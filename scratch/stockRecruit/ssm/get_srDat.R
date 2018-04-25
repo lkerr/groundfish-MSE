@@ -25,7 +25,7 @@ names(srcodGOM)[-1] <- paste0('codGOM_', names(srcodGOM[-1]))
 
 sr <- merge(merge(merge(bbhT, gbT, all=TRUE), 
                   srcodGB, all=TRUE), srcodGOM, all=TRUE)
-
+sr$Year <- as.numeric(as.character(sr$Year))
 
 save(sr, file='data/data_processed/sr.Rdata')
 
