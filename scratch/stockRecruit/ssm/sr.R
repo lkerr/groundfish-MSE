@@ -1,30 +1,10 @@
 
 
+# read in the data
+load(file='data/data_processed/sr.Rdata') #sr
 
-bbh_base <- read.csv('data/1905-2017sst-3-5-18.csv', stringsAsFactors = FALSE)
-sr <- read.csv('data/SAW55SR.csv')
-
-mdy <- as.data.frame(do.call(rbind, strsplit(bbh_base$COLLECTION_DATE, split='\\/')))
-qtab <- cbind(1:12, rep(1:4, each=3))
-names(mdy) <- c('MONTH', 'DAY', 'YEAR')
-mdy$Q <- qtab[match(as.numeric(as.character(mdy$MONTH)), qtab[,1]),2]
-
-
-bbh <- cbind(mdy, bbh_base)
-
-
-# get Q1 - Q4 median temp
-bbhyv <- data.frame(tapply(bbh$Sea.Surface.Temp.Ave.C, 
-                           INDEX=list(mdy$YEAR, mdy$Q), 
-                           FUN=median, na.rm=TRUE))
-bbhyv$Year <- row.names(bbhyv)
-names(bbhyv) <- c('Q1', 'Q2', 'Q3', 'Q4', 'Year')
-
-
-srt <- merge(sr, bbhyv)
-names(srt)[names(srt) == 'SSBMT'] <- 'S'
-names(srt)[names(srt) == 'A1Recruitmentx1000'] <- 'R'
-
+# indexes to use for ssb and R data -- there is a one-year
+# lag in this case.
 idxSSB <- 1:(nrow(srt)-1)
 idxR <- 2:nrow(srt)
 
