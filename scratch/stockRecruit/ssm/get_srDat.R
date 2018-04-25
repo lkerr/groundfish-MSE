@@ -5,30 +5,29 @@
 # into the stock-recruit model file
 
 
-bbh_base <- read.csv('data/1905-2017sst-3-5-18.csv', stringsAsFactors = FALSE)
-sr <- read.csv('data/SAW55SR.csv')
+# BBH temperature series
+load('data/data_processed/bbhT.Rdata') # bbhT
 
-mdy <- as.data.frame(do.call(rbind, strsplit(bbh_base$COLLECTION_DATE, split='\\/')))
-qtab <- cbind(1:12, rep(1:4, each=3))
-names(mdy) <- c('MONTH', 'DAY', 'YEAR')
-mdy$Q <- qtab[match(as.numeric(as.character(mdy$MONTH)), qtab[,1]),2]
+# GB buoy temperature series
+load('data/data_processed/gbT.Rdata') # gbT
 
-
-bbh <- cbind(mdy, bbh_base)
-
-
-# get Q1 - Q4 median temp
-bbhyv <- data.frame(tapply(bbh$Sea.Surface.Temp.Ave.C, 
-                           INDEX=list(mdy$YEAR, mdy$Q), 
-                           FUN=median, na.rm=TRUE))
-bbhyv$Year <- row.names(bbhyv)
-names(bbhyv) <- c('Q1', 'Q2', 'Q3', 'Q4', 'Year')
+# SAW55 stock-recruit
+srcodGB <- read.csv('data/data_raw/SAW55SR_codGB.csv')
+srcodGOM <- read.csv('data/data_raw/SAW55SR_codGOM.csv')
 
 
 
+# alter the column names to clarify source
+names(bbhT)[-1] <- paste0('bbh_', names(bbhT[-1]))
+names(gbT)[-1] <- paste0('gb_', names(gbT[-1]))
+names(srcodGB)[-1] <- paste0('codGB_', names(srcodGB[-1]))
+names(srcodGOM)[-1] <- paste0('codGOM_', names(srcodGOM[-1]))
+
+sr <- merge(merge(merge(bbhT, gbT, all=TRUE), 
+                  srcodGB, all=TRUE), srcodGOM, all=TRUE)
 
 
-
+save(sr, file='data/data_processed/sr.Rdata')
 
 
 
