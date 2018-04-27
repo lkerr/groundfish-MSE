@@ -22,7 +22,7 @@
 #       
 #      *"rickerTS" time series implementation of the ricker model (i.e.,
 #       that includes an autocorrelative component
-#       R = a * S * exp(-b * S + c * tempY) + rho * resid0 + error;
+#       R = a * S * exp(-b * S + c * tempY) * error + rho * resid0
 #       where resid0 is the residual from the previous year.
 #       par[1]: Ricker a
 #       par[2]: Ricker b
@@ -32,7 +32,7 @@
 #       
 #      *"BHTS" time series implementation of the Beverton Holt model
 #       (i.e., that includes an autocorrelative component)
-#       R = (a * S / (b + S) * exp(c * TempY) + rho * resid0);
+#       R = a * S / (b + S) * exp(c * TempY) * error + rho * resid0;
 #       where resid0 is the residual from the previous year.
 #       par[1]: Beverton-Holt a
 #       par[2]: Beverton-Holt b
