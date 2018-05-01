@@ -2,7 +2,7 @@
 
 
 
-set.seed(42)
+set.seed(40)
 
 ## Simulation information
 
@@ -51,7 +51,7 @@ M <- 0.1
 ## Fishery information
 
 # for now!
-F_full <- rlnorm(nyear, log(0.4), 0.1)
+F_full <- rlnorm(nyear, log(0.2), 0.1)
 temp <- rep(15, nyear)
 
 # fishery and survey catchabilities
@@ -64,8 +64,7 @@ selC <- c(s0=5, s1=0.08)
 selC_typ <- 'Logistic'
 
 # Recruitment
-Rpar <- c(7.444707e+00, -5.797480e-06, -9.495725e-02)
-R_typ <- 'Ricker'
+load('data/data_processed/SR/cod/BHTS.Rdata') #srpar
 
 
 ## Survey information

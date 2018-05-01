@@ -16,6 +16,7 @@ waa <- yxage
 Z <- yxage
 slxC <- yxage
 R <- yx0
+residR <- yx0
 SSB <- yx0
 
 

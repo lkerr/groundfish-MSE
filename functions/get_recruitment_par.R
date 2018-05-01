@@ -44,6 +44,8 @@ get_recruitment_par <- function(par, stochastic=TRUE){
                  names = par$names,
                  par = par$par)
     
+    return(par1)
+    
   }else{
   
     # if no parameter bounds are given, make them -Inf and Inf
@@ -71,14 +73,12 @@ get_recruitment_par <- function(par, stochastic=TRUE){
     # c() makes the returned matrix into a vector
     par1 <- c(rtmvnorm(1, mean=par$par, sigma=par$cov,
                        lower=par$lower, upper=par$upper))
+    names(par1) <- par$names
+    
+    return(list(type=par$type, par=par1))
   
   }
-  
-  names(par1) <- par$names
-  
-  
-  return(list(type=par$type, par=par1))
-  
+
 }
 
 

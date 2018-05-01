@@ -60,10 +60,13 @@ for(r in 1:nrep){
     # calculate recruits in year y based on the SSB in years previous
     # (depending on the lag) and temperature
     SSB[y] <- sum(J1N[y-fage,] * mat * waa[y-fage,])  
-    # R[y] <- get_recruits(type='ricker', par=Rpar, S=SSBy,
-    #                      tempY=1, stoch_sdlog=pe_R)
-    R[y] <- get_recruits(type=R_typ, par=Rpar, S=SSB[y],
-                         tempY=temp[y], stoch_sdlog=pe_R)
+
+    Rpar <- get_recruitment_par(par=srpar, stochastic=FALSE)
+    Rout <- get_recruits(type=Rpar$type, par=Rpar, S=SSB[y],
+                         tempY=temp[y], resid0 = residR[y-1])
+    R[y] <- Rout['R']
+    residR[y] <- Rout['resid']
+    R[y] <- ifelse(R[y] < 0, 0, R[y])
     
     # calculate the selectivity in year y (changes if the laa changes)
     slxC[y,] <- get_slx(type=selC_typ, par=selC, laa=laa[y,])

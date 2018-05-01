@@ -61,6 +61,10 @@
 
 get_recruits <- function(type, par, S, tempY=NULL, resid0=NULL){
   
+  # set the parameters as a vector of their own (i.e., remove
+  # "type" from the list)
+  par1 <- par$par
+  
   # if no temperature is included then set to zero (will cancel out
   # in the models)
   if(is.null(tempY)){
@@ -68,56 +72,58 @@ get_recruits <- function(type, par, S, tempY=NULL, resid0=NULL){
   }
   
   # stochastic multiplicitave effect
-  Rstoch <- rlnorm(n = 1, meanlog = log(1) - par['sigR']^2/2, 
-                   sdlog = par['sigR'])
+  Rstoch <- rlnorm(n = 1, meanlog = log(1) - par1['sigR']^2/2, 
+                   sdlog = par1['sigR'])
   
   if(tolower(type) == 'rickerlin'){
     
-    if(!all(c('a', 'b', 'c') %in% names(par))){
+    if(!all(c('a', 'b', 'c') %in% names(par1))){
       stop('get_recruits: check parameters in Ricker linear option')
     }
     
     # (H & W p. 285)
-    Rhat <- S * exp(par['a'] + par['b']*S + par['c']*tempY)
+    Rhat <- S * exp(par1['a'] + par1['b']*S + par1['c']*tempY)
     R <- Rhat * Rstoch
 
   }else if(tolower(type) == 'bhts'){
     
-    if(!all(c('a', 'b', 'c', 'rho', 'resid0') %in% names(par))){
+    if(!all(c('a', 'b', 'c', 'rho') %in% names(par1))){
       stop('get_recruits: check parameters in BHTS option')
     }
     
     # BH parameterization from H&W p. 286
-    Rhat <- par['a'] * S / (par['b'] + S) * exp(par['c'] * tempY)
-    R <- Rhat * Rstoch + par['rho'] * par['resid0']
+    Rhat <- par1['a'] * S / (par1['b'] + S) * exp(par1['c'] * tempY)
+    R <- Rhat * Rstoch + par1['rho'] * resid0
     
-  }else if(tolower(type) == 'RickerTS'){
+  }else if(tolower(type) == 'rickerts'){
     
-    if(!all(c('a', 'b', 'c', 'rho', 'resid0') %in% names(par))){
+    if(!all(c('a', 'b', 'c', 'rho') %in% names(par1))){
       stop('get_recruits: check parameters in RickerTS option')
     }
     
     # Ricker parameterization from Q&D p. 91
-    Rhat <- par['a'] * S * exp(-par['b'] * S + par['c'] * tempY)
-    R <- Rhat * Rstoch + par['rho'] * par['resid0']
+    Rhat <- par1['a'] * S * exp(-par1['b'] * S + par1['c'] * tempY)
+    R <- Rhat * Rstoch + par1['rho'] * resid0
     
   }else if(tolower(type) == 'constantMean'){
  
-    if(length(par) != 1){
+    if(length(par1) != 1){
       stop('get_recruits: check parameters in constantMean option')
     }
     
     # include a small deviation because otherwise Rdevs will
     # all be zero which will result in NaN
-    R <- par['a'] * par['sigR']
+    R <- par1['a'] * par1['sigR']
     
   }else{
     
     stop('Recruitment type provided not recognized')
   
   }
-  
-  return(c(R=R, Resid=R-Rhat))
+  R <- unname(R)
+  Rhat <- unname(Rhat)
+
+  return(c(R=R, resid=R-Rhat))
   
 }
 
