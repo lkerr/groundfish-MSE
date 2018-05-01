@@ -11,10 +11,12 @@ platform <- Sys.info()['sysname']
 if(platform == 'Linux'){
 
   require(msm, lib.loc='Rlib/')
+  require(tmvtnorm, lib.loc='Rlib/')
   
 }else{
   
   require(msm)
+  require(tmvtnorm)
   
 }
 
