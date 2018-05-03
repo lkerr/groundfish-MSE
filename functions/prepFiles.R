@@ -11,6 +11,6 @@ prepFiles <- function(){
   ext <- sapply(extlist, tail, 1)
   fl2trash <- ext %in% c('dll', 'o', 'so')
   file.remove(file.path('assessment', fl[fl2trash]))
-  
+
 }
 
