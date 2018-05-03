@@ -11,6 +11,7 @@
 #BSUB -e "./%J.err"
 
 
+cd ..
 
 # remove old directory
 rm -r -f groundfish-MSE/
@@ -21,7 +22,7 @@ module load git/2.1.3
 # clone the current repository
 git clone https://github.com/COCA-NEgroundfishMSE/groundfish-MSE
 
-
+cd groundfish-MSE/
 
 module load R/3.4.0 
 module load gcc/5.1.0
