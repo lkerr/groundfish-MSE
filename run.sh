@@ -6,9 +6,10 @@
 #BSUB -q short                            # Which queue {short, long, parallel, GPU, interactive}
 #BSUB -J "samsim[1-1]"                    # Job Name
 #BSUB -R rusage[mem=1000] 
+#BSUB -n 1
 
-#BSUB -o "./%J.out"
-#BSUB -e "./%J.err"
+#BSUB -o "./%J.o"
+#BSUB -e "./%J.e"
 
 
 
