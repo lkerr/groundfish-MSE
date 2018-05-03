@@ -1,6 +1,6 @@
 
 
-
+a <- 'done'
 
 # empty the environment
 rm(list=ls())
@@ -26,7 +26,7 @@ source('processes/set_om_parameters.R')
 # get all the necessary containers for the simulation
 source('processes/get_containers.R')
 
-
+save(a, file='DONE1')
 # begin the model loop
 for(r in 1:nrep){
 
@@ -112,16 +112,16 @@ for(r in 1:nrep){
   
     # prepare data for assessment model (if burn-in period is over)
     if(y > ncaayear + fyear + nburn){
-  
+save(a, file='DONE2')  
       source('processes/get_tmb_setup.R')
       source('assessment/caa.R')
       y2 <- y - (ncaayear + fyear + nburn)
       source('processes/fill_repArrays.R')
 
     }
-    
+save(a, file='DONE3')    
     
   }
 }
-a <- 'done'
-save(a, file='DONE')
+
+save(a, file='DONE4')
