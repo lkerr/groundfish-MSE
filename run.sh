@@ -11,7 +11,14 @@
 #BSUB -e "./%J.err"
 
 
-cd ..
+
+# run.sh is located inside git transfer directory here,
+# but when run on HPCC it is assumed that run.sh will be
+# one level up from the root directory. The first thing that
+# happens is run.sh downloads the most up-to-date version from
+# github so we want it outside the root directory so that run.sh
+# isn't part of what gets deleted before the download.
+
 
 # remove old directory
 rm -r -f groundfish-MSE/
