@@ -1,10 +1,12 @@
 
 
-a <- 'done'
+
 
 # empty the environment
 rm(list=ls())
 
+a <- 'done'
+save(a, file='DONE0')
 
 # load all the functions
 ffiles <- list.files(path='functions/', full.names=TRUE)
@@ -119,9 +121,12 @@ save(a, file='DONE2')
       source('processes/fill_repArrays.R')
 
     }
-save(a, file='DONE3')    
+   
     
   }
 }
 
+
 save(a, file='DONE4')
+
+
