@@ -6,13 +6,13 @@
 rm(list=ls())
 
 
-# prepare directories
-prepFiles()
-
-
 # load all the functions
 ffiles <- list.files(path='functions/', full.names=TRUE)
 sapply(ffiles, source)
+
+
+# prepare directories
+prepFiles()
 
 
 # load the required libraries
