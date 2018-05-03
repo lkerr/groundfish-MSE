@@ -123,5 +123,5 @@ for(r in 1:nrep){
     
   }
 }
-
-
+a <- 'done'
+save(a, file='DONE')
