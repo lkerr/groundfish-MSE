@@ -6,7 +6,7 @@ require(TMB)
 
 
 # compile the c++ file and make available to R
-compile("assessment/caa.cpp")
+TMB::compile("assessment/caa.cpp")
 dyn.load(dynlib("assessment/caa"))
 
 
