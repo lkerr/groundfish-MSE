@@ -14,8 +14,12 @@ if(platform == 'Linux'){
 
   # seems you need to load gmm prior to loading tmvtnorm
   require(gmm, lib.loc='../Rlib/')
+  require(mvtnorm, lib.loc='../Rlib/')
   require(tmvtnorm, lib.loc='../Rlib/')
+  
+  require(expm, lib.loc='../Rlib/')
   require(msm, lib.loc='../Rlib/')
+  require(Matrix, lib.loc='../Rlib/')
   require(TMB, lib.loc='../Rlib/')
   
 }else{
