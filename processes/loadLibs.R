@@ -3,17 +3,20 @@
 # whether using Windows or Linux but a little less complicated
 # to not keep a local copy of corresponding Windows R
 # packages on the machine. An Rlib directory will be
-# necessary for running on the ghpcc.
+# necessary for running on the ghpcc. Note that the Rlib
+# directory is located one level outside the home directory
+# (i.e., it is not include in any of the github file
+# transfers).
 
 
 platform <- Sys.info()['sysname']
 if(platform == 'Linux'){
 
   # seems you need to load gmm prior to loading tmvtnorm
-  require(gmm, lib.loc='Rlib/')
-  require(tmvtnorm, lib.loc='Rlib/')
-  require(msm, lib.loc='Rlib/')
-  require(TMB, lib.loc='Rlib/')
+  require(gmm, lib.loc='../Rlib/')
+  require(tmvtnorm, lib.loc='../Rlib/')
+  require(msm, lib.loc='../Rlib/')
+  require(TMB, lib.loc='../Rlib/')
   
 }else{
   
