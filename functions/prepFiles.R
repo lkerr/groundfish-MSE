@@ -10,7 +10,7 @@ prepFiles <- function(){
   extlist <- strsplit(fl, split='\\.')
   ext <- sapply(extlist, tail, 1)
   fl2trash <- ext %in% c('dll', 'o', 'so')
-  unlink(file.path('assessment', fl[fl2trash]))
-    
+  file.remove(file.path('assessment', fl[fl2trash]))
+  
 }
 
