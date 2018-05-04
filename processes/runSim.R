@@ -58,11 +58,11 @@ for(r in 1:nrep){
                                laa=laa[y,], inputUnit='kg')
     
     # calculate maturity in year y
-    mat <- get_maturity(type=mat_typ, par=mat_par, laa=laa[y,])
+    mat[y,] <- get_maturity(type=mat_typ, par=mat_par, laa=laa[y,])
     
     # calculate recruits in year y based on the SSB in years previous
     # (depending on the lag) and temperature
-    SSB[y] <- sum(J1N[y-fage,] * mat * waa[y-fage,])  
+    SSB[y] <- sum(J1N[y-fage,] * mat[y,] * waa[y-fage,])  
 
     Rpar <- get_recruitment_par(par=srpar, stochastic=FALSE)
     Rout <- get_recruits(type=Rpar$type, par=Rpar, S=SSB[y],
@@ -116,8 +116,14 @@ for(r in 1:nrep){
       source('assessment/caa.R')
       y2 <- y - (ncaayear + fyear + nburn)
       source('processes/fill_repArrays.R')
+      
+      # Get fishing mortality for next year's management
+      get_RP()
+      F[y+1] <- get_nextF(type, Fhist=rep$F_full, SSBhist=SSBhat)
 
     }
+    
+    
    
     
   }
