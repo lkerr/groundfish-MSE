@@ -89,6 +89,12 @@ oacomp$J1N[r,y2,,,'caahat'] <- rep$J1N
 oacomp$CN[r,y2,,,'val'] <- get_dwindow(CN, sty, y)
 oacomp$CN[r,y2,,,'caahat'] <- rep$CN
 
+# estimated SSB
+SSBaa <- rep$J1N * get_dwindow(waa, sty, y) * get_dwindow(mat, sty, y)
+SSBhat <- apply(SSBaa, 1, sum)
+oacomp$SSB[r,y2,,'val'] <- get_dwindow(SSB, sty, y)
+oacomp$SSB[r,y2,,'caahat'] <- SSBhat
+
 oacomp$IN[r,y2,,,'val'] <- get_dwindow(IN, sty, y)
 oacomp$IN[r,y2,,,'caahat'] <- rep$IN
 
