@@ -15,6 +15,7 @@ laa <- yxage
 waa <- yxage
 Z <- yxage
 slxC <- yxage
+mat <- yxage
 R <- yx0
 residR <- yx0
 SSB <- yx0
@@ -147,6 +148,7 @@ oacomp <- list(
   Z = save_matrix,
   R = save_vector_ann,
   J1N = save_matrix,
+  SSB = save_vector_ann,
   CN = save_matrix,
   IN = save_matrix,
   
