@@ -109,17 +109,29 @@ for(r in 1:nrep){
     obs_paaIN[y,] <- get_error_paa(type=oe_paaIN_typ, paa=paaIN[y,], par=oe_paaIN)
   
   
-    # prepare data for assessment model (if burn-in period is over)
+    # if burn-in period is over...
     if(y > ncaayear + fyear + nburn){
 
+      # prepare data & run assessment model
       source('processes/get_tmb_setup.R')
       source('assessment/caa.R')
+      
+      # Fill the arrays with results
       y2 <- y - (ncaayear + fyear + nburn)
       source('processes/fill_repArrays.R')
       
       # Get fishing mortality for next year's management
-      get_RP()
-      F[y+1] <- get_nextF(type, Fhist=rep$F_full, SSBhist=SSBhat)
+      fbrpy <- get_FBRP(type=fbrpTyp, par=fbrpLevel,
+                        sel=tail(rep$slxC, 1), waa=tail(rep$waa, 1), 
+                        M=tail(rep$M, 1)[1])
+      bbrpy <- get_BBRP(type=bbrpTyp, par=bbrpLevel,
+                        sel=tail(rep$slxC, 1), waa=tail(rep$waa, 1), 
+                        M=tail(rep$M, 1)[1], mat=mat[y,], 
+                        R=rep$R, Rfun=mean)
+
+      # apply the harvest control rule
+      nextF <- get_nextF(type=hcrTyp, FRP=fbrpy, BRP=bbrpy)
+      # F[y+1] <- get_nextF(type, Fhist=rep$F_full, SSBhist=SSBhat)
 
     }
     
