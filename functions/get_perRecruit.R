@@ -49,6 +49,10 @@
 get_perRecruit <- function(type, par, sel, waa, M, mat=NULL, 
                            nage=1000, nF=1000, nFrep=100){
   
+  if(is.null(mat) & type == 'SPR'){
+    stop('get_perRecruit: must provide maturity if using SPR')
+  }
+  
   # potential levels of F for INSIDE the function (i.e., not output)
   F_full <- seq(0, 2, length.out = nF)
   # Initial level for number of recruits
@@ -56,6 +60,7 @@ get_perRecruit <- function(type, par, sel, waa, M, mat=NULL,
   
   # Adjust input vectors so they match with the number of ages
   # over which the Y/R or SSB/R is being applied.
+
   sel <- c(sel, rep(tail(sel, 1), nage-length(sel)))
   waa <- c(waa, rep(tail(waa, 1), nage-length(waa)))
   if(!is.null(mat)){
@@ -72,9 +77,10 @@ get_perRecruit <- function(type, par, sel, waa, M, mat=NULL,
     Z <- c(0, cumsum(F + M)[-length(F)])
     N <- N_init * exp(-Z)
     C <- F / (Z+1e-6) * N * (1 - exp(-Z))
-# browser()
+
     # calculate yield and ssb over lifetime given the level of
     # fishing mortality
+
     Y[i] <- C %*% waa
     SSB[i] <- sum(N * waa * mat)
   }
@@ -104,7 +110,7 @@ get_perRecruit <- function(type, par, sel, waa, M, mat=NULL,
     yvalue <- Y
     
   }else if(tolower(type) == 'spr'){
-    
+  
     # maximum level for SSBR will occur at F[1] where F_full=0
     SSBRmax <- SSB[1]
     
@@ -113,7 +119,7 @@ get_perRecruit <- function(type, par, sel, waa, M, mat=NULL,
     
     # find the F @ the specified level of F_X%
     Fref <- F_full[which.min(abs(SSBR_ratio - par))]
-# browser()    
+ 
     # for outputs
     yvalue <- SSBR_ratio
     
