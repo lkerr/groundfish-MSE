@@ -91,7 +91,21 @@ pe_R <- 1.5
 
 
 
+## Biological reference point and harvest control rule options
 
+# reference point calculation types
+# Fmsy proxy type
+fbrpTyp <- c('YPR')
+# Bmsy proxy type
+bbrpTyp <- c('RSPR')
+
+# Fmsy proxy level
+fbrpLevel <- c(0.1)
+# Bmsy proxy level
+bbrpLevel <- c(1)
+
+# Harvest control rule types
+hrcTyp <- c('ns1')
 
 
 
