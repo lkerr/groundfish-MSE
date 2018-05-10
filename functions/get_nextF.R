@@ -12,16 +12,12 @@
 #                        cut off when the population is overfished 
 #                        (i.e., B<Bmsy)
 
-get_nextF <- function(type, par, Fmsy=NULL, Bmsy=NULL, M=NULL){
+get_nextF <- function(type, par=NULL, Fmsy=NULL, Bmsy=NULL, M=NULL, SSB=NULL){
   
   
   if(tolower(type) == 'ns1'){
     
-    if(length(par) != 2){
-      stop('get_nextF: check length of parameter vector')
-    }
-    
-    F <- get_NS1HCR(B, Fmsy=par[1], Bmsy=par[2], M=M)
+    F <- get_NS1HCR(SSB, Fmsy=Fmsy, Bmsy=Bmsy, M=M)$Fadvice.RPvalue
     
   }else if(tolower(type) == 'simplethresh'){
     
