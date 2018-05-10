@@ -51,8 +51,9 @@ M <- 0.1
 ## Fishery information
 
 # for now!
-F_full <- rlnorm(nyear, log(0.2), 0.1)
+# F_full <- rlnorm(nyear, log(0.2), 0.1)
 temp <- rep(15, nyear)
+
 
 # fishery and survey catchabilities
 qC <- 0.01
@@ -104,8 +105,34 @@ fbrpLevel <- c(0.1)
 # Bmsy proxy level
 bbrpLevel <- c(1)
 
+# Fmsy proxy types and levels
+fbrp <- rbind(
+  list('YPR', 0.1),
+  list('RSPR', 1)
+)
+pol <- data.frame(
+  FmsyT = c('YPR'  ,   'SPR'        ),
+  FmsyV = c(0.1    ,     1          ),
+  BmsyT = c('RSPR' ,   'dummy'      ),
+  hcrT  = c('ns1'  ,  'simpleThresh')
+)
+
+
+FmsyT <- list('YPR', 'SPR')
+FmsyV <- list(c(0.1, 0.15),
+              c(0.3, 0.4))
+i1 <- lapply(1:length(a1), function(x) expand.grid(a1[[x]], a2[[x]]))
+
+BmsyT <- list('RSPR', 'dummy')
+BmsyV <- list(c(1, 0.8),
+              c(0.5, 1.0))
+i2 <- lapply(1:length(BmsyT), function(x) expand.grid(BmsyT[[x]], BmsyV[[x]]))
+
 # Harvest control rule types
-hrcTyp <- c('ns1')
+i3 <- list('ns1', 'simpleThresh')
+
+
+hrcTyp <- list('ns1', 'simpleThresh')
 
 
 
