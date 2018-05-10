@@ -60,13 +60,12 @@ get_perRecruit <- function(type, par, sel, waa, M, mat=NULL,
   
   # Adjust input vectors so they match with the number of ages
   # over which the Y/R or SSB/R is being applied.
-
   sel <- c(sel, rep(tail(sel, 1), nage-length(sel)))
   waa <- c(waa, rep(tail(waa, 1), nage-length(waa)))
   if(!is.null(mat)){
-    mat <- c(mat, rep(tail(sel, 1), nage-length(mat)))
+    mat <- c(mat, rep(tail(mat, 1), nage-length(mat)))
   }
-  
+ 
   # Generate Yield- and SSB-at-age
   Y <- numeric(length(F_full))
   SSB <- numeric(length(F_full))
