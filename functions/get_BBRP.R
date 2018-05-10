@@ -9,14 +9,14 @@
 #             
 #             par[1]: SPR level for Fmsy proxy (e.g., 0.35 for F35%)
 #       
-#     * 
+#     * dummy -- par is some scalar.
 
 
 
 
 
 get_BBRP <- function(type, par, sel=NULL, waa=NULL, M=NULL, R=NULL,
-                     mat=NULL, Rfun=mean){
+                     mat=NULL, B, Rfun=mean){
   
   
   if(type == 'RSPR'){
@@ -25,15 +25,18 @@ get_BBRP <- function(type, par, sel=NULL, waa=NULL, M=NULL, R=NULL,
     sprFmax <- get_perRecruit(type = 'SPR', par=par, sel=sel, waa=waa, 
                               M=M, mat=mat, nage=1000, nF=1000, nFrep=100)
     
-    meanR <- Rfun(R)
+    funR <- Rfun(R)
    
-    B <- sprFmax$RPvalue * par
+    B <- sprFmax$RPvalue * funR
     
     return(Bref = B)
     
-  }else if(type == 'other'){
+  }else if(type == 'dummy'){
     
-    return(NA)
+    # a placeholder for a ref point is all this is
+    B <- max(B) * par
+    
+    return(Bref = B)
     
   }
   
