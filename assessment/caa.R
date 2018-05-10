@@ -82,6 +82,7 @@ sdrep <- sdreport(obj)
 
 # list of variables exported using REPORT() function in c++ code
 rep <- obj$report()
+
 rep_data <- rep[c('obs_sumCW',
                   'obs_paaCN',
                   'obs_sumIN',
