@@ -26,12 +26,20 @@ source('processes/set_om_parameters.R')
 # get all the necessary containers for the simulation
 source('processes/get_containers.R')
 
+
+
 # begin the model loop
 for(r in 1:nrep){
 
+  
+  # First few years of fishery information
+  F_full[1:(ncaayear + fyear + nburn +1)] <- rlnorm(ncaayear + 
+                                                      fyear + nburn + 1, 
+                                                    log(0.2), 0.1)
 
   # initialize the model with numbers and mortality rates
   # in the first n (fyear-1) years.
+  
   
   initN <- get_init(nage=nage, N0=2e7, F_full=F_full[1], M=M)
   J1N[1:(fyear-1),] <- rep(initN, each=(fyear-1))
@@ -122,16 +130,21 @@ for(r in 1:nrep){
       
       # Get fishing mortality for next year's management
       fbrpy <- get_FBRP(type=fbrpTyp, par=fbrpLevel,
-                        sel=tail(rep$slxC, 1), waa=tail(rep$waa, 1), 
-                        M=tail(rep$M, 1)[1])
+                        sel=endv(rep$slxC), waa=endv(rep$waa), 
+                        M=M[1])
+      # note must convert matrices to vectors when using tail() function
+      # to get the appropriate behavior
       bbrpy <- get_BBRP(type=bbrpTyp, par=bbrpLevel,
-                        sel=tail(rep$slxC, 1), waa=tail(rep$waa, 1), 
-                        M=tail(rep$M, 1)[1], mat=mat[y,], 
-                        R=rep$R, Rfun=mean)
+                        sel=endv(rep$slxC), waa=endv(rep$waa), 
+                        M=endv(rep$M), mat=mat[y,], 
+                        R=rep$R, B=SSBhat, Rfun=mean)
 
       # apply the harvest control rule
-      nextF <- get_nextF(type=hcrTyp, FRP=fbrpy, BRP=bbrpy)
-      # F[y+1] <- get_nextF(type, Fhist=rep$F_full, SSBhist=SSBhat)
+      nextF <- get_nextF(type=hrcTyp, Fmsy=fbrpy, Bmsy=bbrpy, 
+                         SSB=endv(SSBhat))
+      if(y < nyear){
+        F_full[y+1] <- nextF
+      }
 
     }
     
