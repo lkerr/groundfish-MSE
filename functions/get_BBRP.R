@@ -27,7 +27,7 @@ get_BBRP <- function(type, par, sel=NULL, waa=NULL, M=NULL, R=NULL,
     
     funR <- Rfun(R)
    
-    B <- sprFmax$RPvalue * funR
+    B <- sprFmax$RPvalue * funR  #check ... seems wrong
     
     return(Bref = B)
     
