@@ -52,37 +52,43 @@ obs_effort <- yx0
 # (operating model-assessment model comparison)
 
 nomyear <- nyear - (ncaayear + fyear + nburn)
+nmproc <- nrow(mproc)
 
 dn_rep <- paste0('rep', 1:nrep)
 dn_omyear <- paste0('year', 1:nomyear)
+dn_mproc <- paste0('mproc', 1:nmproc)
 
 
 # array template for scalar conainer
 save_scalar <- array(data = NA,
-                     dim = c(nrep, nomyear, 2),
+                     dim = c(nrep, nmproc, nomyear, 2),
                      dimnames = list(paste0('rep', 1:nrep),
+                                     paste0('mproc', 1:nmproc),
                                      paste0('omyear', 1:nomyear),
                                      c('val', 'caahat')))
 
 # array template for vector conainer
 save_vector_ann <- array(data = NA,
-                         dim = c(nrep, nomyear, ncaayear, 2),
+                         dim = c(nrep, nmproc, nomyear, ncaayear, 2),
                          dimnames = list(paste0('rep', 1:nrep), 
+                                         paste0('mproc', 1:nmproc),
                                          paste0('omyear', 1:nomyear),
                                          paste0('caayear', 1:ncaayear),
                                          c('val', 'caahat')))
 
 save_vector_age <- array(data = NA,
-                         dim = c(nrep, nomyear, nage, 2),
+                         dim = c(nrep, nmproc, nomyear, nage, 2),
                          dimnames = list(paste0('rep', 1:nrep), 
+                                         paste0('mproc', 1:nmproc),
                                          paste0('omyear', 1:nomyear),
                                          paste0('caaage', 1:nage),
                                          c('val', 'caahat')))
 
 # array template for matrix conainer
 save_matrix <- array(data = NA,
-                     dim = c(nrep, nomyear, ncaayear, nage, 2),
+                     dim = c(nrep, nmproc, nomyear, ncaayear, nage, 2),
                      dimnames = list(paste0('rep', 1:nrep), 
+                                     paste0('mproc', 1:nmproc),
                                      paste0('omyear', 1:nomyear),
                                      paste0('caayear', 1:ncaayear),
                                      paste0('caaage', 1:nage),
@@ -114,8 +120,9 @@ oacomp <- list(
   M = save_matrix,
   # R_devs have nyear-1 entries
   R_dev = array(data = NA,
-                dim = c(nrep, nomyear, ncaayear-1, 2),
+                dim = c(nrep, nmproc, nomyear, ncaayear-1, 2),
                 dimnames = list(paste0('rep', 1:nrep), 
+                                paste0('mproc', 1:nmproc),
                                 paste0('omyear', 1:nomyear),
                                 paste0('caayear', 1:(ncaayear-1)),
                                 c('val', 'caahat'))),
@@ -129,8 +136,9 @@ oacomp <- list(
   # adaptive length for selectivity vector in case the function
   # changes 
   selC = array(data = NA,
-               dim = c(nrep, nomyear, length(selC), 2),
+               dim = c(nrep, nmproc, nomyear, length(selC), 2),
                dimnames = list(paste0('rep', 1:nrep),
+                               paste0('mproc', 1:nmproc),
                                paste0('omyear', 1:nomyear),
                                paste0('s', 1:length(selC)),
                                c('val', 'caahat'))),
@@ -138,8 +146,9 @@ oacomp <- list(
   qI = save_scalar,
   # ... currently no selI parameters to go from so just use 1:2.
   selI = array(data = NA,
-               dim = c(nrep, nomyear, 2, 2),
+               dim = c(nrep, nmproc, nomyear, 2, 2),
                dimnames = list(paste0('rep', 1:nrep),
+                               paste0('mproc', 1:nmproc),
                                paste0('omyear', 1:nomyear),
                                paste0('s', 1:2),
                                c('val', 'caahat'))),

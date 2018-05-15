@@ -33,7 +33,7 @@ source('processes/get_containers.R')
 # begin the model loop
 for(r in 1:nrep){
 
-  for(m in 1:nrow(mgtproc)){
+  for(m in 1:nrow(mproc)){
   
     # First few years of fishery information
     F_full[1:(ncaayear + fyear + nburn +1)] <- rlnorm(ncaayear + 
@@ -125,34 +125,56 @@ for(r in 1:nrep){
   
         # prepare data & run assessment model
         source('processes/get_tmb_setup.R')
-        source('assessment/caa.R')
+        tryfit <- try(source('assessment/caa.R'))
         
-        # Fill the arrays with results
-        y2 <- y - (ncaayear + fyear + nburn)
-        source('processes/fill_repArrays.R')
+        if(class(tryfit) != 'try-error'){
         
-        # Get fishing mortality for next year's management
-        # fbrpy <- get_FBRP(type=fbrpTyp, par=mgtproc[m,],
-                          # sel=endv(rep$slxC), waa=endv(rep$waa), 
-                          # M=M[1])
-        # note must convert matrices to vectors when using tail() function
-        # to get the appropriate behavior
-        # bbrpy <- get_BBRP(type=bbrpTyp, par=mgtproc[m,],
-                          # sel=endv(rep$slxC), waa=endv(rep$waa), 
-                          # M=endv(rep$M), mat=mat[y,], 
-                          # R=rep$R, B=SSBhat, Rfun=mean)
+          # Fill the arrays with results
+          y2 <- y - (ncaayear + fyear + nburn)
+          source('processes/fill_repArrays.R')
+          
+          # Get fishing mortality for next year's management
+          # fbrpy <- get_FBRP(type=fbrpTyp, par=mproc[m,],
+                            # sel=endv(rep$slxC), waa=endv(rep$waa), 
+                            # M=M[1])
+          # note must convert matrices to vectors when using tail() function
+          # to get the appropriate behavior
+          # bbrpy <- get_BBRP(type=bbrpTyp, par=mproc[m,],
+                            # sel=endv(rep$slxC), waa=endv(rep$waa), 
+                            # M=endv(rep$M), mat=mat[y,], 
+                            # R=rep$R, B=SSBhat, Rfun=mean)
+    
+          # apply the harvest control rule
+          parpop <- list(waa = tail(rep$waa, 1), 
+                         sel = tail(rep$slxC, 1), 
+                         M = tail(rep$M, 1), 
+                         mat = mat[y,],
+                         R = rep$R,
+                         B = SSBhat)
+          nextF <- get_nextF(parmgt = mproc[m,], parpop = parpop)
   
-        # apply the harvest control rule
-        parpop <- list(waa = tail(rep$waa, 1), 
-                       sel = tail(rep$slxC, 1), 
-                       M = tail(rep$M, 1), 
-                       mat = mat[y,],
-                       R = rep$R,
-                       B = SSBhat)
-        nextF <- get_nextF(parmgt = mgtproc[m,], parpop = parpop)
-
-        if(y < nyear){
-          F_full[y+1] <- nextF
+          if(y < nyear){
+            F_full[y+1] <- nextF
+          }
+        
+        }else{
+          
+          # if the assessment model didn't work then fill the
+          # array with NAs
+          for(i in 2:length(oacomp)){
+            # Determine the dimensionality of each oacomp list component
+            # and create a character object with the appropriate
+            # number of commas and then evaluate to fill arrays
+            # with NAs
+            d <- dim(oacomp[[i]])
+            commas <- paste0(rep(',', length(d)-1), collapse='')
+            eval(parse(text=paste0('oacomp[[i]][', commas, '] <- NA')))
+          }
+          
+          # After filling the arrays with NA values, break out of
+          # the loop and move on to the next management strategy
+          break
+          
         }
   
       }
