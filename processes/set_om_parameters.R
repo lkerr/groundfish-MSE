@@ -121,7 +121,7 @@ pol <- data.frame(
 FmsyT <- list('YPR', 'SPR')
 FmsyV <- list(c(0.1, 0.15),
               c(0.3, 0.4))
-i1 <- lapply(1:length(a1), function(x) expand.grid(a1[[x]], a2[[x]]))
+# i1 <- lapply(1:length(a1), function(x) expand.grid(a1[[x]], a2[[x]]))
 
 BmsyT <- list('RSPR', 'dummy')
 BmsyV <- list(c(1, 0.8),

@@ -15,11 +15,10 @@
 
 
 
-get_BBRP <- function(type, par, sel=NULL, waa=NULL, M=NULL, R=NULL,
-                     mat=NULL, B, Rfun=mean){
+get_BBRP <- function(parmgt, parpop, Rfun = mean){
   
   
-  if(type == 'RSPR'){
+  if(parmgt$BREF_TYP == 'RSPR'){
     
     # get SPR at Fmax
     sprFmax <- get_perRecruit(type = 'SPR', par=par, sel=sel, waa=waa, 
@@ -31,7 +30,7 @@ get_BBRP <- function(type, par, sel=NULL, waa=NULL, M=NULL, R=NULL,
     
     return(Bref = B)
     
-  }else if(type == 'dummy'){
+  }else if(parmgt$BREF_TYP){
     
     # a placeholder for a ref point is all this is
     B <- max(B) * par
