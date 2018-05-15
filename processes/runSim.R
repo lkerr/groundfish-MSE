@@ -176,6 +176,30 @@ for(r in 1:nrep){
           break
           
         }
+          
+        # Get fishing mortality for next year's management
+        # fbrpy <- get_FBRP(type=fbrpTyp, par=mgtproc[m,],
+                          # sel=endv(rep$slxC), waa=endv(rep$waa), 
+                          # M=M[1])
+        # note must convert matrices to vectors when using tail() function
+        # to get the appropriate behavior
+        # bbrpy <- get_BBRP(type=bbrpTyp, par=mgtproc[m,],
+                          # sel=endv(rep$slxC), waa=endv(rep$waa), 
+                          # M=endv(rep$M), mat=mat[y,], 
+                          # R=rep$R, B=SSBhat, Rfun=mean)
+  
+        # apply the harvest control rule
+        parpop <- list(waa = tail(rep$waa, 1), 
+                       sel = tail(rep$slxC, 1), 
+                       M = tail(rep$M, 1), 
+                       mat = mat[y,],
+                       R = rep$R,
+                       B = SSBhat)
+        nextF <- get_nextF(parmgt = mgtproc[m,], parpop = parpop)
+
+        if(y < nyear){
+          F_full[y+1] <- nextF
+        }
   
       }
       
