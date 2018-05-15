@@ -25,7 +25,8 @@ get_nextF <- function(parmgt, parpop){
     
   }else if(tolower(parmgt$HCR) == 'simplethresh'){
     
-    F <- ifelse(Bmsy < parmgt$BREF_VAL, 0, Fmsy)
+    Bref <- get_FBRP(parmgt = parmgt, parpop = parpop)
+    F <- ifelse(Bref < parmgt$BREF_VAL, 0, Fmsy)
     
   }else{
     
