@@ -30,37 +30,30 @@
 
 
 
-get_FBRP <- function(type, par, sel=NULL, waa=NULL, M=NULL){
+get_FBRP <- function(parmgt, parpop){
   
   
-  if(type == 'YPR'){
+  if(parmgt$FREF_TYP == 'YPR' | parmgt$FREF_TYP == 'SPR'){
    
-    F <- get_perRecruit(type = 'YPR', 
-                        par = par, 
-                        sel = sel, 
-                        waa = waa, 
-                        M = mean(M))
-    
-    return(Fref = F)
-
-  }else if(type == 'SPR'){
-    
-    F <- get_perRecruit(type = 'SPR', 
-                        par = par, 
-                        sel = sel, 
-                        waa = waa, 
-                        M = mean(M))
+    F <- get_perRecruit(parmgt = parmgt, parpop = parpop)
     
     return(Fref = F)
     
-  }else if(type == 'simR'){
+  }else if(parmgt$FREF_TYP == 'simR'){
     
+    # stuff here
     
     return(Fref = F) 
 
-  }else if(type == 'Mbased'){
+  }else if(parmgt$FREF_TYP == 'Mbased'){
     
-    F <- par[1] * mean(M)
+    F <- parmgt$FREF_VAL * mean(parpop$M)
+    
+    return(Fref = F)
+    
+  }else{
+    
+    stop('get_FBRP: parmgt FREF_TYP not recognized')
     
   }
   

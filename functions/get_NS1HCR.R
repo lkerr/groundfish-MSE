@@ -14,17 +14,17 @@
 # 
 # M: natural mortality
 
-get_NS1HCR <- function(B, Fmsy, Bmsy, M){
+get_NS1HCR <- function(parpop, Fmsy, Bmsy){
   
   # c is defined as the maximum of 1-M or 1/2 (Gabriel and Mace 1999)
-  c <- max(1-M, 1/2)
+  c <- max(1 - tail(parpop$M, 1), 1/2)
   
   # If estimated biomass is under Bmsy then use the linear relationship
   # that goes through (Bmsy, Fmsy) and the origin; if estimated biomass
   # is above Bmsy then use Fmsy
-  if(B <= c*Bmsy){
+  if(tail(parpop$B, 1) <= c*Bmsy){
     
-    F <- Fmsy * B / (c*Bmsy)
+    F <- Fmsy * tail(parpop$B, 1) / (c*Bmsy)
     
   }else{
     

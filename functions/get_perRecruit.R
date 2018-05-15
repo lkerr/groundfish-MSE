@@ -46,10 +46,10 @@
 
 
 
-get_perRecruit <- function(type, par, sel, waa, M, mat=NULL, 
+get_perRecruit <- function(parmgt, parpop, 
                            nage=1000, nF=1000, nFrep=100){
   
-  if(is.null(mat) & type == 'SPR'){
+  if(is.null(parpop$mat) & parmgt$FREF_TYP == 'SPR'){
     stop('get_perRecruit: must provide maturity if using SPR')
   }
   
@@ -60,10 +60,10 @@ get_perRecruit <- function(type, par, sel, waa, M, mat=NULL,
   
   # Adjust input vectors so they match with the number of ages
   # over which the Y/R or SSB/R is being applied.
-  sel <- c(sel, rep(tail(sel, 1), nage-length(sel)))
-  waa <- c(waa, rep(tail(waa, 1), nage-length(waa)))
-  if(!is.null(mat)){
-    mat <- c(mat, rep(tail(mat, 1), nage-length(mat)))
+  sel <- c(parpop$sel, rep(tail(parpop$sel, 1), nage-length(parpop$sel)))
+  waa <- c(parpop$waa, rep(tail(parpop$waa, 1), nage-length(parpop$waa)))
+  if(!is.null(parpop$mat)){
+    mat <- c(parpop$mat, rep(tail(parpop$mat, 1), nage-length(parpop$mat)))
   }
  
   # Generate Yield- and SSB-at-age
@@ -72,19 +72,19 @@ get_perRecruit <- function(type, par, sel, waa, M, mat=NULL,
   for(i in seq_along(Y)){
 
     # Calculate mortality, survival and catch
-    F <- sel * F_full[i]
-    Z <- c(0, cumsum(F + M)[-length(F)])
+    F <- parpop$sel * F_full[i]
+    Z <- c(0, cumsum(F + parpop$M)[-length(F)])
     N <- N_init * exp(-Z)
     C <- F / (Z+1e-6) * N * (1 - exp(-Z))
 
     # calculate yield and ssb over lifetime given the level of
     # fishing mortality
 
-    Y[i] <- C %*% waa
-    SSB[i] <- sum(N * waa * mat)
+    Y[i] <- C %*% c(parpop$waa)
+    SSB[i] <- sum(N * parpop$waa * parpop$mat)
   }
  
-  if(tolower(type) == 'ypr'){
+  if(parmgt$FREF_TYP == 'YPR'){
     ## find F(x)
     # get all slopes
     slp <- sapply(2:length(Y), function(i){
@@ -93,22 +93,28 @@ get_perRecruit <- function(type, par, sel, waa, M, mat=NULL,
     slpo <- slp[1]
     
     # reference slope
-    slpr <- par * slpo
+    slpr <- parmgt$FREF_VAL * slpo
     
     # find the F @ reference slope
     Fref <- F_full[which.min(abs(slp - slpr))]
     
+    # SSB / R at the reference point (not applicable for YPR)
+    SSBref <- NULL
+    
     # for outputs
     yvalue <- Y
-  }else if(tolower(type) == 'ssbr'){
+  }else if(parmgt$FREF_TYP == 'SSBR'){
     
     # find the F @ the specified level of SSBR
-    Fref <- F_full[which.min(abs(SSB - par))]
+    Fref <- F_full[which.min(abs(SSB - parmgt$FREF_VAL))]
+    
+    # SSB / R at the reference point
+    SSBref <- SSB[which.min(abs(SSB - parmgt$FREF_VAL))]
     
     # for outputs
     yvalue <- Y
     
-  }else if(tolower(type) == 'spr'){
+  }else if(parmgt$FREF_TYP == 'SPR'){
   
     # maximum level for SSBR will occur at F[1] where F_full=0
     SSBRmax <- SSB[1]
@@ -117,7 +123,10 @@ get_perRecruit <- function(type, par, sel, waa, M, mat=NULL,
     SSBR_ratio <- SSB / SSBRmax
     
     # find the F @ the specified level of F_X%
-    Fref <- F_full[which.min(abs(SSBR_ratio - par))]
+    Fref <- F_full[which.min(abs(SSBR_ratio - parmgt$FREF_VAL))]
+    
+    # SSB / R at the reference point
+    SSBref <- SSB[which.min(abs(SSBR_ratio - parmgt$FREF_VAL))]
  
     # for outputs
     yvalue <- SSBR_ratio
@@ -135,8 +144,9 @@ get_perRecruit <- function(type, par, sel, waa, M, mat=NULL,
   # of fully-selected fishing mortality; the reference point level; and the
   # reference point value
   out <- list(PRgrid = matrix(c(F_full[oidx], yvalue[oidx]), ncol=2),
-              RPlevel = par,
-              RPvalue = Fref)
+              RPlevel = parmgt$FREF_VAL,
+              RPvalue = Fref,
+              SSBlevel = SSBref)
 }
 
 

@@ -12,20 +12,20 @@
 #                        cut off when the population is overfished 
 #                        (i.e., B<Bmsy)
 
-get_nextF <- function(type, par=NULL, Fmsy=NULL, Bmsy=NULL, M=NULL, SSB=NULL){
+get_nextF <- function(parmgt, parpop){
   
   
-  if(tolower(type) == 'ns1'){
+  if(tolower(parmgt$HCR) == 'ns1'){
     
-    F <- get_NS1HCR(SSB, Fmsy=Fmsy, Bmsy=Bmsy, M=M)$Fadvice.RPvalue
+    # For NS1 need F reference points and B reference points
+    Fref <- get_FBRP(parmgt = parmgt, parpop = parpop)
+    Bref <- get_FBRP(parmgt = parmgt, parpop = parpop)
+ 
+    F <- get_NS1HCR(parpop, Fmsy=Fref$RPlevel, Bmsy=Bref$RPlevel)['Fadvice']
     
-  }else if(tolower(type) == 'simplethresh'){
+  }else if(tolower(parmgt$HCR) == 'simplethresh'){
     
-    if(length(par) != 1){
-      stop('get_nextF: check length of parameter vector')
-    }
-    
-    F <- ifelse(Bmsy < par, 0, Fmsy)
+    F <- ifelse(Bmsy < parmgt$BREF_VAL, 0, Fmsy)
     
   }else{
     

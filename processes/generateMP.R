@@ -55,6 +55,6 @@ wthresh <- methdf$HCR == 'simpleThresh'
 methdf$FREF_TYP[wthresh] <- NA
 methdf$FREF_VAL[wthresh] <- NA
 
-mgtproc <- unique(methdf)
+mproc <- unique(methdf)
 
 
