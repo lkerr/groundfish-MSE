@@ -6,7 +6,7 @@ require(TMB)
 
 
 # compile the c++ file and make available to R
-TMB::compile("assessment/caa.cpp")
+# TMB::compile("assessment/caa.cpp")
 dyn.load(dynlib("assessment/caa"))
 
 
@@ -116,23 +116,25 @@ d2 <- data.frame(rep$sumCW, rep$sumIN,
                  rep$paaCN, rep$paaIN)
 
 
-par(oma=c(0,4,0,0), mfcol=c(2,2), mar=c(0, 0, 0, 0))
-
-plot(rep$obs_sumCW, ylim=range(rep$sumCW, rep$obs_sumCW),
-     xaxt='n', ann=FALSE, las=1)
-lines(rep$sumCW)
-
-plot(rep$obs_sumIN, ylim=range(rep$sumIN, rep$obs_sumIN), las=1,
-     xaxt='n')
-lines(rep$sumIN)
-
-plot(rep$obs_paaCN[5,], ylim=c(0, 1),
-     xaxt='n', yaxt='n', ann=FALSE)
-lines(rep$paaCN[5,], ylim=c(0, 1))
-
-plot(rep$obs_paaIN[5,], ylim=c(0, 1),
-     xaxt='n', yaxt='n', ann=FALSE)
-lines(rep$paaIN[5,], ylim=c(0, 1))
+if(FALSE){
+  par(oma=c(0,4,0,0), mfcol=c(2,2), mar=c(0, 0, 0, 0))
+  
+  plot(rep$obs_sumCW, ylim=range(rep$sumCW, rep$obs_sumCW),
+       xaxt='n', ann=FALSE, las=1)
+  lines(rep$sumCW)
+  
+  plot(rep$obs_sumIN, ylim=range(rep$sumIN, rep$obs_sumIN), las=1,
+       xaxt='n')
+  lines(rep$sumIN)
+  
+  plot(rep$obs_paaCN[5,], ylim=c(0, 1),
+       xaxt='n', yaxt='n', ann=FALSE)
+  lines(rep$paaCN[5,], ylim=c(0, 1))
+  
+  plot(rep$obs_paaIN[5,], ylim=c(0, 1),
+       xaxt='n', yaxt='n', ann=FALSE)
+  lines(rep$paaIN[5,], ylim=c(0, 1))
+}
 
 
 

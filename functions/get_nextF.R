@@ -21,12 +21,14 @@ get_nextF <- function(parmgt, parpop){
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpop)
     Bref <- get_FBRP(parmgt = parmgt, parpop = parpop)
  
-    F <- get_NS1HCR(parpop, Fmsy=Fref$RPlevel, Bmsy=Bref$RPlevel)['Fadvice']
+    F <- get_NS1HCR(parpop, Fmsy=Fref$RPvalue, Bmsy=Bref$RPvalue)['Fadvice']
     
   }else if(tolower(parmgt$HCR) == 'simplethresh'){
     
+    Fref <- get_FBRP(parmgt = parmgt, parpop = parpop)
     Bref <- get_FBRP(parmgt = parmgt, parpop = parpop)
-    F <- ifelse(Bref < parmgt$BREF_VAL, 0, Fmsy)
+    
+    F <- ifelse(Bref$RPvalue < parmgt$BREF_VAL, 0, Fref$RPvalue)
     
   }else{
     

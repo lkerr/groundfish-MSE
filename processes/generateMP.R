@@ -8,13 +8,13 @@
 # and a list of the potential values to use for each method.
 Fprox <- list('YPR', 'SPR')
 Fval <- list(c(0.1, 0.15),
-             c(0.3, 0.4, 0.5))
+             c(0.3, 0.4))
 
 # Potential proxies for Bmax. A list of the names of the proxy methods
 # and a list of the potential values to use for each method.
 Bprox <- list('RSPR', 'dummy')
 Bval <- list(c(0.8, 1, 0.2),
-             c(0.25, 0.5, 1))
+             c(0.25, 0.5))
 
 # Potential versions of harvest control rules
 HCR <- c('ns1', 'simpleThresh')
@@ -51,10 +51,10 @@ names(methdf) <- c('HCR', 'FREF_TYP', 'FREF_VAL', 'BREF_TYP',
 # next identify which of the rows are superfluous given the HCR
 # (e.g., you only need a biomass-based reference point if you're
 # using a simple threshold biomass-based control rule)
-wthresh <- methdf$HCR == 'simpleThresh'
-methdf$FREF_TYP[wthresh] <- NA
-methdf$FREF_VAL[wthresh] <- NA
+# wthresh <- methdf$HCR == 'simpleThresh'
+# methdf$FREF_TYP[wthresh] <- NA
+# methdf$FREF_VAL[wthresh] <- NA
 
 mproc <- unique(methdf)
 
-
+mproc <- subset(mproc, HCR =='ns1')

@@ -94,10 +94,11 @@ for(r in 1:nrep){
       J1N[y,] <- get_J1Ny(J1Ny0=J1N[y-1,], Zy0=Z[y-1,], R[y])
       
       # calculate the predicted catch in year y, the catch weight and the
-      # proportions of catch numbers-at-age
-      CN[y,] <- get_catch(F_full=F_full[y], M=M, N=J1N[y,], selC=slxC[y,])
+      # proportions of catch numbers-at-age. Add small number in case F=0
+      CN[y,] <- get_catch(F_full=F_full[y], M=M, 
+                          N=J1N[y,], selC=slxC[y,]) + 1e-3
       sumCW[y] <- CN[y,] %*% waa[y,]    # (dot product)
-      paaCN[y,] <- CN[y,] / sum(CN[y,])
+      paaCN[y,] <- (CN[y,]) / sum(CN[y,])
     
       # calculate the predicted survey index in year y and the predicted
       # survey proportions-at-age
@@ -195,7 +196,7 @@ for(r in 1:nrep){
                        mat = mat[y,],
                        R = rep$R,
                        B = SSBhat)
-        nextF <- get_nextF(parmgt = mgtproc[m,], parpop = parpop)
+        nextF <- get_nextF(parmgt = mproc[m,], parpop = parpop)
 
         if(y < nyear){
           F_full[y+1] <- nextF
@@ -210,6 +211,6 @@ for(r in 1:nrep){
   }
 }
 
-
+print('Fin')
 
 

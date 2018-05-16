@@ -121,7 +121,7 @@ ssb2 <- get_BmsySim(ny = 1000, Fmsy = 0.25, R = R,
 yrg <- range(ssb1, ssb2)
 # random sample
 plot(tail(ssb1, 100), xlab='year', ylab='SSB', 
-     yrange=yrg, type='l', col='red')
+     ylim=yrg, type='l', col='red')
 
 # mean
 lines(tail(ssb2, 100), xlab='year', ylab='SSB')
