@@ -1,7 +1,6 @@
 
 
 
-
 # empty the environment
 rm(list=ls())
 
@@ -126,7 +125,9 @@ for(r in 1:nrep){
   
         # prepare data & run assessment model
         source('processes/get_tmb_setup.R')
+        sink(file='results/rsink.txt')
         tryfit <- try(source('assessment/caa.R'))
+        sink(file=NULL)
         
         if(class(tryfit) != 'try-error'){
         
@@ -210,6 +211,8 @@ for(r in 1:nrep){
     }
   }
 }
+
+get_plots(x=omval)
 
 print('Fin')
 
