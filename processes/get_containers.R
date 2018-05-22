@@ -172,6 +172,31 @@ oacomp <- list(
 
 
 
+# Version 2 of saving a vector ... this one with only a 
+# placeholder for the value, not the estimate.
+# array template for vector conainer
+save_vector_ann <- array(data = NA,
+                         dim = c(nrep, nmproc, nomyear, ncaayear, 1),
+                         dimnames = list(paste0('rep', 1:nrep), 
+                                         paste0('mproc', 1:nmproc),
+                                         paste0('omyear', 1:nomyear),
+                                         paste0('caayear', 1:ncaayear),
+                                         'val'))
+
+
+omval <- list(
+  
+  SSB = save_vector_ann,
+  
+  R = save_vector_ann,
+  
+  F_full = save_vector_ann,
+  
+  ginipaaCN = save_vector_ann,
+  
+  ginipaaIN = save_vector_ann
+  
+)
 
 
 
