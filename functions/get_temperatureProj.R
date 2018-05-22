@@ -17,8 +17,8 @@
 #           frame with column names "Year" and "T".
 #           
 # ref_yrs: the training period to use that scales the projections
-#             down to the local data set. A vector of length 2
-#             (min, max).
+#          down to the local data set. A vector of length 2
+#          (min, max).
 
 
 
@@ -29,9 +29,9 @@ get_temperatureProj <- function(prj_data, obs_data,
   
   # Pull out the reference periods
   refPrj <- subset(prj_data, 
-                   YEAR > ref_yrs[1] & YEAR < ref_yrs[2])
+                   YEAR >= ref_yrs[1] & YEAR <= ref_yrs[2])
   refObs <- subset(obs_data, 
-                   YEAR > ref_yrs[1] & YEAR < ref_yrs[2])
+                   YEAR >= ref_yrs[1] & YEAR <= ref_yrs[2])
   
   # Get the means over the reference period
   prjMean <- mean(refPrj$T)
