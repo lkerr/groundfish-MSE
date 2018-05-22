@@ -1,9 +1,9 @@
 
 
-# Will need to include an additional dimension in these arrays for
-# some kind of policy decision. Probably easiest if it is the next
-# level after "r" for when you combine them all together. r will be 
-# the repetitions that you spread out on the hpcc.
+# For simplicity, have one list (oacomp) that goes through comparing
+# the assessment model results with the true values and then have
+# another object that will just hold the values themselves.  Makes
+# things easier for analysis of results
 
 
 oacomp$sumCW[r,m,y2,,'val'] <- get_dwindow(sumCW, sty, y)
@@ -116,4 +116,15 @@ oacomp$SSB[r,m,y2,,'caahat'] <- SSBhat
 # oacomp$NLL_paaIN[r,m,y2,'val'] <- -99
 # oacomp$NLL_paaIN[r,m,y2,'caahat'] <- rep$NLL_paaIN
 
+
+
+## Here start filling the simpler arrays with just the OM values
+
+omval$SSB[r,m,y2,,] <- get_dwindow(SSB, sty, y)
+omval$R[r,m,y2,,] <- get_dwindow(R, sty, y)
+omval$F_full[r,m,y2,,] <- get_dwindow(F_full, sty, y)
+giniCN <- apply(get_dwindow(paaCN, sty, y), 1, get_gini)
+omval$ginipaaCN[r,m,y2,,] <- giniCN
+giniIN <- apply(get_dwindow(paaIN, sty, y), 1, get_gini)
+omval$ginipaaIN[r,m,y2,,] <- giniIN
 
