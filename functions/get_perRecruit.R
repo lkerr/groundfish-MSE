@@ -93,7 +93,7 @@ get_perRecruit <- function(parmgt, parpop,
     slpo <- slp[1]
     
     # reference slope
-    slpr <- parmgt$FREF_VAL * slpo
+    slpr <- parmgt$FREF_LEV * slpo
     
     # find the F @ reference slope
     Fref <- F_full[which.min(abs(slp - slpr))]
@@ -106,10 +106,10 @@ get_perRecruit <- function(parmgt, parpop,
   }else if(parmgt$FREF_TYP == 'SSBR'){
     
     # find the F @ the specified level of SSBR
-    Fref <- F_full[which.min(abs(SSB - parmgt$FREF_VAL))]
+    Fref <- F_full[which.min(abs(SSB - parmgt$FREF_LEV))]  ###huh??!!
     
     # SSB / R at the reference point
-    SSBref <- SSB[which.min(abs(SSB - parmgt$FREF_VAL))]
+    SSBref <- SSB[which.min(abs(SSB - parmgt$FREF_LEV))]  ###huh?!!
     
     # for outputs
     yvalue <- Y
@@ -123,10 +123,10 @@ get_perRecruit <- function(parmgt, parpop,
     SSBR_ratio <- SSB / SSBRmax
     
     # find the F @ the specified level of F_X%
-    Fref <- F_full[which.min(abs(SSBR_ratio - parmgt$FREF_VAL))]
+    Fref <- F_full[which.min(abs(SSBR_ratio - parmgt$FREF_LEV))]
     
     # SSB / R at the reference point
-    SSBref <- SSB[which.min(abs(SSBR_ratio - parmgt$FREF_VAL))]
+    SSBref <- SSB[which.min(abs(SSBR_ratio - parmgt$FREF_LEV))]
  
     # for outputs
     yvalue <- SSBR_ratio
@@ -144,9 +144,9 @@ get_perRecruit <- function(parmgt, parpop,
   # of fully-selected fishing mortality; the reference point level; and the
   # reference point value
   out <- list(PRgrid = matrix(c(F_full[oidx], yvalue[oidx]), ncol=2),
-              RPlevel = parmgt$FREF_VAL,
+              RPlevel = parmgt$FREF_LEV,
               RPvalue = Fref,
-              SSBlevel = SSBref)
+              SSBvalue = SSBref)
 }
 
 

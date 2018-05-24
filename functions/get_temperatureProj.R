@@ -37,7 +37,7 @@ get_temperatureProj <- function(prj_data, obs_data,
   prjMean <- mean(refPrj$T)
   obsMean <- mean(refObs$T)
   
-  # Calculate the projection anomoly
+  # Calculate the projection anomaly
   prjAnom <- prj_data$T - prjMean
   
   # Get the downscaled mean
