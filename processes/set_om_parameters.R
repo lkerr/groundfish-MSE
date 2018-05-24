@@ -123,9 +123,9 @@ FmsyV <- list(c(0.1, 0.15),
               c(0.3, 0.4))
 # i1 <- lapply(1:length(a1), function(x) expand.grid(a1[[x]], a2[[x]]))
 
-BmsyT <- list('RSPR', 'dummy')
+BmsyT <- list('RSPR', 'BmsySim')
 BmsyV <- list(c(1, 0.8),
-              c(0.5, 1.0))
+              c(NA, NA))
 i2 <- lapply(1:length(BmsyT), function(x) expand.grid(BmsyT[[x]], BmsyV[[x]]))
 
 # Harvest control rule types
