@@ -12,9 +12,10 @@ Fval <- list(c(0.1, 0.15),
 
 # Potential proxies for Bmax. A list of the names of the proxy methods
 # and a list of the potential values to use for each method.
-Bprox <- list('RSPR', 'dummy')
+Bprox <- list('RSPR', 'SIM')
 Bval <- list(c(0.8, 1, 0.2),
-             c(0.25, 0.5))
+             c(NA, NA))
+
 
 # Potential versions of harvest control rules
 HCR <- c('ns1', 'simpleThresh')
@@ -45,8 +46,8 @@ id <- expand.grid(nrlist)
 # Generate a data frame containing all combinations of proxy methods
 # and control rules by using the ID to index
 methdf <- cbind( HCR[id[,3]], lst[[1]][id[,1],], lst[[2]][id[,2],])
-names(methdf) <- c('HCR', 'FREF_TYP', 'FREF_VAL', 'BREF_TYP',
-                'BREF_VAL')
+names(methdf) <- c('HCR', 'FREF_TYP', 'FREF_LEV', 'BREF_TYP',
+                'BREF_LEV')
 
 # next identify which of the rows are superfluous given the HCR
 # (e.g., you only need a biomass-based reference point if you're
@@ -58,3 +59,9 @@ names(methdf) <- c('HCR', 'FREF_TYP', 'FREF_VAL', 'BREF_TYP',
 mproc <- unique(methdf)
 
 mproc <- subset(mproc, HCR =='ns1')
+
+# Temporarily use the imported version until I figure out a good
+# way to make this work building it in the code. May as well not
+# do this until it's done.
+mproc <- read.table('processes/mproc.txt', header=TRUE,
+                    stringsAsFactors=FALSE)
