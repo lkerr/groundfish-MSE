@@ -6,7 +6,7 @@ rm(list=ls())
 
 
 # load all the functions
-ffiles <- list.files(path='functions/', full.names=TRUE)
+ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
 sapply(ffiles, source)
 
 
@@ -26,6 +26,10 @@ source('processes/set_om_parameters.R')
 
 # get all the necessary containers for the simulation
 source('processes/get_containers.R')
+
+# Load specific recruitment functions for simulation-based approach
+# to Bproxy reference points
+source('processes/Rfun_BmsySim.R')
 
 
 
@@ -212,8 +216,17 @@ for(r in 1:nrep){
   }
 }
 
+# Create figures
 get_plots(x=omval)
 
-print('Fin')
-
+# Output run time / date information and OM inputs
+td <- as.character(Sys.time())
+ompar <- readLines('processes/set_om_parameters.R')
+cat('\n\nFin.\n\n',
+    'Completion at: ',
+    td,
+    file='results/runInfo.txt', sep='')
+cat('\n\n\n\n\n\n\n\n  ##### OM Parameters ##### \n\n',
+    ompar,
+    file='results/runInfo.txt', sep='\n', append=TRUE)
 
