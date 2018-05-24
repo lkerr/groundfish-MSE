@@ -1,0 +1,67 @@
+
+
+# Function to calculate biomass-based reference points
+# 
+# parmgt: parmgt of reference point to calculate
+#     
+#     * RSPR: mean recruitment multiplied by SPR(Fmsy) or some proxy of
+#             SPR at Fmsy
+#             
+#             par[1]: SPR level for Fmsy proxy (e.g., 0.35 for F35%)
+#       
+#     * dummy -- par is some scalar.
+#     
+# parpop: list of population parameters needed to calculate the biomass-
+#         based reference point. See specific functions, e.g.
+#           get_perRecruit()
+#           get_BmsySim
+#         to see what needs to be included in the list.
+
+
+
+
+
+get_BBRP <- function(parmgt, parpop, Rfun_lst){
+
+  
+  if(parmgt$BREF_TYP == 'RSPR'){
+    
+    # get SPR at Fmax
+    sprFmax <- get_perRecruit(parmgt=mproc[m,], parpop=parpop, 
+                              nage=1000, nF=1000, nFrep=100)
+    
+    # Load in the recruitment function (recruitment function index is
+    # found in the parmgt data frame but the actual functions are from
+    # the list Rfun_BmsySim which is created in the processes folder.
+    Rfun <- Rfun_lst[[parmgt$RFUN_NM]]
+    
+    funR <- Rfun(R)
+   
+    B <- sprFmax$RPvalue * funR  #check ... seems wrong
+
+    return(list(RPvalue = B))
+    
+  }else if(parmgt$BREF_TYP == 'SIM'){
+    
+    # Load in the recruitment function (recruitment function index is
+    # found in the parmgt data frame but the actual functions are from
+    # the list Rfun_BmsySim which is created in the processes folder.
+    Rfun <- Rfun_BmsySim[[parmgt$RFUN_NM]]
+    
+    # get SPR at Fmax
+    sprFmax <- get_perRecruit(parmgt=mproc[m,], parpop=parpop,
+                              nage=1000, nF=1000, nFrep=100)
+    
+    B <- get_BmsySim(parmgt, parpop, Rfun = Rfun, 
+                     F_val=sprFmax$RPvalue)$SSBvalue
+
+    return(list(RPvalue = B))
+    
+  }
+  
+  
+}
+
+
+
+
