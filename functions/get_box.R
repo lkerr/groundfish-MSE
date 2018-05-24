@@ -1,5 +1,11 @@
 
 
+# Function to create boxplots of simulation output
+# 
+# x: input data (i.e., a list element from omval)
+
+
+
 
 get_box <- function(x, plotIdx=NULL, ylab='Value'){
   
