@@ -2,15 +2,25 @@
 
 # The application of harvest control rules
 #
-# type: the type of HCR to apply. Options are:
-# 
-#      * "ns1": based on national standard 1 precautionary approach, this is
+# parmgt: a 1-row data frame of management parameters. The operational
+#         component of parmgt for this function is the (1-row) column
+#         "HCR". Options are:
+#  
+#           * "ns1": based on national standard 1 precautionary approach, this is
 #               the classic harvest control rule that increases linearly and 
 #               then reaches an asymptote at [Bmsy,Fmsy]
 #        
-#      * "simpleThresh": a simple threshold model where fishing is entirely
+#           * "simpleThresh": a simple threshold model where fishing is entirely
 #                        cut off when the population is overfished 
 #                        (i.e., B<Bmsy)
+#                        
+# parpop: named ist of population parameters (vectors) needed for the 
+#         simulation including selectivity (sel), weight-at-age (waa),
+#         recruitment (R), maturity (mat) and natural mortality (M).
+#         Natural mortality can be a vector or a scalar. Vectors have
+#         one value per age class.
+
+
 
 get_nextF <- function(parmgt, parpop){
   

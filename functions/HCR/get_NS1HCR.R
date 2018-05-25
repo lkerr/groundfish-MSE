@@ -6,13 +6,15 @@
 # Approaches to Implementing National Standard 1 of the MSA (see Gabriel
 # and Mace 1999, Proceedings, 5th NMFS NSAW
 # 
-# B: estimated biomass from assessment model
+# parpop: list containing population parameters. Must include named element
+#         "B" which is a vector of biomass history. Only the last number
+#         in the history is used, so could put in a vector of length 1.
 # 
 # Fmsy: Fmsy reference point or proxy
 # 
 # Bmsy: Bmsy reference point or proxy
 # 
-# M: natural mortality
+
 
 get_NS1HCR <- function(parpop, Fmsy, Bmsy){
   

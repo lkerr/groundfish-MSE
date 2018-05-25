@@ -2,7 +2,13 @@
 
 # Function to calculate F-based reference points
 # 
-# type: type of reference point to calculate
+# parmgt: a 1-row data frame of management parameters. The operational
+#         component of parmgt for this function is the (1-row) columns
+#         "FREF_TYP" and "FREF_LEV". FREF_TYP indicates the type of model
+#         that should be used to calculate the F reference point and
+#         FREF_LEV is the associate F level (e.g., 0.4 for F40% if you are
+#         using SPR or 0.1 for F0.1 if you are using YPR. Options for
+#         FREF_TYP are:
 #     
 #     * YPR: yield-per-recruit-based reference point. See get_perRecruit.R.
 #            Basically the parameters (par) are just the reference point 
@@ -16,15 +22,12 @@
 #               Mace (1999), p.42. In some cases M or some factor of M has
 #               been considered as a proxy for Fmsy.
 #               
-#               par[1]: the factor to multiply M by to get the Fmsy proxy
 #     
-# par: parameters needed (see type definitions above)
-#       
-# sel: vector of selectivity if necessary
-#     
-# waa: vector of weights-at-age if necessary
-#     
-# M: natural mortality scalar if necessary
+# parpop: named ist of population parameters (vectors) needed for the 
+#         simulation including selectivity (sel), weight-at-age (waa),
+#         recruitment (R), maturity (mat) and natural mortality (M).
+#         Natural mortality can be a vector or a scalar. Vectors have
+#         one value per age class.
 
 
 

@@ -2,7 +2,11 @@
 
 # Function to calculate biomass-based reference points
 # 
-# parmgt: parmgt of reference point to calculate
+# parmgt: a 1-row data frame of management parameters. The operational
+#         component of parmgt for this function are the (1-row) columns
+#         "BREF_TYP" and "BREF_LEV". BREF_TYP refers to the type of biomass-
+#         based reference point you want to use and BREF_LEV refers to
+#         an associated level for that reference point. Options are:
 #     
 #     * RSPR: mean recruitment multiplied by SPR(Fmsy) or some proxy of
 #             SPR at Fmsy

@@ -3,12 +3,17 @@
 # Function to get Bmsy assuming an Fmsy, recruitment history and level of
 # natural mortality.
 # 
-# ny: number of years to run out the projection for
-#
-# Fmsy: Fmsy or some proxy -- this will be the constant level applied in
-#       all years of the projections/simulations
-#       
-# R: A vector of recruitment histories.
+# parmgt: a 1-row data frame of management parameters. The operational
+#         component of parmgt for this function are the (1-row) columns
+#         "FREF_TYP" and "FREF_LEV". FREF_TYP/FREF_LEV determine
+#         how the Fmsy proxy is set (i.e., what the level of fishing
+#         mortality will be during the projections).
+# 
+# parpop: named ist of population parameters (vectors) needed for the 
+#         simulation including selectivity (sel), weight-at-age (waa),
+#         recruitment (R), maturity (mat) and natural mortality (M).
+#         Natural mortality can be a vector or a scalar. Vectors have
+#         one value per age class.
 # 
 # Rfun: Function defining what to do with the recruitment histories. Any 
 #       function will do here, and extra arguments can be included using
@@ -18,19 +23,9 @@
 #       the trim=p argument in the ... if you wanted to apply the mean
 #       recruitment or a trimmed mean recruitment to every year of the
 #       projection/simulation. Another option would be to do something 
-#       like use rlnorm() and then specify an sd.
+#       like use rlnorm() and then specify an sd. Or you could define a
+#       trend in the recruitment history and use that.
 #       
-# sel: Vector of selectivity to apply to each of the age classes
-# 
-# init: Initial numbers-at-age
-# 
-# waa: vector of weights-at-age
-# 
-# mat: vector of maturity-at-age
-# 
-# M: The level of natural mortality to apply to each year of the
-#    projection/simulation. Can be a scalar to apply the same rate to all
-#    age classes or a vector to apply a different rate.
 #         
 #         
 # # Important note: If you want to use only the last n years of the
