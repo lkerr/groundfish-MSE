@@ -13,7 +13,6 @@ get_plots <- function(x, dir){
   nm <- names(x)
   
   
-  
   for(i in 1:length(x)){
     
     jpeg(paste0(dir, nm[i], '.jpg.'))
