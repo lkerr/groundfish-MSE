@@ -216,8 +216,12 @@ for(r in 1:nrep){
   }
 }
 
+# create a results directory if it doesn't exist (this dir
+# is ignored in github so it may not be there)
+dir.create('results/', showWarnings = FALSE)
+
 # Create figures
-get_plots(x=omval)
+get_plots(x=omval, dir='results/fig/')
 
 # Output run time / date information and OM inputs
 td <- as.character(Sys.time())
