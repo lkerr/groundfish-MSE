@@ -105,11 +105,16 @@ get_perRecruit <- function(parmgt, parpop,
     yvalue <- Y
   }else if(parmgt$FREF_TYP == 'SSBR'){
     
-    # find the F @ the specified level of SSBR
-    Fref <- F_full[which.min(abs(SSB - parmgt$FREF_LEV))]  ###huh??!!
+    # find the F @ the specified level of SSB/R. Recall that SSB is the
+    # expected SSB over the lifetime of a single individual and that
+    # parmgt$FREF_LEV still refers to a level of SSB/R because we're in the 
+    # realm of F-based reference points. Noting this just because subtracting
+    # something that looks like F from something that looks like SSB makes
+    # no sense at first blush.
+    Fref <- F_full[which.min(abs(SSB - parmgt$FREF_LEV))]
     
     # SSB / R at the reference point
-    SSBref <- SSB[which.min(abs(SSB - parmgt$FREF_LEV))]  ###huh?!!
+    SSBref <- SSB[which.min(abs(SSB - parmgt$FREF_LEV))]
     
     # for outputs
     yvalue <- Y
