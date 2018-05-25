@@ -20,6 +20,8 @@
 # github so we want it outside the root directory so that run.sh
 # isn't part of what gets deleted before the download.
 
+# 17d3b37aa4080198a25fe421470b97f92af26794
+
 
 # remove old directory
 rm -r -f groundfish-MSE/
@@ -28,7 +30,7 @@ rm -r -f groundfish-MSE/
 module load git/2.1.3
 
 # clone the current repository
-git clone https://github.com/COCA-NEgroundfishMSE/groundfish-MSE
+git clone https://samtruesdell:17d3b37aa4080198a25fe421470b97f92af26794@github.com/COCA-NEgroundfishMSE/groundfish-MSE
 
 cd groundfish-MSE/
 
