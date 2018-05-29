@@ -235,7 +235,7 @@ td2 <- paste(gsub(' ', '_', td2), round(runif(1, 0, 10000)), sep='_')
 save(omval, file=paste0('results/sim/omval', td2, '.Rdata'))
 
 # Create figures
-get_plots(x=omval, dir='results/fig/')
+# get_plots(x=omval, dir='results/fig/')
 
 
 ompar <- readLines('processes/set_om_parameters.R')
