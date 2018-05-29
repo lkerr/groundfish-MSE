@@ -224,7 +224,7 @@ td <- gsub(' ', '', as.character(Sys.time()))
 td <- gsub(':', '', td)
 
 # save results
-save(omval, file=paste0('/results/omval', td, '.Rdata'))
+save(omval, file=paste0('results/omval', td, '.Rdata'))
 
 # Create figures
 get_plots(x=omval, dir='results/fig/')
