@@ -220,11 +220,17 @@ for(r in 1:nrep){
 # is ignored in github so it may not be there)
 dir.create('results/', showWarnings = FALSE)
 
+# Output run time / date information and OM inputs
+td <- gsub(' ', '', as.character(Sys.time()))
+td <- gsub(':', '', td)
+
+# save results
+save(omval, file=paste0('/results/omval', td, '.Rdata'))
+
 # Create figures
 get_plots(x=omval, dir='results/fig/')
 
-# Output run time / date information and OM inputs
-td <- as.character(Sys.time())
+
 ompar <- readLines('processes/set_om_parameters.R')
 cat('\n\nFin.\n\n',
     'Completion at: ',
