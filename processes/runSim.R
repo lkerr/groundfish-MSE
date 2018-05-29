@@ -31,7 +31,9 @@ source('processes/get_containers.R')
 # to Bproxy reference points
 source('processes/Rfun_BmsySim.R')
 
-
+# create a results directory if it doesn't exist (this dir
+# is ignored in github so it may not be there)
+dir.create('results/', showWarnings = FALSE)
 
 # begin the model loop
 for(r in 1:nrep){
@@ -216,9 +218,6 @@ for(r in 1:nrep){
   }
 }
 
-# create a results directory if it doesn't exist (this dir
-# is ignored in github so it may not be there)
-dir.create('results/', showWarnings = FALSE)
 
 # Output run time / date information and OM inputs
 td <- gsub(' ', '', as.character(Sys.time()))
