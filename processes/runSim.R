@@ -247,3 +247,4 @@ cat('\n\n\n\n\n\n\n\n  ##### OM Parameters ##### \n\n',
     ompar,
     file='results/runInfo.txt', sep='\n', append=TRUE)
 
+print(' ---- Fin ----')

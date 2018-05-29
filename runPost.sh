@@ -1,19 +1,21 @@
 
-
 #!/bin/bash
 
 #BSUB -W 00:15                            # How much time does your job need (HH:MM)
 #BSUB -q short                            # Which queue {short, long, parallel, GPU, interactive}
-#BSUB -J "run"                    # Job Name
+#BSUB -J "runPost"                    # Job Name
 #BSUB -R rusage[mem=10000] 
 #BSUB -n 1
 
 #BSUB -o "./%J.o"
 #BSUB -e "./%J.e"
 
+#BSUB -w 'done(runSim)'  # DEPENDENCIES: wait until down with simulation job.
 
-bsub < runPre.sh
-bsub < runSim.sh
-bsub < runPost.sh
 
-echo "run complete"
+
+module load R/3.4.0
+
+Rscript ./processes/runPost.R --vanilla
+
+echo "runPost complete"
