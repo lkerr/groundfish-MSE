@@ -31,9 +31,11 @@ source('processes/get_containers.R')
 # to Bproxy reference points
 source('processes/Rfun_BmsySim.R')
 
-# create a results directory if it doesn't exist (this dir
+# create a results & sim directories if it doesn't exist (this dir
 # is ignored in github so it may not be there)
-dir.create('results/', showWarnings = FALSE)
+dir.create('results', showWarnings = FALSE)
+dir.create('results/sim', showWarnings = FALSE)
+
 
 # begin the model loop
 for(r in 1:nrep){
@@ -219,12 +221,18 @@ for(r in 1:nrep){
 }
 
 
-# Output run time / date information and OM inputs
-td <- gsub(' ', '', as.character(Sys.time()))
-td <- gsub(':', '', td)
+# Output run time / date information and OM inputs. The random number is
+# just ensuring that no simulations will be overwritten because the hpcc
+# might finish some in the same second. td is used for uniquely naming the
+# output file as well as for listing in the output results.
+td <- as.character(Sys.time())
+td2 <- gsub(':', '', td)
+td2 <- paste(gsub(' ', '_', td2), round(runif(1, 0, 10000)), sep='_')
+
+
 
 # save results
-save(omval, file=paste0('results/omval', td, '.Rdata'))
+save(omval, file=paste0('results/sim/omval', td2, '.Rdata'))
 
 # Create figures
 get_plots(x=omval, dir='results/fig/')
