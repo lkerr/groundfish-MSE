@@ -4,12 +4,14 @@
 # load the TMB package
 require(TMB)
 
-# Ensure that TMB will use the Rtools compiler (not necessary on
-# all machines)
-path_current <- Sys.getenv('PATH')
-path_new <- paste0('c:\\Rtools\\bin;c:\\Rtools\\mingw_32\\bin;',
-                   path_current)
-Sys.setenv(PATH=path_new)
+# Ensure that TMB will use the Rtools compiler (only windows ... and 
+# not necessary on all machines)
+if(platform != 'Linux'){
+  path_current <- Sys.getenv('PATH')
+  path_new <- paste0('c:\\Rtools\\bin;c:\\Rtools\\mingw_32\\bin;',
+                     path_current)
+  Sys.setenv(PATH=path_new)
+}
 
 # compile the c++ file and make available to R
 TMB::compile("assessment/caa.cpp")
