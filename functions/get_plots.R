@@ -7,7 +7,7 @@
 
 
 
-get_plots <- function(x, dir){
+get_plots <- function(x, dirOut){
   
   
   nm <- names(x)
@@ -15,7 +15,7 @@ get_plots <- function(x, dir){
   
   for(i in 1:length(x)){
     
-    jpeg(paste0(dir, nm[i], '.jpg.'))
+    jpeg(paste0(dirOut, nm[i], '.jpg.'))
     
       # If you just have a bunch of NAs for some reason make an
       # empty plot as a place-holder
