@@ -17,5 +17,5 @@
 "ns1" "SPR" 0.4 "SIM" NA "MEAN"
 "ns1" "YPR" 0.1 "SIM" NA "L5SAMP"
 "ns1" "YPR" 0.15 "SIM" NA "L5SAMP"
-"ns1" "SPR" 0.3 "SIM" NA "L5SAMP"
-"ns1" "SPR" 0.4 "SIM" NA "L5SAMP"
+"ns1" "SPR" 0.9 "SIM" NA "L5SAMP"
+"ns1" "SPR" 0.01 "SIM" NA "L5SAMP"
