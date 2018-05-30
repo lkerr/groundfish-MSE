@@ -1,7 +1,7 @@
 
 #!/bin/bash
 
-#BSUB -W 00:15                            # How much time does your job need (HH:MM)
+#BSUB -W 00:59                            # How much time does your job need (HH:MM)
 #BSUB -q short                            # Which queue {short, long, parallel, GPU, interactive}
 #BSUB -J "runPre"                    # Job Name
 #BSUB -R rusage[mem=10000] 
