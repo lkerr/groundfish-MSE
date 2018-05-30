@@ -21,6 +21,7 @@ if(platform == 'Linux'){
   require(msm, lib.loc='../Rlib/')
   require(Matrix, lib.loc='../Rlib/')
   require(TMB, lib.loc='../Rlib/')
+  require(abind, lib.loc='../Rlib/')
   
 }else{
   
