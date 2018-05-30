@@ -10,12 +10,13 @@
 #BSUB -o "./%J.o"
 #BSUB -e "./%J.e"
 
-#BSUB -w 'done(runSim)'  # DEPENDENCIES: wait until down with simulation job.
+#BSUB -w 'done(runSim[1-25])'  # DEPENDENCIES: wait until down with simulation job.
 
 
 
 module load R/3.4.0
 
+cd groundfish-MSE/
 Rscript ./processes/runPost.R --vanilla
 
 echo "runPost complete"
