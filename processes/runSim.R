@@ -7,7 +7,7 @@ rm(list=ls())
 
 # load all the functions
 ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
-sapply(ffiles, source)
+invisible(sapply(ffiles, source))
 
 
 # prepare directories
@@ -35,6 +35,7 @@ source('processes/Rfun_BmsySim.R')
 # is ignored in github so it may not be there)
 dir.create('results', showWarnings = FALSE)
 dir.create('results/sim', showWarnings = FALSE)
+dir.create('results/fig', showWarnings = FALSE)
 
 
 # begin the model loop
