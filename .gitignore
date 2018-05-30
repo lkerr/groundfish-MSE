@@ -1,0 +1,25 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+/background/*
+/cocaSharedFiles/*
+/documentation/*
+/function_tests/*
+/literature/*
+/meetings/*
+/misc/*
+/Reports/*
+/Rlib/*
+/data_raw/*
+/data/ParametersLit.xlsx
+/data/data_raw/trawlSurvey/GMRI_cod_haddock_yt_1970-2016station_catch_length.xls
+/data/data_raw/trawlSurvey/GMRI_cod_haddock_yt_1970-2016individual_fish_data.xls
+/data/data_raw/trawlSurvey/SVDBS Elements by Table and Column.docx
+/data/data_raw/gbBuoyData/*
+/assessment/caa.dll
+/assessment/caa.o
+/assessment/caa.so
+/results/*
+/*.o
+/*.dll
