@@ -123,10 +123,14 @@ for(r in 1:nrep){
                                      par=oe_effort)
       
       # Get observation error data for the assessment model
-      obs_sumCW[y] <- get_error_idx(type=oe_sumCW_typ, idx=sumCW[y], par=oe_sumCW)
-      obs_paaCN[y,] <- get_error_paa(type=oe_paaCN_typ, paa=paaCN[y,], par=oe_paaCN)
-      obs_sumIN[y] <- get_error_idx(type=oe_sumIN_typ, idx=sumIN[y], par=oe_sumIN)
-      obs_paaIN[y,] <- get_error_paa(type=oe_paaIN_typ, paa=paaIN[y,], par=oe_paaIN)
+      obs_sumCW[y] <- get_error_idx(type=oe_sumCW_typ, idx=sumCW[y], 
+                                    par=oe_sumCW)
+      obs_paaCN[y,] <- get_error_paa(type=oe_paaCN_typ, paa=paaCN[y,], 
+                                     par=oe_paaCN)
+      obs_sumIN[y] <- get_error_idx(type=oe_sumIN_typ, idx=sumIN[y], 
+                                    par=oe_sumIN)
+      obs_paaIN[y,] <- get_error_paa(type=oe_paaIN_typ, paa=paaIN[y,], 
+                                     par=oe_paaIN)
     
     
       # if burn-in period is over...
