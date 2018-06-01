@@ -37,14 +37,14 @@ get_temperatureProj <- function(prj_data, obs_data,
   prjMean <- mean(refPrj$T)
   obsMean <- mean(refObs$T)
   
-  # Calculate the projection anomaly
-  prjAnom <- prj_data$T - prjMean
   
   # Get the downscaled mean
-  dsPrj <- obsMean + prjAnom
+  # Simple mean bias correction
+  # Maraun 2016 "Bias correcting climate change simulations - a 
+  # critical review" Curr. Clim. Change Rep. / p.4
+  dsPrj <- prj_data$T - (prjMean - obsMean)
   dsPrj <- data.frame(YEAR=prj_data$YEAR, T=dsPrj)
   rownames(dsPrj) <- NULL
-  
   
   
   # Plot the result if called for
