@@ -98,7 +98,7 @@ pe_R <- 1.5
 # Fmsy proxy type
 fbrpTyp <- c('YPR')
 # Bmsy proxy type
-bbrpTyp <- c('RSPR')
+bbrpTyp <- c('RSSBR')
 
 # Fmsy proxy level
 fbrpLevel <- c(0.1)
@@ -108,12 +108,12 @@ bbrpLevel <- c(1)
 # Fmsy proxy types and levels
 fbrp <- rbind(
   list('YPR', 0.1),
-  list('RSPR', 1)
+  list('RSSBR', 1)
 )
 pol <- data.frame(
   FmsyT = c('YPR'  ,   'SPR'        ),
   FmsyV = c(0.1    ,     1          ),
-  BmsyT = c('RSPR' ,   'dummy'      ),
+  BmsyT = c('RSSBR' ,   'dummy'      ),
   hcrT  = c('ns1'  ,  'simpleThresh')
 )
 
@@ -123,7 +123,7 @@ FmsyV <- list(c(0.1, 0.15),
               c(0.3, 0.4))
 # i1 <- lapply(1:length(a1), function(x) expand.grid(a1[[x]], a2[[x]]))
 
-BmsyT <- list('RSPR', 'BmsySim')
+BmsyT <- list('RSSBR', 'BmsySim')
 BmsyV <- list(c(1, 0.8),
               c(NA, NA))
 i2 <- lapply(1:length(BmsyT), function(x) expand.grid(BmsyT[[x]], BmsyV[[x]]))

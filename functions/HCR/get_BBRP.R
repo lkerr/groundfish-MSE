@@ -8,7 +8,7 @@
 #         based reference point you want to use and BREF_LEV refers to
 #         an associated level for that reference point. Options are:
 #     
-#     * RSPR: mean recruitment multiplied by SPR(Fmsy) or some proxy of
+#     * RSSBR: mean recruitment multiplied by SPR(Fmsy) or some proxy of
 #             SPR at Fmsy
 #             
 #             par[1]: SPR level for Fmsy proxy (e.g., 0.35 for F35%)
@@ -28,7 +28,7 @@
 get_BBRP <- function(parmgt, parpop, Rfun_lst){
 
   
-  if(parmgt$BREF_TYP == 'RSPR'){
+  if(parmgt$BREF_TYP == 'RSSBR'){
     
     # get SPR at Fmax
     ssbrFmax <- get_perRecruit(parmgt='SSBR', parpop=parpop, 

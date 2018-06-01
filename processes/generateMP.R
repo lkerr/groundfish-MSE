@@ -12,7 +12,7 @@ Fval <- list(c(0.1, 0.15),
 
 # Potential proxies for Bmax. A list of the names of the proxy methods
 # and a list of the potential values to use for each method.
-Bprox <- list('RSPR', 'SIM')
+Bprox <- list('RSSBR', 'SIM')
 Bval <- list(c(0.8, 1, 0.2),
              c(NA, NA))
 
