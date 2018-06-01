@@ -42,7 +42,7 @@ get_BBRP <- function(parmgt, parpop, Rfun_lst){
     funR <- Rfun(R)
    
     B <- ssbrFmax$SSBvalue * funR
-browser()
+
     return(list(RPvalue = B))
     
   }else if(parmgt$BREF_TYP == 'SIM'){
