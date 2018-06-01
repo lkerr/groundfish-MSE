@@ -31,7 +31,7 @@ get_BBRP <- function(parmgt, parpop, Rfun_lst){
   if(parmgt$BREF_TYP == 'RSPR'){
     
     # get SPR at Fmax
-    sprFmax <- get_perRecruit(parmgt=mproc[m,], parpop=parpop, 
+    ssbrFmax <- get_perRecruit(parmgt='SSBR', parpop=parpop, 
                               nage=1000, nF=1000, nFrep=100)
     
     # Load in the recruitment function (recruitment function index is
@@ -41,8 +41,8 @@ get_BBRP <- function(parmgt, parpop, Rfun_lst){
     
     funR <- Rfun(R)
    
-    B <- sprFmax$RPvalue * funR  #check ... seems wrong
-
+    B <- ssbrFmax$SSBvalue * funR
+browser()
     return(list(RPvalue = B))
     
   }else if(parmgt$BREF_TYP == 'SIM'){
