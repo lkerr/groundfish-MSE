@@ -43,6 +43,7 @@ if(platform == 'Linux'){
   require(msm)
   require(tmvtnorm)
   require(TMB)
+  require(abind)
   
 }
 
