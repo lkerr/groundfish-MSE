@@ -7,7 +7,7 @@
 ## Simulation information
 
 # number of times to repeat this analysis
-nrep <- 1
+nrep <- 3
 
 # first age and plus age
 fage <- 1
@@ -22,6 +22,10 @@ fyear <- 5
 
 # number of burn-in years
 nburn <- 400
+
+# number of burn years for saving OM results (after management
+# procedure has started)
+rburn <- 5
 
 # number of years in assessment model
 ncaayear <- 30 
