@@ -30,8 +30,12 @@ get_BBRP <- function(parmgt, parpop, Rfun_lst){
   
   if(parmgt$BREF_TYP == 'RSSBR'){
     
-    # get SPR at Fmax
-    ssbrFmax <- get_perRecruit(parmgt='SSBR', parpop=parpop, 
+    # get Fmax proxy
+    Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop)
+    
+    parmgt1 <- list(FREF_LEV=Fprox$RPvalue, FREF_TYP='SSBR')
+    
+    ssbrFmax <- get_perRecruit(parmgt=parmgt1, parpop=parpop, 
                               nage=1000, nF=1000, nFrep=100)
     
     # Load in the recruitment function (recruitment function index is
