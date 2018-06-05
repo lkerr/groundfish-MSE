@@ -19,10 +19,10 @@ get_box <- function(x, plotIdx=NULL, ylab='Value'){
   bp <- list()
   for(i in 1:length(plotIdx)){
     # 1 in last dim for value rather than estimate
-    if(all(is.na(x[,i,,,]))){
+    if(all(is.na(x[,i,]))){
       bp[[i]] <- NA
     }else{
-      bp[[i]] <- boxplot(x[,i,,,], plot=FALSE)
+      bp[[i]] <- boxplot(x[,i,], plot=FALSE)
     }
   }
 
@@ -36,8 +36,8 @@ get_box <- function(x, plotIdx=NULL, ylab='Value'){
         c('Management strategy', ylab))
   
   for(i in 1:length(plotIdx)){
-    if(!all(is.na(x[,i,,,]))){
-      boxplot(x[,i,,,], at=i, add=TRUE)
+    if(!all(is.na(x[,i,]))){
+      boxplot(c(x[,i,]), at=i, add=TRUE)
     }
   }
   
