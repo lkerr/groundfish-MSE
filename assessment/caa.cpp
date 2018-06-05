@@ -128,9 +128,12 @@ Type objective_function<Type>::operator() ()
 
 
   // Recruitment
-  // ENVIRONMENTAL VARIABLES: Get rid of the random walk and make sure that the environmental
-  // variables are something like Zscores and are on the same scale as the recruitment deviations
-  // (so they should also be Z scores or something once they get down to the likelihood function)
+  // ENVIRONMENTAL VARIABLES: Get rid of the random walk and make sure that 
+  // the environmental
+  // variables are something like Zscores and are on the same scale as the 
+  // recruitment deviations
+  // (so they should also be Z scores or something once they get down to the 
+  // likelihood function)
   R(0) = J1N(0,0);
   for(int y=1; y<ncaayear; y++){
     // note Rdevs go from 0 to n-1 so here R_dev(y-1) does actually
