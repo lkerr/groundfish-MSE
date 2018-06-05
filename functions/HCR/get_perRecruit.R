@@ -135,7 +135,7 @@ get_perRecruit <- function(parmgt, parpop,
  
     # for outputs
     yvalue <- SSBR_ratio
-    
+   
   }else{
     
     stop('get_perRecruit: type not recognized')
