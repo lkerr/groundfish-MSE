@@ -31,11 +31,13 @@ source('processes/get_containers.R')
 # to Bproxy reference points
 source('processes/Rfun_BmsySim.R')
 
-# create a results & sim directories if it doesn't exist (this dir
-# is ignored in github so it may not be there)
+# Remove any files in the results directories
+unlink('results/*', recursive=TRUE)
+# create a results & sim directories
 dir.create('results', showWarnings = FALSE)
-dir.create('results/sim', showWarnings = FALSE)
-dir.create('results/fig', showWarnings = FALSE)
+dir.create('results/sim')
+dir.create('results/fig')
+
 
 
 # begin the model loop
@@ -145,7 +147,6 @@ for(r in 1:nrep){
         if(class(tryfit) != 'try-error'){
         
           # Fill the arrays with results
-          y2 <- y - (ncaayear + fyear + nburn)
           source('processes/fill_repArrays.R')
           
           # Get fishing mortality for next year's management
@@ -167,7 +168,7 @@ for(r in 1:nrep){
                          R = rep$R,
                          B = SSBhat)
           nextF <- get_nextF(parmgt = mproc[m,], parpop = parpop)
-  
+
           if(y < nyear){
             F_full[y+1] <- nextF
           }
@@ -218,7 +219,7 @@ for(r in 1:nrep){
   
       }
       
-      
+
      
       
     }
@@ -252,4 +253,9 @@ cat('\n\n\n\n\n\n\n\n  ##### OM Parameters ##### \n\n',
     ompar,
     file='results/runInfo.txt', sep='\n', append=TRUE)
 
+if(platform == 'Windows'){
+  # get_plots(omval, dirOut='results/fig/')
+  source('processes/runPost.R')
+}
+  
 print(' ---- Fin ----')
