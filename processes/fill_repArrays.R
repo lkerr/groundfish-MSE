@@ -5,6 +5,8 @@
 # another object that will just hold the values themselves.  Makes
 # things easier for analysis of results
 
+y2 <- y - (ncaayear + fyear + nburn)
+
 
 oacomp$sumCW[r,m,y2,,'val'] <- get_dwindow(sumCW, sty, y)
 oacomp$sumCW[r,m,y2,,'caahat'] <- rep$sumCW
@@ -119,12 +121,18 @@ oacomp$SSB[r,m,y2,,'caahat'] <- SSBhat
 
 
 ## Here start filling the simpler arrays with just the OM values
+## Note that nomyear is a function of "rburn" in the set_om_parameters.R
+## file. rburn ensures that you are starting at least part-way into the
+## management time-period so you can see the response. It is set pretty
+## arbitrarily though.
 
-omval$SSB[r,m,y2,,] <- get_dwindow(SSB, sty, y)
-omval$R[r,m,y2,,] <- get_dwindow(R, sty, y)
-omval$F_full[r,m,y2,,] <- get_dwindow(F_full, sty, y)
-giniCN <- apply(get_dwindow(paaCN, sty, y), 1, get_gini)
-omval$ginipaaCN[r,m,y2,,] <- giniCN
-giniIN <- apply(get_dwindow(paaIN, sty, y), 1, get_gini)
-omval$ginipaaIN[r,m,y2,,] <- giniIN
+omval$SSB[r,m,] <- get_dwindow(SSB, nomyear, nyear)
+omval$R[r,m,] <- get_dwindow(R, nomyear, nyear)
+omval$F_full[r,m,] <- get_dwindow(F_full, nomyear, nyear)
+giniCN <- apply(get_dwindow(paaCN, nomyear, nyear), 1, 
+                get_gini)
+omval$ginipaaCN[r,m,] <- giniCN
+giniIN <- apply(get_dwindow(paaIN, nomyear, nyear), 1, 
+                get_gini)
+omval$ginipaaIN[r,m,] <- giniIN
 
