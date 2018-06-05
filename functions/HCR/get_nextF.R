@@ -34,7 +34,7 @@ get_nextF <- function(parmgt, parpop){
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpop)
     Bref <- get_BBRP(parmgt = parmgt, parpop = parpop, Rfun_lst=Rfun_BmsySim)
     F <- get_NS1HCR(parpop, Fmsy=Fref$RPvalue, Bmsy=Bref$RPvalue)['Fadvice']
-    
+
   }else if(tolower(parmgt$HCR) == 'simplethresh'){
     
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpop)
@@ -47,8 +47,8 @@ get_nextF <- function(parmgt, parpop){
     stop('get_nextF: type not recognized')
     
   }
-  
-  
+
+  return(F)
 }
 
 
