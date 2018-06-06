@@ -65,4 +65,4 @@ mproc <- subset(mproc, HCR =='ns1')
 # do this until it's done.
 mproc <- read.table('processes/mproc.txt', header=TRUE,
                     stringsAsFactors=FALSE)
-
+mproc <- mproc[1:10,]
