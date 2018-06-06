@@ -20,7 +20,7 @@
 cd groundfish-MSE/
 
 module load R/3.4.0 
-module load gcc/5.1.0
+# module load gcc/5.1.0
 
 Rscript ./processes/runSim.R --vanilla
 # Rscript $HOME/COCA/processes/runSim.R --vanilla
