@@ -40,6 +40,7 @@ get_nextF <- function(parmgt, parpop){
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpop)
     Bref <- get_BBRP(parmgt = parmgt, parpop = parpop, Rfun_lst=Rfun_BmsySim)
     
+    # added small value to F because F = 0 causes some estimation errors
     F <- ifelse(tail(parpop$B, 1) < Bref$RPvalue, 0, Fref$RPvalue)+1e-3
     
   }else{
