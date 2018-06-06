@@ -36,11 +36,11 @@ get_nextF <- function(parmgt, parpop){
     F <- get_NS1HCR(parpop, Fmsy=Fref$RPvalue, Bmsy=Bref$RPvalue)['Fadvice']
 
   }else if(tolower(parmgt$HCR) == 'simplethresh'){
-    
+   
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpop)
-    Bref <- get_FBRP(parmgt = parmgt, parpop = parpop)
+    Bref <- get_BBRP(parmgt = parmgt, parpop = parpop, Rfun_lst=Rfun_BmsySim)
     
-    F <- ifelse(Bref$RPvalue < parmgt$BREF_VAL, 0, Fref$RPvalue)
+    F <- ifelse(tail(parpop$B, 1) < Bref$RPvalue, 0, Fref$RPvalue)+1e-3
     
   }else{
     
