@@ -77,7 +77,7 @@ bdatlist <- sapply(pop, '[', 2)
 bdat <- do.call(rbind, bdatlist)
 
 mla <- tapply(bdat$LEN, list(bdat$AGE, bdat$YEAR), FUN=mean)
-mla <- mla[,c(5, 25, 50)]
+mla <- mla[,c(1, 25, 50)]
 ages <- 1:dim(mla)[1]
 matplot(ages, mla, type='o')
 
