@@ -38,7 +38,10 @@ dir.create('results', showWarnings = FALSE)
 dir.create('results/sim')
 dir.create('results/fig')
 
-
+# if on windows (i.e., not hpcc) must compile the tmb code
+if(platform == 'Windows'){
+  source('processes/runPre.R')
+}
 
 # begin the model loop
 for(r in 1:nrep){
