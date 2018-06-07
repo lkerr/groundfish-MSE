@@ -194,6 +194,8 @@ omval <- list(
   
   F_full = save_vector_ann,
   
+  sumCW = save_vector_ann,
+  
   ginipaaCN = save_vector_ann,
   
   ginipaaIN = save_vector_ann

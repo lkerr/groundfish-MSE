@@ -129,6 +129,7 @@ oacomp$SSB[r,m,y2,,'caahat'] <- SSBhat
 omval$SSB[r,m,] <- get_dwindow(SSB, nomyear, nyear)
 omval$R[r,m,] <- get_dwindow(R, nomyear, nyear)
 omval$F_full[r,m,] <- get_dwindow(F_full, nomyear, nyear)
+omval$sumCW[r,m,] <- get_dwindow(sumCW, nomyear,nyear)
 giniCN <- apply(get_dwindow(paaCN, nomyear, nyear), 1, 
                 get_gini)
 omval$ginipaaCN[r,m,] <- giniCN
