@@ -182,8 +182,9 @@ save_vector_ann <- array(data = NA,
                          dim = c(nrep, nmproc, nyear - nomyear+1),
                          dimnames = list(paste0('rep', 1:nrep), 
                                          paste0('mproc', 1:nmproc),
-                                         paste0('ncaayear', 1:(nyear - 
+                                         paste0('nyear', 1:(nyear - 
                                                                nomyear+1))))
+
 
 
 omval <- list(
@@ -195,6 +196,8 @@ omval <- list(
   F_full = save_vector_ann,
   
   sumCW = save_vector_ann,
+  
+  sumCWcv = save_vector_ann, #cheap ... not really vector.
   
   ginipaaCN = save_vector_ann,
   

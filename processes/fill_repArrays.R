@@ -130,6 +130,9 @@ omval$SSB[r,m,] <- get_dwindow(SSB, nomyear, nyear)
 omval$R[r,m,] <- get_dwindow(R, nomyear, nyear)
 omval$F_full[r,m,] <- get_dwindow(F_full, nomyear, nyear)
 omval$sumCW[r,m,] <- get_dwindow(sumCW, nomyear,nyear)
+# cheap -- filling only one value in a vector of NAs. works.
+omval$sumCWcv[r,m,1] <- sd(get_dwindow(sumCW, nomyear,nyear)) /
+                        mean(omval$sumCW[r,m,])
 giniCN <- apply(get_dwindow(paaCN, nomyear, nyear), 1, 
                 get_gini)
 omval$ginipaaCN[r,m,] <- giniCN
