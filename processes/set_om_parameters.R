@@ -94,6 +94,9 @@ oe_effort_typ <- 'lognorm'
 # process error levels
 pe_R <- 1.5
 
+# implementation error of fishing mortality
+ie_F <- 0
+
 
 
 ## Biological reference point and harvest control rule options
