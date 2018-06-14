@@ -46,8 +46,14 @@ if(platform == 'Windows'){
 # begin the model loop
 for(r in 1:nrep){
 
-  for(m in 1:nrow(mproc)){
+  # Use the same random numbers for each of the management strategies
+  # set.seed(NULL)
+  # rsd <- rnorm()
   
+  for(m in 1:nrow(mproc)){
+    
+    # set.seed(rsd)
+    
     # First few years of fishery information
     F_full[1:(ncaayear + fyear + nburn +1)] <- rlnorm(ncaayear + 
                                                         fyear + nburn + 1, 
@@ -214,7 +220,10 @@ for(r in 1:nrep){
                        mat = mat[y,],
                        R = rep$R,
                        B = SSBhat)
-        nextF <- get_nextF(parmgt = mproc[m,], parpop = parpop)
+        
+        # recommended level of fishing mortality for the next year
+        nextF_rec <- get_nextF(parmgt = mproc[m,], parpop = parpop)
+        nextF <- get_ieF(type='lognormal', F, par=ie_F)
 
         if(y < nyear){
           F_full[y+1] <- nextF
