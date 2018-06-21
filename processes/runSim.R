@@ -56,7 +56,7 @@ for(r in 1:nrep){
     
     # First few years of fishery information
     F_full[1:(ncaayear + fyear + nburn +1)] <- rlnorm(ncaayear + 
-                                                        fyear + nburn + 1, 
+                                                      fyear + nburn + 1, 
                                                       log(0.2), 0.1)
   
     # initialize the model with numbers and mortality rates
@@ -149,6 +149,8 @@ for(r in 1:nrep){
   
         # prepare data & run assessment model
         source('processes/get_tmb_setup.R')
+        
+        # include sink file just to keep the console output clean
         sink(file='results/rsink.txt')
         tryfit <- try(source('assessment/caa.R'))
         sink(file=NULL)
