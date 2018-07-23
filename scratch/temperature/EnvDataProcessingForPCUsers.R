@@ -96,7 +96,8 @@ gb.df<- as.data.frame(gb.z.mm, xy = T) %>%
 # Note, there will be a lot of NAs there -- can drop em easily and save that 
 # if you want.
 
-
+save(gb.df, 
+     file='C:/Users/struesdell/OneDrive - Gulf of Maine Research Institute/GMRI/COCA/data/data_raw/gb.dat.Rdata')
 
 
 
