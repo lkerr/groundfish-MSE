@@ -177,7 +177,7 @@ oacomp <- list(
 # array template for vector conainer
 
 # First year to output for saving OMresults
-nomyear <- ncaayear + fyear + nburn + rburn
+nomyear <- nyear#ncaayear + fyear + nburn + rburn
 save_vector_ann <- array(data = NA,
                          dim = c(nrep, nmproc, nyear - nomyear+1),
                          dimnames = list(paste0('rep', 1:nrep), 

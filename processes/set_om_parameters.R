@@ -14,8 +14,9 @@ fage <- 1
 page <- 15
 nage <- length(fage:page)
 
-# number of years to run the simulation
-nyear <- 450
+# number of years to run the simulation (# projection years)
+# nyear <- 450
+# THIS IS in the sim file ... depends on how much CMIP data there are
 
 # first year after the initial condition period
 fyear <- 5
@@ -25,11 +26,21 @@ nburn <- 400
 
 # number of burn years for saving OM results (after management
 # procedure has started)
-rburn <- 5
+# rburn <- 35
 
 # number of years in assessment model
 ncaayear <- 30 
 
+## Temperature information ##
+cmip5model <- 'CMCC_CM'
+
+# Number of model years to run are defined by the length of the burn-in
+# period and the dimension of the CMIP5 data set.
+# Load the cmip5 temperature data
+cmip5 <- read.table(file='data/data_raw/NEUS_CMIP5_annual_means.txt',
+                    header=TRUE, skip=2)
+
+nyear <- nrow(cmip5) + nburn
 
 ## Life history parameters ##
 
@@ -53,11 +64,6 @@ M <- 0.1
 
 
 ## Fishery information
-
-# for now!
-# F_full <- rlnorm(nyear, log(0.2), 0.1)
-temp <- rep(15, nyear)
-
 
 # fishery and survey catchabilities
 qC <- 0.01

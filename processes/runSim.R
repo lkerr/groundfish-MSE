@@ -37,6 +37,11 @@ source('processes/get_containers.R')
 # to Bproxy reference points
 source('processes/Rfun_BmsySim.R')
 
+# Get the temperature vector
+temp <- c(rep(15.5, nburn), 
+          cmip5[,cmip5model])
+
+
 # Remove any files in the results directories
 unlink('results/*', recursive=TRUE)
 # create a results & sim directories
@@ -48,6 +53,8 @@ dir.create('results/fig')
 if(platform == 'Windows'){
   source('processes/runPre.R')
 }
+
+
 
 # begin the model loop
 for(r in 1:nrep){
@@ -99,10 +106,10 @@ for(r in 1:nrep){
       # calculate recruits in year y based on the SSB in years previous
       # (depending on the lag) and temperature
       SSB[y] <- sum(J1N[y-fage,] * mat[y,] * waa[y-fage,])  
-  
+
       Rpar <- get_recruitment_par(par=srpar, stochastic=FALSE)
       Rout <- get_recruits(type=Rpar$type, par=Rpar, S=SSB[y],
-                           tempY=temp[y], resid0 = residR[y-1])
+                           tempY=temp[y])
       R[y] <- Rout['R']
       residR[y] <- Rout['resid']
       R[y] <- ifelse(R[y] < 0, 0, R[y])
@@ -151,7 +158,7 @@ for(r in 1:nrep){
     
     
       # if burn-in period is over...
-      if(y > ncaayear + fyear + nburn){
+      if(y > nburn){
   
         # prepare data & run assessment model
         source('processes/get_tmb_setup.R')
