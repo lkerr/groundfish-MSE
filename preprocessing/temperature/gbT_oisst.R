@@ -22,6 +22,6 @@ colnames(mqt) <- c('Year', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
                    'q1', 'q2', 'q3', 'q4')
 rownames(mqt) <- NULL
-mqt <- as.data.frame(mqt)
+mqt_oisst <- as.data.frame(mqt)
 
-
+save(mqt_oisst, file='data/data_raw/mqt_oisst.Rdata')
