@@ -7,7 +7,7 @@
 ## Simulation information
 
 # number of times to repeat this analysis
-nrep <- 3
+nrep <- 1
 
 # first age and plus age
 fage <- 1
@@ -22,7 +22,7 @@ nage <- length(fage:page)
 fyear <- 5
 
 # number of burn-in years
-nburn <- 400
+nburn <- 50
 
 # number of burn years for saving OM results (after management
 # procedure has started)

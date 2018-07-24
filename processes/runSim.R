@@ -1,10 +1,5 @@
 
 
-## Here is a change.
-## 
-## #change 2
-## 
-## change3
 
 
 # empty the environment
@@ -37,9 +32,24 @@ source('processes/get_containers.R')
 # to Bproxy reference points
 source('processes/Rfun_BmsySim.R')
 
+# Load in the baseline projected temperature data to use
+cmip_base <- cmip5[,c('year', cmip5model)]
+names(cmip_base) <- c('YEAR', 'T')
+
+# Load in the GB temperature data for downscaling
+load('data/data_raw/mqt_oisst.Rdata')
+gbT <- mqt_oisst[,c('Year', 'q1')]
+names(gbT) <- c('YEAR', 'T')
+
+# Downscale from NELME to GB
+cmip_dwn <- get_temperatureProj(prj_data = cmip_base, 
+                                obs_data = gbT, 
+                                ref_yrs = c(1982, 2018))
+
 # Get the temperature vector
-temp <- c(rep(15.5, nburn), 
-          cmip5[,cmip5model])
+msyears <- cmip_dwn$YEAR < 2000
+temp <- c(rep(median(cmip_dwn[msyears,'T']), nburn), 
+          cmip_dwn$T)
 
 
 # Remove any files in the results directories
@@ -89,7 +99,7 @@ for(r in 1:nrep){
   
   
     for(y in fyear:nyear){
-    
+ if(y == fyear) print(paste('r=',r, 'm=',m))   
       # calculate length-at-age in year y
       laa[y,] <- get_lengthAtAge(type=laa_typ, par=laa_par, 
                                  ages=fage:page)
