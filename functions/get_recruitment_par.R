@@ -17,8 +17,8 @@
 #        (1) "type" for the type of S/R model (type options are 
 #            'constantMean', 
 #            'rickerlin', 
-#            'rickerTS' and
-#            'BHTS') 
+#            'RITS' (for Ricker model) and
+#            'BHTS' (for beverton-holt)) 
 #        (2) a vector of parameter names
 #        (3) a vector of parameters
 #      and MAY include
