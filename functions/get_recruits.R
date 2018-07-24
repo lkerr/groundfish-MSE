@@ -19,7 +19,7 @@
 #       par['b',1]: Ricker b
 #       par['c',1]: the temperature effect
 #       
-#      *"rickerTS" time series implementation of the ricker model (i.e.,
+#      *"RITS" time series implementation of the ricker model (i.e.,
 #       that includes an autocorrelative component
 #       R = a * S * exp(-b * S + c * tempY) * error + rho * resid0
 #       where resid0 is the residual from the previous year.
@@ -87,23 +87,27 @@ get_recruits <- function(type, par, S, tempY=NULL, resid0=NULL){
 
   }else if(tolower(type) == 'bhts'){
     
-    if(!all(c('a', 'b', 'c', 'rho') %in% names(par1))){
+    if(!all(c('a', 'b', 'c') %in% names(par1))){
       stop('get_recruits: check parameters in BHTS option')
     }
     
     # BH parameterization from H&W p. 286
-    Rhat <- par1['a'] * S / (par1['b'] + S) * exp(par1['c'] * tempY)
-    R <- Rhat * Rstoch + par1['rho'] * resid0
+    # meanT is accounting for the centering used in model development.
+    Rhat <- par1['a'] * S / (par1['b'] + S) * exp(par1['c'] * 
+                                                 (tempY - par[['meanT']]))
+    R <- Rhat * Rstoch
     
-  }else if(tolower(type) == 'rickerts'){
+  }else if(tolower(type) == 'rits'){
     
-    if(!all(c('a', 'b', 'c', 'rho') %in% names(par1))){
+    if(!all(c('a', 'b', 'c') %in% names(par1))){
       stop('get_recruits: check parameters in RickerTS option')
     }
     
     # Ricker parameterization from Q&D p. 91
-    Rhat <- par1['a'] * S * exp(-par1['b'] * S + par1['c'] * tempY)
-    R <- Rhat * Rstoch + par1['rho'] * resid0
+    # # meanT is accounting for the centering used in model development.
+    Rhat <- par1['a'] * S * exp(-par1['b'] * S + par1['c'] * 
+                                                 (tempY - par[['meanT']]))
+    R <- Rhat * Rstoch
     
   }else if(tolower(type) == 'constantMean'){
  

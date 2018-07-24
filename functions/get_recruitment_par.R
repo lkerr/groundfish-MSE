@@ -42,7 +42,8 @@ get_recruitment_par <- function(par, stochastic=TRUE){
     
     par1 <- list(type = par$type,
                  names = par$names,
-                 par = par$par)
+                 par = par$par,
+                 meanT = par$meanT)
     
     return(par1)
     
@@ -75,7 +76,9 @@ get_recruitment_par <- function(par, stochastic=TRUE){
                        lower=par$lower, upper=par$upper))
     names(par1) <- par$names
     
-    return(list(type=par$type, par=par1))
+    return(list(type=par$type, 
+                par=par1,
+                meanT = par$meanT))
   
   }
 
