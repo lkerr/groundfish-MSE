@@ -7,10 +7,10 @@ require(TMB)
 # Ensure that TMB will use the Rtools compiler (only windows ... and 
 # not necessary on all machines)
 if(platform != 'Linux'){
-  path_current <- Sys.getenv('PATH')
-  path_new <- paste0('c:\\Rtools\\bin;c:\\Rtools\\mingw_32\\bin;',
+  path0 <- Sys.getenv('PATH')
+  path1 <- paste0('c:\\Rtools\\bin;c:\\Rtools\\mingw_32\\bin;',
                      path_current)
-  Sys.setenv(PATH=path_new)
+  Sys.setenv(PATH=path1)
 }
 
 # compile the c++ file and make available to R
@@ -122,6 +122,14 @@ rep_NLL <- rep[c('NLL',
 
 d2 <- data.frame(rep$sumCW, rep$sumIN,
                  rep$paaCN, rep$paaIN)
+
+
+# Re-set the system path to the original
+if(platform != 'Linux'){
+  Sys.setenv(PATH=path0)
+}
+
+
 
 
 if(FALSE){
