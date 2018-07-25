@@ -1,6 +1,17 @@
 
 
 
+# Ensure that TMB will use the Rtools compiler (only windows ... and 
+# not necessary on all machines)
+if(platform != 'Linux'){
+  path0 <- Sys.getenv('PATH')
+  path1 <- paste0('c:\\Rtools\\bin;c:\\Rtools\\mingw_32\\bin;',
+                  path_current)
+  Sys.setenv(PATH=path1)
+}
+
+
+
 sty <- y-ncaayear+1
 
 # get the random walk deviations

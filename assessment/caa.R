@@ -4,19 +4,18 @@
 # load the TMB package
 require(TMB)
 
-# Ensure that TMB will use the Rtools compiler (only windows ... and 
-# not necessary on all machines)
-if(platform != 'Linux'){
-  path0 <- Sys.getenv('PATH')
-  path1 <- paste0('c:\\Rtools\\bin;c:\\Rtools\\mingw_32\\bin;',
-                     path_current)
-  Sys.setenv(PATH=path1)
-}
+# # Ensure that TMB will use the Rtools compiler (only windows ... and 
+# # not necessary on all machines)
+# if(platform != 'Linux'){
+#   path0 <- Sys.getenv('PATH')
+#   path1 <- paste0('c:\\Rtools\\bin;c:\\Rtools\\mingw_32\\bin;',
+#                      path_current)
+#   Sys.setenv(PATH=path1)
+# }
 
 # compile the c++ file and make available to R
 # TMB::compile("assessment/caa.cpp")
 dyn.load(dynlib("assessment/caa"))
-
 
 data <- tmb_dat
 
@@ -67,6 +66,7 @@ active_idx <- !names(lb) %in% names(map_par)
 # of the bounds is specified at). Only add noise to the active
 # parameters -- don't want to distort the values of the inactive
 # parameters.
+# if(m == 2 & y == 102) browser()
 for(i in which(active_idx)){
   tmb_par[[i]] <- get_svNoise(tmb_par[[i]],
                               cv=1,
