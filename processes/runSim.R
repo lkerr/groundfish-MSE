@@ -1,10 +1,10 @@
 
-
+# setwd('C:/Users/struesdell/OneDrive - Gulf of Maine Research Institute/GMRI/COCA/')
 
 
 # empty the environment
 rm(list=ls())
-
+# set.seed(2)
 
 # load all the functions
 ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
@@ -64,16 +64,30 @@ if(platform == 'Windows'){
   source('processes/runPre.R')
 }
 
+# Set up a sink for debugging
+if(debugSink){
+  dbf <- 'results/debugInfo.txt'
+  cat('############  Debug results:  ############\n',
+      file=dbf, sep='')
+}
 
 
 # begin the model loop
 for(r in 1:nrep){
 
+  if(debugSink){
+    cat('r = ', r, '\n', file=dbf, append=TRUE)
+  }
+  
   # Use the same random numbers for each of the management strategies
   # set.seed(NULL)
   # rsd <- rnorm()
   
   for(m in 1:nrow(mproc)){
+    
+    if(debugSink){
+      cat('  m =', m, '\n', file=dbf, append=TRUE)
+    }
     
     # set.seed(rsd)
     
@@ -99,7 +113,11 @@ for(r in 1:nrep){
   
   
     for(y in fyear:nyear){
- if(y == fyear) print(paste('r=',r, 'm=',m))   
+      
+      if(debugSink){
+        cat('    y =', y, '\n', file=dbf, append=TRUE)
+      }
+      
       # calculate length-at-age in year y
       laa[y,] <- get_lengthAtAge(type=laa_typ, par=laa_par, 
                                  ages=fage:page)
@@ -166,16 +184,22 @@ for(r in 1:nrep){
       obs_paaIN[y,] <- get_error_paa(type=oe_paaIN_typ, paa=paaIN[y,], 
                                      par=oe_paaIN)
     
-    
+
       # if burn-in period is over...
       if(y > nburn){
   
         # prepare data & run assessment model
         source('processes/get_tmb_setup.R')
-        
+# if(m == 2 & y == 102) browser()    
         # include sink file just to keep the console output clean
         sink(file='results/rsink.txt')
+        if(debugSink){
+          cat('      trying assessment...', file=dbf, append=TRUE)
+        }
         tryfit <- try(source('assessment/caa.R'))
+        if(debugSink){
+          cat('/...assessment complete\n', file=dbf, append=TRUE)
+        }
         sink(file=NULL)
         
         if(class(tryfit) != 'try-error'){

@@ -6,6 +6,9 @@
 
 ## Simulation information
 
+# Debug?
+debugSink <- TRUE
+
 # number of times to repeat this analysis
 nrep <- 1
 
