@@ -81,7 +81,7 @@ if(debugSink & platform == 'Windows'){
 # begin the model loop
 for(r in 1:nrep){
 
-  if(debugSink){
+  if(debugSink & platform == 'Windows'){
     cat('r = ', r, '\n', file=dbf, append=TRUE)
   }
   
@@ -91,7 +91,7 @@ for(r in 1:nrep){
   
   for(m in 1:nrow(mproc)){
     
-    if(debugSink){
+    if(debugSink & platform == 'Windows'){
       cat('  r =', r, 'm =', m, '\n', file=dbf, append=TRUE)
     }
     
@@ -120,7 +120,7 @@ for(r in 1:nrep){
   
     for(y in fyear:nyear){
 # Sys.sleep(2)
-      if(debugSink){
+      if(debugSink & platform == 'Windows'){
         cat('    r =', r, 'm =', m, 'y =', y, '\n', file=dbf, append=TRUE)
       }
       
@@ -210,11 +210,11 @@ if(r == 2 & m == 2 & y == 86){ save.image(file='test86.Rdata')}
 if(r == 2 & m == 2 & y == 87){ save.image(file='test87.Rdata')}
         # include sink file just to keep the console output clean
         sink(file='results/rsink.txt')
-        if(debugSink){
+        if(debugSink & platform == 'Windows'){
           cat('      trying assessment...', file=dbf, append=TRUE)
         }
         tryfit <- try(source('assessment/caa.R'))
-        if(debugSink){
+        if(debugSink & platform == 'Windows'){
           cat('/...assessment complete\n', file=dbf, append=TRUE)
         }
         sink(file=NULL)
