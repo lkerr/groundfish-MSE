@@ -1,10 +1,10 @@
 
-# setwd('C:/Users/struesdell/OneDrive - Gulf of Maine Research Institute/GMRI/COCA/')
+setwd('C:/Users/struesdell/OneDrive - Gulf of Maine Research Institute/GMRI/COCA/')
 
 
 # empty the environment
 rm(list=ls())
-# set.seed(2)
+set.seed(2)
 
 # load all the functions
 ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
@@ -34,6 +34,7 @@ source('processes/Rfun_BmsySim.R')
 
 # Load in the baseline projected temperature data to use
 cmip_base <- cmip5[,c('year', cmip5model)]
+# cmip_base <- cmip_base[1:100,]
 names(cmip_base) <- c('YEAR', 'T')
 
 # Load in the GB temperature data for downscaling
@@ -113,11 +114,12 @@ for(r in 1:nrep){
   
   
     for(y in fyear:nyear){
-      
+
       if(debugSink){
         cat('    y =', y, '\n', file=dbf, append=TRUE)
       }
       
+cat('flag1\n', file=dbf, append=TRUE)      
       # calculate length-at-age in year y
       laa[y,] <- get_lengthAtAge(type=laa_typ, par=laa_par, 
                                  ages=fage:page)
@@ -138,6 +140,7 @@ for(r in 1:nrep){
       Rpar <- get_recruitment_par(par=srpar, stochastic=FALSE)
       Rout <- get_recruits(type=Rpar$type, par=Rpar, S=SSB[y],
                            tempY=temp[y])
+
       R[y] <- Rout['R']
       residR[y] <- Rout['resid']
       R[y] <- ifelse(R[y] < 0, 0, R[y])
@@ -152,14 +155,14 @@ for(r in 1:nrep){
       # depend on the numbers and mortality rate in the previous year and
       # on the recruitment this year
       J1N[y,] <- get_J1Ny(J1Ny0=J1N[y-1,], Zy0=Z[y-1,], R[y])
-      
+    
       # calculate the predicted catch in year y, the catch weight and the
       # proportions of catch numbers-at-age. Add small number in case F=0
       CN[y,] <- get_catch(F_full=F_full[y], M=M, 
                           N=J1N[y,], selC=slxC[y,]) + 1e-3
       sumCW[y] <- CN[y,] %*% waa[y,]    # (dot product)
       paaCN[y,] <- (CN[y,]) / sum(CN[y,])
-    
+ 
       # calculate the predicted survey index in year y and the predicted
       # survey proportions-at-age
       IN[y,] <- get_survey(F_full=F_full[y], M=M, N=J1N[y,], slxC[y,], 
@@ -183,30 +186,43 @@ for(r in 1:nrep){
                                     par=oe_sumIN)
       obs_paaIN[y,] <- get_error_paa(type=oe_paaIN_typ, paa=paaIN[y,], 
                                      par=oe_paaIN)
-    
 
       # if burn-in period is over...
       if(y > nburn){
-  
+        # if(debugSink){
+        #   sty <- y-ncaayear+1
+        #   cat('====== J1N ======\n', file=dbf, append=TRUE)
+        #   write.table(get_dwindow(J1N,sty,y), file=dbf, append=TRUE)
+        #   cat('====== CN ======\n', file=dbf, append=TRUE)
+        #   write.table(get_dwindow(CN,sty,y), file=dbf, append=TRUE)
+        #   cat('====== R ======\n', file=dbf, append=TRUE)
+        #   write.table(get_dwindow(R,sty,y), file=dbf, append=TRUE)
+        #   cat('====== paaIN ======\n', file=dbf, append=TRUE)
+        #   write.table(get_dwindow(paaIN,sty,y), file=dbf, append=TRUE)
+        # }
         # prepare data & run assessment model
+cat('flag2\n', file=dbf, append=TRUE) 
         source('processes/get_tmb_setup.R')
-# if(m == 2 & y == 102) browser()    
+cat('flag3\n', file=dbf, append=TRUE) 
+if(m == 2 & y == 102){ save.image(file='test.Rdata')}
         # include sink file just to keep the console output clean
         sink(file='results/rsink.txt')
         if(debugSink){
           cat('      trying assessment...', file=dbf, append=TRUE)
         }
+cat('flag4\n', file=dbf, append=TRUE) 
         tryfit <- try(source('assessment/caa.R'))
+cat('flag5\n', file=dbf, append=TRUE) 
         if(debugSink){
           cat('/...assessment complete\n', file=dbf, append=TRUE)
         }
         sink(file=NULL)
-        
+cat('flag7\n', file=dbf, append=TRUE)         
         if(class(tryfit) != 'try-error'){
         
           # Fill the arrays with results
           source('processes/fill_repArrays.R')
-          
+cat('flag8\n', file=dbf, append=TRUE)           
           # Get fishing mortality for next year's management
           # fbrpy <- get_FBRP(type=fbrpTyp, par=mproc[m,],
                             # sel=endv(rep$slxC), waa=endv(rep$waa), 
@@ -217,7 +233,7 @@ for(r in 1:nrep){
                             # sel=endv(rep$slxC), waa=endv(rep$waa), 
                             # M=endv(rep$M), mat=mat[y,], 
                             # R=rep$R, B=SSBhat, Rfun=mean)
-    
+cat('flag9\n', file=dbf, append=TRUE) 
           # apply the harvest control rule
           parpop <- list(waa = tail(rep$waa, 1), 
                          sel = tail(rep$slxC, 1), 
@@ -226,9 +242,9 @@ for(r in 1:nrep){
                          R = rep$R,
                          B = SSBhat)
           nextF <- get_nextF(parmgt = mproc[m,], parpop = parpop)
-
+cat('flag10\n', file=dbf, append=TRUE) 
           if(y < nyear){
-            F_full[y+1] <- nextF
+            F_full[y+1] <- rlnorm(1, log(0.02), 0.3)#nextF
           }
         
         }else{
@@ -262,21 +278,21 @@ for(r in 1:nrep){
                           # M=endv(rep$M), mat=mat[y,], 
                           # R=rep$R, B=SSBhat, Rfun=mean)
   
-        # apply the harvest control rule
-        parpop <- list(waa = tail(rep$waa, 1), 
-                       sel = tail(rep$slxC, 1), 
-                       M = tail(rep$M, 1), 
-                       mat = mat[y,],
-                       R = rep$R,
-                       B = SSBhat)
-        
-        # recommended level of fishing mortality for the next year
-        nextF_rec <- get_nextF(parmgt = mproc[m,], parpop = parpop)
-        nextF <- get_ieF(type='lognormal', F, par=ie_F)
-
-        if(y < nyear){
-          F_full[y+1] <- nextF
-        }
+        # # apply the harvest control rule
+        # parpop <- list(waa = tail(rep$waa, 1), 
+        #                sel = tail(rep$slxC, 1), 
+        #                M = tail(rep$M, 1), 
+        #                mat = mat[y,],
+        #                R = rep$R,
+        #                B = SSBhat)
+        # 
+        # # recommended level of fishing mortality for the next year
+        # nextF_rec <- get_nextF(parmgt = mproc[m,], parpop = parpop)
+        # nextF <- get_ieF(type='lognormal', F, par=ie_F)
+        # 
+        # if(y < nyear){
+        #   F_full[y+1] <- nextF
+        # }
   
       }
       

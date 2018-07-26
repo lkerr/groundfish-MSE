@@ -66,12 +66,15 @@ active_idx <- !names(lb) %in% names(map_par)
 # of the bounds is specified at). Only add noise to the active
 # parameters -- don't want to distort the values of the inactive
 # parameters.
-# if(m == 2 & y == 102) browser()
+
 for(i in which(active_idx)){
   tmb_par[[i]] <- get_svNoise(tmb_par[[i]],
                               cv=1,
                               lb=tmb_lb[[i]], ub=tmb_ub[[i]])
 }
+# tmb_par <- lapply(which(active_idx), function(x)
+#              get_svNoise(tmb_par[[x]], cv=1,
+#                          lb=tmb_lb[[x]], ub=tmb_ub[[x]]))
 
 
 
@@ -128,6 +131,7 @@ d2 <- data.frame(rep$sumCW, rep$sumIN,
 if(platform != 'Linux'){
   Sys.setenv(PATH=path0)
 }
+
 
 
 

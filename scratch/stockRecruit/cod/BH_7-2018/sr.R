@@ -10,7 +10,7 @@ srt <- merge(saw55, mqt_oisst)
 
 # create a new simpler data file with the data you want
 srdat <- as.data.frame(cbind(YEAR = srt$Year,
-                             T = srt$q3,
+                             T = srt$q1,
                              S = srt$SSBMT,
                              R = srt$A1Recruitmentx1000 * 1000))
 srdat <- srdat[complete.cases(srdat),]

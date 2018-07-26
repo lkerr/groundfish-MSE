@@ -10,7 +10,7 @@
 debugSink <- TRUE
 
 # number of times to repeat this analysis
-nrep <- 1
+nrep <- 3
 
 # first age and plus age
 fage <- 1
@@ -44,6 +44,7 @@ cmip5 <- read.table(file='data/data_raw/NEUS_CMIP5_annual_means.txt',
                     header=TRUE, skip=2)
 
 nyear <- nrow(cmip5) + nburn
+# nyear <- nrow(cmip5[82:nrow(cmip5),]) + nburn
 
 ## Life history parameters ##
 
