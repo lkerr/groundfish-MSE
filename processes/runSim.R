@@ -1,7 +1,10 @@
 
+
 if(Sys.info()['sysname'] == 'Windows'){
   setwd('C:/Users/struesdell/OneDrive - Gulf of Maine Research Institute/GMRI/COCA/')
 }
+
+
 
 
 
