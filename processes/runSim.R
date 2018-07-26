@@ -1,5 +1,5 @@
 
-setwd('C:/Users/struesdell/OneDrive - Gulf of Maine Research Institute/GMRI/COCA/')
+#setwd('C:/Users/struesdell/OneDrive - Gulf of Maine Research Institute/GMRI/COCA/')
 
 
 # empty the environment
@@ -34,7 +34,6 @@ source('processes/Rfun_BmsySim.R')
 
 # Load in the baseline projected temperature data to use
 cmip_base <- cmip5[,c('year', cmip5model)]
-# cmip_base <- cmip_base[1:100,]
 names(cmip_base) <- c('YEAR', 'T')
 
 # Load in the GB temperature data for downscaling
@@ -46,7 +45,7 @@ names(gbT) <- c('YEAR', 'T')
 cmip_dwn <- get_temperatureProj(prj_data = cmip_base, 
                                 obs_data = gbT, 
                                 ref_yrs = c(1982, 2018))
-
+cmip_dwn <- head(cmip_dwn, 100)
 # Get the temperature vector
 msyears <- cmip_dwn$YEAR < 2000
 temp <- c(rep(median(cmip_dwn[msyears,'T']), nburn), 
