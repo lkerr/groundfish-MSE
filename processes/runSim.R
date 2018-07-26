@@ -51,11 +51,11 @@ names(gbT) <- c('YEAR', 'T')
 cmip_dwn <- get_temperatureProj(prj_data = cmip_base, 
                                 obs_data = gbT, 
                                 ref_yrs = c(1982, 2018))
-# cmip_dwn <- head(cmip_dwn, 100)
+
 # Get the temperature vector
 msyears <- cmip_dwn$YEAR < 2000
-temp <- c(rep(median(cmip_dwn[msyears,'T']), nburn), 
-          cmip_dwn$T)
+temp <- c(rep(median(cmip_dwn[msyears,'T']), nburn),
+          cmip_dwn[,'T'])
 
 
 # Remove any files in the results directories
@@ -98,9 +98,12 @@ for(r in 1:nrep){
     # set.seed(rsd)
     
     # First few years of fishery information
-    F_full[1:(ncaayear + fyear + nburn +1)] <- rlnorm(ncaayear + 
-                                                      fyear + nburn + 1, 
-                                                      log(0.2), 0.1)
+    # F_full[1:(ncaayear + fyear + nburn +1)] <- rlnorm(ncaayear + 
+    #                                                   fyear + nburn + 1, 
+    #                                                   log(0.2), 0.1)
+    F_full[1:(nburn + sum(msyears)+1)] <- rlnorm(ncaayear + 
+                                                 fyear + nburn + 1, 
+                                                 log(0.2), 0.1)
   
     # initialize the model with numbers and mortality rates
     # in the first n (fyear-1) years.
@@ -119,7 +122,7 @@ for(r in 1:nrep){
   
   
     for(y in fyear:nyear){
-# Sys.sleep(2)
+
       if(debugSink & platform == 'Windows'){
         cat('    r =', r, 'm =', m, 'y =', y, '\n', file=dbf, append=TRUE)
       }
@@ -145,7 +148,7 @@ for(r in 1:nrep){
       Rout <- get_recruits(type=Rpar$type, par=Rpar, S=SSB[y],
                            tempY=temp[y])
 
-      R[y] <- rlnorm(1, log(44000000), 0.3)#Rout['R']
+      R[y] <- Rout['R']
       residR[y] <- Rout['resid']
       R[y] <- ifelse(R[y] < 0, 0, R[y])
       
@@ -192,7 +195,7 @@ for(r in 1:nrep){
                                      par=oe_paaIN)
 
       # if burn-in period is over...
-      if(y > nburn){
+      if(y > nburn + sum(msyears)){
         # if(debugSink){
         #   sty <- y-ncaayear+1
         #   cat('====== J1N ======\n', file=dbf, append=TRUE)
@@ -206,18 +209,21 @@ for(r in 1:nrep){
         # }
         # prepare data & run assessment model
         source('processes/get_tmb_setup.R')
-if(r == 2 & m == 2 & y == 86){ save.image(file='test86.Rdata')}
-if(r == 2 & m == 2 & y == 87){ save.image(file='test87.Rdata')}
+# if(r == 2 & m == 2 & y == 86){ save.image(file='test86.Rdata')}
+# if(r == 2 & m == 2 & y == 87){ save.image(file='test87.Rdata')}
         # include sink file just to keep the console output clean
         sink(file='results/rsink.txt')
         if(debugSink & platform == 'Windows'){
           cat('      trying assessment...', file=dbf, append=TRUE)
         }
+        
         tryfit <- try(source('assessment/caa.R'))
+        
         if(debugSink & platform == 'Windows'){
           cat('/...assessment complete\n', file=dbf, append=TRUE)
         }
         sink(file=NULL)
+
         if(class(tryfit) != 'try-error'){
         
           # Fill the arrays with results
@@ -241,7 +247,7 @@ if(r == 2 & m == 2 & y == 87){ save.image(file='test87.Rdata')}
                          B = SSBhat)
           nextF <- get_nextF(parmgt = mproc[m,], parpop = parpop)
           if(y < nyear){
-            F_full[y+1] <- rlnorm(1, log(0.02), 0.3)#nextF
+            F_full[y+1] <- nextF
           }
         
         }else{

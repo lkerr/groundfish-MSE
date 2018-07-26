@@ -24,7 +24,7 @@ nage <- length(fage:page)
 # first year after the initial condition period
 fyear <- 5
 
-# number of burn-in years
+# number of burn-in years (before the pre-2000 non-assessment period)
 nburn <- 50
 
 # number of burn years for saving OM results (after management
