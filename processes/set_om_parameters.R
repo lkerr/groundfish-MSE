@@ -44,7 +44,7 @@ cmip5 <- read.table(file='data/data_raw/NEUS_CMIP5_annual_means.txt',
                     header=TRUE, skip=2)
 
 nyear <- nrow(cmip5) + nburn
-# nyear <- nrow(cmip5[82:nrow(cmip5),]) + nburn
+# nyear <- 100 + nburn
 
 ## Life history parameters ##
 

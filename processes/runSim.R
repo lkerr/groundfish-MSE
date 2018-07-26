@@ -45,7 +45,7 @@ names(gbT) <- c('YEAR', 'T')
 cmip_dwn <- get_temperatureProj(prj_data = cmip_base, 
                                 obs_data = gbT, 
                                 ref_yrs = c(1982, 2018))
-cmip_dwn <- head(cmip_dwn, 100)
+# cmip_dwn <- head(cmip_dwn, 100)
 # Get the temperature vector
 msyears <- cmip_dwn$YEAR < 2000
 temp <- c(rep(median(cmip_dwn[msyears,'T']), nburn), 
