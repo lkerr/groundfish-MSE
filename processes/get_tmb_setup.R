@@ -53,11 +53,11 @@ tmb_dat <- list(
                   timeI = timeI
 )
 
-file.remove('results/caasink.txt')
-sapply(1:length(tmb_dat), function(x){
-  # cat(names(tmb_dat[[x]]), '\n', file='results/caasink.txt', append=TRUE)
-  write.table(tmb_dat[[x]], file='results/caasink.txt', append=TRUE)
-})
+# file.remove('results/caasink.txt')
+# sapply(1:length(tmb_dat), function(x){
+#   # cat(names(tmb_dat[[x]]), '\n', file='results/caasink.txt', append=TRUE)
+#   write.table(tmb_dat[[x]], file='results/caasink.txt', append=TRUE)
+# })
 
 
 
