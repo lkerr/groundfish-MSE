@@ -71,7 +71,7 @@ if(platform == 'Windows'){
 }
 
 # Set up a sink for debugging
-if(debugSink){
+if(debugSink & platform == 'Windows'){
   dbf <- 'results/debugInfo.txt'
   cat('############  Debug results:  ############\n',
       file=dbf, sep='')
@@ -119,7 +119,7 @@ for(r in 1:nrep){
   
   
     for(y in fyear:nyear){
-# Sys.sleep(0.5)
+Sys.sleep(2)
       if(debugSink){
         cat('    r =', r, 'm =', m, 'y =', y, '\n', file=dbf, append=TRUE)
       }
@@ -206,7 +206,8 @@ for(r in 1:nrep){
         # }
         # prepare data & run assessment model
         source('processes/get_tmb_setup.R')
-# if(m == 2 & y == 102){ save.image(file='test.Rdata')}
+if(r == 2 & m == 2 & y == 86){ save.image(file='test86.Rdata')}
+if(r == 2 & m == 2 & y == 87){ save.image(file='test87.Rdata')}
         # include sink file just to keep the console output clean
         sink(file='results/rsink.txt')
         if(debugSink){
@@ -330,5 +331,6 @@ if(platform == 'Windows'){
   # get_plots(omval, dirOut='results/fig/')
   source('processes/runPost.R')
 }
-  
+
+print(paste('r =', r, 'm = ', m, 'y =', y))
 print(' ---- Fin ----')

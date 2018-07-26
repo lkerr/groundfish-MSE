@@ -6,7 +6,7 @@
 
 ## Simulation information
 
-# Debug?
+# Debug? (windows only for now...)
 debugSink <- TRUE
 
 # number of times to repeat this analysis
