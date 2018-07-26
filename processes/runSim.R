@@ -1,5 +1,8 @@
 
-# setwd('C:/Users/struesdell/OneDrive - Gulf of Maine Research Institute/GMRI/COCA/')
+if(Sys.info()['sysname'] == 'Windows'){
+  setwd('C:/Users/struesdell/OneDrive - Gulf of Maine Research Institute/GMRI/COCA/')
+}
+
 
 
 # empty the environment
@@ -86,7 +89,7 @@ for(r in 1:nrep){
   for(m in 1:nrow(mproc)){
     
     if(debugSink){
-      cat('  m =', m, '\n', file=dbf, append=TRUE)
+      cat('  r =', r, 'm =', m, '\n', file=dbf, append=TRUE)
     }
     
     # set.seed(rsd)
@@ -113,9 +116,9 @@ for(r in 1:nrep){
   
   
     for(y in fyear:nyear){
-
+# Sys.sleep(0.5)
       if(debugSink){
-        cat('    y =', y, '\n', file=dbf, append=TRUE)
+        cat('    r =', r, 'm =', m, 'y =', y, '\n', file=dbf, append=TRUE)
       }
       
       # calculate length-at-age in year y
@@ -139,7 +142,7 @@ for(r in 1:nrep){
       Rout <- get_recruits(type=Rpar$type, par=Rpar, S=SSB[y],
                            tempY=temp[y])
 
-      R[y] <- Rout['R']
+      R[y] <- rlnorm(1, log(44000000), 0.3)#Rout['R']
       residR[y] <- Rout['resid']
       R[y] <- ifelse(R[y] < 0, 0, R[y])
       
