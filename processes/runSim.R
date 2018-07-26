@@ -1,5 +1,5 @@
 
-#setwd('C:/Users/struesdell/OneDrive - Gulf of Maine Research Institute/GMRI/COCA/')
+# setwd('C:/Users/struesdell/OneDrive - Gulf of Maine Research Institute/GMRI/COCA/')
 
 
 # empty the environment
@@ -118,7 +118,6 @@ for(r in 1:nrep){
         cat('    y =', y, '\n', file=dbf, append=TRUE)
       }
       
-cat('flag1\n', file=dbf, append=TRUE)      
       # calculate length-at-age in year y
       laa[y,] <- get_lengthAtAge(type=laa_typ, par=laa_par, 
                                  ages=fage:page)
@@ -200,28 +199,22 @@ cat('flag1\n', file=dbf, append=TRUE)
         #   write.table(get_dwindow(paaIN,sty,y), file=dbf, append=TRUE)
         # }
         # prepare data & run assessment model
-cat('flag2\n', file=dbf, append=TRUE) 
         source('processes/get_tmb_setup.R')
-cat('flag3\n', file=dbf, append=TRUE) 
-if(m == 2 & y == 102){ save.image(file='test.Rdata')}
+# if(m == 2 & y == 102){ save.image(file='test.Rdata')}
         # include sink file just to keep the console output clean
         sink(file='results/rsink.txt')
         if(debugSink){
           cat('      trying assessment...', file=dbf, append=TRUE)
         }
-cat('flag4\n', file=dbf, append=TRUE) 
         tryfit <- try(source('assessment/caa.R'))
-cat('flag5\n', file=dbf, append=TRUE) 
         if(debugSink){
           cat('/...assessment complete\n', file=dbf, append=TRUE)
         }
         sink(file=NULL)
-cat('flag7\n', file=dbf, append=TRUE)         
         if(class(tryfit) != 'try-error'){
         
           # Fill the arrays with results
           source('processes/fill_repArrays.R')
-cat('flag8\n', file=dbf, append=TRUE)           
           # Get fishing mortality for next year's management
           # fbrpy <- get_FBRP(type=fbrpTyp, par=mproc[m,],
                             # sel=endv(rep$slxC), waa=endv(rep$waa), 
@@ -232,7 +225,6 @@ cat('flag8\n', file=dbf, append=TRUE)
                             # sel=endv(rep$slxC), waa=endv(rep$waa), 
                             # M=endv(rep$M), mat=mat[y,], 
                             # R=rep$R, B=SSBhat, Rfun=mean)
-cat('flag9\n', file=dbf, append=TRUE) 
           # apply the harvest control rule
           parpop <- list(waa = tail(rep$waa, 1), 
                          sel = tail(rep$slxC, 1), 
@@ -241,7 +233,6 @@ cat('flag9\n', file=dbf, append=TRUE)
                          R = rep$R,
                          B = SSBhat)
           nextF <- get_nextF(parmgt = mproc[m,], parpop = parpop)
-cat('flag10\n', file=dbf, append=TRUE) 
           if(y < nyear){
             F_full[y+1] <- rlnorm(1, log(0.02), 0.3)#nextF
           }
