@@ -2,8 +2,8 @@
 # Script to create containers (necessary because the main
 # script uses loops that it fills)
 
-yxage <- matrix(0, nrow=nyear, ncol=nage)
-yx0 <- rep(0, nyear)
+yxage <- matrix(NA, nrow=nyear, ncol=nage)
+yx0 <- rep(NA, nyear)
 
 
 # Containers that save the simulation data
@@ -16,7 +16,7 @@ waa <- yxage
 Z <- yxage
 slxC <- yxage
 mat <- yxage
-F_full <- rep(NA, length(yx0))
+F_full <- yx0
 R <- yx0
 residR <- yx0
 SSB <- yx0

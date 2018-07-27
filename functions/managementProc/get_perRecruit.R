@@ -73,15 +73,16 @@ get_perRecruit <- function(parmgt, parpop,
 
     # Calculate mortality, survival and catch
     F <- parpop$sel * F_full[i]
-    Z <- c(0, F[-length(F)] + parpop$M)
+    M <- parpop$M
+    Z <- c(0, F[-length(F)] + M[-length(M)])
     N <- N_init * exp(-cumsum(Z))
     C <- sapply(1:length(N), function(x) 
-                F[x] / (F[x] + parpop$M) * N[x] * (1 - exp(-F[x] - parpop$M)))
+                F[x] / (F[x] + M[x]) * N[x] * (1 - exp(-F[x] - M[x])))
 
     # calculate yield and ssb over lifetime given the level of
     # fishing mortality
 
-    Y[i] <- C %*% c(parpop$waa)
+    Y[i] <- C %*% c(parpop$waa) # (use c() for proper formatting)
     SSB[i] <- sum(N * parpop$waa * parpop$mat)
   }
  
