@@ -10,7 +10,7 @@ if(Sys.info()['sysname'] == 'Windows'){
 
 # empty the environment
 rm(list=ls())
-set.seed(2)
+# set.seed(2)
 
 # load all the functions
 ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
