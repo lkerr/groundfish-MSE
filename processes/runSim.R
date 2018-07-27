@@ -101,8 +101,7 @@ for(r in 1:nrep){
     # F_full[1:(ncaayear + fyear + nburn +1)] <- rlnorm(ncaayear + 
     #                                                   fyear + nburn + 1, 
     #                                                   log(0.2), 0.1)
-    F_full[1:(nburn + sum(msyears)+1)] <- rlnorm(ncaayear + 
-                                                 fyear + nburn + 1, 
+    F_full[1:(nburn + sum(msyears)+1)] <- rlnorm(nburn + sum(msyears)+1, 
                                                  log(0.2), 0.1)
   
     # initialize the model with numbers and mortality rates
@@ -209,8 +208,7 @@ for(r in 1:nrep){
         # }
         # prepare data & run assessment model
         source('processes/get_tmb_setup.R')
-# if(r == 2 & m == 2 & y == 86){ save.image(file='test86.Rdata')}
-# if(r == 2 & m == 2 & y == 87){ save.image(file='test87.Rdata')}
+
         # include sink file just to keep the console output clean
         sink(file='results/rsink.txt')
         if(debugSink & platform == 'Windows'){
@@ -337,6 +335,8 @@ if(platform == 'Windows'){
   # get_plots(omval, dirOut='results/fig/')
   source('processes/runPost.R')
 }
+
+print(unique(warnings()))
 
 print(paste('r =', r, 'm = ', m, 'y =', y))
 print(' ---- Fin ----')
