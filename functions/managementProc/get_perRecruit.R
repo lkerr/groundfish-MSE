@@ -100,7 +100,7 @@ get_perRecruit <- function(parmgt, parpop,
     Fref <- F_full[which.min(abs(slp - slpr))]
     
     # SSB / R at the reference point (not applicable for YPR)
-    SSBref <- NULL
+    SSBatRP <- NULL
     
     # for outputs
     yvalue <- Y
@@ -115,7 +115,7 @@ get_perRecruit <- function(parmgt, parpop,
     Fref <- F_full[which.min(abs(SSB - parmgt$FREF_LEV))]
     
     # SSB / R at the reference point
-    SSBref <- SSB[which.min(abs(SSB - parmgt$FREF_LEV))]
+    SSBatRP <- SSB[which.min(abs(SSB - parmgt$FREF_LEV))]
     
     # for outputs
     yvalue <- SSB
@@ -132,7 +132,7 @@ get_perRecruit <- function(parmgt, parpop,
     Fref <- F_full[which.min(abs(SSBR_ratio - parmgt$FREF_LEV))]
     
     # SSB / R at the reference point
-    SSBref <- SSB[which.min(abs(SSBR_ratio - parmgt$FREF_LEV))]
+    SSBatRP <- SSB[which.min(abs(SSBR_ratio - parmgt$FREF_LEV))]
  
     # for outputs
     yvalue <- SSBR_ratio
@@ -152,7 +152,7 @@ get_perRecruit <- function(parmgt, parpop,
   out <- list(PRgrid = matrix(c(F_full[oidx], yvalue[oidx]), ncol=2),
               RPlevel = parmgt$FREF_LEV,
               RPvalue = Fref,
-              SSBvalue = SSBref)
+              SSBvalue = SSBatRP)
 }
 
 
