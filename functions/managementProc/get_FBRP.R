@@ -44,7 +44,7 @@ get_FBRP <- function(parmgt, parpop){
     
   }else if(parmgt$FREF_TYP == 'simR'){
     
-    # stuff here
+    #### stuff here ####
     
     return(Fref = F) 
 

@@ -117,7 +117,7 @@ get_perRecruit <- function(parmgt, parpop,
     
     # SSB / R at the reference point
     SSBatRP <- SSB[which.min(abs(SSB - parmgt$FREF_LEV))]
-    
+       
     # for outputs
     yvalue <- SSB
     
@@ -134,7 +134,7 @@ get_perRecruit <- function(parmgt, parpop,
     
     # SSB / R at the reference point
     SSBatRP <- SSB[which.min(abs(SSBR_ratio - parmgt$FREF_LEV))]
- 
+
     # for outputs
     yvalue <- SSBR_ratio
    
@@ -154,6 +154,7 @@ get_perRecruit <- function(parmgt, parpop,
               RPlevel = parmgt$FREF_LEV,
               RPvalue = Fref,
               SSBvalue = SSBatRP)
+  
 }
 
 
