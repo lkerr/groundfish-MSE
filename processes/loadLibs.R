@@ -10,7 +10,7 @@
 
 
 platform <- Sys.info()['sysname']
-platform <- 'Windows'
+
 if(platform == 'Linux'){
 
   # seems you need to load gmm prior to loading tmvtnorm
