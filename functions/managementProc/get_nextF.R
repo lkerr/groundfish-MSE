@@ -21,27 +21,35 @@
 #         one value per age class.
 
 
-
-get_nextF <- function(parmgt, parpop){
+get_nextF <- function(parmgt, parpop, RPlast, evalRP){
   
   
   # A general application of national standard 1 reference points. There
   # are different ways to grab the F reference point and the B reference
   # point and those will be implemented in get_FBRP
+  
+  Fref <- get_FBRP(parmgt = parmgt, parpop = parpop)
+  Bref <- get_BBRP(parmgt = parmgt, parpop = parpop, Rfun_lst=Rfun_BmsySim)
+  
+  if(evalRP){
+    FrefRPvalue <- Fref$RPvalue
+    BrefRPvalue <- Bref$RPvalue
+  }else{
+    FrefRPvalue <- RPlast[1]
+    BrefRPvalue <- RPlast[2]
+  }
+  
   if(tolower(parmgt$HCR) == 'ns1'){
     
-    # For NS1 need F reference points and B reference points
-    Fref <- get_FBRP(parmgt = parmgt, parpop = parpop)
-    Bref <- get_BBRP(parmgt = parmgt, parpop = parpop, Rfun_lst=Rfun_BmsySim)
-    F <- get_NS1HCR(parpop, Fmsy=Fref$RPvalue, Bmsy=Bref$RPvalue)['Fadvice']
+    F <- get_NS1HCR(parpop, Fmsy=FrefRPvalue, Bmsy=BrefRPvalue)['Fadvice']
+
 
   }else if(tolower(parmgt$HCR) == 'simplethresh'){
    
-    Fref <- get_FBRP(parmgt = parmgt, parpop = parpop)
-    Bref <- get_BBRP(parmgt = parmgt, parpop = parpop, Rfun_lst=Rfun_BmsySim)
+    
     
     # added small value to F because F = 0 causes some estimation errors
-    F <- ifelse(tail(parpop$B, 1) < Bref$RPvalue, 0, Fref$RPvalue)+1e-3
+    F <- ifelse(tail(parpop$B, 1) < BrefRPvalue, 0, FrefRPvalue)+1e-4
     
   }else{
     
@@ -49,7 +57,8 @@ get_nextF <- function(parmgt, parpop){
     
   }
 
-  return(F)
+  out <- list(F=F, RPs=c(FrefRPvalue, BrefRPvalue))
+  return(out)
 }
 
 

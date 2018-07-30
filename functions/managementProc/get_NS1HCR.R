@@ -37,7 +37,7 @@ get_NS1HCR <- function(parpop, Fmsy, Bmsy){
     
   }
   
-  return(c(Fadvice = F))
+  return(c(Fadvice = unname(F)))
   
 }
 

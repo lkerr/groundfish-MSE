@@ -5,7 +5,7 @@
 # another object that will just hold the values themselves.  Makes
 # things easier for analysis of results
 
-y2 <- y - (ncaayear + fyear + nburn)
+# y2 <- y - (ncaayear + fyear + nburn)
 
 
 # oacomp$sumCW[r,m,y2,,'val'] <- get_dwindow(sumCW, sty, y)
@@ -139,4 +139,5 @@ omval$ginipaaCN[r,m,] <- giniCN
 giniIN <- apply(get_dwindow(paaIN, nomyear, nyear), 1, 
                 get_gini)
 omval$ginipaaIN[r,m,] <- giniIN
+
 

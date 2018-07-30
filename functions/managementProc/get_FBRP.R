@@ -39,7 +39,7 @@ get_FBRP <- function(parmgt, parpop){
   if(parmgt$FREF_TYP == 'YPR' | parmgt$FREF_TYP == 'SPR'){
    
     F <- get_perRecruit(parmgt = parmgt, parpop = parpop)
-    
+   
     return(Fref = F)
     
   }else if(parmgt$FREF_TYP == 'simR'){

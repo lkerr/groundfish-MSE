@@ -1,12 +1,5 @@
 
 
-if(Sys.info()['sysname'] == 'Windows'){
-  setwd('C:/Users/struesdell/OneDrive - Gulf of Maine Research Institute/GMRI/COCA/')
-}
-
-
-
-
 
 # empty the environment
 rm(list=ls())
@@ -56,6 +49,9 @@ cmip_dwn <- get_temperatureProj(prj_data = cmip_base,
 msyears <- cmip_dwn$YEAR < 2000
 temp <- c(rep(median(cmip_dwn[msyears,'T']), nburn),
           cmip_dwn[,'T'])
+
+# The first year that actual management will begin
+fmyear <- nburn + sum(msyears)
 
 
 # Remove any files in the results directories
@@ -118,7 +114,9 @@ for(r in 1:nrep){
                                          inputUnit='kg')
     Z[1:(fyear-1),] <- rep(F_full[1]+M, each=(fyear-1))
   
-  
+    RPs_rm <- matrix(NA, nrow=nyear, ncol=2,
+                     dimnames=list(paste0('y', 1:nyear),
+                                   c('FREF', 'BREF')))
   
     for(y in fyear:nyear){
 
@@ -194,18 +192,8 @@ for(r in 1:nrep){
                                      par=oe_paaIN)
 
       # if burn-in period is over...
-      if(y > nburn + sum(msyears)){
-        # if(debugSink){
-        #   sty <- y-ncaayear+1
-        #   cat('====== J1N ======\n', file=dbf, append=TRUE)
-        #   write.table(get_dwindow(J1N,sty,y), file=dbf, append=TRUE)
-        #   cat('====== CN ======\n', file=dbf, append=TRUE)
-        #   write.table(get_dwindow(CN,sty,y), file=dbf, append=TRUE)
-        #   cat('====== R ======\n', file=dbf, append=TRUE)
-        #   write.table(get_dwindow(R,sty,y), file=dbf, append=TRUE)
-        #   cat('====== paaIN ======\n', file=dbf, append=TRUE)
-        #   write.table(get_dwindow(paaIN,sty,y), file=dbf, append=TRUE)
-        # }
+      if(y > fmyear-1){
+
         # prepare data & run assessment model
         source('processes/get_tmb_setup.R')
 
@@ -243,10 +231,33 @@ for(r in 1:nrep){
                          mat = mat[y,],
                          R = rep$R,
                          B = SSBhat)
-          nextF <- get_nextF(parmgt = mproc[m,], parpop = parpop)
+          
+          # If in the first year or a subsequent year on the reference
+          # point update schedule then run the reference point update
+          if( y == fmyear | 
+              ( y > fmyear & 
+                (y-fyear) > 0 & 
+                (y-fyear-1) %% mproc[m,'RPInt'] == 0 ) ){
+            
+            gnF <- get_nextF(parmgt = mproc[m,], parpop = parpop,
+                             RPlast = NULL, evalRP=TRUE)
+            RPmat[y,] <- gnF$RPs
+          }else{
+            # Otherwise use old reference points to calculate stock
+            # status
+            gnF <- get_nextF(parmgt = mproc[m,], parpop = parpop,
+                             RPlast = RPmat[y-1,], evalRP = FALSE)
+            RPmat[y,] <- RPmat[y-1,]
+          }
+          nextF <- gnF$F
+
+         
+          
           if(y < nyear){
             F_full[y+1] <- nextF
           }
+          
+          
         
         }else{
           
