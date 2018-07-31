@@ -7,7 +7,9 @@
 # separate here it is easier for the HPCC to deal with.
 
 
-
+# Determine what platform the code is running on (Duplicated purposefully
+# in runSim.R)
+platform <- Sys.info()['sysname']
 
 # Determine whether or not this is a run on the HPCC by checking for the
 # existence of the folder Rlib. Duplicate of code in runSim.R but this is

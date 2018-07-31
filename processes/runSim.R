@@ -13,7 +13,8 @@ invisible(sapply(ffiles, source))
 # prepare directories
 #prepFiles()
 
-# Determine what platform the code is running on
+# Determine what platform the code is running on (Duplicated purposefully
+# in runPre.R for running on HPCC)
 platform <- Sys.info()['sysname']
 
 # Determine whether or not this is a run on the HPCC by checking for the
