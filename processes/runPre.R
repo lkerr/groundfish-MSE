@@ -7,8 +7,7 @@
 # separate here it is easier for the HPCC to deal with.
 
 
-# load the required libraries
-source('processes/loadLibs.R')
+
 
 # Determine whether or not this is a run on the HPCC by checking for the
 # existence of the folder Rlib. Duplicate of code in runSim.R but this is
@@ -27,6 +26,9 @@ if(platform != 'Linux'){
                      path_current)
   Sys.setenv(PATH=path_new)
 }
+
+# load the required libraries
+source('processes/loadLibs.R')
 
 # compile the c++ file and make available to R
 TMB::compile("assessment/caa.cpp")
