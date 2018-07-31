@@ -1,5 +1,4 @@
 
-cat(dir('..'), file='filestest.txt')#
 # Code to compile TMB code before running the operating model. Doing this
 # because it's probably a little better to compile once and then access the
 # executable only -- certainly for when this is running on the HPCC as an
@@ -14,7 +13,7 @@ source('processes/loadLibs.R')
 # Determine whether or not this is a run on the HPCC by checking for the
 # existence of the folder Rlib. Duplicate of code in runSim.R but this is
 # necessary because runPre.R is run separately when run on the HPCC.
-if(file.exists('Rlib')){
+if(file.exists('../Rlib')){
   runClass <- 'HPCC'
 }else{
   runClass <- 'Local'
