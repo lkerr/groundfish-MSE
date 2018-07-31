@@ -9,9 +9,7 @@
 # transfers).
 
 
-platform <- Sys.info()['sysname']
-
-if(platform == 'Linux'){
+if(runClass == 'HPCC'){
 
   # seems you need to load gmm prior to loading tmvtnorm
   require(gmm, lib.loc='../Rlib/')

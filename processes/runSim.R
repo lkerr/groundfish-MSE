@@ -13,6 +13,16 @@ invisible(sapply(ffiles, source))
 # prepare directories
 #prepFiles()
 
+# Determine what platform the code is running on
+platform <- Sys.info()['sysname']
+
+# Determine whether or not this is a run on the HPCC by checking for the
+# existence of the folder Rlib
+if(file.exists('Rlib')){
+  runClass <- 'HPCC'
+}else{
+  runClass <- 'Local'
+}
 
 # load the required libraries
 source('processes/loadLibs.R')
@@ -61,13 +71,16 @@ dir.create('results', showWarnings = FALSE)
 dir.create('results/sim')
 dir.create('results/fig')
 
-# if on windows (i.e., not hpcc) must compile the tmb code
-if(platform == 'Windows'){
+# if on local machine (i.e., not hpcc) must compile the tmb code
+# (HPCC runs have a separate call to compile this code).
+if(runClass != 'HPCC'){
   source('processes/runPre.R')
 }
 
-# Set up a sink for debugging
-if(debugSink & platform == 'Windows'){
+# Set up a sink for debugging -- don't use this if on the HPCC because
+# you will end up with multiple programs trying to access the same file
+# at the same time (if running in paralell).
+if(debugSink & runClass != 'HPCC'){
   dbf <- 'results/debugInfo.txt'
   cat('############  Debug results:  ############\n',
       file=dbf, sep='')
@@ -77,7 +90,7 @@ if(debugSink & platform == 'Windows'){
 # begin the model loop
 for(r in 1:nrep){
 
-  if(debugSink & platform == 'Windows'){
+  if(debugSink & runClass != 'HPCC'){
     cat('r = ', r, '\n', file=dbf, append=TRUE)
   }
   
@@ -87,7 +100,7 @@ for(r in 1:nrep){
   
   for(m in 1:nrow(mproc)){
     
-    if(debugSink & platform == 'Windows'){
+    if(debugSink & runClass != 'HPCC'){
       cat('  r =', r, 'm =', m, '\n', file=dbf, append=TRUE)
     }
     
