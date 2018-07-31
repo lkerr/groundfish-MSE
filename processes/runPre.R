@@ -1,5 +1,5 @@
 
-cat(dir('..'), file='filestest.txt')
+cat(dir('..'), file='filestest.txt')#
 # Code to compile TMB code before running the operating model. Doing this
 # because it's probably a little better to compile once and then access the
 # executable only -- certainly for when this is running on the HPCC as an
