@@ -10,7 +10,7 @@
 debugSink <- TRUE
 
 # number of times to repeat this analysis
-nrep <- 3
+nrep <- 5
 
 # first age and plus age
 fage <- 1
