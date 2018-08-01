@@ -82,9 +82,6 @@ if(debugSink & runClass != 'HPCC'){
   # Keep console reasonably clean
 }
 
-if(runClass != 'HPCC'){
-  sink(file='results/rsink.txt')
-}
 
 # begin the model loop
 for(r in 1:nrep){
@@ -339,25 +336,24 @@ td2 <- paste(gsub(' ', '_', td2), round(runif(1, 0, 10000)), sep='_')
 # save results
 save(omval, file=paste0('results/sim/omval', td2, '.Rdata'))
 
-# Create figures
-# get_plots(x=omval, dir='results/fig/')
+
+if(runClass != 'HPCC'){
+  ompar <- readLines('processes/set_om_parameters.R')
+  cat('\n\nFin.\n\n',
+      'Completion at: ',
+      td,
+      file='results/runInfo.txt', sep='')
+  cat('\n\n\n\n\n\n\n\n  ##### OM Parameters ##### \n\n',
+      ompar,
+      file='results/runInfo.txt', sep='\n', append=TRUE)
+}
 
 
-ompar <- readLines('processes/set_om_parameters.R')
-cat('\n\nFin.\n\n',
-    'Completion at: ',
-    td,
-    file='results/runInfo.txt', sep='')
-cat('\n\n\n\n\n\n\n\n  ##### OM Parameters ##### \n\n',
-    ompar,
-    file='results/runInfo.txt', sep='\n', append=TRUE)
 
 if(platform == 'Windows'){
-  # get_plots(omval, dirOut='results/fig/')
   source('processes/runPost.R')
 }
 
-sink(file=NULL)
 
 print(unique(warnings()))
 

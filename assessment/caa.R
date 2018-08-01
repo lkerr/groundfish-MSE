@@ -51,6 +51,11 @@ obj <- MakeADFun(data = data,
                  map = map_par
 )
 
+# Supress output
+obj$env$tracemgc <- FALSE
+obj$env$inner.control$trace <- FALSE
+obj$env$silent <- TRUE
+
 
 # index for active parameter bounds
 # (note that R does not give an error message if the wrong
