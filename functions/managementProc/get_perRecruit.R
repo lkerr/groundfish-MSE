@@ -7,26 +7,29 @@
 # Function to return either Yield-per-recruit, Spawning biomass-per-recruit,
 # or Spawning potential ratio.
 # 
-# type: type of model, one of "YPR", "SSBR" or "SPR"
 # 
-# par: associated reference levels for each reference point
-#      
-#      * for YPR, the level of slope of the YPR curve that is x% of the
-#        origin slope (e.g., par=0.1 for F_0.1)
+# parmgt: a 1-row data frame of management parameters. The operational
+#         component of parmgt for this function is the (1-row) columns
+#         "FREF_TYP" and "FREF_LEV". FREF_TYP indicates the type of model
+#         that should be used to calculate the F reference point and
+#         FREF_LEV is the associate F level (e.g., 0.4 for F40% if you are
+#         using SPR or 0.1 for F0.1 if you are using YPR). The options
+#         and associated reference points are:
+#         
+#           * for YPR, the level of slope of the YPR curve that is x% of the
+#             origin slope (e.g., par=0.1 for F_0.1)
 #     
-#      * for SSBR, the desired level of spawner biomass-per-recruit
+#           * for SSBR, the desired level of spawner biomass-per-recruit
 #      
-#      * for SPR, the desired ratio of spawner biomass-per-recruit relative
-#        to the level of spawner biomass-per-recruit at the origin (e.g.,
-#        par=0.4 for F_40%)
-#        
-# sel: selectivity vector
+#           * for SPR, the desired ratio of spawner biomass-per-recruit 
+#             relative to the level of spawner biomass-per-recruit at the 
+#             origin (e.g., par=0.4 for F_40%)
 # 
-# waa: weight-at-age vector
-# 
-# M: natural mortality scalar
-# 
-# mat: maturity vector (necessary for types SSBR and SPR)
+# parpop: named ist of population parameters (vectors) needed for the 
+#         simulation including selectivity (sel), weight-at-age (waa),
+#         recruitment (R), maturity (mat) and natural mortality (M).
+#         Natural mortality can be a vector or a scalar. Vectors have
+#         one value per age class. 
 # 
 # nage: number of ages to consider -- some large number and doesn't really
 #       need to be an argument. Note that the length of the input vectors

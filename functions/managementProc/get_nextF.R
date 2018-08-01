@@ -19,6 +19,16 @@
 #         recruitment (R), maturity (mat) and natural mortality (M).
 #         Natural mortality can be a vector or a scalar. Vectors have
 #         one value per age class.
+#         
+# Rlast: a vector of length 2 representing the Fmsy and Bmsy reference points
+#        that were used in the previous year of the simulation. The reason
+#        for this is so you can evaluate management procedures that only
+#        update reference points once every N number of years.
+#        
+# evalRP: True/False variable indicating whether reference points should
+#         be evaluated at all -- if not then just use RPlast. Function
+#         could be simplified a little to combine RPlast and evalRP but
+#         it is pretty clear this way at least.
 
 
 get_nextF <- function(parmgt, parpop, RPlast, evalRP){
