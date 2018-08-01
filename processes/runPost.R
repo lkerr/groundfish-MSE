@@ -1,18 +1,8 @@
 
 
-# Determine what platform the code is running on (Duplicated purposefully
-# in runPre.R & runPost.R for running on HPCC)
-platform <- Sys.info()['sysname']
-
-# Determine whether or not this is a run on the HPCC by checking for the
-# existence of the folder Rlib. Duplicate of code in runSim.R but this is
-# necessary because runPre.R & runPost.R are run separately when run on 
-# the HPCC.
-if(file.exists('../Rlib')){
-  runClass <- 'HPCC'
-}else{
-  runClass <- 'Local'
-}
+# Get the run info so the functions work appropriately whether they are
+# on Windows or Linux and whether this is an HPCC run or not.
+source(get_runinfo)
 
 
 # Load in the simulation results
