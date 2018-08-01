@@ -126,17 +126,17 @@ SSBhat <- apply(SSBaa, 1, sum)
 ## management time-period so you can see the response. It is set pretty
 ## arbitrarily though.
 
-omval$SSB[r,m,] <- get_dwindow(SSB, nomyear, nyear)
-omval$R[r,m,] <- get_dwindow(R, nomyear, nyear)
-omval$F_full[r,m,] <- get_dwindow(F_full, nomyear, nyear)
-omval$sumCW[r,m,] <- get_dwindow(sumCW, nomyear,nyear)
+omval$SSB[r,m,] <- get_dwindow(SSB, (fmyear-1), nyear)
+omval$R[r,m,] <- get_dwindow(R, (fmyear-1), nyear)
+omval$F_full[r,m,] <- get_dwindow(F_full, (fmyear-1), nyear)
+omval$sumCW[r,m,] <- get_dwindow(sumCW, (fmyear-1), nyear)
 # cheap -- filling only one value in a vector of NAs. works.
-omval$sumCWcv[r,m,1] <- sd(get_dwindow(sumCW, nomyear,nyear)) /
+omval$sumCWcv[r,m,1] <- sd(get_dwindow(sumCW, (fmyear-1), nyear)) /
                         mean(omval$sumCW[r,m,])
-giniCN <- apply(get_dwindow(paaCN, nomyear, nyear), 1, 
+giniCN <- apply(get_dwindow(paaCN, (fmyear-1), nyear), 1, 
                 get_gini)
 omval$ginipaaCN[r,m,] <- giniCN
-giniIN <- apply(get_dwindow(paaIN, nomyear, nyear), 1, 
+giniIN <- apply(get_dwindow(paaIN, (fmyear-1), nyear), 1, 
                 get_gini)
 omval$ginipaaIN[r,m,] <- giniIN
 

@@ -181,11 +181,11 @@ save_matrix <- array(data = NA,
 # First year to output for saving OMresults
 nomyear <- nyear#ncaayear + fyear + nburn + rburn
 save_vector_ann <- array(data = NA,
-                         dim = c(nrep, nmproc, nyear - nomyear+1),
+                         dim = c(nrep, nmproc, nyear-(fmyear-1)+1),
                          dimnames = list(paste0('rep', 1:nrep), 
                                          paste0('mproc', 1:nmproc),
-                                         paste0('nyear', 1:(nyear - 
-                                                               nomyear+1))))
+                                         paste0('nyear', 1:(nyear-
+                                                            (fmyear-1)+1))))
 
 # save_2xmatrix_ann <- array(data = NA,
 #                            dim = c(nrep, nmproc, nyear - nomyear+1, 2),

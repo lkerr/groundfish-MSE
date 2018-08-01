@@ -27,10 +27,6 @@ source('processes/generateMP.R')
 # get the operating model parameters
 source('processes/set_om_parameters.R')
 
-
-# get all the necessary containers for the simulation
-source('processes/get_containers.R')
-
 # Load specific recruitment functions for simulation-based approach
 # to Bproxy reference points
 source('processes/Rfun_BmsySim.R')
@@ -64,6 +60,9 @@ unlink('results/*', recursive=TRUE)
 dir.create('results', showWarnings = FALSE)
 dir.create('results/sim')
 dir.create('results/fig')
+
+# get all the necessary containers for the simulation
+source('processes/get_containers.R')
 
 # if on local machine (i.e., not hpcc) must compile the tmb code
 # (HPCC runs have a separate call to compile this code).
