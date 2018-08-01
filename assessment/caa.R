@@ -15,7 +15,7 @@ require(TMB)
 
 # compile the c++ file and make available to R
 # TMB::compile("assessment/caa.cpp")
-dyn.load(dynlib("assessment/caa"))
+invisible(capture.output(dyn.load(dynlib("assessment/caa"))))
 
 data <- tmb_dat
 
@@ -48,13 +48,9 @@ map_par <- list(
 obj <- MakeADFun(data = data,
                  parameters = parameters,
                  DLL = "caa",
-                 map = map_par
+                 map = map_par,
+                 silent = TRUE
 )
-
-# Supress output
-obj$env$tracemgc <- FALSE
-obj$env$inner.control$trace <- FALSE
-obj$env$silent <- TRUE
 
 
 # index for active parameter bounds
