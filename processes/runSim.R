@@ -78,8 +78,13 @@ if(debugSink & runClass != 'HPCC'){
   dbf <- 'results/debugInfo.txt'
   cat('############  Debug results:  ############\n',
       file=dbf, sep='')
+  
+  # Keep console reasonably clean
 }
 
+if(runClass != 'HPCC'){
+  sink(file='results/rsink.txt')
+}
 
 # begin the model loop
 for(r in 1:nrep){
@@ -206,7 +211,6 @@ for(r in 1:nrep){
 
         # include sink file just to keep the console output clean
         if(debugSink & runClass != 'HPCC'){
-          sink(file='results/rsink.txt')
           cat('      trying assessment...', file=dbf, append=TRUE)
         }
         
