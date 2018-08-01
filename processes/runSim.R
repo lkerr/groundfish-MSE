@@ -135,7 +135,7 @@ for(r in 1:nrep){
   
     for(y in fyear:nyear){
 
-      if(debugSink & platform == 'Windows'){
+      if(debugSink & runClass != 'HPCC'){
         cat('    r =', r, 'm =', m, 'y =', y, '\n', file=dbf, append=TRUE)
       }
       
@@ -213,17 +213,16 @@ for(r in 1:nrep){
         source('processes/get_tmb_setup.R')
 
         # include sink file just to keep the console output clean
-        sink(file='results/rsink.txt')
-        if(debugSink & platform == 'Windows'){
+        if(debugSink & runClass != 'HPCC'){
+          sink(file='results/rsink.txt')
           cat('      trying assessment...', file=dbf, append=TRUE)
         }
         
         tryfit <- try(source('assessment/caa.R'))
         
-        if(debugSink & platform == 'Windows'){
+        if(debugSink & runClass != 'HPCC'){
           cat('/...assessment complete\n', file=dbf, append=TRUE)
         }
-        sink(file=NULL)
 
         if(class(tryfit) != 'try-error'){
         
@@ -361,6 +360,8 @@ if(platform == 'Windows'){
   # get_plots(omval, dirOut='results/fig/')
   source('processes/runPost.R')
 }
+
+sink(file=NULL)
 
 print(unique(warnings()))
 
