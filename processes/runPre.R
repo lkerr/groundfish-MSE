@@ -9,7 +9,7 @@
 
 # Get the run info so the functions work appropriately whether they are
 # on Windows or Linux and whether this is an HPCC run or not.
-source(get_runinfo)
+source('processes/get_runinfo.R')
 
 # Ensure that TMB will use the Rtools compiler (only windows ... and 
 # not necessary on all machines)
