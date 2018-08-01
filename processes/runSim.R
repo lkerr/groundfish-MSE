@@ -16,7 +16,7 @@ invisible(sapply(ffiles, source))
 
 # Get the run info so the functions work appropriately whether they are
 # on Windows or Linux and whether this is an HPCC run or not.
-source('processes/get_runinfo')
+source('processes/get_runinfo.R')
 
 # load the required libraries
 source('processes/loadLibs.R')
