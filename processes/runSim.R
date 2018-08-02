@@ -149,9 +149,9 @@ for(r in 1:nrep){
       # (depending on the lag) and temperature
       SSB[y] <- sum(J1N[y-fage,] * mat[y,] * waa[y-fage,])  
 
-      Rpar <- get_recruitment_par(par=srpar, stochastic=FALSE)
+      Rpar <- get_recruitment_par(par=srpar, stochastic=Rstoch_par)
       Rout <- get_recruits(type=Rpar$type, par=Rpar, S=SSB[y],
-                           tempY=temp[y], stochastic=FALSE)
+                           tempY=temp[y], stochastic=Rstoch_ann)
 
       R[y] <- Rout['R']
       residR[y] <- Rout['resid']

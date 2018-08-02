@@ -80,6 +80,11 @@ selC_typ <- 'Logistic'
 
 # Recruitment
 load('data/data_processed/SR/cod/BHTS.Rdata') #srpar
+# include stochasticity in recruitment parameter estimates?
+Rstoch_par <- FALSE
+# include stochasticity in annual recruitment estimate?
+Rstoch_ann <- FALSE
+
 
 
 ## Survey information
