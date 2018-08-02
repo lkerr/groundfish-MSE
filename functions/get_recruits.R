@@ -59,7 +59,8 @@
 
 
 
-get_recruits <- function(type, par, S, tempY=NULL, resid0=NULL){
+get_recruits <- function(type, par, S, tempY=NULL, resid0=NULL,
+                         stochastic=TRUE){
   
   # set the parameters as a vector of their own (i.e., remove
   # "type" from the list)
@@ -83,7 +84,7 @@ get_recruits <- function(type, par, S, tempY=NULL, resid0=NULL){
     
     # (H & W p. 285)
     Rhat <- S * exp(par1['a'] + par1['b']*S + par1['c']*tempY)
-    R <- Rhat * Rstoch
+    R <- Rhat * ifelse(stochastic, Rstoch, 1)
 
   }else if(tolower(type) == 'bhts'){
     
@@ -95,7 +96,7 @@ get_recruits <- function(type, par, S, tempY=NULL, resid0=NULL){
     # meanT is accounting for the centering used in model development.
     Rhat <- par1['a'] * S / (par1['b'] + S) * exp(par1['c'] * 
                                                  (tempY - par[['meanT']]))
-    R <- Rhat * Rstoch
+    R <- Rhat * ifelse(stochastic, Rstoch, 1)
     
   }else if(tolower(type) == 'rits'){
     
@@ -107,7 +108,7 @@ get_recruits <- function(type, par, S, tempY=NULL, resid0=NULL){
     # # meanT is accounting for the centering used in model development.
     Rhat <- par1['a'] * S * exp(-par1['b'] * S + par1['c'] * 
                                                  (tempY - par[['meanT']]))
-    R <- Rhat * Rstoch
+    R <- Rhat * ifelse(stochastic, Rstoch, 1)
     
   }else if(tolower(type) == 'constantMean'){
  

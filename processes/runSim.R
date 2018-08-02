@@ -151,7 +151,7 @@ for(r in 1:nrep){
 
       Rpar <- get_recruitment_par(par=srpar, stochastic=FALSE)
       Rout <- get_recruits(type=Rpar$type, par=Rpar, S=SSB[y],
-                           tempY=temp[y])
+                           tempY=temp[y], stochastic=FALSE)
 
       R[y] <- Rout['R']
       residR[y] <- Rout['resid']
