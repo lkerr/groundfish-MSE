@@ -56,6 +56,11 @@ get_perRecruit <- function(parmgt, parpop,
     stop('get_perRecruit: must provide maturity if using SPR')
   }
   
+  # If M is not a vector make it a vector
+  if(length(parpop$M) == 1){
+    parpop$M <- rep(parpop$M, length(parpop$sel))
+  }
+  
   # potential levels of F for INSIDE the function (i.e., not output)
   F_full <- seq(0, 2, length.out = nF)
   # Initial level for number of recruits
@@ -84,7 +89,6 @@ get_perRecruit <- function(parmgt, parpop,
 
     # calculate yield and ssb over lifetime given the level of
     # fishing mortality
-
     Y[i] <- C %*% c(parpop$waa) # (use c() for proper formatting)
     SSB[i] <- sum(N * parpop$waa * parpop$mat)
   }
