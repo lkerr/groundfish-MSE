@@ -256,7 +256,7 @@ for(r in 1:nrep){
                              RPlast = RPmat[y-1,], evalRP = FALSE)
             RPmat[y,] <- RPmat[y-1,]
           }
-          nextF <- gnF$F
+          nextF <- gnF$F + 1e-5
 
          
           
