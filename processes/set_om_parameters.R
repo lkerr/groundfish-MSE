@@ -45,7 +45,7 @@ cmip5model <- 'CMCC_CM'
 # Load the cmip5 temperature data
 cmip5 <- read.table(file='data/data_raw/NEUS_CMIP5_annual_means.txt',
                     header=TRUE, skip=2)
-cmip5 <- subset(cmip5, nyear <= mxyear)
+cmip5 <- subset(cmip5, year <= mxyear)
 
 nyear <- nrow(cmip5) + nburn
 # nyear <- 100 + nburn
