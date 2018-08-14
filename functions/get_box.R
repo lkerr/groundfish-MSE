@@ -29,8 +29,9 @@ get_box <- function(x, plotIdx=NULL, ylab='Value'){
   yrg <- range(unlist(sapply(bp, '[', 'stats')),
                unlist(sapply(bp, '[', 'out')),
                na.rm=TRUE)
+  xrg <- c(0.5, length(plotIdx)+0.5)
 
-  plot(x, type='n', ylim=yrg, xlim=c(0, length(plotIdx)),
+  plot(x, type='n', ylim=yrg, xlim=xrg,
        xlab='', ylab='')
   mtext(side=1:2, line=3, cex=1.25,
         c('Management strategy', ylab))
