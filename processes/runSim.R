@@ -34,6 +34,7 @@ source('processes/Rfun_BmsySim.R')
 # Load in the baseline projected temperature data to use
 cmip_base <- cmip5[,c('year', cmip5model)]
 names(cmip_base) <- c('YEAR', 'T')
+cmip_base <- subset(cmip_base, YEAR <= 2050)
 
 # Load in the GB temperature data for downscaling
 load('data/data_raw/mqt_oisst.Rdata')
