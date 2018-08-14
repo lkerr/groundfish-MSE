@@ -22,7 +22,7 @@ get_slx <- function(type, par, laa){
   if(tolower(type) == 'logistic'){
   
      slx <- 1 / (1 + exp(par[1] - par[2] * laa))
-   
+  
   }
   
   return(slx)
