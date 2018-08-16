@@ -51,7 +51,7 @@
 
 get_perRecruit <- function(parmgt, parpop, 
                            nage=1000, nF=1000, nFrep=100){
-  
+
   if(is.null(parpop$mat) & parmgt$FREF_TYP == 'SPR'){
     stop('get_perRecruit: must provide maturity if using SPR')
   }

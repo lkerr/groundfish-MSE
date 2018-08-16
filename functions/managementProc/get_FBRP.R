@@ -54,6 +54,15 @@ get_FBRP <- function(parmgt, parpop){
     
     return(Fref = F)
     
+  }else if(parmgt$FREF_TYP == 'Fmed'){
+    
+    slp <- get_replacement(parpop = parpop, parmgt = parmgt)
+    pmtemp <- list(FREF_TYP = 'SSBR')
+    ssbrGrid <- get_perRecruit(parmgt = pmtemp, parpop = parpop)$PRgrid
+    F <- get_fmed(parpop = parpop, rep_slp = slp, ssbrGrid = ssbrGrid)
+    
+    return(Fref = F)
+    
   }else{
     
     stop('get_FBRP: parmgt FREF_TYP not recognized')

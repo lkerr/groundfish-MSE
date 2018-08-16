@@ -139,5 +139,6 @@ omval$ginipaaCN[r,m,] <- giniCN
 giniIN <- apply(get_dwindow(paaIN, (fmyear-1), nyear), 1, 
                 get_gini)
 omval$ginipaaIN[r,m,] <- giniIN
+omval$RPs[r,m,,] <- get_dwindow(RPmat, (fmyear-1), nyear)
 
 

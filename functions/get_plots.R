@@ -11,9 +11,12 @@ get_plots <- function(x, dirOut){
   
   
   nm <- names(x)
+  bxidx <- which(nm %in% c("SSB", "R", "F_full", "sumCW", "sumCWcv", 
+                           "ginipaaCN", "ginipaaIN"))
   
+  rpidx <- which(nm == "RPs")
   
-  for(i in 1:length(x)){
+  for(i in bxidx){
     
     jpeg(paste0(dirOut, nm[i], '.jpg.'))
     
@@ -30,6 +33,25 @@ get_plots <- function(x, dirOut){
   }
     
 
+  rp <- omval[[rpidx]]
+  dir.create(file.path(dirOut, 'RP'), showWarnings=FALSE)
+  for(i in 1:dim(rp)[2]){
+  
+    jpeg(paste0(dirOut, 'RP/', 'mp', i, '.jpg.'))
+  
+      get_rptrend(rp[,i,,])
+    
+    dev.off()
+    
+    jpeg(paste0(dirOut, 'RP/', 'hcr', i, '.jpg.'))
+    
+      get_hcrPlot(rp[,i,,])
+    
+    dev.off()
+    
+    
+  }
+  
   
 }
 

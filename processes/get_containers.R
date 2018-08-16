@@ -187,13 +187,13 @@ save_vector_ann <- array(data = NA,
                                          paste0('nyear', 1:(nyear-
                                                             (fmyear-1)+1))))
 
-# save_2xmatrix_ann <- array(data = NA,
-#                            dim = c(nrep, nmproc, nyear - nomyear+1, 2),
-#                            dimnames = list(paste0('rep', 1:nrep), 
-#                                            paste0('mproc', 1:nmproc),
-#                                            paste0('nyear', 1:(nyear - 
-#                                                               nomyear+1)),
-#                                            c('FRefP', 'BRefP')))
+save_2xmatrix_ann <- array(data = NA,
+                           dim = c(nrep, nmproc, nyear-(fmyear-1)+1, 2),
+                           dimnames = list(paste0('rep', 1:nrep),
+                                           paste0('mproc', 1:nmproc),
+                                           paste0('nyear', 1:(nyear-
+                                                                (fmyear-1)+1)),
+                                           c('FRefP', 'BRefP')))
 
 
 
@@ -211,9 +211,9 @@ omval <- list(
   
   ginipaaCN = save_vector_ann,
   
-  ginipaaIN = save_vector_ann
+  ginipaaIN = save_vector_ann,
   
-  # RPs = save_2xmatrix_ann
+  RPs = save_2xmatrix_ann
   
 )
 

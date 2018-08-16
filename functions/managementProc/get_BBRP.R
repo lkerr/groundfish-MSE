@@ -32,7 +32,7 @@ get_BBRP <- function(parmgt, parpop, Rfun_lst){
     
     # get Fmax proxy
     Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop)
-    
+
     parmgt1 <- list(FREF_LEV=Fprox$RPvalue, FREF_TYP='SSBR')
     
     ssbrFmax <- get_perRecruit(parmgt=parmgt1, parpop=parpop, 
