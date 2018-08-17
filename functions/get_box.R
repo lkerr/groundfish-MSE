@@ -22,7 +22,8 @@ get_box <- function(x, plotIdx=NULL, ylab='Value'){
     if(all(is.na(x[,i,]))){
       bp[[i]] <- NA
     }else{
-      bp[[i]] <- boxplot(x[,i,], plot=FALSE)
+      mn <- apply(x, c(1,2), mean, na.rm=TRUE)
+      bp[[i]] <- boxplot(mn[,i], plot=FALSE)
     }
   }
 
@@ -38,7 +39,7 @@ get_box <- function(x, plotIdx=NULL, ylab='Value'){
   
   for(i in 1:length(plotIdx)){
     if(!all(is.na(x[,i,]))){
-      mn <- apply(x, c(2,3), mean, na.rm=TRUE)
+      mn <- apply(x, c(1,2), mean, na.rm=TRUE)
       boxplot(c(mn[,i]), at=i, add=TRUE)
     }
   }
