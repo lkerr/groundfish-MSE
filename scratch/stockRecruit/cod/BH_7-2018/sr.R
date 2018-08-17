@@ -110,18 +110,18 @@ newR <- sapply(1:length(newT), function(x){
 sclR <- 1000
 sclS <- 1000
 
-par(mar=c(4,4,2,1))
+par(mar=c(4,5,2,1))
 plot(0, type='n', xlim=range(newS/sclS), ylim=c(0, max(newR)/sclR),
      xlab='', ylab='', las=1)
 matplot(x=newS/sclS, y=newR/sclR, type='l', lwd=3, add=TRUE)
 
 points(rep$S/sclS, rep$R/sclR, pch=3)
 
-mtext(side=1:2, line=c(2.5,2.5), cex=1.25,
+mtext(side=1:2, line=c(2.5,3.5), cex=1.25,
       c('SSB (MTx1000)', 'R (millions)'))
 legend('top', xpd=NA, col=1:3, lty=1:3, bty='n', ncol=3, lwd=2,
-       legend=paste('T=', newT),
-       yjust=0, inset=-0.2)
+       legend=paste('T = +', newT),
+       yjust=0, inset=-0.15)
 
 
 # residual plot
