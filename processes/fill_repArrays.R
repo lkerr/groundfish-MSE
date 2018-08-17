@@ -130,9 +130,13 @@ omval$SSB[r,m,] <- get_dwindow(SSB, (fmyear-1), nyear)
 omval$R[r,m,] <- get_dwindow(R, (fmyear-1), nyear)
 omval$F_full[r,m,] <- get_dwindow(F_full, (fmyear-1), nyear)
 omval$sumCW[r,m,] <- get_dwindow(sumCW, (fmyear-1), nyear)
-# cheap -- filling only one value in a vector of NAs. works.
-omval$sumCWcv[r,m,1] <- sd(get_dwindow(sumCW, (fmyear-1), nyear)) /
-                        mean(omval$sumCW[r,m,])
+
+# cheap -- repeating CV over array so not really "annual" cv. Doing this for consistency with
+# other boxplot outputs. Not ideal but does work.
+cv <- sd(get_dwindow(sumCW, (fmyear-1), nyear)) /
+      mean(get_dwindow(sumCW, (fmyear-1), nyear))
+omval$sumCWcv[r,m,] <- rep(cv, nyear - (fmyear-1) + 1)
+
 giniCN <- apply(get_dwindow(paaCN, (fmyear-1), nyear), 1, 
                 get_gini)
 omval$ginipaaCN[r,m,] <- giniCN

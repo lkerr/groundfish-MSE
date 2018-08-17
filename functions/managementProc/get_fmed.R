@@ -15,6 +15,7 @@ get_fmed <- function(parpop, rep_slp, ssbrGrid){
   # Print a warning if outside the sampled range of SSBRs
   if(F_star_ind == 1 | F_star_ind == nrow(ssbrGrid)){
     print('WARNING: SSBR outside sample range')
+    browser()
   }
   
   return(list(RPvalue=F_star))

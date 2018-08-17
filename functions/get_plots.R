@@ -19,7 +19,7 @@ get_plots <- function(x, dirOut){
   for(i in bxidx){
     
     jpeg(paste0(dirOut, nm[i], '.jpg.'))
-    
+
       # If you just have a bunch of NAs for some reason make an
       # empty plot as a place-holder
       if(all(is.na(x[[i]]))){
