@@ -1,7 +1,7 @@
 
 # Look at the CMIP5 temperature data
 
-cmip5 <- read.table('data/NEUS_CMIP5_annual_means.txt', header=TRUE, skip=2)
+cmip5 <- read.table('data/data_raw/NEUS_CMIP5_annual_means.txt', header=TRUE, skip=2)
 
 tquant <- t(apply(cmip5[-1], 1, quantile, 
                   probs=c(0.025, 0.05, 0.25, 0.5, 0.75, 0.95, 0.975)))
