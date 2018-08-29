@@ -19,10 +19,9 @@ dyn.load(dynlib("scratch/growth/tmbModel/full_linear/growth"))
 
 # read in the data
 load('data/data_processed/trawlBiol.Rdata') # biol
-# load('data/data_processed/gbT.Rdata')       # gbT
-load('data/data_processed/bbhT.Rdata')       # bbhT
-gbT <- bbhT
-gbT$Year <- as.numeric(gbT$Year)
+load(file='data/data_raw/mqt_oisst.Rdata') #mqt_oisst
+# gbT <- bbhT
+# gbT$Year <- as.numeric(gbT$Year)
 
 
 tdc <- subset(biol, COMNAME == 'ATLANTIC COD')
@@ -38,13 +37,13 @@ tdcsub <- tdcsub1[complete.cases(tdcsub1),]
 # to get back into the history of the observed fish
 # (could edit this to use slightly more data)
 tdcsub <- subset(tdcsub, 
-                 YEAR > min(gbT$Year) + max(tdcsub$AGE))
+                 YEAR > min(mqt_oisst$Year) + max(tdcsub$AGE))
 
 
 ## check which temp you're using in data()
 
 # get overall average
-gbT$T <- apply(gbT[,2:13], 1, mean, na.rm=TRUE)
+mqt_oisst$T <- apply(mqt_oisst[,2:13], 1, mean, na.rm=TRUE)
 # quick fixes ... need more complete T series
 # gbT$q3[1] <- gbT$q3[2]
 # gbT$q3[32] <- mean(gbT$q3[31:33], na.rm=TRUE)
@@ -69,7 +68,7 @@ data <- list(nyear = nyear+nage,
              YEAR = tdcsub$YEAR,
              AGE = tdcsub$AGE,
              LENGTH = tdcsub$LENGTH,
-             TEMP = gbT$q3 - mean(gbT$q3,na.rm=TRUE))
+             TEMP = mqt_oisst$q3 - mean(mqt_oisst$q3,na.rm=TRUE))
 
 # could put the betas on a log scale and force them
 # to start positive and head negative. Not doing this lets
