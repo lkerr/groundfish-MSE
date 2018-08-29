@@ -38,11 +38,19 @@
 # anyhow though (so I guess this note isn't so critically important!)
 
 
+### ** note: initial numbers-at-age is assuming age-1 is the minimum right now. model ages should be
+###          passed under parpop and the minimum should be used instead of 1.0.
+
+
 
 get_BmsySim <- function(parmgt, parpop, Rfun,
                         F_val, ny=1000, ...){
 
-  init <- rep(1000, length(parpop$sel))
+  # Get the initial population for the simulation -- assumes exponential survival based
+  # on the given F, mean recruitment and M
+  ages <- 1:length(parpop$sel)
+  meanR <- mean(parpop$R)
+  init <- meanR * exp(-ages * F_val*parpop$sel - as.numeric(parpop$M))
   
   # Ensure that all vectors are the same length
   if(!all(length(parpop$sel) == length(init),
@@ -94,9 +102,9 @@ get_BmsySim <- function(parmgt, parpop, Rfun,
   
   # Get mature biomass-at-age
   SSBaa <- sweep(Waa, MARGIN=2, STATS=parpop$mat, FUN='*')
-  
+
   # Find the total SSB / year
-  SSBref <- mean(apply(SSBaa, 1, sum)[100:nrow(SSBaa)])
+  SSBref <- mean(apply(SSBaa, 1, sum)[(ny - floor(0.1*ny)):ny])
  
   out <- list(RPlevel = parmgt$FREF_LEV,
               RPvalue = F_val,
