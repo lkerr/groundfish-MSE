@@ -60,7 +60,6 @@ get_FBRP <- function(parmgt, parpop){
     pmtemp <- list(FREF_TYP = 'SSBR')
     ssbrGrid <- get_perRecruit(parmgt = pmtemp, parpop = parpop)$PRgrid
     F <- get_fmed(parpop = parpop, rep_slp = slp, ssbrGrid = ssbrGrid)
-    
     return(Fref = F)
     
   }else{
