@@ -38,7 +38,6 @@ if(runClass == 'HPCC'){
     sapply(pkg, require, character.only = TRUE)
   }
   
-  # Usage example
   pkg<-c("msm", "tmvtnorm", "TMB", "abind", "tidyverse")
   check.packages(pkg)
   
