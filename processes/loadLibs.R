@@ -36,7 +36,7 @@ if(runClass == 'HPCC'){
   }
   
   # Usage example
-  pkg<-c("msm", "tmvtnorm", "TMB", "abind")
+  pkg<-c("msm", "tmvtnorm", "TMB", "abind", "tidyverse")
   check.packages(pkg)
   
   require(msm)

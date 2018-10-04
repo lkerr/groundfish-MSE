@@ -116,6 +116,9 @@ pe_R <- 1.5
 # implementation error of fishing mortality
 ie_F <- 0
 
+# Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
+ob_sumCW <- 1
+ob_sumIN <- 1
 
 
 ## Biological reference point and harvest control rule options

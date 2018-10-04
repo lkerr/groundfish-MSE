@@ -190,11 +190,13 @@ for(r in 1:nrep){
                                      par=oe_effort)
       
       # Get observation error data for the assessment model
-      obs_sumCW[y] <- get_error_idx(type=oe_sumCW_typ, idx=sumCW[y], 
+      obs_sumCW[y] <- get_error_idx(type=oe_sumCW_typ, 
+                                    idx=sumCW[y] * ob_sumCW, 
                                     par=oe_sumCW)
       obs_paaCN[y,] <- get_error_paa(type=oe_paaCN_typ, paa=paaCN[y,], 
                                      par=oe_paaCN)
-      obs_sumIN[y] <- get_error_idx(type=oe_sumIN_typ, idx=sumIN[y], 
+      obs_sumIN[y] <- get_error_idx(type=oe_sumIN_typ, 
+                                    idx=sumIN[y] * ob_sumIN, 
                                     par=oe_sumIN)
       obs_paaIN[y,] <- get_error_paa(type=oe_paaIN_typ, paa=paaIN[y,], 
                                      par=oe_paaIN)
@@ -210,13 +212,23 @@ for(r in 1:nrep){
           cat('      trying assessment...', file=dbf, append=TRUE)
         }
         
-        tryfit <- try(source('assessment/caa.R'))
-        
+        # Run the CAA assessment
+        tryfitCAA <- try(source('assessment/caa.R'))
+        # Run the PlanB assessment
+        tryfitPlanB <- try(source('assessment/planB.R'))
+     
+        # was the assessment successful?
+        conv <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' & 
+                        class(tryfitCAA) != 'try-error') ||
+                       (mproc[m,'ASSESSCLASS'] == 'PLANB' & 
+                        class(tryfitPlanB) != 'try-error'),
+                       yes = 1, no = 0)
+       
         if(debugSink & runClass != 'HPCC'){
           cat('/...assessment complete\n', file=dbf, append=TRUE)
         }
 
-        if(class(tryfit) != 'try-error'){
+        if(conv){
         
           # Fill the arrays with results
           source('processes/fill_repArrays.R')
@@ -230,17 +242,34 @@ for(r in 1:nrep){
                             # sel=endv(rep$slxC), waa=endv(rep$waa), 
                             # M=endv(rep$M), mat=mat[y,], 
                             # R=rep$R, B=SSBhat, Rfun=mean)
+          
           # apply the harvest control rule
-          parpop <- list(waa = tail(rep$waa, 1), 
-                         sel = tail(rep$slxC, 1), 
-                         M = tail(rep$M, 1), 
-                         mat = mat[y,],
-                         R = rep$R,
-                         B = SSBhat)
+          
+          # Vary the parpop depending on the type of assessment model
+          # (can't have just one because one of the models might not
+          # converge.
+          if(mproc[m,'ASSESSCLASS'] == 'CAA'){
+            parpop <- list(waa = tail(rep$waa, 1), 
+                           sel = tail(rep$slxC, 1), 
+                           M = tail(rep$M, 1), 
+                           mat = mat[y,],
+                           R = rep$R,
+                           B = SSBhat)
+          }else if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
+            parpop <- list(obs_sumCW = tmb_dat$obs_sumCW,
+                           mult = tryfitPlanB$value$multiplier,
+                           waatrue_y = waa[y,],
+                           Ntrue_y = J1N[y,],
+                           Mtrue_y = M,
+                           slxCtrue_y = slxC[y,])
+          }
           
           # If in the first year or a subsequent year on the reference
-          # point update schedule then run the reference point update
-          if( y == fmyear | 
+          # point update schedule or if using planB insteadthen run the 
+          # reference point update.  || used to keep from evaluating
+          # mproc[m,'RPInt'] under planB (it will be NA).
+          if( y == fmyear ||
+              mproc[m,'ASSESSCLASS'] == 'PLANB' ||
               ( y > fmyear & 
                 (y-fyear) > 0 & 
                 (y-fyear-1) %% mproc[m,'RPInt'] == 0 ) ){

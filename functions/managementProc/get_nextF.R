@@ -38,36 +38,66 @@ get_nextF <- function(parmgt, parpop, RPlast, evalRP){
   # are different ways to grab the F reference point and the B reference
   # point and those will be implemented in get_FBRP
   
-  Fref <- get_FBRP(parmgt = parmgt, parpop = parpop)
-  Bref <- get_BBRP(parmgt = parmgt, parpop = parpop, Rfun_lst=Rfun_BmsySim)
+  if(parmgt$ASSESSCLASS == 'CAA'){
+    Fref <- get_FBRP(parmgt = parmgt, parpop = parpop)
+    Bref <- get_BBRP(parmgt = parmgt, parpop = parpop, Rfun_lst=Rfun_BmsySim)
+    
+    if(evalRP){
+      FrefRPvalue <- Fref$RPvalue
+      BrefRPvalue <- Bref$RPvalue
+    }else{
+      FrefRPvalue <- RPlast[1]
+      BrefRPvalue <- RPlast[2]
+    }
+    
+    if(tolower(parmgt$HCR) == 'ns1'){
+      
+      F <- get_NS1HCR(parpop, Fmsy=FrefRPvalue, Bmsy=BrefRPvalue)['Fadvice']
   
-  if(evalRP){
-    FrefRPvalue <- Fref$RPvalue
-    BrefRPvalue <- Bref$RPvalue
+  
+    }else if(tolower(parmgt$HCR) == 'simplethresh'){
+     
+      
+      
+      # added small value to F because F = 0 causes some estimation errors
+      F <- ifelse(tail(parpop$B, 1) < BrefRPvalue, 0, FrefRPvalue)+1e-4
+      
+    }else{
+      
+      stop('get_nextF: type not recognized')
+      
+    }
+  
+    out <- list(F=F, RPs=c(FrefRPvalue, BrefRPvalue))
+    
+  }else if(parmgt$ASSESSCLASS == 'PLANB'){
+    
+    # Find the recommended level for catch in weight
+    CWrec <- tail(parpop$obs_sumCW, 1) * parpop$mult
+    
+    #### NEXT MIGRATE THE WEIGHT TO A FISHING MORTALITY
+    #### you know what the selectivity is going to be 
+    #### (use the real one here) and you know what the weight is
+    #### going to be (use the real one) so drive the F as hard as
+    #### required in each of the age classes until you land on
+    #### the desired catch biomass.
+    
+    # Calculate what the corresponding true F is that matches with
+    # the actual biomass-at-age in the current year
+    trueF <- getF(x = CWrec,
+                  Nv = parpop$Ntrue_y, 
+                  slxCv = parpop$slxCtrue_y, 
+                  M = parpop$Mtrue_y, 
+                  waav = parpop$waatrue_y)
+    
+    out <- list(F = trueF, RPs = c(NA, NA))
+    
   }else{
-    FrefRPvalue <- RPlast[1]
-    BrefRPvalue <- RPlast[2]
+    
+    stop('Assessment class not recognized')
+    
   }
   
-  if(tolower(parmgt$HCR) == 'ns1'){
-    
-    F <- get_NS1HCR(parpop, Fmsy=FrefRPvalue, Bmsy=BrefRPvalue)['Fadvice']
-
-
-  }else if(tolower(parmgt$HCR) == 'simplethresh'){
-   
-    
-    
-    # added small value to F because F = 0 causes some estimation errors
-    F <- ifelse(tail(parpop$B, 1) < BrefRPvalue, 0, FrefRPvalue)+1e-4
-    
-  }else{
-    
-    stop('get_nextF: type not recognized')
-    
-  }
-
-  out <- list(F=F, RPs=c(FrefRPvalue, BrefRPvalue))
   return(out)
 }
 
