@@ -117,7 +117,7 @@ pe_R <- 1.5
 ie_F <- 0
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
-ob_sumCW <- 1
+ob_sumCW <- 0.8
 ob_sumIN <- 1
 
 
