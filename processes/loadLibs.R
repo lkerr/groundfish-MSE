@@ -21,6 +21,7 @@ if(runClass == 'HPCC'){
   require(Matrix, lib.loc='../Rlib/')
   require(TMB, lib.loc='../Rlib/')
   require(abind, lib.loc='../Rlib/')
+  require(tidyverse, lib.loc='../Rlib/')
   
 }else{
   
