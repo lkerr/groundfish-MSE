@@ -39,6 +39,8 @@ module load R/3.4.0
 
 cd groundfish-MSE/
 
+mkdir results
+
 Rscript ./processes/runPre.R --vanilla
 
 echo "runPre complete"

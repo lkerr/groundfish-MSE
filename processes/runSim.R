@@ -54,13 +54,6 @@ temp <- c(rep(median(cmip_dwn[msyears,'T']), nburn),
 fmyear <- nburn + sum(msyears)
 
 
-# Remove any files in the results directories
-unlink('results/*', recursive=TRUE)
-# create a results & sim directories
-dir.create('results', showWarnings = FALSE)
-dir.create('results/sim')
-dir.create('results/fig')
-
 # get all the necessary containers for the simulation
 source('processes/get_containers.R')
 

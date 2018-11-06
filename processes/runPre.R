@@ -18,6 +18,13 @@ if(platform != 'Linux'){
   path_new <- paste0('c:\\Rtools\\bin;c:\\Rtools\\mingw_32\\bin;',
                      path_current)
   Sys.setenv(PATH=path_new)
+  
+  # Remove any files in the results directories
+  unlink('results/*', recursive=TRUE)
+  # create a results & sim directories
+  dir.create('results', showWarnings = FALSE)
+  dir.create('results/sim')
+  dir.create('results/fig')
 }
 
 # load the required libraries
