@@ -21,11 +21,12 @@ if(platform != 'Linux'){
   
   # Remove any files in the results directories
   unlink('results/*', recursive=TRUE)
-  # create a results & sim directories
-  dir.create('results', showWarnings = FALSE)
-  dir.create('results/sim')
-  dir.create('results/fig')
 }
+
+# create a results & sim directories
+dir.create('results', showWarnings = FALSE)
+dir.create('results/sim')
+dir.create('results/fig')
 
 # load the required libraries
 source('processes/loadLibs.R')
