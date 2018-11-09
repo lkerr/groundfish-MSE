@@ -60,7 +60,7 @@ get_nextF <- function(parmgt, parpop, RPlast, evalRP){
       
       
       # added small value to F because F = 0 causes some estimation errors
-      F <- ifelse(tail(parpop$B, 1) < BrefRPvalue, 0, FrefRPvalue)+1e-4
+      F <- ifelse(tail(parpop$SSB, 1) < BrefRPvalue, 0, FrefRPvalue)+1e-4
       
     }else{
       

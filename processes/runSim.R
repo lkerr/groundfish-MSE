@@ -247,7 +247,8 @@ for(r in 1:nrep){
                            M = tail(rep$M, 1), 
                            mat = mat[y,],
                            R = rep$R,
-                           B = SSBhat)
+                           SSB = SSBhat,
+                           J1N = rep$J1N)
           }else if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
             parpop <- list(obs_sumCW = tmb_dat$obs_sumCW,
                            mult = tryfitPlanB$value$multiplier,
