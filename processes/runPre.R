@@ -18,7 +18,9 @@ if(platform != 'Linux'){
   path_new <- paste0('c:\\Rtools\\bin;c:\\Rtools\\mingw_32\\bin;',
                      path_current)
   Sys.setenv(PATH=path_new)
-  
+}
+
+if(runClass == 'Local'){
   # Remove any files in the results directories
   unlink('results/*', recursive=TRUE)
 }

@@ -9,7 +9,7 @@ platform <- Sys.info()['sysname']
 # the node
 if(platform == 'Linux'){
   # Dig into the environmental variables
-  evndir <- system('printenv LSF_ENVDIR')
+  evndir <- system('printenv LSF_ENVDIR', intern=TRUE)
   if(evndir == '/lsf/conf'){
     runClass <- 'HPCC'
   }else{
