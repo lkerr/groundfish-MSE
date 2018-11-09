@@ -9,12 +9,13 @@ platform <- Sys.info()['sysname']
 # the node
 if(platform == 'Linux'){
   # Identify the name of the node
-  nn <- system('uname --nodename')
-  if(nn == 'ghpcc06'){
-    runClass <- 'HPCC'
-  }else{
-    runClass <- 'Local'
-  }
+  # nn <- system('uname --nodename')
+  # if(nn == 'ghpcc06'){
+  #   runClass <- 'HPCC'
+  # }else{
+  #   runClass <- 'Local'
+  # }
+  runClass <- 'HPCC'
 }else{
   runClass <- 'Local'
 }
