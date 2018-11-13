@@ -31,6 +31,12 @@ source('processes/set_om_parameters.R')
 # to Bproxy reference points
 source('processes/Rfun_BmsySim.R')
 
+# If running on a local machine, more than one repetition should be
+# used otherwise some plotting functions (e.g., boxplots) will fail
+if(runClass == 'Local' && nrep == 1){
+  stop('For local runs please set nrep > 1 (in set_om_parameters.R)')
+}
+
 # Load in the baseline projected temperature data to use
 cmip_base <- cmip5[,c('year', cmip5model)]
 names(cmip_base) <- c('YEAR', 'T')
