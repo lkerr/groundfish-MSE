@@ -25,7 +25,7 @@
 #             relative to the level of spawner biomass-per-recruit at the 
 #             origin (e.g., par=0.4 for F_40%)
 # 
-# parpop: named ist of population parameters (vectors) needed for the 
+# parpop: named list of population parameters (vectors) needed for the 
 #         simulation including selectivity (sel), weight-at-age (waa),
 #         recruitment (R), maturity (mat) and natural mortality (M).
 #         Natural mortality can be a vector or a scalar. Vectors have
