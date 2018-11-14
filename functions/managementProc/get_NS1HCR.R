@@ -42,11 +42,4 @@ get_NS1HCR <- function(parpop, Fmsy, Bmsy){
 }
 
 
-### Test
-# f <- c()
-# b=seq(100, 2000, 100)
-# for(i in 1:length(b)){
-#   parpop <- list(M = 0.2, B=b[i])
-#   f[i] <- get_NS1HCR(parpop=parpop, Fmsy = 0.2, Bmsy = 1000)
-# }
-# plot(f ~ b)
+

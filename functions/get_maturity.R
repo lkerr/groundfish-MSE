@@ -16,9 +16,19 @@
 #      how the function is parameterized
 #
 # laa: length-at-age vector
+# 
+# tempY: value for temperature in year y
 
 
-get_maturity <- function(type, par, laa){
+get_maturity <- function(type, par, laa, tempY=NULL){
+  
+  if(is.null(tempY)){
+    tempY <- 0
+  }
+  
+  if(type == 'logistic' && is.na(par[3])){
+    par[3] <- 0
+  }
   
   if(tolower(type) == 'knife'){
     
@@ -30,16 +40,12 @@ get_maturity <- function(type, par, laa){
     mat <- as.numeric(laa >= par)
   
   }else if(tolower(type) == 'logistic'){
-    
-    if(length(par) != 2){
-      stop('get_maturity: length of par must be 2 with logistic
-           option')
-    }
-    
-    # mat <- 1 / (1 + exp(par[1] - par[2] * laa))
-    
+
     # par[2] is L50
-    mat <- 1 / (1 + exp(par[1] * (par[2] - laa)))
+    # Looks like we can simply add an additional parameter here despite
+    # the L50 version of the parameterization. Work this out on paper
+    # and call v1 par[1]*par[2] and v2 -par[2] and go from there.
+    mat <- 1 / (1 + exp(par[1] * (par[2] - laa) + par[3] * tempY))
     
   }
   
@@ -47,7 +53,6 @@ get_maturity <- function(type, par, laa){
   return(mat)
   
 }
-
 
 
 
