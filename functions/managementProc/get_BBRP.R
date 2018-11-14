@@ -30,14 +30,14 @@ get_BBRP <- function(parmgt, parpop, Rfun_lst){
   
   if(parmgt$BREF_TYP == 'RSSBR'){
     
-    # get Fmax proxy
+    # get Fmsy proxy
     Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop)
 
-    parmgt1 <- list(FREF_LEV=Fprox$RPvalue, FREF_TYP='SSBR')
+    parmgt1 <- list(FREF_LEV=Fprox$SSBvalue, FREF_TYP='SSBR')
     
     ssbrFmax <- get_perRecruit(parmgt=parmgt1, parpop=parpop, 
-                              nage=1000, nF=1000, nFrep=100)
-  
+                               nage=1000, nF=1000, nFrep=100)
+ 
     # Load in the recruitment function (recruitment function index is
     # found in the parmgt data frame but the actual functions are from
     # the list Rfun_BmsySim which is created in the processes folder.
@@ -59,7 +59,7 @@ get_BBRP <- function(parmgt, parpop, Rfun_lst){
     # get SPR at Fmax
     sprFmax <- get_perRecruit(parmgt=mproc[m,], parpop=parpop,
                               nage=1000, nF=1000, nFrep=100)
-    
+   
     B <- get_BmsySim(parmgt, parpop, Rfun = Rfun, 
                      F_val=sprFmax$RPvalue)$SSBvalue
 
