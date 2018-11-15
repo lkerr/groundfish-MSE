@@ -53,8 +53,8 @@ cmip_dwn <- get_temperatureProj(prj_data = cmip_base,
                                 ref_yrs = c(1982, 2018))
 
 # Get the temperature vector
+msyears <- cmip_dwn$YEAR < 2000
 if(useTemp == TRUE){
-  msyears <- cmip_dwn$YEAR < 2000
   temp <- c(rep(median(cmip_dwn[msyears,'T']), nburn),
             cmip_dwn[,'T'])
 }else{
