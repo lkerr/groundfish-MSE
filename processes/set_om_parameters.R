@@ -37,18 +37,20 @@ mxyear <- 2050
 # number of years in assessment model
 ncaayear <- 30 
 
-## Temperature information ##
-cmip5model <- 'CMCC_CM'
+## Do you want to include temperature projections
+useTemp <- TRUE
 
-# Number of model years to run are defined by the length of the burn-in
-# period and the dimension of the CMIP5 data set.
-# Load the cmip5 temperature data
-cmip5 <- read.table(file='data/data_raw/NEUS_CMIP5_annual_means.txt',
-                    header=TRUE, skip=2)
-cmip5 <- subset(cmip5, year <= mxyear)
+  ## Temperature information ##
+  cmip5model <- 'CMCC_CM'
+  
+  # Number of model years to run are defined by the length of the burn-in
+  # period and the dimension of the CMIP5 data set.
+  # Load the cmip5 temperature data
+  cmip5 <- read.table(file='data/data_raw/NEUS_CMIP5_annual_means.txt',
+                      header=TRUE, skip=2)
+  cmip5 <- subset(cmip5, year <= mxyear)
 
-nyear <- nrow(cmip5) + nburn
-# nyear <- 100 + nburn
+  nyear <- nrow(cmip5) + nburn
 
 ## Life history parameters ##
 
