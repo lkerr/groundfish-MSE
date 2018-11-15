@@ -54,7 +54,7 @@ useTemp <- FALSE
 
 ## Life history parameters ##
 
-# length-at-age parameters
+# length-at-age parameters -- see get_lengthAtAge for including covariates
 laa_par <- c(114.1, 0.22, 0.17) #SAW 55 p.667
 laa_typ <- 'vonB'
 
