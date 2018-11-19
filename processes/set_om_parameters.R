@@ -38,7 +38,7 @@ mxyear <- 2050
 ncaayear <- 30 
 
 ## Do you want to include temperature projections
-useTemp <- FALSE
+useTemp <- TRUE
 
   ## Temperature information ##
   cmip5model <- 'CMCC_CM'
