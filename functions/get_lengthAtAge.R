@@ -31,6 +31,19 @@ get_lengthAtAge <- function(type, par, ages, TempY=NULL){
       par[is.na(par)] <- 0
     }
     
+    # If there are only 3 or 4 parameters adapt par so that it is zero
+    # instead of NA. There is surely a better way to do this...
+    if(is.na(par[4])){
+      par[4] <- 0
+    }
+    if(is.na(par[5])){
+      par[5] <- 0
+    }
+    
+    if(is.null(TempY)){
+      TempY <- 0
+    }
+    
     laa <- (par[1] + par[4] * TempY) * 
            (1 - exp(-(par[2] + par[5] * TempY) * (ages - par[3])))
     
