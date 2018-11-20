@@ -10,6 +10,11 @@ Rfun_BmsySim <- list(
   
   L5SAMP = function(parpop, ...) mean(sample(tail(parpop$R), 5)),
   
+  # The median temperature for the Bmsy proxy simulations refers to the
+  # median temperature between now and 25 years into the future (if there
+  # are 25 years available in the series -- otherwise it just uses what is
+  # left).
+  
   recT = function(parpop, parenv) 
           get_recruits(type = parpop$Rpar$type, 
           par = parpop$Rpar, 
