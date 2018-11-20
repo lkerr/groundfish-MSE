@@ -60,8 +60,8 @@ get_BBRP <- function(parmgt, parpop, Rfun_lst){
     sprFmax <- get_perRecruit(parmgt=mproc[m,], parpop=parpop,
                               nage=1000, nF=1000, nFrep=100)
    
-    B <- get_BmsySim(parmgt, parpop, Rfun = Rfun, 
-                     F_val=sprFmax$RPvalue)$SSBvalue
+    B <- get_BmsySim(parmgt = parmgt, parpop = parpop, parenv = parenv, 
+                     Rfun = Rfun, F_val=sprFmax$RPvalue)$SSBvalue
 
     return(list(RPvalue = B))
     

@@ -43,7 +43,7 @@
 
 
 
-get_BmsySim <- function(parmgt, parpop, Rfun,
+get_BmsySim <- function(parmgt, parpop, parenv, Rfun,
                         F_val, ny=1000, ...){
 
   # Get the initial population for the simulation -- assumes exponential survival based

@@ -269,6 +269,9 @@ for(r in 1:nrep){
                            slxCtrue_y = slxC[y,])
           }
           
+          # Environmental parameters
+          parenv <- list(tempY = temp[1:y])
+          
           # If in the first year or a subsequent year on the reference
           # point update schedule or if using planB insteadthen run the 
           # reference point update.  || used to keep from evaluating
@@ -280,6 +283,7 @@ for(r in 1:nrep){
                 (y-fyear-1) %% mproc[m,'RPInt'] == 0 ) ){
             
             gnF <- get_nextF(parmgt = mproc[m,], parpop = parpop,
+                             parenv = parenv,
                              RPlast = NULL, evalRP=TRUE)
             RPmat[y,] <- gnF$RPs
 

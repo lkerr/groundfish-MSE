@@ -31,7 +31,7 @@
 #         it is pretty clear this way at least.
 
 
-get_nextF <- function(parmgt, parpop, RPlast, evalRP){
+get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
   
   
   # A general application of national standard 1 reference points. There
@@ -40,7 +40,8 @@ get_nextF <- function(parmgt, parpop, RPlast, evalRP){
   
   if(parmgt$ASSESSCLASS == 'CAA'){
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpop)
-    Bref <- get_BBRP(parmgt = parmgt, parpop = parpop, Rfun_lst=Rfun_BmsySim)
+    Bref <- get_BBRP(parmgt = parmgt, parpop = parpop, 
+                     parenv = parenv, Rfun_lst=Rfun_BmsySim)
     
     if(evalRP){
       FrefRPvalue <- Fref$RPvalue
