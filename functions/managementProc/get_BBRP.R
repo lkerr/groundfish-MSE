@@ -25,7 +25,7 @@
 
 
 
-get_BBRP <- function(parmgt, parpop, Rfun_lst){
+get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst){
 
   
   if(parmgt$BREF_TYP == 'RSSBR'){

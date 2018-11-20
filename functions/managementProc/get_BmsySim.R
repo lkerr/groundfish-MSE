@@ -91,9 +91,9 @@ get_BmsySim <- function(parmgt, parpop, parenv, Rfun,
                                        parpop$M[nage-1]) + 
                  N[y-1,nage] * exp(-parpop$sel[nage] * F_val - 
                                      parpop$M[nage])
-    
+
     # Recruitment
-    N[y,1] <- Rfun(parpop$R)
+    N[y,1] <- Rfun(parpop = parpop, parenv = parenv)
     
   }
   

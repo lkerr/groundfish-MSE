@@ -10,10 +10,12 @@ Rfun_BmsySim <- list(
   
   L5SAMP = function(parpop, ...) mean(sample(tail(parpop$R), 5)),
   
-  recT = get_recruits(type = parpop$Rpar$type, par = parpop$Rpar, 
-                      S = tail(parpop$SSB, 1),
-                      tempY = parenv$temp[parenv$y], 
-                      stochastic = parenv$Rstoch_ann)
+  recT = function(parpop, parenv) 
+          get_recruits(type = parpop$Rpar$type, 
+          par = parpop$Rpar, 
+          S = tail(parpop$SSB, 1),
+          tempY = parenv$temp[parenv$y], 
+          stochastic = parenv$Rstoch_ann)['R']
   
 )
 
