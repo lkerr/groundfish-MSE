@@ -56,12 +56,14 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst){
     # the list Rfun_BmsySim which is created in the processes folder.
     Rfun <- Rfun_BmsySim[[parmgt$RFUN_NM]]
     
-    # get SPR at Fmax
-    sprFmax <- get_perRecruit(parmgt=mproc[m,], parpop=parpop,
-                              nage=1000, nF=1000, nFrep=100)
+    # # get SPR at Fmax
+    # sprFmax <- get_perRecruit(parmgt=mproc[m,], parpop=parpop,
+    #                           nage=1000, nF=1000, nFrep=100)
+    # get Fmsy proxy
+    Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop)
    
     B <- get_BmsySim(parmgt = parmgt, parpop = parpop, parenv = parenv, 
-                     Rfun = Rfun, F_val=sprFmax$RPvalue)$SSBvalue
+                     Rfun = Rfun, F_val=Fprox$RPvalue)$SSBvalue
 
     return(list(RPvalue = B))
     

@@ -10,7 +10,7 @@
 debugSink <- TRUE
 
 # number of times to repeat this analysis
-nrep <- 1
+nrep <- 3
 
 # first age and plus age
 fage <- 1
@@ -28,7 +28,7 @@ fyear <- 5
 nburn <- 50
 
 # maximum year predicted into the future
-mxyear <- 2025
+mxyear <- 2050
 
 # number of burn years for saving OM results (after management
 # procedure has started)

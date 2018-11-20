@@ -1,6 +1,6 @@
 
 
-get_replacement <- function(parpop, parmgt, plot=TRUE){
+get_replacement <- function(parpop, parmgt, plot=FALSE){
   
   ###### ----- must change L5SAMP here..... --------#######
   # Change setup here it is ridiculous.
@@ -15,7 +15,7 @@ get_replacement <- function(parpop, parmgt, plot=TRUE){
 
   # slp of the bisecting line
   # slp <- coef(bimod)
-  slp <- median(parpop$R / parpop$B)
+  slp <- median(parpop$R / parpop$SSB)
   
   if(plot){
     xl <- c(0, max(parpop$SSB))
