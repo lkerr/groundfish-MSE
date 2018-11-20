@@ -28,7 +28,7 @@ fyear <- 5
 nburn <- 50
 
 # maximum year predicted into the future
-mxyear <- 2050
+mxyear <- 2025
 
 # number of burn years for saving OM results (after management
 # procedure has started)
