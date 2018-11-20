@@ -259,7 +259,8 @@ for(r in 1:nrep){
                            mat = mat[y,],
                            R = rep$R,
                            SSB = SSBhat,
-                           J1N = rep$J1N)
+                           J1N = rep$J1N,
+                           Rpar = Rpar)
           }else if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
             parpop <- list(obs_sumCW = tmb_dat$obs_sumCW,
                            mult = tryfitPlanB$value$multiplier,
@@ -270,7 +271,9 @@ for(r in 1:nrep){
           }
           
           # Environmental parameters
-          parenv <- list(tempY = temp[1:y])
+          parenv <- list(tempY = temp,
+                         Rstoch_ann = Rstoch_ann,
+                         y = y)
           
           # If in the first year or a subsequent year on the reference
           # point update schedule or if using planB insteadthen run the 
