@@ -14,7 +14,7 @@ Rfun_BmsySim <- list(
           get_recruits(type = parpop$Rpar$type, 
           par = parpop$Rpar, 
           S = tail(parpop$SSB, 1),
-          tempY = parenv$temp[parenv$y], 
+          tempY = median(parenv$temp[parenv$y:(parenv$y+25)], na.rm=TRUE), 
           stochastic = parenv$Rstoch_ann)['R']
   
 )
