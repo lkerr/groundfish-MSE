@@ -42,7 +42,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpop)
     Bref <- get_BBRP(parmgt = parmgt, parpop = parpop, 
                      parenv = parenv, Rfun_lst=Rfun_BmsySim)
-    
+   
     if(evalRP){
       FrefRPvalue <- Fref$RPvalue
       BrefRPvalue <- Bref$RPvalue
