@@ -1,8 +1,10 @@
-# groundfish-MSE
-Development of Robust Management Strategies for Northeast Groundfish Fisheries in a Changing Climate
+## groundfish-MSE
+
+### Development of Robust Management Strategies for Northeast Groundfish Fisheries in a Changing Climate
 
 
-# For specific information, please see the following files in the documentation directory:
+### For specific information, please see the following files in the documentation directory:
+
 
  FILENAME          | DESCRIPTION
 ------------------ | -----------
