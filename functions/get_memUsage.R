@@ -4,7 +4,7 @@
 ## Function to report the memory used in the runs
 
 
-get_memUsage <- function(runClass, info){
+get_memUsage <- function(runClass){
   
   if(runClass == 'HPCC'){
   
@@ -39,12 +39,10 @@ get_memUsage <- function(runClass, info){
       mmStats <- quantile(mm, na.rm=TRUE)
       
       write.table(mmStats, file='../memUsage.txt', row.names=TRUE)
-      cat('Quantiles for memory usage (MB)',
+      cat('Quantiles for memory usage (MB)\n',
           names(mmStats), 
           '\n',
           mmStats,
-          '\n\n\n',
-          info,
           file='../memUsage.txt')
       
     }
