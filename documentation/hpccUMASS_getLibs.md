@@ -12,13 +12,13 @@ Running the MSE requires some specific R libraries.  Similarly to when you run i
 ```
 [st12d@ghpcc06 ~]$
 ```
-except it won't start with st12d it will start with your username.
+  except it won't start with st12d it will start with your username.
 
 2. Load gcc. When R packages are installed they need to be compiled in order to run -- gcc is in charge of this step.  gcc is not automatically available however -- you have to tell the HPCC that you are going to want to use it.  Load it using
 ```
 [st12d@ghpcc06 ~]$ module load gcc/5.1.0
 ```
-and you will get an output something like
+  and you will get an output something like
 ```
 [st12d@ghpcc06 ~]$ module load gcc/5.1.0
 gcc 5.1.0 is located under /share/pkg/gcc/5.1.0
@@ -28,19 +28,19 @@ Just like gcc, you have to tell the HPCC that you are going to want to use R bef
 ```
 module load R/3.4.0
 ```
-the output looks something like
+  the output looks something like
 ```
 [st12d@ghpcc06 ~]$ module load R/3.4.0
 R 3.4.0 is located under /share/pkg/R/3.4.0
 When compiling modules for this, be sure to load gcc/5.1.0
 ```
-It wants to make sure we've loaded gcc/5.1.0 in case we want to install packages -- good news: we  did that in step 2!
+  It wants to make sure we've loaded gcc/5.1.0 in case we want to install packages -- good news: we  did that in step 2!
 
 4. Open R by typing R in the console and hitting Enter
 ```
 [st12d@ghpcc06 ~]$ R
 ```
-Now even though the screen hasn't changed much (it's not like opening a program on your local machine) you are now working in R:
+  Now even though the screen hasn't changed much (it's not like opening a program on your local machine) you are now working in R:
 
   ```
   [st12d@ghpcc06 ~]$ R
@@ -63,11 +63,11 @@ Now even though the screen hasn't changed much (it's not like opening a program 
   'help.start()' for an HTML browser interface to help.
   Type 'q()' to quit R.
   ```
-If you ever want to exit R so you can get back to the HPCC console, just type
+  If you ever want to exit R so you can get back to the HPCC console, just type
 ```
 > q()
 ```
-hit enter and you will exit.
+  hit enter and you will exit.
 
 5. Now we will install the packages.  The only tricky step here is is that we have to tell R where we want the packages to be installed.  Note that this will depend on how you have set up your HPCC account.  The trick is that the program assumes that you have a folder called **Rlib** and that it is a level **up** from the directory you are running the MSE from.  If you do not already have this folder R will automatically create it for you.
 
@@ -78,10 +78,10 @@ hit enter and you will exit.
                      lib='~/COCA_HPCC/Rlib/',
                      repos='http://cran.us.r-project.org')
   ```
-The **~** in the function call under ```lib='~/COCA_HPCC/Rlib/``` refers to your home directory on the HPCC.  The folder I have in the next level up from my home directory is called **COCA_HPCC**.  I already have a folder called groundfish-MSE  (you'll have that after you run the code -- see **hpccUMASS_runMSE.md** when you're done here) and the files that are in my directory  look something like:  
-&nbsp;&nbsp;~/COCA_HPCC/groundfish-MSE  
-&nbsp;&nbsp;~/COCA_HPCC/Rlib  
-except for potential differences in the naming.  If your folder has a different name  you can't copy the ```install.packages()``` code directly -- you will need to edit the path for **lib** and replace **COCA_HPCC** with the name of your folder.  See the end of this document if you want a little more information.
+  The **~** in the function call under ```lib='~/COCA_HPCC/Rlib/``` refers to your home directory on the HPCC.  The folder I have in the next level up from my home directory is called **COCA_HPCC**.  I already have a folder called groundfish-MSE  (you'll have that after you run the code -- see **hpccUMASS_runMSE.md** when you're done here) and the files that are in my directory  look something like:  
+    *~/COCA_HPCC/groundfish-MSE*
+    *~/COCA_HPCC/Rlib*
+  except for potential differences in the naming.  If your folder has a different name  you can't copy the ```install.packages()``` code directly -- you will need to edit the path for **lib** and replace **COCA_HPCC** with the name of your folder.  See the end of this document if you want a little more information.
 
   Once you hit enter R will begin installing libraries and you will see things like:
   ```
@@ -100,7 +100,7 @@ except for potential differences in the naming.  If your folder has a different 
   ==================================================
   downloaded 242 KB
   ```
-This will go on and on, probably for 10 or 15 minutes, maybe longer.  But you can let it go and take a break -- you are done installing packages and are ready to run the MSE!
+  This will go on and on, probably for 10 or 15 minutes, maybe longer.  But you can let it go and take a break -- you are done installing packages and are ready to run the MSE!
 ***
 *More information on the file structure in Step 5*  
 More specifically, the code in the program **groundfish-MSE/processes/loadLibs.R** specifies the location of the libraries using ```require(library, lib.loc='../Rlib/')```.  ```require()``` works like ```library()```. The ```../Rlib/``` tells R to go up one level from the directory from which the call was made to look for the directory **Rlib** which is where it will find the packages.  The reason the packages have to be a level up from the rest of the material (i.e., the groundfish-MSE directory) is that all the material is re-loaded from Git-Hub whenever the model is run but the packages are not part of the Git-Hub material.  In other words, if the packages were within the groundfish-MSE directory they would be deleted.
