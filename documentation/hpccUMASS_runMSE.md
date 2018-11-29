@@ -24,7 +24,7 @@ The MSE is run on the UMASS HPCC as a batch job.  If you are unfamiliar with bat
 
 Four files are required to run the MSE.  They are: *run.sh*, *runPre.sh*, *runSim.sh* and *runPost.sh*  These need to be located in the same directory.  This is the directory where the folder **groundfish-MSE** will be located after it is cloned from Git-Hub.  Once the files are uploaded they can stay in the directory (i.e., you don't need to upload them every time you intend to run the MSE).
 
-The four files are listed in turn below.  You can copy them into a new text document on your local machine and save them (with the appropriate .sh extension), then upload them to the appropriate folder in your HPCC account.  Notably, if you are working on a Windows (or presumably Mac) machine you will need to convert each of the files to Unix/Linux structure (the HPCC runs Linux).  This is due to differences in how the systems treat line breaks.  Once you have uploaded each of the files, use the command ```dos2unix``` for the conversion on each of the four files.  The inputs and outputs will look something like:
+The four files are listed in turn below.  You can copy them individually into a new text document on your local machine and save them (with the appropriate .sh extension), then upload them to the appropriate folder in your HPCC account.  Notably, if you are working on a Windows (or presumably Mac) machine you will need to convert each of the files to Unix/Linux structure (the HPCC runs Linux).  This is due to differences in how the systems treat line breaks.  Once you have uploaded each of the files, use the command ```dos2unix``` for the conversion on each of the four files.  The inputs and outputs will look something like:
 ```
 [st12d@ghpcc06 COCA_HPCC]$ dos2unix run.sh
 dos2unix: converting file run.sh to UNIX format ...
@@ -69,8 +69,6 @@ The *run.sh* file is simply a control file.  It specifies that first *runPre.sh*
 #BSUB -e "./%J.e"             # Specifies name of the error file
 
 
-# ---- Instructions for the HPCC run ---- #
-
 bsub < runPre.sh             # Submit job runPre.sh
 bsub < runSim.sh             # Submit job runSim.sh
 bsub < runPost.sh            # Submit job runPost.sh
@@ -91,8 +89,6 @@ echo "run complete"          # Print statement indicating job is done
 #BSUB -e "./%J.e"             # Specifies name of the error file
 
 
-# ---- Instructions for the HPCC run ---- #
-
 rm -r -f groundfish-MSE/     # remove old directory
 
 module load git/2.1.3        # load the git module
@@ -109,7 +105,7 @@ Rscript ./processes/runPre.R --vanilla    # Run the runPre.R code
 
 echo "runPre complete"       # Print statement indicating job is done
 ```
-There are new processes going on in runPre.sh:
+There are new processes going on in runPre.sh that we haven't discussed:
 * ```rm -r -f groundfish-MSE/``` deletes the previous groundfish-MSE directory if it already exists
 
 * ```module load git/2.1.3``` loads git to the environment so it can be used
@@ -180,6 +176,36 @@ echo "runPost complete"           # Print statement indicating job is done
 By now we have encountered all the code in *runPost.sh* in other files so there is nothing new.  An important note however is that **when you change the array size in runSim.sh you must also change it in runPost.sh where the script specifies it should wait for the runSim job to complete (**```#BSUB -w 'done(runSim[1-25])'```**)**.  This is easy to forget.
 
 ***
+### Editing the .sh files on the HPCC
+Most changes to the model will be made on local machines and then uploaded to Git-Hub.  However, the four .sh files are not used directly by what is copied from Git-Hub (although there are copies of the files in the *groundfish-MSE* folder for reference).  If you want to edit these files (e.g., to change the number of simulations or possibly the memory allocation) it is useful to be able to do this directly on the HPCC (that way you don't have to re-upload and re-remember to use ```dos2unix```).  If you use WinSCP or MobaXterm for your file transfers you should be able to open the .sh files directly using that environment.  Alternatively, there is an equally easy scenario where you can edit files directly from the HPCC console using the function ```nano```.  This will open up the file inside the console.  For example, after navigating using ```cd``` to the directory that contains the .sh files, the command
+```
+nano runPost.sh
+```
+will open up the file and it looks something like
+```
+#!/bin/bash
+
+#BSUB -W 00:15                    # How much time does your job need (HH:MM)
+#BSUB -q short                    # Which queue
+#BSUB -J "runPost"                # Job Name
+#BSUB -R rusage[mem=10000]        # Memory requirements (in MB)
+#BSUB -n 1                        # Number of nodes to use
+#BSUB -o "./%J.o"                 # Specifies name of the output file
+#BSUB -e "./%J.e"                 # Specifies name of the error file
+#BSUB -w 'done(runSim[1-25])'     # wait to submit until down with runSim job
+
+module load R/3.4.0               # load R module
+cd groundfish-MSE/                # change directories to groundfish-MSE
+Rscript ./processes/runPost.R --vanilla      # Run the runSim.R code
+
+echo "runPost complete"           # Print statement indicating job is done
+
+^G Get Help   ^O WriteOut   ^R Read File   ^Y Prev Page   ^K Cut  Text    ^C Cur Pos
+^X Exit       ^J Justify    ^W Where Is    ^V Next Page   ^U UnCut Text   ^T To Spell
+```
+Now you can navigate with the arrow keys and type in any changes you want to make to the file (e.g., changing the number of simulations).  When you are done, click CTRL-X to exit (note the shortcuts at the bottom of the page).  If you have made a change it will ask you if you want to save and if so you can type ```Y``` and hit Enter.
+
+***
 
 ### Running the MSE
 Running the MSE is straightforward once everything is in place (e.g., you have the libraries loaded, you've uploaded the four .sh files, you've settled on a number of simulations in both the *runSim.sh* and *runPost.sh* scripts, etc.).  All you need to do is enter ```bsub < run.sh```.  You will get output indicating that your job has been submitted to the queue
@@ -189,4 +215,4 @@ Running the MSE is straightforward once everything is in place (e.g., you have t
 Job <9049872> is submitted to queue <short>.
 ```
 
-and you wait for it to complete.  You can check the status using the command ```bjobs```.  When the job is complete you will have four new files with the extension .o, four new files with the extension .e and there will be .Rdata files and plots in the *Results* directory.
+and you wait for it to complete.  You can check the status using the command ```bjobs``` (you can use this no matter what HPCC directory you are in).  When the job is complete you will have four new files with the extension .o, four new files with the extension .e and there will be .Rdata files and plots in the *Results* directory.
