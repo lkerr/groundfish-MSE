@@ -1,12 +1,16 @@
 
 # Running scripts in sequence using batch jobs
-(Sam Truesdell struesdell@gmri.org)
+#### (Sam Truesdell struesdell@gmri.org)
+
+(This material prepared for Gavin Fay's GIt-Hub page)
+
+***
 
 Sometimes it is useful to submit multiple jobs at once but also ensure that they will run in a particular order. For example, say you want to repeat a simulation 1000 times and then plot the results. You can write a program that (1) sends an array job (an array job being a set of identical scripts such as simulation repetitions); and (2) waits until the entire array is finished and then reads in the results from the 1000 simulations and makes some plots. This is similar to the example above except it emphasizes that you can submit several jobs at once and that you can easily specify an order of execution for the scripts.
 
 This is probably best described by an example. Below are three files: a control script, an array script and a completion script. You can try the procedure described below yourself by copying the three scripts into blank text files (with names matching the names in this example) and uploading them to your directory on the GHPCC. Don't forget to change the extensions to **.sh** (stands for shell file).
 
-####Control script
+#### Control script
 script name: **runsleep.sh**
 action: submits the two other scripts to the queue.
 ```
@@ -25,7 +29,7 @@ bsub < sleep100.sh				 # submit the sleep100 shell file
 bsub < echocomplete.sh			 # submit the echocomplete shell file
 ```
 
-####Array script
+####  Array script
 script name: **sleep100.sh**
 action: executes the primary code (which in this case is simply sleeping). Pay special attention to the bracketed suffix on the name below ```sleep100[1-3]```. This indicates that an array of 3 identical jobs should be submitted to run in parallel. If you were actually using this for your research this could entail submitting your individual simulation runs.
 ```
@@ -46,7 +50,7 @@ sleep 100                   # sleep for 100 seconds (this is the operative code 
 echo "sleep100.sh: sleep complete"  # print something saying the job is done
 ```
 
-####Completion script
+#### Completion script
 script name: **echocomplete.sh**
 action: prints text so you know that the job has run to completion.
 If you were using something similar for your research, this script would be doing something like reading in the results of the simulations and plotting them but here we're just reporting that the job is done. The important thing here is the command ```#BSUB -w 'done(sleep100[1-3])'```. This specifies that this script should wait until the **sleep100.sh** script is complete before executing its code.
@@ -82,14 +86,14 @@ As long as you have navigated to the directory where you stored these three file
 
 As the job runs you can check the progress using ```bjobs```. If you keep typing ```bjobs``` into the console you should be able to see the progression of:
 
-\noindent1. **runsleep.sh** submitted and pending;
+1\. **runsleep.sh** submitted and pending;
 
 JOBID  |USER |STAT   |QUEUE   |FROM_HOST |EXEC_HOST|JOB_NAME|SUBMIT_TIME
 -----  |---- |----   |-----   |--------- |---------|--------|-----------
 1001|userID|PEND   |short   |         |         |runsleep|Oct 2 09:33
 
 
-\noindent2. **runsleep.sh** running and causing three versions of **sleep100.sh** to be submitted (and pending);
+2\. **runsleep.sh** running and causing three versions of **sleep100.sh** to be submitted (and pending);
 
 JOBID|USER|STAT|QUEUE|FROM_HOST |EXEC_HOST|JOB_NAME  |SUBMIT_TIME
 -----|----|----|-----|--------- |---------|--------  |-----------
@@ -99,7 +103,7 @@ JOBID|USER|STAT|QUEUE|FROM_HOST |EXEC_HOST|JOB_NAME  |SUBMIT_TIME
 1002|userID|PEND|short|      |         |*eep100[3]|Oct  2 09:33
 
 
-\noindent3. **echocomplete.sh** waiting in the queue without executing (i.e., pending) until all of the **sleep100.sh** separate runs are complete; and
+3\. **echocomplete.sh** waiting in the queue without executing (i.e., pending) until all of the **sleep100.sh** separate runs are complete; and
 
 JOBID  | USER | STAT| QUEUE| FROM_HOST| EXEC_HOST| JOB_NAME  | SUBMIT_TIME
 -----  | ---- | ----| -----| ---------| ---------| --------  | -----------
@@ -108,7 +112,7 @@ JOBID  | USER | STAT| QUEUE| FROM_HOST| EXEC_HOST| JOB_NAME  | SUBMIT_TIME
 1002| userID| RUN | short|    |          | *eep100[2]| Oct 2 09:33
 1003| userID| PEND| short|    |          | *ocomplete| Oct 2 09:33
 
-\noindent4. **echocomplete.sh** running.
+4\. **echocomplete.sh** running.
 
 JOBID  |USER |STAT|QUEUE|FROM_HOST|EXEC_HOST|JOB_NAME  |SUBMIT_TIME
 -------|-----|----|-----|---------|---------|----------|-----------
@@ -166,7 +170,7 @@ PS:
 Read file <./1003.e> for stderr output of this job.
 ```
 
-###Notes
+### Notes
 * If you have an array submission like we do here and you want to alter the number of parallel procedures (i.e., the [1-3] suffix) you need to change the syntax in two places: (1) the naming in the array script (i.e., change the [1-3] in ```sleep100[1-3]``` to ```sleep100[1-5]``` for 5 repetitions); and (2) in the completion script you would change ```'done(sleep100[1-3])'``` to ```'done(sleep100[1-5])'```.
 
 * Any error messages from your code will be stored in the files with the extension **.e**. Any output will be stored in the files with extension **.o**. You can access them using the ```cat``` command in the console or through your file interface program.
