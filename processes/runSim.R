@@ -116,7 +116,7 @@ for(r in 1:nrep){
     # in the first n (fyear-1) years.
     
     
-    initN <- get_init(nage=nage, N0=2e5, F_full=F_full[1], M=M)
+    initN <- get_init(nage=nage, N0=2e7, F_full=F_full[1], M=M)
     J1N[1:(fyear-1),] <- rep(initN, each=(fyear-1))
     laa[1:(fyear-1),] <- rep(get_lengthAtAge(type='vonB', par=laa_par, 
                                          ages=fage:page),
