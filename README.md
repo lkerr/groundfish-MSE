@@ -2,6 +2,7 @@
 
 ### Development of Robust Management Strategies for Northeast Groundfish Fisheries in a Changing Climate
 
+***
 
 ### For specific information, please see the following files in the documentation directory (presented in a somewhat-sensible order):
 
