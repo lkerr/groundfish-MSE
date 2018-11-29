@@ -4,7 +4,7 @@
 ## Function to report the memory used in the runs
 
 
-get_memUsage <- function(runClass){
+get_memUsage <- function(runClass, info){
   
   if(runClass == 'HPCC'){
   
@@ -22,22 +22,30 @@ get_memUsage <- function(runClass){
 
     # read in the .o files
     rl <- sapply(whicho, function(x) readLines(file.path('../', flist[x])))
+    rlv <- unlist(rl)
     
     # identify which entries refer to the maximum memory that was used
-    whichmm <- grep(rl, pattern = 'Max Memory')
+    whichmm <- grep(rlv, pattern = 'Max Memory')
     
     if(length(whichmm) > 0){
     
       # Just the max memory values as strings
-      mmtxt <- rl[whichmm]
+      mmtxt <- rlv[whichmm]
       
       # extract just the numbers
       mm <- sapply(1:length(mmtxt), 
                    function(x) as.numeric(gsub('\\D', '', mmtxt[x])))
   
-      mmStats <- quantile(mm)
+      mmStats <- quantile(mm, na.rm=TRUE)
       
-      write.table(mmStats, file='../memUsage.txt')
+      write.table(mmStats, file='../memUsage.txt', row.names=TRUE)
+      cat('Quantiles for memory usage (MB)',
+          names(mmStats), 
+          '\n',
+          mmStats,
+          '\n\n\n',
+          info,
+          file='../memUsage.txt')
       
     }
     

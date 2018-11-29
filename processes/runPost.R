@@ -26,4 +26,7 @@ names(omval) <- names(flLst[[1]])
 
 get_plots(x=omval, dirOut='results/fig/')
 
-get_memUsage(runClass = runClass)
+
+mproc <- read.table('processes/mproc.txt', header = TRUE,
+                    stringsAsFactors = FALSE)
+get_memUsage(runClass = runClass, info=mproc)
