@@ -19,14 +19,14 @@ action: submits the two other scripts to the queue.
 #BSUB -W 00:15                   # How much time does your job need (HH:MM)
 #BSUB -q short                   # Which queue {short, long, parallel, GPU, interactive}
 #BSUB -J "runsleep"              # Job Name
-#BSUB -R rusage[mem=10000] 		 # Specify memory usage (needlessly high for this job)
-#BSUB -n 1						 # Number of processors to use
+#BSUB -R rusage[mem=10000]       # Specify memory usage (needlessly high for this job)
+#BSUB -n 1			 # Number of processors to use
 
-#BSUB -o "./%J.o"				 # name for the output file
-#BSUB -e "./%J.e"				 # name for the error file
+#BSUB -o "./%J.o"		 # name for the output file
+#BSUB -e "./%J.e"		 # name for the error file
 
-bsub < sleep100.sh				 # submit the sleep100 shell file
-bsub < echocomplete.sh			 # submit the echocomplete shell file
+bsub < sleep100.sh		 # submit the sleep100 shell file
+bsub < echocomplete.sh		 # submit the echocomplete shell file
 ```
 
 ####  Array script
@@ -41,11 +41,11 @@ action: executes the primary code (which in this case is simply sleeping). Pay s
 #BSUB -R rusage[mem=10000]  # Specify memory usage (needlessly high for this job)
 #BSUB -n 1                  # Number of processors to use
 
-#BSUB -o "./%J.o" 			# name for the output file
-#BSUB -e "./%J.e" 			# name for the error file
+#BSUB -o "./%J.o" 	    # name for the output file
+#BSUB -e "./%J.e" 	    # name for the error file
 
 sleep 100                   # sleep for 100 seconds (this is the operative code and
-							# would otherwise be something like Rscript ./runSim.R --vanilla)
+			    # would otherwise be something like Rscript ./runSim.R --vanilla)
 
 echo "sleep100.sh: sleep complete"  # print something saying the job is done
 ```
@@ -67,7 +67,7 @@ If you were using something similar for your research, this script would be doin
 #BSUB -e "./%J.e"               # name for the error file
 
 #BSUB -w 'done(sleep100[1-3])'  # Operative line for dependencies.
-								# Wait until done with sleep100 job.
+				# Wait until done with sleep100 job.
 
 echo "echocomplete.sh: job complete"  # print a line indicating the job is finished
 ```
