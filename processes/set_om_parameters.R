@@ -10,7 +10,7 @@
 debugSink <- TRUE
 
 # number of times to repeat this analysis
-nrep <- 1
+nrep <- 2
 
 # first age and plus age
 fage <- 1
@@ -55,7 +55,7 @@ useTemp <- TRUE
 ## Life history parameters ##
 
 # length-at-age parameters -- see get_lengthAtAge for including covariates
-laa_par <- c(114.1, 0.22, 0.17) #SAW 55 p.667
+laa_par <- c(Linf=114.1, K=0.22, t0=0.17, beta1=5)
 laa_typ <- 'vonB'
 
 # weight-length parameters
