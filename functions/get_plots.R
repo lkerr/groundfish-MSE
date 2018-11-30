@@ -56,14 +56,13 @@ get_plots <- function(x, dirIn, dirOut){
     
     
   }
-  
-  # Time-series temperature plot
-  yrs <- rev(tail(cmip_dwn$YEAR,1)-(0:(length(temp)-1)))
-  jpeg(paste0(dirOut, 'tempts.jpg.'),
-       width=480*1.75, height=480, pointsize=12*1.5)
-    get_tempTSPlot(tempts = temp, yrs = yrs, 
-               fmyear=fmyear, anomStd = anomStd)
-  dev.off()
+ 
+  # # Time-series temperature plot
+  # jpeg(paste0(dirOut, 'tempts.jpg.'),
+  #      width=480*1.75, height=480, pointsize=12*1.5)
+  #   get_tempTSPlot(tempts = temp, yrs = yrs, 
+  #                  fmyear=fmyear, anomStd = anomStd)
+  # dev.off()
   
   
 }
