@@ -7,46 +7,39 @@
 # type: type of function function. Available options are
 #       *'vonB'
 #         L = (Linf + beta1*T) * (1 - exp(-(K + beta2*T) * (ages - t0)))
-#         par[1] = Linf
-#         par[2] = K
-#         par[3] = t0
-#         par[4] = beta1
-#         par[5] = beta2
 #       *''
 #
 # par: vector of parameters to use in the function. See function
 #      definitions in "type" for the length of the vector and
-#      how the function is parameterized
+#      how the function is parameterized. The elements of par must
+#      be named according to the variable names given in "type".
 #      
+# ages: the ages in the model (e.g., 1-15)
 # 
+# Tanom: temperature anomoly from a baseline level (e.g., a historical
+#        average)
 
 
-get_lengthAtAge <- function(type, par, ages, TempY=NULL){
+get_lengthAtAge <- function(type, par, ages, Tanom=NULL){
   
   if(tolower(type) == 'vonb'){
     
     # if any of the par parameters are NA (i.e., are unused temperature
     # effects) then set them to zero so they will not impact growth at all.
-    if(any(is.na(par))){
-      par[is.na(par)] <- 0
+    if(is.na(par['beta1'])){
+      par['beta1'] <- 0
+    }
+    if(is.na(par['beta2'])){
+      par['beta2'] <- 0
     }
     
-    # If there are only 3 or 4 parameters adapt par so that it is zero
-    # instead of NA. There is surely a better way to do this...
-    if(is.na(par[4])){
-      par[4] <- 0
-    }
-    if(is.na(par[5])){
-      par[5] <- 0
+    if(is.null(Tanom)){
+      Tanom <- 0
     }
     
-    if(is.null(TempY)){
-      TempY <- 0
-    }
-    
-    laa <- (par[1] + par[4] * TempY) * 
-           (1 - exp(-(par[2] + par[5] * TempY) * (ages - par[3])))
-    
+    laa <- (par['Linf'] + par['beta1'] * Tanom) * 
+           (1 - exp(-(par['K'] + par['beta2'] * Tanom) * (ages - par['t0'])))
+  
   }else{
     
     stop('length-at-age type not recognized')

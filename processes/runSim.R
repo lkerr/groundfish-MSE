@@ -57,8 +57,10 @@ msyears <- cmip_dwn$YEAR < 2000
 if(useTemp == TRUE){
   temp <- c(rep(median(cmip_dwn[msyears,'T']), nburn),
             cmip_dwn[,'T'])
+  Tanom <- temp - median(cmip_dwn[msyears,'T'])
 }else{
   temp <- NULL
+  Tanom <- rep(0, nburn+length(cmip_dwn[,'T']))
 }
 
 # The first year that actual management will begin
@@ -119,7 +121,7 @@ for(r in 1:nrep){
     initN <- get_init(nage=nage, N0=2e7, F_full=F_full[1], M=M)
     J1N[1:(fyear-1),] <- rep(initN, each=(fyear-1))
     laa[1:(fyear-1),] <- rep(get_lengthAtAge(type='vonB', par=laa_par, 
-                                         ages=fage:page),
+                                         ages=fage:page, Tanom=0),
                              each=(fyear-1))
     waa[1:(fyear-1),] <- get_weightAtAge(type='aLb', par=waa_par, 
                                          laa=laa[1:(fyear-1),],
@@ -138,7 +140,7 @@ for(r in 1:nrep){
       
       # calculate length-at-age in year y
       laa[y,] <- get_lengthAtAge(type=laa_typ, par=laa_par, 
-                                 ages=fage:page)
+                                 ages=fage:page, Tanom=Tanom[y])
       # other option here is get_size which tries to take temperature
       # into account. Needs some work there though.
       
