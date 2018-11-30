@@ -50,7 +50,7 @@ names(gbT) <- c('YEAR', 'T')
 # Downscale from NELME to GB
 cmip_dwn <- get_temperatureProj(prj_data = cmip_base, 
                                 obs_data = gbT, 
-                                ref_yrs = c(1982, 2018))
+                                ref_yrs = c(ref0, ref1))
 
 # Get the temperature vector
 msyears <- cmip_dwn$YEAR < 2000

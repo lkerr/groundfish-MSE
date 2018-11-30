@@ -43,6 +43,10 @@ useTemp <- TRUE
   ## Temperature information ##
   cmip5model <- 'CMCC_CM'
   
+  ## Reference years for temperature downscale
+  ref0 <- 1982
+  ref1 <- 2018
+  
   # Number of model years to run are defined by the length of the burn-in
   # period and the dimension of the CMIP5 data set.
   # Load the cmip5 temperature data
