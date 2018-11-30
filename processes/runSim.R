@@ -57,7 +57,8 @@ msyears <- cmip_dwn$YEAR < 2000
 if(useTemp == TRUE){
   temp <- c(rep(median(cmip_dwn[msyears,'T']), nburn),
             cmip_dwn[,'T'])
-  Tanom <- temp - median(cmip_dwn[msyears,'T'])
+  anomStd <- median(cmip_dwn[msyears,'T'])  # anomoly standard
+  Tanom <- temp - anomStd
 }else{
   temp <- NULL
   Tanom <- rep(0, nburn+length(cmip_dwn[,'T']))
