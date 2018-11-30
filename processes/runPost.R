@@ -24,6 +24,6 @@ for(i in 1:length(fl)){
 omval <- get_simcat(x=flLst)
 names(omval) <- names(flLst[[1]])
 
-get_plots(x=omval, dirOut='results/fig/')
+get_plots(x=omval, dirIn='results/sim/', dirOut='results/fig/')
 
 get_memUsage(runClass = runClass)

@@ -3,12 +3,17 @@
 # Driver function to create output plots from the simulation
 # 
 # x: list of output for plots (i.e., omval)
+# 
+# dirIn: simulation directory to grab specific examples for
+#        particular plots (e.g., temperature time series)
 
 
 
 
-get_plots <- function(x, dirOut){
+get_plots <- function(x, dirIn, dirOut){
   
+  # Load one of the simulation environments
+  load(file.path(dirIn, list.files(dirIn)[1]))
   
   nm <- names(x)
   bxidx <- which(nm %in% c("SSB", "R", "F_full", "sumCW", "sumCWcv", 
@@ -51,6 +56,14 @@ get_plots <- function(x, dirOut){
     
     
   }
+  
+  # Time-series temperature plot
+  yrs <- rev(tail(cmip_dwn$YEAR,1)-(0:(length(temp)-1)))
+  jpeg(paste0(dirOut, 'tempts.jpg.'),
+       width=480*1.75, height=480, pointsize=12*1.5)
+    get_tempTSPlot(tempts = temp, yrs = yrs, 
+               fmyear=fmyear, anomStd = anomStd)
+  dev.off()
   
   
 }
