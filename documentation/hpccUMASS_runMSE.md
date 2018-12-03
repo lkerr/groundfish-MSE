@@ -208,7 +208,7 @@ Now you can navigate with the arrow keys and type in any changes you want to mak
 ***
 
 ### Running the MSE
-Running the MSE is straightforward once everything is in place (e.g., you have the libraries loaded, you've uploaded the four .sh files, you've settled on a number of simulations in both the *runSim.sh* and *runPost.sh* scripts, etc.).  All you need to do is enter ```bsub < run.sh```.  You will get output indicating that your job has been submitted to the queue
+Running the MSE is straightforward once everything is in place (e.g., you have the libraries loaded, you've uploaded the four .sh files, you've settled on a number of simulations in both the *runSim.sh* and *runPost.sh* scripts, you've converted the .sh files to Unix/Linux format if necessary, etc.).  All you need to do is enter ```bsub < run.sh```.  You will get output indicating that your job has been submitted to the queue
 
 ```
 [st12d@ghpcc06 COCA_HPCC]$ bsub < run.sh
