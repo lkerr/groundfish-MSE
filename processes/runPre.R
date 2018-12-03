@@ -20,6 +20,8 @@ if(platform != 'Linux'){
   Sys.setenv(PATH=path_new)
 }
 
+# Remove all files as long as not running runSetup later within the plotting
+# function to gather information for diagnostic plots.
 if(runClass == 'Local'){
   # Remove any files in the results directories
   unlink('results/*', recursive=TRUE)
@@ -27,8 +29,8 @@ if(runClass == 'Local'){
 
 # create a results & sim directories
 dir.create('results', showWarnings = FALSE)
-dir.create('results/sim')
-dir.create('results/fig')
+dir.create('results/sim', showWarnings = FALSE)
+dir.create('results/fig', showWarnings = FALSE)
 
 # load the required libraries
 source('processes/loadLibs.R')
