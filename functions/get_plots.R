@@ -58,18 +58,36 @@ get_plots <- function(x, dirIn, dirOut){
   }
  
   
-  # # Get diagnostic plots that show (1) the temperature history; (2) the
-  # # growth models (with temperature); and (3) the recruitment models
-  # # (with temperature)
-  # source('processes/runSetup.R')
-  # 
-  # # Time-series temperature plot
-  # jpeg(paste0(dirOut, 'tempts.jpg.'),
-  #      width=480*1.75, height=480, pointsize=12*1.5)
-  #   yrs <- (mxyear - length(temp)+1):mxyear
-  #   get_tempTSPlot(tempts = temp, yrs = yrs,
-  #                  fmyear=fmyear, anomStd = anomStd)
-  # dev.off()
+  # Get diagnostic plots that show (1) the temperature history; (2) the
+  # growth models (with temperature); and (3) the recruitment models
+  # (with temperature)
+  source('processes/runSetup.R')
+
+  # Time-series temperature plot
+  jpeg(paste0(dirOut, 'tempts.jpg.'),
+       width=480*1.75, height=480, pointsize=12*1.5)
+    yrs <- (mxyear - length(temp)+1):mxyear
+    get_tempTSPlot(tempts = temp, yrs = yrs,
+                   fmyear=fmyear, anomStd = anomStd)
+  dev.off()
+ 
+  # Plot describing how growth changed over time
+  jpeg(paste0(dirOut, 'laa.jpg.'),
+       width=480*1.75, height=480, pointsize=12*1.5)
+    ptyridx <- fmyear:length(yrs)
+    get_laaPlot(laa_par=laa_par, laa_typ=laa_typ, laafun=get_lengthAtAge, 
+                ages=fage:(ceiling(1.5*page)), Tanom=Tanom[ptyridx], 
+                ptyrs=yrs[ptyridx])
+  dev.off()
+  
+  # Plot describing how average recruitment changed over time
+  jpeg(paste0(dirOut, 'laa.jpg.'),
+       width=480*1.75, height=480, pointsize=12*1.5)
+    ptyridx <- fmyear:length(yrs)
+    get_laaPlot(rec_par=rec_par, laa_typ=laa_typ, laafun=get_lengthAtAge, 
+                ages=fage:(ceiling(1.5*page)), Tanom=Tanom[ptyridx], 
+                ptyrs=yrs[ptyridx])
+  dev.off()
   
   
 }
