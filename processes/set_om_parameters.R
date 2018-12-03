@@ -30,9 +30,10 @@ nburn <- 50
 # maximum year predicted into the future
 mxyear <- 2050
 
-# number of burn years for saving OM results (after management
-# procedure has started)
-# rburn <- 35
+# Average and sd F before the management period begins. Mean on real scale
+# but distribution is lognormal. SD is lognormal SD.                                              
+burnFmean <- 0.4
+burnFsd <- 0.2
 
 # number of years in assessment model
 ncaayear <- 30 
