@@ -80,15 +80,15 @@ get_plots <- function(x, dirIn, dirOut){
                 ptyrs=yrs[ptyridx])
   dev.off()
   
-  # Plot describing how average recruitment changed over time
-  jpeg(paste0(dirOut, 'laa.jpg.'),
-       width=480*1.75, height=480, pointsize=12*1.5)
-    ptyridx <- fmyear:length(yrs)
-    get_laaPlot(rec_par=rec_par, laa_typ=laa_typ, laafun=get_lengthAtAge, 
-                ages=fage:(ceiling(1.5*page)), Tanom=Tanom[ptyridx], 
-                ptyrs=yrs[ptyridx])
-  dev.off()
-  
+  # # Plot describing how average recruitment changed over time
+  # jpeg(paste0(dirOut, 'laa.jpg.'),
+  #      width=480*1.75, height=480, pointsize=12*1.5)
+  #   ptyridx <- fmyear:length(yrs)
+  #   get_laaPlot(rec_par=rec_par, laa_typ=laa_typ, laafun=get_lengthAtAge, 
+  #               ages=fage:(ceiling(1.5*page)), Tanom=Tanom[ptyridx], 
+  #               ptyrs=yrs[ptyridx])
+  # dev.off()
+  # 
   
 }
 
