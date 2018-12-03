@@ -20,9 +20,13 @@ if(platform != 'Linux'){
   Sys.setenv(PATH=path_new)
 }
 
-# Remove all files as long as not running runSetup later within the plotting
-# function to gather information for diagnostic plots.
-if(runClass == 'Local'){
+
+# Remove all files (as long as not running runSetup later within the plotting
+# function to gather information for diagnostic plots). Ran through the 
+# available environments before and after the simulation is run and found
+# one variable that was only available after (active_idx) ... used that to
+# determine whether or not to delete all the files in the results directory.
+if(runClass == 'Local' & !exists('active_idx')){
   # Remove any files in the results directories
   unlink('results/*', recursive=TRUE)
 }
