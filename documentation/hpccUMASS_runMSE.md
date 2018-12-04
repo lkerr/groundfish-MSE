@@ -2,7 +2,7 @@
 # Running the MSE on the UMASS cluster
 #### (Sam Truesdell struesdell@gmri.org)
 
-<br>
+
 Provides an step-by-step description of how to run the MSE code on the UMASS GHPCC.  Assumes that:
 1. You already have an account so you can use the UMASS computer cluster.  If you don't see the section *Request access to the Cluster* in the file **documents/hpccUMASS_intro.md**
 2. You have already installed the necessary R libraries within your UMASS HPCC.  If you haven't done this already see the file **documentation/hpccUMASS_getLibs.md**
@@ -208,7 +208,7 @@ Now you can navigate with the arrow keys and type in any changes you want to mak
 ***
 
 ### Running the MSE
-Running the MSE is straightforward once everything is in place (e.g., you have the libraries loaded, you've uploaded the four .sh files, you've settled on a number of simulations in both the *runSim.sh* and *runPost.sh* scripts, etc.).  All you need to do is enter ```bsub < run.sh```.  You will get output indicating that your job has been submitted to the queue
+Running the MSE is straightforward once everything is in place (e.g., you have the libraries loaded, you've uploaded the four .sh files, you've settled on a number of simulations in both the *runSim.sh* and *runPost.sh* scripts, you've converted the .sh files to Unix/Linux format if necessary, etc.).  All you need to do is enter ```bsub < run.sh```.  You will get output indicating that your job has been submitted to the queue
 
 ```
 [st12d@ghpcc06 COCA_HPCC]$ bsub < run.sh
