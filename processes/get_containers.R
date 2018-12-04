@@ -213,7 +213,9 @@ omval <- list(
   
   ginipaaIN = save_vector_ann,
   
-  RPs = save_2xmatrix_ann
+  FPROXY = save_vector_ann,
+  
+  SSBPROXY = save_vector_ann
   
 )
 
