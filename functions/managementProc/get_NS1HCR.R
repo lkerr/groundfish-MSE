@@ -24,12 +24,12 @@ get_NS1HCR <- function(parpop, Fmsy, Bmsy){
   # If estimated biomass is under Bmsy then use the linear relationship
   # that goes through (Bmsy, Fmsy) and the origin; if estimated biomass
   # is above Bmsy then use Fmsy
-
-  if(tail(parpop$SSB, 1) <= c*Bmsy){
+  
+  if(tail(parpop$SSBhat, 1) <= c*Bmsy){
     
     # See Gabriel and Mace "A review of biological reference points in the
     # contrxt of the prcautionary approach" p.40
-    F <- Fmsy * tail(parpop$SSB, 1) / (c*Bmsy)
+    F <- Fmsy * tail(parpop$SSBhat, 1) / (c*Bmsy)
     
   }else{
     
