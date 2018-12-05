@@ -22,6 +22,7 @@ residR <- yx0
 SSB <- yx0
 RPmat <- matrix(NA, nrow=nyear, ncol=2,
                 dimnames = list(paste0(1:nyear), c('FRefP', 'BRefP')))
+OFdStatus <- yx0
 
 
 # Containers that have corresponding outputs for the
@@ -215,10 +216,11 @@ omval <- list(
   
   FPROXY = save_vector_ann,
   
-  SSBPROXY = save_vector_ann
+  SSBPROXY = save_vector_ann,
+  
+  OFdStatus = save_vector_ann
   
 )
-
 
 
 

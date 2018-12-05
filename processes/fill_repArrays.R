@@ -91,9 +91,7 @@
 # # oacomp$CN[r,m,y2,,,'val'] <- get_dwindow(CN, sty, y)
 # # oacomp$CN[r,m,y2,,,'caahat'] <- rep$CN
 # 
-# # estimated SSB
-SSBaa <- rep$J1N * get_dwindow(waa, sty, y) * get_dwindow(mat, sty, y)
-SSBhat <- apply(SSBaa, 1, sum)
+
 # oacomp$SSB[r,m,y2,,'val'] <- get_dwindow(SSB, sty, y)
 # oacomp$SSB[r,m,y2,,'caahat'] <- SSBhat
 # 
@@ -130,6 +128,7 @@ omval$SSB[r,m,] <- get_dwindow(SSB, (fmyear-1), nyear)
 omval$R[r,m,] <- get_dwindow(R, (fmyear-1), nyear)
 omval$F_full[r,m,] <- get_dwindow(F_full, (fmyear-1), nyear)
 omval$sumCW[r,m,] <- get_dwindow(sumCW, (fmyear-1), nyear)
+omval$OFdStatus[r,m,] <- get_dwindow(OFdStatus, (fmyear-1), nyear)
 
 # cheap -- repeating CV over array so not really "annual" cv. Doing this for consistency with
 # other boxplot outputs. Not ideal but does work.

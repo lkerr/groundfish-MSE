@@ -50,7 +50,7 @@ for(r in 1:nrep){
     RPs_rm <- matrix(NA, nrow=nyear, ncol=2,
                      dimnames=list(paste0('y', 1:nyear),
                                    c('FREF', 'BREF')))
-  
+     
     for(y in fyear:nyear){
 
       if(debugSink & runClass != 'HPCC'){
@@ -128,7 +128,7 @@ for(r in 1:nrep){
 
       # if burn-in period is over...
       if(y > fmyear-1){
-
+         
         # prepare data & run assessment model
         source('processes/get_tmb_setup.R')
 
@@ -154,9 +154,11 @@ for(r in 1:nrep){
         }
 
         if(conv){
-        
-          # Fill the arrays with results
-          source('processes/fill_repArrays.R')
+          
+          # Retrieve the estimated spawner biomass (necessary for advice)
+          SSBaa <- rep$J1N * get_dwindow(waa, sty, y) * get_dwindow(mat, sty, y)
+          SSBhat <- apply(SSBaa, 1, sum)
+          
           # Get fishing mortality for next year's management
           # fbrpy <- get_FBRP(type=fbrpTyp, par=mproc[m,],
                             # sel=endv(rep$slxC), waa=endv(rep$waa), 
@@ -179,9 +181,10 @@ for(r in 1:nrep){
                            M = tail(rep$M, 1), 
                            mat = mat[y,],
                            R = rep$R,
-                           SSB = SSBhat,
+                           SSBhat = SSBhat,
                            J1N = rep$J1N,
-                           Rpar = Rpar)
+                           Rpar = Rpar,
+                           Fhat = tail(rep$F_full, 1))
           }else if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
             parpop <- list(obs_sumCW = tmb_dat$obs_sumCW,
                            mult = tryfitPlanB$value$multiplier,
@@ -197,7 +200,7 @@ for(r in 1:nrep){
                          y = y)
           
           # If in the first year or a subsequent year on the reference
-          # point update schedule or if using planB insteadthen run the 
+          # point update schedule or if using planB instead then run the 
           # reference point update.  || used to keep from evaluating
           # mproc[m,'RPInt'] under planB (it will be NA).
           if( y == fmyear ||
@@ -210,7 +213,7 @@ for(r in 1:nrep){
                              parenv = parenv,
                              RPlast = NULL, evalRP=TRUE)
             RPmat[y,] <- gnF$RPs
-
+            
           }else{
             # Otherwise use old reference points to calculate stock
             # status
@@ -218,6 +221,10 @@ for(r in 1:nrep){
                              RPlast = RPmat[y-1,], evalRP = FALSE)
             RPmat[y,] <- RPmat[y-1,]
           }
+          # Report overfished status
+          OFdStatus[y] <- gnF$OFdStatus
+         
+          # Tabulate advice (plus small constant)
           nextF <- gnF$F + 1e-5
 
          
@@ -226,8 +233,7 @@ for(r in 1:nrep){
             F_full[y+1] <- nextF
           }
           
-          
-        
+
         }else{
           
           # if the assessment model didn't work then fill the
@@ -281,6 +287,8 @@ for(r in 1:nrep){
      
       
     }
+    # Fill the arrays with results
+    source('processes/fill_repArrays.R')
   }
 }
 
