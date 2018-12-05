@@ -51,6 +51,11 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
       BrefRPvalue <- RPlast[2]
     }
     
+    # Determine whether the population is overfished and whether 
+    # overfishing is occurring
+    # browser()
+    overfished <- ifelse(tail(parpop$SSBhat,1) < BrefRPvalue, 1, 0)
+    
     if(tolower(parmgt$HCR) == 'ns1'){
       
       F <- get_NS1HCR(parpop, Fmsy=FrefRPvalue, Bmsy=BrefRPvalue)['Fadvice']
@@ -61,7 +66,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
       
       
       # added small value to F because F = 0 causes some estimation errors
-      F <- ifelse(tail(parpop$SSB, 1) < BrefRPvalue, 0, FrefRPvalue)+1e-4
+      F <- ifelse(tail(parpop$SSBhat, 1) < BrefRPvalue, 0, FrefRPvalue)+1e-4
       
     }else{
       
@@ -69,7 +74,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
       
     }
   
-    out <- list(F=F, RPs=c(FrefRPvalue, BrefRPvalue))
+    out <- list(F=F, RPs=c(FrefRPvalue, BrefRPvalue), OFdStatus=overfished)
     
   }else if(parmgt$ASSESSCLASS == 'PLANB'){
     
@@ -91,7 +96,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
                   M = parpop$Mtrue_y, 
                   waav = parpop$waatrue_y)
     
-    out <- list(F = trueF, RPs = c(NA, NA))
+    out <- list(F = trueF, RPs = c(NA, NA), OFdStatus=NA)
     
   }else{
     
