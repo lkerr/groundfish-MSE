@@ -144,5 +144,7 @@ giniIN <- apply(get_dwindow(paaIN, (fmyear-1), nyear), 1,
 omval$ginipaaIN[r,m,] <- giniIN
 omval$FPROXY[r,m,] <- get_dwindow(RPmat[,1], (fmyear-1), nyear)
 omval$SSBPROXY[r,m,] <- get_dwindow(RPmat[,2], (fmyear-1), nyear)
-omval$YEAR <- rev(rev(cmip_dwn$YEAR)[1:length((fmyear-1):nyear)])
+if(y == nyear){
+  omval$YEAR <- rev(rev(cmip_dwn$YEAR)[1:length((fmyear-1):nyear)])
+}
 

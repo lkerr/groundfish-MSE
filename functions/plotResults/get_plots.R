@@ -80,13 +80,12 @@ get_plots <- function(x, dirIn, dirOut){
     
   }
   
-    
   dir.create(file.path(dirOut, 'RP'), showWarnings=FALSE)
-  for(i in 1:dim(omval$FPROXY)[2]){
+  for(i in 1:dim(x$FPROXY)[2]){
   
     jpeg(paste0(dirOut, 'RP/', 'mp', i, '.jpg.'))
  
-      get_rptrend(x=omval$FPROXY[,i,], y=omval$SSBPROXY[,i,])
+      get_rptrend(x=x$FPROXY[,i,], y=x$SSBPROXY[,i,])
     
     dev.off()
     
@@ -138,18 +137,18 @@ get_plots <- function(x, dirIn, dirOut){
   dir.create(file.path(dirOut, 'Traj'), showWarnings=FALSE)
   for(i in trajidx){
 
-    tempPM <- omval[[i]]
+    tempPM <- x[[i]]
     PMname <- nm[i]
     
     dir.create(file.path(dirOut, 'Traj', PMname), showWarnings=FALSE)
     for(mp in 1:dim(tempPM)[2]){
       
       for(r in 1:dim(tempPM)[1]){
-    
+  
         jpeg(paste0(dirOut, 'Traj/', PMname, '/mp', mp, 'rep', r, '.jpg.'),
              width=480*1.75, height=480, pointsize=12*1.5)
-        
-          get_tplot(x=tempPM[r,mp,], yrs = omval$YEAR, 
+       
+          get_tplot(x=tempPM[r,mp,], yrs = x$YEAR, 
                     mpName=paste('MP', mp), 
                     PMname=PMname)
           # plot(tempPM[r,mp,], type='o')
