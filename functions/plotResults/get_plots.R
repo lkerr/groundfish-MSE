@@ -133,22 +133,60 @@ get_plots <- function(x, dirIn, dirOut){
   # dev.off()
   # 
   
-  # Trajectory plots
+  
+  
+  ### Trajectory plots
   dir.create(file.path(dirOut, 'Traj'), showWarnings=FALSE)
+  
+  # only make a few trajectories so you don't get so many plots
+  repidx <-sample(1:dim(x[[trajidx[1]]])[1], 
+                  size=min(5, dim(x[[trajidx[1]]])[1]))
+
   for(i in trajidx){
 
     tempPM <- x[[i]]
     PMname <- nm[i]
     
+    # Calculate a range for the boxplot y axes. In order to do this need
+    # to run through the loop first and calculate all the boxplot stats.
+    bpstats <- list()
+    for(mp in 1:dim(tempPM)[2]){
+      tempPMmp <- tempPM[,mp,]
+      bpstats[[i]] <- boxplot(x = tempPMmp, plot=FALSE)
+    }
+    
+    # Now get the range of the statistics to use in the loop.
+    yrg <- range(sapply(bpstats, '[[', 'stats'))
+ 
+    # Account for 0-1 nature of binary variabiles (e.g., overfished status)
+    if(is.na(yrg[1])){
+      yrg <- c(0, 1)
+    }
+    
     dir.create(file.path(dirOut, 'Traj', PMname), showWarnings=FALSE)
     for(mp in 1:dim(tempPM)[2]){
       
-      for(r in 1:dim(tempPM)[1]){
+      # Simplify the references
+      tempPMmp <- tempPM[,mp,]
+
+      # First do a general boxplot of the trajectory over years
+      jpeg(paste0(dirOut, 'Traj/', PMname, '/boxmp', mp, '.jpg.'),
+           width=480*1.75, height=480, pointsize=12*1.5)
+        
+        par(mar=c(4,4,1,1))
+        get_tbxplot(x = tempPMmp, PMname=PMname, yrs=x$YEAR,
+                    printOutliers=FALSE, yrg=yrg)
+      
+      dev.off()
+      
+      
+      # Do just 5 trajectories as examples
+      for(r in repidx){
   
         jpeg(paste0(dirOut, 'Traj/', PMname, '/mp', mp, 'rep', r, '.jpg.'),
              width=480*1.75, height=480, pointsize=12*1.5)
        
-          get_tplot(x=tempPM[r,mp,], yrs = x$YEAR, 
+          get_tplot(x=tempPMmp[r,], yrs = x$YEAR, 
                     mpName=paste('MP', mp), 
                     PMname=PMname)
           # plot(tempPM[r,mp,], type='o')
