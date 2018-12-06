@@ -24,6 +24,12 @@ for(i in 1:length(fl)){
 omval <- get_simcat(x=flLst)
 names(omval) <- names(flLst[[1]])
 
+# The "year" list element in omval is for plotting and needs to be
+# only the length of the number of years -- unlike the other categories
+# this doesn't change. So plotting doesn't get result in errors, change
+# the dimensions of this list element
+omval[['YEAR']] <- omval[['YEAR']][1:(length(omval[['YEAR']])/length(flLst))]
+
 get_plots(x=omval, dirIn='results/sim/', dirOut='results/fig/')
 
 get_memUsage(runClass = runClass)
