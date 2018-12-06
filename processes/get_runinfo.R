@@ -10,7 +10,11 @@ platform <- Sys.info()['sysname']
 if(platform == 'Linux'){
   # Dig into the environmental variables
   evndir <- system('printenv LSF_ENVDIR', intern=TRUE)
-  if(evndir == '/lsf/conf'){
+  
+  # Test if environmental variable exists. If this particular one does not then
+  # then you are on a local system ... must include length()>0 to avoid an
+  # error.
+  if(length(evndir) > 0 && evndir == '/lsf/conf'){
     runClass <- 'HPCC'
   }else{
     runClass <- 'Local'
