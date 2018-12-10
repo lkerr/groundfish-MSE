@@ -17,13 +17,15 @@ get_plots <- function(x, dirIn, dirOut){
   
   nm <- names(x)
   bxidx <- which(nm %in% c("SSB", "R", "F_full", "sumCW", "sumCWcv", 
-                           "ginipaaCN", "ginipaaIN", "OFdStatus"))
+                           "ginipaaCN", "ginipaaIN", "OFdStatus",
+                           "mxGradCAA"))
   
   rpidx <- which(nm %in% c("FPROXY", "SSBPROXY"))
   
   # index for trajectories to plot
   trajidx <- which(nm %in% c("SSB", "R", "F_full", "sumCW", 
-                             "ginipaaCN", "ginipaaIN", "OFdStatus"))
+                             "ginipaaCN", "ginipaaIN", "OFdStatus",
+                             "mxGradCAA"))
   
   # Year names
   yridx <- which(nm %in% "YEAR")

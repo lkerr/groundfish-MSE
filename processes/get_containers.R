@@ -23,6 +23,7 @@ SSB <- yx0
 RPmat <- matrix(NA, nrow=nyear, ncol=2,
                 dimnames = list(paste0(1:nyear), c('FRefP', 'BRefP')))
 OFdStatus <- yx0
+mxGradCAA <- yx0
 
 
 # Containers that have corresponding outputs for the
@@ -218,7 +219,9 @@ omval <- list(
   
   SSBPROXY = save_vector_ann,
   
-  OFdStatus = save_vector_ann
+  OFdStatus = save_vector_ann,
+  
+  mxGradCAA = save_vector_ann
   
 )
 

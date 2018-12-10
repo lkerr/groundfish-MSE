@@ -223,6 +223,11 @@ for(r in 1:nrep){
           }
           # Report overfished status
           OFdStatus[y] <- gnF$OFdStatus
+          
+          # Report maximum gradient component for CAA model
+          mxGradCAA[y] <- ifelse(mproc[m,'ASSESSCLASS'] == 'CAA',
+                                 yes = rep$maxGrad,
+                                 no = NA)
          
           # Tabulate advice (plus small constant)
           nextF <- gnF$F + 1e-5

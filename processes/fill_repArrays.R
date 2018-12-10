@@ -129,6 +129,7 @@ omval$R[r,m,] <- get_dwindow(R, (fmyear-1), nyear)
 omval$F_full[r,m,] <- get_dwindow(F_full, (fmyear-1), nyear)
 omval$sumCW[r,m,] <- get_dwindow(sumCW, (fmyear-1), nyear)
 omval$OFdStatus[r,m,] <- get_dwindow(OFdStatus, (fmyear-1), nyear)
+omval$mxGradCAA[r,m,] <- get_dwindow(mxGradCAA, (fmyear-1), nyear)
 
 # cheap -- repeating CV over array so not really "annual" cv. Doing this for consistency with
 # other boxplot outputs. Not ideal but does work.
