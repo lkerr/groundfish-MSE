@@ -8,8 +8,7 @@
 
 
 get_box <- function(x, plotIdx=NULL, ylab='Value'){
-  
-  
+
   if(is.null(plotIdx)){
     plotIdx <- 1:dim(x)[2]
   }
@@ -19,6 +18,7 @@ get_box <- function(x, plotIdx=NULL, ylab='Value'){
   bp <- list()
   for(i in 1:length(plotIdx)){
     # 1 in last dim for value rather than estimate
+
     if(all(is.na(x[,i,]))){
       bp[[i]] <- NA
     }else{

@@ -30,7 +30,6 @@ get_plots <- function(x, dirIn, dirOut){
   
   # Performance measures using all the years
   for(i in bxidx){
-    
     jpeg(paste0(dirOut, nm[i], '.jpg.'))
 
       # If you just have a bunch of NAs for some reason make an
@@ -49,13 +48,12 @@ get_plots <- function(x, dirIn, dirOut){
   for(i in bxidx){
     
     jpeg(paste0(dirOut, nm[i], 'First15.jpg.'))
-    
     # If you just have a bunch of NAs for some reason make an
     # empty plot as a place-holder
-    if(all(is.na(x[[i]][,,1:15]))){
+    if(all(is.na(x[[i]][,,1:15,drop=FALSE]))){
       plot(0)
     }else{
-      get_box(x=x[[i]][,,1:15])
+      get_box(x=x[[i]][,,1:15,drop=FALSE])
     }
     
     dev.off()
@@ -70,10 +68,10 @@ get_plots <- function(x, dirIn, dirOut){
     # If you just have a bunch of NAs for some reason make an
     # empty plot as a place-holder
     ny <- dim(x[[i]])[3]
-    if(all(is.na(x[[i]][,,(ny-14):ny]))){
+    if(all(is.na(x[[i]][,,(ny-14):ny,drop=FALSE]))){
       plot(0)
     }else{
-      get_box(x=x[[i]][,,(ny-14):ny])
+      get_box(x=x[[i]][,,(ny-14):ny,drop=FALSE])
     }
     
     dev.off()
@@ -100,7 +98,7 @@ get_plots <- function(x, dirIn, dirOut){
     
   }
  
-  
+ 
   # Get diagnostic plots that show (1) the temperature history; (2) the
   # growth models (with temperature); and (3) the recruitment models
   # (with temperature)
