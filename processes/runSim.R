@@ -185,6 +185,7 @@ for(r in 1:nrep){
                            J1N = rep$J1N,
                            Rpar = Rpar,
                            Fhat = tail(rep$F_full, 1))
+            
           }else if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
             parpop <- list(obs_sumCW = tmb_dat$obs_sumCW,
                            mult = tryfitPlanB$value$multiplier,
@@ -288,7 +289,18 @@ for(r in 1:nrep){
   
       }
       
-
+      if(mproc[m,'ASSESSCLASS'] == 'CAA'){
+        diag <- list(
+          relE_qI[y] = get_relE(rep$log_qI, log(qI)),
+          relE_qC[y] = get_relE(rep$log_qC, log(qC)),
+          relE_selC[y,] = get_relE(rep$log_selC, log(selC)),
+          relE_ipop_mean[y] = get_relE(rep$log_ipop_mean, log_ipop_mean),
+          relE_ipop_dev[y,] = get_relE(rep$ipop_dev, ipop_dev),
+          relE_R_dev[y,] = get_relE(rep$R_dev, R_dev)
+        )
+      }else{
+        diag <- NA
+      }
      
       
     }

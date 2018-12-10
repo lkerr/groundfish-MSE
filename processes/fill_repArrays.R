@@ -149,3 +149,15 @@ if(y == nyear){
   omval$YEAR <- rev(rev(cmip_dwn$YEAR)[1:length((fmyear-1):nyear)])
 }
 
+
+# Assessment model diagnostics
+diagval$relE_qI[r,m,] <- diag$relE_qI
+diagval$relE_qC[r,m,] <- diag$relE_qC
+diagval$relE_selC[r,m,] <- diag$relE_selC
+diagval$relE_ipop_mean[r,m,] <- diag$relE_ipop_mean
+diagval$relE_ipop_dev[r,m,] <- diag$relE_ipop_dev
+diagval$relE_R_dev[r,m,] <- diag$relE_R_dev
+
+
+
+
