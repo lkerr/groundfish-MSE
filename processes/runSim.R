@@ -218,6 +218,7 @@ for(r in 1:nrep){
             # Otherwise use old reference points to calculate stock
             # status
             gnF <- get_nextF(parmgt = mproc[m,], parpop = parpop,
+                             parenv = parenv,
                              RPlast = RPmat[y-1,], evalRP = FALSE)
             RPmat[y,] <- RPmat[y-1,]
           }
