@@ -220,7 +220,6 @@ get_plots <- function(x, dirIn, dirOut){
       # Jitter the overfished status if necessary so you can see the 
       # trajectory
       if(nm[i] == 'OFdStatus'){
-        browser()
         mpMed <- jitter(mpMed, amount=0.05)
       }
       get_mpMedTraj(mpMedMat = mpMed, ylab=nm[i])
