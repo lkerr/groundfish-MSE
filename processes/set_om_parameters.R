@@ -9,6 +9,9 @@
 # Debug? (windows only for now...)
 debugSink <- TRUE
 
+# Debug using simple temperature trend that reduces variance?
+simpleTemperature <- TRUE
+
 # number of times to repeat this analysis
 nrep <- 2
 

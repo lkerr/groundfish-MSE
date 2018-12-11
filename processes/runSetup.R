@@ -87,3 +87,12 @@ if(debugSink & runClass != 'HPCC'){
   # Keep console reasonably clean
 }
 
+
+# Simple temperature trend for debugging -- smooth the data
+# Use only if switch is turned on
+if(simpleTemperature){
+  smidx <- 1:length(Tanom)
+  lo <- loess(Tanom ~ smidx)
+  Tanom <- predict(lo)
+}
+
