@@ -13,7 +13,7 @@ debugSink <- TRUE
 simpleTemperature <- TRUE
 
 # number of times to repeat this analysis
-nrep <- 2
+nrep <- 1
 
 # first age and plus age
 fage <- 1
@@ -97,7 +97,7 @@ load('data/data_processed/SR/cod/BHTS.Rdata') #srpar
 # include stochasticity in recruitment parameter estimates?
 Rstoch_par <- FALSE
 # include stochasticity in annual recruitment estimate?
-Rstoch_ann <- TRUE
+Rstoch_ann <- FALSE
 
 
 
