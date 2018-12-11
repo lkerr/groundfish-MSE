@@ -185,6 +185,7 @@ for(r in 1:nrep){
                            J1N = rep$J1N,
                            Rpar = Rpar,
                            Fhat = tail(rep$F_full, 1))
+            
           }else if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
             parpop <- list(obs_sumCW = tmb_dat$obs_sumCW,
                            mult = tryfitPlanB$value$multiplier,
@@ -289,7 +290,15 @@ for(r in 1:nrep){
   
       }
       
-
+      if(mproc[m,'ASSESSCLASS'] == 'CAA' & y > fmyear-1){
+        relE_qI[y] = get_relE(rep$log_qI, log(qI))
+        relE_qC[y] = get_relE(rep$log_qC, log(qC))
+        # Use max selectivity ... a little weird but they do go together
+        relE_selC[y,] = max(get_relE(rep$log_selC, log(selC)))
+        relE_ipop_mean[y] = get_relE(rep$log_ipop_mean, log_ipop_mean)
+        relE_ipop_dev[y] = mean(get_relE(rep$ipop_dev, ipop_dev))
+        relE_R_dev[y] = mean(get_relE(rep$R_dev, R_dev))
+      }
      
       
     }
@@ -311,6 +320,7 @@ td2 <- paste(gsub(' ', '_', td2), round(runif(1, 0, 10000)), sep='_')
 
 # save results
 save(omval, file=paste0('results/sim/omval', td2, '.Rdata'))
+save(diag, file=paste0('results/sim/diag', td2, '.Rdata'))
 
 
 if(runClass != 'HPCC'){

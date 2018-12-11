@@ -149,3 +149,16 @@ if(y == nyear){
   omval$YEAR <- rev(rev(cmip_dwn$YEAR)[1:length((fmyear-1):nyear)])
 }
 
+
+# Assessment model diagnostics ... -1 gives 1 NA. Will change when I get
+# around to reporting all years for all metrics.
+omval$relE_qI[r,m,] <- relE_qI[(fmyear-1):nyear]
+omval$relE_qC[r,m,] <- relE_qC[(fmyear-1):nyear]
+omval$relE_selC[r,m,] <- relE_selC[(fmyear-1):nyear]
+omval$relE_ipop_mean[r,m,] <- relE_ipop_mean[(fmyear-1):nyear]
+omval$relE_ipop_dev[r,m,] <- relE_ipop_dev[(fmyear-1):nyear]
+omval$relE_R_dev[r,m,] <- relE_R_dev[(fmyear-1):nyear]
+
+
+
+
