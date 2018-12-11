@@ -320,8 +320,6 @@ td2 <- paste(gsub(' ', '_', td2), round(runif(1, 0, 10000)), sep='_')
 
 # save results
 save(omval, file=paste0('results/sim/omval', td2, '.Rdata'))
-save(diag, file=paste0('results/sim/diag', td2, '.Rdata'))
-
 
 if(runClass != 'HPCC'){
   ompar <- readLines('processes/set_om_parameters.R')
