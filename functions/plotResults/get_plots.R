@@ -33,50 +33,50 @@ get_plots <- function(x, dirIn, dirOut){
   # Year names
   yridx <- which(nm %in% "YEAR")
   
-  # Performance measures using all the years
+  # Performance measures: medium term years 10-20
   for(i in bxidx){
-    jpeg(paste0(dirOut, nm[i], '.jpg.'))
+    jpeg(paste0(dirOut, nm[i], 'yr10-20.jpg.'))
 
       # If you just have a bunch of NAs for some reason make an
       # empty plot as a place-holder
-      if(all(is.na(x[[i]]))){
+      if(all(is.na(x[[i]][,,10:20,drop=FALSE]))){
         plot(0)
       }else{
-        get_box(x=x[[i]])
+        get_box(x=x[[i]][,,10:20,drop=FALSE])
       }
     
     dev.off()
       
   }
   
-  # Performance measures using first 15 years
+  # Performance measures using first 5 years
   for(i in bxidx){
     
-    jpeg(paste0(dirOut, nm[i], 'First15.jpg.'))
+    jpeg(paste0(dirOut, nm[i], 'yr1-5.jpg.'))
     # If you just have a bunch of NAs for some reason make an
     # empty plot as a place-holder
-    if(all(is.na(x[[i]][,,1:15,drop=FALSE]))){
+    if(all(is.na(x[[i]][,,1:5,drop=FALSE]))){
       plot(0)
     }else{
-      get_box(x=x[[i]][,,1:15,drop=FALSE])
+      get_box(x=x[[i]][,,1:5,drop=FALSE])
     }
     
     dev.off()
     
   }
   
-  # Performance measures using last 15 years
+  # Performance measures: long term 20-50 years
   for(i in bxidx){
     
-    jpeg(paste0(dirOut, nm[i], 'Last15.jpg.'))
+    jpeg(paste0(dirOut, nm[i], 'yr20-end.jpg.'))
     
     # If you just have a bunch of NAs for some reason make an
     # empty plot as a place-holder
     ny <- dim(x[[i]])[3]
-    if(all(is.na(x[[i]][,,(ny-14):ny,drop=FALSE]))){
+    if(all(is.na(x[[i]][,,20:ny,drop=FALSE]))){
       plot(0)
     }else{
-      get_box(x=x[[i]][,,(ny-14):ny,drop=FALSE])
+      get_box(x=x[[i]][,,20:ny,drop=FALSE])
     }
     
     dev.off()
@@ -155,11 +155,11 @@ get_plots <- function(x, dirIn, dirOut){
     bpstats <- list()
     for(mp in 1:dim(tempPM)[2]){
       tempPMmp <- tempPM[,mp,]
-      bpstats[[i]] <- boxplot(x = tempPMmp, plot=FALSE)
+      bpstats[[mp]] <- boxplot(x = tempPMmp, plot=FALSE)$stats
     }
     
     # Now get the range of the statistics to use in the loop.
-    yrg <- range(sapply(bpstats, '[[', 'stats'))
+    yrg <- range(unlist(bpstats), na.rm=TRUE)
  
     # Account for 0-1 nature of binary variabiles (e.g., overfished status)
     if(is.na(yrg[1])){
