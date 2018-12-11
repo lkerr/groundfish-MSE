@@ -87,8 +87,12 @@ get_plots <- function(x, dirIn, dirOut){
   for(i in 1:dim(x$FPROXY)[2]){
   
     jpeg(paste0(dirOut, 'RP/', 'mp', i, '.jpg.'))
- 
-      get_rptrend(x=x$FPROXY[,i,], y=x$SSBPROXY[,i,])
+      
+      if(all(is.na(x$FPROXY[,i,]))){
+        plot(0)
+      }else{
+        get_rptrend(x=x$FPROXY[,i,], y=x$SSBPROXY[,i,])
+      }
     
     dev.off()
     
@@ -192,7 +196,7 @@ get_plots <- function(x, dirIn, dirOut){
 
         jpeg(paste0(dirOut, 'Traj/', PMname, '/mp', mp, 'rep', r, '.jpg.'),
              width=480*1.75, height=480, pointsize=12*1.5)
-       
+        
           get_tplot(x=tempPMmp[r,], yrs = x$YEAR, 
                     mpName=paste('MP', mp), 
                     PMname=PMname, ylim=yrgrsim)
@@ -212,8 +216,16 @@ get_plots <- function(x, dirIn, dirOut){
     jpeg(paste0(dirOut, 'Traj/', PMname, '/MPmedTraj.jpg.'),
          width=480*1.75, height=480, pointsize=12*1.5)
       par(mar=c(4,4,1,1))
+      
+      # Jitter the overfished status if necessary so you can see the 
+      # trajectory
+      if(nm[i] == 'OFdStatus'){
+        browser()
+        mpMed <- jitter(mpMed, amount=0.05)
+      }
       get_mpMedTraj(mpMedMat = mpMed, ylab=nm[i])
-    dev.off()
+      
+      dev.off()
   }
   
   
