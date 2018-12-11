@@ -25,7 +25,10 @@ get_plots <- function(x, dirIn, dirOut){
   # index for trajectories to plot
   trajidx <- which(nm %in% c("SSB", "R", "F_full", "sumCW", 
                              "ginipaaCN", "ginipaaIN", "OFdStatus",
-                             "mxGradCAA"))
+                             "mxGradCAA",
+                             "relE_qI", "relE_qC", "relE_selC",
+                             "relE_ipop_mean", "relE_ipop_dev",
+                             "relE_R_dev"))
   
   # Year names
   yridx <- which(nm %in% "YEAR")

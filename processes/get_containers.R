@@ -50,6 +50,14 @@ effort <- yx0
 obs_effort <- yx0
 
 
+# CAA model results
+relE_qI <- yx0
+relE_qC <- yx0
+relE_selC <- matrix(NA, nrow=nyear, ncol=2)
+relE_ipop_mean <- yx0
+relE_ipop_dev <- yx0
+relE_R_dev <- yx0
+
 
 
 # container to hold operating/assessment model results
@@ -200,30 +208,25 @@ save_2xmatrix_ann <- array(data = NA,
 
 
 omval <- list(
-  
   SSB = save_vector_ann,
-  
   R = save_vector_ann,
-  
   F_full = save_vector_ann,
-  
   sumCW = save_vector_ann,
-  
   sumCWcv = save_vector_ann, #cheap ... not really vector.
-  
   ginipaaCN = save_vector_ann,
-  
   ginipaaIN = save_vector_ann,
-  
   FPROXY = save_vector_ann,
-  
   SSBPROXY = save_vector_ann,
-  
   OFdStatus = save_vector_ann,
-  
-  mxGradCAA = save_vector_ann
-  
+  mxGradCAA = save_vector_ann,
+  relE_qI = save_vector_ann,
+  relE_qC = save_vector_ann,
+  relE_selC = save_vector_ann,
+  relE_ipop_mean = save_vector_ann,
+  relE_ipop_dev = save_vector_ann,
+  relE_R_dev = save_vector_ann
 )
+
 
 
 

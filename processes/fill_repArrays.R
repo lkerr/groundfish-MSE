@@ -150,13 +150,14 @@ if(y == nyear){
 }
 
 
-# Assessment model diagnostics
-diagval$relE_qI[r,m,] <- diag$relE_qI
-diagval$relE_qC[r,m,] <- diag$relE_qC
-diagval$relE_selC[r,m,] <- diag$relE_selC
-diagval$relE_ipop_mean[r,m,] <- diag$relE_ipop_mean
-diagval$relE_ipop_dev[r,m,] <- diag$relE_ipop_dev
-diagval$relE_R_dev[r,m,] <- diag$relE_R_dev
+# Assessment model diagnostics ... -1 gives 1 NA. Will change when I get
+# around to reporting all years for all metrics.
+omval$relE_qI[r,m,] <- relE_qI[(fmyear-1):nyear]
+omval$relE_qC[r,m,] <- relE_qC[(fmyear-1):nyear]
+omval$relE_selC[r,m,] <- relE_selC[(fmyear-1):nyear]
+omval$relE_ipop_mean[r,m,] <- relE_ipop_mean[(fmyear-1):nyear]
+omval$relE_ipop_dev[r,m,] <- relE_ipop_dev[(fmyear-1):nyear]
+omval$relE_R_dev[r,m,] <- relE_R_dev[(fmyear-1):nyear]
 
 
 
