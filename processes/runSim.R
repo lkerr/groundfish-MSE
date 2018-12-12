@@ -37,8 +37,7 @@ for(r in 1:nrep){
     # F_full[1:(ncaayear + fyear + nburn +1)] <- rlnorm(ncaayear + 
     #                                                   fyear + nburn + 1, 
     #                                                   log(0.2), 0.1)
-    F_full[1:(nburn + sum(msyears)+1)] <- rlnorm(nburn + sum(msyears)+1, 
-                                                 log(burnFmean), burnFsd)
+    F_full[1:fmyearIdx] <- rlnorm(fmyearIdx, log(burnFmean), burnFsd)
   
     # initialize the model with numbers and mortality rates
     # in the first n (fyear-1) years.

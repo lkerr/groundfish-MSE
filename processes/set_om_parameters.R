@@ -7,22 +7,21 @@
 ## Simulation information
 
 # Debug? (windows only for now...)
-debugSink <- TRUE
+debugSink <- FALSE
 
 # Debug using simple temperature trend that reduces variance?
 simpleTemperature <- TRUE
 
 # number of times to repeat this analysis
-nrep <- 1
+nrep <- 2
 
 # first age and plus age
 fage <- 1
 page <- 15
 nage <- length(fage:page)
 
-# number of years to run the simulation (# projection years)
-# nyear <- 450
-# THIS IS in the sim file ... depends on how much CMIP data there are
+# First year to begin actual management
+fmyear <- 2000
 
 # first year after the initial condition period
 fyear <- 5
@@ -54,11 +53,11 @@ useTemp <- TRUE
   # Number of model years to run are defined by the length of the burn-in
   # period and the dimension of the CMIP5 data set.
   # Load the cmip5 temperature data
-  cmip5 <- read.table(file='data/data_raw/NEUS_CMIP5_annual_means.txt',
-                      header=TRUE, skip=2)
-  cmip5 <- subset(cmip5, year <= mxyear)
+  # cmip5 <- read.table(file='data/data_raw/NEUS_CMIP5_annual_means.txt',
+  #                     header=TRUE, skip=2)
+  # cmip5 <- subset(cmip5, year <= mxyear)
 
-  nyear <- nrow(cmip5) + nburn
+  # nyear <- nrow(cmip5) + nburn
 
 ## Life history parameters ##
 
@@ -102,7 +101,9 @@ Rstoch_ann <- FALSE
 
 
 ## Survey information
-slxI <- matrix(1, nrow=nyear, ncol=nage)
+# slxI <- matrix(1, nrow=nyear, ncol=nage)
+selI <- c(1)
+selI_typ <- 'const'
 timeI <- 0.5
 
 
