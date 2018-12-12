@@ -15,6 +15,7 @@ laa <- yxage
 waa <- yxage
 Z <- yxage
 slxC <- yxage
+slxI <- yxage
 mat <- yxage
 F_full <- yx0
 R <- yx0

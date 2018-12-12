@@ -91,6 +91,7 @@ for(r in 1:nrep){
       
       # calculate the selectivity in year y (changes if the laa changes)
       slxC[y,] <- get_slx(type=selC_typ, par=selC, laa=laa[y,])
+      slxI[y,] <- get_slx(type=selI_typ, par=selI, laa=NULL)
       
       # get Z for the current year
       Z[y,] <- F_full[y]*slxC[y,] + M
