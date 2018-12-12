@@ -5,7 +5,7 @@
 
 
 
-get_tbxplot <- function(x, PMname, yrs, printOutliers, yrg){
+get_tbxplot <- function(x, PMname, yrs, printOutliers, yrg, fmyear){
   
   # Create some lines at what you hope is appropriate intervals
   boxplot(x, outline=printOutliers, ylim=yrg, border=NA, xaxt='n')
@@ -25,8 +25,15 @@ get_tbxplot <- function(x, PMname, yrs, printOutliers, yrg){
   xlab <- xlab[xlab > min(yrs) & xlab <= max(yrs)]
   xlabidx <- match(xlab, yrs)
   
+  # Identify the location for the indicator of the first management
+  # year
+  abidx <- which(yrs == fmyear)
+  
   # Print the x axis
   axis(1, at=xlabidx, labels=xlab)
+  
+  # Print the abline indicating the beginning of management
+  abline(v=abidx, lty=3)
   
   # Label the axes
   mtext(side=1:2, line=2.5, cex=1.25,
