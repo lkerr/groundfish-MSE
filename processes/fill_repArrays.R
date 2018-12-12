@@ -124,40 +124,47 @@
 ## management time-period so you can see the response. It is set pretty
 ## arbitrarily though.
 
-omval$SSB[r,m,] <- get_dwindow(SSB, (fmyear-1), nyear)
-omval$R[r,m,] <- get_dwindow(R, (fmyear-1), nyear)
-omval$F_full[r,m,] <- get_dwindow(F_full, (fmyear-1), nyear)
-omval$sumCW[r,m,] <- get_dwindow(sumCW, (fmyear-1), nyear)
-omval$OFdStatus[r,m,] <- get_dwindow(OFdStatus, (fmyear-1), nyear)
-omval$mxGradCAA[r,m,] <- get_dwindow(mxGradCAA, (fmyear-1), nyear)
+omval$SSB[r,m,] <- SSB
+omval$R[r,m,] <- R
+omval$F_full[r,m,] <- F_full
+omval$sumCW[r,m,] <- sumCW
+omval$OFdStatus[r,m,] <- OFdStatus
+omval$mxGradCAA[r,m,] <- mxGradCAA
 
-# cheap -- repeating CV over array so not really "annual" cv. Doing this for consistency with
-# other boxplot outputs. Not ideal but does work.
-cv <- sd(get_dwindow(sumCW, (fmyear-1), nyear)) /
-      mean(get_dwindow(sumCW, (fmyear-1), nyear))
-omval$sumCWcv[r,m,] <- rep(cv, nyear - (fmyear-1) + 1)
+# Deal with the CV later when creating the plots for particular time periods
+omval$sumCWcv[r,m,] <- NA
 
-giniCN <- apply(get_dwindow(paaCN, (fmyear-1), nyear), 1, 
-                get_gini)
+giniCN <- apply(paaCN, 1, get_gini)
 omval$ginipaaCN[r,m,] <- giniCN
-giniIN <- apply(get_dwindow(paaIN, (fmyear-1), nyear), 1, 
-                get_gini)
+giniIN <- apply(paaIN, 1, get_gini)
 omval$ginipaaIN[r,m,] <- giniIN
-omval$FPROXY[r,m,] <- get_dwindow(RPmat[,1], (fmyear-1), nyear)
-omval$SSBPROXY[r,m,] <- get_dwindow(RPmat[,2], (fmyear-1), nyear)
+omval$FPROXY[r,m,] <- RPmat[,1]
+omval$SSBPROXY[r,m,] <- RPmat[,2]
 if(y == nyear){
-  omval$YEAR <- rev(rev(cmip_dwn$YEAR)[1:length((fmyear-1):nyear)])
+  # Determine whether additional years should be added on to the
+  # beginning of the series
+  if(nyear > length(cmip_dwn$YEAR)){
+    nprologueY <- nyear - length(cmip_dwn$YEAR)
+    prologueY <- (cmip_dwn$YEAR[1]-nprologueY):(cmip_dwn$YEAR[1]-1)
+    yrs <- c(prologueY, cmip_dwn$YEAR)
+  # If no additional years needed then just take them from the years
+  # time series.
+  }else{
+    yrs <- rev(rev(cmip_dwn$YEAR)[1:nyear])
+  }
+  omval$YEAR <- yrs
 }
 
 
 # Assessment model diagnostics ... -1 gives 1 NA. Will change when I get
 # around to reporting all years for all metrics.
-omval$relE_qI[r,m,] <- relE_qI[(fmyear-1):nyear]
-omval$relE_qC[r,m,] <- relE_qC[(fmyear-1):nyear]
-omval$relE_selC[r,m,] <- relE_selC[(fmyear-1):nyear]
-omval$relE_ipop_mean[r,m,] <- relE_ipop_mean[(fmyear-1):nyear]
-omval$relE_ipop_dev[r,m,] <- relE_ipop_dev[(fmyear-1):nyear]
-omval$relE_R_dev[r,m,] <- relE_R_dev[(fmyear-1):nyear]
+omval$relE_qI[r,m,] <- relE_qI
+omval$relE_qC[r,m,] <- relE_qC
+omval$relE_selCs0[r,m,] <- relE_selCs0
+omval$relE_selCs1[r,m,] <- relE_selCs1
+omval$relE_ipop_mean[r,m,] <- relE_ipop_mean
+omval$relE_ipop_dev[r,m,] <- relE_ipop_dev
+omval$relE_R_dev[r,m,] <- relE_R_dev
 
 
 

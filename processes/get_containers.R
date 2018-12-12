@@ -53,7 +53,8 @@ obs_effort <- yx0
 # CAA model results
 relE_qI <- yx0
 relE_qC <- yx0
-relE_selC <- matrix(NA, nrow=nyear, ncol=2)
+relE_selCs0 <- yx0
+relE_selCs1 <- yx0
 relE_ipop_mean <- yx0
 relE_ipop_dev <- yx0
 relE_R_dev <- yx0
@@ -71,40 +72,40 @@ dn_omyear <- paste0('year', 1:nomyear)
 dn_mproc <- paste0('mproc', 1:nmproc)
 
 
-# array template for scalar conainer
-save_scalar <- array(data = NA,
-                     dim = c(nrep, nmproc, nomyear, 2),
-                     dimnames = list(paste0('rep', 1:nrep),
-                                     paste0('mproc', 1:nmproc),
-                                     paste0('omyear', 1:nomyear),
-                                     c('val', 'caahat')))
+# # array template for scalar conainer
+# save_scalar <- array(data = NA,
+#                      dim = c(nrep, nmproc, nomyear, 2),
+#                      dimnames = list(paste0('rep', 1:nrep),
+#                                      paste0('mproc', 1:nmproc),
+#                                      paste0('omyear', 1:nomyear),
+#                                      c('val', 'caahat')))
 
 # array template for vector conainer
-save_vector_ann <- array(data = NA,
-                         dim = c(nrep, nmproc, nomyear, ncaayear, 2),
-                         dimnames = list(paste0('rep', 1:nrep), 
-                                         paste0('mproc', 1:nmproc),
-                                         paste0('omyear', 1:nomyear),
-                                         paste0('caayear', 1:ncaayear),
-                                         c('val', 'caahat')))
+# save_vector_ann <- array(data = NA,
+#                          dim = c(nrep, nmproc, nomyear, ncaayear, 2),
+#                          dimnames = list(paste0('rep', 1:nrep), 
+#                                          paste0('mproc', 1:nmproc),
+#                                          paste0('omyear', 1:nomyear),
+#                                          paste0('caayear', 1:ncaayear),
+#                                          c('val', 'caahat')))
 
-save_vector_age <- array(data = NA,
-                         dim = c(nrep, nmproc, nomyear, nage, 2),
-                         dimnames = list(paste0('rep', 1:nrep), 
-                                         paste0('mproc', 1:nmproc),
-                                         paste0('omyear', 1:nomyear),
-                                         paste0('caaage', 1:nage),
-                                         c('val', 'caahat')))
+# save_vector_age <- array(data = NA,
+#                          dim = c(nrep, nmproc, nomyear, nage, 2),
+#                          dimnames = list(paste0('rep', 1:nrep), 
+#                                          paste0('mproc', 1:nmproc),
+#                                          paste0('omyear', 1:nomyear),
+#                                          paste0('caaage', 1:nage),
+#                                          c('val', 'caahat')))
 
-# array template for matrix conainer
-save_matrix <- array(data = NA,
-                     dim = c(nrep, nmproc, nomyear, ncaayear, nage, 2),
-                     dimnames = list(paste0('rep', 1:nrep), 
-                                     paste0('mproc', 1:nmproc),
-                                     paste0('omyear', 1:nomyear),
-                                     paste0('caayear', 1:ncaayear),
-                                     paste0('caaage', 1:nage),
-                                     c('val', 'caahat')))
+# # array template for matrix conainer
+# save_matrix <- array(data = NA,
+#                      dim = c(nrep, nmproc, nomyear, ncaayear, nage, 2),
+#                      dimnames = list(paste0('rep', 1:nrep), 
+#                                      paste0('mproc', 1:nmproc),
+#                                      paste0('omyear', 1:nomyear),
+#                                      paste0('caayear', 1:ncaayear),
+#                                      paste0('caaage', 1:nage),
+#                                      c('val', 'caahat')))
 
 # oacomp <- list(
 # 
@@ -189,21 +190,20 @@ save_matrix <- array(data = NA,
 # array template for vector conainer
 
 # First year to output for saving OMresults
-nomyear <- nyear#ncaayear + fyear + nburn + rburn
+# nomyear <- nyear#ncaayear + fyear + nburn + rburn
 save_vector_ann <- array(data = NA,
-                         dim = c(nrep, nmproc, nyear-(fmyear-1)+1),
+                         dim = c(nrep, nmproc, nyear),
                          dimnames = list(paste0('rep', 1:nrep), 
                                          paste0('mproc', 1:nmproc),
-                                         paste0('nyear', 1:(nyear-
-                                                            (fmyear-1)+1))))
+                                         paste0('nyear', 1:nyear)))
 
-save_2xmatrix_ann <- array(data = NA,
-                           dim = c(nrep, nmproc, nyear-(fmyear-1)+1, 2),
-                           dimnames = list(paste0('rep', 1:nrep),
-                                           paste0('mproc', 1:nmproc),
-                                           paste0('nyear', 1:(nyear-
-                                                                (fmyear-1)+1)),
-                                           c('FRefP', 'BRefP')))
+# save_2xmatrix_ann <- array(data = NA,
+#                            dim = c(nrep, nmproc, nyear-(fmyear-1)+1, 2),
+#                            dimnames = list(paste0('rep', 1:nrep),
+#                                            paste0('mproc', 1:nmproc),
+#                                            paste0('nyear', 1:(nyear-
+#                                                                 (fmyear-1)+1)),
+#                                            c('FRefP', 'BRefP')))
 
 
 
@@ -221,7 +221,8 @@ omval <- list(
   mxGradCAA = save_vector_ann,
   relE_qI = save_vector_ann,
   relE_qC = save_vector_ann,
-  relE_selC = save_vector_ann,
+  relE_selCs0 = save_vector_ann,
+  relE_selCs1 = save_vector_ann,
   relE_ipop_mean = save_vector_ann,
   relE_ipop_dev = save_vector_ann,
   relE_R_dev = save_vector_ann
