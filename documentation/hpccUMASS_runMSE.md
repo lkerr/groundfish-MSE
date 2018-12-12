@@ -110,7 +110,8 @@ There are new processes going on in runPre.sh that we haven't discussed:
 
 * ```module load git/2.1.3``` loads git to the environment so it can be used
 
-* ```git clone``` clones the groundfish-MSE repository from Git-Hub.  The idea is that if there are multiple people working on the project, the run will only ever use the most recent version that has been uploaded to Git-Hub.  Practically, this means that when you go to run the MSE you must push your changes before submitting the job to the HPCC.  *note* if you want to change to cloning a particular branch from gitHub use ```git clone -b <branchname> <url>```.
+* ```git clone``` clones the groundfish-MSE repository from Git-Hub.  The idea is that if there are multiple people working on the project, the run will only ever use the most recent version that has been uploaded to Git-Hub.  Practically, this means that when you go to run the MSE you must push your changes before submitting the job to the HPCC.  
+  * *note:* if you want to change to cloning a particular branch from gitHub use ```git clone -b <branchname> <url>```.
 
 * ```module load gcc/5.1.0``` loads gcc into the environment which is needed to compile the TMB catch-at-age model (this occurs in *runPre.R* in a few lines)
 
