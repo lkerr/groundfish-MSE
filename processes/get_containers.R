@@ -198,11 +198,11 @@ save_vector_ann <- array(data = NA,
                                          paste0('nyear', 1:nyear)))
 
 # save_2xmatrix_ann <- array(data = NA,
-#                            dim = c(nrep, nmproc, nyear-(fmyear-1)+1, 2),
+#                            dim = c(nrep, nmproc, nyear-(fmyearIdx-1)+1, 2),
 #                            dimnames = list(paste0('rep', 1:nrep),
 #                                            paste0('mproc', 1:nmproc),
 #                                            paste0('nyear', 1:(nyear-
-#                                                                 (fmyear-1)+1)),
+#                                                                 (fmyearIdx-1)+1)),
 #                                            c('FRefP', 'BRefP')))
 
 

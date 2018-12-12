@@ -1,5 +1,4 @@
 
-
 # Run simulation setup. This is a separate file so that the model setup
 # parameters canj later be accessed by running the setup but not the
 # entire simulation.
@@ -64,17 +63,13 @@ if(useTemp == TRUE){
 }
 
 # The first year that actual management will begin
-fmyear <- nburn + sum(msyears)
+fmyearIdx <- nburn + sum(msyears)
 
 
 # get all the necessary containers for the simulation
 source('processes/get_containers.R')
 
-# if on local machine (i.e., not hpcc) must compile the tmb code
-# (HPCC runs have a separate call to compile this code).
-if(runClass != 'HPCC'){
-  source('processes/runPre.R')
-}
+
 
 # Set up a sink for debugging -- don't use this if on the HPCC because
 # you will end up with multiple programs trying to access the same file
