@@ -26,7 +26,8 @@ if(platform != 'Linux'){
 # available environments before and after the simulation is run and found
 # one variable that was only available after (active_idx) ... used that to
 # determine whether or not to delete all the files in the results directory.
-if(runClass == 'Local' & !exists('active_idx')){
+
+if(runClass == 'Local'){
   # Remove any files in the results directories
   unlink('results/*', recursive=TRUE)
 }
