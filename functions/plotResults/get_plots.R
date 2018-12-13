@@ -229,7 +229,7 @@ get_plots <- function(x, dirIn, dirOut){
     # Trajectories for the medians of each MP over time
     
     # Get the medians of each performance measure over time
-    mpMed <- apply(tempPM[,,pyidx], c(2,3), median, na.rm=TRUE)
+    mpMed <- apply(tempPM[,,pyidx, drop=FALSE], c(2,3), median, na.rm=TRUE)
     
     if(all(is.na(mpMed))){
       next
