@@ -27,8 +27,8 @@ if(useTemp == TRUE){
   anomStd <- median(cmip_dwn[msyears,'T'])  # anomoly standard
   Tanom <- temp - anomStd
 }else{
-  temp <- NULL
-  Tanom <- rep(0, nburn+length(cmip_dwn[,'T']))
+  temp <- rep(median(cmip_dwn[msyears,'T']), nburn + nrow(cmip_dwn))
+  Tanom <- rep(0, nburn + nrow(cmip_dwn))
 }
 
 # Simple temperature trend for debugging -- smooth the data
