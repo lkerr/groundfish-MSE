@@ -15,12 +15,14 @@ Rfun_BmsySim <- list(
   # are 25 years available in the series -- otherwise it just uses what is
   # left).
   
-  recT = function(parpop, parenv) 
+  recT = function(){
           get_recruits(type = parpop$Rpar$type, 
-          par = parpop$Rpar, 
-          S = tail(parpop$SSBhat, 1),
-          tempY = median(parenv$temp[parenv$y:(parenv$y+25)], na.rm=TRUE), 
-          stochastic = parenv$Rstoch_ann)['R']
+                       par = parpop$Rpar, 
+                       S = tail(parpop$SSBhat, 1),
+                       tempY = median(parenv$temp[parenv$y:(parenv$y+25)], 
+                                      na.rm=TRUE), 
+                       stochastic = parenv$Rstoch_ann)['R']
+  }
   
 )
 
