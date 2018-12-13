@@ -217,3 +217,9 @@ Job <9049872> is submitted to queue <short>.
 ```
 
 and you wait for it to complete.  You can check the status using the command ```bjobs``` (you can use this no matter what HPCC directory you are in).  When the job is complete you will have four new files with the extension .o, four new files with the extension .e and there will be .Rdata files and plots in the *Results* directory.
+
+***
+
+### Notes
+
+* On my local linux Ubuntu machine I've found I can't install R's tidyverse library (necessary for the planB assessment approach written by C Legault) under the default conditions.  I had to first update the system.  Based on a web search I found packages to add to the linux system: ```sudo apt-get install r-cran-curl r-cran-openssl r-cran-xml2``` and after I made these changes I could install tidyverse.
