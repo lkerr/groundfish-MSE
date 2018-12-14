@@ -7,6 +7,13 @@ rm(list=ls())
 
 source('processes/runSetup.R')
 
+# if on local machine (i.e., not hpcc) must compile the tmb code
+# (HPCC runs have a separate call to compile this code). Keep out of
+# runSetup.R because it is really a separate process on the HPCC.
+if(runClass != 'HPCC'){
+  source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
+}
+
 # begin the model loop
 for(r in 1:nrep){
 
@@ -30,8 +37,7 @@ for(r in 1:nrep){
     # F_full[1:(ncaayear + fyear + nburn +1)] <- rlnorm(ncaayear + 
     #                                                   fyear + nburn + 1, 
     #                                                   log(0.2), 0.1)
-    F_full[1:(nburn + sum(msyears)+1)] <- rlnorm(nburn + sum(msyears)+1, 
-                                                 log(burnFmean), burnFsd)
+    F_full[1:fmyearIdx] <- rlnorm(fmyearIdx, log(burnFmean), burnFsd)
   
     # initialize the model with numbers and mortality rates
     # in the first n (fyear-1) years.
@@ -84,6 +90,7 @@ for(r in 1:nrep){
       
       # calculate the selectivity in year y (changes if the laa changes)
       slxC[y,] <- get_slx(type=selC_typ, par=selC, laa=laa[y,])
+      slxI[y,] <- get_slx(type=selI_typ, par=selI, laa=NULL)
       
       # get Z for the current year
       Z[y,] <- F_full[y]*slxC[y,] + M
@@ -127,7 +134,7 @@ for(r in 1:nrep){
                                      par=oe_paaIN)
 
       # if burn-in period is over...
-      if(y > fmyear-1){
+      if(y > fmyearIdx-1){
          
         # prepare data & run assessment model
         source('processes/get_tmb_setup.R')
@@ -204,9 +211,9 @@ for(r in 1:nrep){
           # point update schedule or if using planB instead then run the 
           # reference point update.  || used to keep from evaluating
           # mproc[m,'RPInt'] under planB (it will be NA).
-          if( y == fmyear ||
+          if( y == fmyearIdx ||
               mproc[m,'ASSESSCLASS'] == 'PLANB' ||
-              ( y > fmyear & 
+              ( y > fmyearIdx & 
                 (y-fyear) > 0 & 
                 (y-fyear-1) %% mproc[m,'RPInt'] == 0 ) ){
             
@@ -290,11 +297,12 @@ for(r in 1:nrep){
   
       }
       
-      if(mproc[m,'ASSESSCLASS'] == 'CAA' & y > fmyear-1){
+      if(mproc[m,'ASSESSCLASS'] == 'CAA' & y > fmyearIdx-1){
         relE_qI[y] = get_relE(rep$log_qI, log(qI))
         relE_qC[y] = get_relE(rep$log_qC, log(qC))
         # Use max selectivity ... a little weird but they do go together
-        relE_selC[y,] = max(get_relE(rep$log_selC, log(selC)))
+        relE_selCs0[y] = get_relE(rep$log_selC[1], log(selC['s0']))
+        relE_selCs1[y] = get_relE(rep$log_selC[2], log(selC['s1']))
         relE_ipop_mean[y] = get_relE(rep$log_ipop_mean, log_ipop_mean)
         relE_ipop_dev[y] = mean(get_relE(rep$ipop_dev, ipop_dev))
         relE_R_dev[y] = mean(get_relE(rep$R_dev, R_dev))

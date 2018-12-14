@@ -12,10 +12,25 @@
 
 get_plots <- function(x, dirIn, dirOut){
   
+  # load some of the necessary variables for plotting by running the
+  # setup file.
+  source('processes/set_om_parameters.R', local=TRUE)
+  source('processes/genAnnStructure.R', local=TRUE)
+  
   # Load one of the simulation environments
-  load(file.path(dirIn, list.files(dirIn)[1]))
+  # load(file.path(dirIn, list.files(dirIn)[1]))
+
+  # model years
+  # yrs <- (mxyear - length(temp)+1):mxyear
+  
+  # Year before the management period to start the plots
+  py0 <- 5
+  
+  # Index for years that will be plotted for trajectories and such
+  pyidx <- (fmyearIdx-py0+1):length(yrs)
   
   nm <- names(x)
+  # ny <- dim(x[[i]])[3]
   bxidx <- which(nm %in% c("SSB", "R", "F_full", "sumCW", "sumCWcv", 
                            "ginipaaCN", "ginipaaIN", "OFdStatus",
                            "mxGradCAA"))
@@ -31,58 +46,58 @@ get_plots <- function(x, dirIn, dirOut){
                              "relE_R_dev", "FPROXY", "SSBPROXY"))
   
   # Year names
-  yridx <- which(nm %in% "YEAR")
-  
+  # yridx <- which(nm %in% "YEAR")
+
   # Performance measures: medium term years 10-20
   for(i in bxidx){
-    jpeg(paste0(dirOut, nm[i], 'yr10-20.jpg.'))
+    jpeg(paste0(dirOut, nm[i], 'yrb10-20.jpg.'))
 
       # If you just have a bunch of NAs for some reason make an
       # empty plot as a place-holder
-      if(all(is.na(x[[i]][,,10:20,drop=FALSE]))){
+      if(all(is.na(x[[i]][,,(fmyearIdx+10-1):(fmyearIdx+20),drop=FALSE]))){
         plot(0)
       }else{
-        get_box(x=x[[i]][,,10:20,drop=FALSE])
+        get_box(x=x[[i]][,,(fmyearIdx+10-1):(fmyearIdx+20),drop=FALSE])
       }
     
     dev.off()
       
   }
-  
+ 
   # Performance measures using first 5 years
   for(i in bxidx){
     
-    jpeg(paste0(dirOut, nm[i], 'yr1-5.jpg.'))
+    jpeg(paste0(dirOut, nm[i], 'yra1-5.jpg.'))
     # If you just have a bunch of NAs for some reason make an
     # empty plot as a place-holder
-    if(all(is.na(x[[i]][,,1:5,drop=FALSE]))){
+    if(all(is.na(x[[i]][,,fmyearIdx:(fmyearIdx+5-1),drop=FALSE]))){
       plot(0)
     }else{
-      get_box(x=x[[i]][,,1:5,drop=FALSE])
+      get_box(x=x[[i]][,,fmyearIdx:(fmyearIdx+5-1),drop=FALSE])
     }
     
     dev.off()
     
   }
-  
+
   # Performance measures: long term 20-50 years
   for(i in bxidx){
     
-    jpeg(paste0(dirOut, nm[i], 'yr20-end.jpg.'))
+    jpeg(paste0(dirOut, nm[i], 'yrc20-end.jpg.'))
     
     # If you just have a bunch of NAs for some reason make an
     # empty plot as a place-holder
-    ny <- dim(x[[i]])[3]
-    if(all(is.na(x[[i]][,,20:ny,drop=FALSE]))){
+    if(all(is.na(x[[i]][,,(nyear-20+1):nyear,drop=FALSE]))){
       plot(0)
     }else{
-      get_box(x=x[[i]][,,20:ny,drop=FALSE])
+      get_box(x=x[[i]][,,(nyear-20+1):nyear,drop=FALSE])
     }
     
     dev.off()
     
   }
-  
+   
+
   dir.create(file.path(dirOut, 'RP'), showWarnings=FALSE)
   for(i in 1:dim(x$FPROXY)[2]){
   
@@ -91,7 +106,8 @@ get_plots <- function(x, dirIn, dirOut){
       if(all(is.na(x$FPROXY[,i,]))){
         plot(0)
       }else{
-        get_rptrend(x=x$FPROXY[,i,], y=x$SSBPROXY[,i,])
+        get_rptrend(x=x$FPROXY[,i,pyidx], 
+                    y=x$SSBPROXY[,i,pyidx])
       }
     
     dev.off()
@@ -107,16 +123,14 @@ get_plots <- function(x, dirIn, dirOut){
     
   }
  
- 
+
   # Get diagnostic plots that show (1) the temperature history; (2) the
   # growth models (with temperature); and (3) the recruitment models
   # (with temperature)
-  source('processes/runSetup.R')
 
   # Time-series temperature plot
   jpeg(paste0(dirOut, 'tempts.jpg.'),
        width=480*1.75, height=480, pointsize=12*1.5)
-    yrs <- (mxyear - length(temp)+1):mxyear
     get_tempTSPlot(tanom = Tanom, yrs = yrs,
                    fmyear=fmyear, tanomStd = anomStd)
   dev.off()
@@ -124,23 +138,23 @@ get_plots <- function(x, dirIn, dirOut){
   # Plot describing how growth changed over time
   jpeg(paste0(dirOut, 'laa.jpg.'),
        width=480*1.75, height=480, pointsize=12*1.5)
-    ptyridx <- fmyear:length(yrs)
+    ptyridx <- fmyearIdx:length(yrs)
     get_laaPlot(laa_par=laa_par, laa_typ=laa_typ, laafun=get_lengthAtAge, 
-                ages=fage:(ceiling(1.5*page)), Tanom=Tanom[ptyridx], 
-                ptyrs=yrs[ptyridx])
+                ages=fage:(ceiling(1.5*page)), Tanom=Tanom[pyidx], 
+                ptyrs=yrs[pyidx])
   dev.off()
   
   # # Plot describing how average recruitment changed over time
   # jpeg(paste0(dirOut, 'laa.jpg.'),
   #      width=480*1.75, height=480, pointsize=12*1.5)
-  #   ptyridx <- fmyear:length(yrs)
+  #   ptyridx <- fmyearIdx:length(yrs)
   #   get_laaPlot(rec_par=rec_par, laa_typ=laa_typ, laafun=get_lengthAtAge, 
   #               ages=fage:(ceiling(1.5*page)), Tanom=Tanom[ptyridx], 
   #               ptyrs=yrs[ptyridx])
   # dev.off()
   # 
   
-  
+ 
   
   ### Trajectory plots
   dir.create(file.path(dirOut, 'Traj'), showWarnings=FALSE)
@@ -159,7 +173,7 @@ get_plots <- function(x, dirIn, dirOut){
     # to run through the loop first and calculate all the boxplot stats.
     bpstats <- list()
     for(mp in 1:dim(tempPM)[2]){
-      tempPMmp <- tempPM[,mp,]
+      tempPMmp <- tempPM[,mp,pyidx]
       bpstats[[mp]] <- boxplot(x = tempPMmp, plot=FALSE)$stats
     }
     
@@ -178,28 +192,33 @@ get_plots <- function(x, dirIn, dirOut){
     for(mp in 1:dim(tempPM)[2]){
       
       # Simplify the references
-      tempPMmp <- tempPM[,mp,]
+      tempPMmp <- tempPM[,mp,pyidx]
+      
+      if(all(is.na(tempPMmp))){
+        next
+      }
 
       # First do a general boxplot of the trajectory over years
       jpeg(paste0(dirOut, 'Traj/', PMname, '/boxmp', mp, '.jpg.'),
            width=480*1.75, height=480, pointsize=12*1.5)
         
         par(mar=c(4,4,1,1))
-        get_tbxplot(x = tempPMmp, PMname=PMname, yrs=x$YEAR,
-                    printOutliers=FALSE, yrg=yrgbx)
+
+        get_tbxplot(x = tempPMmp, PMname=PMname, yrs=yrs[pyidx],
+                    printOutliers=FALSE, yrg=yrgbx, fmyear=yrs[fmyearIdx])
       
       dev.off()
       
-     
+    
       # Do (up to) 5 trajectories as examples
       for(r in repidx){
 
         jpeg(paste0(dirOut, 'Traj/', PMname, '/mp', mp, 'rep', r, '.jpg.'),
              width=480*1.75, height=480, pointsize=12*1.5)
         
-          get_tplot(x=tempPMmp[r,], yrs = x$YEAR, 
+          get_tplot(x=tempPMmp[r,], yrs = yrs[pyidx], 
                     mpName=paste('MP', mp), 
-                    PMname=PMname, ylim=yrgrsim)
+                    PMname=PMname, ylim=yrgrsim, fmyear=yrs[fmyearIdx])
           # plot(tempPM[r,mp,], type='o')
         
         dev.off()
@@ -210,7 +229,11 @@ get_plots <- function(x, dirIn, dirOut){
     # Trajectories for the medians of each MP over time
     
     # Get the medians of each performance measure over time
-    mpMed <- apply(tempPM, c(2,3), median, na.rm=TRUE)
+    mpMed <- apply(tempPM[,,pyidx, drop=FALSE], c(2,3), median, na.rm=TRUE)
+    
+    if(all(is.na(mpMed))){
+      next
+    }
     
     # Make the plot
     jpeg(paste0(dirOut, 'Traj/', PMname, '/MPmedTraj.jpg.'),
@@ -222,7 +245,8 @@ get_plots <- function(x, dirIn, dirOut){
       if(nm[i] == 'OFdStatus'){
         mpMed <- jitter(mpMed, amount=0.05)
       }
-      get_mpMedTraj(mpMedMat = mpMed, ylab=nm[i])
+      get_mpMedTraj(mpMedMat = mpMed, x=yrs[pyidx], ylab=nm[i], 
+                    fmyear=yrs[fmyearIdx])
       
       dev.off()
   }

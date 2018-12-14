@@ -53,11 +53,11 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
     
     # Determine whether the population is overfished and whether 
     # overfishing is occurring
-    # browser()
+
     overfished <- ifelse(tail(parpop$SSBhat,1) < BrefRPvalue, 1, 0)
     
     if(tolower(parmgt$HCR) == 'ns1'){
-      
+     
       F <- get_NS1HCR(parpop, Fmsy=FrefRPvalue, Bmsy=BrefRPvalue)['Fadvice']
   
   
