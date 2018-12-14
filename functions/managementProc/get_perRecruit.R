@@ -51,7 +51,7 @@
 
 get_perRecruit <- function(parmgt, parpop, 
                            nage=1000, nF=1000, nFrep=100){
-
+  
   if(is.null(parpop$mat) & parmgt$FREF_TYP == 'SPR'){
     stop('get_perRecruit: must provide maturity if using SPR')
   }
@@ -92,7 +92,7 @@ get_perRecruit <- function(parmgt, parpop,
     Y[i] <- C %*% c(parpop$waa) # (use c() for proper formatting)
     SSB[i] <- sum(N * parpop$waa * parpop$mat)
   }
- 
+  
   if(parmgt$FREF_TYP == 'YPR'){
     ## find F(x)
     # get all slopes
@@ -106,10 +106,10 @@ get_perRecruit <- function(parmgt, parpop,
     
     # find the F @ reference slope
     Fref <- F_full[which.min(abs(slp - slpr))]
-    
-    # SSB / R at the reference point (not applicable for YPR)
-    SSBatRP <- NULL
-    
+         
+    # SSB / R at the reference point
+    SSBatRP <- SSB[which.min(abs(slp - slpr))]
+   
     # for outputs
     yvalue <- Y
   }else if(parmgt$FREF_TYP == 'SSBR'){
@@ -124,7 +124,7 @@ get_perRecruit <- function(parmgt, parpop,
     
     # SSB / R at the reference point
     SSBatRP <- SSB[which.min(abs(SSB - parmgt$FREF_LEV))]
-       
+      
     # for outputs
     yvalue <- SSB
     
