@@ -1,6 +1,6 @@
 
 # Run simulation setup. This is a separate file so that the model setup
-# parameters canj later be accessed by running the setup but not the
+# parameters can later be accessed by running the setup but not the
 # entire simulation.
 
 # load all the functions
@@ -24,6 +24,7 @@ source('processes/generateMP.R')
 
 # get the operating model parameters
 source('processes/set_om_parameters.R')
+nage <- length(fage:page)
 
 source('processes/genAnnStructure.R')
 
