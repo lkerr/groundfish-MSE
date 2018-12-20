@@ -13,7 +13,7 @@ debugSink <- FALSE
 simpleTemperature <- TRUE
 
 # number of times to repeat this analysis
-nrep <- 1
+nrep <- 2
 
 # first age and plus age
 fage <- 1
@@ -92,11 +92,21 @@ selC <- c(s0=5, s1=0.08)
 selC_typ <- 'Logistic'
 
 # Recruitment
-load('data/data_processed/SR/cod/BHTS.Rdata') #srpar
+Rpar <- c(a = 1.953864e+07,
+          b = 3.631550e+04,
+          c = 0.3,
+          rho = 0,
+          sigR = 1.0)
+
+
+# load('data/data_processed/SR/cod/BHTS.Rdata') #srpar
+
+## REMOVED parameters relating to R stochasticity -- prefer to adjust this
+## using the parameters.
 # include stochasticity in recruitment parameter estimates?
-Rstoch_par <- FALSE
+# Rstoch_par <- FALSE
 # include stochasticity in annual recruitment estimate?
-Rstoch_ann <- FALSE
+# Rstoch_ann <- FALSE
 
 
 
