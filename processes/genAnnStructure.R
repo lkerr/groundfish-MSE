@@ -40,7 +40,7 @@ if(simpleTemperature){
 }
 
 
-# Determine the actual years based on thej available temperature data
+# Determine the actual years based on the available temperature data
 # (and the burn-in period which 'temp' has already incorporated)
 nyear <- length(temp)
 lastYear <- tail(cmip_dwn$YEAR,1)
