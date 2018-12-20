@@ -105,7 +105,7 @@ selC_typ <- 'Logistic'
 
 # Recruitment
 Rpar <- c(a = 1.953864e+07,
-          b = 3.631550e+04*5,
+          b = 3.631550e+04*2,
           c = -0.540,
           rho = 0,
           sigR = 0.68)
