@@ -19,7 +19,7 @@ slxI <- yxage
 mat <- yxage
 F_full <- yx0
 R <- yx0
-residR <- yx0
+Rhat <- yx0
 SSB <- yx0
 RPmat <- matrix(NA, nrow=nyear, ncol=2,
                 dimnames = list(paste0(1:nyear), c('FRefP', 'BRefP')))

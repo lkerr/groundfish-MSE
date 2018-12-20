@@ -56,7 +56,7 @@ for(r in 1:nrep){
     RPs_rm <- matrix(NA, nrow=nyear, ncol=2,
                      dimnames=list(paste0('y', 1:nyear),
                                    c('FREF', 'BREF')))
-     
+    
     for(y in fyear:nyear){
 
       if(debugSink & runClass != 'HPCC'){
@@ -80,12 +80,11 @@ for(r in 1:nrep){
       # (depending on the lag) and temperature
       SSB[y] <- sum(J1N[y-fage,] * mat[y,] * waa[y-fage,])  
 
-      Rpar <- get_recruitment_par(par=srpar, stochastic=Rstoch_par)
-      Rout <- get_recruits(type=Rpar$type, par=Rpar, S=SSB[y],
-                           tempY=temp[y], stochastic=Rstoch_ann)
+      Rout <- get_recruits(type='BHTS', par=Rpar, S=SSB[y],
+                           TAnom=Tanom[y], R_ym1 = R[y-1], Rhat_ym1 = Rhat[y-1])
 
-      R[y] <- Rout['R']
-      residR[y] <- Rout['resid']
+      R[y] <- Rout[['R']]
+      Rhat[y] <- Rout[['Rhat']]
       R[y] <- ifelse(R[y] < 0, 0, R[y])
       
       # calculate the selectivity in year y (changes if the laa changes)
@@ -204,7 +203,7 @@ for(r in 1:nrep){
           
           # Environmental parameters
           parenv <- list(tempY = temp,
-                         Rstoch_ann = Rstoch_ann,
+                         Tanom = Tanom,
                          y = y)
           
           # If in the first year or a subsequent year on the reference
