@@ -15,7 +15,7 @@ simpleTemperature <- TRUE
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 2
+nrep <- 1
 
 # first age and plus age
 fage <- 1
@@ -106,9 +106,9 @@ selC_typ <- 'Logistic'
 # Recruitment
 Rpar <- c(a = 1.953864e+07,
           b = 3.631550e+04,
-          c = 0.3,
+          c = -0.540,
           rho = 0,
-          sigR = 1.0)
+          sigR = 0.68)
 
 
 # load('data/data_processed/SR/cod/BHTS.Rdata') #srpar
