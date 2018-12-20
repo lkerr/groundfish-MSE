@@ -68,6 +68,10 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
       # added small value to F because F = 0 causes some estimation errors
       F <- ifelse(tail(parpop$SSBhat, 1) < BrefRPvalue, 0, FrefRPvalue)+1e-4
       
+    }else if(tolower(parmgt$HCR) == 'constf'){
+ 
+      F <- FrefRPvalue
+      
     }else{
       
       stop('get_nextF: type not recognized')
