@@ -229,7 +229,7 @@ get_plots <- function(x, dirIn, dirOut){
     # Trajectories for the medians of each MP over time
     
     # Get the medians of each performance measure over time
-    if(nm[i] == 'OFdStatus' | 'F_Full'){
+    if(nm[i] == 'OFdStatus' | nm[i] == 'F_Full'){
       mpMed <- apply(tempPM[,,pyidx, drop=FALSE], c(2,3), mean, na.rm=TRUE)
     }else{
       mpMed <- apply(tempPM[,,pyidx, drop=FALSE], c(2,3), median, na.rm=TRUE)
