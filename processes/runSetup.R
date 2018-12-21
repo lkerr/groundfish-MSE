@@ -28,9 +28,12 @@ nage <- length(fage:page)
 
 source('processes/genAnnStructure.R')
 
-# Load specific recruitment functions for simulation-based approach
-# to Bproxy reference points
+# Load specific recruitment functions (these are a list for simulation-based 
+# approach to deriving Bproxy reference points
 source('processes/Rfun_BmsySim.R')
+
+
+
 
 # If running on a local machine, more than one repetition should be
 # used otherwise some plotting functions (e.g., boxplots) will fail
