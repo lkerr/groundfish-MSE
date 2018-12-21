@@ -96,7 +96,7 @@ Rstoch_ann <- FALSE
 
 # fishery and survey catchabilities
 qC <- 0.01
-qI <- 1.0
+qI <- 0.99
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
@@ -105,7 +105,7 @@ selC_typ <- 'Logistic'
 
 # Recruitment
 Rpar <- c(a = 1.953864e+07,
-          b = 3.631550e+04*2,
+          b = 3.631550e+04*2, # to get more contrast in the results
           c = -0.540,
           rho = 0,
           sigR = 0.68)
@@ -199,7 +199,11 @@ hrcTyp <- list('ns1', 'simpleThresh')
 
 
 
-
+#### -- Errors and warnings -- ####
+if(1.0 %in% c(qI, qC)){
+  stop('catchability (qI and qC) must not be exactly one (you can make it
+        however close you want though')
+}
 
 
 

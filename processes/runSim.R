@@ -1,5 +1,5 @@
 
-
+set.seed(88)
 
 # empty the environment
 rm(list=ls())
