@@ -41,12 +41,13 @@ get_plots <- function(x, dirIn, dirOut){
   trajidx <- which(nm %in% c("SSB", "R", "F_full", "sumCW", 
                              "ginipaaCN", "ginipaaIN", "OFdStatus",
                              "mxGradCAA",
-                             "relE_qI", "relE_qC", "relE_selC",
+                             "relE_qI", "relE_qC", "relE_selCs0", "relE_selCs1",
                              "relE_ipop_mean", "relE_ipop_dev",
-                             "relE_R_dev", "FPROXY", "SSBPROXY"))
+                             "relE_R_dev", "relE_SSB", "relE_CW", "relE_IN", 
+                             "FPROXY", "SSBPROXY"))
   
-  # Year names
-  # yridx <- which(nm %in% "YEAR")
+  
+  #### Performance measure plots ####
 
   # Performance measures: medium term years 10-20
   for(i in bxidx){
@@ -98,6 +99,8 @@ get_plots <- function(x, dirIn, dirOut){
   }
    
 
+  #### Proxy Reference Point plots ####
+  
   dir.create(file.path(dirOut, 'RP'), showWarnings=FALSE)
   for(i in 1:dim(x$FPROXY)[2]){
   
@@ -128,6 +131,8 @@ get_plots <- function(x, dirIn, dirOut){
   # growth models (with temperature); and (3) the recruitment models
   # (with temperature)
 
+  #### Temperature time series ####
+  
   # Time-series temperature plot
   jpeg(paste0(dirOut, 'tempts.jpg.'),
        width=480*1.75, height=480, pointsize=12*1.5)
@@ -135,6 +140,7 @@ get_plots <- function(x, dirIn, dirOut){
                    fmyear=fmyear, ftyear=yrs[nburn+1])
   dev.off()
  
+  #### Growth ####
   # Plot describing how growth changed over time
   jpeg(paste0(dirOut, 'laa.jpg.'),
        width=480*1.75, height=480, pointsize=12*1.5)
@@ -156,14 +162,13 @@ get_plots <- function(x, dirIn, dirOut){
   
  
   
-  ### Trajectory plots
+  #### Trajectories of OM values ####
   dir.create(file.path(dirOut, 'Traj'), showWarnings=FALSE)
   
   # only make a few trajectories so you don't get so many plots
   repidx <-sample(1:dim(x[[trajidx[1]]])[1], 
                   size=min(5, dim(x[[trajidx[1]]])[1]))
 
-  
   for(i in trajidx){
 
     tempPM <- x[[i]]
@@ -255,6 +260,30 @@ get_plots <- function(x, dirIn, dirOut){
       dev.off()
   }
   
+  
+  #### Selectivity plot ####
+  
+  par(mar=c(4.5,4.5,1.5,1.5))
+  
+  # age-based selectivity plot
+  jpeg(paste0(dirOut, 'slxAge.jpg.'),
+       width=480*1.5, height=480, pointsize=12*1.5)
+  
+    get_slxPlot(ages = fage:page, type = 'age', 
+                laa_typ = laa_typ, laa_par = laa_par, 
+                selC_typ = selC_typ, selCpar = selC, 
+                TAnom = mean(Tanom[fmyearIdx:length(Tanom)]))
+  dev.off()
+  
+  # length-based selectivity plot
+  jpeg(paste0(dirOut, 'slxLength.jpg.'),
+       width=480*1.5, height=480, pointsize=12*1.5)
+  
+    get_slxPlot(ages = fage:page, type = 'length', 
+                laa_typ = laa_typ, laa_par = laa_par, 
+                selC_typ = selC_typ, selCpar = selC, 
+                TAnom = mean(Tanom[fmyearIdx:length(Tanom)]))
+  dev.off()
   
 }
 
