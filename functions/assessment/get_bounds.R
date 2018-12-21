@@ -36,3 +36,11 @@ get_bounds <- function(x, type, p){
 }
 
 
+
+## Testing
+
+# get_bounds(x = 0.001, type = 'lower', p = 10)
+# get_bounds(x = 5, type = 'lower', p = 10)
+# get_bounds(x = -0.001, type = 'upper', p = 10)
+# get_bounds(x = -5, type = 'upper', p = 10)
+
