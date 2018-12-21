@@ -131,8 +131,8 @@ get_plots <- function(x, dirIn, dirOut){
   # Time-series temperature plot
   jpeg(paste0(dirOut, 'tempts.jpg.'),
        width=480*1.75, height=480, pointsize=12*1.5)
-    get_tempTSPlot(tanom = Tanom, yrs = yrs,
-                   fmyear=fmyear, tanomStd = anomStd)
+    get_tempTSPlot(temp = temp, yrs = yrs,
+                   fmyear=fmyear, ftyear=yrs[nburn+1])
   dev.off()
  
   # Plot describing how growth changed over time

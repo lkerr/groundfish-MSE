@@ -24,6 +24,15 @@ msyears <- cmip_dwn$YEAR < baseTempYear
 if(useTemp == TRUE){
   temp <- c(rep(median(cmip_dwn[msyears,'T']), nburn),
             cmip_dwn[,'T'])
+  
+  # Simple temperature trend for debugging -- smooth the data
+  # Use only if switch is turned on
+  if(simpleTemperature){
+    smidx <- 1:length(temp)
+    lo <- loess(temp ~ smidx)
+    temp <- predict(lo)
+  }
+  
   anomStd <- median(cmip_dwn[msyears,'T'])  # anomoly standard
   Tanom <- temp - anomStd
 }else{
@@ -31,13 +40,7 @@ if(useTemp == TRUE){
   Tanom <- rep(0, nburn + nrow(cmip_dwn))
 }
 
-# Simple temperature trend for debugging -- smooth the data
-# Use only if switch is turned on
-if(simpleTemperature){
-  smidx <- 1:length(Tanom)
-  lo <- loess(Tanom ~ smidx)
-  Tanom <- predict(lo)
-}
+
 
 
 # Determine the actual years based on the available temperature data
