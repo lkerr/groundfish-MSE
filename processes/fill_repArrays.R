@@ -165,6 +165,9 @@ omval$relE_selCs1[r,m,] <- relE_selCs1
 omval$relE_ipop_mean[r,m,] <- relE_ipop_mean
 omval$relE_ipop_dev[r,m,] <- relE_ipop_dev
 omval$relE_R_dev[r,m,] <- relE_R_dev
+omval$relE_SSB[r,m,] <- relE_SSB
+omval$relE_CW[r,m,] <- relE_CW
+omval$relE_IN[r,m,] <- relE_IN
 
 
 

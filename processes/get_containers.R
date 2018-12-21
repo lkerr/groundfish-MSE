@@ -59,6 +59,9 @@ relE_selCs1 <- yx0
 relE_ipop_mean <- yx0
 relE_ipop_dev <- yx0
 relE_R_dev <- yx0
+relE_SSB <- yx0
+relE_CW <- yx0
+relE_IN <- yx0
 
 
 
@@ -226,7 +229,10 @@ omval <- list(
   relE_selCs1 = save_vector_ann,
   relE_ipop_mean = save_vector_ann,
   relE_ipop_dev = save_vector_ann,
-  relE_R_dev = save_vector_ann
+  relE_R_dev = save_vector_ann,
+  relE_SSB = save_vector_ann,
+  relE_CW = save_vector_ann,
+  relE_IN = save_vector_ann
 )
 
 

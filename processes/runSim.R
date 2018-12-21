@@ -1,5 +1,6 @@
 
-set.seed(88)
+
+#### Set up environment ####
 
 # empty the environment
 rm(list=ls())
@@ -14,7 +15,9 @@ if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
-# begin the model loop
+
+#### Top rep Loop ####
+
 for(r in 1:nrep){
 
   if(debugSink & runClass != 'HPCC'){
@@ -25,6 +28,7 @@ for(r in 1:nrep){
   # set.seed(NULL)
   # rsd <- rnorm()
   
+  #### Top MP loop ####
   for(m in 1:nrow(mproc)){
     
     if(debugSink & runClass != 'HPCC'){
@@ -39,9 +43,9 @@ for(r in 1:nrep){
     #                                                   log(0.2), 0.1)
     F_full[1:fmyearIdx] <- rlnorm(fmyearIdx, log(burnFmean), burnFsd)
   
+    #### Initilizations ####
     # initialize the model with numbers and mortality rates
     # in the first n (fyear-1) years.
-    
     
     initN <- get_init(nage=nage, N0=2e7, F_full=F_full[1], M=M)
     J1N[1:(fyear-1),] <- rep(initN, each=(fyear-1))
@@ -57,6 +61,7 @@ for(r in 1:nrep){
                      dimnames=list(paste0('y', 1:nyear),
                                    c('FREF', 'BREF')))
     
+    #### Top year loop ####
     for(y in fyear:nyear){
 
       if(debugSink & runClass != 'HPCC'){
@@ -143,6 +148,7 @@ for(r in 1:nrep){
           cat('      trying assessment...', file=dbf, append=TRUE)
         }
         
+        #### Run assessment model ####
         # Run the CAA assessment
         tryfitCAA <- try(source('assessment/caa.R'))
         # Run the PlanB assessment
@@ -165,18 +171,6 @@ for(r in 1:nrep){
           SSBaa <- rep$J1N * get_dwindow(waa, sty, y) * get_dwindow(mat, sty, y)
           SSBhat <- apply(SSBaa, 1, sum)
           
-          # Get fishing mortality for next year's management
-          # fbrpy <- get_FBRP(type=fbrpTyp, par=mproc[m,],
-                            # sel=endv(rep$slxC), waa=endv(rep$waa), 
-                            # M=M[1])
-          # note must convert matrices to vectors when using tail() function
-          # to get the appropriate behavior
-          # bbrpy <- get_BBRP(type=bbrpTyp, par=mproc[m,],
-                            # sel=endv(rep$slxC), waa=endv(rep$waa), 
-                            # M=endv(rep$M), mat=mat[y,], 
-                            # R=rep$R, B=SSBhat, Rfun=mean)
-          
-          # apply the harvest control rule
           
           # Vary the parpop depending on the type of assessment model
           # (can't have just one because one of the models might not
@@ -205,6 +199,8 @@ for(r in 1:nrep){
           parenv <- list(tempY = temp,
                          Tanom = Tanom,
                          y = y)
+          
+          #### Get ref points & assign F ####
           
           # If in the first year or a subsequent year on the reference
           # point update schedule or if using planB instead then run the 
@@ -267,39 +263,19 @@ for(r in 1:nrep){
           
         }
           
-        # Get fishing mortality for next year's management
-        # fbrpy <- get_FBRP(type=fbrpTyp, par=mgtproc[m,],
-                          # sel=endv(rep$slxC), waa=endv(rep$waa), 
-                          # M=M[1])
-        # note must convert matrices to vectors when using tail() function
-        # to get the appropriate behavior
-        # bbrpy <- get_BBRP(type=bbrpTyp, par=mgtproc[m,],
-                          # sel=endv(rep$slxC), waa=endv(rep$waa), 
-                          # M=endv(rep$M), mat=mat[y,], 
-                          # R=rep$R, B=SSBhat, Rfun=mean)
-  
-        # # apply the harvest control rule
-        # parpop <- list(waa = tail(rep$waa, 1), 
-        #                sel = tail(rep$slxC, 1), 
-        #                M = tail(rep$M, 1), 
-        #                mat = mat[y,],
-        #                R = rep$R,
-        #                B = SSBhat)
-        # 
-        # # recommended level of fishing mortality for the next year
-        # nextF_rec <- get_nextF(parmgt = mproc[m,], parpop = parpop)
-        # nextF <- get_ieF(type='lognormal', F, par=ie_F)
-        # 
-        # if(y < nyear){
-        #   F_full[y+1] <- nextF
-        # }
+        
   
       }
       
+      
+      #### Calculate rel errors ####
+      CN[y,] %*% waa[y,]     
       if(mproc[m,'ASSESSCLASS'] == 'CAA' & y > fmyearIdx-1){
+        relE_SSB[y] <- mean(get_relE(SSBhat, get_dwindow(SSB, sty, y)))
+        relE_CW[y] <- mean(get_relE(rep$sumCW, get_dwindow(sumCW, sty, y)))
+        relE_IN[y] <- mean(get_relE(rep$sumIN, get_dwindow(sumIN, sty, y)))
         relE_qI[y] = get_relE(rep$log_qI, log(qI))
         relE_qC[y] = get_relE(rep$log_qC, log(qC))
-        # Use max selectivity ... a little weird but they do go together
         relE_selCs0[y] = get_relE(rep$log_selC[1], log(selC['s0']))
         relE_selCs1[y] = get_relE(rep$log_selC[2], log(selC['s1']))
         relE_ipop_mean[y] = get_relE(rep$log_ipop_mean, log_ipop_mean)
@@ -325,7 +301,7 @@ td2 <- paste(gsub(' ', '_', td2), round(runif(1, 0, 10000)), sep='_')
 
 
 
-# save results
+#### save results ####
 save(omval, file=paste0('results/sim/omval', td2, '.Rdata'))
 
 if(runClass != 'HPCC'){
