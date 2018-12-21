@@ -96,7 +96,7 @@ Rstoch_ann <- FALSE
 
 # fishery and survey catchabilities
 qC <- 0.01
-qI <- 0.001
+qI <- 0.99
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
