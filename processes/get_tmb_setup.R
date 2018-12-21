@@ -80,10 +80,15 @@ tmb_par <- list(log_M = log(M),
 # (i.e., tmb_par_base is not used later in the code)
 tmb_par_base <- tmb_par
 
-# get the lower and upper bounds
-tmb_lb <- lapply(tmb_par, get_bounds, type='lower', p=1)
-tmb_ub <- lapply(tmb_par, get_bounds, type='upper', p=1)
-
+# get the lower and upper bounds. Be a little careful with value for p --
+# if it is 1.0 (or less) then if you have a positive value it will be bounded
+# to be positive and negative bounded to be negative always which may be
+# an unrealistic constraint (note that these are in log space so this really
+# has to do with parameters that are close to 1.0 like, for instance, survey
+# catchability may be).
+tmb_lb <- lapply(tmb_par, get_bounds, type='lower', p=10)
+tmb_ub <- lapply(tmb_par, get_bounds, type='upper', p=10)
+browser()
 
 
 
