@@ -98,7 +98,7 @@ rep <- obj$report()
 # Report the gradients for each of the estimated parameters and
 # the maximum gradient
 rep$gradient.fixed <- sdrep$gradient.fixed
-rep$maxGrad <- max(rep$gradient.fixed)
+rep$maxGrad <- max(abs(rep$gradient.fixed))
 
 rep_data <- rep[c('obs_sumCW',
                   'obs_paaCN',
