@@ -29,7 +29,7 @@ ub <- tmb_ub
 # whatever is contained in this list (i.e., not commented out) will be an
 # inactive parameter so the starting value will be used.
 map_par <- list(
-  log_M = factor(NA),
+  # log_M = factor(NA),
   # R_dev = factor(rep(NA, ncaayear-1)),
   # log_ipop_mean = factor(NA),
   # ipop_dev = factor(rep(NA, nage)),
@@ -70,13 +70,9 @@ active_idx <- !names(lb) %in% names(map_par)
 
 for(i in which(active_idx)){
   tmb_par[[i]] <- get_svNoise(tmb_par[[i]],
-                              cv=1,
+                              cv=startCV,
                               lb=tmb_lb[[i]], ub=tmb_ub[[i]])
 }
-# tmb_par <- lapply(which(active_idx), function(x)
-#              get_svNoise(tmb_par[[x]], cv=1,
-#                          lb=tmb_lb[[x]], ub=tmb_ub[[x]]))
-
 
 
 # run the model using the R function nlminb()
