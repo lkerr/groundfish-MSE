@@ -36,13 +36,16 @@
 # 
 # TAnom_y: value for the temperature anomaly in year y
 # 
+# pe_R: process error level for recruitment (lognormal scale)
+# 
 # R_ym1: observed recruitment from previous year
 #       
 # Rhat_ym1: predicted recruitment from previous year
 
 
 
-get_recruits <- function(type, par, SSB, TAnom_y, R_ym1=NULL, Rhat_ym1=NULL){
+get_recruits <- function(type, par, SSB, TAnom_y, pe_R, 
+                         R_ym1=NULL, Rhat_ym1=NULL){
 
   if('rho' %in% names(par)){
     
@@ -90,7 +93,7 @@ get_recruits <- function(type, par, SSB, TAnom_y, R_ym1=NULL, Rhat_ym1=NULL){
   ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
   
   # Random error component
-  rc <- rnorm(1, mean = 0, sd = par['sigR'])
+  rc <- rnorm(1, mean = 0, sd = pe_R)
   
   R <- Rhat * exp(ac + rc)
  
