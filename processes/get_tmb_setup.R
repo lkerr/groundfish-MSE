@@ -61,19 +61,52 @@ tmb_dat <- list(
 
 
 
-
-tmb_par <- list(log_M = log(M),
-                R_dev = R_dev,
-                log_ipop_mean = log_ipop_mean,
-                ipop_dev = ipop_dev,
-                log_qC = log(qC),
-                log_qI = log(qI),
-                log_selC = log(selC),
-                log_oe_sumCW = log(oe_sumCW),
-                log_oe_sumIN = log(oe_sumIN),
-                # oe_effort = oe_effort,
-                log_pe_R = log(pe_R)
+# Parameters on an arithmetic scale
+tmb_par_arith <- list(M = M,
+                      R_dev = R_dev,
+                      ipop_mean = exp(log_ipop_mean),
+                      ipop_dev = ipop_dev,
+                      qC = qC,
+                      qI = qI,
+                      selC = selC,
+                      oe_sumCW = oe_sumCW,
+                      oe_sumIN = oe_sumIN,
+                      # oe_effort = oe_effort,
+                      pe_R = pe_R
 )
+
+# Vector indicating whether each of the parameters should be on a log
+# scale or not (1 indicates log scale). Names must match names of
+# tmb_par_arith.
+tmb_par_scale <- c(M = 1, 
+                   R_dev = 0, 
+                   ipop_mean = 1, 
+                   ipop_dev = 0, 
+                   qC = 1, 
+                   qI = 1, 
+                   selC = 1, 
+                   oe_sumCW = 1, 
+                   oe_sumIN = 1, 
+                   pe_R = 1)
+
+# Check for consistency in tmb_par_arith and tmb_par_scale
+if(any(names(tmb_par_arith) != names(tmb_par_scale))){
+  stop('get_tmb_setup: names(tmb_par_arith) != names(tmb_par_scale)')
+}
+
+# Apply log function to those parameters that should be logged
+tmb_par <- mapply(FUN = function(x,y)
+                          if(y == 1){
+                            return(log(x))
+                          }else{
+                            return(x)
+                        }, 
+                  tmb_par_arith, tmb_par_scale)
+
+names(tmb_par) <- sapply(1:length(tmb_par), 
+                         function(x) ifelse(tmb_par_scale[x],
+                                            paste0('log_', names(tmb_par)[x]),
+                                            names(tmb_par)[x]))
 
 # tmb_par will be used, although starting values may be altered for
 # the model; base is for an easy comparison to the true values
@@ -86,9 +119,31 @@ tmb_par_base <- tmb_par
 # an unrealistic constraint (note that these are in log space so this really
 # has to do with parameters that are close to 1.0 like, for instance, survey
 # catchability may be).
-tmb_lb <- lapply(tmb_par, get_bounds, type='lower', p=10)
-tmb_ub <- lapply(tmb_par, get_bounds, type='upper', p=10)
-browser()
+tmb_lb <- mapply(FUN = function(x,y){
+                         get_bounds(x = x, 
+                                    type = 'lower', 
+                                    p = boundRgLev, 
+                                    logScale = y)
+                       }, 
+                 tmb_par_arith, tmb_par_scale)
+  
 
 
+tmb_ub <- mapply(FUN = function(x,y){
+                         get_bounds(x = x, 
+                                    type = 'upper', 
+                                    p = boundRgLev, 
+                                    logScale = y)
+                       }, 
+                 tmb_par_arith, tmb_par_scale)
 
+
+names(tmb_lb) <- sapply(1:length(tmb_lb), 
+                         function(x) ifelse(tmb_par_scale[x],
+                                            paste0('log_', names(tmb_lb)[x]),
+                                            names(tmb_lb)[x]))
+
+names(tmb_ub) <- sapply(1:length(tmb_ub), 
+                         function(x) ifelse(tmb_par_scale[x],
+                                            paste0('log_', names(tmb_ub)[x]),
+                                            names(tmb_ub)[x]))
