@@ -15,7 +15,7 @@ simpleTemperature <- TRUE
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 1
+nrep <- 2
 
 # first age and plus age
 fage <- 1
@@ -31,7 +31,7 @@ fyear <- 5
 mxyear <- 2050
 
 # number of years in assessment model
-ncaayear <- 30 
+ncaayear <- 40 
 
 
 #### Burn-in parameters ####
@@ -48,7 +48,7 @@ burnFsd <- 0.2
 #### Temperature information ####
 
 ## Do you want to include temperature projections (in S-R, growth, etc.)
-useTemp <- TRUE
+useTemp <- FALSE
 
 ## Temperature information ##
 cmip5model <- 'CMCC_CM'
@@ -89,14 +89,14 @@ load('data/data_processed/SR/cod/BHTS.Rdata') #srpar
 # include stochasticity in recruitment parameter estimates?
 Rstoch_par <- FALSE
 # include stochasticity in annual recruitment estimate?
-Rstoch_ann <- FALSE
+Rstoch_ann <- TRUE
 
 
 #### Fishery parameters ####
 
 # fishery and survey catchabilities
 qC <- 0.01
-qI <- 0.99
+qI <- 0.001
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
@@ -129,6 +129,11 @@ selI_typ <- 'const'
 timeI <- 0.5 # when is the survey (as a proportion of the year)
 
 
+#### Stock assessment model parameters ####
+boundRgLev <- 0.1
+startCV <- 0.001
+
+
 #### Error parameters ####
 
 # observation error levels
@@ -144,7 +149,7 @@ oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 1.5
+pe_R <- 0.15
 
 # implementation error of fishing mortality
 ie_F <- 0
