@@ -86,7 +86,8 @@ for(r in 1:nrep){
       SSB[y] <- sum(J1N[y-fage,] * mat[y,] * waa[y-fage,])  
 
       Rout <- get_recruits(type='BHTS', par=Rpar, S=SSB[y],
-                           TAnom=Tanom[y], R_ym1 = R[y-1], Rhat_ym1 = Rhat[y-1])
+                           TAnom=Tanom[y], pe_R = pe_R, R_ym1 = R[y-1], 
+                           Rhat_ym1 = Rhat[y-1])
 
       R[y] <- Rout[['R']]
       Rhat[y] <- Rout[['Rhat']]
@@ -114,7 +115,7 @@ for(r in 1:nrep){
       # calculate the predicted survey index in year y and the predicted
       # survey proportions-at-age
       IN[y,] <- get_survey(F_full=F_full[y], M=M, N=J1N[y,], slxC[y,], 
-                           slxI=1, timeI=timeI, qI=qI)
+                           slxI=selI, timeI=timeI, qI=qI)
       sumIN[y] <- sum(IN[y,])
       paaIN[y,] <- IN[y,] / sum(IN[y,])
       

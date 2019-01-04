@@ -17,14 +17,7 @@ require(TMB)
 # TMB::compile("assessment/caa.cpp")
 invisible(capture.output(dyn.load(dynlib("assessment/caa"))))
 
-data <- tmb_dat
 
-parameters <- tmb_par
-
-# Set parameter bounds
-lb <- tmb_lb
-
-ub <- tmb_ub
 
 # whatever is contained in this list (i.e., not commented out) will be an
 # inactive parameter so the starting value will be used.
@@ -41,7 +34,38 @@ map_par <- list(
   log_pe_R = factor(NA)
 )
 
+
+
 # map_par <- list() # all parameters active
+
+
+# Set parameter bounds
+lb <- tmb_lb
+ub <- tmb_ub
+
+
+# index for active parameter bounds
+# (note that R does not give an error message if the wrong
+# number of parameter bounds are given
+# if having estimation problems parameter bounds are a good
+# place to check)
+active_idx <- !names(lb) %in% names(map_par)
+
+
+# add any noise to the parameter starting values
+# (note that the impact of the CV also depends on what the level
+# of the bounds is specified at). Only add noise to the active
+# parameters -- don't want to distort the values of the inactive
+# parameters.
+
+for(i in which(active_idx)){
+  tmb_par[[i]] <- get_svNoise(tmb_par[[i]],
+                              cv=startCV,
+                              lb=tmb_lb[[i]], ub=tmb_ub[[i]])
+}
+
+data <- tmb_dat
+parameters <- tmb_par
 
 
 # make an objective function
@@ -53,29 +77,7 @@ obj <- MakeADFun(data = data,
 )
 
 
-# index for active parameter bounds
-# (note that R does not give an error message if the wrong
-# number of parameter bounds are given
-# if having estimation problems parameter bounds are a good
-# place to check)
-active_idx <- !names(lb) %in% names(map_par)
 
-
-
-# add any noise to the parameter starting values
-# (note that the impact of the CV also depends on what the level
-# of the bounds is specified at). Only add noise to the active
-# parameters -- don't want to distort the values of the inactive
-# parameters.
-
-for(i in which(active_idx)){
-  tmb_par[[i]] <- get_svNoise(tmb_par[[i]],
-                              cv=1,
-                              lb=tmb_lb[[i]], ub=tmb_ub[[i]])
-}
-# tmb_par <- lapply(which(active_idx), function(x)
-#              get_svNoise(tmb_par[[x]], cv=1,
-#                          lb=tmb_lb[[x]], ub=tmb_ub[[x]]))
 
 
 
@@ -84,7 +86,9 @@ opt <- nlminb(start=obj$par,
               objective=obj$fn, 
               gradient=obj$gr, 
               lower=unlist(lb[active_idx]),
-              upper=unlist(ub[active_idx]))
+              upper=unlist(ub[active_idx]),
+              control=list(iter.max = 100000,
+                           eval.max = 1000))
 
 
 
@@ -98,7 +102,7 @@ rep <- obj$report()
 # Report the gradients for each of the estimated parameters and
 # the maximum gradient
 rep$gradient.fixed <- sdrep$gradient.fixed
-rep$maxGrad <- max(rep$gradient.fixed)
+rep$maxGrad <- max(abs(rep$gradient.fixed))
 
 rep_data <- rep[c('obs_sumCW',
                   'obs_paaCN',
@@ -140,26 +144,54 @@ if(platform != 'Linux'){
 
 
 
-
+# Diagnostics:
+#   (1) plots of observed and predicted values; and
+#   (2) plots of the estimates, true values, starting values, and bounds.
 
 if(FALSE){
-  par(oma=c(0,4,0,0), mfcol=c(2,2), mar=c(0, 0, 0, 0))
+  # par(oma=c(0,4,0,0), mfcol=c(2,2), mar=c(0, 0, 0, 0))
+  # 
+  # plot(rep$obs_sumCW, ylim=range(rep$sumCW, rep$obs_sumCW),
+  #      xaxt='n', ann=FALSE, las=1)
+  # lines(rep$sumCW)
+  # 
+  # plot(rep$obs_sumIN, ylim=range(rep$sumIN, rep$obs_sumIN), las=1,
+  #      xaxt='n')
+  # lines(rep$sumIN)
+  # 
+  # plot(rep$obs_paaCN[8,],
+  #      xaxt='n', yaxt='n', ann=FALSE)
+  # lines(rep$paaCN[8,])
+  # 
+  # plot(rep$obs_paaIN[8,],
+  #      xaxt='n', yaxt='n', ann=FALSE)
+  # lines(rep$paaIN[8,])
   
-  plot(rep$obs_sumCW, ylim=range(rep$sumCW, rep$obs_sumCW),
-       xaxt='n', ann=FALSE, las=1)
-  lines(rep$sumCW)
   
-  plot(rep$obs_sumIN, ylim=range(rep$sumIN, rep$obs_sumIN), las=1,
-       xaxt='n')
-  lines(rep$sumIN)
+  par(mfcol=c(1,1), mar=c(4,4,2,1))
+  nm <- unique(names(sdrep$par.fixed))
+  for(i in 1:length(nm)){
+    psv <- parameters[[nm[i]]]
+    ptv <- tmb_par_base[[nm[i]]]
+    plb <- lb[[nm[i]]]
+    pub <- ub[[nm[i]]]
+    pev <- sdrep$par.fixed[which(nm[i] == names(sdrep$par.fixed))]
+    
+    xrg <- c(0,(length(psv)+1))
+    yrg <- range(plb, pub)
+    plot(NA, xlim=xrg, ylim=yrg, pch=1, main=nm[i], las=1)
+    legend('topleft', bty='n', ncol=3, inset=-0.2, xpd=NA,
+           legend = c('start', 'true', 'est'),
+           col = c('black', 'red', 'blue'),
+           pch = c(1, 16, 3))
+    segments(x0=1:length(plb), y0=plb, y1=pub, lty=3)
+    points(psv, xlim=xrg, ylim=yrg, pch=1)
+    points(ptv, pch=16, cex=0.75, col='red')
+    points(pev, pch=3, col='blue')
+    points(plb, pch=2)
+    points(pub, pch=6)
+  }
   
-  plot(rep$obs_paaCN[5,], ylim=c(0, 1),
-       xaxt='n', yaxt='n', ann=FALSE)
-  lines(rep$paaCN[5,], ylim=c(0, 1))
-  
-  plot(rep$obs_paaIN[5,], ylim=c(0, 1),
-       xaxt='n', yaxt='n', ann=FALSE)
-  lines(rep$paaIN[5,], ylim=c(0, 1))
 }
 
 

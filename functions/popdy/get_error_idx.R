@@ -21,7 +21,7 @@ get_error_idx <- function(type, idx, par){
                   
   if(tolower(type) == 'lognorm'){
 
-    idxE <- rlnorm(1, meanlog = log(idx) - par^2/2,
+    idxE <- rlnorm(1, meanlog = log(idx), # - par^2/2
                       sdlog = par)
   }
   

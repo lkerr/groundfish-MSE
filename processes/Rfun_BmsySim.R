@@ -22,6 +22,7 @@ Rfun_BmsySim <- list(
                        SSB = tail(parpop$SSBhat, 1),
                        TAnom = median(parenv$Tanom[parenv$y:(parenv$y+25)], 
                                       na.rm = TRUE),
+                       pe_R = pe_R,
                        R_ym1 = 1,
                        Rhat_ym1 = 1)
           return(gr[['Rhat']])
