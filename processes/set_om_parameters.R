@@ -15,11 +15,11 @@ simpleTemperature <- TRUE
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 1
+nrep <- 2
 
 # first age and plus age
 fage <- 1
-page <- 15
+page <- 12
 
 # First year to begin actual management
 fmyear <- 2000
@@ -31,7 +31,7 @@ fyear <- 5
 mxyear <- 2050
 
 # number of years in assessment model
-ncaayear <- 40 
+ncaayear <- 30 
 
 
 #### Burn-in parameters ####
@@ -41,7 +41,7 @@ nburn <- 50
 
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.                                              
-burnFmean <- 0.5
+burnFmean <- 0.45
 burnFsd <- 0.2
 
 
@@ -95,8 +95,8 @@ Rstoch_ann <- TRUE
 #### Fishery parameters ####
 
 # fishery and survey catchabilities
-qC <- 0.01
-qI <- 0.001
+qC <- 0.0001
+qI <- 0.0001
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
@@ -130,8 +130,16 @@ timeI <- 0.5 # when is the survey (as a proportion of the year)
 
 
 #### Stock assessment model parameters ####
-boundRgLev <- 0.1
-startCV <- 0.001
+
+# Expansion range for setting limits on parameter bounds
+boundRgLev <- 1.5
+
+# CV for starting values for the assessment model
+startCV <- 1.5
+
+# scalar to bring pop numbers closer to zero (necessary
+# for model fitting)
+caaInScalar <- 1000  
 
 
 #### Error parameters ####
@@ -139,17 +147,17 @@ startCV <- 0.001
 # observation error levels
 oe_sumCW <- 0.05
 oe_sumCW_typ <- 'lognorm'
-oe_paaCN <- 100
+oe_paaCN <- 1000
 oe_paaCN_typ <- 'multinomial'
 oe_sumIN <- 0.2
 oe_sumIN_typ <- 'lognorm'
-oe_paaIN <- 100
+oe_paaIN <- 1000
 oe_paaIN_typ <- 'multinomial'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 0.15
+pe_R <- 0.5
 
 # implementation error of fishing mortality
 ie_F <- 0
