@@ -32,7 +32,13 @@ get_bounds <- function(x, type, p, logScale){
   out <- sapply(out, function(x){
                        if(logScale & x <= 0){
                           
-                           x <- 1e-6
+                           # if x is less than zero and the parameter should
+                           # not go below zero then set the minimum at the
+                           # value for x divided by 10. This ensures that
+                           # larger values do not go super-negative with their
+                           # bounds but smaller ones will have a lower lower
+                           # bound.
+                           x <- abs(x) / 10
                            return(x)
                           
                          }else{
