@@ -22,7 +22,9 @@
 
 get_svNoise <- function(x, cv, lb, ub){
   
+  # add small constant to sd for the case where x = 0
   sd <- abs(cv * x)
+  sd <- ifelse(sd != 0, sd, 1e-6)
   newsv <- sapply(1:length(x), function(i)
                                  rtnorm(n=1, mean=x[i], sd=sd[i], 
                                         lower=lb[i], upper=ub[i]))
