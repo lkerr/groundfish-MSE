@@ -18,7 +18,7 @@ sty <- y-ncaayear+1
 R_dev <- get_RWdevs(get_dwindow(R, sty, y))
 
 # get the initial population mean and deviations
-ipopInfo <- get_LMdevs(J1N[sty,])
+ipopInfo <- get_LMdevs(J1N[sty,] / caaInScalar)
 log_ipop_mean <- ipopInfo$lmean
 ipop_dev <- ipopInfo$lLMdevs
 
@@ -34,7 +34,7 @@ tmb_dat <- list(
                   obs_paaCN = get_dwindow(obs_paaCN, sty, y),
                 
                   # Index
-                  obs_sumIN = get_dwindow(obs_sumIN, sty, y),
+                  obs_sumIN = get_dwindow(obs_sumIN, sty, y) / caaInScalar,
                   obs_paaIN = get_dwindow(obs_paaIN, sty, y),
                   
                   # Fishing effort
@@ -46,7 +46,7 @@ tmb_dat <- list(
                   
                   # len/wt-at-age
                   laa = get_dwindow(laa, sty, y),
-                  waa = get_dwindow(waa, sty, y),
+                  waa = get_dwindow(waa, sty, y) * caaInScalar,
                   
                   # Survey info
                   slxI = get_dwindow(slxI, sty, y),
@@ -72,7 +72,11 @@ tmb_par_arith <- list(M = M,
                       oe_sumCW = oe_sumCW,
                       oe_sumIN = oe_sumIN,
                       # oe_effort = oe_effort,
-                      pe_R = pe_R
+                      # multiply pe_R by 5 because the deviations used by pe_R 
+                      # account only for the random error and are not based on 
+                      # a S/R model like they are in the simulation so you need 
+                      # extra variance.
+                      pe_R = pe_R * 5
 )
 
 # Vector indicating whether each of the parameters should be on a log
@@ -147,3 +151,8 @@ names(tmb_ub) <- sapply(1:length(tmb_ub),
                          function(x) ifelse(tmb_par_scale[x],
                                             paste0('log_', names(tmb_ub)[x]),
                                             names(tmb_ub)[x]))
+
+
+
+
+
