@@ -4,7 +4,7 @@
 
 ***
 
-### For specific information, please see the following files in the documentation directory (presented in a somewhat-sensible order):
+### For specific information, please see the following files in the documentation directory (presented in a somewhat-sensible order; also available under the Wiki tab):
 
 
  FILENAME              | DESCRIPTION
