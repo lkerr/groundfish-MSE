@@ -177,13 +177,13 @@ for(r in 1:nrep){
           # (can't have just one because one of the models might not
           # converge.
           if(mproc[m,'ASSESSCLASS'] == 'CAA'){
-            parpop <- list(waa = tail(rep$waa, 1), 
+            parpop <- list(waa = tail(rep$waa, 1) / caaInScalar, 
                            sel = tail(rep$slxC, 1), 
                            M = tail(rep$M, 1), 
                            mat = mat[y,],
-                           R = rep$R,
-                           SSBhat = SSBhat,
-                           J1N = rep$J1N,
+                           R = rep$R * caaInScalar,
+                           SSBhat = SSBhat * caaInScalar,
+                           J1N = rep$J1N * caaInScalar,
                            Rpar = Rpar,
                            Fhat = tail(rep$F_full, 1))
             
