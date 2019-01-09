@@ -15,14 +15,13 @@ Rfun_BmsySim <- list(
   # are 25 years available in the series -- otherwise it just uses what is
   # left).
   
-  recT = function(parpop, parenv){
+  recT = function(parpop, parenv, SSB, TAnom){
           parpop$Rpar['rho'] <- 0
           gr <- get_recruits(type = 'BHTS', 
                        par = parpop$Rpar, 
-                       SSB = tail(parpop$SSBhat, 1),
-                       TAnom = median(parenv$Tanom[parenv$y:(parenv$y+25)], 
-                                      na.rm = TRUE),
-                       pe_R = pe_R,
+                       SSB = SSB,
+                       TAnom = TAnom,
+                       pe_R = 0, # no stochasticity for projections
                        R_ym1 = 1,
                        Rhat_ym1 = 1)
           return(gr[['Rhat']])

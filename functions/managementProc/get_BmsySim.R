@@ -26,6 +26,11 @@
 #       like use rlnorm() and then specify an sd. Or you could define a
 #       trend in the recruitment history and use that.
 #       
+# distillBmsy: function to aggregate biomasses under the particular F policy.
+#              Since temperature can play a role there is no equilibrium
+#              over the period, so need to make a decision about what function
+#              to use like mean, median or a quantile.
+#       
 #         
 #         
 # # Important note: If you want to use only the last n years of the
@@ -44,13 +49,24 @@
 
 
 get_BmsySim <- function(parmgt, parpop, parenv, Rfun,
-                        F_val, ny=1000, ...){
+                        F_val, distillBmsy = mean, ...){
 
+  ny <- parmgt$BREF_LEV
+  
+  if(ny > (max(parenv$yrs) - parenv$y)){
+    stop('get_BmsySim: please set parmgt$BREF_LEV to a smaller number of
+         years -- the cmip temperature series does not predict far enough
+         for the outlook you set')
+  }
+  
   # Get the initial population for the simulation -- assumes exponential 
   # survival based on the given F, mean recruitment and M
-  ages <- 1:length(parpop$sel)
-  meanR <- mean(parpop$R)
-  init <- meanR * exp(-ages * F_val*parpop$sel - as.numeric(parpop$M))
+  # ages <- 1:length(parpop$sel)
+  # meanR <- mean(parpop$R)
+  # init <- meanR * exp(-ages * F_val*parpop$sel - as.numeric(parpop$M))
+  
+  # The initial population is the estimates in the last year
+  init <- tail(parpop$J1N, 1)
   
   # Ensure that all vectors are the same length
   if(!all(length(parpop$sel) == length(init),
@@ -93,18 +109,25 @@ get_BmsySim <- function(parmgt, parpop, parenv, Rfun,
                                      parpop$M[nage])
 
     # Recruitment
-    N[y,1] <- Rfun(parpop = parpop, parenv = parenv)
-    
+    N[y,1] <- Rfun(parpop = parpop, 
+                   parenv = parenv, 
+                   SSB = c(N[y,]) %*% c(parpop$waa),
+                   # last model year (parenv$y) plus the year number of the
+                   # projection
+                   TAnom = parenv$Tanom[parenv$y+y])
+
   }
-  
+ 
   # Get weight-at-age
   Waa <- sweep(N, MARGIN=2, STATS=parpop$waa, FUN='*')
   
   # Get mature biomass-at-age
   SSBaa <- sweep(Waa, MARGIN=2, STATS=parpop$mat, FUN='*')
 
-  # Find the total SSB / year
-  SSBref <- mean(apply(SSBaa, 1, sum)[(ny - floor(0.1*ny)):ny])
+  # Find the total SSB / year ([-1,] to get rid of the initial year, where
+  # recruitment was coming out of an estimate and had nothing to do with
+  # any projections.
+  SSBref <- distillBmsy(apply(SSBaa[-1,], 1, sum))
  
   out <- list(RPlevel = parmgt$FREF_LEV,
               RPvalue = F_val,

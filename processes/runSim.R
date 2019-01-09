@@ -199,6 +199,8 @@ for(r in 1:nrep){
           # Environmental parameters
           parenv <- list(tempY = temp,
                          Tanom = Tanom,
+                         yrs = yrs, # management years
+                         yrs_temp = yrs_temp, # temperature years
                          y = y)
           
           #### Get ref points & assign F ####
