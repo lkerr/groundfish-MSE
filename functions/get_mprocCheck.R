@@ -50,8 +50,7 @@ get_mprocCheck <- function(mproc){
              ' check names'))
   }
   
-  if(!all(is.na(mproc$BREF_LEV))){
-    # Just a placeholder for now -- B reference point levels not established
+  if(!all(is.na(mproc$BREF_LEV) | mproc$BREF_LEV == floor(mproc$BREF_LEV))){
     msg <- c(msg, 
              paste0('value out of range in BREF_LEV column of mproc.txt:',
              ' check values'))
@@ -108,7 +107,7 @@ get_mprocCheck <- function(mproc){
 #                      FREF_TYP = c('YPR', 'SPR', 'Fmed'),
 #                      FREF_LEV = c(0.1, 0.5, 999),
 #                      BREF_TYP = c('SIM', 'SIM', 'RSSBR'),
-#                      BREF_LEV = c(NA, NA, NA),
+#                      BREF_LEV = c(25.999, NA, NA),
 #                      RFUN_NM = c('L5SAMP', 'MEAN', 'recT'),
 #                      RPInt = c(1, 3, 5.999))
 # 
