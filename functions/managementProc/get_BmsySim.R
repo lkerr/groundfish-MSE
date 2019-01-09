@@ -46,8 +46,8 @@
 get_BmsySim <- function(parmgt, parpop, parenv, Rfun,
                         F_val, ny=1000, ...){
 
-  # Get the initial population for the simulation -- assumes exponential survival based
-  # on the given F, mean recruitment and M
+  # Get the initial population for the simulation -- assumes exponential 
+  # survival based on the given F, mean recruitment and M
   ages <- 1:length(parpop$sel)
   meanR <- mean(parpop$R)
   init <- meanR * exp(-ages * F_val*parpop$sel - as.numeric(parpop$M))
