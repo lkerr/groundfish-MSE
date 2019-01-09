@@ -21,7 +21,7 @@ The steps below include R-based pseudocode just to make the explanations easier.
 lfit <- loess(bioInd ~ yrs)
 pred_fit <- predict(lfit)
 ```  
-    where ```bioInd``` is the biomass index from a survey, ```yrs``` are the corresponding years for the index, and ```loess()``` is the smoothing function.
+where ```bioInd``` is the biomass index from a survey, ```yrs``` are the corresponding years for the index, and ```loess()``` is the smoothing function.
 
 2. Extract the  last three  values from the model predictions
 ```
