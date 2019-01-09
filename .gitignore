@@ -4,12 +4,12 @@
 .Ruserdata
 /background/*
 /cocaSharedFiles/*
-/documentation/*
 /function_tests/*
 /literature/*
 /meetings/*
 /misc/*
 /Reports/*
+/manuscripts/*
 /Rlib/*
 /data_raw/*
 /data/ParametersLit.xlsx
@@ -24,3 +24,13 @@
 /*.o
 /*.dll
 /processes/mproc_all.txt
+/documentation/20180612 COCA NE multspecies MSE problem framing_ml.docx
+/documentation/COCA MSE problem framing.docx
+/documentation/COCA_methods_description.docx
+/documentation/documentation
+/documentation/ManagementProcedureFlow.pptx
+/documentation/recruitment.docx
+/documentation/*.html
+/documentation/*.url
+/documentation/.ipynb_checkpoints/
+/documentation/old/*
