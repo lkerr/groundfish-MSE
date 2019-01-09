@@ -136,7 +136,7 @@ get_plots <- function(x, dirIn, dirOut){
   # Time-series temperature plot
   jpeg(paste0(dirOut, 'tempts.jpg.'),
        width=480*1.75, height=480, pointsize=12*1.5)
-    get_tempTSPlot(temp = temp, yrs = yrs,
+    get_tempTSPlot(temp = temp[yrs_temp %in% yrs], yrs = yrs,
                    fmyear=fmyear, ftyear=yrs[nburn+1])
   dev.off()
  
