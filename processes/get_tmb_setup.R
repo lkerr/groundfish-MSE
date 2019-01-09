@@ -153,6 +153,15 @@ names(tmb_ub) <- sapply(1:length(tmb_ub),
                                             names(tmb_ub)[x]))
 
 
+# make any deviations have identical scales across all
+devIdx <- match(c('R_dev', 'ipop_dev'),  names(tmb_lb))
+for(i in 1:length(devIdx)){
+  tmb_lb[[devIdx[i]]] <- rep(min(tmb_lb[[devIdx[i]]]), 
+                             length(tmb_lb[[devIdx[i]]]))
+  tmb_ub[[devIdx[i]]] <- rep(max(tmb_ub[[devIdx[i]]]), 
+                             length(tmb_ub[[devIdx[i]]]))
+}
+
 
 
 
