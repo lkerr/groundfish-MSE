@@ -6,7 +6,7 @@
 #         component of parmgt for this function is the (1-row) column
 #         "HCR". Options are:
 #  
-#           * "ns1": based on national standard 1 precautionary approach, this is
+#           * "slide": based on national standard 1 precautionary approach, this is
 #               the classic harvest control rule that increases linearly and 
 #               then reaches an asymptote at [Bmsy,Fmsy]
 #        
@@ -56,9 +56,9 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
 
     overfished <- ifelse(tail(parpop$SSBhat,1) < BrefRPvalue, 1, 0)
     
-    if(tolower(parmgt$HCR) == 'ns1'){
+    if(tolower(parmgt$HCR) == 'slide'){
      
-      F <- get_NS1HCR(parpop, Fmsy=FrefRPvalue, Bmsy=BrefRPvalue)['Fadvice']
+      F <- get_slideHCR(parpop, Fmsy=FrefRPvalue, Bmsy=BrefRPvalue)['Fadvice']
   
   
     }else if(tolower(parmgt$HCR) == 'simplethresh'){

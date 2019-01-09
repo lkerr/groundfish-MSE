@@ -16,7 +16,7 @@
 # 
 
 
-get_NS1HCR <- function(parpop, Fmsy, Bmsy){
+get_slideHCR <- function(parpop, Fmsy, Bmsy){
   
   # c is defined as the maximum of 1-M or 1/2 (Gabriel and Mace 1999)
   c <- max(1 - tail(parpop$M, 1), 1/2)

@@ -18,7 +18,7 @@ Bval <- list(c(0.8, 1, 0.2),
 
 
 # Potential versions of harvest control rules
-HCR <- c('ns1', 'simpleThresh')
+HCR <- c('slide', 'simpleThresh')
 
 # expand out the potential values for the combinations of each proxy
 # method and its potential values
@@ -58,7 +58,7 @@ names(methdf) <- c('HCR', 'FREF_TYP', 'FREF_LEV', 'BREF_TYP',
 
 mproc <- unique(methdf)
 
-mproc <- subset(mproc, HCR =='ns1')
+mproc <- subset(mproc, HCR =='slide')
 
 # Temporarily use the imported version until I figure out a good
 # way to make this work building it in the code. May as well not

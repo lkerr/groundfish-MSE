@@ -189,7 +189,7 @@ pol <- data.frame(
   FmsyT = c('YPR'  ,   'SPR'        ),
   FmsyV = c(0.1    ,     1          ),
   BmsyT = c('RSSBR' ,   'dummy'      ),
-  hcrT  = c('ns1'  ,  'simpleThresh')
+  hcrT  = c('slide'  ,  'simpleThresh')
 )
 
 
@@ -204,10 +204,10 @@ BmsyV <- list(c(1, 0.8),
 i2 <- lapply(1:length(BmsyT), function(x) expand.grid(BmsyT[[x]], BmsyV[[x]]))
 
 # Harvest control rule types
-i3 <- list('ns1', 'simpleThresh')
+i3 <- list('slide', 'simpleThresh')
 
 
-hrcTyp <- list('ns1', 'simpleThresh')
+hrcTyp <- list('slide', 'simpleThresh')
 
 
 
