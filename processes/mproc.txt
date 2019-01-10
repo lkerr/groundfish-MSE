@@ -1,5 +1,3 @@
 ASSESSCLASS  HCR	FREF_TYP	FREF_LEV	BREF_TYP	BREF_LEV	RFUN_NM RPInt
 CAA  simplethresh	SPR	0.2	SIM	50 forecast 1
-CAA  simplethresh	SPR	0.2	SIM	5 forecast 1
-CAA  simplethresh	SPR	0.2	SIM	5 hindcastMean 1
 CAA  simplethresh	SPR	0.2	SIM	50 hindcastMean 1
