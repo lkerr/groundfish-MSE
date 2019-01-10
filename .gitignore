@@ -35,3 +35,4 @@
 /documentation/*.url
 /documentation/.ipynb_checkpoints/
 /documentation/old/*
+.Rproj.user
