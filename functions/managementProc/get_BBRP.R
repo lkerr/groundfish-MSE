@@ -30,6 +30,10 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst){
   
   if(parmgt$BREF_TYP == 'RSSBR'){
     
+    # There cannot be any forward projections associated with RSSBR. They
+    # don't make sense because if that is your assumption about recruitment
+    # then biomasses in the future won't matter.
+    
     # get Fmsy proxy
     Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop)
 
@@ -42,8 +46,9 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst){
     # found in the parmgt data frame but the actual functions are from
     # the list Rfun_BmsySim which is created in the processes folder.
     Rfun <- Rfun_lst[[parmgt$RFUN_NM]]
-    
-    funR <- Rfun(parpop, parenv)
+
+    funR <- Rfun(parpop = parpop, 
+                 ny = parmgt$BREF_LEV)
    
     B <- ssbrFmax$SSBvalue * funR
 
