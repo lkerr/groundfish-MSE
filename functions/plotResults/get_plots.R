@@ -182,6 +182,10 @@ get_plots <- function(x, dirIn, dirOut){
       bpstats[[mp]] <- boxplot(x = tempPMmp, plot=FALSE)$stats
     }
     
+    if(all(is.na(unlist(bpstats)))){
+      next
+    }
+    
     # Now get the range of the statistics to use in the loop (boxplots).
     yrgbx <- range(unlist(bpstats), na.rm=TRUE)
     
