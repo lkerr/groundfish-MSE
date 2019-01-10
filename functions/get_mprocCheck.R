@@ -13,7 +13,8 @@ get_mprocCheck <- function(mproc){
   hcr <- c('slide', 'simplethresh', 'constF', NA)
   fref_typ <- c('YPR', 'SPR', 'Fmed', NA)
   bref_typ <- c('RSSBR', 'SIM', NA)
-  rfun_nm <- c('MEAN', 'L5SAMP', 'recT', NA)
+  # rfun_nm <- c('MEAN', 'L5SAMP', 'recT', NA)
+  rfun_nm <- c('forecast', 'hindcastMean')
   
   msg <- c()
   
