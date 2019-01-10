@@ -38,8 +38,10 @@ source('processes/Rfun_BmsySim.R')
 # If running on a local machine, more than one repetition should be
 # used otherwise some plotting functions (e.g., boxplots) will fail
 if(runClass == 'Local' && nrep == 1){
-  stop('For local runs please set nrep > 1 (in set_om_parameters.R)',
-       call.=FALSE)
+  # stop('For local runs please set nrep > 1 (in set_om_parameters.R)',
+       # call.=FALSE)
+  nrep <- 2
+  warn('local run: nrep (in set_om_parameters.R) set to 2 to avoid errors')
 }
 
 # Warning regarding Bmsy calculation hindcasts
