@@ -114,7 +114,8 @@ get_BmsySim <- function(parmgt, parpop, parenv, Rfun,
                    SSB = c(N[y,]) %*% c(parpop$waa),
                    # last model year (parenv$y) plus the year number of the
                    # projection
-                   TAnom = parenv$Tanom[parenv$y+y])
+                   TAnom = parenv$Tanom[parenv$y+y],
+                   ny = ny)
 
   }
  
