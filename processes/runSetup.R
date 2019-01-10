@@ -58,6 +58,16 @@ if(any(tst)){
   warning(msg)
 }
 
+# Error regarding bad combinations of mproc
+tst <- mproc$BREF_TYP == 'RSSBR' & mproc$RFUN_NM == 'forecast'
+if(!all(is.na(tst)) && any(tst & !is.na(tst))){
+  stop(paste('In mproc BREF_TYP and RFUN_NM cannot be RSSBR and forecast,',
+             'respectively. While this may be possible to compute it seems',
+             'odd to use future SSB in the calculation of R for R*SSBR',
+             'but then not include SSB projections when thinking about what',
+             'the reference point should actually be.'))
+}
+
 
 # get all the necessary containers for the simulation
 source('processes/get_containers.R')
