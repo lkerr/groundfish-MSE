@@ -42,6 +42,18 @@ if(runClass == 'Local' && nrep == 1){
        call.=FALSE)
 }
 
+# Warning regarding Bmsy calculation hindcasts
+tst <- mproc$BREF_TYP == 'SIM' &
+       mproc$RFUN_NM == 'hindcastMean' &
+       mproc$BREF_LEV > ncaayear
+if(any(tst)){
+  msg <- paste0('Number of years in hindcast that you specified (', 
+                mproc$BREF_LEV[tst], ') is larger than the number of years in', 
+                ' the moving window of the stock assessment model (', 
+                ncaayear, '). Number of years used in the hindcast changed to ', 
+                ncaayear, '.\n')
+  warning(msg)
+}
 
 
 # get all the necessary containers for the simulation
