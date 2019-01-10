@@ -235,26 +235,26 @@ get_plots <- function(x, dirIn, dirOut){
     
     # Get the means of each performance measure over time
     # if(nm[i] == 'OFdStatus' | nm[i] == 'F_Full'){
-      mpMed <- apply(tempPM[,,pyidx, drop=FALSE], c(2,3), mean, na.rm=TRUE)
+      mpMean <- apply(tempPM[,,pyidx, drop=FALSE], c(2,3), mean, na.rm=TRUE)
     # }else{
       # mpMed <- apply(tempPM[,,pyidx, drop=FALSE], c(2,3), median, na.rm=TRUE)
     # }
     
-    if(all(is.na(mpMed))){
+    if(all(is.na(mpMean))){
       next
     }
     
     # Make the plot
-    jpeg(paste0(dirOut, 'Traj/', PMname, '/MPmedTraj.jpg.'),
+    jpeg(paste0(dirOut, 'Traj/', PMname, '/MPMeanTraj.jpg.'),
          width=480*1.75, height=480, pointsize=12*1.5)
       par(mar=c(4,4,1,1))
       
       # Jitter the overfished status if necessary so you can see the 
       # trajectory
       if(nm[i] == 'OFdStatus'){
-        mpMed <- jitter(mpMed, amount=0.05)
+        mpMean <- jitter(mpMean, amount=0.05)
       }
-      get_mpMedTraj(mpMedMat = mpMed, x=yrs[pyidx], ylab=nm[i], 
+      get_mpMeanTraj(mpMeanMat = mpMean, x=yrs[pyidx], ylab=nm[i], 
                     fmyear=yrs[fmyearIdx])
       
       dev.off()
