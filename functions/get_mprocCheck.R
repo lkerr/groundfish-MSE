@@ -11,7 +11,7 @@ get_mprocCheck <- function(mproc){
   
   assessclass <- c('CAA', 'PLANB')
   hcr <- c('slide', 'simplethresh', 'constF', NA)
-  fref_typ <- c('YPR', 'SPR', 'Fmed', NA)
+  fref_typ <- c('YPR', 'SPR', 'Fmed', 'FmsySim', NA)
   bref_typ <- c('RSSBR', 'SIM', NA)
   # rfun_nm <- c('MEAN', 'L5SAMP', 'recT', NA)
   rfun_nm <- c('forecast', 'hindcastMean', NA)
