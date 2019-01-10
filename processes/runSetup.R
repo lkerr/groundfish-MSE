@@ -41,7 +41,7 @@ if(runClass == 'Local' && nrep == 1){
   # stop('For local runs please set nrep > 1 (in set_om_parameters.R)',
        # call.=FALSE)
   nrep <- 2
-  warn('local run: nrep (in set_om_parameters.R) set to 2 to avoid errors')
+  warning('local run: nrep (in set_om_parameters.R) set to 2 to avoid errors')
 }
 
 # Warning regarding Bmsy calculation hindcasts
