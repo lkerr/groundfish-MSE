@@ -45,7 +45,8 @@ if(runClass == 'Local' && nrep == 1){
 }
 
 # Warning regarding Bmsy calculation hindcasts
-tst <- mproc$BREF_TYP == 'SIM' &
+tst <- !is.na(mproc$BREF_TYP) & 
+       mproc$BREF_TYP == 'SIM' &
        mproc$RFUN_NM == 'hindcastMean' &
        mproc$BREF_LEV > ncaayear
 if(any(tst)){
