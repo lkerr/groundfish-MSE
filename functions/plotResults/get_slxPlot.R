@@ -29,7 +29,7 @@ get_slxPlot <- function(ages, type, laa_typ, laa_par,
   }
   
   laa <- get_lengthAtAge(type=laa_typ, par=laa_par, 
-                  ages=fage:page, Tanom=TAnom)
+                  ages=ages, Tanom=TAnom)
   
   slx <- get_slx(type=selC_typ, par=selCpar, laa=laa)
   

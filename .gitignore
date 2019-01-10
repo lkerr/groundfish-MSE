@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
 *.pdf
+=======
+*.pdf
+*.Rproj.user
+*.Rhistory
+*.RData
+*.Ruserdata
+>>>>>>> 345682115bf76af80aca77eae80317df68aa300f
 /background/*
 /cocaSharedFiles/*
 /function_tests/*
@@ -35,3 +43,4 @@
 /documentation/*.url
 /documentation/.ipynb_checkpoints/
 /documentation/old/*
+.Rproj.user

@@ -13,7 +13,8 @@ get_mprocCheck <- function(mproc){
   hcr <- c('slide', 'simplethresh', 'constF', NA)
   fref_typ <- c('YPR', 'SPR', 'Fmed', NA)
   bref_typ <- c('RSSBR', 'SIM', NA)
-  rfun_nm <- c('MEAN', 'L5SAMP', 'recT', NA)
+  # rfun_nm <- c('MEAN', 'L5SAMP', 'recT', NA)
+  rfun_nm <- c('forecast', 'hindcastMean', NA)
   
   msg <- c()
   
@@ -37,8 +38,10 @@ get_mprocCheck <- function(mproc){
              paste0('unrecognized entry in FREF_TYP column of mproc.txt:',
               ' check names'))
   }
- 
-  if(any(mproc$FREF_LEV < 0) || any(mproc$FREF_LEV > 1)){
+
+  if(any(!is.na(mproc$FREF_LEV) & 
+         (mproc$FREF_LEV < 0 | mproc$FREF_LEV > 1)
+         )){
     msg <- c(msg, 
              paste0('value out of range in FREF_LEV column of mproc.txt:',
              ' check values'))
@@ -50,8 +53,7 @@ get_mprocCheck <- function(mproc){
              ' check names'))
   }
   
-  if(!all(is.na(mproc$BREF_LEV))){
-    # Just a placeholder for now -- B reference point levels not established
+  if(!all(is.na(mproc$BREF_LEV) | mproc$BREF_LEV == floor(mproc$BREF_LEV))){
     msg <- c(msg, 
              paste0('value out of range in BREF_LEV column of mproc.txt:',
              ' check values'))
@@ -62,9 +64,10 @@ get_mprocCheck <- function(mproc){
              paste0('unrecognized entry in RFUN_NM column of mproc.txt:',
              ' check names'))
   }
-  
-  if(mproc$RPInt < 1 || !all(mproc$RPInt == floor(mproc$RPInt))){
-    # Just a placeholder for now -- B reference point levels not established
+
+  if(any(!is.na(mproc$RPInt) & 
+         ( mproc$RPInt < 1 | !mproc$RPInt == floor(mproc$RPInt) )
+     )){
     msg <- c(msg, 
              paste0('value out of range in RPInt column of mproc.txt:',
              ' must be both an integer and greater than 0'))
@@ -108,7 +111,7 @@ get_mprocCheck <- function(mproc){
 #                      FREF_TYP = c('YPR', 'SPR', 'Fmed'),
 #                      FREF_LEV = c(0.1, 0.5, 999),
 #                      BREF_TYP = c('SIM', 'SIM', 'RSSBR'),
-#                      BREF_LEV = c(NA, NA, NA),
+#                      BREF_LEV = c(25.999, NA, NA),
 #                      RFUN_NM = c('L5SAMP', 'MEAN', 'recT'),
 #                      RPInt = c(1, 3, 5.999))
 # 

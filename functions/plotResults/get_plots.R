@@ -136,7 +136,7 @@ get_plots <- function(x, dirIn, dirOut){
   # Time-series temperature plot
   jpeg(paste0(dirOut, 'tempts.jpg.'),
        width=480*1.75, height=480, pointsize=12*1.5)
-    get_tempTSPlot(temp = temp, yrs = yrs,
+    get_tempTSPlot(temp = temp[yrs_temp %in% yrs], yrs = yrs,
                    fmyear=fmyear, ftyear=yrs[nburn+1])
   dev.off()
  
@@ -167,7 +167,7 @@ get_plots <- function(x, dirIn, dirOut){
   
   # only make a few trajectories so you don't get so many plots
   repidx <-sample(1:dim(x[[trajidx[1]]])[1], 
-                  size=min(5, dim(x[[trajidx[1]]])[1]))
+                  size=min(1, dim(x[[trajidx[1]]])[1]))
 
   for(i in trajidx){
 
@@ -180,6 +180,10 @@ get_plots <- function(x, dirIn, dirOut){
     for(mp in 1:dim(tempPM)[2]){
       tempPMmp <- tempPM[,mp,pyidx]
       bpstats[[mp]] <- boxplot(x = tempPMmp, plot=FALSE)$stats
+    }
+    
+    if(all(is.na(unlist(bpstats)))){
+      next
     }
     
     # Now get the range of the statistics to use in the loop (boxplots).
@@ -235,26 +239,26 @@ get_plots <- function(x, dirIn, dirOut){
     
     # Get the means of each performance measure over time
     # if(nm[i] == 'OFdStatus' | nm[i] == 'F_Full'){
-      mpMed <- apply(tempPM[,,pyidx, drop=FALSE], c(2,3), mean, na.rm=TRUE)
+      mpMean <- apply(tempPM[,,pyidx, drop=FALSE], c(2,3), mean, na.rm=TRUE)
     # }else{
       # mpMed <- apply(tempPM[,,pyidx, drop=FALSE], c(2,3), median, na.rm=TRUE)
     # }
     
-    if(all(is.na(mpMed))){
+    if(all(is.na(mpMean))){
       next
     }
     
     # Make the plot
-    jpeg(paste0(dirOut, 'Traj/', PMname, '/MPmedTraj.jpg.'),
+    jpeg(paste0(dirOut, 'Traj/', PMname, '/MPMeanTraj.jpg.'),
          width=480*1.75, height=480, pointsize=12*1.5)
       par(mar=c(4,4,1,1))
       
       # Jitter the overfished status if necessary so you can see the 
       # trajectory
       if(nm[i] == 'OFdStatus'){
-        mpMed <- jitter(mpMed, amount=0.05)
+        mpMean <- jitter(mpMean, amount=0.05)
       }
-      get_mpMedTraj(mpMedMat = mpMed, x=yrs[pyidx], ylab=nm[i], 
+      get_mpMeanTraj(mpMeanMat = mpMean, x=yrs[pyidx], ylab=nm[i], 
                     fmyear=yrs[fmyearIdx])
       
       dev.off()
