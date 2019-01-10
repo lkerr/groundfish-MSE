@@ -1,7 +1,8 @@
-.Rproj.user
-.Rhistory
-.RData
-.Ruserdata
+*.pdf
+*.Rproj.user
+*.Rhistory
+*.RData
+*.Ruserdata
 /background/*
 /cocaSharedFiles/*
 /function_tests/*
