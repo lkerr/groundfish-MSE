@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+*.pdf
 /background/*
 /cocaSharedFiles/*
 /function_tests/*
