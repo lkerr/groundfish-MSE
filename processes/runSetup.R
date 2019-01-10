@@ -38,10 +38,35 @@ source('processes/Rfun_BmsySim.R')
 # If running on a local machine, more than one repetition should be
 # used otherwise some plotting functions (e.g., boxplots) will fail
 if(runClass == 'Local' && nrep == 1){
-  stop('For local runs please set nrep > 1 (in set_om_parameters.R)',
-       call.=FALSE)
+  # stop('For local runs please set nrep > 1 (in set_om_parameters.R)',
+       # call.=FALSE)
+  nrep <- 2
+  warning('local run: nrep (in set_om_parameters.R) set to 2 to avoid errors')
 }
 
+# Warning regarding Bmsy calculation hindcasts
+tst <- !is.na(mproc$BREF_TYP) & 
+       mproc$BREF_TYP == 'SIM' &
+       mproc$RFUN_NM == 'hindcastMean' &
+       mproc$BREF_LEV > ncaayear
+if(any(tst)){
+  msg <- paste0('Number of years in hindcast that you specified (', 
+                mproc$BREF_LEV[tst], ') is larger than the number of years in', 
+                ' the moving window of the stock assessment model (', 
+                ncaayear, '). Number of years used in the hindcast changed to ', 
+                ncaayear, '.\n')
+  warning(msg)
+}
+
+# Error regarding bad combinations of mproc
+tst <- mproc$BREF_TYP == 'RSSBR' & mproc$RFUN_NM == 'forecast'
+if(!all(is.na(tst)) && any(tst & !is.na(tst))){
+  stop(paste('In mproc BREF_TYP and RFUN_NM cannot be RSSBR and forecast,',
+             'respectively. While this may be possible to compute it seems',
+             'odd to use future SSB in the calculation of R for R*SSBR',
+             'but then not include SSB projections when thinking about what',
+             'the reference point should actually be.'))
+}
 
 
 # get all the necessary containers for the simulation

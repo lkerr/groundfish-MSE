@@ -15,7 +15,7 @@ simpleTemperature <- TRUE
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 2
+nrep <- 1
 
 # first age and plus age
 fage <- 1
@@ -48,7 +48,7 @@ burnFsd <- 0.2
 #### Temperature information ####
 
 ## Do you want to include temperature projections (in S-R, growth, etc.)
-useTemp <- FALSE
+useTemp <- TRUE
 
 ## Temperature information ##
 cmip5model <- 'CMCC_CM'

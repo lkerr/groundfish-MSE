@@ -1,7 +1,8 @@
-.Rproj.user
-.Rhistory
-.RData
-.Ruserdata
+*.pdf
+*.Rproj.user
+*.Rhistory
+*.RData
+*.Ruserdata
 /background/*
 /cocaSharedFiles/*
 /function_tests/*
@@ -34,3 +35,4 @@
 /documentation/*.url
 /documentation/.ipynb_checkpoints/
 /documentation/old/*
+.Rproj.user

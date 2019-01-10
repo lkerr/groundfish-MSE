@@ -2,7 +2,7 @@
 
 cmip5 <- read.table(file='data/data_raw/NEUS_CMIP5_annual_means.txt',
                     header=TRUE, skip=2)
-cmip5 <- subset(cmip5, year <= mxyear)
+# cmip5 <- subset(cmip5, year <= lastyear)
 
 # Load in the baseline projected temperature data to use
 cmip_base <- cmip5[,c('year', cmip5model)]
@@ -45,10 +45,12 @@ if(useTemp == TRUE){
 
 # Determine the actual years based on the available temperature data
 # (and the burn-in period which 'temp' has already incorporated)
-nyear <- length(temp)
-lastYear <- tail(cmip_dwn$YEAR,1)
-firstYear <- lastYear-length(temp)+1
-yrs <- firstYear:lastYear
+
+firstYear <- max(cmip5$year) - length(temp) + 1
+yrs <- firstYear:mxyear
+nyear <- length(yrs)
+
+yrs_temp <- firstYear:max(cmip5$year)
 
 # The first year that actual management will begin
 fmyearIdx <- which(yrs == fmyear)
