@@ -167,7 +167,7 @@ get_plots <- function(x, dirIn, dirOut){
   
   # only make a few trajectories so you don't get so many plots
   repidx <-sample(1:dim(x[[trajidx[1]]])[1], 
-                  size=min(5, dim(x[[trajidx[1]]])[1]))
+                  size=min(1, dim(x[[trajidx[1]]])[1]))
 
   for(i in trajidx){
 
