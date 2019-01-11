@@ -1,3 +1,4 @@
 ASSESSCLASS  HCR	FREF_TYP	FREF_LEV	BREF_TYP	BREF_LEV	RFUN_NM RPInt
-CAA  simplethresh	FmsySim	0.1	SIM	50 forecast 1
-
+CAA  simplethresh	SPR	0.4	SIM	5 forecast 1
+CAA  simplethresh	FmsySim	30	RSSBR	5 hindcastMean 1
+CAA  simplethresh	FmsySim	20	SIM	15 forecast 3
