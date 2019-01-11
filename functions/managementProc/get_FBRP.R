@@ -4,9 +4,9 @@
 # 
 # parmgt: a 1-row data frame of management parameters. The operational
 #         component of parmgt for this function is the (1-row) columns
-#         "FREF_TYP" and "FREF_LEV". FREF_TYP indicates the type of model
+#         "FREF_TYP" and "FREF_PAR0". FREF_TYP indicates the type of model
 #         that should be used to calculate the F reference point and
-#         FREF_LEV is the associate F level (e.g., 0.4 for F40% if you are
+#         FREF_PAR0 is the associate F level (e.g., 0.4 for F40% if you are
 #         using SPR or 0.1 for F0.1 if you are using YPR. Options for
 #         FREF_TYP are:
 #     
@@ -57,7 +57,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
                              parenv = parenv, 
                              Rfun = Rfun, 
                              F_val = candF[x],
-                             ny = parmgt$FREF_LEV,
+                             ny = parmgt$FREF_PAR0,
                              stReportYr = 2)$sumCW})
     
     meanSumCW <- apply(sumCW, 2, mean)

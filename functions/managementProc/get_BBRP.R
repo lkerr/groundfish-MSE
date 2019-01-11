@@ -4,8 +4,8 @@
 # 
 # parmgt: a 1-row data frame of management parameters. The operational
 #         component of parmgt for this function are the (1-row) columns
-#         "BREF_TYP" and "BREF_LEV". BREF_TYP refers to the type of biomass-
-#         based reference point you want to use and BREF_LEV refers to
+#         "BREF_TYP" and "BREF_PAR0". BREF_TYP refers to the type of biomass-
+#         based reference point you want to use and BREF_PAR0 refers to
 #         an associated level for that reference point. Options are:
 #     
 #     * RSSBR: mean recruitment multiplied by SPR(Fmsy) or some proxy of
@@ -38,7 +38,7 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     # get Fmsy proxy
     # Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop)
 
-    parmgt1 <- list(FREF_LEV = FBRP, FREF_TYP = 'SSBR')
+    parmgt1 <- list(FREF_PAR0 = FBRP, FREF_TYP = 'SSBR')
     
     ssbrFmax <- get_perRecruit(parmgt=parmgt1, parpop=parpop, 
                                nage=1000, nF=1000, nFrep=100)
@@ -49,7 +49,7 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     Rfun <- Rfun_lst[[parmgt$RFUN_NM]]
 
     funR <- Rfun(parpop = parpop, 
-                 ny = parmgt$BREF_LEV)
+                 ny = parmgt$BREF_PAR0)
    
     B <- ssbrFmax$SSBvalue * funR
 
@@ -71,7 +71,7 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
  
     SSB <- get_proj(parmgt = parmgt, parpop = parpop, parenv = parenv, 
                     Rfun = Rfun, F_val = FBRP,
-                    ny = parmgt$BREF_LEV,
+                    ny = parmgt$BREF_PAR0,
                     stReportYear = 2)$SSB
     
     SSBvalue <- distillBmsy(SSB)

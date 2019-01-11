@@ -5,7 +5,7 @@
 # 
 # parmgt: a 1-row data frame of management parameters. The operational
 #         component of parmgt for this function are the (1-row) columns
-#         "FREF_TYP" and "FREF_LEV". FREF_TYP/FREF_LEV determine
+#         "FREF_TYP" and "FREF_PAR0". FREF_TYP/FREF_PAR0 determine
 #         how the Fmsy proxy is set (i.e., what the level of fishing
 #         mortality will be during the projections).
 # 
@@ -66,7 +66,7 @@ get_BmsySim <- function(parmgt, parpop, parenv, Rfun,
   SSBref <- distillBmsy(apply(SSBaa, 1, sum))
  
 
-  out <- list(RPlevel = parmgt$FREF_LEV,
+  out <- list(RPlevel = parmgt$FREF_PAR0,
               RPvalue = F_val,
               SSBvalue = SSBref,
               meanSumCW = mean(sumCW))

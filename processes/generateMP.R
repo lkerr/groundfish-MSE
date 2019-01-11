@@ -46,8 +46,8 @@ id <- expand.grid(nrlist)
 # Generate a data frame containing all combinations of proxy methods
 # and control rules by using the ID to index
 methdf <- cbind( HCR[id[,3]], lst[[1]][id[,1],], lst[[2]][id[,2],])
-names(methdf) <- c('HCR', 'FREF_TYP', 'FREF_LEV', 'BREF_TYP',
-                'BREF_LEV')
+names(methdf) <- c('HCR', 'FREF_TYP', 'FREF_PAR0', 'BREF_TYP',
+                'BREF_PAR0')
 
 # next identify which of the rows are superfluous given the HCR
 # (e.g., you only need a biomass-based reference point if you're

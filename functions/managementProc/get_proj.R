@@ -5,7 +5,7 @@
 # 
 # parmgt: a 1-row data frame of management parameters. The operational
 #         component of parmgt for this function are the (1-row) columns
-#         "FREF_TYP" and "FREF_LEV". FREF_TYP/FREF_LEV determine
+#         "FREF_TYP" and "FREF_PAR0". FREF_TYP/FREF_PAR0 determine
 #         how the Fmsy proxy is set (i.e., what the level of fishing
 #         mortality will be during the projections).
 # 
@@ -52,7 +52,7 @@ get_proj <- function(parmgt, parpop, parenv, Rfun,
                      F_val, stReportYr, ny, ...){
 
   if(ny > (max(parenv$yrs_temp) - parenv$yrs_temp[y])){
-    stop(paste('get_proj: please set parmgt$BREF_LEV to a smaller',
+    stop(paste('get_proj: please set parmgt$BREF_PAR0 to a smaller',
                'number of years -- the cmip temperature series does not',
                'predict far enough for the outlook you set ... the',
                'difference is', ny - (max(parenv$yrs_temp) - 
