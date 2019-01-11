@@ -53,12 +53,14 @@ get_BmsySim <- function(parmgt, parpop, parenv, Rfun,
 
   ny <- parmgt$BREF_LEV
   
-  if(ny > (max(parenv$yrs) - parenv$y)){
-    stop('get_BmsySim: please set parmgt$BREF_LEV to a smaller number of
-         years -- the cmip temperature series does not predict far enough
-         for the outlook you set')
+  if(ny > (max(parenv$yrs_temp) - parenv$yrs_temp[y])){
+    stop(paste('get_BmsySim: please set parmgt$BREF_LEV to a smaller',
+               'number of years -- the cmip temperature series does not',
+               'predict far enough for the outlook you set ... the',
+               'difference is', ny - (max(parenv$yrs_temp) - 
+                parenv$yrs_temp[y]), 'year(s)'))
   }
-  
+ 
   # Get the initial population for the simulation -- assumes exponential 
   # survival based on the given F, mean recruitment and M
   # ages <- 1:length(parpop$sel)
@@ -73,7 +75,7 @@ get_BmsySim <- function(parmgt, parpop, parenv, Rfun,
           length(parpop$sel) == length(parpop$waa))){
     stop('get_BmsySim: check vector lengths')
   }
-  
+
   # If M is a vector, ensure it is the same length as the rest
   if(length(parpop$M) > 1){
     if(length(parpop$sel) != length(parpop$M)){
@@ -111,14 +113,14 @@ get_BmsySim <- function(parmgt, parpop, parenv, Rfun,
     # Recruitment
     N[y,1] <- Rfun(parpop = parpop, 
                    parenv = parenv, 
-                   SSB = c(N[y,]) %*% c(parpop$waa),
+                   SSB = c(N[y-1,]) %*% c(parpop$waa),
                    # last model year (parenv$y) plus the year number of the
                    # projection
                    TAnom = parenv$Tanom[parenv$y+y],
                    ny = ny)
 
   }
- 
+
   # Get weight-at-age
   Waa <- sweep(N, MARGIN=2, STATS=parpop$waa, FUN='*')
   
@@ -130,9 +132,19 @@ get_BmsySim <- function(parmgt, parpop, parenv, Rfun,
   # any projections.
   SSBref <- distillBmsy(apply(SSBaa[-1,], 1, sum))
  
+  # Calculate the catch in weight
+  
+  sumCW <- sapply(1:nrow(N), function(i){
+    CN <- (parpop$sel * F_val) / (parpop$sel * F_val + parpop$M) * 
+      N[i,] * (1 - exp(-F_val * parpop$sel - parpop$M))
+    tempSumCW <- CN %*% c(parpop$waa)
+    return(tempSumCW)
+  })
+  
   out <- list(RPlevel = parmgt$FREF_LEV,
               RPvalue = F_val,
-              SSBvalue = SSBref)
+              SSBvalue = SSBref,
+              meanSumCW = mean(sumCW))
   
   return(out)
   
