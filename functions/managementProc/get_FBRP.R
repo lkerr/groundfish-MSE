@@ -33,26 +33,40 @@
 
 
 
-get_FBRP <- function(parmgt, parpop){
+get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
   
   
   if(parmgt$FREF_TYP == 'YPR' | parmgt$FREF_TYP == 'SPR'){
    
     F <- get_perRecruit(parmgt = parmgt, parpop = parpop)
    
-    return(Fref = F)
+    return(c(RPvalue = F))
     
   }else if(parmgt$FREF_TYP == 'FmsySim'){
     
-    #### stuff here ####
+    # Load in the recruitment function (recruitment function index is
+    # found in the parmgt data frame but the actual functions are from
+    # the list Rfun_BmsySim which is created in the processes folder.
+    Rfun <- Rfun_BmsySim[[parmgt$RFUN_NM]]
     
-    return(Fref = F) 
-
-  }else if(parmgt$FREF_TYP == 'Mbased'){
+    candF <- seq(from=0, to=2, by=0.025)
+   
+    Y <- sapply(1:length(candF), function(x){
+                get_BmsySim(parmgt = parmgt, 
+                            parpop = parpop, 
+                            parenv = parenv, 
+                            Rfun = Rfun, 
+                            F_val=candF[x])$meanSumCW})
     
-    F <- parmgt$FREF_VAL * mean(parpop$M)
+    Fmsy <- candF[which.max(Y)]
+   
+    # Warn if maximum yield did not occur within the range
+    if(Fmsy %in% range(candF)){
+      warning(paste('get_FBRP: maximum yield occurs at endpoint of',
+                    'candidate F values'))
+    }
     
-    return(Fref = F)
+    return(c(RPvalue = Fmsy))
     
   }else if(parmgt$FREF_TYP == 'Fmed'){
     
@@ -60,7 +74,8 @@ get_FBRP <- function(parmgt, parpop){
     pmtemp <- list(FREF_TYP = 'SSBR')
     ssbrGrid <- get_perRecruit(parmgt = pmtemp, parpop = parpop)$PRgrid
     F <- get_fmed(parpop = parpop, rep_slp = slp, ssbrGrid = ssbrGrid)
-    return(F)
+    
+    return(list(RPvalue = F))
     
   }else{
     
