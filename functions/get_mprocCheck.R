@@ -40,8 +40,7 @@ get_mprocCheck <- function(mproc){
   }
 
   if(any(!is.na(mproc$FREF_LEV) & 
-         (mproc$FREF_LEV < 0 | mproc$FREF_LEV > 1)
-         )){
+         (mproc$FREF_LEV < 0))){
     msg <- c(msg, 
              paste0('value out of range in FREF_LEV column of mproc.txt:',
              ' check values'))
