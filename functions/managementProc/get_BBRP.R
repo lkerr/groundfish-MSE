@@ -25,7 +25,8 @@
 
 
 
-get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst){
+get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
+                     distillBmsy=mean){
 
   
   if(parmgt$BREF_TYP == 'RSSBR'){
@@ -35,9 +36,9 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst){
     # then biomasses in the future won't matter.
     
     # get Fmsy proxy
-    Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop)
+    # Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop)
 
-    parmgt1 <- list(FREF_LEV=Fprox$SSBvalue, FREF_TYP='SSBR')
+    parmgt1 <- list(FREF_LEV = FBRP, FREF_TYP = 'SSBR')
     
     ssbrFmax <- get_perRecruit(parmgt=parmgt1, parpop=parpop, 
                                nage=1000, nF=1000, nFrep=100)
@@ -52,7 +53,7 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst){
    
     B <- ssbrFmax$SSBvalue * funR
 
-    return(list(RPvalue = B))
+    out <- list(RPvalue = B)
     
   }else if(parmgt$BREF_TYP == 'SIM'){
     
@@ -65,16 +66,21 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst){
     # sprFmax <- get_perRecruit(parmgt=mproc[m,], parpop=parpop,
     #                           nage=1000, nF=1000, nFrep=100)
     # get Fmsy proxy
-    Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop, 
-                      parenv = parenv, Rfun_lst = Rfun_lst)
-   
-    B <- get_BmsySim(parmgt = parmgt, parpop = parpop, parenv = parenv, 
-                     Rfun = Rfun, F_val=Fprox['RPvalue'])$SSBvalue
+    # Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop, 
+                      # parenv = parenv, Rfun_lst = Rfun_lst)
+ 
+    SSB <- get_proj(parmgt = parmgt, parpop = parpop, parenv = parenv, 
+                    Rfun = Rfun, F_val = FBRP,
+                    ny = parmgt$BREF_LEV,
+                    stReportYear = 2)$SSB
+    
+    SSBvalue <- distillBmsy(SSB)
 
-    return(list(RPvalue = B))
+    out <- list(RPvalue = SSBvalue)
     
   }
   
+  return(out)
   
 }
 

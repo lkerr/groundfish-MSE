@@ -39,12 +39,13 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
   # point and those will be implemented in get_FBRP
   
   if(parmgt$ASSESSCLASS == 'CAA'){
-    
+     
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpop, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim)
     Bref <- get_BBRP(parmgt = parmgt, parpop = parpop, 
-                     parenv = parenv, Rfun_lst = Rfun_BmsySim)
-   
+                     parenv = parenv, Rfun_lst = Rfun_BmsySim,
+                     FBRP = Fref[['RPvalue']])
+  
     if(evalRP){
       FrefRPvalue <- Fref[['RPvalue']]
       BrefRPvalue <- Bref[['RPvalue']]
@@ -111,6 +112,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
   }
   
   return(out)
+  
 }
 
 

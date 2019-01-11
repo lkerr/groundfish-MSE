@@ -38,9 +38,9 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
   
   if(parmgt$FREF_TYP == 'YPR' | parmgt$FREF_TYP == 'SPR'){
    
-    F <- get_perRecruit(parmgt = parmgt, parpop = parpop)
-   
-    return(c(RPvalue = F))
+    F <- get_perRecruit(parmgt = parmgt, parpop = parpop)$RPvalue
+  
+    return(list(RPvalue = F))
     
   }else if(parmgt$FREF_TYP == 'FmsySim'){
     
@@ -51,14 +51,17 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
     
     candF <- seq(from=0, to=2, by=0.025)
    
-    Y <- sapply(1:length(candF), function(x){
-                get_BmsySim(parmgt = parmgt, 
-                            parpop = parpop, 
-                            parenv = parenv, 
-                            Rfun = Rfun, 
-                            F_val=candF[x])$meanSumCW})
+    sumCW <- sapply(1:length(candF), function(x){
+                    get_proj(parmgt = parmgt, 
+                             parpop = parpop, 
+                             parenv = parenv, 
+                             Rfun = Rfun, 
+                             F_val = candF[x],
+                             ny = parmgt$FREF_LEV,
+                             stReportYr = 2)$sumCW})
     
-    Fmsy <- candF[which.max(Y)]
+    meanSumCW <- apply(sumCW, 2, mean)
+    Fmsy <- candF[which.max(meanSumCW)]
    
     # Warn if maximum yield did not occur within the range
     if(Fmsy %in% range(candF)){
@@ -66,7 +69,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
                     'candidate F values'))
     }
     
-    return(c(RPvalue = Fmsy))
+    return(list(RPvalue = Fmsy))
     
   }else if(parmgt$FREF_TYP == 'Fmed'){
     
