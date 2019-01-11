@@ -65,10 +65,11 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst){
     # sprFmax <- get_perRecruit(parmgt=mproc[m,], parpop=parpop,
     #                           nage=1000, nF=1000, nFrep=100)
     # get Fmsy proxy
-    Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop)
+    Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop, 
+                      parenv = parenv, Rfun_lst = Rfun_lst)
    
     B <- get_BmsySim(parmgt = parmgt, parpop = parpop, parenv = parenv, 
-                     Rfun = Rfun, F_val=Fprox$RPvalue)$SSBvalue
+                     Rfun = Rfun, F_val=Fprox['RPvalue'])$SSBvalue
 
     return(list(RPvalue = B))
     
