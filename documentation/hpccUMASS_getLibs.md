@@ -9,38 +9,38 @@ Running the MSE requires some specific R libraries.  Similarly to when you run i
 ### Steps for installing libraries
 
 1. Log in to your HPCC account.  You will get a prompt that looks something like
-```
-[st12d@ghpcc06 ~]$
-```
-  except it won't start with st12d it will start with your username.
+   ```
+   [st12d@ghpcc06 ~]$
+   ```
+     except it won't start with st12d it will start with your username.
 
 2. Load gcc. When R packages are installed they need to be compiled in order to run -- gcc is in charge of this step.  gcc is not automatically available however -- you have to tell the HPCC that you are going to want to use it.  Load it using
-```
-[st12d@ghpcc06 ~]$ module load gcc/5.1.0
-```
-  and you will get an output something like
-```
-[st12d@ghpcc06 ~]$ module load gcc/5.1.0
-gcc 5.1.0 is located under /share/pkg/gcc/5.1.0
-```
+   ```
+   [st12d@ghpcc06 ~]$ module load gcc/5.1.0
+   ```
+   and you will get an output something like
+   ```
+   [st12d@ghpcc06 ~]$ module load gcc/5.1.0
+   gcc 5.1.0 is located under /share/pkg/gcc/5.1.0
+   ```
 3. Next load R  
 Just like gcc, you have to tell the HPCC that you are going to want to use R before you are able to open it.
-```
-module load R/3.4.0
-```
-  the output looks something like
-```
-[st12d@ghpcc06 ~]$ module load R/3.4.0
-R 3.4.0 is located under /share/pkg/R/3.4.0
-When compiling modules for this, be sure to load gcc/5.1.0
-```
-  It wants to make sure we've loaded gcc/5.1.0 in case we want to install packages -- good news: we  did that in step 2!
+   ```
+   module load R/3.4.0
+   ```
+   the output looks something like
+   ```
+   [st12d@ghpcc06 ~]$ module load R/3.4.0
+   R 3.4.0 is located under /share/pkg/R/3.4.0
+   When compiling modules for this, be sure to load gcc/5.1.0
+   ```
+   It wants to make sure we've loaded gcc/5.1.0 in case we want to install packages -- good news: we  did that in step 2!
 
 4. Open R by typing R in the console and hitting Enter
-```
-[st12d@ghpcc06 ~]$ R
-```
-  Now even though the screen hasn't changed much (it's not like opening a program on your local machine) you are now working in R:
+   ```
+   [st12d@ghpcc06 ~]$ R
+   ```
+   Now even though the screen hasn't changed much (it's not like opening a program on your local machine) you are now working in R:
 
   ```
   [st12d@ghpcc06 ~]$ R
@@ -64,10 +64,10 @@ When compiling modules for this, be sure to load gcc/5.1.0
   Type 'q()' to quit R.
   ```
   If you ever want to exit R so you can get back to the HPCC console, just type
-```
-> q()
-```
-  hit enter and you will exit.
+   ```
+   > q()
+   ```
+   hit enter and you will exit.
 
 5. Now we will install the packages.  The only tricky step here is is that we have to tell R where we want the packages to be installed.  Note that this will depend on how you have set up your HPCC account.  The trick is that the program assumes that you have a folder called **Rlib** and that it is a level **up** from the directory you are running the MSE from.  If you do not already have this folder R will automatically create it for you.
 
