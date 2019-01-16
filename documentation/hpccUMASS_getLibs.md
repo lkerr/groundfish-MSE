@@ -63,11 +63,11 @@ Just like gcc, you have to tell the HPCC that you are going to want to use R bef
      'help.start()' for an HTML browser interface to help.
      Type 'q()' to quit R.
      ```
-  If you ever want to exit R so you can get back to the HPCC console, just type
+     If you ever want to exit R so you can get back to the HPCC console, just type
      ```
      > q()
      ```
-  hit enter and you will exit.
+     hit enter and you will exit.
 
 5. Now we will install the packages.  The only tricky step here is is that we have to tell R where we want the packages to be installed.  Note that this will depend on how you have set up your HPCC account.  The trick is that the program assumes that you have a folder called **Rlib** and that it is a level **up** from the directory you are running the MSE from.  If you do not already have this folder R will automatically create it for you.
 
