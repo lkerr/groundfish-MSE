@@ -51,11 +51,12 @@
 get_proj <- function(parmgt, parpop, parenv, Rfun,
                      F_val, stReportYr, ny, ...){
 
-  if(ny > (max(parenv$yrs_temp) - parenv$yrs_temp[y])){
+  if(ny > (max(parenv$yrs_temp) - parenv$yrs_temp[y]) & 
+     Rfun == 'forecast'){
     stop(paste('get_proj: please set parmgt$BREF_PAR0 to a smaller',
                'number of years -- the cmip temperature series does not',
                'predict far enough for the outlook you set ... the',
-               'difference is', ny - (max(parenv$yrs_temp) - 
+               'difference is', ny - (max(parenv$yrs_temp) -
                 parenv$yrs_temp[y]), 'year(s)'))
   }
  
