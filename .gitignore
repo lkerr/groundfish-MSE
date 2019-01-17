@@ -24,3 +24,4 @@ data/data_raw/*
 *.JPG
 *.pptx
 *.docx
+.Rproj.user
