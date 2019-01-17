@@ -1,15 +1,18 @@
 
-# Running the MSE on the UMASS cluster
+# Running the MSE
 #### (Sam Truesdell struesdell@gmri.org)
 
 
-Provides an step-by-step description of how to run the MSE code on the UMASS GHPCC.  Assumes that:
+Provides an step-by-step description of how to run the MSE code -- focused on using the the UMASS GHPCC which is the complicated part. Local run instructions also included.  HPCC runs assume that:
 1. You already have an account so you can use the UMASS computer cluster.  If you don't see the section *Request access to the Cluster* in the file [documents/hpccUMASS_intro.md](documents/hpccUMASS_intro.md)
 2. You have already installed the necessary R libraries within your UMASS HPCC.  If you haven't done this already see the file [documentation/hpccUMASS_getLibs.md](documentation/hpccUMASS_getLibs.md)
 
 ***
 
-### Summary
+### Running locally
+Typically HPCC runs will have the **nrep** parameter -- which governs the number of independent simulations to run -- set to a low value like 1 or 2 in [processes/set_om_parameters.R](../processes/set_om_parameters.R). This is because the repetitions are done instead in parallel by the HPCC so each individual instance does not need many repetitions. Test runs on a local machine may have **nrep** set as low as 2 (if you set it to 1 there will be a warning -- this is simply because of downstream issues -- e.g., with plotting -- if there is only a single repetition). For a local run simply set **nrep** to the desired number of simulations and source the [processes/runSim.R](../processes/runSim.R) code (along with any other changes to the [processes/set_om_parameters.R](../processes/set_om_parameters.R) and [processes/mproc.txt](../processes/mproc.txt) files). In RStudio you can do this by opening the [processes/runSim.R](../processes/runSim.R) and pressing the **Source** button in the upper-right corner of the script window. Or, if you aren't using RStudio, in the R console you could type ```source('processes/runSim.R')``` (assuming groundfish-MSE was your working directory). Local runs work well, especially for testing, but for lots of repetitions they are too slow and you are better off using the HPCC.
+
+### Summary of HPCC runs
 The MSE is run on the UMASS HPCC as a batch job.  If you are unfamiliar with batch jobs it would probably be worthwhile to read the example under [documentation/hpccUMASS_batchJobs.md](documentation/hpccUMASS_batchJobs.md).  The premise is that this job is divided into three parts:
 
 1. Setup. The repository is cloned from Git-Hub to the user's HPCC account.  A results directory is created and the assessment model is compiled.
