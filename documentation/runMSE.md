@@ -4,7 +4,7 @@
 
 
 Provides an step-by-step description of how to run the MSE code -- focused on using the the UMASS GHPCC which is the complicated part. Local run instructions also included.  HPCC runs assume that:
-1. You already have an account so you can use the UMASS computer cluster.  If you don't see the section *Request access to the Cluster* in the file [documents/hpccUMASS_intro.md](hpccUMASS_intro.md)
+1. You already have an account so you can use the UMASS computer cluster.  If you don't see the section *Request access to the Cluster* in the file [documentation/hpccUMASS_intro.md](hpccUMASS_intro.md)
 2. You have already installed the necessary R libraries within your UMASS HPCC.  If you haven't done this already see the file [documentation/hpccUMASS_getLibs.md](hpccUMASS_getLibs.md)
 
 ***
