@@ -1,6 +1,7 @@
 
-Grid searches for Fmsy
-------
+# Grid searches for Fmsy
+### Sam Truesdell (struesdell@gmri.org)
+
 This document describes the methodology for determining F<sub>MSY</sub> based on maximizing yield over a grid search.
 
 
