@@ -4,13 +4,13 @@
 
 
 Provides an step-by-step description of how to run the MSE code on the UMASS GHPCC.  Assumes that:
-1. You already have an account so you can use the UMASS computer cluster.  If you don't see the section *Request access to the Cluster* in the file **documents/hpccUMASS_intro.md**
-2. You have already installed the necessary R libraries within your UMASS HPCC.  If you haven't done this already see the file **documentation/hpccUMASS_getLibs.md**
+1. You already have an account so you can use the UMASS computer cluster.  If you don't see the section *Request access to the Cluster* in the file [documents/hpccUMASS_intro.md](documents/hpccUMASS_intro.md)
+2. You have already installed the necessary R libraries within your UMASS HPCC.  If you haven't done this already see the file [documentation/hpccUMASS_getLibs.md](documentation/hpccUMASS_getLibs.md)
 
 ***
 
 ### Summary
-The MSE is run on the UMASS HPCC as a batch job.  If you are unfamiliar with batch jobs it would probably be worthwhile to read the example under **documentation/hpccUMASS_batchJobs.md**.  The premise is that this job is divided into three parts:
+The MSE is run on the UMASS HPCC as a batch job.  If you are unfamiliar with batch jobs it would probably be worthwhile to read the example under [documentation/hpccUMASS_batchJobs.md](documentation/hpccUMASS_batchJobs.md).  The premise is that this job is divided into three parts:
 
 1. Setup. The repository is cloned from Git-Hub to the user's HPCC account.  A results directory is created and the assessment model is compiled.
 
