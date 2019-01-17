@@ -35,4 +35,4 @@ The overall approach to the MSE is to attempt to have the code be as compartment
 
 * **README.md**: Describes where to find the documentation.
 
-* **run.sh/runNoGit.sh/runPost.sh/runPre.sh/runSim.sh**: Shell files that are used to actually run the MSE on the HPCC. These need to be accessible because if you run the MSE on the HPCC you need to have these files uploaded to your HPCC account separately from just cloning from GitHub (see [hpccUMASS_runMSE.md(hpccUMASS_runMSE.md)]).
+* **run.sh/runNoGit.sh/runPost.sh/runPre.sh/runSim.sh**: Shell files that are used to actually run the MSE on the HPCC. These need to be accessible because if you run the MSE on the HPCC you need to have these files uploaded to your HPCC account separately from just cloning from GitHub (see [hpccUMASS_runMSE.md](hpccUMASS_runMSE.md)).
