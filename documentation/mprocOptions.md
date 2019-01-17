@@ -4,7 +4,7 @@
 # Options for management procedures
 ### Sam Truesdell (struesdell@gmri.org)
 
-What to write in the mproc.txt file and what it means
+What to write in the mproc.txt file and what it means.
 
 
 ## ASSESSCLASS
