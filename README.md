@@ -4,5 +4,8 @@
 
 ***
 
-### Welcome! Please visit the Wiki pages for specific information about teh groundfish-MSE project, including information on general methods, code specifics and running the model on the UMASS HPCC
+### Welcome! Please visit the [Wiki](./wiki) pages for specific information about the groundfish-MSE project, including information on: 
+* general methods 
+* code specifics, and 
+* running the model on the UMASS HPCC
 
