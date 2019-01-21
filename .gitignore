@@ -4,7 +4,6 @@
 *.Ruserdata
 /background/*
 /cocaSharedFiles/*
-/documentation/*
 /function_tests/*
 /literature/*
 /meetings/*
@@ -25,3 +24,6 @@ data/data_raw/*
 *.pptx
 *.docx
 .Rproj.user
+/documentation/old*
+/documentation/.ipynb_checkpoints
+*.url
