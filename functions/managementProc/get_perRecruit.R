@@ -10,9 +10,9 @@
 # 
 # parmgt: a 1-row data frame of management parameters. The operational
 #         component of parmgt for this function is the (1-row) columns
-#         "FREF_TYP" and "FREF_LEV". FREF_TYP indicates the type of model
+#         "FREF_TYP" and "FREF_PAR0". FREF_TYP indicates the type of model
 #         that should be used to calculate the F reference point and
-#         FREF_LEV is the associate F level (e.g., 0.4 for F40% if you are
+#         FREF_PAR0 is the associate F level (e.g., 0.4 for F40% if you are
 #         using SPR or 0.1 for F0.1 if you are using YPR). The options
 #         and associated reference points are:
 #         
@@ -102,7 +102,7 @@ get_perRecruit <- function(parmgt, parpop,
     slpo <- slp[1]
     
     # reference slope
-    slpr <- parmgt$FREF_LEV * slpo
+    slpr <- parmgt$FREF_PAR0 * slpo
     
     # find the F @ reference slope
     Fref <- F_full[which.min(abs(slp - slpr))]
@@ -116,14 +116,14 @@ get_perRecruit <- function(parmgt, parpop,
     
     # find the F @ the specified level of SSB/R. Recall that SSB is the
     # expected SSB over the lifetime of a single individual and that
-    # parmgt$FREF_LEV still refers to a level of SSB/R because we're in the 
+    # parmgt$FREF_PAR0 still refers to a level of SSB/R because we're in the 
     # realm of F-based reference points. Noting this just because subtracting
     # something that looks like F from something that looks like SSB makes
     # no sense at first blush.
-    Fref <- F_full[which.min(abs(SSB - parmgt$FREF_LEV))]
+    Fref <- F_full[which.min(abs(SSB - parmgt$FREF_PAR0))]
     
     # SSB / R at the reference point
-    SSBatRP <- SSB[which.min(abs(SSB - parmgt$FREF_LEV))]
+    SSBatRP <- SSB[which.min(abs(SSB - parmgt$FREF_PAR0))]
       
     # for outputs
     yvalue <- SSB
@@ -137,10 +137,10 @@ get_perRecruit <- function(parmgt, parpop,
     SSBR_ratio <- SSB / SSBRmax
     
     # find the F @ the specified level of F_X%
-    Fref <- F_full[which.min(abs(SSBR_ratio - parmgt$FREF_LEV))]
+    Fref <- F_full[which.min(abs(SSBR_ratio - parmgt$FREF_PAR0))]
     
     # SSB / R at the reference point
-    SSBatRP <- SSB[which.min(abs(SSBR_ratio - parmgt$FREF_LEV))]
+    SSBatRP <- SSB[which.min(abs(SSBR_ratio - parmgt$FREF_PAR0))]
 
     # for outputs
     yvalue <- SSBR_ratio
@@ -158,7 +158,7 @@ get_perRecruit <- function(parmgt, parpop,
   # of fully-selected fishing mortality; the reference point level; and the
   # reference point value
   out <- list(PRgrid = matrix(c(F_full[oidx], yvalue[oidx]), ncol=2),
-              RPlevel = parmgt$FREF_LEV,
+              RPlevel = parmgt$FREF_PAR0,
               RPvalue = Fref,
               SSBvalue = SSBatRP)
   

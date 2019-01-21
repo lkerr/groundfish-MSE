@@ -1,6 +1,7 @@
-ASSESSCLASS  HCR	FREF_TYP	FREF_LEV	BREF_TYP	BREF_LEV	RFUN_NM RPInt
-CAA  simplethresh	YPR	0.1	SIM	50 forecast 1
-CAA  simplethresh	SPR	0.2	SIM	30 hindcastMean 1
-CAA  slide	YPR	0.1	SIM	10	hindcastMean 1
-CAA  slide	SPR	0.2	RSSBR	10	hindcastMean 1
-PLANB NA NA NA NA NA NA NA
+ASSESSCLASS  HCR	FREF_TYP	FREF_PAR0	BREF_TYP	BREF_PAR0	RFUN_NM RPInt
+CAA  constF	FmsySim	5	  SIM	15 hindcastMean 1
+CAA  constF	FmsySim	10	SIM	15 hindcastMean 1
+CAA  constF	FmsySim	15	SIM	15 hindcastMean 1
+CAA  constF	FmsySim	20	SIM	15 hindcastMean 1
+CAA  constF	FmsySim	25	SIM	15 hindcastMean 1
+CAA  constF	FmsySim	30	SIM	15 hindcastMean 1

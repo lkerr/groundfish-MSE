@@ -48,10 +48,10 @@ if(runClass == 'Local' && nrep == 1){
 tst <- !is.na(mproc$BREF_TYP) & 
        mproc$BREF_TYP == 'SIM' &
        mproc$RFUN_NM == 'hindcastMean' &
-       mproc$BREF_LEV > ncaayear
+       mproc$BREF_PAR0 > ncaayear
 if(any(tst)){
   msg <- paste0('Number of years in hindcast that you specified (', 
-                mproc$BREF_LEV[tst], ') is larger than the number of years in', 
+                mproc$BREF_PAR0[tst], ') is larger than the number of years in', 
                 ' the moving window of the stock assessment model (', 
                 ncaayear, '). Number of years used in the hindcast changed to ', 
                 ncaayear, '.\n')

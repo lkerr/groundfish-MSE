@@ -28,7 +28,8 @@ get_Tmin <- function(Bmsy, parpop, Rlst = Rlst){
   # Get 100 year projection at zero fishing mortality, and do it 50
   # times so you have a distribution
   proj <- t(sapply(1:50, function(x)
-                  get_proj(parpop, F = 0, Rlst = Rlst, ny = 101)$SSB))
+                  get_proj(parpop, F = 0, 
+                           ny = 101)$SSB))
  
 
   # Determine which values were over the Bmsy threshold, and return the

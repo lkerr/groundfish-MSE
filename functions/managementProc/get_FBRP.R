@@ -4,9 +4,9 @@
 # 
 # parmgt: a 1-row data frame of management parameters. The operational
 #         component of parmgt for this function is the (1-row) columns
-#         "FREF_TYP" and "FREF_LEV". FREF_TYP indicates the type of model
+#         "FREF_TYP" and "FREF_PAR0". FREF_TYP indicates the type of model
 #         that should be used to calculate the F reference point and
-#         FREF_LEV is the associate F level (e.g., 0.4 for F40% if you are
+#         FREF_PAR0 is the associate F level (e.g., 0.4 for F40% if you are
 #         using SPR or 0.1 for F0.1 if you are using YPR. Options for
 #         FREF_TYP are:
 #     
@@ -33,26 +33,43 @@
 
 
 
-get_FBRP <- function(parmgt, parpop){
+get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
   
   
   if(parmgt$FREF_TYP == 'YPR' | parmgt$FREF_TYP == 'SPR'){
    
-    F <- get_perRecruit(parmgt = parmgt, parpop = parpop)
+    F <- get_perRecruit(parmgt = parmgt, parpop = parpop)$RPvalue
+  
+    return(list(RPvalue = F))
+    
+  }else if(parmgt$FREF_TYP == 'FmsySim'){
+    
+    # Load in the recruitment function (recruitment function index is
+    # found in the parmgt data frame but the actual functions are from
+    # the list Rfun_BmsySim which is created in the processes folder.
+    Rfun <- Rfun_BmsySim[[parmgt$RFUN_NM]]
+    
+    candF <- seq(from=0, to=2, by=0.025)
    
-    return(Fref = F)
+    sumCW <- sapply(1:length(candF), function(x){
+                    get_proj(parmgt = parmgt, 
+                             parpop = parpop, 
+                             parenv = parenv, 
+                             Rfun = Rfun, 
+                             F_val = candF[x],
+                             ny = parmgt$FREF_PAR0,
+                             stReportYr = 2)$sumCW})
     
-  }else if(parmgt$FREF_TYP == 'simR'){
+    meanSumCW <- apply(sumCW, 2, mean)
+    Fmsy <- candF[which.max(meanSumCW)]
+   
+    # Warn if maximum yield did not occur within the range
+    if(Fmsy %in% range(candF)){
+      warning(paste('get_FBRP: maximum yield occurs at endpoint of',
+                    'candidate F values'))
+    }
     
-    #### stuff here ####
-    
-    return(Fref = F) 
-
-  }else if(parmgt$FREF_TYP == 'Mbased'){
-    
-    F <- parmgt$FREF_VAL * mean(parpop$M)
-    
-    return(Fref = F)
+    return(list(RPvalue = Fmsy))
     
   }else if(parmgt$FREF_TYP == 'Fmed'){
     
@@ -60,7 +77,8 @@ get_FBRP <- function(parmgt, parpop){
     pmtemp <- list(FREF_TYP = 'SSBR')
     ssbrGrid <- get_perRecruit(parmgt = pmtemp, parpop = parpop)$PRgrid
     F <- get_fmed(parpop = parpop, rep_slp = slp, ssbrGrid = ssbrGrid)
-    return(F)
+    
+    return(list(RPvalue = F))
     
   }else{
     
