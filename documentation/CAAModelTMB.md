@@ -1,6 +1,6 @@
 
 
-# Integrated Catch-at-age model using TMB
+# Integrated catch-at-age model using TMB
 ### Sam Truesdell (struesdell@gmri.org)
 
 <br> Describes the code that implements the TMB-based catch-at-age model in the management strategy evaluation
