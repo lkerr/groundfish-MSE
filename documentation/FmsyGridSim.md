@@ -43,3 +43,5 @@ The way the simulation is coded right now, the number of years in the projection
   * In **both** cases the projection will be run for **only** 10 years. The reason for this is that the *forecast* recruitment function is linked to actual temperature projections beyond the current year. Accordingly it does not make sense to run the projection for, say, 1000 years because no such projections are available. *hindcastMean* could be run for 1000 years but it is not set up that way so that it mirrors the process in the *forecast* recruitment function.
 
 The way this is currently set up the initial conditions have too much influence over the calculated F<sub>MSY</sub>. A possible solution is to change the initial values. If the initial values were in equilibrium given the current temperature (in the case of using *forecast*) or recruitment mean assumption (in the case of *hindcastMean*) then it might work to only run for 5 or 10 years.
+
+[Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
