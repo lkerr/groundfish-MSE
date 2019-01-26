@@ -177,6 +177,23 @@ Read file <./1003.e> for stderr output of this job.
 
 * If you are designing simulations (e.g., in R) you want to do it so that you can easily run in parallel. The outer loop should indicate the simulations so you can easily change your number of simulations. If you want to run 1000 simulations in total you could do something like change the number of repetitions per script to 10 and run a job with an array of 100.
 
+* The above example does not save output files which you will probably want to do. If you name your output file something like *result.Rdata* you will notice quickly that the array does you no good because each version of the program will save the output under the same name and thus *result.Rdata* will be continually overwritten.  A simple and straightforward way to avoid this is using random numbers:
+
+ ```
+ # Get a random integer between 0 and 100,000
+ rn <- round(runif(1, 0, 100000))
+
+ # Add the integer to the result file name
+ name <- paste0('result', '_', rn, '.Rdata')
+
+ # Turn the name into the full file path -- don't
+ # forget to tailor dummyPath to your directory structure!
+ savePath <- file.path('dummyPath', name)
+
+ # Save the final result for the array iteration
+ save(result, file=savePath)
+ ```
+
 * I tend to commit plenty of mistakes as I'm working on this stuff. With the ```-w 'done()'``` command this means that I sometimes have jobs in my queue that will never run. The command ```qdel JOBID``` (you can find the job ID using the ```bjobs``` command) will delete the specified job from your queue.
 
 * If you are like me you may find this perplexing. Feel free to e-mail me at struesdell@gmri.org. I'm not a computer programmer and I only know what I've found necessary for my work but I might be able to help with some basics!
