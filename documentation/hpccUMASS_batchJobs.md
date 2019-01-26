@@ -179,20 +179,20 @@ Read file <./1003.e> for stderr output of this job.
 
 * The above example does not save output files which you will probably want to do. If you name your output file something like *result.Rdata* you will notice quickly that the array does you no good because each version of the program will save the output under the same name and thus *result.Rdata* will be continually overwritten.  A simple and straightforward way to avoid this is using random numbers:
 
- ```
- # Get a random integer between 0 and 100,000
- rn <- round(runif(1, 0, 100000))
+  ```
+  # Get a random integer between 0 and 100,000
+  rn <- round(runif(1, 0, 100000))
 
- # Add the integer to the result file name
- name <- paste0('result', '_', rn, '.Rdata')
+  # Add the integer to the result file name
+  name <- paste0('result', '_', rn, '.Rdata')
 
- # Turn the name into the full file path -- don't
- # forget to tailor dummyPath to your directory structure!
- savePath <- file.path('dummyPath', name)
+  # Turn the name into the full file path -- don't
+  # forget to tailor dummyPath to your directory structure!
+  savePath <- file.path('dummyPath', name)
 
- # Save the final result for the array iteration
- save(result, file=savePath)
- ```
+  # Save the final result for the array iteration
+  save(result, file=savePath)
+  ```
 
 * I tend to commit plenty of mistakes as I'm working on this stuff. With the ```-w 'done()'``` command this means that I sometimes have jobs in my queue that will never run. The command ```qdel JOBID``` (you can find the job ID using the ```bjobs``` command) will delete the specified job from your queue.
 
