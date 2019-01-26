@@ -153,3 +153,5 @@ bsub -R rusage[mem=10000] -W 01:30 Rscript Name_script.R 1 2
 ```
 bkill -u username 0
 ```
+
+[Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
