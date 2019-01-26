@@ -85,3 +85,5 @@ The type of recruitment function to be used. Currently all options involve Bever
 The frequency with which reference points are re-calculated.
 
 * The value represents the frequency. For example, if the value is 3, reference points are recalculated every 3 years. In the years when the reference points are not updated the advice may change based on an updated assessment model but the reference points (and thus the shape of any associated harvest control rule) remains the same.
+
+[Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
