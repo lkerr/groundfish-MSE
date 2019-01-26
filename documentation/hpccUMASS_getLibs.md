@@ -104,3 +104,5 @@ Just like gcc, you have to tell the HPCC that you are going to want to use R bef
 ***
 *More information on the file structure in Step 5*  
 More specifically, the code in the program **groundfish-MSE/processes/loadLibs.R** specifies the location of the libraries using ```require(library, lib.loc='../Rlib/')```.  ```require()``` works like ```library()```. The ```../Rlib/``` tells R to go up one level from the directory from which the call was made to look for the directory **Rlib** which is where it will find the packages.  The reason the packages have to be a level up from the rest of the material (i.e., the groundfish-MSE directory) is that all the material is re-loaded from Git-Hub whenever the model is run but the packages are not part of the Git-Hub material.  In other words, if the packages were within the groundfish-MSE directory they would be deleted.
+
+[Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
