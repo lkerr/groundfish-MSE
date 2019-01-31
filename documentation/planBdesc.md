@@ -42,3 +42,5 @@ mult <- exp(slp)
 where ```slp``` is the slope and ```mult``` is the multiplier that is output by the function.
 
 This is the end of the planB code -- it just produces the multiplier. In order to generate catch advice the multiplier should be applied to some function of the catch time series (e.g., catch in the last year, average catch over the last three years, etc.)
+
+[Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
