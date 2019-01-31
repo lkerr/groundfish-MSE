@@ -9,7 +9,7 @@
 debugSink <- FALSE
 
 # Debug using simple temperature trend that reduces variance?
-simpleTemperature <- TRUE
+simpleTemperature <- FALSE
 
 
 #### Structural parameters ####
