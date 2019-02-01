@@ -35,7 +35,7 @@ wrangle<-function(data,selVars=c(2,4,6:9,11:13,15:16),sliceVars=-c(2)){
     select(selVars) %>% 
     slice(sliceVars)
   names(data) <- c("Stock",data[1, 2:11])
-  data<-data[,-1] %>% 
+  data<-data[-1,] %>% 
     mutate('Year'=2017)
   data
 }
@@ -54,8 +54,7 @@ FY10_CtoTAC<-as_tibble(FY10[[5]])
 FY10_Catch<-wrangle(FY10_Catch,selVars=c(2,4,6:9,11:13,14:15),sliceVars=-c(1,3:4))
 FY10_Landing<-wrangle(FY10_Landing,selVars=c(2,4,6:9,11:13,14:15),sliceVars=-c(1,3:4))
 FY10_Discard<-wrangle(FY10_Discard,selVars=c(2,4,6:9,11:13,14:15),sliceVars=-c(1,3:4))
-FY10_CtoACL1<-wrangle(FY10_CtoACL,sliceVars=-c(1,3))
-FY10_ACL1<-wrangle(FY10_ACL,selVars=c(1:ncol(FY10_ACL)),sliceVars=-c(1,3:4))
+FY10_TAC<-wrangle(FY10_TAC,selVars=c(2,4,6:9,11:13,14:15),sliceVars=-c(1,3:4))
 
 FY10_Landing1<-wrangle(FY10_Landing)
 FY10_Discard1<-wrangle(FY10_Discard)
