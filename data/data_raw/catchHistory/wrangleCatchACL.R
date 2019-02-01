@@ -267,5 +267,4 @@ for(i in 1:length(Tables)){
 }
 catchHist<-bind_rows(Tables)
 
-saveto<- c("C:/Users/jcummings/Documents/groundfish-MSE")
 write_csv(catchHist,"catchHist.csv")
