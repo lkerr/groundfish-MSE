@@ -190,18 +190,79 @@ Catch[,-1]<-map(Catch[,-1], as.numeric)
 
 # ACL Data ####
 
-# # Rename Columns of Catch Data
-# names(FY10_ACL)<-names(FY11_Catch)<-names(FY12_Catch)<-
-#   c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
-#     "Scallop Fishery","State Water","Other","Year")
-# names(FY13_Catch)<-names(FY14_Catch)<-names(FY15_Catch)<-
-#   names(FY16_Catch)<-names(FY17_Catch)<-
-#   c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
-#     "Scallop Fishery","Small Mesh","State Water","Other","Year")
-# 
-# # Bind yearly tables together
-# Catch<-bind_rows(FY10_Catch,FY11_Catch,FY12_Catch,FY13_Catch,FY14_Catch,FY15_Catch,
-#                  FY16_Catch,FY17_Catch)
-# 
-# # Make character columns numeric
-# Catch[,-1]<-map(Catch[,-1], as.numeric)
+# Rename Columns of ACL Data
+names(FY10_ACL)<-names(FY11_ACL)<-names(FY12_ACL)<-
+  c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
+    "Scallop Fishery","State Water","Other","Year")
+names(FY13_ACL)<-names(FY14_ACL)<-names(FY15_ACL)<-
+  names(FY16_ACL)<-names(FY17_ACL)<-
+  c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
+    "Scallop Fishery","Small Mesh","State Water","Other","Year")
+
+# Bind yearly tables together
+ACL<-bind_rows(FY10_ACL,FY11_ACL,FY12_ACL,FY13_ACL,FY14_ACL,FY15_ACL,
+                 FY16_ACL,FY17_ACL)
+
+# Make character columns numeric
+ACL[,-1]<-map(ACL[,-1], as.numeric)
+
+# CtoACL Data ####
+
+# Rename Columns of CtoACL Data
+names(FY10_CtoACL)<-names(FY11_CtoACL)<-names(FY12_CtoACL)<-
+  c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
+    "Scallop Fishery","State Water","Other","Year")
+names(FY13_CtoACL)<-names(FY14_CtoACL)<-names(FY15_CtoACL)<-
+  names(FY16_CtoACL)<-names(FY17_CtoACL)<-
+  c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
+    "Scallop Fishery","Small Mesh","State Water","Other","Year")
+
+# Bind yearly tables together
+CtoACL<-bind_rows(FY10_CtoACL,FY11_CtoACL,FY12_CtoACL,FY13_CtoACL,FY14_CtoACL,FY15_CtoACL,
+               FY16_CtoACL,FY17_CtoACL)
+
+# Make character columns numeric
+CtoACL[,-1]<-map(CtoACL[,-1], as.numeric)
+
+# Landing Data ####
+
+# Rename Columns of Landing Data
+names(FY10_Landing)<-names(FY11_Landing)<-names(FY12_Landing)<-
+  c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
+    "Scallop Fishery","State Water","Other","Year")
+names(FY13_Landing)<-names(FY14_Landing)<-names(FY15_Landing)<-
+  names(FY16_Landing)<-names(FY17_Landing)<-
+  c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
+    "Scallop Fishery","Small Mesh","State Water","Other","Year")
+
+# Bind yearly tables together
+Landing<-bind_rows(FY10_Landing,FY11_Landing,FY12_Landing,FY13_Landing,FY14_Landing,FY15_Landing,
+                  FY16_Landing,FY17_Landing)
+
+# Make character columns numeric
+Landing[,-1]<-map(Landing[,-1], as.numeric)
+
+# Discard Data ####
+
+# Rename Columns of Discard Data
+names(FY10_Discard)<-names(FY11_Discard)<-names(FY12_Discard)<-
+  c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
+    "Scallop Fishery","State Water","Other","Year")
+names(FY13_Discard)<-names(FY14_Discard)<-names(FY15_Discard)<-
+  names(FY16_Discard)<-names(FY17_Discard)<-
+  c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
+    "Scallop Fishery","Small Mesh","State Water","Other","Year")
+
+# Bind yearly tables together
+Discard<-bind_rows(FY10_Discard,FY11_Discard,FY12_Discard,FY13_Discard,FY14_Discard,FY15_Discard,
+                   FY16_Discard,FY17_Discard)
+
+# Make character columns numeric
+Discard[,-1]<-map(Discard[,-1], as.numeric)
+
+Tables<-list(Catch,ACL,CtoACL,Landing,Discard)
+lables<-c("Catch","ACL","CtoACL","Landing","Discard")
+for(i in 1:length(Tables)){
+  Tables[[i]]<-mutate(Tables[[i]],data_type=lables[i])
+}
+catchHist<-bind_rows(Tables)
