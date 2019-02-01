@@ -34,7 +34,7 @@ wrangle<-function(data,selVars=c(2,4,6:9,11:13,15:16),sliceVars=-c(2)){
   data<-data %>%
     select(selVars) %>% 
     slice(sliceVars)
-  names(data) <- c("Stock",data[1, 2:11])
+  names(data) <- c("Stock",data[1, 2:ncol(data)])
   data<-data[-1,] %>% 
     mutate('Year'=2017)
   data
@@ -57,7 +57,6 @@ FY10_Discard<-wrangle(FY10_Discard,selVars=c(2,4,6:9,11:12,14:15),sliceVars=-c(1
 FY10_TAC<-wrangle(FY10_TAC,selVars=c(2,4,6:9,11:12,14:15),sliceVars=-c(1,3:4))
 FY10_CtoTAC<-wrangle(FY10_CtoTAC,selVars=c(2,4,6:9,11:12,14:15),sliceVars=-c(1,3:4))
 
-
 # 2011
 location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY11_Mults_Catch_Estimates.pdf")
 FY11 <- extract_tables(location,pages=c(2:6),method="lattice")
@@ -68,7 +67,9 @@ FY11_Discard<-as_tibble(FY11[[3]])
 FY11_ACL<-as_tibble(FY11[[4]])
 FY11_CtoACL<-as_tibble(FY11[[5]])
 # Wrangle
-FY11_Catch<-wrangle(FY11_Catch,selVars=c(2,4,6:9,11:12,14:15),sliceVars=-c(1,3:4))
+FY11selVars<-c(2,4,6:9,11:12,14:15)
+FY11sliceVars<- -c(1,3)
+FY11_Catch<-wrangle(FY11_Catch,selVars=FY11selVars,sliceVars=FY11sliceVars)
 FY11_Landing<-wrangle(FY11_Landing,selVars=c(2,4,6:9,11:13,14:15),sliceVars=-c(1,3:4))
 FY11_Discard<-wrangle(FY11_Discard,selVars=c(2,4,6:9,11:13,14:15),sliceVars=-c(1,3:4))
 FY11_ACL<-wrangle(FY11_ACL,selVars=c(2,4,6:9,11:13,14:15),sliceVars=-c(1,3:4))
