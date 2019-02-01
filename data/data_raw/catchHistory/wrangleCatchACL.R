@@ -74,6 +74,25 @@ FY11_Landing<-wrangle(FY11_Landing,selVars=FY11selVars,sliceVars=FY11sliceVars)
 FY11_Discard<-wrangle(FY11_Discard,selVars=FY11selVars,sliceVars=FY11sliceVars)
 FY11_ACL<-wrangle(FY11_ACL,selVars=c(1:ncol(FY11_ACL)),sliceVars=FY11sliceVars)
 FY11_CtoACL<-wrangle(FY11_CtoACL,selVars=FY11selVars,sliceVars=-1)
+
+# 2012
+location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY12_Mults_Catch_Estimates.pdf")
+FY12 <- extract_tables(location,pages=c(2:6),method="lattice")
+# Convert to tibbles
+FY12_Catch<-as_tibble(FY12[[1]])
+FY12_Landing<-as_tibble(FY12[[2]])
+FY12_Discard<-as_tibble(FY12[[3]])
+FY12_ACL<-as_tibble(FY12[[4]])
+FY12_CtoACL<-as_tibble(FY12[[5]])
+# Wrangle
+FY12selVars<-c(2,4,6:9,11:12,14:15)
+FY12sliceVars<- -c(1,3)
+FY12_Catch<-wrangle(FY12_Catch,selVars=FY12selVars,sliceVars=FY12sliceVars)
+FY12_Landing<-wrangle(FY12_Landing,selVars=FY12selVars,sliceVars=FY12sliceVars)
+FY12_Discard<-wrangle(FY12_Discard,selVars=FY12selVars,sliceVars=FY12sliceVars)
+FY12_ACL<-wrangle(FY12_ACL,selVars=FY12selVars,sliceVars=FY12sliceVars)
+FY12_CtoACL<-wrangle(FY12_CtoACL,selVars=FY12selVars,sliceVars=FY12sliceVars)
+
 #2017
 location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY17_Mults_Catch_Estimates.pdf")
 FY17 <- extract_tables(location,pages=c(2:6),method="lattice")
