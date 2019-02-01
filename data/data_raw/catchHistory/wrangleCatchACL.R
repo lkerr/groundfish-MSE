@@ -146,11 +146,11 @@ FY16_Discard<-as_tibble(FY16[[5]])
 # Wrangle
 FY16selVars<-c(2,4,6:9,11:13,15:16)
 FY16sliceVars<- -c(1,3)
-FY16_CtoACL<-wrangle(FY16_CtoACL,sliceVars=FY16sliceVars,year=2015)
-FY16_ACL<-wrangle(FY16_ACL,selVars=c(1:ncol(FY16_ACL)),sliceVars=FY16sliceVars,year=2015)
-FY16_Catch<-wrangle(FY16_Catch,year=2015)
-FY16_Landing<-wrangle(FY16_Landing,year=2015)
-FY16_Discard<-wrangle(FY16_Discard,year=2015)
+FY16_CtoACL<-wrangle(FY16_CtoACL,sliceVars=FY16sliceVars,year=2016)
+FY16_ACL<-wrangle(FY16_ACL,selVars=c(1:ncol(FY16_ACL)),sliceVars=FY16sliceVars,year=2016)
+FY16_Catch<-wrangle(FY16_Catch,year=2016)
+FY16_Landing<-wrangle(FY16_Landing,year=2016)
+FY16_Discard<-wrangle(FY16_Discard,year=2016)
 
 #2017
 location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY17_Mults_Catch_Estimates.pdf")
@@ -162,11 +162,11 @@ FY17_Catch<-as_tibble(FY17[[3]])
 FY17_Landing<-as_tibble(FY17[[4]])
 FY17_Discard<-as_tibble(FY17[[5]])
 # Wrangle
-FY17_CtoACL<-wrangle(FY17_CtoACL,sliceVars=-c(1,3),year=2015)
-FY17_ACL<-wrangle(FY17_ACL,selVars=c(1:ncol(FY17_ACL)),sliceVars=-c(1,3),year=2015)
-FY17_Catch<-wrangle(FY17_Catch,year=2015)
-FY17_Landing<-wrangle(FY17_Landing,year=2015)
-FY17_Discard<-wrangle(FY17_Discard,year=2015)
+FY17_CtoACL<-wrangle(FY17_CtoACL,sliceVars=-c(1,3),year=2017)
+FY17_ACL<-wrangle(FY17_ACL,selVars=c(1:ncol(FY17_ACL)),sliceVars=-c(1,3),year=2017)
+FY17_Catch<-wrangle(FY17_Catch,year=2017)
+FY17_Landing<-wrangle(FY17_Landing,year=2017)
+FY17_Discard<-wrangle(FY17_Discard,year=2017)
 
 ##### Bind annual tables together #####
 
@@ -267,5 +267,5 @@ for(i in 1:length(Tables)){
 }
 catchHist<-bind_rows(Tables)
 
-saveto<- c("C:/Users/jcummings")
-#write.csv(catchHist,saveto)
+saveto<- c("C:/Users/jcummings/Documents/groundfish-MSE")
+write.csv(catchHist,saveto)
