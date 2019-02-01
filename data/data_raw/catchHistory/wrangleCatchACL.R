@@ -17,13 +17,13 @@ library(tidyverse)
 library(purrr)
 
 ##### Functions #####
-wrangle<-function(data,selVars=c(2,4,6:9,11:13,15:16),sliceVars=-c(2)){
+wrangle<-function(data,selVars=c(2,4,6:9,11:13,15:16),sliceVars=-c(2),year=2010){
   data<-data %>%
     select(selVars) %>% 
     slice(sliceVars)
   names(data) <- c("Stock",data[1, 2:ncol(data)])
   data<-data[-1,] %>% 
-    mutate('Year'=2017)
+    mutate('Year'=year)
   data
 }
 
@@ -56,11 +56,11 @@ FY11_CtoACL<-as_tibble(FY11[[5]])
 # Wrangle
 FY11selVars<-c(2,4,6:9,11:12,14:15)
 FY11sliceVars<- -c(1,3)
-FY11_Catch<-wrangle(FY11_Catch,selVars=FY11selVars,sliceVars=FY11sliceVars)
-FY11_Landing<-wrangle(FY11_Landing,selVars=FY11selVars,sliceVars=FY11sliceVars)
-FY11_Discard<-wrangle(FY11_Discard,selVars=FY11selVars,sliceVars=FY11sliceVars)
-FY11_ACL<-wrangle(FY11_ACL,selVars=c(1:ncol(FY11_ACL)),sliceVars=FY11sliceVars)
-FY11_CtoACL<-wrangle(FY11_CtoACL,selVars=FY11selVars,sliceVars=-1)
+FY11_Catch<-wrangle(FY11_Catch,selVars=FY11selVars,sliceVars=FY11sliceVars,year=2011)
+FY11_Landing<-wrangle(FY11_Landing,selVars=FY11selVars,sliceVars=FY11sliceVars,year=2011)
+FY11_Discard<-wrangle(FY11_Discard,selVars=FY11selVars,sliceVars=FY11sliceVars,year=2011)
+FY11_ACL<-wrangle(FY11_ACL,selVars=c(1:ncol(FY11_ACL)),sliceVars=FY11sliceVars,year=2011)
+FY11_CtoACL<-wrangle(FY11_CtoACL,selVars=FY11selVars,sliceVars=-1,year=2011)
 
 # 2012
 location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY12_Mults_Catch_Estimates.pdf")
@@ -74,11 +74,11 @@ FY12_CtoACL<-as_tibble(FY12[[5]])
 # Wrangle
 FY12selVars<-c(2,4,6:9,11:12,14:15)
 FY12sliceVars<- -c(1,3)
-FY12_Catch<-wrangle(FY12_Catch,selVars=FY12selVars,sliceVars=FY12sliceVars)
-FY12_Landing<-wrangle(FY12_Landing,selVars=FY12selVars,sliceVars=FY12sliceVars)
-FY12_Discard<-wrangle(FY12_Discard,selVars=FY12selVars,sliceVars=FY12sliceVars)
-FY12_ACL<-wrangle(FY12_ACL,selVars=FY12selVars,sliceVars=FY12sliceVars)
-FY12_CtoACL<-wrangle(FY12_CtoACL,selVars=FY12selVars,sliceVars=FY12sliceVars)
+FY12_Catch<-wrangle(FY12_Catch,selVars=FY12selVars,sliceVars=FY12sliceVars,year=2012)
+FY12_Landing<-wrangle(FY12_Landing,selVars=FY12selVars,sliceVars=FY12sliceVars,year=2012)
+FY12_Discard<-wrangle(FY12_Discard,selVars=FY12selVars,sliceVars=FY12sliceVars,year=2012)
+FY12_ACL<-wrangle(FY12_ACL,selVars=FY12selVars,sliceVars=FY12sliceVars,year=2012)
+FY12_CtoACL<-wrangle(FY12_CtoACL,selVars=FY12selVars,sliceVars=FY12sliceVars,year=2012)
 
 #2013
 location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY13_Mults_Catch_Estimates.pdf")
@@ -92,11 +92,11 @@ FY13_Discard<-as_tibble(FY13[[5]])
 # Wrangle
 FY13selVars<-c(2,4,6:9,11:13,15:16)
 FY13sliceVars<- -c(1,3)
-FY13_CtoACL<-wrangle(FY13_CtoACL,selVars=FY13selVars,sliceVars=FY13sliceVars)
-FY13_ACL<-wrangle(FY13_ACL,selVars=c(1:ncol(FY13_ACL)),sliceVars=FY13sliceVars)
-FY13_Catch<-wrangle(FY13_Catch)
-FY13_Landing<-wrangle(FY13_Landing)
-FY13_Discard<-wrangle(FY13_Discard)
+FY13_CtoACL<-wrangle(FY13_CtoACL,selVars=FY13selVars,sliceVars=FY13sliceVars,year=2013)
+FY13_ACL<-wrangle(FY13_ACL,selVars=c(1:ncol(FY13_ACL)),sliceVars=FY13sliceVars,year=2013)
+FY13_Catch<-wrangle(FY13_Catch,year=2013)
+FY13_Landing<-wrangle(FY13_Landing,year=2013)
+FY13_Discard<-wrangle(FY13_Discard,year=2013)
 
 #2014
 location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY14_Mults_Catch_Estimates.pdf")
@@ -110,11 +110,11 @@ FY14_Discard<-as_tibble(FY14[[5]])
 # Wrangle
 FY14selVars<-c(2,4,6:9,11:13,15:16)
 FY14sliceVars<- -c(1,3)
-FY14_CtoACL<-wrangle(FY14_CtoACL,sliceVars=FY14sliceVars)
-FY14_ACL<-wrangle(FY14_ACL,selVars=c(1:ncol(FY14_ACL)),sliceVars=FY14sliceVars)
-FY14_Catch<-wrangle(FY14_Catch)
-FY14_Landing<-wrangle(FY14_Landing)
-FY14_Discard<-wrangle(FY14_Discard)
+FY14_CtoACL<-wrangle(FY14_CtoACL,sliceVars=FY14sliceVars,year=2014)
+FY14_ACL<-wrangle(FY14_ACL,selVars=c(1:ncol(FY14_ACL)),sliceVars=FY14sliceVars,year=2014)
+FY14_Catch<-wrangle(FY14_Catch,year=2014)
+FY14_Landing<-wrangle(FY14_Landing,year=2014)
+FY14_Discard<-wrangle(FY14_Discard,year=2014)
 
 #2015
 location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY15_Mults_Catch_Estimates.pdf")
@@ -128,11 +128,11 @@ FY15_Discard<-as_tibble(FY15[[5]])
 # Wrangle
 FY15selVars<-c(2,4,6:9,11:13,15:16)
 FY15sliceVars<- -c(1,3)
-FY15_CtoACL<-wrangle(FY15_CtoACL,sliceVars=FY15sliceVars)
-FY15_ACL<-wrangle(FY15_ACL,selVars=c(1:ncol(FY15_ACL)),sliceVars=FY15sliceVars)
-FY15_Catch<-wrangle(FY15_Catch)
-FY15_Landing<-wrangle(FY15_Landing)
-FY15_Discard<-wrangle(FY15_Discard)
+FY15_CtoACL<-wrangle(FY15_CtoACL,sliceVars=FY15sliceVars,year=2015)
+FY15_ACL<-wrangle(FY15_ACL,selVars=c(1:ncol(FY15_ACL)),sliceVars=FY15sliceVars,year=2015)
+FY15_Catch<-wrangle(FY15_Catch,year=2015)
+FY15_Landing<-wrangle(FY15_Landing,year=2015)
+FY15_Discard<-wrangle(FY15_Discard,year=2015)
 
 #2016
 location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY16_Mults_Catch_Estimates.pdf")
@@ -146,11 +146,11 @@ FY16_Discard<-as_tibble(FY16[[5]])
 # Wrangle
 FY16selVars<-c(2,4,6:9,11:13,15:16)
 FY16sliceVars<- -c(1,3)
-FY16_CtoACL<-wrangle(FY16_CtoACL,sliceVars=FY16sliceVars)
-FY16_ACL<-wrangle(FY16_ACL,selVars=c(1:ncol(FY16_ACL)),sliceVars=FY16sliceVars)
-FY16_Catch<-wrangle(FY16_Catch)
-FY16_Landing<-wrangle(FY16_Landing)
-FY16_Discard<-wrangle(FY16_Discard)
+FY16_CtoACL<-wrangle(FY16_CtoACL,sliceVars=FY16sliceVars,year=2015)
+FY16_ACL<-wrangle(FY16_ACL,selVars=c(1:ncol(FY16_ACL)),sliceVars=FY16sliceVars,year=2015)
+FY16_Catch<-wrangle(FY16_Catch,year=2015)
+FY16_Landing<-wrangle(FY16_Landing,year=2015)
+FY16_Discard<-wrangle(FY16_Discard,year=2015)
 
 #2017
 location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY17_Mults_Catch_Estimates.pdf")
@@ -162,11 +162,11 @@ FY17_Catch<-as_tibble(FY17[[3]])
 FY17_Landing<-as_tibble(FY17[[4]])
 FY17_Discard<-as_tibble(FY17[[5]])
 # Wrangle
-FY17_CtoACL<-wrangle(FY17_CtoACL,sliceVars=-c(1,3))
-FY17_ACL<-wrangle(FY17_ACL,selVars=c(1:ncol(FY17_ACL)),sliceVars=-c(1,3))
-FY17_Catch<-wrangle(FY17_Catch)
-FY17_Landing<-wrangle(FY17_Landing)
-FY17_Discard<-wrangle(FY17_Discard)
+FY17_CtoACL<-wrangle(FY17_CtoACL,sliceVars=-c(1,3),year=2015)
+FY17_ACL<-wrangle(FY17_ACL,selVars=c(1:ncol(FY17_ACL)),sliceVars=-c(1,3),year=2015)
+FY17_Catch<-wrangle(FY17_Catch,year=2015)
+FY17_Landing<-wrangle(FY17_Landing,year=2015)
+FY17_Discard<-wrangle(FY17_Discard,year=2015)
 
 ##### Bind annual tables together #####
 
@@ -266,3 +266,6 @@ for(i in 1:length(Tables)){
   Tables[[i]]<-mutate(Tables[[i]],data_type=lables[i])
 }
 catchHist<-bind_rows(Tables)
+
+saveto<- c("C:/Users/jcummings")
+#write.csv(catchHist,saveto)
