@@ -1,7 +1,6 @@
 
 
-
-species <- 'HADDOCK' 
+species <- 'YELLOWTAIL FLOUNDER' 
 # 'ATLANTIC COD'
 # 'HADDOCK'
 # 'YELLOWTAIL FLOUNDER'
@@ -32,41 +31,27 @@ tdc <- tdc[!is.na(tdc$AGE),]
 names(TAnomRaw)[1] <- 'YEAR'
 dat <- merge(tdc, TAnomRaw)
 
-# birth year
-dat$BYEAR <- dat$YEAR - dat$AGE
 
-sumAnom <- numeric(nrow(dat))
-for(i in 1:nrow(dat)){
-  
-  temp <- dat[i,]
-  iYears <- (temp$YEAR - temp$AGE):temp$YEAR
-  iAnom <- TAnomRaw[TAnomRaw$YEAR %in% iYears,2]
-  
-  # Consider only the temperatures experienced over the first
-  # tempAgeMax years
-  iAnom <- head(iAnom, tempAgeMax+1) # +1 to account for age-0
-  sumAnom[i] <- sum(iAnom)
-  
-}
 
-dat$GDY <- cut(sumAnom, breaks = brks)
+datWt <- subset(dat, YEAR > 1991)
 
-mla <- tapply(X = dat[,type], 
-              INDEX = list(dat$AGE, dat$GDY), 
+mla <- tapply(X = datWt[,type], 
+              INDEX = list(datWt$AGE, datWt$YEAR), 
               FUN = get(fun),
               na.rm = TRUE)
 
 cr <- colorRampPalette(c('cornflowerblue', 'firebrick1'))
 cols <- cr(ncol(mla))
 
-title <- paste0(species, ' (', fun, ') -- ', 'tempAgeMax = ', tempAgeMax)
+title <- paste0(fun, ' WAA: ', species)
 matplot(x=mla, type='l', col=cols, main=title, 
         xlab = 'Age', ylab = type, lty=1, lwd=2)
 
 legnms <- sapply(1:(length(brks)-1), function(i){
   paste(brks[i], 'to', brks[i+1])})
-legend('bottomright', lty=1, lwd=3, col=cols, legend=legnms,
-       ncol=2, cex=0.75, title='GDYAnomaly')
+legend('topleft', lty=1, lwd=3, col=c(cols[1], tail(cols, 1)), 
+       legend=range(datWt$YEAR),
+       ncol=2, cex=0.75, title='Year')
 
 
 
