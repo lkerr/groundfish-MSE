@@ -19,9 +19,6 @@ library(purrr)
 ##### Functions #####
 removeCommas<- function(table) {gsub(",", "", table, fixed = TRUE)}
 
-# tabWithoutCommas <- apply(Catch, 2, removeCommas)
-# map(Catch,removeCommas)
-
 wrangle<-function(data,selVars=c(2,4,6:9,11:13,15:16),sliceVars=-c(2),year=2010){
   data<-data %>%
     select(selVars) %>% 
