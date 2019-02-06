@@ -17,6 +17,8 @@ library(tidyverse)
 library(purrr)
 
 ##### Functions #####
+removeCommas<- function(table) {gsub(",", "", table, fixed = TRUE)}
+
 wrangle<-function(data,selVars=c(2,4,6:9,11:13,15:16),sliceVars=-c(2),year=2010){
   data<-data %>%
     select(selVars) %>% 
@@ -24,6 +26,7 @@ wrangle<-function(data,selVars=c(2,4,6:9,11:13,15:16),sliceVars=-c(2),year=2010)
   names(data) <- c("Stock",data[1, 2:ncol(data)])
   data<-data[-1,] %>% 
     mutate('Year'=year)
+  data<-map(data,removeCommas)
   data
 }
 
