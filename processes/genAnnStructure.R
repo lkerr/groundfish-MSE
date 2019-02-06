@@ -19,10 +19,9 @@ cmip_dwn <- get_temperatureProj(prj_data = cmip_base,
                                 ref_yrs = c(ref0, ref1))
 
 # Get the temperature vector
-baseTempYear <- 1985
 msyears <- cmip_dwn$YEAR < baseTempYear
 if(useTemp == TRUE){
-  temp <- c(rep(median(cmip_dwn[msyears,'T']), nburn),
+  temp <- c(rep(anomFun(cmip_dwn[msyears,'T']), nburn),
             cmip_dwn[,'T'])
   
   # Simple temperature trend for debugging -- smooth the data
