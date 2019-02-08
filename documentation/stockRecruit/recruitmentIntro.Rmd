@@ -1,0 +1,101 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+
+
+
+# Documentation analyses leading to operating model stock-recruit function parameters
+
+This document is common to each of the stock-recruit models that are fit. See the individual documentation files for the results of each model.
+
+## Introduction and premise
+
+The stocks discussed are:
+
+* Cod  
+* Haddock  
+* Pollock  
+* Yellowtail  
+
+The models are fit in Template Model Builder. They could be fit in R using ```optim()``` but template model builder makes it easy to turn some parameter estimates on and off without re-building the model.
+
+## Methods
+
+### Data
+Read in the stock and recruitment data. These are organized in a single file and the source of the data (e.g., SAW55) are included. Stock size and recruits are in the same year so for the analysis the data will need to be offset (i.e., age-1 recruitment in 2014 should be a function of SSB in 2013). Note that the working directory of this document is the file location hence the need for the '../' at the start of the file path. Possibly the best way to do this would be adaptively within the stock recruitment function -- that way the number of years to offset could be generalized but this is a little clearer.
+
+```{r}
+rec <- read.csv(file='data/data_raw/recruitment/codHadPolYTFCompiled.csv',
+         header=TRUE)
+head(rec)
+```
+
+Annual temperature anomaly data are also required. See the documentation function **tempAnomaly** for more information on how the anomaly data are calculated
+
+```{r}
+TAnom <- read.csv('data/data_processed/TAnom.csv', header=TRUE)
+head(TAnom)
+```
+
+Combine the recruitment and temperature data into a single data frame
+
+```{r}
+recT <- merge(TAnom, rec)
+```
+
+```{r, echo=FALSE, result='hide'}
+# Output the recT data frame to be used in each of the stock analyses
+write.csv(recT, file='documentation/stockRecruit/data/recT.csv', 
+          row.names=FALSE)
+```
+
+### Analysis
+For simplicity and to ensure that all the data are treated in the same way a function was created to prep the data for analysis.
+
+
+```{r comment='', echo=FALSE}
+cat(readLines('documentation/stockRecruit/functions/get_SRDat.R'), sep='\n')
+```
+
+To ensure this is doing what we want let's look at the start of both versions of the data files
+
+```{r}
+cod0 <- subset(rec, STOCK == 'GBCOD')
+cod1 <- get_SRDat(recDat = recT, stock = 'GBCOD')
+print(head(cod0))
+print(head(cod1))
+```
+
+Above you can see that in the original file cod SSB is inline with the recruitment value 29399 but in the updated version it is inline with 27836.
+
+
+#### Modeling the data
+TMB requires two files:
+
+* A control file that specifies starting values, parameter bounds etc. and also reads in the model results; and
+* A c++ file (.cpp) that contains the actual model itself.
+
+This description will first go through the TMB model (i.e., the c++ file) and then work through the R code in the control (.r) file.
+
+#### The TMB code
+Below is the TMB code from the file **documentation/sr.cpp**
+
+```{r comment='', echo=FALSE}
+cat(readLines('documentation/stockRecruit/sr.cpp'), sep='\n')
+```
+
+
+### Generating a reuseable function for stock-recruit code
+To make things a little more straightforward when running the analysis on three separate stocks, a function is listed below that acccepts input values for each stock, runs the model, and provides outputs. The actual R code that specifies this function can be found in **documentation/stockRecruit/functions/srRun.R**.
+
+```{r comment='', echo=FALSE}
+cat(readLines('documentation/stockRecruit/functions/srRun.R'), sep='\n')
+```
+
+
+
+
+
+

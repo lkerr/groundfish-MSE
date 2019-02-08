@@ -1,0 +1,82 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r, echo=FALSE, results='hide'}
+# Install the necessary functions
+ffiles <- list.files(path='documentation/stockRecruit/functions', 
+                     full.names=TRUE, recursive=TRUE)
+invisible(sapply(ffiles, source))
+```
+
+# Analysis of Cod stock-recruit data
+
+Read in the data. The appropriate stock will be selected below in the model function.
+```{r}
+recT <- read.csv(file='documentation/stockRecruit/data/recT.csv', 
+                 header=TRUE)
+```
+
+#### Cod model parameters
+```{r, results = 'hide'}
+
+# Parameters for the cod model
+codPar <- list(recDat = recT,
+               stock = 'GBCOD',
+            
+               start = list(log_a = -1.021315,
+                            log_b = 1,
+                            c = 0,
+                            log_sigR = log(1)),
+            
+               lb = c(log_a = -10,
+                      log_b = -10,
+                      c = -10,
+                      log_sigR = -10),
+            
+               ub = c(log_a = 20,
+                      log_b = 20,
+                      c = 10,
+                      log_sigR = log(10)),
+            
+               estPar = c(1, 1, 1, 1))
+
+```
+
+#### Run the model
+```{r, results = 'hide'}
+rep <- do.call(srRun, codPar)
+```
+
+## Results
+
+### S/R model fit
+Below is plotted the model fit with data at median temperature anomaly
+
+```{r}
+plotBH(rep)
+```
+
+
+### Diagnostics
+The gradients for each of the parameters is given below. Ideally they should all be small -- something on the order of 1x10^-5^. Certainly not larger than 1.0.
+```{r, echo=FALSE}
+pnames <- names(rep$sdrep$value)
+grads <- c(rep$sdrep$gradient.fixed)
+names(grads) <- pnames
+print(grads)
+```
+
+
+The parameters should not be near the bounds specified by the variables **lb** and **ub**. The plot below shows the parameter values relative to these bounds.
+
+
+
+
+
+
+
+
+
