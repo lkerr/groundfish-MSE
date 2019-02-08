@@ -32,10 +32,10 @@ if(useTemp == TRUE){
     temp <- predict(lo)
   }
   
-  anomStd <- median(cmip_dwn[msyears,'T'])  # anomoly standard
+  anomStd <- anomFun(cmip_dwn[msyears,'T'])  # anomoly standard
   Tanom <- temp - anomStd
 }else{
-  temp <- rep(median(cmip_dwn[msyears,'T']), nburn + nrow(cmip_dwn))
+  temp <- rep(anomFun(cmip_dwn[msyears,'T']), nburn + nrow(cmip_dwn))
   Tanom <- rep(0, nburn + nrow(cmip_dwn))
 }
 
