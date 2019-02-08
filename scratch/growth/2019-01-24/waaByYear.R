@@ -54,7 +54,42 @@ legend('topleft', lty=1, lwd=3, col=c(cols[1], tail(cols, 1)),
        ncol=2, cex=0.75, title='Year')
 
 
+yrs <- unique(datWt$YEAR)
+lwpar_list <- list()
+newL <- seq(from = min(datWt$LENGTH), 
+            to = max(datWt$LENGTH), 
+            by = 1)
+newW_list <- list()
+
+for(i in 1:length(yrs)){
+  
+  temp <- subset(datWt, YEAR == yrs[i])
+  lwmod <- nls(INDWT ~ a * LENGTH^b, 
+               data = temp, 
+               start = c(a=0.00001, b=3))
+  cmod <- coef(lwmod)
+  lwpar_list[[i]] <- cmod
+  
+  newW_list[[i]] <- cmod['a'] * newL ^ cmod['b']
+}
+lwpar <- do.call(rbind, lwpar_list)
+newW <- do.call(rbind, newW_list)
 
 
+cr <- colorRampPalette(c('cornflowerblue', 'firebrick1'))
+cols <- cr(nrow(newW))
 
+matplot(x = newL,
+        y = t(newW),
+        col = cols,
+        lty = 1,
+        lwd = 2,
+        type = 'l',
+        xlab = 'Length',
+        ylab = 'Weight',
+        las = 1,
+        main = species)
 
+legend('topleft', lty=1, lwd=3, col=c(cols[1], tail(cols, 1)), 
+       legend=range(datWt$YEAR),
+       ncol=2, cex=1.25, title='Year')
