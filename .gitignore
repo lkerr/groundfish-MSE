@@ -3,6 +3,7 @@
 *.RData
 *.Ruserdata
 /background/*
+/manuscripts/*
 /cocaSharedFiles/*
 /function_tests/*
 /literature/*
@@ -27,3 +28,5 @@ data/data_raw/*
 /documentation/old*
 /documentation/.ipynb_checkpoints
 *.url
+*.pdf
+*.tex
