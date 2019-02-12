@@ -78,7 +78,7 @@ Just like gcc, you have to tell the HPCC that you are going to want to use R bef
                       lib='~/COCA_HPCC/Rlib/',
                       repos='http://cran.us.r-project.org')
    ```
-The **~** in the function call under ```lib='~/COCA_HPCC/Rlib/``` refers to your home directory on the HPCC.  The folder I have in the next level from my home directory is called **COCA_HPCC**.  I already have a folder called **groundfish-MSE** (you'll have that after you run the code -- see **hpccUMASS_runMSE.md** when you're done here) and the folders that are in my home  look something like:
+The **~** in the function call under ```lib='~/COCA_HPCC/Rlib/``` refers to your home directory on the HPCC.  The folder I have in the next level from my home directory is called **COCA_HPCC**.  I already have a folder called **groundfish-MSE** (you'll have that after you run the code -- see **hpccUMASS_runMSE.md** when you're done here) and the folders that are in my home directory look something like:
 
 *  ~/COCA_HPCC/groundfish-MSE
 *  ~/COCA_HPCC/Rlib
