@@ -1,0 +1,6 @@
+
+
+
+TAnom <- read.csv('data/data_processed/TAnom.csv', header=TRUE)
+
+
