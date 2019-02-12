@@ -49,10 +49,10 @@
 
 
 get_proj <- function(parmgt, parpop, parenv, Rfun,
-                     F_val, stReportYr, ny, ...){
+                     F_val, stReportYr, ny=200, ...){
 
   if(ny > (max(parenv$yrs_temp) - parenv$yrs_temp[y]) & 
-     Rfun == 'forecast'){
+     parmgt['RFUN_NM'] == 'forecast'){
     stop(paste('get_proj: please set parmgt$BREF_PAR0 to a smaller',
                'number of years -- the cmip temperature series does not',
                'predict far enough for the outlook you set ... the',
@@ -132,13 +132,13 @@ get_proj <- function(parmgt, parpop, parenv, Rfun,
     ## Recruitment
     
     # sd of historical R estimates
-    sdR <- sd(get_LMdevs(Rest)$lLMdevs)
-    
+
     N[y,1] <- Rfun(parpop = parpop, 
                    parenv = parenv, 
                    SSB = c(N[y-1,]) %*% c(parpop$waa),
                    sdR = sdR,
-                   TAnom = TAnomPMean)
+                   TAnom = TAnomPMean,
+                   Rest = Rest)
 
   }
 

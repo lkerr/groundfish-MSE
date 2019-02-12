@@ -29,11 +29,11 @@ Rfun_BmsySim <- list(
     return(gr[['Rhat']])
     },
   
-  hindcastMean = function(...){
+  hindcastMean = function(Rest, ...){
     mean(Rest)
   },
 
-  hindcastSample = function(...){
+  hindcastSample = function(Rest, ...){
     sample(Rest, 1)
   }
   
