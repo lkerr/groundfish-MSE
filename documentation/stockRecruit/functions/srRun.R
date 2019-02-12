@@ -3,7 +3,7 @@
 srRun <- function(recDat, stock, start, lb, ub, estPar){
   
   # load the TMB package
-  require(TMB)
+  invisible(library(TMB))
   
   # Adjust the system path to make sure that R finds the correct compiler
   path0 <- Sys.getenv('PATH')
@@ -50,7 +50,11 @@ srRun <- function(recDat, stock, start, lb, ub, estPar){
   
   estPar[estPar == 0] <- NA
   map_par <- as.list(estPar[is.na(estPar)])
-  
+  map_par <- lapply(map_par, as.factor)
+  # for(i in 1:length(map_par)){
+  #   map_par[[i]] <- as.factor(map_par[[i]])
+  # }
+# browser()
   obj <- MakeADFun(data = data,
                    parameters = parameters,
                    DLL = "sr",
@@ -64,11 +68,15 @@ srRun <- function(recDat, stock, start, lb, ub, estPar){
                 gradient = obj$gr, 
                 lower = lb[active_idx], 
                 upper = ub[active_idx])
-  
+ 
   # Generate the sdreport file
   sdrep <- sdreport(obj)
   rep <- obj$report()
   rep$sdrep <- sdrep
+  rep$lb <- lb
+  rep$ub <- ub
+  rep$start <- start
+  rep$estPar <- estPar
   
   return(rep)
 }

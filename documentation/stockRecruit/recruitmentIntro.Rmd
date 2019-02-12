@@ -4,7 +4,12 @@ output:
   pdf_document: default
 ---
 
-
+```{r, echo=FALSE, result='hide'}
+# Install the necessary functions
+ffiles <- list.files(path='documentation/stockRecruit/functions', 
+                     full.names=TRUE, recursive=TRUE)
+invisible(sapply(ffiles, source))
+```
 
 # Documentation analyses leading to operating model stock-recruit function parameters
 
@@ -24,7 +29,7 @@ The models are fit in Template Model Builder. They could be fit in R using ```op
 ## Methods
 
 ### Data
-Read in the stock and recruitment data. These are organized in a single file and the source of the data (e.g., SAW55) are included. Stock size and recruits are in the same year so for the analysis the data will need to be offset (i.e., age-1 recruitment in 2014 should be a function of SSB in 2013). Note that the working directory of this document is the file location hence the need for the '../' at the start of the file path. Possibly the best way to do this would be adaptively within the stock recruitment function -- that way the number of years to offset could be generalized but this is a little clearer.
+Read in the stock and recruitment data. These are organized in a single file and the source of the data (e.g., SAW55) are included. Stock size and recruits are in the same year so for the analysis the data will need to be offset (i.e., age-1 recruitment in 2014 should be a function of SSB in 2013).
 
 ```{r}
 rec <- read.csv(file='data/data_raw/recruitment/codHadPolYTFCompiled.csv',
@@ -59,7 +64,7 @@ For simplicity and to ensure that all the data are treated in the same way a fun
 cat(readLines('documentation/stockRecruit/functions/get_SRDat.R'), sep='\n')
 ```
 
-To ensure this is doing what we want let's look at the start of both versions of the data files
+In the function above the records are offset to make sure that the stock and recruits are aligned appropriately. Possibly the best way to do this would be adaptively within the stock recruitment function -- that way the number of years to offset could be generalized but this is a little clearer. To ensure this is doing what we want let's look at the start of both versions of the data files
 
 ```{r}
 cod0 <- subset(rec, STOCK == 'GBCOD')
@@ -88,7 +93,7 @@ cat(readLines('documentation/stockRecruit/sr.cpp'), sep='\n')
 
 
 ### Generating a reuseable function for stock-recruit code
-To make things a little more straightforward when running the analysis on three separate stocks, a function is listed below that acccepts input values for each stock, runs the model, and provides outputs. The actual R code that specifies this function can be found in **documentation/stockRecruit/functions/srRun.R**.
+To make things a little more straightforward when running the analysis on four separate stocks, a function is listed below that acccepts input values for each stock, runs the model, and provides outputs. The actual R code that specifies this function can be found in **documentation/stockRecruit/functions/srRun.R**.
 
 ```{r comment='', echo=FALSE}
 cat(readLines('documentation/stockRecruit/functions/srRun.R'), sep='\n')
