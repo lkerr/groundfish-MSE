@@ -49,15 +49,17 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
     # the list Rfun_BmsySim which is created in the processes folder.
     Rfun <- Rfun_BmsySim[[parmgt$RFUN_NM]]
     
+    
+    
     candF <- seq(from=0, to=2, by=0.025)
    
     sumCW <- sapply(1:length(candF), function(x){
                     get_proj(parmgt = parmgt, 
                              parpop = parpop, 
                              parenv = parenv, 
-                             Rfun = Rfun, 
+                             Rfun = Rfun,
                              F_val = candF[x],
-                             ny = parmgt$FREF_PAR0,
+                             ny = 200,
                              stReportYr = 2)$sumCW})
     
     meanSumCW <- apply(sumCW, 2, mean)
