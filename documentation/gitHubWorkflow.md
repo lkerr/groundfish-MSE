@@ -6,7 +6,7 @@ The purpose of this document is to describe the intended workflow for updates to
 
 ## Branches
 
-* **Master**: The master branch. Ideally this branch will always be able to run with the available options in **mproc.txt**. Before other branches are merged into master they have been reviewed by one or more people other than the author and thoroughly tested both on both a local machine and on the HPCC. Merges to Master should come from the Dev branch rather than directly from feature branches.
+* **Master**: The master branch. Ideally this branch will always be able to run with the available options in **mproc.txt**. Before other branches are merged into **Master** they have been reviewed by one or more people other than the author and thoroughly tested both on both a local machine and on the HPCC. Merges to **Master** should come from the **Dev** branch rather than directly from feature branches.
 
   * *exception*: Small edits to the documentation are less critical -- it seems reasonable that these can be committed to the Master branch directly. Large changes to the documentation, like new files, could benefit from review however.
 
