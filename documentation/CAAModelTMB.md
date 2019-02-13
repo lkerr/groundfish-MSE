@@ -52,5 +52,3 @@ Sys.setenv(PATH=path1)
 This will update your environmental variables for the current session so that the first compiler TMB will encounter will be the correct one from RTools.
 
 [Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
-
-tempTest
