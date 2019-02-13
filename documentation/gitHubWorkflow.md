@@ -23,7 +23,7 @@ The purpose of this document is to describe the intended workflow for updates to
 
   * Large changes that don't have to do with testing are ideally not submitted directly to the **Dev** branch. Instead they should be submitted to a feature branch.
 
-  Note that **Dev** (and any other branch) can be run directly from the HPCC by updating the syntax in **runPre.sh** (see [groundfish-MSE/documentation/runMSE.md](../../documentation/runMSE.md)).
+  Note that **Dev** (and any other branch) can be run directly from the HPCC by updating the syntax in **runPre.sh** (see [groundfish-MSE/documentation/runMSE.md](runMSE.md)).
 
 * **Feature branches**: Named branches that represent substantial changes to the code. Before merging a feature branch into the Dev branch the code should be tested both on a local machine and on the HPCC and reviewed by someone else. The framework for the review should be through a pull request.
 
