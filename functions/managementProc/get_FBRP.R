@@ -54,7 +54,8 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
     candF <- seq(from=0, to=2, by=0.025)
    
     sumCW <- sapply(1:length(candF), function(x){
-                    get_proj(parmgt = parmgt, 
+                    get_proj(type = 'FREF',
+                             parmgt = parmgt, 
                              parpop = parpop, 
                              parenv = parenv, 
                              Rfun = Rfun,

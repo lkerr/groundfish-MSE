@@ -56,7 +56,7 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     out <- list(RPvalue = B)
     
   }else if(parmgt$BREF_TYP == 'SIM'){
-    
+   
     # Load in the recruitment function (recruitment function index is
     # found in the parmgt data frame but the actual functions are from
     # the list Rfun_BmsySim which is created in the processes folder.
@@ -69,7 +69,8 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     # Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop, 
                       # parenv = parenv, Rfun_lst = Rfun_lst)
 
-    SSB <- get_proj(parmgt = parmgt, parpop = parpop, parenv = parenv, 
+    SSB <- get_proj(type = 'BREF', parmgt = parmgt, parpop = parpop, 
+                    parenv = parenv, 
                     Rfun = Rfun, F_val = FBRP,
                     ny = 200,
                     stReportYear = 2)$SSB

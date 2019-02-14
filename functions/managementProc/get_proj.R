@@ -48,9 +48,18 @@
 
 
 
-get_proj <- function(parmgt, parpop, parenv, Rfun,
+get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                      F_val, stReportYr, ny=200, ...){
 
+  
+  if(type == 'FREF'){
+    start <- parmgt$FREF_PAR0
+    end <- parmgt$FREF_PAR1
+  }else if(type == 'BREF'){
+    start <- parmgt$BREF_PAR0
+    end <- parmgt$BREF_PAR1
+  }
+  
   if(ny > (max(parenv$yrs_temp) - parenv$yrs_temp[y]) & 
      parmgt['RFUN_NM'] == 'forecast'){
     stop(paste('get_proj: please set parmgt$BREF_PAR0 to a smaller',
@@ -88,17 +97,17 @@ get_proj <- function(parmgt, parpop, parenv, Rfun,
   
   # historical R estimates over the time window specified in mproc.txt
   Rest <- get_dwindow(parpop$R, 
-                      start = unlist(nR- (-parmgt['FREF_PAR0']) + 1), 
-                      end = unlist(nR - (-parmgt['FREF_PAR1']) + 1))
+                      start = unlist(nR- (-start) + 1), 
+                      end = unlist(nR - (-end) + 1))
   # variance of historical R estimates
   RestV <- var(Rest)
   
   # Calculate the average temperature to use in forward projections
   TAnomP <- get_dwindow(parenv$Tanom,
                         starty = parenv$y + 
-                                 unlist(parmgt['FREF_PAR0']),
+                                 unlist(start),
                         endy = parenv$y + 
-                               unlist(parmgt['FREF_PAR1']))
+                               unlist(end))
   TAnomPMean <- mean(TAnomP)
   
   
