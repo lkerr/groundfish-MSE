@@ -25,12 +25,12 @@ Type objective_function<Type>::operator() ()
   PARAMETER(t0);
   PARAMETER(log_sig);
     Type sig = exp(log_sig);
-  PARAMETER(log_beta1);
-    Type beta1 = exp(log_beta1);
-  PARAMETER(log_beta2);
-    Type beta2 = exp(log_beta2)
+  PARAMETER(beta1);
+    // Type beta1 = exp(log_beta1);
+  PARAMETER(beta2);
+    // Type beta2 = exp(log_beta2);
 
-
+    
   // Containers
   vector<Type> Lhat(n);
   Type NLL = 0;
@@ -39,15 +39,14 @@ Type objective_function<Type>::operator() ()
  
   // Model
   for(int i=0; i<n; i++){
-    Lhat(i) = (Linf + beta1 * T(i)) * 
-              (1 - exp(-(K + beta2 * T(i)) * (A(i) - t0)));
+    Lhat(i) = (Linf + beta1 * T(i) ) *
+              (1 - exp(-(K + beta2 * T(i) ) * (A(i) - t0)));
+    // Lhat(i) = Linf * (1 - exp(-K * (A(i) - t0)) );
   }
 
   // // negative log likelihood
   for(int i=0; i<n; i++){
 
-    // NLL -= dnorm(log(L(i) + 0.0001),
-                 // log(Lhat(i) + 0.0001), sig, true);
     NLL -= dnorm(log(L(i)) + 0.00001, 
                  log(Lhat(i)) + 0.00001, sig, true);
     

@@ -3,7 +3,7 @@
 
 TAnomType <- 'gdy' # 'gdy' or 'point'
 
-tempAgeMax <- 5 # care about temp through this age
+tempAgeMax <- 2 # care about temp through this age
 
 
 path0 <- Sys.getenv('PATH')
@@ -57,7 +57,7 @@ require(TMB)
 
 # compile the c++ file and make available to R
 compile("documentation/growth/growthScratch/growthTemp.cpp")
-dyn.load(dynlib("documentation/growth/growthScratch/simplegrowth"))
+dyn.load(dynlib("documentation/growth/growthScratch/growthTemp"))
 
 if(TAnomType == 'gdy'){
   runT <- datSub$sumAnom
@@ -68,31 +68,31 @@ if(TAnomType == 'gdy'){
 }
 
 datMod <- list(n = nrow(datSub),
-               T = datSub$sumAnom,
+               T = runT,
                A = datSub$AGE,
                L = datSub$LENGTH)
 
-parameters <- list(log_Linf = 4.895, 
-                   log_K = -1.984,
-                   t0 = 0.101,
-                   log_sig = -1,
-                   log_beta1 = 1,
-                   log_beta2 = 1)
+parameters <- list(log_Linf = log(130), 
+                   log_K = log(0.2),
+                   t0 = 0,
+                   log_sig = log(0.2),
+                   beta1 = 0,
+                   beta2 = 0)
 
 # Set parameter bounds
-lb <- list(log_Linf = log(80), 
-           log_K = 0.05,
-           t0 = -2,
+lb <- list(log_Linf = log(30), 
+           log_K = log(0.00001),
+           t0 = -5,
            log_sig = log(0.00001),
-           log_beta1 = -5,
-           log_beta2 = 5)
+           beta1 = -30,
+           beta2 = -10)
 
 ub <- list(log_Linf = log(200), 
-           log_K = log(0.3),
-           t0 = 2,
-           log_sig = -0.5,
-           log_beta1 = 1.5,
-           log_beta2 = 5)
+           log_K = log(1),
+           t0 = 5,
+           log_sig = log(10),
+           beta1 = 10,
+           beta2 = 10)
 
 
 map_par <- list(
@@ -100,16 +100,16 @@ map_par <- list(
   # log_K = factor(NA),
   # t0 = factor(NA),
   # log_sig = factor(NA),
-  # log_beta1 = factor(NA),
-  # log_beta2 = factor(NA)
+  # beta1 = factor(NA)
+  beta2 = factor(NA)
 )
 
 
 
 # make an objective function
-obj <- MakeADFun(data = data,
+obj <- MakeADFun(data = datMod,
                  parameters = parameters,
-                 DLL = "simplegrowth",
+                 DLL = "growthTemp",
                  map = map_par
 )
 
@@ -124,11 +124,11 @@ active_idx <- !names(lb) %in% names(map_par)
 
 
 # run the model using the R function nlminb()
-opt <- nlminb(start=obj$par,
-              objective=obj$fn,
-              gradient=obj$gr,
-              lower=unlist(lb[active_idx]),
-              upper=unlist(ub[active_idx]))
+opt <- nlminb(start = obj$par,
+              objective = obj$fn,
+              gradient = obj$gr,
+              lower = unlist(lb[active_idx]),
+              upper = unlist(ub[active_idx]))
 
 
 
@@ -139,7 +139,92 @@ sdrep <- sdreport(obj)
 # list of variables exported using REPORT() function in c++ code
 rep <- obj$report()
 
+AICk <- length(sdrep$par.fixed)
+AIC <- 2 * AICk - 2 * log(-rep$NLL)
+
+relE <- mean((rep$L - rep$Lhat) / rep$Lhat)
+slp <- coef(lm(rep$Lhat ~ rep$L))[2]
 
 
 
+##############
+##############
+##############
+##############
+
+gplot <- function(Linf, K, t0, dat){
+  
+  plot(dat$L ~ dat$A, col='gray', pch=16, cex=0.5)
+  
+  newx <- seq(0, max(datMod$A), length.out = 100)
+  pred <- sapply(1:length(Linf),
+                 function(x){
+                   Linf[x] * (1-exp(-K[x]*(newx-t0[x])))
+                 })
+  
+  matlines(newx, pred, col=1:length(Linf), lty=1, lwd=c(5,3))
+  
+}
+
+# Compare GDY M2 with point M3 -- assuming avg temperature
+gplot(Linf = c(exp(4.81), exp(4.77)),
+      K = c(exp(-1.73), exp(-1.70)),
+      t0 = c(-0.43, -0.52),
+      dat = datMod)
+
+
+
+
+# Assuming "best" point model (M3 ... affects K) what is the 
+# behavior over different temperature anomalies
+
+gplotT <- function(par, f, TAnom){
+  
+  age <- 0:15
+  pred <- sapply(1:length(TAnom),
+                 function(x){
+                   f(par, age, TAnom[x])
+                 })
+  
+  matplot(age, pred, col=1:length(TAnom), lwd=3, type='l', lty=1)
+  legend('topleft',
+         legend = TAnom,
+         lty = 1,
+         lwd = 3,
+         col = 1:length(TAnom),
+         title = 'Anomaly',
+         bty = 'n',
+         cex = 0.75)
+  
+}
+
+
+f1 <- function(par, age, TAnom){
+  pL <- (par$Linf + par$beta1 * TAnom ) * (1 - exp(-par$K * (age - par$t0)))
+  return(pL)
+}
+
+f2 <- function(par, age, TAnom){
+  pL <- par$Linf * (1 - exp(-(par$K + par$beta2 * TAnom) * (age - par$t0)))
+  return(pL)
+}
+
+ta <- (-2):2
+
+# Predicted values for point Model 3 (affects K) over different anomalies
+gplotT(par = list(Linf = exp(4.79),
+                  K = exp(-1.70),
+                  t0 = -0.52,
+                  beta2 = -0.026),
+       f = f2,
+       TAnom = ta)
+
+
+# Predicted values for gdy Model 2 (affects Linf) over different anomalies
+gplotT(par = list(Linf = exp(4.81),
+                  K = exp(-1.73),
+                  t0 = -0.43,
+                  beta1 = -3.48),
+       f = f1,
+       TAnom = ta)
 
