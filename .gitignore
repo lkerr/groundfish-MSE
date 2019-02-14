@@ -18,10 +18,7 @@ data/data_raw/*
 *.o
 *.so
 /results/*
-/*.o
-/*.dll
 /processes/mproc_all.txt
-*.JPG
 *.pptx
 *.docx
 .Rproj.user
