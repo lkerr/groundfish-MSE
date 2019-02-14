@@ -3,7 +3,10 @@
 ## ---- SIMULATION PARAMETERS ---- ##
 
 
-#### Debugging ####
+#### Testing and Debugging ####
+
+# Use testing version of mproc?
+useMprocTest <- TRUE
 
 # Debug? (windows only for now...)
 debugSink <- FALSE
