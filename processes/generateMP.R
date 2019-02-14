@@ -66,7 +66,7 @@ mproc <- subset(mproc, HCR =='slide')
 mproc <- read.table('processes/mproc.txt', header=TRUE,
                     stringsAsFactors=FALSE)
 
-mprocTest <- read.table('processes/mproc.txt', header=TRUE,
+mprocTest <- read.table('processes/mprocTest.txt', header=TRUE,
                         stringsAsFactors=FALSE)
 
 if(useMprocTest){

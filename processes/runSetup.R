@@ -19,12 +19,12 @@ source('processes/get_runinfo.R')
 # load the required libraries
 source('processes/loadLibs.R')
 
-# load the list of management procedures
-source('processes/generateMP.R')
-
 # get the operating model parameters
 source('processes/set_om_parameters.R')
 nage <- length(fage:page)
+
+# load the list of management procedures
+source('processes/generateMP.R')
 
 source('processes/genAnnStructure.R')
 
