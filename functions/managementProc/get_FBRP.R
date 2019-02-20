@@ -64,7 +64,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
                               ny = 200,
                               stReportYr = 2)})
     
-    sumCW <- do.call(cbind, sapply(x, '[', 'sumCW'))
+    sumCW <- do.call(cbind, sapply(simAtF, '[', 'sumCW'))
    
     meanSumCW <- apply(sumCW, 2, mean)
     Fmsy <- candF[which.max(meanSumCW)]
