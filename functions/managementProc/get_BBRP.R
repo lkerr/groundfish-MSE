@@ -72,7 +72,7 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     SSB <- get_proj(type = 'BREF', parmgt = parmgt, parpop = parpop, 
                     parenv = parenv, 
                     Rfun = Rfun, F_val = FBRP,
-                    ny = 200,
+                    ny = 200, # only will be relevant for hindcast version
                     stReportYear = 2)$SSB
     
     SSBvalue <- distillBmsy(SSB)

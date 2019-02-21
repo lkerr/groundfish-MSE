@@ -35,39 +35,115 @@
 
 get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
   
+  # Load in the recruitment function (recruitment function index is
+  # found in the parmgt data frame but the actual functions are from
+  # the list Rfun_BmsySim which is created in the processes folder.
+  # Necessary for any forecast simulation-based approaches.
+  Rfun <- Rfun_BmsySim[[parmgt$RFUN_NM]]
   
   if(parmgt$FREF_TYP == 'YPR' | parmgt$FREF_TYP == 'SPR'){
    
     F <- get_perRecruit(parmgt = parmgt, parpop = parpop)$RPvalue
+    
+    # If using a per-recruit F-based reference point paired with a forecast
+    # simulation B-based reference point you will need an starting-point
+    # for the simulation -- calcaulte this assuming fishing at the F-based
+    # reference point.
+    if(parmgt$BREF_TYP == 'SIM' & parmgt$RFUN_NM == 'forecast'){
+      
+      # have to use the temporal window set up for the biomass reference
+      # point so come up with a dummy parmgt
+      parmgtTemp <- parmgt
+      parmgtTemp$FREF_PAR0 <- parmgtTemp$BREF_PAR0
+      parmgtTemp$FREF_PAR1 <- parmgtTemp$BREF_PAR1
+     
+      simAtF <- get_proj(type = 'FREF',
+                 parmgt = parmgtTemp, 
+                 parpop = parpop, 
+                 parenv = parenv, 
+                 Rfun = Rfun,
+                 F_val = F,
+                 ny = 200,
+                 stReportYr = 2)
   
-    return(list(RPvalue = F))
+      # Extract the equilibrium population for use in forecasts for
+      # Fmsy forecast calculations and for output for Bmsy forecast
+      # calculations
+      
+      equiJ1N <- simAtF$J1N
+    }else{
+      equiJ1N <- NULL
+    }
+    
+  
+    return(list(RPvalue = F, equiJ1N = equiJ1N))
     
   }else if(parmgt$FREF_TYP == 'FmsySim'){
     
-    # Load in the recruitment function (recruitment function index is
-    # found in the parmgt data frame but the actual functions are from
-    # the list Rfun_BmsySim which is created in the processes folder.
-    Rfun <- Rfun_BmsySim[[parmgt$RFUN_NM]]
-    
-    
-    
     candF <- seq(from=0, to=2, by=0.025)
 
-
+    # Edit the environmental parameters for the initial run so that
+    # the temperature is always the current temperature. Important for
+    # temperature-based BRP projections but will not make a difference
+    # for hindcast projections. Temperature is length 1 -- the length
+    # of the temperature anomaly is tested in get_proj.
+    parenvTemp <- parenv
+    parenvTemp$Tanom <- rep(parenv$Tanom[parenv$y],
+                            times = length(parenv$Tanom))
+ 
     simAtF <- lapply(1:length(candF), function(x){
                      get_proj(type = 'FREF',
                               parmgt = parmgt, 
                               parpop = parpop, 
-                              parenv = parenv, 
+                              parenv = parenvTemp, 
                               Rfun = Rfun,
                               F_val = candF[x],
                               ny = 200,
                               stReportYr = 2)})
     
     sumCW <- do.call(cbind, sapply(simAtF, '[', 'sumCW'))
-   
+    
     meanSumCW <- apply(sumCW, 2, mean)
     Fmsy <- candF[which.max(meanSumCW)]
+    
+    # Extract the equilibrium population for use in forecasts for
+    # Fmsy forecast calculations and for output for Bmsy forecast
+    # calculations
+    
+    equiJ1N <- simAtF[[which.max(meanSumCW)]]$J1N
+    
+    
+    # If using forward projection, use the equilibrium values for population
+    # size at the current temperature (simAtF) and the optimal F (Fmsy) and 
+    # project forward from there. It is important to start from here because 
+    # otherwise there might not be enough time in the projection to reach 
+    # an equilibrium state.
+  
+    if(parmgt$RFUN_NM == 'forecast'){
+      
+      # Get the initial population using the optimal F assuming current
+      # temperature anomaly (FMSY)
+      
+      parpopTemp <- parpop
+      parpopTemp$J1N <- equiJ1N
+      
+      simAtF <- lapply(1:length(candF), function(x){
+        get_proj(type = 'FREF',
+                 parmgt = parmgt, 
+                 parpop = parpopTemp,
+                 parenv = parenv, 
+                 Rfun = Rfun,
+                 F_val = candF[x],
+                 stReportYr = 2)})
+      
+      # Update the optimal states assuming variable temperature
+      sumCW <- do.call(cbind, sapply(simAtF, '[', 'sumCW'))
+      
+      meanSumCW <- apply(sumCW, 2, mean)
+      Fmsy <- candF[which.max(meanSumCW)]
+      
+    }
+    
    
     # Warn if maximum yield did not occur within the range
     if(Fmsy %in% range(candF)){
@@ -75,7 +151,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
                     'candidate F values'))
     }
     
-    return(list(RPvalue = Fmsy))
+    return(list(RPvalue = Fmsy, equiJ1N = equiJ1N))
     
   }else if(parmgt$FREF_TYP == 'Fmed'){
     

@@ -42,7 +42,18 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
            
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpop, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim)
-    Bref <- get_BBRP(parmgt = parmgt, parpop = parpop, 
+    
+    # if using forecast start the BMSY initial population at the equilibrium
+    # FMSY level (before any temperature projections). This is consistent
+    # with how the Fmsy is calculated.
+    parpopUpdate <- parpop
+    if(parmgt$RFUN_NM == 'forecast'){
+      
+      parpopUpdate$J1N <- Fref$equiJ1N
+      
+    }
+    
+    Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = Fref[['RPvalue']])
 
