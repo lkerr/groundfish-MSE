@@ -6,7 +6,7 @@
 #### Testing and Debugging ####
 
 # Use testing version of mproc?
-useMprocTest <- TRUE
+useMprocTest <- FALSE
 
 # Debug? (windows only for now...)
 debugSink <- FALSE
