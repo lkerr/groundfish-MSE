@@ -80,7 +80,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
     
   }else if(parmgt$FREF_TYP == 'FmsySim'){
     
-    candF <- seq(from=0, to=2, by=0.025)
+    candF <- seq(from=0, to=2, by=0.005)
 
     # Edit the environmental parameters for the initial run so that
     # the temperature is always the current temperature. Important for
