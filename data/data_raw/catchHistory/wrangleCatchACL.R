@@ -7,7 +7,7 @@
 # https://www.greateratlantic.fisheries.noaa.gov/ro/fso/reports/Groundfish_Catch_Accounting.htm
 # And wrangles the data into a common usable format.
 
-# Last Edit: February 1, 2019
+# Last Edit: February 25, 2019
 
 ##### Load needed libraries #####
 Sys.setenv(JAVA_HOME='C:\\Program Files\\Java\\jre1.8.0_201')
