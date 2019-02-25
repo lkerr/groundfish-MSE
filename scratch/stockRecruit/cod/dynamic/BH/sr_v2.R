@@ -2,15 +2,19 @@
 ## BH MODEL
 
 # read in the data
-load(file='data/data_raw/mqt_oisst.Rdata') #mqt_oisst
-saw55 <- read.table('data/data_raw/SAW55SR_codGB.csv', header=TRUE, sep=',')
+# load(file='data/data_raw/mqt_oisst.Rdata') #mqt_oisst
+TAnomRaw <- read.table('scratch/growth/2019-01-24/anom1985.txt', 
+                       header=TRUE)
+  names(TAnomRaw)[1] <- 'Year'
+saw55 <- read.table('data/data_raw/SAW55SR_codGB.csv', 
+                    header=TRUE, sep=',')
 
-srt <- merge(saw55, mqt_oisst)
+srt <- merge(saw55, TAnomRaw)
 
 
 # create a new simpler data file with the data you want
 srdat <- as.data.frame(cbind(YEAR = srt$Year,
-                             T = srt$q3,
+                             T = srt$Tanom,
                              S = srt$SSBMT,
                              R = srt$A1Recruitmentx1000 * 1000))
 srdat <- srdat[complete.cases(srdat),]
@@ -51,9 +55,9 @@ lb <- c(log_a = -10,
         log_Rhat0 = log(100),
         log_sigR = -10)
 
-ub <- c(log_a = 17,#3,
-        log_b = 10.5,#10,
-        c = -0.54,
+ub <- c(log_a = 20,#3,
+        log_b = 20,#10,
+        c = 10,
         theta = 5,
         log_Rhat0 = log(75000),
         log_sigR = log(10))
@@ -62,9 +66,9 @@ ub <- c(log_a = 17,#3,
 map_par <- list(
                 # log_a = factor(NA),
                 # log_b = factor(NA),
-                # c = factor(NA)
-                theta = factor(NA)
-                # log_Rhat0 = factor(NA)
+                # c = factor(NA),
+                theta = factor(NA),
+                log_Rhat0 = factor(NA)
                 # log_sigR = factor(NA)
 )
 

@@ -1,7 +1,2 @@
-ASSESSCLASS  HCR	FREF_TYP	FREF_PAR0	BREF_TYP	BREF_PAR0	RFUN_NM RPInt
-CAA  constF	FmsySim	5	  SIM	15 hindcastMean 1
-CAA  constF	FmsySim	10	SIM	15 hindcastMean 1
-CAA  constF	FmsySim	15	SIM	15 hindcastMean 1
-CAA  constF	FmsySim	20	SIM	15 hindcastMean 1
-CAA  constF	FmsySim	25	SIM	15 hindcastMean 1
-CAA  constF	FmsySim	30	SIM	15 hindcastMean 1
+ASSESSCLASS HCR FREF_TYP FREF_PAR0 FREF_PAR1 BREF_TYP BREF_PAR0 BREF_PAR1 RFUN_NM RPInt
+CAA simplethresh FmsySim -15 -5 SIM -15 -5 hindcastMean 1
