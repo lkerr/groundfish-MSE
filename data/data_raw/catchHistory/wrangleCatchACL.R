@@ -274,3 +274,17 @@ for(i in 1:length(Tables)){
 catchHist<-bind_rows(Tables)
 
 #write_csv(catchHist,"catchHist.csv")
+
+# Reorganize catchHist data for plotting
+mydata <- catchHist %>% 
+  select(Stock, Total, Year, data_type) %>% #select columns of interest
+  rename_all(tolower) %>% #make all names lowercase
+  mutate(stock = tolower(stock)) %>% #make stock names lowercase
+  filter(grepl(paste(c("cod","haddock"), collapse="|"),stock)) #get just cod and haddock data
+
+###
+ggplot(mydata, aes(x=year, y=total, group=data_type, color=data_type)) +
+  geom_line() +
+  facet_wrap(~stock,scales = "free")
+
+
