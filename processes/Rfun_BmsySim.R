@@ -15,20 +15,26 @@ Rfun_BmsySim <- list(
   # are 25 years available in the series -- otherwise it just uses what is
   # left).
   
-  forecast = function(parpop, parenv, SSB, TAnom, ...){
-                      parpop$Rpar['rho'] <- 0
-                      gr <- get_recruits(type = 'BHTS', 
-                                   par = parpop$Rpar, 
-                                   SSB = SSB,
-                                   TAnom = TAnom,
-                                   pe_R = 0, # no stochasticity for projections
-                                   R_ym1 = 1,
-                                   Rhat_ym1 = 1)
-                      return(gr[['Rhat']])
-  },
+  forecast = function(parpop, parenv, SSB, TAnom, sdR, ...){
+    
+    
+    parpop$Rpar['rho'] <- 0
+    gr <- get_recruits(type = 'BHTS', 
+                 par = parpop$Rpar, 
+                 SSB = SSB,
+                 TAnom = TAnom,
+                 pe_R = sdR,
+                 R_ym1 = 1,
+                 Rhat_ym1 = 1)
+    return(gr[['Rhat']])
+    },
   
-  hindcastMean = function(parpop, ny, ...){
-                          mean( tail(parpop$R, ny) )
+  hindcastMean = function(Rest, ...){
+    mean(Rest)
+  },
+
+  hindcastSample = function(Rest, ...){
+    sample(Rest, 1)
   }
   
 )

@@ -3,6 +3,7 @@
 *.RData
 *.Ruserdata
 /background/*
+/manuscripts/*
 /cocaSharedFiles/*
 /function_tests/*
 /literature/*
@@ -17,13 +18,12 @@ data/data_raw/*
 *.o
 *.so
 /results/*
-/*.o
-/*.dll
 /processes/mproc_all.txt
-*.JPG
 *.pptx
 *.docx
 .Rproj.user
 /documentation/old*
 /documentation/.ipynb_checkpoints
 *.url
+*.pdf
+*.tex

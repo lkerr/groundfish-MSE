@@ -46,9 +46,9 @@ lb <- c(log_a = -10,
         c = -10,
         log_sigR = -10)
 
-ub <- c(log_a = 17,#3,
-        log_b = 10.5,#10,
-        c = -0.54,
+ub <- c(log_a = 20,#3,
+        log_b = 20,#10,
+        c = 10,
         log_sigR = log(10))
 
 

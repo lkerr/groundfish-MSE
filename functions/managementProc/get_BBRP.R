@@ -68,10 +68,10 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     # get Fmsy proxy
     # Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop, 
                       # parenv = parenv, Rfun_lst = Rfun_lst)
- 
+
     SSB <- get_proj(parmgt = parmgt, parpop = parpop, parenv = parenv, 
                     Rfun = Rfun, F_val = FBRP,
-                    ny = parmgt$BREF_PAR0,
+                    ny = 200,
                     stReportYear = 2)$SSB
     
     SSBvalue <- distillBmsy(SSB)

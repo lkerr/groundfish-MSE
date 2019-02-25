@@ -49,10 +49,10 @@
 
 
 get_proj <- function(parmgt, parpop, parenv, Rfun,
-                     F_val, stReportYr, ny, ...){
+                     F_val, stReportYr, ny=200, ...){
 
   if(ny > (max(parenv$yrs_temp) - parenv$yrs_temp[y]) & 
-     Rfun == 'forecast'){
+     parmgt['RFUN_NM'] == 'forecast'){
     stop(paste('get_proj: please set parmgt$BREF_PAR0 to a smaller',
                'number of years -- the cmip temperature series does not',
                'predict far enough for the outlook you set ... the',
@@ -82,6 +82,26 @@ get_proj <- function(parmgt, parpop, parenv, Rfun,
     }
   }
   
+  
+  # length of recruitment time series
+  nR <- length(parpop$R)
+  
+  # historical R estimates over the time window specified in mproc.txt
+  Rest <- get_dwindow(parpop$R, 
+                      start = unlist(nR- (-parmgt['FREF_PAR0']) + 1), 
+                      end = unlist(nR - (-parmgt['FREF_PAR1']) + 1))
+  # variance of historical R estimates
+  RestV <- var(Rest)
+  
+  # Calculate the average temperature to use in forward projections
+  TAnomP <- get_dwindow(parenv$Tanom,
+                        starty = parenv$y + 
+                                 unlist(parmgt['FREF_PAR0']),
+                        endy = parenv$y + 
+                               unlist(parmgt['FREF_PAR1']))
+  TAnomPMean <- mean(TAnomP)
+  
+  
   # number of ages in the model
   nage <- length(parpop$sel)
   
@@ -109,14 +129,16 @@ get_proj <- function(parmgt, parpop, parenv, Rfun,
                  N[y-1,nage] * exp(-parpop$sel[nage] * F_val - 
                                      parpop$M[nage])
 
-    # Recruitment
+    ## Recruitment
+    
+    # sd of historical R estimates
+
     N[y,1] <- Rfun(parpop = parpop, 
                    parenv = parenv, 
                    SSB = c(N[y-1,]) %*% c(parpop$waa),
-                   # last model year (parenv$y) plus the year number of the
-                   # projection
-                   TAnom = parenv$Tanom[parenv$y+y],
-                   ny = ny)
+                   sdR = sdR,
+                   TAnom = TAnomPMean,
+                   Rest = Rest)
 
   }
 
