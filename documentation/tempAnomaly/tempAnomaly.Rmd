@@ -1,0 +1,141 @@
+
+
+
+# Determining values for the temperature anomaly
+The purpose of this script is to determine temperature anomalies on which to base further analyses such as stock-recruit and growth models that incorporate temperature. The parameter values from these models are used in the MSE.
+
+## Why use anomalies
+Anomaly values are used for model-fitting (e.g., to determine the parameters of the stock-recruit function) as well as in the simulation because it makes turning the impacts of temperature on and off slightly easier. If the impact of temperature is x+(theta)(T) or x(exp((theta)(T))) then setting the theta parameter to zero (and thus including a vector of zeros for the anomaly into the future) removes the impact of temperature altogether. This is more convenient than extending each formula for use with/without temperature and using lots of if() statements.
+
+## Downscaling
+Defining the downscaled temperature anomaly occurs in the MSE code. That makes it easier to switch between different versions of the potential future by using different flavors of temperature projections. However it should be noted that fitting a S/R or another model using one version of downscaled temperature (whether anomaly or not) and then using another version of temperature (e.g., another CMIP5 projection) in the MSE is a bit out-of-step. However, it is not realistic to think that every time you change the temperature projection scenario in the MSE you would also change the fit of the stock-recruitment function and it is not realistic to automate the fitting either. In my opinion it is reasonable to fit the model using an average anomaly and then make different versions of projections. We know that (especially stock-recruit) models are far from perfect -- especially when projecting beyond the observed range -- and we are more interested in the directionality of the response.
+
+## Getting the data
+The first step in determining the anomaly is to read in the CMIP5 temperature data.
+```{r}
+cmip5 <- read.table('data/data_raw/NEUS_CMIP5_annual_means.txt', 
+                    header=TRUE, skip=2)
+head(cmip5[,1:6])
+```
+
+For this analysis we will use an average across all CMIP5 projections which is called **cmip_base** here.
+
+```{r}
+nc <- ncol(cmip5)
+cmip_base <- data.frame(YEAR = cmip5$year,
+                        T = apply(cmip5[,2:nc], 1, mean))
+names(cmip_base) <- c('YEAR', 'T')
+```
+
+## Georges Bank SST for downscaling
+Next Georges Bank OISST data are read in (**mqt_sst**) because these will be used to downscale the Northeast LME CMIP5 projections to the scale of Georges Bank. These are downscaled to the first quarter OISST data. There is no explicit theory behind using the first quarter but the anomalies make everything relative so this should not make a huge difference.
+
+```{r}
+
+load('data/data_raw/mqt_oisst.Rdata')
+gbT <- mqt_oisst[,c('Year', 'q1')]
+names(gbT) <- c('YEAR', 'T')
+
+```
+
+## Downscaling process
+We will next downscale the CMIP5 data using the Georges Bank OISST for scaling. For this we will load in the ```get_temperatureProj()``` function. This function requires loading in the CMIP5 data (**prj_data**), the OISST data (**obs_data**), and determining two reference years (**ref0** and **ref1**). The temperature difference between the mean of **prj_data** and **obs_data** between these two reference years provides the scaling factor. These objects are loaded in from **set_om_parameters.R** for consistency with the MSE. The plot below shows the CMIP5 projections, the observed Georges Bank SST and the downscaled data. The full ```get_temperatureProj()``` function can be found at the end of this document.
+
+```{r}
+
+# Load in the downscaling function
+source('functions/get_temperatureProj.R')
+
+# Load in OM setup file with reference years ref0 and ref1
+source('processes/set_om_parameters.R')
+
+# Run the downscale function
+cmip_dwn <- get_temperatureProj(prj_data = cmip_base,
+                                obs_data = gbT,
+                                ref_yrs = c(ref0, ref1), plot=TRUE)
+
+```
+
+The object **cmip_dwn** now holds the downscaled data
+
+```{r}
+head(cmip_dwn)
+```
+
+## Determine the annual anomalies
+The next step is to determine the temperature anomaly. This requires a baseline temperature from which the anomaly is derived. The baseline temperature is calculated from a combination of a reference year that represents the maximum year used in the anomaly calculation function and a function that gives the expected value for use in determining the anomaly.
+
+The baseline temperature year and the anomaly standard function are specified in the **set_om_parameters** file (this file was loaded into the environment above). The values for each are printed below (because of difficulties not worth explaining the anomaly function definition below is a little rough around the edges). The anomaly standard function would typically be **mean()** or **median()** -- something to subtract from a vector to determine the anomaly.
+
+```{r, echo=FALSE}
+cat('base temperature year: ', baseTempYear, '\n')
+cat('anomaly function: \n'); print(anomFun)
+```
+
+Next we will actually calculate the temperature anomaly. First the years over which to define the anomaly standard are defined (the variable **msyears**). Second the anomaly function -- ```anomFun``` --is applied to this set of years to get the standard. Third the standard is subtracted from the downscaled temperature data.
+
+```{r}
+# Calculate the years to use in the anomaly standard
+msyears <- cmip_dwn$YEAR < baseTempYear
+
+# Get the anomaly standard using the anomaly function specified
+anomStd <- anomFun(cmip_dwn[msyears,'T'])
+
+# Calculate the anomaly
+TAnom <- cmip_dwn[,'T'] - anomStd
+
+```
+
+The downscaled values are then exported
+
+```{r}
+TAnomDF <- data.frame(YEAR = cmip_dwn$YEAR,
+                      TANOM = TAnom)
+write.csv(TAnomDF, file = 'data/data_processed/TAnom.csv',
+          row.names = FALSE)
+```
+
+Below is a plot to help visualize the anomaly calculation process. The period over which the anomaly standard is calculated is indicated by the rose colored box.
+
+```{r, echo=FALSE, results='hide'}
+
+par(5,5,1,1)
+plot(TAnom ~ cmip_dwn[,'YEAR'], lwd=3, 
+     las=1, type = 'n',
+     xlab = 'Year',
+     ylab = 'Temperature Anomaly')
+rect(xleft = min(cmip_dwn[,'YEAR']),
+     ybottom = -5,
+     xright = baseTempYear,
+     ytop = 1,
+     col = 'mistyrose')
+lines(TAnom ~ cmip_dwn[,'YEAR'], lwd=3, type='l', col='firebrick1')
+abline(h=0, lty = 3, lwd=3, col='cornflowerblue')
+box()
+legend('topleft',
+       legend = c('Anomaly', 'Standard calc yrs'),
+       pch = c(0, 22),
+       pt.bg = c(0, 'mistyrose'),
+       lty = c(1, 0),
+       lwd = c(2, 0),
+       pt.cex = c(0, 3.5),
+       col = c('firebrick1', 'black'),
+       bty = 'n',
+       cex = 1.25)
+
+
+```
+
+
+Below is the full ```get_temperatureProj()``` function that runs the downscaling (also avalailable under functions/get_temperatureProj.R)
+
+```{r, echo=FALSE}
+
+print(get_temperatureProj)
+
+```
+
+
+
+
+

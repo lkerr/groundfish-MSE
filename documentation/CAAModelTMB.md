@@ -46,7 +46,7 @@ Model outputs are specified in the c++ file using the REPORT() function and are 
 ```
 path0 <- Sys.getenv('PATH')
 path1 <-  paste0('c:\\Rtools\\bin;c:\\Rtools\\mingw_32\\bin;',
-                 path_current)
+                 path0)
 Sys.setenv(PATH=path1)
 ```
 This will update your environmental variables for the current session so that the first compiler TMB will encounter will be the correct one from RTools.

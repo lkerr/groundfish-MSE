@@ -40,10 +40,10 @@ get_mprocCheck <- function(mproc){
   }
 
   if(any(!is.na(mproc$FREF_PAR0) & 
-         (mproc$FREF_PAR0 < 0))){
+         !mproc$FREF_PAR0 == floor(mproc$FREF_PAR0))){
     msg <- c(msg, 
              paste0('value out of range in FREF_PAR0 column of mproc.txt:',
-             ' check values'))
+             ' must be integer'))
   }
   
   if(!all(mproc$BREF_TYP %in% bref_typ)){
@@ -96,35 +96,35 @@ get_mprocCheck <- function(mproc){
 # (just random stuff -- not actual sets of trials!)
 
 # correct
-mproc1 <- data.frame(ASSESSCLASS = c('CAA', 'CAA', 'PLANB'),
-                     HCR = c('slide', 'simplethresh', 'constF'),
-                     FREF_TYP = c('YPR', 'SPR', 'Fmed'),
-                     FREF_PAR0 = c(0.1, 0.5, 0.1),
-                     BREF_TYP = c('SIM', 'SIM', 'RSSBR'),
-                     BREF_PAR0 = c(NA, NA, NA),
-                     RFUN_NM = c('hindcastMean', 'forecast', NA),
-                     RPInt = c(1, 3, 5))
+# mproc1 <- data.frame(ASSESSCLASS = c('CAA', 'CAA', 'PLANB'),
+#                      HCR = c('slide', 'simplethresh', 'constF'),
+#                      FREF_TYP = c('YPR', 'SPR', 'Fmed'),
+#                      FREF_PAR0 = c(0.1, 0.5, 0.1),
+#                      BREF_TYP = c('SIM', 'SIM', 'RSSBR'),
+#                      BREF_PAR0 = c(NA, NA, NA),
+#                      RFUN_NM = c('hindcastMean', 'forecast', NA),
+#                      RPInt = c(1, 3, 5))
 
 # incorrect
-mproc2 <- data.frame(ASSESSCLASS = c('CAAXXX', 'CAA', 'PLANB'),
-                     HCR = c('slide', 'simplethresh', 'constF'),
-                     FREF_TYP = c('YPR', 'SPR', 'Fmed'),
-                     FREF_PAR0 = c(0.1, 0.5, 0.1),
-                     BREF_TYP = c('SIM', 'SIMXXX', 'RSSBR'),
-                     BREF_PAR0 = c(NA, NA, NA),
-                     RFUN_NM = c('L5SAMPXXX', 'MEAN', 'recT'),
-                     RPInt = c(1, 3, 5))
+# mproc2 <- data.frame(ASSESSCLASS = c('CAAXXX', 'CAA', 'PLANB'),
+#                      HCR = c('slide', 'simplethresh', 'constF'),
+#                      FREF_TYP = c('YPR', 'SPR', 'Fmed'),
+#                      FREF_PAR0 = c(0.1, 0.5, 0.1),
+#                      BREF_TYP = c('SIM', 'SIMXXX', 'RSSBR'),
+#                      BREF_PAR0 = c(NA, NA, NA),
+#                      RFUN_NM = c('L5SAMPXXX', 'MEAN', 'recT'),
+#                      RPInt = c(1, 3, 5))
 
-mproc3 <- data.frame(ASSESSCLASS = c('CAA', 'CAA', 'PLANB'),
-                     HCR = c('slide', 'simplethresh', 'constF'),
-                     FREF_TYP = c('YPR', 'SPR', 'FMSY'),
-                     FREF_PAR0 = c(0.1, 0.5, 99),
-                     BREF_TYP = c('SIM', 'SIM', 'RSSBR'),
-                     BREF_PAR0 = c(25.999, NA, NA),
-                     RFUN_NM = c('L5SAMP', 'MEAN', 'recT'),
-                     RPInt = c(1, 3, 5.999))
+# mproc3 <- data.frame(ASSESSCLASS = c('CAA', 'CAA', 'PLANB'),
+#                      HCR = c('slide', 'simplethresh', 'constF'),
+#                      FREF_TYP = c('YPR', 'SPR', 'FMSY'),
+#                      FREF_PAR0 = c(0.1, 0.5, 99),
+#                      BREF_TYP = c('SIM', 'SIM', 'RSSBR'),
+#                      BREF_PAR0 = c(25.999, NA, NA),
+#                      RFUN_NM = c('L5SAMP', 'MEAN', 'recT'),
+#                      RPInt = c(1, 3, 5.999))
 
 
-get_mprocCheck(mproc1)
-get_mprocCheck(mproc2)
-get_mprocCheck(mproc3)
+# get_mprocCheck(mproc1)
+# get_mprocCheck(mproc2)
+# get_mprocCheck(mproc3)

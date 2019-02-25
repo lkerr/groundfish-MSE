@@ -19,10 +19,9 @@ cmip_dwn <- get_temperatureProj(prj_data = cmip_base,
                                 ref_yrs = c(ref0, ref1))
 
 # Get the temperature vector
-baseTempYear <- 1985
 msyears <- cmip_dwn$YEAR < baseTempYear
 if(useTemp == TRUE){
-  temp <- c(rep(median(cmip_dwn[msyears,'T']), nburn),
+  temp <- c(rep(anomFun(cmip_dwn[msyears,'T']), nburn),
             cmip_dwn[,'T'])
   
   # Simple temperature trend for debugging -- smooth the data
@@ -33,10 +32,10 @@ if(useTemp == TRUE){
     temp <- predict(lo)
   }
   
-  anomStd <- median(cmip_dwn[msyears,'T'])  # anomoly standard
+  anomStd <- anomFun(cmip_dwn[msyears,'T'])  # anomoly standard
   Tanom <- temp - anomStd
 }else{
-  temp <- rep(median(cmip_dwn[msyears,'T']), nburn + nrow(cmip_dwn))
+  temp <- rep(anomFun(cmip_dwn[msyears,'T']), nburn + nrow(cmip_dwn))
   Tanom <- rep(0, nburn + nrow(cmip_dwn))
 }
 
