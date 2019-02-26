@@ -19,6 +19,17 @@ library(purrr)
 ##### Functions #####
 removeCommas<- function(table) {gsub(",", "", table, fixed = TRUE)}
 
+myspread <- function(df, key, value) {
+  # quote key
+  keyq <- rlang::enquo(key)
+  # break value vector into quotes
+  valueq <- rlang::enquo(value)
+  s <- rlang::quos(!!valueq)
+  df %>% gather(variable, value, !!!s) %>%
+    unite(temp, !!keyq, variable) %>%
+    spread(temp, value)
+}
+
 # tabWithoutCommas <- apply(Catch, 2, removeCommas)
 # map(Catch,removeCommas)
 
@@ -276,6 +287,8 @@ catchHist<-bind_rows(Tables)
 #write_csv(catchHist,"catchHist.csv")
 
 # Reorganize catchHist data for plotting
+#read_csv("catchHist.csv")
+
 mydata <- catchHist %>% 
   select(Stock, Total, Year, data_type) %>% #select columns of interest
   rename_all(tolower) %>% #make all names lowercase
@@ -318,3 +331,13 @@ pre_reg2<-predict(reg2,list(ACL=xs,ACL2=xs^2))
 plot(Catch~ACL,data=gbHaddata)
 abline(reg,col="red")
 lines(xs,pre_reg2)
+
+# Interactions
+regdata <- mydata %>% 
+  filter(stock=="gb cod"|stock=="gb haddock") %>%
+  spread(data_type,total) %>% 
+  mutate(ACL2=ACL^2) %>% 
+  gather(data_type,total,-c(year,stock)) %>% 
+  spread(stock,total) %>% 
+  myspread(data_type, c("gb cod","gb haddock"))
+
