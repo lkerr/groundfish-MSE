@@ -287,4 +287,34 @@ ggplot(mydata, aes(x=year, y=total, group=data_type, color=data_type)) +
   geom_line() +
   facet_wrap(~stock,scales = "free")
 
+#####  fit implementation error model #####
+# reorganize data for analysis
+# GB Cod
+gbCoddata <- mydata %>% 
+  filter(stock=="gb cod") %>% 
+  spread(data_type,total) %>% 
+  mutate(ACL2=ACL^2)
 
+reg<-lm(Catch~ACL,gbCoddata)
+reg2<-lm(Catch~ACL+ACL2,gbCoddata)
+xs<-seq(0,5000,500)
+pre_reg2<-predict(reg2,list(ACL=xs,ACL2=xs^2))
+
+plot(Catch~ACL,data=gbCoddata)
+abline(reg,col="red")
+lines(xs,pre_reg2)
+
+# GB Haddock
+gbHaddata <- mydata %>% 
+  filter(stock=="gb haddock") %>% 
+  spread(data_type,total) %>% 
+  mutate(ACL2=ACL^2)
+
+reg<-lm(Catch~ACL,gbHaddata)
+reg2<-lm(Catch~ACL+ACL2,gbHaddata)
+xs<-seq(0,60000,10000)
+pre_reg2<-predict(reg2,list(ACL=xs,ACL2=xs^2))
+
+plot(Catch~ACL,data=gbHaddata)
+abline(reg,col="red")
+lines(xs,pre_reg2)
