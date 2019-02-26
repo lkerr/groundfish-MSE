@@ -333,11 +333,36 @@ abline(reg,col="red")
 lines(xs,pre_reg2)
 
 # Interactions
-regdata <- mydata %>% 
-  filter(stock=="gb cod"|stock=="gb haddock") %>%
+mydata<-mydata %>% 
+  filter(stock=="gb cod"|stock=="gb haddock")
+mydata$stock[mydata$stock=="gb cod"]<-"cod"
+mydata$stock[mydata$stock=="gb haddock"]<-"haddock"
+
+regdata <- mydata %>%
   spread(data_type,total) %>% 
   mutate(ACL2=ACL^2) %>% 
   gather(data_type,total,-c(year,stock)) %>% 
   spread(stock,total) %>% 
-  myspread(data_type, c("gb cod","gb haddock"))
+  myspread(data_type, c("cod","haddock"))
 
+reg<-lm(Catch_cod~ACL_cod,regdata)
+reg2<-lm(Catch_cod~ACL_cod+ACL2_cod,regdata)
+regboth<-lm(Catch_cod~ACL_cod+ACL_haddock,regdata)
+regboth2<-lm(Catch_cod~ACL_cod+ACL_haddock+ACL2_cod+ACL2_haddock,regdata)
+xs_cod<-seq(0,5000,500)
+pre_reg2<-predict(reg2,list(ACL_cod=xs_cod,ACL2_cod=xs_cod^2))
+
+plot(Catch_cod~ACL_cod,data=regdata)
+abline(reg,col="red")
+lines(xs_cod,pre_reg2,col="blue")
+
+reg<-lm(Catch_haddock~ACL_haddock,regdata)
+reg2<-lm(Catch_haddock~ACL_haddock+ACL2_haddock,regdata)
+regboth<-lm(Catch_haddock~ACL_cod+ACL_haddock,regdata)
+regboth2<-lm(Catch_haddock~ACL_cod+ACL_haddock+ACL2_cod+ACL2_haddock,regdata)
+xs_haddock<-seq(0,60000,10000)
+pre_reg2<-predict(reg2,list(ACL_haddock=xs_haddock,ACL2_haddock=xs_haddock^2))
+
+plot(Catch_haddock~ACL_haddock,data=regdata)
+abline(reg,col="red")
+lines(xs_haddock,pre_reg2,col="blue")
