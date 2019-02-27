@@ -39,7 +39,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
   # point and those will be implemented in get_FBRP
   
   if(parmgt$ASSESSCLASS == 'CAA'){
-           
+          
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpop, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim)
     
@@ -49,7 +49,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
     parpopUpdate <- parpop
     if(parmgt$RFUN_NM == 'forecast'){
       
-      parpopUpdate$J1N <- Fref$equiJ1N
+      parpopUpdate$J1N <- Fref$equiJ1N_MSY
       
     }
     

@@ -90,7 +90,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
     parenvTemp <- parenv
     parenvTemp$Tanom <- rep(parenv$Tanom[parenv$y],
                             times = length(parenv$Tanom))
- 
+
     simAtF <- lapply(1:length(candF), function(x){
                      get_proj(type = 'FREF',
                               parmgt = parmgt, 
@@ -106,11 +106,10 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
     meanSumCW <- apply(sumCW, 2, mean)
     Fmsy <- candF[which.max(meanSumCW)]
     
-    # Extract the equilibrium population for use in forecasts for
-    # Fmsy forecast calculations and for output for Bmsy forecast
-    # calculations
-    
-    equiJ1N <- simAtF[[which.max(meanSumCW)]]$J1N
+    # Extract the equilibrium population (at each level of F) for use in 
+    # forecasts for Fmsy forecast calculations and for output for Bmsy 
+    # forecast calculations
+    equiJ1N <- sapply(simAtF, '[', 'J1N')
     
     
     # If using forward projection, use the equilibrium values for population
@@ -125,9 +124,9 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
       # temperature anomaly (FMSY)
       
       parpopTemp <- parpop
-      parpopTemp$J1N <- equiJ1N
-      
+    
       simAtF <- lapply(1:length(candF), function(x){
+        parpopTemp$J1N <- equiJ1N[[x]]
         get_proj(type = 'FREF',
                  parmgt = parmgt, 
                  parpop = parpopTemp,
@@ -151,7 +150,10 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
                     'candidate F values'))
     }
     
-    return(list(RPvalue = Fmsy, equiJ1N = equiJ1N))
+    # Equilibrium starting conditions at MSY (used in BMSY calculations)
+    equiJ1N_MSY <- equiJ1N[[which.max(meanSumCW)]]
+    
+    return(list(RPvalue = Fmsy, equiJ1N_MSY = equiJ1N_MSY))
     
   }else if(parmgt$FREF_TYP == 'Fmed'){
     

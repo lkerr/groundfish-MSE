@@ -159,7 +159,6 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     ## Recruitment
     
     # sd of historical R estimates
-
     N[y,1] <- Rfun(parpop = parpop, 
                    parenv = parenv, 
                    SSB = c(N[y-1,]) %*% c(parpop$waa),
