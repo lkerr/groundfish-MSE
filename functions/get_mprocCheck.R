@@ -21,6 +21,10 @@ get_mprocCheck <- function(mproc){
   # Note: use paste0 when splitting text over multiple lines to get correct-
   #       looking error message output
   
+  
+  ## Check to make sure that all the function names for the procedures
+  ## are correct
+  
   if(!all(mproc$ASSESSCLASS %in% assessclass)){
     msg <- c(msg, 
              paste0('unrecognized entry in ASSESSCLASS column of mproc.txt:',
@@ -38,6 +42,13 @@ get_mprocCheck <- function(mproc){
              paste0('unrecognized entry in FREF_TYP column of mproc.txt:',
               ' check names'))
   }
+  
+  if(!all(mproc$RFUN_NM %in% rfun_nm)){
+    msg <- c(msg, 
+             paste0('unrecognized entry in RFUN_NM column of mproc.txt:',
+                    ' check names'))
+  }
+
 
   if(any(!is.na(mproc$FREF_PAR0) & 
          !mproc$FREF_PAR0 == floor(mproc$FREF_PAR0))){
@@ -58,11 +69,7 @@ get_mprocCheck <- function(mproc){
              ' check values'))
   }
   
-  if(!all(mproc$RFUN_NM %in% rfun_nm)){
-    msg <- c(msg, 
-             paste0('unrecognized entry in RFUN_NM column of mproc.txt:',
-             ' check names'))
-  }
+  
 
   if(any(!is.na(mproc$RPInt) & 
          ( mproc$RPInt < 1 | !mproc$RPInt == floor(mproc$RPInt) )
