@@ -1,5 +1,5 @@
 # Reorganize catchHist data for plotting
-#read_csv("catchHist.csv")
+read_csv("catchHist.csv")
 
 mydata <- catchHist %>% 
   select(Stock, Total, Year, data_type) %>% #select columns of interest
