@@ -103,6 +103,21 @@ pred_plot2<-pred_plot %>%
 ggplot(pred_plot2, aes(x=in_cod,y=value,group=catch,col=catch)) +
   geom_line() + xlab("Cod ACL") + ylab("Catch")
 
-##### - Set up prediction for Cod and Haddock ACL model - 
+##### - Set up prediction for Cod and Haddock ACL model - #####
+# Create ACL combos
 pred_vals<-expand.grid(in_cod,in_haddock)
-pred_plot_both<-predictvglm(mvreg_both,list(ACL_cod=pred_vals$Var1,ACL_haddock=pred_vals$Var2),se.fit=TRUE)
+# Predict
+pred_plot_both<-predictvglm(mvreg_both,list(ACL_cod=pred_vals$Var1,ACL_haddock=pred_vals$Var2))
+# reorganize data
+pred_plot_both2<-pred_plot_both %>%
+  as_tibble() %>% 
+  select(mean1,mean2) %>% 
+  mutate(Catch_Cod=mean1) %>% 
+  mutate(Catch_Haddock=mean2) %>%
+  select(Catch_Cod,Catch_Haddock) %>% 
+  cbind(Cod_ACL=pred_vals$Var1,Haddock_ACL=pred_vals$Var2) %>% 
+  gather(catch,value, -Cod_ACL, -Haddock_ACL)
+
+# Plot
+ggplot(pred_plot_both2, aes(x=Cod_ACL,y=Haddock_ACL,col=value)) + 
+  facet_grid(~catch) +  geom_point(aes(size=4))+geom_contour(aes(z=value),col="black") + theme_bw()
