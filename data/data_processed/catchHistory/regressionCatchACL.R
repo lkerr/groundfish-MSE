@@ -1,3 +1,7 @@
+##### 
+# Fit a multivariate regression to the catch and ACL data for GB cod and haddock
+# Jonathan Cummings and Gavin Fay
+
 library(tidyverse)
 library(VGAM)
 
