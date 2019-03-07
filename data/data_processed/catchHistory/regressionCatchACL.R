@@ -1,5 +1,20 @@
+library(tidyverse)
+library(VGAM)
+
+# Functions
+myspread <- function(df, key, value) {
+  # quote key
+  keyq <- rlang::enquo(key)
+  # break value vector into quotes
+  valueq <- rlang::enquo(value)
+  s <- rlang::quos(!!valueq)
+  df %>% gather(variable, value, !!!s) %>%
+    unite(temp, !!keyq, variable) %>%
+    spread(temp, value)
+}
+
 # Reorganize catchHist data for plotting
-read_csv("catchHist.csv")
+catchHist<-read_csv("catchHist.csv")
 
 mydata <- catchHist %>% 
   select(Stock, Total, Year, data_type) %>% #select columns of interest
@@ -58,11 +73,18 @@ regdata <- mydata %>%
 # ggplot(regdata,aes(Catch_cod,Catch_haddock))+geom_point()+geom_smooth(method="lm")
 # ggplot(regdata,aes(ACL_cod,Catch_haddock))+geom_point()+geom_smooth(method="lm")
 
-mreg<-lm(cbind(Catch_cod,Catch_haddock)~ACL_cod+ACL_haddock,regdata)
-mreg
-vcov(mreg)
-predict(mreg)
+# mreg<-lm(cbind(Catch_cod,Catch_haddock)~ACL_cod+ACL_haddock,regdata)
+# mreg
+# vcov(mreg)
+# predict(mreg)
+# 
+# in_cod<-seq(0,10000,length.out=20)
+# in_haddock<-seq(0,100000,length.out=20)
+# predict(mreg,list(ACL_cod=in_cod,ACL_haddock=in_haddock))
 
-in_cod<-seq(0,10000,length.out=20)
-in_haddock<-seq(0,100000,length.out=20)
-predict(mreg,list(ACL_cod=in_cod,ACL_haddock=in_haddock))
+# With VGAM
+vlm1 <- vglm(cbind(Catch_cod,Catch_haddock)~ACL_cod+ACL_haddock,family=binormal,regdata)
+Coef(vlm1, matrix = TRUE)
+summary(vlm1)
+AICc(vlm1)
+predictvglm(vlm1,list(ACL_cod=in_cod,ACL_haddock=in_haddock),se.fit=TRUE)
