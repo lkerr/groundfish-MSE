@@ -73,18 +73,36 @@ mvreg_both2<-vglm(cbind(Catch_cod,Catch_haddock)~ACL_cod+ACL2_cod+ACL_haddock+AC
                  family=binormal,regdata)
 
 # Calculate AIC scores
-#c(AIC(mvreg_int),AIC(mvreg_cod),AIC(mvreg_had),AIC(mvreg_both),AIC(mvreg_both2))
+c(AIC(mvreg_int),AIC(mvreg_cod),AIC(mvreg_had),AIC(mvreg_both),AIC(mvreg_both2))
 c(AICc(mvreg_int),AICc(mvreg_cod),AICc(mvreg_had),AICc(mvreg_both),AICc(mvreg_both2))
 
-Coef(fit_int, matrix = TRUE)
-summary(fit_int)
-AICc(fit_int)
+# Report regresion results
+Coef(mvreg_cod, matrix = TRUE)
+summary(mvreg_cod)
 
-fit_int<-vglm(cbind(Catch_cod,Catch_haddock)~1,family=binormal,regdata)
-Coef(fit_int, matrix = TRUE)
-summary(fit_int)
-AICc(fit_int)
+Coef(mvreg_both, matrix = TRUE)
+summary(mvreg_both)
 
-# in_cod<-seq(0,10000,length.out=20)
-# in_haddock<-seq(0,100000,length.out=20)
-predictvglm(vlm1,list(ACL_cod=in_cod,ACL_haddock=in_haddock),se.fit=TRUE)
+##### - set up prediction for Cod ACL model- #####
+in_cod<-seq(0,10000,length.out=20)
+in_haddock<-seq(0,100000,length.out=20)
+predictvglm(mvreg_cod,list(ACL_cod=in_cod),se.fit=TRUE)
+predictvglm(mvreg_both,list(ACL_cod=in_cod,ACL_haddock=in_haddock),se.fit=TRUE)
+
+pred_plot<-predictvglm(mvreg_cod,list(ACL_cod=in_cod))
+pred_plot2<-pred_plot %>%
+  as_tibble() %>% 
+  select(mean1,mean2) %>% 
+  mutate(Catch_Cod=mean1) %>% 
+  mutate(Catch_Haddock=mean2) %>%
+  select(Catch_Cod,Catch_Haddock) %>% 
+  cbind(in_cod) %>% 
+  gather(catch,value, -in_cod)
+
+# plot prediction
+ggplot(pred_plot2, aes(x=in_cod,y=value,group=catch,col=catch)) +
+  geom_line() + xlab("Cod ACL") + ylab("Catch")
+
+##### - Set up prediction for Cod and Haddock ACL model - 
+pred_vals<-expand.grid(in_cod,in_haddock)
+pred_plot_both<-predictvglm(mvreg_both,list(ACL_cod=pred_vals$Var1,ACL_haddock=pred_vals$Var2),se.fit=TRUE)
