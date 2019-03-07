@@ -1,7 +1,8 @@
 library(tidyverse)
 library(VGAM)
 
-# Functions
+##### - Functions - #####
+# Spread keeping multiple value columns
 myspread <- function(df, key, value) {
   # quote key
   keyq <- rlang::enquo(key)
@@ -13,6 +14,7 @@ myspread <- function(df, key, value) {
     spread(temp, value)
 }
 
+##### - Data Import and Processing - #####
 # Reorganize catchHist data for plotting
 catchHist<-read_csv("catchHist.csv")
 
@@ -22,18 +24,27 @@ mydata <- catchHist %>%
   mutate(stock = tolower(stock)) %>% #make stock names lowercase
   filter(grepl(paste(c("cod","haddock"), collapse="|"),stock)) #get just cod and haddock data
 
-###
+# Plot time series of catch, ACL, C:ACL, Discards, and Landing
 ggplot(mydata, aes(x=year, y=total, group=data_type, color=data_type)) +
   geom_line() +
   facet_wrap(~stock,scales = "free")
 
-#####  fit implementation error model #####
-# Set up data to model cod-haddock Interactions
+##### - Set up data to model cod-haddock Interactions - #####
+# select just GB cod and haddock
 mydata<-mydata %>% 
   filter(stock=="gb cod"|stock=="gb haddock")
 mydata$stock[mydata$stock=="gb cod"]<-"cod"
 mydata$stock[mydata$stock=="gb haddock"]<-"haddock"
 
+# Plot time series of catch, ACL, C:ACL, Discards, and Landing
+plotdata<-mydata %>% 
+  filter(data_type=="Catch"|data_type=="ACL")
+
+ggplot(plotdata, aes(x=year, y=total, group=data_type, color=data_type)) +
+  geom_line() +
+  facet_wrap(~stock,scales = "free")
+
+# organize for regression
 regdata <- mydata %>%
   spread(data_type,total) %>% 
   mutate(ACL2=ACL^2) %>% 
@@ -41,50 +52,32 @@ regdata <- mydata %>%
   spread(stock,total) %>% 
   myspread(data_type, c("cod","haddock"))
 
-# reg<-lm(Catch_cod~ACL_cod,regdata)
-# reg2<-lm(Catch_cod~ACL_cod+ACL2_cod,regdata)
-# regboth<-lm(Catch_cod~ACL_cod+ACL_haddock,regdata)
-# regboth2<-lm(Catch_cod~ACL_cod+ACL_haddock+ACL2_cod+ACL2_haddock,regdata)
-# xs_cod<-seq(0,5000,500)
-# pre_reg2<-predict(reg2,list(ACL_cod=xs_cod,ACL2_cod=xs_cod^2))
-# 
-# plot(Catch_cod~ACL_cod,data=regdata)
-# abline(reg,col="red")
-# lines(xs_cod,pre_reg2,col="blue")
-# 
-# reg<-lm(Catch_haddock~ACL_haddock,regdata)
-# reg2<-lm(Catch_haddock~ACL_haddock+ACL2_haddock,regdata)
-# regboth<-lm(Catch_haddock~ACL_cod+ACL_haddock,regdata)
-# regboth2<-lm(Catch_haddock~ACL_cod+ACL_haddock+ACL2_cod+ACL2_haddock,regdata)
-# xs_haddock<-seq(0,60000,10000)
-# pre_reg2<-predict(reg2,list(ACL_haddock=xs_haddock,ACL2_haddock=xs_haddock^2))
-# 
-# plot(Catch_haddock~ACL_haddock,data=regdata)
-# abline(reg,col="red")
-# lines(xs_haddock,pre_reg2,col="blue")
-# 
-# plot(Catch_haddock~ACL_cod,data=regdata)
-# abline(regboth,col="red")
-# lines(xs_cod,pre_reg2,col="blue")
-# 
-# plot(Catch_cod~ACL_haddock,data=regdata)
-# abline(regboth,col="red")
-# 
-# ggplot(regdata,aes(Catch_cod,Catch_haddock))+geom_point()+geom_smooth(method="lm")
-# ggplot(regdata,aes(ACL_cod,Catch_haddock))+geom_point()+geom_smooth(method="lm")
+#####  - Fit implementation error models - #####
+# Intercept only model
+mvreg_int<-vglm(cbind(Catch_cod,Catch_haddock)~1,family=binormal,regdata)
+# Cod ACL model
+mvreg_cod<-vglm(cbind(Catch_cod,Catch_haddock)~ACL_cod,family=binormal,regdata)
+# Haddock ACL model
+mvreg_had<-vglm(cbind(Catch_cod,Catch_haddock)~ACL_haddock,family=binormal,regdata)
+# Cod and Haddock model
+mvreg_both<-vglm(cbind(Catch_cod,Catch_haddock)~ACL_cod+ACL_haddock,family=binormal,regdata)
+# Cod, Cod^2 and Haddock, Haddock^2 model
+mvreg_both2<-vglm(cbind(Catch_cod,Catch_haddock)~ACL_cod+ACL2_cod+ACL_haddock+ACL2_haddock,
+                 family=binormal,regdata)
 
-# mreg<-lm(cbind(Catch_cod,Catch_haddock)~ACL_cod+ACL_haddock,regdata)
-# mreg
-# vcov(mreg)
-# predict(mreg)
-# 
+# Calculate AIC scores
+#c(AIC(mvreg_int),AIC(mvreg_cod),AIC(mvreg_had),AIC(mvreg_both),AIC(mvreg_both2))
+c(AICc(mvreg_int),AICc(mvreg_cod),AICc(mvreg_had),AICc(mvreg_both),AICc(mvreg_both2))
+
+Coef(fit_int, matrix = TRUE)
+summary(fit_int)
+AICc(fit_int)
+
+fit_int<-vglm(cbind(Catch_cod,Catch_haddock)~1,family=binormal,regdata)
+Coef(fit_int, matrix = TRUE)
+summary(fit_int)
+AICc(fit_int)
+
 # in_cod<-seq(0,10000,length.out=20)
 # in_haddock<-seq(0,100000,length.out=20)
-# predict(mreg,list(ACL_cod=in_cod,ACL_haddock=in_haddock))
-
-# With VGAM
-vlm1 <- vglm(cbind(Catch_cod,Catch_haddock)~ACL_cod+ACL_haddock,family=binormal,regdata)
-Coef(vlm1, matrix = TRUE)
-summary(vlm1)
-AICc(vlm1)
 predictvglm(vlm1,list(ACL_cod=in_cod,ACL_haddock=in_haddock),se.fit=TRUE)
