@@ -44,6 +44,13 @@ ggplot(plotdata, aes(x=year, y=total, group=data_type, color=data_type)) +
   geom_line() +
   facet_wrap(~stock,scales = "free")
 
+# Plot time series of catch to ACL for GB
+plotdata2<-mydata %>% 
+  filter(data_type=="CtoACL")
+
+ggplot(plotdata2, aes(x=year, y=total, group=stock, color=stock)) +
+  geom_line() + geom_hline(yintercept=100)+ ylab("Catch as Percentage of ACL")
+
 # organize for regression
 regdata <- mydata %>%
   spread(data_type,total) %>% 
