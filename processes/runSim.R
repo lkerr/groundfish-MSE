@@ -320,7 +320,7 @@ if(runClass != 'HPCC'){
 
 
 
-if(platform == 'Windows'){
+if(runClass != 'HPCC'){
   source('processes/runPost.R')
 }
 
