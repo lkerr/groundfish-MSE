@@ -270,4 +270,7 @@ for(i in 1:length(Tables)){
 }
 catchHist<-bind_rows(Tables)
 
+catchHist$Stock[which(catchHist$Stock=="SNE Winter Flounder")]<-"SNE/MA Winter Flounder"
+catchHist$Stock[which(catchHist$Stock=="SNE/MA Winter Flounder*")]<-"SNE/MA Winter Flounder"
+
 #write_csv(catchHist,"catchHist.csv")
