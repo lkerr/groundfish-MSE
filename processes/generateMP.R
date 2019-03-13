@@ -70,5 +70,5 @@ mproc <- read.table('processes/mproc.txt', header=TRUE,
 
 # Check to ensure that the management procedures are a subset of the
 # available options
-get_mprocCheck(mproc)
+# get_mprocCheck(mproc)
 
