@@ -7,7 +7,7 @@
 # https://www.greateratlantic.fisheries.noaa.gov/ro/fso/reports/Groundfish_Catch_Accounting.htm
 # And wrangles the data into a common usable format.
 
-# Last Edit: February 25, 2019
+# Last Edit: March 13, 2019
 
 ##### Load needed libraries #####
 Sys.setenv(JAVA_HOME='C:\\Program Files\\Java\\jre1.8.0_201')
@@ -18,20 +18,6 @@ library(purrr)
 
 ##### Functions #####
 removeCommas<- function(table) {gsub(",", "", table, fixed = TRUE)}
-
-myspread <- function(df, key, value) {
-  # quote key
-  keyq <- rlang::enquo(key)
-  # break value vector into quotes
-  valueq <- rlang::enquo(value)
-  s <- rlang::quos(!!valueq)
-  df %>% gather(variable, value, !!!s) %>%
-    unite(temp, !!keyq, variable) %>%
-    spread(temp, value)
-}
-
-# tabWithoutCommas <- apply(Catch, 2, removeCommas)
-# map(Catch,removeCommas)
 
 wrangle<-function(data,selVars=c(2,4,6:9,11:13,15:16),sliceVars=-c(2),year=2010){
   data<-data %>%
@@ -46,7 +32,7 @@ wrangle<-function(data,selVars=c(2,4,6:9,11:13,15:16),sliceVars=-c(2),year=2010)
 
 ##### Extract and wrangle the  the tables #####
 # 2010
-location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY10_Mults_Catch_Estimates.pdf")
+location<- c("FY10_Mults_Catch_Estimates.pdf")
 FY10 <- extract_tables(location,pages=c(2:6),method="lattice")
 # Convert to tibbles
 FY10_Catch<-as_tibble(FY10[[1]])
@@ -62,7 +48,7 @@ FY10_ACL<-wrangle(FY10_ACL,selVars=c(2,4,6:9,11:12,14:15),sliceVars=-c(1,3:4))
 FY10_CtoACL<-wrangle(FY10_CtoACL,selVars=c(2,4,6:9,11:12,14:15),sliceVars=-c(1,3:4))
 
 # 2011
-location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY11_Mults_Catch_Estimates.pdf")
+location<- c("FY11_Mults_Catch_Estimates.pdf")
 FY11 <- extract_tables(location,pages=c(2:6),method="lattice")
 # Convert to tibbles
 FY11_Catch<-as_tibble(FY11[[1]])
@@ -80,7 +66,7 @@ FY11_ACL<-wrangle(FY11_ACL,selVars=c(1:ncol(FY11_ACL)),sliceVars=FY11sliceVars,y
 FY11_CtoACL<-wrangle(FY11_CtoACL,selVars=FY11selVars,sliceVars=-1,year=2011)
 
 # 2012
-location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY12_Mults_Catch_Estimates.pdf")
+location<- c("FY12_Mults_Catch_Estimates.pdf")
 FY12 <- extract_tables(location,pages=c(2:6),method="lattice")
 # Convert to tibbles
 FY12_Catch<-as_tibble(FY12[[1]])
@@ -98,7 +84,7 @@ FY12_ACL<-wrangle(FY12_ACL,selVars=FY12selVars,sliceVars=FY12sliceVars,year=2012
 FY12_CtoACL<-wrangle(FY12_CtoACL,selVars=FY12selVars,sliceVars=FY12sliceVars,year=2012)
 
 #2013
-location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY13_Mults_Catch_Estimates.pdf")
+location<- c("FY13_Mults_Catch_Estimates.pdf")
 FY13 <- extract_tables(location,pages=c(2:6),method="lattice")
 # Convert to tibbles
 FY13_CtoACL<-as_tibble(FY13[[1]])
@@ -116,7 +102,7 @@ FY13_Landing<-wrangle(FY13_Landing,year=2013)
 FY13_Discard<-wrangle(FY13_Discard,year=2013)
 
 #2014
-location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY14_Mults_Catch_Estimates.pdf")
+location<- c("FY14_Mults_Catch_Estimates.pdf")
 FY14 <- extract_tables(location,pages=c(2:6),method="lattice")
 # Convert to tibbles
 FY14_CtoACL<-as_tibble(FY14[[1]])
@@ -134,7 +120,7 @@ FY14_Landing<-wrangle(FY14_Landing,year=2014)
 FY14_Discard<-wrangle(FY14_Discard,year=2014)
 
 #2015
-location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY15_Mults_Catch_Estimates.pdf")
+location<- c("FY15_Mults_Catch_Estimates.pdf")
 FY15 <- extract_tables(location,pages=c(2:6),method="lattice")
 # Convert to tibbles
 FY15_CtoACL<-as_tibble(FY15[[1]])
@@ -152,7 +138,7 @@ FY15_Landing<-wrangle(FY15_Landing,year=2015)
 FY15_Discard<-wrangle(FY15_Discard,year=2015)
 
 #2016
-location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY16_Mults_Catch_Estimates.pdf")
+location<- c("FY16_Mults_Catch_Estimates.pdf")
 FY16 <- extract_tables(location,pages=c(2:6),method="lattice")
 # Convert to tibbles
 FY16_CtoACL<-as_tibble(FY16[[1]])
@@ -170,7 +156,7 @@ FY16_Landing<-wrangle(FY16_Landing,year=2016)
 FY16_Discard<-wrangle(FY16_Discard,year=2016)
 
 #2017
-location<- c("~/groundfish-MSE/data/data_raw/catchHistory/FY17_Mults_Catch_Estimates.pdf")
+location<- c("FY17_Mults_Catch_Estimates.pdf")
 FY17 <- extract_tables(location,pages=c(2:6),method="lattice")
 # Convert to tibbles
 FY17_CtoACL<-as_tibble(FY17[[1]])
