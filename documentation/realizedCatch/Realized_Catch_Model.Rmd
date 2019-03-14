@@ -1,6 +1,8 @@
 ---
 title: "Realized Catch Model"
-output:  html_notebook
+output:
+  word_document: default
+  html_notebook: default
 ---
 
 
@@ -19,6 +21,19 @@ library(tidyverse)
 library(VGAM)
 library(knitr)
 
+##### - Functions - #####
+# Spread keeping multiple value columns
+myspread <- function(df, key, value) {
+  # quote key
+  keyq <- rlang::enquo(key)
+  # break value vector into quotes
+  valueq <- rlang::enquo(value)
+  s <- rlang::quos(!!valueq)
+  df %>% gather(variable, value, !!!s) %>%
+    unite(temp, !!keyq, variable) %>%
+    spread(temp, value)
+}
+
 catchHist<-read_csv("C:/Users/jcummings/OneDrive - UMASS Dartmouth/SMAST/Research/groundfish-MSE/data/data_processed/catchHistory/catchHist.csv")
 catchHist <- catchHist %>% 
   select(Stock, Total, Year, data_type) %>% #select columns of interest
@@ -36,28 +51,139 @@ gbcod_data <- catchHist %>%
 kable(gbcod_data,caption="George's Bank Cod data")
 ```
 
+
+Plots of the George's Bank data, and subsets of the data showing the catch, ACL, and catch to ACL relationship through time:
 ```{r, echo=FALSE, message=FALSE}
 mydata <- catchHist %>% 
   filter(grepl(paste(c("cod","haddock"), collapse="|"),stock))
 ggplot(mydata, aes(x=year, y=total, group=data_type, color=data_type)) +
   geom_line() +
-  facet_wrap(~stock,scales = "free")
-```
+  facet_wrap(~stock,scales = "free") + labs(title="Time Series by stock and data type")
 
+##### - Set up data to model cod-haddock Interactions - #####
+# select just GB cod and haddock
+mydata<-mydata %>% 
+  filter(stock=="gb cod"|stock=="gb haddock")
+mydata$stock[mydata$stock=="gb cod"]<-"cod"
+mydata$stock[mydata$stock=="gb haddock"]<-"haddock"
+
+# Plot time series of catch, ACL, C:ACL, Discards, and Landing
+plotdata<-mydata %>% 
+  filter(data_type=="Catch"|data_type=="ACL")
+
+ggplot(plotdata, aes(x=year, y=total, group=data_type, color=data_type)) +
+  geom_line() +
+  facet_wrap(~stock,scales = "free") + labs(title="George's Bank Cod and Haddock ACL and Catch")
+
+# Plot time series of catch to ACL for GB
+plotdata2<-mydata %>% 
+  filter(data_type=="CtoACL")
+
+ggplot(plotdata2, aes(x=year, y=total, group=stock, color=stock)) +
+  geom_line() + geom_hline(yintercept=100)+ ylab("Catch as Percentage of ACL") + labs(title="George's Bank Cod and Haddock Catch:ACL")
+
+# organize for regression
+regdata <- mydata %>%
+  spread(data_type,total) %>% 
+  mutate(ACL2=ACL^2) %>% 
+  gather(data_type,total,-c(year,stock)) %>% 
+  spread(stock,total) %>% 
+  myspread(data_type, c("cod","haddock"))
+
+```
 
 
 ## Realized Catch Modeling Methodology
 
+Multiple regression models were fit to the George's Bank cod and George's Bank haddock catch, using George's Bank cod and haddock ACL as predictive variables.  We evaluated a set of five multiple regression models.  An intercept only model, a GB cod ACL model, a GB haddock ACL model, a GB cod + haddock ACL model, and a quadratic GB cod + haddock ACL model:
+```{r, echo=TRUE, message=FALSE}
+# Intercept only model
+mvreg_int<-vglm(cbind(Catch_cod,Catch_haddock)~1,family=binormal,regdata)
+# Cod ACL model
+mvreg_cod<-vglm(cbind(Catch_cod,Catch_haddock)~ACL_cod,family=binormal,regdata)
+# Haddock ACL model
+mvreg_had<-vglm(cbind(Catch_cod,Catch_haddock)~ACL_haddock,family=binormal,regdata)
+# Cod & Haddock model
+mvreg_both<-vglm(cbind(Catch_cod,Catch_haddock)~ACL_cod+ACL_haddock,family=binormal,regdata)
+# Quadratic Cod, & Haddock model
+mvreg_both2<-vglm(cbind(Catch_cod,Catch_haddock)~ACL_cod+ACL2_cod+ACL_haddock+ACL2_haddock, family=binormal,regdata)
+```
 
+As a quick model selection procedure these five models were evaluated using AIC and AICc scores.  
+```{r, echo=FALSE, message=FALSE}
+# Calculate AIC scores
+mvregAIC<-data.frame(model=c("Intercept","Cod ACL","Haddock ACL","Cod ACL & Haddock ACL","Quadratic Cod & Haddock ACL"),AIC=c(AIC(mvreg_int),AIC(mvreg_cod),AIC(mvreg_had),AIC(mvreg_both),AIC(mvreg_both2)),AICc=c(AICc(mvreg_int),AICc(mvreg_cod),AICc(mvreg_had),AICc(mvreg_both),AICc(mvreg_both2)))
+kable(mvregAIC,caption="AIC results")
+```
 
-# Markdown help
+Based on the results of this quick analysis we progressed with the Cod ACL and Cod ACL & Haddock ACL models.  
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+###### Cod Model
+This resulting model coefficients and predicted mean catch given a cod ACL are:
+```{r, echo=FALSE, message=FALSE}
+# coefficients
+kable(Coef(mvreg_cod, matrix = TRUE),caption="Cod ACL model coefficients")
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+# predictions
+##### - set up prediction for Cod ACL model- #####
+cod_ACL<-seq(0,10000,length.out=21)
+cod_pred<-predictvglm(mvreg_cod,list(ACL_cod=cod_ACL)) %>% 
+  as_tibble() %>% 
+  select(mean1,mean2) %>% 
+  mutate(cod=mean1) %>% 
+  mutate(haddock=mean2) %>%
+  select(cod,haddock)
+cod_pred<-cbind(cod_ACL,cod_pred)
+kable(cod_pred,caption="Cod model mean predicted catch")
+```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+The mean predicted relationship between the cod ACL and the cod and haddock catch from the Cod ACL model is:
+```{r, echo=FALSE, message=FALSE}
+# plot
+pred_plot<-cod_pred %>%
+  gather(catch,value, -cod_ACL)
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+# plot prediction
+ggplot(pred_plot, aes(x=cod_ACL,y=value,group=catch,col=catch)) +
+  geom_line() + xlab("Cod ACL") + ylab("Catch")
+```
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+###### Cod & Haddock Model
+This resulting model coefficients and predicted mean catch given a cod ACL and haddock ACL are:
+```{r, echo=FALSE, message=FALSE}
+kable(Coef(mvreg_both, matrix = TRUE),,caption="Cod & Haddock ACL model coefficients")
+
+haddock_ACL<-seq(0,100000,length.out=21)
+codhad_pred<-predictvglm(mvreg_both,list(ACL_cod=cod_ACL,ACL_haddock=haddock_ACL)) %>% 
+  as_tibble() %>% 
+  select(mean1,mean2) %>% 
+  mutate(cod=mean1) %>% 
+  mutate(haddock=mean2) %>%
+  select(cod,haddock)
+codhad_pred<-cbind(cod_ACL,haddock_ACL,codhad_pred)
+kable(codhad_pred,caption="Cod model mean predicted catch")
+```
+
+```{r, echo=FALSE, message=FALSE}
+##### - Set up prediction for Cod and Haddock ACL model - #####
+# Create ACL combos
+pred_vals<-expand.grid(cod_ACL,haddock_ACL)
+# Predict
+pred_plot_both<-predictvglm(mvreg_both,list(ACL_cod=pred_vals$Var1,ACL_haddock=pred_vals$Var2))
+# reorganize data
+pred_plot_both2<-pred_plot_both %>%
+  as_tibble() %>% 
+  select(mean1,mean2) %>% 
+  mutate(Catch_Cod=mean1) %>% 
+  mutate(Catch_Haddock=mean2) %>%
+  select(Catch_Cod,Catch_Haddock) %>% 
+  cbind(Cod_ACL=pred_vals$Var1,Haddock_ACL=pred_vals$Var2) %>% 
+  gather(catch,value, -Cod_ACL, -Haddock_ACL)
+```
+
+The mean predicted relationship between the cod ACL and the cod and haddock catch from the Cod ACL model is:
+```{r, echo=FALSE, message=FALSE}
+# Plot
+ggplot(pred_plot_both2, aes(x=Cod_ACL,y=Haddock_ACL,col=value)) + 
+  facet_grid(~catch) +  geom_point(size=6)+geom_contour(aes(z=value),col="black") + theme_bw()
+```
