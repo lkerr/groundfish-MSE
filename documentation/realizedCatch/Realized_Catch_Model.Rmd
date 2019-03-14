@@ -2,7 +2,6 @@
 title: "Realized Catch Model"
 output:
   word_document: default
-  html_notebook: default
 ---
 
 
@@ -151,7 +150,7 @@ ggplot(pred_plot, aes(x=cod_ACL,y=value,group=catch,col=catch)) +
 ###### Cod & Haddock Model
 This resulting model coefficients and predicted mean catch given a cod ACL and haddock ACL are:
 ```{r, echo=FALSE, message=FALSE}
-kable(Coef(mvreg_both, matrix = TRUE),,caption="Cod & Haddock ACL model coefficients")
+kable(Coef(mvreg_both, matrix = TRUE),caption="Cod & Haddock ACL model coefficients")
 
 haddock_ACL<-seq(0,100000,length.out=21)
 codhad_pred<-predictvglm(mvreg_both,list(ACL_cod=cod_ACL,ACL_haddock=haddock_ACL)) %>% 
