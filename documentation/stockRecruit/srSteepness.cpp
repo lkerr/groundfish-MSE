@@ -27,6 +27,7 @@ template<class Type>
   PARAMETER(log_sigR);
     Type sigR = exp(log_sigR);
   
+  vector<Type> gamma(NOBS);
   vector<Type> Rhat(NOBS);
   vector<Type> hPrime(NOBS);
   vector<Type> R0Prime(NOBS);
@@ -35,7 +36,8 @@ template<class Type>
   // Steepness parameterization (Punt et al. Fisheries Research
   // 157 28-40 (2014))
   
-  hPrime = h * exp(beta1 * TANOM);
+  gamma = -0.5 * log( (1 - 0.2) / (h - 0.2) - 1) + beta1 * TANOM;
+  hPrime = 0.2 + (1 - 0.2) / (1 + exp(-2*gamma));
   R0Prime = R0 * exp(beta2 * TANOM);
 
   // std::cout << beta1 << std::endl;

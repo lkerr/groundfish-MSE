@@ -18,7 +18,7 @@ recT$SSBRF0 <- recT$SSBRF0 / 1000
 recT$REC <- recT$REC000S * 1000
 ```
 
-# Analysis of Cod stock-recruit data (Beverton-Holt)
+# Analysis of Cod stock-recruit data (Beverton-Holt steepness version)
 
 ## Cod model parameters
 The relevant values that will be passed to the modeling function are:
@@ -28,6 +28,8 @@ The relevant values that will be passed to the modeling function are:
 * lb: lower bounds for each parameter
 * ub: upper bounds for each parameter
 * estPar: 0/1 indicator for which parameters to estimate
+
+beta1 is a steepness effect, beta2 is an R0 effect and beta3 is part of the overall error term.
 ```{r, echo = FALSE}
 
 # Parameters for the cod model
@@ -42,7 +44,7 @@ codPar <- list(recDat = recT,
                          beta3 = 0,
                          log_sigR = log(0.3)),
             
-               lb = c(log_h = log(0.01),
+               lb = c(log_h = log(0.2), # LB should be >= 0.2
                        log_R0 = log(2e6),
                        beta1 = -1,
                        beta2 = -5,
