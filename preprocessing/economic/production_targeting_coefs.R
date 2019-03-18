@@ -16,33 +16,10 @@ if(!require(dplyr)) {
 rawpath <- 'data/data_raw/econ/'
 savepath <- 'data/data_processed/econ/'
 
-#Files to read -- sample data for now.
-targeting_source<-"sample_DCdata_gillnets_fy2012_forML.dta"
-production_source<-"sample_PRODREGdata_gillnets_fy2012_forML.dta"
 
 targeting_coef_source<-"asclogits_ALL.txt" #(I'll just pull the first GILLNET and FIRST TRAWL coefs)
 production_coef_pre<-"production_regs_actual_pre_forR.txt"
 production_coef_post<-"production_regs_actual_post_forR.txt"
-# 
-# # read in the datasets
- targeting <- read.dta13(file.path(rawpath, targeting_source))
- production <- read.dta13(file.path(rawpath, production_source))
-# 
-# 
-# 
-# 
-# 
-# # I think we don't want to drop any data out of the datasets until right before the simulations.
-# # May make sense to sort data here
-# 
-# # We will want to always have the datasets merged with regression coefficients
-# # save processed data
- save(targeting, file=file.path(savepath, "econ_targeting.RData"))
- save(production, file=file.path(savepath, "econ_production.RData"))
-
-
-
-
 
 
 
@@ -123,7 +100,7 @@ rownames(production_coefs)<-NULL
 
 
 # parse the "model" string variable to facilitate merging to production dataset
-production_coefs<-separate(production_coefs,model,into=c("gearcat","spstock","post"),sep="[_]", remove=FALSE)
+production_coefs<-separate(production_coefs,model,into=c("gearcat","spstock2","post"),sep="[_]", remove=TRUE)
 
 ## Rename columns 
 ### First, Unlabel.  Strip out the equal signs. Prepend "beta_" to all
@@ -138,6 +115,10 @@ production_coefs<-production_coefs[,c(which(colnames(production_coefs)!="rmse"),
 
 colnames(production_coefs)[6:ncol(production_coefs)-1]<-paste0("beta_",colnames(production_coefs[6:ncol(production_coefs)-1]))
 # you will eventually merge on post, gearcat, and spstock
+production_coefs$gearcat<-tolower(production_coefs$gearcat)
+production_coefs$spstock2<-tolower(production_coefs$spstock2)
+production_coefs$post<-as.numeric(production_coefs$post)
+
 save(production_coefs, file=file.path(savepath, "production_coefs.RData"))
 
 
@@ -215,8 +196,6 @@ targeting_coefs<-inner_join(stocks,ALL, by="gearcat")
 colnames(targeting_coefs)[3:ncol(targeting_coefs)]<-paste0("beta_",colnames(targeting_coefs[3:ncol(targeting_coefs)]))
 
 save(targeting_coefs, file=file.path(savepath, "targeting_coefs.RData"))
-
-
 
 
 
