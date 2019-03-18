@@ -17,50 +17,72 @@ savepath <- 'data/data_processed/econ/'
 targeting_source<-"sample_DCdata_gillnets_fy2012_forML.dta"
 production_source<-"sample_PRODREGdata_gillnets_fy2012_forML.dta"
 
-targeting_coef_source<-"asclogit.txt"
-production_coef_source<-"production_regs_V27.txt"
-production_coef_source<-"prod29.txt" #temp overwriting
+targeting_coef_source<-"asclogit_ALL.txt" #(I'll just pull the first GILLNET and FIRST TRAWL coefs)
+production_coef_pre<-"production_regs_actual_pre_forR.txt"
+production_coef_post<-"production_regs_actual_post_forR.txt"
+# 
+# # read in the datasets
+ targeting <- read.dta13(file.path(rawpath, targeting_source))
+ production <- read.dta13(file.path(rawpath, production_source))
+# 
+# 
+# 
+# 
+# 
+# # I think we don't want to drop any data out of the datasets until right before the simulations.
+# # May make sense to sort data here
+# 
+# # We will want to always have the datasets merged with regression coefficients
+# # save processed data
+ save(targeting, file=file.path(savepath, "econ_targeting.RData"))
+ save(production, file=file.path(savepath, "econ_production.RData"))
 
-# read in the datasets
-targeting <- read.dta13(file.path(rawpath, targeting_source))
-production <- read.dta13(file.path(rawpath, production_source))
 
 
 
 
-
-# I think we don't want to drop any data out of the datasets until right before the simulations.
-# May make sense to sort data here
-
-# We will want to always have the datasets merged regression coefficients here.
-# save processed data
-save(targeting, file=file.path(savepath, "econ_targeting.RData"))
-save(production, file=file.path(savepath, "econ_production.RData"))
 
 
 ##########################
 # BEGIN readin of econometric model of production coefficients 
 ##########################
+# p value, above which we set the coefficient to zero.  You can set this to 1.0 if you want.
+thresh<-0.10
+
+## Function to zero out coefficients that are non statistically significant##
+zero_out<-function(working_coefs,pcut){
+  nc<-ncol(working_coefs)
+  # zero out the insignificant ones 
+  wc<-2
+  while(wc<nc){
+    idxM<-NULL 
+    idxM<-which(working_coefs[wc+1]>pcut) 
+    working_coefs[,wc][idxM]<-0
+    wc<-wc+2
+  }
+  working_coefs
+}
+
+## Function to drop out the p-values##
+droppval<-function(working_coefs){
+  nc<-ncol(working_coefs)
+  # zero out the insignificant ones 
+  wc<-nc
+  while(wc>=3){
+    working_coefs<-working_coefs[-wc]
+    wc<-wc-2
+  }
+  working_coefs
+}
+
 # read in the estimated coefficients from txt files
-production_coefs <- read.csv(file.path(rawpath,production_coef_source), sep=",", header=TRUE,stringsAsFactors=FALSE)
+production_coefs <- read.csv(file.path(rawpath,production_coef_pre), sep="\t", header=TRUE,stringsAsFactors=FALSE)
 
-## Deal with zeroing out coefficients ##
+production_coefs<-zero_out(production_coefs,thresh)
+production_coefs<-droppval(production_coefs)
 
-nc<-ncol(production_coefs)
-# zero out the insignificant ones 
-wc<-2
-while(wc<nc){
-  idxM<-NULL 
-  idxM<-which(production_coefs[wc+1]>.1) 
-  production_coefs[,wc][idxM]<-0
-  wc<-wc+2
-}
+
 # Drop out the p-values since we don't need them anymore. these are the odd columns 3:nc. Super ugly code, but works.
-wc<-nc
-while(wc>=3){
-  production_coefs<-production_coefs[-wc]
-  wc<-wc-2
-}
 ## End zeroing out coefficients ##
 
 
@@ -72,6 +94,24 @@ production_coefs<-production_coefs[,-1]
 #transpose and send to dataframe, fix naming, and characters
 production_coefs<-as.data.frame(t(production_coefs))
 
+### Reapeat for the post coefs 
+
+production_coefs_post <- read.csv(file.path(rawpath,production_coef_post), sep="\t", header=TRUE,stringsAsFactors=FALSE)
+
+production_coefs_post<-zero_out(production_coefs_post,thresh)
+production_coefs_post<-droppval(production_coefs_post)
+
+#push the first column into the row names and drop that column
+rownames(production_coefs_post)<-production_coefs_post[,1]
+production_coefs_post<-production_coefs_post[,-1]
+#transpose and send to dataframe, fix naming, and characters
+production_coefs_post<-as.data.frame(t(production_coefs_post))
+
+### Bring together 
+production_coefs[setdiff(names(production_coefs_post), names(production_coefs))] <- NA
+production_coefs_post[setdiff(names(production_coefs), names(production_coefs_post))] <- NA
+production_coefs<-rbind(production_coefs,production_coefs_post)
+rm(production_coefs_post)
 #take the rownames, push them into a column, and make sure they are characters. un-name the rows
 model <- rownames(production_coefs)
 production_coefs<-cbind(model,production_coefs)
@@ -80,24 +120,38 @@ rownames(production_coefs)<-NULL
 
 
 # parse the "model" string variable to facilitate merging to production dataset
-production_coefs<-separate(production_coefs,model,into=c("estimator","post","gearcat","spstock"),sep="[_]", remove=TRUE)
+production_coefs<-separate(production_coefs,model,into=c("gearcat","spstock","post"),sep="[_]", remove=FALSE)
+
+## Rename columns 
+### First, Unlabel.  Strip out the equal signs. Prepend "beta_" to all
+colnames(production_coefs)[colnames(production_coefs)=="Number of Crew (Log)"] <- "logcrew"
+colnames(production_coefs)[colnames(production_coefs)=="Trip Length (Log)"] <- "logtriphours"
+colnames(production_coefs)[colnames(production_coefs)=="Cumulative Harvest (Log)"] <- "loghcumul"
+colnames(production_coefs)[colnames(production_coefs)=="Primary Target"] <- "primary"
+colnames(production_coefs)[colnames(production_coefs)=="Secondary Secondary"] <- "secondary"
+colnames(production_coefs)<- tolower(gsub("=","",colnames(production_coefs)))
+
+production_coefs<-production_coefs[,c(which(colnames(production_coefs)!="rmse"),which(colnames(production_coefs)=="rmse"))]
+
+colnames(production_coefs)[6:ncol(production_coefs)-1]<-paste0("beta_",colnames(production_coefs[6:ncol(production_coefs)-1]))
+
+
+
 
 # you will eventually merge on post, gearcat, and spstock
 
 
-save(production_coefs, file=file.path(savepath, "production_coefs.RData"))
+#save(production_coefs, file=file.path(savepath, "production_coefs.RData"))
+
+
+
 
 
 #Repeat for the ASCLogit coefficients (not done yet)
-
-
 #save(targeting_coefs, file=file.path(savepath, "targeting_coefs.RData"))
 
-# Desired output   
-## 40ish rows (2 gears x2 time periods x 10ish stocks)
-## 3 key columns (post, gearcat, spstock)
-## 29 columns: "real variables", 12 categoricals for months,  12 categoricals for years
- 
+
+
 
 
 
