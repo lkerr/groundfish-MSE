@@ -7,6 +7,9 @@ if(!require(readstata13)) {
 if(!require(tidyr)) {  
   install.packages("tidyr")
   require(tidyr)}
+if(!require(dplyr)) {  
+  install.packages("dplyr")
+  require(dplyr)}
 
 # file paths for the raw and final directories
 
@@ -17,7 +20,7 @@ savepath <- 'data/data_processed/econ/'
 targeting_source<-"sample_DCdata_gillnets_fy2012_forML.dta"
 production_source<-"sample_PRODREGdata_gillnets_fy2012_forML.dta"
 
-targeting_coef_source<-"asclogit_ALL.txt" #(I'll just pull the first GILLNET and FIRST TRAWL coefs)
+targeting_coef_source<-"asclogits_ALL.txt" #(I'll just pull the first GILLNET and FIRST TRAWL coefs)
 production_coef_pre<-"production_regs_actual_pre_forR.txt"
 production_coef_post<-"production_regs_actual_post_forR.txt"
 # 
@@ -125,7 +128,7 @@ production_coefs<-separate(production_coefs,model,into=c("gearcat","spstock","po
 ## Rename columns 
 ### First, Unlabel.  Strip out the equal signs. Prepend "beta_" to all
 colnames(production_coefs)[colnames(production_coefs)=="Number of Crew (Log)"] <- "logcrew"
-colnames(production_coefs)[colnames(production_coefs)=="Trip Length (Log)"] <- "logtriphours"
+colnames(production_coefs)[colnames(production_coefs)=="Trip Length (Log)"] <- "logtripdays"
 colnames(production_coefs)[colnames(production_coefs)=="Cumulative Harvest (Log)"] <- "loghcumul"
 colnames(production_coefs)[colnames(production_coefs)=="Primary Target"] <- "primary"
 colnames(production_coefs)[colnames(production_coefs)=="Secondary Secondary"] <- "secondary"
@@ -134,22 +137,84 @@ colnames(production_coefs)<- tolower(gsub("=","",colnames(production_coefs)))
 production_coefs<-production_coefs[,c(which(colnames(production_coefs)!="rmse"),which(colnames(production_coefs)=="rmse"))]
 
 colnames(production_coefs)[6:ncol(production_coefs)-1]<-paste0("beta_",colnames(production_coefs[6:ncol(production_coefs)-1]))
-
-
-
-
 # you will eventually merge on post, gearcat, and spstock
+save(production_coefs, file=file.path(savepath, "production_coefs.RData"))
 
 
-#save(production_coefs, file=file.path(savepath, "production_coefs.RData"))
+
+
 
 
 
 
 
 #Repeat for the ASCLogit coefficients (not done yet)
-#save(targeting_coefs, file=file.path(savepath, "targeting_coefs.RData"))
 
+asc_coefs <- read.csv(file.path(rawpath,targeting_coef_source), sep="\t", header=TRUE,stringsAsFactors=FALSE)
+asc_coefs<-asc_coefs[-1,]
+
+asc_coefs<-zero_out(asc_coefs,thresh)
+asc_coefs<-droppval(asc_coefs)
+
+# fix up X (coef name)
+asc_coefs$X<-tolower(asc_coefs$X)
+
+
+
+
+
+asc_coefs$X[asc_coefs$X=="total expected revenues (expected revenues*multiplier)"] <-"exp_rev"
+asc_coefs$X[asc_coefs$X=="distance (in miles) from port to month-specific stock area"] <-"distance"
+asc_coefs$X[asc_coefs$X=="das charge"] <-"das_charge"
+asc_coefs$X[asc_coefs$X=="number of crew"] <-"crew"
+asc_coefs$X[asc_coefs$X=="start of fishing season indicator (months 1 and 2)"] <-"start_of_season"
+asc_coefs$X[asc_coefs$X=="open-access/permit to fish"] <-"permitted"
+asc_coefs$X[asc_coefs$X=="limited-access permit to fish"] <-"lapermitted"
+
+asc_coefs$X[asc_coefs$X=="fuel price*distance"] <-"fuelprice_distance"
+asc_coefs$X[asc_coefs$X=="fuel price*vessel length"] <-"fuelprice_len"
+
+asc_coefs$X[asc_coefs$X=="das charge*vessel length"] <-"das_charge_len"
+asc_coefs$X[asc_coefs$X=="max wind speed (m/s)"] <-"max_wind"
+asc_coefs$X[asc_coefs$X=="max wind speed squared"] <-"max_wind2"
+asc_coefs$X[asc_coefs$X=="max wind speed squared"] <-"max_wind2"
+asc_coefs$X<-gsub("fuel price*vessel length","fuelprice_len ", asc_coefs$X)
+
+asc_coefs$X<-gsub("\\(deflated\\)","", asc_coefs$X)
+
+
+
+stocklist<-c("americanlobster", "codgb", "codgom", "haddockgom", "haddockgb", "monkfish", "nofish", "other", "pollock", "skates", "spinydogfish", "whitehake", "yellowtailflounderccgom","americanplaiceflounder", "redsilveroffshorehake","redfish","seascallop","squidmackerelbutterfishherrin","winterfloundergb","witchflounder","yellowtailfloundergb", "yellowtailfloundersnema")
+
+asc_coefs$spstock<-0
+
+for (ws in stocklist){ 
+  wr<-grep(ws,asc_coefs$X)
+  asc_coefs$spstock[(wr+1):(wr+3)]<-ws
+  asc_coefs<-asc_coefs[-wr,]
+}
+
+ALL<-asc_coefs[which(asc_coefs$spstock==0),]
+ALL<-ALL[!names(ALL) %in% c("spstock")]
+rownames(ALL)<-ALL[,1]
+ALL<-ALL[,-1]
+
+ALL<-as.data.frame(t(ALL))
+ALL$gearcat<-rownames(ALL)
+rownames(ALL)<-NULL
+  
+
+
+stocks<-asc_coefs[-which(asc_coefs$spstock==0),]
+stocks<-gather(stocks,'GILLNETS','TRAWL', key="gearcat", value="coef")
+stocks<-spread(stocks,X,coef)
+#transpose and send to dataframe, fix naming, and characters
+
+targeting_coefs<-inner_join(stocks,ALL, by="gearcat")
+
+colnames(targeting_coefs)[3:ncol(targeting_coefs)]<-paste0("beta_",colnames(targeting_coefs[3:ncol(targeting_coefs)]))
+
+save(targeting_coefs, file=file.path(savepath, "targeting_coefs.RData"))
 
 
 
