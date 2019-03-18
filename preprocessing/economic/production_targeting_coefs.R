@@ -167,16 +167,20 @@ asc_coefs$X<-gsub("\\(deflated\\)","", asc_coefs$X)
 
 stocklist<-c("americanlobster", "codgb", "codgom", "haddockgom", "haddockgb", "monkfish", "nofish", "other", "pollock", "skates", "spinydogfish", "whitehake", "yellowtailflounderccgom","americanplaiceflounder", "redsilveroffshorehake","redfish","seascallop","squidmackerelbutterfishherrin","winterfloundergb","witchflounder","yellowtailfloundergb", "yellowtailfloundersnema")
 
-asc_coefs$spstock<-0
+
+#Delete this line for the final version 
+stocklist<-c("american_lobster", "cod_gb", "cod_gom")
+
+asc_coefs$spstock2<-0
 
 for (ws in stocklist){ 
   wr<-grep(ws,asc_coefs$X)
-  asc_coefs$spstock[(wr+1):(wr+3)]<-ws
+  asc_coefs$spstock2[(wr+1):(wr+3)]<-ws
   asc_coefs<-asc_coefs[-wr,]
 }
 
-ALL<-asc_coefs[which(asc_coefs$spstock==0),]
-ALL<-ALL[!names(ALL) %in% c("spstock")]
+ALL<-asc_coefs[which(asc_coefs$spstock2==0),]
+ALL<-ALL[!names(ALL) %in% c("spstock2")]
 rownames(ALL)<-ALL[,1]
 ALL<-ALL[,-1]
 
@@ -186,12 +190,15 @@ rownames(ALL)<-NULL
   
 
 
-stocks<-asc_coefs[-which(asc_coefs$spstock==0),]
+stocks<-asc_coefs[-which(asc_coefs$spstock2==0),]
 stocks<-gather(stocks,'GILLNETS','TRAWL', key="gearcat", value="coef")
 stocks<-spread(stocks,X,coef)
 #transpose and send to dataframe, fix naming, and characters
 
 targeting_coefs<-inner_join(stocks,ALL, by="gearcat")
+
+targeting_coefs$spstock2<- gsub("_","",targeting_coefs$spstock2)
+
 
 colnames(targeting_coefs)[3:ncol(targeting_coefs)]<-paste0("beta_",colnames(targeting_coefs[3:ncol(targeting_coefs)]))
 
