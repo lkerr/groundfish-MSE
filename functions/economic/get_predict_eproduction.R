@@ -7,8 +7,6 @@
 # logh=q+XB, where X is q, log crew, log trip days, log cumulative harvest, primary, secondary, and dummies for month and fishing year.
 # 
 
-#code to test function. Remove when done.
-
 get_predict_eproduction <- function(prod_ds){
  attach(prod_ds)
   logh_hat<- q+beta_logcrew*log_crew  + beta_logtripdays*log_trip_days +  beta_loghcumul*logh_cumul + beta_primary*primary + beta_secondary*secondary 
