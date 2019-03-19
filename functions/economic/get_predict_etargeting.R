@@ -1,0 +1,40 @@
+# A function to do predictions for the economic targeting model. 
+#
+# tds: Combined dataset of targeting data and asclogit coefficients 
+# I need to :
+# A. compute xb. 
+# B. exponentiate
+# C. Compute the total, by id
+# D. Compute prob = exp(xb)/total exp(xb)
+
+# To fix:  depending on the specificatio, the prediction line will need to change.  
+#.Unsure if the NA are handled properly.  Also unsure if the "No Fish" option will be properly constructed (Troubleshoot: if the utility function equation is fixed AND I get a matrix of NAs, then the utility for the no-fish option isn't properly being constructed. I'm pretty sure that this gets set =0 (so exp(0)=1). There are no coefficients for no fish model.
+
+get_predict_etargeting <- function(tds){
+ attach(tds)
+  tds$util<-beta_exp_rev*exp_rev_total + beta_distance*distance + beta_das_charge*das_charge + beta_fuelprice_distance*fuelprice_distance
+    
+######################## This needs to be fixed and will depend on the specification for the ASC logit.   Right now, we have a 'small' utility function
+#################
+  # tds$util<-util+beta_price_one_day_lag*price_lb_lag1+beta_avg_wind*mean_wind + beta_avg_wind2*mean_wind_2+beta_start_of_season*start_of_season + beta_crew*crew + beta_permitted*permitted + beta_lapermitted*LApermit+das_charge_len*beta_das_charge_len
+  
+  ######################## This needs to be fixed and will depend on the specification for the ASC logit.   Right now, we have a 'small' utility function
+  #################
+  
+  
+  tds$util<-tds$util + beta_fuel_price*fuelprice+beta_fuelprice_len*fuelprice_len+beta_wkly_crew_wage*wkly_crew_wage
+  
+  tds$expu<-exp(tds$util)
+  totexpu<-aggregate(tds$expu,by=list(id=id), FUN=sum)
+  colnames(totexpu)[colnames(totexpu)=="x"] <- "totalu"
+  
+  # mergeback
+  tds<-merge(x = tds, y = totexpu, by = "id", all = TRUE)
+
+  prhat<- tds$expu/tds$totalu
+  
+  detach(tds)
+  return(prhat)
+  
+}
+

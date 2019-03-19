@@ -4,6 +4,7 @@
 
   # 3. Pulls in the targeting equation coefficients and data
   # 4. Joins them together. 
+# This is a little stupid, because it make a big dataset, instead of making a pair of matrices (one for data and one for coefficients). But whatever.
 
 if(!require(readstata13)) {  
   install.packages("readstata13")
@@ -14,9 +15,6 @@ if(!require(tidyr)) {
 if(!require(dplyr)) {  
   install.packages("dplyr")
   require(dplyr)}
-if(!require(dummies)) {  
-  install.packages("dummies")
-  require(dummies)}
 
 
 # file paths for the raw and final directories

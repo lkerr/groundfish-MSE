@@ -131,7 +131,7 @@ save(production_coefs, file=file.path(savepath, "production_coefs.RData"))
 
 #Repeat for the ASCLogit coefficients (not done yet)
 
-asc_coefs <- read.csv(file.path(rawpath,targeting_coef_source), sep="\t", header=TRUE,stringsAsFactors=FALSE)
+asc_coefs <- read.csv(file.path(rawpath,targeting_coef_source), sep=",", header=TRUE,stringsAsFactors=FALSE)
 asc_coefs<-asc_coefs[-1,]
 
 asc_coefs<-zero_out(asc_coefs,thresh)
@@ -143,6 +143,12 @@ asc_coefs$X<-tolower(asc_coefs$X)
 
 
 
+asc_coefs$X<-gsub("\t)","", asc_coefs$X)
+asc_coefs$X<-gsub("one-day lag","", asc_coefs$X)
+asc_coefs$X<-gsub("\\(deflated\\)","", asc_coefs$X)
+asc_coefs$X<-trimws(asc_coefs$X, which=c("both"))
+
+asc_coefs$X[asc_coefs$X=="price/lb"] <-"price_one_day_lag"
 
 asc_coefs$X[asc_coefs$X=="total expected revenues (expected revenues*multiplier)"] <-"exp_rev"
 asc_coefs$X[asc_coefs$X=="distance (in miles) from port to month-specific stock area"] <-"distance"
@@ -154,14 +160,20 @@ asc_coefs$X[asc_coefs$X=="limited-access permit to fish"] <-"lapermitted"
 
 asc_coefs$X[asc_coefs$X=="fuel price*distance"] <-"fuelprice_distance"
 asc_coefs$X[asc_coefs$X=="fuel price*vessel length"] <-"fuelprice_len"
+asc_coefs$X[asc_coefs$X=="fuel price"] <-"fuelprice"
 
 asc_coefs$X[asc_coefs$X=="das charge*vessel length"] <-"das_charge_len"
 asc_coefs$X[asc_coefs$X=="max wind speed (m/s)"] <-"max_wind"
 asc_coefs$X[asc_coefs$X=="max wind speed squared"] <-"max_wind2"
 asc_coefs$X[asc_coefs$X=="max wind speed squared"] <-"max_wind2"
+asc_coefs$X[asc_coefs$X=="max wind speed squared"] <-"max_wind2"
+
+asc_coefs$X[asc_coefs$X=="avg. wind speed (m/s)"] <-"avg_wind"
+asc_coefs$X[asc_coefs$X=="avg. wind speed squared"] <-"avg_wind2"
+
+
 asc_coefs$X<-gsub("fuel price*vessel length","fuelprice_len ", asc_coefs$X)
 
-asc_coefs$X<-gsub("\\(deflated\\)","", asc_coefs$X)
 
 
 
