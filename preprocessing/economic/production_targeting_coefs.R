@@ -108,12 +108,12 @@ colnames(production_coefs)[colnames(production_coefs)=="Number of Crew (Log)"] <
 colnames(production_coefs)[colnames(production_coefs)=="Trip Length (Log)"] <- "logtripdays"
 colnames(production_coefs)[colnames(production_coefs)=="Cumulative Harvest (Log)"] <- "loghcumul"
 colnames(production_coefs)[colnames(production_coefs)=="Primary Target"] <- "primary"
-colnames(production_coefs)[colnames(production_coefs)=="Secondary Secondary"] <- "secondary"
+colnames(production_coefs)[colnames(production_coefs)=="Secondary Target"] <- "secondary"
 colnames(production_coefs)<- tolower(gsub("=","",colnames(production_coefs)))
 
 production_coefs<-production_coefs[,c(which(colnames(production_coefs)!="rmse"),which(colnames(production_coefs)=="rmse"))]
 
-colnames(production_coefs)[6:ncol(production_coefs)-1]<-paste0("beta_",colnames(production_coefs[6:ncol(production_coefs)-1]))
+colnames(production_coefs)[5:ncol(production_coefs)-1]<-paste0("beta_",colnames(production_coefs[5:ncol(production_coefs)-1]))
 # you will eventually merge on post, gearcat, and spstock
 production_coefs$gearcat<-tolower(production_coefs$gearcat)
 production_coefs$spstock2<-tolower(production_coefs$spstock2)
