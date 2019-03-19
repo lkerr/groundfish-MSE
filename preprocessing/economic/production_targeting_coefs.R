@@ -1,5 +1,5 @@
-# Read in Production and Targeting datasets from Stata to .Rdata format.  
-# Need to Read in the production and targeting coefficients
+# Read in Production and Targeting coefficients to .RData.  
+# Tested working. Make a small change if we want to get different regression results (there are 4 sets of models for each gear, we haven't picked a "best " model yet).
 
 if(!require(readstata13)) {  
   install.packages("readstata13")
@@ -17,7 +17,7 @@ rawpath <- 'data/data_raw/econ/'
 savepath <- 'data/data_processed/econ/'
 
 
-targeting_coef_source<-"asclogits_ALL.txt" #(I'll just pull the first GILLNET and FIRST TRAWL coefs)
+targeting_coef_source<-"asclogits_ALL_forR.txt" #(I'll just pull the first GILLNET and FIRST TRAWL coefs)
 production_coef_pre<-"production_regs_actual_pre_forR.txt"
 production_coef_post<-"production_regs_actual_post_forR.txt"
 
@@ -27,7 +27,7 @@ production_coef_post<-"production_regs_actual_post_forR.txt"
 # BEGIN readin of econometric model of production coefficients 
 ##########################
 # p value, above which we set the coefficient to zero.  You can set this to 1.0 if you want.
-thresh<-0.10
+thresh<-1.0
 
 ## Function to zero out coefficients that are non statistically significant##
 zero_out<-function(working_coefs,pcut){
@@ -130,9 +130,12 @@ save(production_coefs, file=file.path(savepath, "production_coefs.RData"))
 
 
 #Repeat for the ASCLogit coefficients (not done yet)
-
-asc_coefs <- read.csv(file.path(rawpath,targeting_coef_source), sep=",", header=TRUE,stringsAsFactors=FALSE)
+asc_coefs <- read.csv(file.path(rawpath,targeting_coef_source), sep="\t", header=TRUE,stringsAsFactors=FALSE)
 asc_coefs<-asc_coefs[-1,]
+
+# I'm just extracting the 1st set of regression results, these are in columns 1:5.  
+asc_coefs<-asc_coefs[,1:5]
+
 
 asc_coefs<-zero_out(asc_coefs,thresh)
 asc_coefs<-droppval(asc_coefs)
@@ -142,6 +145,8 @@ asc_coefs$X<-tolower(asc_coefs$X)
 
 
 
+asc_coefs$X<-gsub(",","", asc_coefs$X)
+asc_coefs$X<-trimws(asc_coefs$X, which=c("both"))
 
 asc_coefs$X<-gsub("\t)","", asc_coefs$X)
 asc_coefs$X<-gsub("one-day lag","", asc_coefs$X)
@@ -177,11 +182,11 @@ asc_coefs$X<-gsub("fuel price*vessel length","fuelprice_len ", asc_coefs$X)
 
 
 
-stocklist<-c("americanlobster", "codgb", "codgom", "haddockgom", "haddockgb", "monkfish", "nofish", "other", "pollock", "skates", "spinydogfish", "whitehake", "yellowtailflounderccgom","americanplaiceflounder", "redsilveroffshorehake","redfish","seascallop","squidmackerelbutterfishherrin","winterfloundergb","witchflounder","yellowtailfloundergb", "yellowtailfloundersnema")
+stocklist<-c("american_lobster", "cod_gb", "cod_gom", "haddock_gom", "haddock_gb", "monkfish", "other", "pollock", "skates", "spiny_dogfish", "white_hake", "yellowtail_flounder_ccgom","american_plaice_flounder", "red_silver_offshore_hake","redfish","sea_scallop","squid_mackerel_butterfish_herrin","winter_flounder_gb","winter_flounder_gom","witch_flounder","yellowtail_flounder_gb", "yellowtail_flounder_snema")
 
 
 #Delete this line for the final version 
-stocklist<-c("american_lobster", "cod_gb", "cod_gom")
+#stocklist<-c("american_lobster", "cod_gb", "cod_gom")
 
 asc_coefs$spstock2<-0
 
@@ -190,6 +195,7 @@ for (ws in stocklist){
   asc_coefs$spstock2[(wr+1):(wr+3)]<-ws
   asc_coefs<-asc_coefs[-wr,]
 }
+
 
 ALL<-asc_coefs[which(asc_coefs$spstock2==0),]
 ALL<-ALL[!names(ALL) %in% c("spstock2")]
@@ -213,6 +219,9 @@ targeting_coefs$spstock2<- gsub("_","",targeting_coefs$spstock2)
 
 
 colnames(targeting_coefs)[3:ncol(targeting_coefs)]<-paste0("beta_",colnames(targeting_coefs[3:ncol(targeting_coefs)]))
+
+#Force NAs to zero. This is legit. I promise. 
+targeting_coefs[is.na(targeting_coefs)]<-0
 
 save(targeting_coefs, file=file.path(savepath, "targeting_coefs.RData"))
 
