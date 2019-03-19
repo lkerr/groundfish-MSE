@@ -16,18 +16,16 @@ load(file.path(datapath,"full_targeting.RData"))
 
 
 #data wrangling on test datasets  -- once you have a full set of coefficients, you should be able to delete this.
-colnames(targeting_dataset)[colnames(targeting_dataset)=="beta_fuel price "] <- "beta_fuel_price"
-stocklist<-c("americanlobster", "codgb", "codgom")
-test<-targeting_dataset[which(targeting_dataset$spstock2 %in% stocklist),]
-tds<-test
+omitlist<-c("hiho")
+tds<-targeting_dataset
 #end data wrangling on test dataset
 
 
 
 
 #code to test function. Remove when done.
-phat<-get_predict_etargeting(test)
-test<-cbind(phat,test)
+phat<-get_predict_etargeting(targeting_dataset)
+targeting_dataset<-cbind(phat,targeting_dataset)
 
 #Not sure where to put hhat right now, probably overwrite hhat in production_dataset.  
 

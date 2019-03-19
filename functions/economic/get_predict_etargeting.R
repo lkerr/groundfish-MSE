@@ -12,19 +12,14 @@
 
 get_predict_etargeting <- function(tds){
  attach(tds)
-  tds$util<-beta_exp_rev*exp_rev_total + beta_distance*distance + beta_das_charge*das_charge + beta_fuelprice_distance*fuelprice_distance
+  tds$util<-beta_exp_rev*exp_rev_total + beta_distance*distance + beta_das_charge*das_charge + beta_fuelprice_distance*fuelprice_distance + beta_start_of_season*start_of_season+beta_crew*crew + beta_price_one_day_lag*price_lb_lag1 +beta_avg_wind*mean_wind + beta_avg_wind2*mean_wind_2+beta_permitted*permitted + beta_lapermitted*LApermit +das_charge_len*beta_das_charge_len+ beta_max_wind*max_wind+beta_max_wind2*max_wind_2
     
-######################## This needs to be fixed and will depend on the specification for the ASC logit.   Right now, we have a 'small' utility function
-#################
-  # tds$util<-util+beta_price_one_day_lag*price_lb_lag1+beta_avg_wind*mean_wind + beta_avg_wind2*mean_wind_2+beta_start_of_season*start_of_season + beta_crew*crew + beta_permitted*permitted + beta_lapermitted*LApermit+das_charge_len*beta_das_charge_len
-  
-  ######################## This needs to be fixed and will depend on the specification for the ASC logit.   Right now, we have a 'small' utility function
-  #################
-  
-  
-  tds$util<-tds$util + beta_fuel_price*fuelprice+beta_fuelprice_len*fuelprice_len+beta_wkly_crew_wage*wkly_crew_wage
+  #Add in the alternative-specific effects 
+    tds$util<-tds$util + beta_fuelprice*fuelprice+beta_fuelprice_len*fuelprice_len+beta_wkly_crew_wage*wkly_crew_wage
+  tds$util[is.na(tds$util)]<-0
   
   tds$expu<-exp(tds$util)
+
   totexpu<-aggregate(tds$expu,by=list(id=id), FUN=sum)
   colnames(totexpu)[colnames(totexpu)=="x"] <- "totalu"
   
