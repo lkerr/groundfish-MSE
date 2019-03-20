@@ -104,9 +104,9 @@ production_coefs<-separate(production_coefs,model,into=c("gearcat","spstock2","p
 
 ## Rename columns 
 ### First, Unlabel.  Strip out the equal signs. Prepend "beta_" to all
-colnames(production_coefs)[colnames(production_coefs)=="Number of Crew (Log)"] <- "logcrew"
-colnames(production_coefs)[colnames(production_coefs)=="Trip Length (Log)"] <- "logtripdays"
-colnames(production_coefs)[colnames(production_coefs)=="Cumulative Harvest (Log)"] <- "loghcumul"
+colnames(production_coefs)[colnames(production_coefs)=="Number of Crew (Log)"] <- "log_crew"
+colnames(production_coefs)[colnames(production_coefs)=="Trip Length (Log)"] <- "log_trip_days"
+colnames(production_coefs)[colnames(production_coefs)=="Cumulative Harvest (Log)"] <- "logh_cumul"
 colnames(production_coefs)[colnames(production_coefs)=="Primary Target"] <- "primary"
 colnames(production_coefs)[colnames(production_coefs)=="Secondary Target"] <- "secondary"
 colnames(production_coefs)<- tolower(gsub("=","",colnames(production_coefs)))

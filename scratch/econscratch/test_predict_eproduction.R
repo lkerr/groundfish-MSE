@@ -9,14 +9,10 @@ invisible(sapply(ffiles, source))
 
 datapath <- 'data/data_processed/econ'
 load(file.path(datapath,"full_production.RData"))
-# patch coef naming.
-colnames(production_dataset)[colnames(production_dataset)=="logcrew"] <- "beta_logcrew"
-colnames(production_dataset)[colnames(production_dataset)=="beta_secondary target"] <- "beta_secondary"
-#End code to test function. Remove when done.
 
 
 
-
+prod_ds<-production_dataset
 
 
 #code to test function. Remove when done.
