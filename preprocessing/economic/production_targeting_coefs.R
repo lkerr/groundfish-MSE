@@ -153,15 +153,15 @@ asc_coefs$X<-gsub("one-day lag","", asc_coefs$X)
 asc_coefs$X<-gsub("\\(deflated\\)","", asc_coefs$X)
 asc_coefs$X<-trimws(asc_coefs$X, which=c("both"))
 
-asc_coefs$X[asc_coefs$X=="price/lb"] <-"price_one_day_lag"
+asc_coefs$X[asc_coefs$X=="price/lb"] <-"price_lb_lag1"
 
-asc_coefs$X[asc_coefs$X=="total expected revenues (expected revenues*multiplier)"] <-"exp_rev"
+asc_coefs$X[asc_coefs$X=="total expected revenues (expected revenues*multiplier)"] <-"exp_rev_total"
 asc_coefs$X[asc_coefs$X=="distance (in miles) from port to month-specific stock area"] <-"distance"
 asc_coefs$X[asc_coefs$X=="das charge"] <-"das_charge"
 asc_coefs$X[asc_coefs$X=="number of crew"] <-"crew"
 asc_coefs$X[asc_coefs$X=="start of fishing season indicator (months 1 and 2)"] <-"start_of_season"
 asc_coefs$X[asc_coefs$X=="open-access/permit to fish"] <-"permitted"
-asc_coefs$X[asc_coefs$X=="limited-access permit to fish"] <-"lapermitted"
+asc_coefs$X[asc_coefs$X=="limited-access permit to fish"] <-"lapermit"
 
 asc_coefs$X[asc_coefs$X=="fuel price*distance"] <-"fuelprice_distance"
 asc_coefs$X[asc_coefs$X=="fuel price*vessel length"] <-"fuelprice_len"
@@ -169,12 +169,10 @@ asc_coefs$X[asc_coefs$X=="fuel price"] <-"fuelprice"
 
 asc_coefs$X[asc_coefs$X=="das charge*vessel length"] <-"das_charge_len"
 asc_coefs$X[asc_coefs$X=="max wind speed (m/s)"] <-"max_wind"
-asc_coefs$X[asc_coefs$X=="max wind speed squared"] <-"max_wind2"
-asc_coefs$X[asc_coefs$X=="max wind speed squared"] <-"max_wind2"
-asc_coefs$X[asc_coefs$X=="max wind speed squared"] <-"max_wind2"
+asc_coefs$X[asc_coefs$X=="max wind speed squared"] <-"max_wind_2"
 
-asc_coefs$X[asc_coefs$X=="avg. wind speed (m/s)"] <-"avg_wind"
-asc_coefs$X[asc_coefs$X=="avg. wind speed squared"] <-"avg_wind2"
+asc_coefs$X[asc_coefs$X=="avg. wind speed (m/s)"] <-"mean_wind"
+asc_coefs$X[asc_coefs$X=="avg. wind speed squared"] <-"mean_wind_2"
 
 
 asc_coefs$X<-gsub("fuel price*vessel length","fuelprice_len ", asc_coefs$X)

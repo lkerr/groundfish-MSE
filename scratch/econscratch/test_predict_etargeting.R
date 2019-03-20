@@ -16,7 +16,6 @@ load(file.path(datapath,"full_targeting.RData"))
 
 
 #data wrangling on test datasets  -- once you have a full set of coefficients, you should be able to delete this.
-omitlist<-c("hiho")
 tds<-targeting_dataset
 #end data wrangling on test dataset
 

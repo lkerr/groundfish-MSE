@@ -34,6 +34,7 @@ targeting <- read.dta13(file.path(rawpath, targeting_source))
 targeting$spstock2<-tolower(targeting$spstock)
 targeting$spstock2<- gsub("_","",targeting$spstock2)
 
+colnames(targeting)[colnames(targeting)=="LApermit"] <- "lapermit"
 
 production <- read.dta13(file.path(rawpath, production_source))
 ###############################################################
