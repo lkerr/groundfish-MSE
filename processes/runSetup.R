@@ -8,8 +8,9 @@ ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
 invisible(sapply(ffiles, source))
 
 
-# prepare directories
-#prepFiles()
+# get the operating model parameters
+source('processes/set_om_parameters.R')
+nage <- length(fage:page)
 
 
 # Get the run info so the functions work appropriately whether they are
@@ -21,10 +22,6 @@ source('processes/loadLibs.R')
 
 # load the list of management procedures
 source('processes/generateMP.R')
-
-# get the operating model parameters
-source('processes/set_om_parameters.R')
-nage <- length(fage:page)
 
 source('processes/genAnnStructure.R')
 

@@ -5,12 +5,14 @@
 
 #### Debugging ####
 
-# Debug? (windows only for now...)
+# Debug? (windows only for now...) (T/F)
 debugSink <- FALSE
 
-# Debug using simple temperature trend that reduces variance?
+# Debug using simple temperature trend that reduces variance? (T/F)
 simpleTemperature <- FALSE
 
+# Testing run which uses mprocTest.txt instead of mproc.txt? (T/F)
+mprocTest <- TRUE
 
 #### Structural parameters ####
 

@@ -66,9 +66,16 @@ mproc <- subset(mproc, HCR =='slide')
 mproc <- read.table('processes/mproc.txt', header=TRUE,
                     stringsAsFactors=FALSE)
 
+if(mprocTest){
+  
+  mproc <- read.table('processes/mprocTest.txt', header=TRUE,
+                      stringsAsFactors=FALSE)
+  cat('***mprocTest == TRUE (in set_om_parameters.R): testing run***') 
+   
+}
 
 
 # Check to ensure that the management procedures are a subset of the
 # available options
-get_mprocCheck(mproc)
+# get_mprocCheck(mproc)
 
