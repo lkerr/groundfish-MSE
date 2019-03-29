@@ -30,7 +30,8 @@ get_catch <- function(F_full, M, N, selC, realizedCatchModel){
   } # End realizedCatchModel==1 - ACL
   
   if(realizedCatchModel==2){
-    load("~/data/data_processed/catchHistory/realizedCatchModels.RData")
+    load('data/data_processed/catchHistory/realizedCatchModels.RData') # Not working
+    C<-predict(reg_cod,data.frame(ACL_cod=ACL))
   } # End realizedCatchModel==2 - Single-species
   
   if(realizedCatchModel==3){
