@@ -29,10 +29,20 @@ get_catch <- function(F_full, M, N, selC, realizedCatchModel){
     return(C)
   } # End realizedCatchModel==1 - ACL
   
-  if(realizedCatchModel==2){} # End realizedCatchModel==2 - Single-species
-  if(realizedCatchModel==3){} # End realizedCatchModel==3 - Multi-species
-  if(realizedCatchModel==4){} # End realizedCatchModel==4 - Adv multi-species
+  if(realizedCatchModel==2){
+    load("~/data/data_processed/catchHistory/realizedCatchModels.RData")
+  } # End realizedCatchModel==2 - Single-species
+  
+  if(realizedCatchModel==3){
+    load("~/data/data_processed/catchHistory/realizedCatchModels.RData")
+  } # End realizedCatchModel==3 - Multi-species
+  
+  if(realizedCatchModel==4){
+    load("~/data/data_processed/catchHistory/realizedCatchModels.RData")
+  } # End realizedCatchModel==4 - Adv multi-species
+  
   if(realizedCatchModel==5){} # End realizedCatchModel==5 - Econ catch shares
+  
   if(realizedCatchModel==6){} # End realizedCatchModel==6 - Econ non-tradable
 
 }
