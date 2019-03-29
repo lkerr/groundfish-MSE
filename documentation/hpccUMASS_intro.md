@@ -16,7 +16,7 @@ You can find more information at http://wiki.umassrc.org/wiki/index.php/Main_Pag
 
 ## Preliminary set up
 
-You will need to be on the UMass network to access the server. If you work remotely, you'll need to set up __VPN__ on your computer following the instructions at https://www.umassd.edu/cits/vpn/.
+You will need to be on the UMass network to access the server. If you work remotely, you'll need to set up __VPN__ on your computer following the instructions at https://www.umassd.edu/cits/vpn/.  [ST 3/26/19: No-one in the MSE user group has yet needed to use a VPN in order to access the HPCC. It seems worthwhile to try skipping this step and then coming back to it if there are issues.]
 
 
 ## Request access to the Cluster
