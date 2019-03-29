@@ -113,11 +113,38 @@ VGAM::Coef(mvreg_both, matrix = TRUE)
 summary(mvreg_both)
 
 ##### - set up prediction for Cod ACL model- #####
+# create new data for simulated ACL of cod and haddock
 in_cod<-data.frame(ACL_cod=seq(0,10000,length.out=20))
 in_haddock<-data.frame(ACL_haddock=seq(0,100000,length.out=20))
-predict(reg_cod,in_cod,se.fit=TRUE)
-predict(reg_hadInt,in_haddock,se.fit=TRUE)
 
+# -Single species prediction- #
+# predict cod catch given cod ACL
+preg_cod<-predict(reg_cod,in_cod,se.fit=TRUE)
+preg_cod2<-preg_cod %>%
+  as_tibble() %>% 
+  select(fit) %>% 
+  mutate(Catch_Cod=fit) %>%
+  select(Catch_Cod) %>% 
+  cbind(in_cod)
+
+# plot prediction
+ggplot(preg_cod2, aes(x=ACL_cod,y=Catch_Cod)) +
+  geom_line() + xlab("Cod ACL") + ylab("Catch")
+
+# predict haddock catch given haddock ACL
+preg_had<-predict(reg_hadInt,in_haddock,se.fit=TRUE)
+preg_had2<-preg_had %>%
+  as_tibble() %>% 
+  select(fit) %>% 
+  mutate(Catch_had=fit) %>%
+  select(Catch_had) %>% 
+  cbind(in_haddock)
+
+# plot prediction
+ggplot(preg_had2, aes(x=ACL_haddock,y=Catch_had)) +
+  geom_line() + xlab("Haddock ACL") + ylab("Catch")
+
+# -Multiple species prediction- #
 predictvglm(mvreg_cod,list(ACL_cod=in_cod$ACL_cod),se.fit=TRUE)
 predictvglm(mvreg_both,list(ACL_cod=in_cod$ACL_cod,
                             ACL_haddock=in_haddock$ACL_haddock),se.fit=TRUE)
