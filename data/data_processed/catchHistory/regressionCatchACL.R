@@ -113,12 +113,16 @@ VGAM::Coef(mvreg_both, matrix = TRUE)
 summary(mvreg_both)
 
 ##### - set up prediction for Cod ACL model- #####
-in_cod<-seq(0,10000,length.out=20)
-in_haddock<-seq(0,100000,length.out=20)
-predictvglm(mvreg_cod,list(ACL_cod=in_cod),se.fit=TRUE)
-predictvglm(mvreg_both,list(ACL_cod=in_cod,ACL_haddock=in_haddock),se.fit=TRUE)
+in_cod<-data.frame(ACL_cod=seq(0,10000,length.out=20))
+in_haddock<-data.frame(ACL_haddock=seq(0,100000,length.out=20))
+predict(reg_cod,in_cod,se.fit=TRUE)
+predict(reg_hadInt,in_haddock,se.fit=TRUE)
 
-pred_plot<-predictvglm(mvreg_cod,list(ACL_cod=in_cod))
+predictvglm(mvreg_cod,list(ACL_cod=in_cod$ACL_cod),se.fit=TRUE)
+predictvglm(mvreg_both,list(ACL_cod=in_cod$ACL_cod,
+                            ACL_haddock=in_haddock$ACL_haddock),se.fit=TRUE)
+
+pred_plot<-predictvglm(mvreg_cod,list(ACL_cod=in_cod$ACL_cod))
 pred_plot2<-pred_plot %>%
   as_tibble() %>% 
   select(mean1,mean2) %>% 
@@ -126,15 +130,15 @@ pred_plot2<-pred_plot %>%
   mutate(Catch_Haddock=mean2) %>%
   select(Catch_Cod,Catch_Haddock) %>% 
   cbind(in_cod) %>% 
-  gather(catch,value, -in_cod)
+  gather(catch,value, -ACL_cod)
 
 # plot prediction
-ggplot(pred_plot2, aes(x=in_cod,y=value,group=catch,col=catch)) +
+ggplot(pred_plot2, aes(x=ACL_cod,y=value,group=catch,col=catch)) +
   geom_line() + xlab("Cod ACL") + ylab("Catch")
 
 ##### - Set up prediction for Cod and Haddock ACL model - #####
 # Create ACL combos
-pred_vals<-expand.grid(in_cod,in_haddock)
+pred_vals<-expand.grid(in_cod$ACL_cod,in_haddock$ACL_haddock)
 # Predict
 pred_plot_both<-predictvglm(mvreg_both,list(ACL_cod=pred_vals$Var1,ACL_haddock=pred_vals$Var2))
 # reorganize data
@@ -150,3 +154,4 @@ pred_plot_both2<-pred_plot_both %>%
 # Plot
 ggplot(pred_plot_both2, aes(x=Cod_ACL,y=Haddock_ACL,col=value)) + 
   facet_grid(~catch) +  geom_point(aes(size=4))+geom_contour(aes(z=value),col="black") + theme_bw()
+
