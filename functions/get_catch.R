@@ -38,7 +38,6 @@ get_catch <- function(F_full, M, N, selC, realizedCatchModel){
   } # End realizedCatchModel==3 - Multi-species
   
   if(realizedCatchModel==4){
-    load("~/data/data_processed/catchHistory/realizedCatchModels.RData")
   } # End realizedCatchModel==4 - Adv multi-species
   
   if(realizedCatchModel==5){} # End realizedCatchModel==5 - Econ catch shares
