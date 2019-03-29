@@ -4,6 +4,8 @@
 
 library(tidyverse)
 library(VGAM)
+library(AICcmodavg)
+library(broom)
 
 ##### - Functions - #####
 # Spread keeping multiple value columns
@@ -63,7 +65,30 @@ regdata <- mydata %>%
   spread(stock,total) %>% 
   myspread(data_type, c("cod","haddock"))
 
-#####  - Fit implementation error models - #####
+#####  - Fit single variable implementation error models - #####
+# Catch of Cod
+reg_codInt<-lm(Catch_cod~1,regdata)
+reg_cod<-lm(Catch_cod~ACL_cod,regdata)
+reg_codBoth<-lm(Catch_cod~ACL_cod+ACL_haddock,regdata)
+# Catch of Haddock
+reg_hadInt<-lm(Catch_haddock~1,regdata)
+reg_had<-lm(Catch_haddock~ACL_haddock,regdata)
+reg_hadBoth<-lm(Catch_haddock~ACL_haddock+ACL_cod,regdata)
+
+# Calculate AIC scores
+c(AIC(reg_codInt),AIC(reg_cod),AIC(reg_codBoth),AIC(reg_hadInt),AIC(reg_had),AIC(reg_hadBoth))
+c(AICc(reg_codInt),AICc(reg_cod),AICc(reg_codBoth),AICc(reg_hadInt),AICc(reg_had),AICc(reg_hadBoth))
+
+# Report regression results
+tidy(reg_cod)
+augment(reg_cod)
+glance(reg_cod)
+
+tidy(reg_hadInt)
+augment(reg_hadInt)
+glance(reg_hadInt)
+
+#####  - Fit multivariate implementation error models - #####
 # Intercept only model
 mvreg_int<-vglm(cbind(Catch_cod,Catch_haddock)~1,family=binormal,regdata)
 # Cod ACL model
@@ -81,10 +106,10 @@ c(AIC(mvreg_int),AIC(mvreg_cod),AIC(mvreg_had),AIC(mvreg_both),AIC(mvreg_both2))
 c(AICc(mvreg_int),AICc(mvreg_cod),AICc(mvreg_had),AICc(mvreg_both),AICc(mvreg_both2))
 
 # Report regresion results
-Coef(mvreg_cod, matrix = TRUE)
+VGAM::Coef(mvreg_cod, matrix = TRUE)
 summary(mvreg_cod)
 
-Coef(mvreg_both, matrix = TRUE)
+VGAM::Coef(mvreg_both, matrix = TRUE)
 summary(mvreg_both)
 
 ##### - set up prediction for Cod ACL model- #####
