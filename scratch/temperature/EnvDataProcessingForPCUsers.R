@@ -19,13 +19,23 @@ oisst.stack<- raster::stack(paste(oisst.dir, "OISST.grd", sep = ""))
 
 # Read in all physioregion boundary shapefile
 sp.dir<- "J:/Research/Mills Lab/All/GIS/" # Update path as needed
-#all.regs<- sf::st_read(dsn = paste(sp.dir, "PhysioRegions_Maine/", sep = ""), layer = "PhysioRegions_WGS84", crs = "+init=epsg:4326")
-all.regs<- sf::st_read(dsn = paste(sp.dir, "PhysioRegions_Maine/PhysioRegions_WGS84.shp", sep = ""), crs = "+init=epsg:4326")
+#all.regs<- sf::st_read(dsn = 
+#                        paste(sp.dir, "PhysioRegions_Maine/", sep = ""), 
+#                        layer = "PhysioRegions_WGS84", crs = "+init=epsg:4326")
+all.regs<- sf::st_read(dsn = 
+                         paste(sp.dir, 
+                               "PhysioRegions_Maine/PhysioRegions_WGS84.shp", 
+                               sep = ""), crs = "+init=epsg:4326")
 
 
 # Get regions of interest
 unique(all.regs$Region)
-gom.regs<- c("Eastern Coastal Shelf", "Bay of Fundy", "Northern Coastal Shelf", "Southern Coastal Shelf", "Wikinson Basin", "Georges Basin", "Jordan Basin", "Browns Bank", "Central Gulf of Maine") # Change to edit "regions" included in GoM analysis -- note they spelled "Wilkinson" incorrectly as "Wikinson"
+# Change to edit "regions" included in GoM analysis -- note they 
+# spelled "Wilkinson" incorrectly as "Wikinson"
+gom.regs<- c("Eastern Coastal Shelf", "Bay of Fundy", 
+             "Northern Coastal Shelf", "Southern Coastal Shelf", 
+             "Wikinson Basin", "Georges Basin", "Jordan Basin", 
+             "Browns Bank", "Central Gulf of Maine") 
 gom<- all.regs[all.regs$Region %in% gom.regs,] %>%
   st_union() %>%
   st_sf()
@@ -42,12 +52,20 @@ plot(st_geometry(gb), col = "red", add = T)
 gom.stack<- raster::mask(oisst.stack, st_zm(gom))
 gb.stack<- raster::mask(oisst.stack, st_zm(gb))
 
-# From there, can move on to getting time series statistics. Example: monthly means
+# From there, can move on to getting time series statistics. 
+# Example: monthly means
 # Preliminaries
-month.conv<- data.frame("Month.Chr" = c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"), "Month.Num" = c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"))
+month.conv<- data.frame("Month.Chr" = c("January", "February", "March", 
+                                        "April", "May", "June", 
+                                        "July", "August", "September", 
+                                        "October", "November", "December"), 
+                        "Month.Num" = c("01", "02", "03", "04", "05", "06", 
+                                        "07", "08", "09", "10", "11", "12"))
 
-oisst.min.date<- as.Date(gsub("[.]", "-", gsub("X", "", min(names(oisst.stack)))))
-oisst.max.date<- as.Date(gsub("[.]", "-", gsub("X", "", max(names(oisst.stack)))))
+oisst.min.date<- as.Date(gsub("[.]", "-", gsub("X", "", 
+                                               min(names(oisst.stack)))))
+oisst.max.date<- as.Date(gsub("[.]", "-", gsub("X", "", 
+                                               max(names(oisst.stack)))))
 oisst.dates<- seq.Date(from = oisst.min.date, to = oisst.max.date, by = "day")
 
 # Convert raster stack to time series
@@ -75,9 +93,11 @@ gb.df<- as.data.frame(gb.z.mm, xy = T) %>%
   mutate(., "Year.Clean" = gsub("X", "", Year)) %>%
   dplyr::select(., x, y, Year.Clean, Month, Day, Temp)
 
-# Note, there will be a lot of NAs there -- can drop em easily and save that if you want.
+# Note, there will be a lot of NAs there -- can drop em easily and save that 
+# if you want.
 
-
+save(gb.df, 
+     file='C:/Users/struesdell/OneDrive - Gulf of Maine Research Institute/GMRI/COCA/data/data_raw/gb.dat.Rdata')
 
 
 

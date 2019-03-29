@@ -17,8 +17,8 @@
 #           frame with column names "Year" and "T".
 #           
 # ref_yrs: the training period to use that scales the projections
-#             down to the local data set. A vector of length 2
-#             (min, max).
+#          down to the local data set. A vector of length 2
+#          (min, max).
 
 
 
@@ -29,22 +29,22 @@ get_temperatureProj <- function(prj_data, obs_data,
   
   # Pull out the reference periods
   refPrj <- subset(prj_data, 
-                   YEAR > ref_yrs[1] & YEAR < ref_yrs[2])
+                   YEAR >= ref_yrs[1] & YEAR <= ref_yrs[2])
   refObs <- subset(obs_data, 
-                   YEAR > ref_yrs[1] & YEAR < ref_yrs[2])
+                   YEAR >= ref_yrs[1] & YEAR <= ref_yrs[2])
   
   # Get the means over the reference period
   prjMean <- mean(refPrj$T)
   obsMean <- mean(refObs$T)
   
-  # Calculate the projection anomoly
-  prjAnom <- prj_data$T - prjMean
   
   # Get the downscaled mean
-  dsPrj <- obsMean + prjAnom
+  # Simple mean bias correction
+  # Maraun 2016 "Bias correcting climate change simulations - a 
+  # critical review" Curr. Clim. Change Rep. / p.4
+  dsPrj <- prj_data$T - (prjMean - obsMean)
   dsPrj <- data.frame(YEAR=prj_data$YEAR, T=dsPrj)
   rownames(dsPrj) <- NULL
-  
   
   
   # Plot the result if called for
