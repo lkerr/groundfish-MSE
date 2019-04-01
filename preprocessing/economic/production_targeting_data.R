@@ -6,6 +6,7 @@
   # 4. Joins them together. 
 # This is a little stupid, because it make a big dataset, instead of making a pair of matrices (one for data and one for coefficients). But whatever.
 
+rm(list=ls())
 if(!require(readstata13)) {  
   install.packages("readstata13")
   require(readstata13)}
@@ -23,8 +24,8 @@ rawpath <- 'data/data_raw/econ/'
 savepath <- 'data/data_processed/econ/'
 
 #Files to read -- sample data for now.
-targeting_source<-"sample_DCdata_gillnets_fy2012_forML.dta"
-production_source<-"sample_PRODREGdata_gillnets_fy2012_forML.dta"
+targeting_source<-"sample_DCdata_gillnets_fy2012_forML_V2.dta"
+production_source<-"sample_PRODREGdata_gillnets_fy2012_forML_V2.dta"
 
 # 
 # # read in the datasets
@@ -45,7 +46,9 @@ production$gffishingyear <- sample(2004:2015,nrow(production), replace=T)
 
 #clean up production dataset, expand month and year factor variables.
 production$gearcat<-tolower(production$gearcat)
-production$spstock2<-tolower(production$spstock2)
+production$spstock2<-tolower(production$spstock)
+production$spstock2<- gsub("_","",production$spstock2)
+
 
 mygfyear<-as.data.frame(factor(production$gffishingyear))
 mymonth<-as.data.frame(factor(production$month))

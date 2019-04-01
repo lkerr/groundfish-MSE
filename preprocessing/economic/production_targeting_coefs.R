@@ -1,6 +1,6 @@
 # Read in Production and Targeting coefficients to .RData.  
 # Tested working. Make a small change if we want to get different regression results (there are 4 sets of models for each gear, we haven't picked a "best " model yet).
-
+rm(list=ls())
 if(!require(readstata13)) {  
   install.packages("readstata13")
   require(readstata13)}
@@ -74,7 +74,8 @@ production_coefs<-production_coefs[,-1]
 #transpose and send to dataframe, fix naming, and characters
 production_coefs<-as.data.frame(t(production_coefs))
 
-### Reapeat for the post coefs 
+
+### Repeat for the post coefs 
 
 production_coefs_post <- read.csv(file.path(rawpath,production_coef_post), sep="\t", header=TRUE,stringsAsFactors=FALSE)
 
