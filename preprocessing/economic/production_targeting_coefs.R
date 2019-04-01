@@ -181,7 +181,7 @@ asc_coefs$X<-gsub("fuel price*vessel length","fuelprice_len ", asc_coefs$X)
 
 
 
-stocklist<-c("american_lobster", "cod_gb", "cod_gom", "haddock_gom", "haddock_gb", "monkfish", "other", "pollock", "skates", "spiny_dogfish", "white_hake", "yellowtail_flounder_ccgom","american_plaice_flounder", "red_silver_offshore_hake","redfish","sea_scallop","squid_mackerel_butterfish_herrin","winter_flounder_gb","winter_flounder_gom","witch_flounder","yellowtail_flounder_gb", "yellowtail_flounder_snema")
+stocklist<-c("american_lobster", "cod_gb", "cod_gom", "haddock_gom", "haddock_gb", "monkfish", "other", "pollock", "skates", "spiny_dogfish", "white_hake", "yellowtail_flounder_ccgom","american_plaice_flounder", "red_silver_offshore_hake","redfish","sea_scallop","squid_mackerel_butterfish_herrin","winter_flounder_gb","winter_flounder_gom","witch_flounder","yellowtail_flounder_gb", "yellowtail_flounder_snema","summer_flounder")
 
 
 #Delete this line for the final version 
