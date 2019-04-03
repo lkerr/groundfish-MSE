@@ -1,6 +1,3 @@
-
-
-
 # Options for management procedures
 ### Sam Truesdell (struesdell@gmri.org)
 
@@ -87,3 +84,18 @@ The frequency with which reference points are re-calculated.
 * The value represents the frequency. For example, if the value is 3, reference points are recalculated every 3 years. In the years when the reference points are not updated the advice may change based on an updated assessment model but the reference points (and thus the shape of any associated harvest control rule) remains the same.
 
 [Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
+
+## RCM_TYP
+Methods for determining the realized catch given a catch limit.
+
+* **1** - ACL:  Direct 1:1 relationship between ACL and catch, where the catch==F==ACL
+
+* **2** - Single-species:  Catch for a given species is modeled as a function of the ACL for that species Catch=lm(Catch~ACL)
+
+* **3** - Multi-species:  Catch for a all species is modeled as a function of the ACL for all species Catch[i]=lm(Catch[N]~ACL[N])
+
+* **4** - Adv multi-species: Thorson approach to multiple species catch modeling
+
+* **5** - Econ catch shares: Description needed from Min-Yang or Anna
+
+* **6** - Econ non-tradable input control: Description needed from Min-Yang or Anna

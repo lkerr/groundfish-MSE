@@ -223,14 +223,3 @@ if(1.0 %in% c(qI, qC)){
   stop('catchability (qI and qC) must not be exactly one (you can make it
         however close you want though')
 }
-
-
-#### -- Realized Catch Models -- ####
-# Model Options
-# 1 - ACL:  Direct 1:1 relationship between ACL and catch, where the catch==F==ACL
-# 2 - Single-species:  Catch for a given species is modeled as a function of the ACL for that species Catch=lm(Catch~ACL)
-# 3 - Multi-species:  Catch for a all species is modeled as a function of the ACL for all species Catch[i]=lm(Catch[N]~ACL[N])
-# 4 - Adv multi-species: Thorson approach to multiple species catch modeling
-# 5 - Econ catch shares: Description needed from Min-Yang or Anna
-# 6 - Econ non-tradable input control: Description needed from Min-Yang or Anna
-realizedCatchModel<-1 # Select option
