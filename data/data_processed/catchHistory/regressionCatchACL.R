@@ -6,6 +6,9 @@ library(tidyverse)
 library(VGAM)
 library(AICcmodavg)
 library(broom)
+# library(TMB)
+# library(INLA)
+# library(SpatialFA)
 
 ##### - Functions - #####
 # Spread keeping multiple value columns
