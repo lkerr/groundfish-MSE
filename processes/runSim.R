@@ -107,7 +107,7 @@ for(r in 1:nrep){
     
       # calculate the predicted catch in year y, the catch weight and the
       # proportions of catch numbers-at-age. Add small number in case F=0
-      CN[y,] <- get_catch(F_full=F_full[y], M=M, 
+      CN[y,] <- get_catch(type=mproc[m,'RCM_TYP'],F_full=F_full[y], M=M, 
                           N=J1N[y,], selC=slxC[y,]) + 1e-3
       sumCW[y] <- CN[y,] %*% waa[y,]    # (dot product)
       paaCN[y,] <- (CN[y,]) / sum(CN[y,])
