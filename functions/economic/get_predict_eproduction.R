@@ -39,6 +39,13 @@ get_predict_eproduction <- function(prod_ds){
   fx<-fx+ rowSums(monthdums*monthcoefs)
   #production
   prod_ds$hhat<- exp(prod_ds$logh_hat + fx)*exp((rmse^2)/2)
+  prod_ds$hhat<- exp(prod_ds$logh_hat + fx)*prod_ds$emean
+  
+  # gen eresid=exp(resid)
+  # egen emean=mean(eresid), by(hullnum2)
+  # replace logh_hat_=((exp(logh_hat_))*emean)
+  
+  
   #expected revenue
   prod_ds$exp_rev_hat<- prod_ds$hhat*price_lb_lag1
   prod_ds$exp_rev_total_hat<- prod_ds$hhat*price_lb_lag1*multiplier
