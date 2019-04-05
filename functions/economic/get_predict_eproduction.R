@@ -37,12 +37,18 @@ get_predict_eproduction <- function(prod_ds){
   monthcoefs[is.na(monthcoefs)]<-0
   
   fx<-fx+ rowSums(monthdums*monthcoefs)
-  prod_ds$logh_hat<- prod_ds$logh_hat + fx
+  #production
+  prod_ds$hhat<- exp(prod_ds$logh_hat + fx)*exp((rmse^2)/2)
+  #expected revenue
+  prod_ds$exp_rev_hat<- prod_ds$hhat*price_lb_lag1
+  prod_ds$exp_rev_total_hat<- prod_ds$hhat*price_lb_lag1*multiplier
   
-  hhat<-exp(prod_ds$logh_hat)*exp((rmse^2)/2)
+  selectvars<-c("hullnum2", "date","spstock2","exp_rev_hat","exp_rev_total_hat","hhat")
+  
+  prod_out<-prod_ds[selectvars]
+  
   detach(prod_ds)
-  
-  return(hhat)
+  return(prod_out)
   
 }
 

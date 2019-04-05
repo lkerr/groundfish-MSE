@@ -16,10 +16,10 @@ prod_ds<-production_dataset
 
 
 #code to test function. Remove when done.
-hhat<-get_predict_eproduction(production_dataset)
+production_outputs<-get_predict_eproduction(production_dataset)
 
 #Not sure where to put hhat right now, probably overwrite hhat in production_dataset.  
-production_dataset<-cbind(production_dataset,hhat)
-production_dataset$hhat<-hhat
+#production_dataset<-cbind(production_dataset,hhat)
+#production_dataset$hhat<-hhat
 
 
