@@ -33,8 +33,15 @@ tds$expu<-exp(tds$xb)
   tds<-merge(x = tds, y = totexpu, by = "id", all = TRUE)
 
   tds$prhat<- tds$expu/tds$totalu
-  return(tds$prhat)
+
+  #this is where infeasible trips should be eliminated.
+  
+  
+  d <- data.table(tds, key=c("hullnum2", "date","prhat"))
+  dd<-d[, tail(.SD, 1), by=c("hullnum2","date")]
+
   detach(tds)
+  return(dd)
   
 }
 

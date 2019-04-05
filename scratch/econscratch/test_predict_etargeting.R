@@ -23,8 +23,8 @@ tds<-targeting_dataset
 
 
 #code to test function. Remove when done.
-phat<-get_predict_etargeting(targeting_dataset)
-targeting_dataset<-cbind(phat,targeting_dataset)
+predicted_trips<-get_predict_etargeting(targeting_dataset)
+#targeting_dataset<-cbind(phat,targeting_dataset)
 
 #Not sure where to put hhat right now, probably overwrite hhat in production_dataset.  
 
