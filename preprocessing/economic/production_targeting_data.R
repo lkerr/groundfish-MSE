@@ -102,10 +102,11 @@ check<- ncol(production)+ncol(production_coefs)-3
 if(ncol(production_dataset) !=check){
   warning("Lost some Columns from the production dataset")
 }
-
-
+#######################################
+#######################################
 #This is the spot where I want to remove columns that we don't need.  But we wont' do this until close to the end, when we know what we're simulating.
-
+#######################################
+#######################################
 
 
 save(production_dataset, file=file.path(savepath, "full_production.RData"))
