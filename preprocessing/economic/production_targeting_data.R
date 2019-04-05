@@ -32,12 +32,21 @@ production_source<-"sample_PRODREGdata_gillnets_fy2012_forML_V2.dta"
 targeting <- read.dta13(file.path(rawpath, targeting_source))
 
 
+targeting$startfy = paste("5", "1",targeting$gffishingyear,sep=".")
+targeting$startfy = as.Date(paste("5", "1",targeting$gffishingyear,sep="."), "%m.%d.%Y")
+targeting$doffy=as.numeric(difftime(targeting$date,targeting$startfy, units="days")+1)
+
+
 targeting$spstock2<-tolower(targeting$spstock)
 targeting$spstock2<- gsub("_","",targeting$spstock2)
 
 colnames(targeting)[colnames(targeting)=="LApermit"] <- "lapermit"
 
 production <- read.dta13(file.path(rawpath, production_source))
+production$startfy = paste("5", "1",production$gffishingyear,sep=".")
+production$startfy = as.Date(paste("5", "1",production$gffishingyear,sep="."), "%m.%d.%Y")
+production$doffy=as.numeric(difftime(production$date,production$startfy, units="days")+1)
+
 ###############################################################
 #THIS IS JUST FOR TESTING, REMOVE THIS LATER.
 production$gffishingyear <- sample(2004:2015,nrow(production), replace=T)
@@ -93,6 +102,10 @@ check<- ncol(production)+ncol(production_coefs)-3
 if(ncol(production_dataset) !=check){
   warning("Lost some Columns from the production dataset")
 }
+
+
+#This is the spot where I want to remove columns that we don't need.  But we wont' do this until close to the end, when we know what we're simulating.
+
 
 
 save(production_dataset, file=file.path(savepath, "full_production.RData"))
