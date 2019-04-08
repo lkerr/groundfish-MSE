@@ -35,13 +35,3 @@ tds$expu<-exp(tds$xb)
   return(tds)
 }
 
-
-# This is another way to do it. 
-# tds$util<-beta_exp_rev*exp_rev_total + beta_distance*distance + beta_das_charge*das_charge + beta_fuelprice_distance*fuelprice_distance + beta_start_of_season*start_of_season+beta_crew*crew + beta_price_one_day_lag*price_lb_lag1 +beta_avg_wind*mean_wind + beta_avg_wind2*mean_wind_2+beta_permitted*permitted + beta_lapermitted*LApermit +das_charge_len*beta_das_charge_len+ beta_max_wind*max_wind+beta_max_wind2*max_wind_2
-#   
-# #Add in the alternative-specific effects 
-#   tds$util<-tds$util + beta_fuelprice*fuelprice+beta_fuelprice_len*fuelprice_len+beta_wkly_crew_wage*wkly_crew_wage
-# tds$util[is.na(tds$util)]<-0
-# 
-# tds$expu<-exp(tds$util)
-
