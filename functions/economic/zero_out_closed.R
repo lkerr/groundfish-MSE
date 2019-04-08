@@ -7,8 +7,8 @@
 
 
 zero_out_closed <- function(tds,open_hold){
-  tds<-merge(tds,open_hold, by=c("hullnum2","spstock2"))
-  tds$prhat[tds$open==0]<-0
+  tds<-merge(tds,open_hold, by=c("spstock2"))
+  tds$prhat[tds$open=="FALSE"]<-0
   return(tds)
 }
 

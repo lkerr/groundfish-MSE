@@ -25,7 +25,8 @@ B[is.na(B)]<-0
 xb<-rowSums(X*B)
 tds<-cbind(tds,xb)
 tds$expu<-exp(tds$xb)
-  totexpu<-aggregate(tds$expu,by=list(id=id), FUN=sum)
+  totexpu<-aggregate(tds$expu,by=list(id=tds$id), FUN=sum)
+  
   colnames(totexpu)=c("id","totalu")
   
   # mergeback
