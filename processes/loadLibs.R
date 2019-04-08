@@ -24,6 +24,13 @@ if(runClass == 'HPCC'){
   require(forcats, lib.loc='../Rlib/')
   require(readr, lib.loc='../Rlib/')
   require(tidyverse, lib.loc='../Rlib/')
+
+  # Min-Yang can't test this, but one of these should work
+  install.packages("data.table")
+  
+  require(data.table, lib.loc='../Rlib/')  
+  detach(package:data.table)
+  
   
 }else{
   
@@ -38,14 +45,15 @@ if(runClass == 'HPCC'){
     sapply(pkg, require, character.only = TRUE)
   }
   
-  pkg<-c("msm", "tmvtnorm", "TMB", "abind", "tidyverse")
+  pkg<-c("msm", "tmvtnorm", "TMB", "abind", "tidyverse", "data.table")
   check.packages(pkg)
   
   require(msm)
   require(tmvtnorm)
   require(TMB)
   require(abind)
-  
+  detach(package:data.table)
+  #data.table library purposefully detached here
 }
 
 
