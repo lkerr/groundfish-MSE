@@ -36,8 +36,8 @@ get_predict_eproduction <- function(prod_ds){
   
   fx<-fx+ rowSums(monthdums*monthcoefs)
   #production
-  prod_ds$hhat<- exp(prod_ds$logh_hat + fx)*exp((prod_ds$rmse^2)/2)
-  #prod_ds$hhat<- exp(prod_ds$logh_hat + fx)*prod_ds$emean
+  prod_ds$harvest_sim<- exp(prod_ds$logh_hat + fx)*exp((prod_ds$rmse^2)/2)
+  #prod_ds$harvest_sim<- exp(prod_ds$logh_hat + fx)*prod_ds$emean
   
   # gen eresid=exp(resid)
   # egen emean=mean(eresid), by(hullnum2)
@@ -45,10 +45,10 @@ get_predict_eproduction <- function(prod_ds){
   
   
   #expected revenue
-  prod_ds$exp_rev_hat<- prod_ds$hhat*prod_ds$price_lb_lag1
-  prod_ds$exp_rev_total_hat<- prod_ds$hhat*prod_ds$price_lb_lag1*prod_ds$multiplier
+  prod_ds$exp_rev_sim<- prod_ds$harvest_sim*prod_ds$price_lb_lag1
+  prod_ds$exp_rev_total_sim<- prod_ds$harvest_sim*prod_ds$price_lb_lag1*prod_ds$multiplier
   
-  selectvars<-c("hullnum2", "date","spstock2","exp_rev_hat","exp_rev_total_hat","hhat")
+  selectvars<-c("hullnum2", "date","spstock2","exp_rev_sim","exp_rev_total_sim","harvest_sim")
   
   prod_out<-prod_ds[selectvars]
   return(prod_out)
