@@ -17,7 +17,13 @@ prod_ds<-production_dataset
 
 #code to test function. Remove when done.
 production_outputs<-get_predict_eproduction(production_dataset)
-save(production_outputs, file=file.path(savepath, "prod_good.Rdata"))
+
+
+#here, subset prod_ds to just contain the cols in mysubs
+#then try to rerun the get_predict_eproduction on that and see if it works
+
+
+
 
 #Not sure where to put hhat right now, probably overwrite hhat in production_dataset.  
 #production_dataset<-cbind(production_dataset,hhat)
