@@ -40,6 +40,12 @@ targeting$doffy=as.numeric(difftime(targeting$date,targeting$startfy, units="day
 targeting$spstock2<-tolower(targeting$spstock)
 targeting$spstock2<- gsub("_","",targeting$spstock2)
 
+# Right here, rebuild the spstock2 variable from it's constituent parts.  Needs to be done for the production dataset too
+# speciesSTOCK
+#codGB, haddockGOM, etc
+# pollock for the unit stocks
+
+
 colnames(targeting)[colnames(targeting)=="LApermit"] <- "lapermit"
 
 production <- read.dta13(file.path(rawpath, production_source))
@@ -58,12 +64,19 @@ production$gearcat<-tolower(production$gearcat)
 production$spstock2<-tolower(production$spstock)
 production$spstock2<- gsub("_","",production$spstock2)
 
+# Right here, rebuild the spstock2 variable from it's constituent parts.  Needs to be done for the production dataset too
+# speciesSTOCK
+#codGB, haddockGOM, etc
+# pollock for the unit stocks
+
+
 
 mygfyear<-as.data.frame(factor(production$gffishingyear))
 mymonth<-as.data.frame(factor(production$month))
 ###############################################################
 #THIS IS JUST FOR TESTING, REMOVE THIS LATER.
 production$gffishingyear <- 2012
+production$emean<-1
 #THIS IS JUST FOR TESTING, REMOVE THIS LATER.
 ###############################################################                        
 
@@ -84,13 +97,6 @@ load(file.path(savepath,"production_coefs.RData"))
 # merge production dataset and coefficients
 production_dataset<-inner_join(production,production_coefs,by=c("gearcat","spstock2","post"))
 
-# This is the place where you would drop-out the "post" variable
-post_only<-production_coefs[which(production_coefs$post==1),]
-post_production_dataset<-inner_join(production,post_only,by=c("gearcat","spstock2"))
-
-pre_only<-production_coefs[which(production_coefs$post==0),]
-pre_production_dataset<-inner_join(production,pre_only,by=c("gearcat","spstock2"))
-
 #do some error checking on the merge
 # I expect the exact number of rows in "production_dataset" as there are in production. Anything else is a problem.
 if(nrow(production_dataset) != nrow(production)){
@@ -102,12 +108,35 @@ check<- ncol(production)+ncol(production_coefs)-3
 if(ncol(production_dataset) !=check){
   warning("Lost some Columns from the production dataset")
 }
-#######################################
-#######################################
-#This is the spot where I want to remove columns that we don't need.  But we wont' do this until close to the end, when we know what we're simulating.
-#######################################
-#######################################
 
+
+
+
+#Keep a subset of the variables
+datavars=c("log_crew","log_trip_days","logh_cumul","primary","secondary")
+betavars=paste0("beta_",datavars)
+test<-colnames(production_dataset)
+
+fydums<-test[grepl("^fy20", test)]
+fycoefs<-test[grepl("^beta_fy20", test)]
+
+monthdums<-test[grepl("^months", test)]
+monthcoefs<-test[grepl("^beta_month", test)]
+idvars=c("hullnum2", "id", "date","spstock2", "doffy")
+necessary=c("multiplier", "q", "rmse", "price_lb_lag1","emean")
+useful=c("gearcat","post", "logh")
+mysubs=c(idvars, useful, datavars,betavars, fydums, monthdums, fycoefs, monthcoefs, necessary)
+
+production_dataset<-production_dataset[mysubs]
+
+
+
+# This is the place where you would drop-out the "post" variable
+post_only<-production_coefs[which(production_coefs$post==1),]
+post_production_dataset<-inner_join(production,post_only,by=c("gearcat","spstock2"))
+
+pre_only<-production_coefs[which(production_coefs$post==0),]
+pre_production_dataset<-inner_join(production,pre_only,by=c("gearcat","spstock2"))
 
 save(production_dataset, file=file.path(savepath, "full_production.RData"))
 save(post_production_dataset, file=file.path(savepath, "post_production.RData"))
@@ -127,6 +156,20 @@ check<- ncol(targeting)+ncol(targeting_coefs)-2
 if(ncol(targeting_dataset) !=check){
   warning("Lost some Columns from the targeting dataset")
 }
+
+
+
+datavars=c("exp_rev_total","distance","das_charge","fuelprice_distance","start_of_season","crew","price_lb_lag1","mean_wind","mean_wind_2","permitted","lapermit","das_charge_len","max_wind","max_wind_2","fuelprice","fuelprice_len","wkly_crew_wage")
+betavars=paste0("beta_",datavars)
+idvars=c("hullnum2", "date","spstock2", "doffy")
+necessary=c("id", "multiplier", "q", "price_lb_lag1")
+useful=c("gearcat","post","h_hat")
+mysubs=c(idvars,useful,datavars,betavars)
+
+
+targeting_dataset<-targeting_dataset[mysubs]
+
+
 
 
 save(targeting_dataset, file=file.path(savepath, "full_targeting.RData"))
