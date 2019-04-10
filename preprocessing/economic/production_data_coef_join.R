@@ -33,7 +33,6 @@ production$doffy=as.numeric(difftime(production$date,production$startfy, units="
 
 ###############################################################
 #THIS IS JUST FOR TESTING, REMOVE THIS LATER.
-production$gfback <- production$gffishingyear
 production$gffishingyear <- sample(2004:2015,nrow(production), replace=T)
 #THIS IS JUST FOR TESTING, REMOVE THIS LATER.
 ###############################################################
@@ -42,13 +41,6 @@ production$gffishingyear <- sample(2004:2015,nrow(production), replace=T)
 production$gearcat<-tolower(production$gearcat)
 production$spstock2<-tolower(production$spstock)
 production$spstock2<- gsub("_","",production$spstock2)
-
-production$spstock2<-tolower(production$spstock)
-production$spstock2<- gsub("_","",production$spstock2)
-production$spstock2<- gsub("gb","GB",production$spstock2)
-production$spstock2<- gsub("ccgom","CCGOM",production$spstock2)
-production$spstock2<- gsub("gom","GOM",production$spstock2)
-production$spstock2<- gsub("snema","SNEMA",production$spstock2)
 
 
 
@@ -81,6 +73,13 @@ if(ncol(production_dataset) !=check){
 }
 
 
+production$spstock2<-tolower(production$spstock)
+production$spstock2<- gsub("_","",production$spstock2)
+production$spstock2<- gsub("gb","GB",production$spstock2)
+production$spstock2<- gsub("ccgom","CCGOM",production$spstock2)
+production$spstock2<- gsub("gom","GOM",production$spstock2)
+production$spstock2<- gsub("snema","SNEMA",production$spstock2)
+
 
 
 #Keep a subset of the variables
@@ -94,7 +93,7 @@ fycoefs<-pd_cols[grepl("^beta_fy20", pd_cols)]
 monthdums<-pd_cols[grepl("^months", pd_cols)]
 monthcoefs<-pd_cols[grepl("^beta_month", pd_cols)]
 idvars=c("hullnum2", "id", "date","spstock2", "doffy")
-necessary=c("multiplier", "q", "rmse", "price_lb_lag1","emean")
+necessary=c("multiplier", "q", "rmse", "price_lb_lag1","emean", "gffishingyear")
 useful=c("gearcat","post", "logh")
 mysubs=c(idvars, useful, datavars,betavars, fydums, monthdums, fycoefs, monthcoefs, necessary)
 
