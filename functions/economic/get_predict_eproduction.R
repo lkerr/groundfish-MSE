@@ -19,8 +19,7 @@ get_predict_eproduction <- function(prod_ds){
   B[is.na(B)]<-0
   
   prod_ds$logh_hat<-rowSums(X*B)
- #JUST FOR TESTING 
-#  prod_ds$logh_hat=prod_ds$logh_hat+q
+  prod_ds$logh_hat=prod_ds$logh_hat+q
 
   # Pull the fy dummies out, replace NAs with zeros, and multiply them by the fy coefs
   fydums<-subset(prod_ds, select = grepl("^fy20", names(prod_ds)))
@@ -36,15 +35,13 @@ get_predict_eproduction <- function(prod_ds){
   
   fx<-fx+ rowSums(monthdums*monthcoefs)
   #production
-  prod_ds$harvest_sim<- exp(prod_ds$logh_hat + fx)*exp((prod_ds$rmse^2)/2)
-  #prod_ds$harvest_sim<- exp(prod_ds$logh_hat + fx)*prod_ds$emean
+  # bad way to smear
+  #prod_ds$harvest_sim<- exp(prod_ds$logh_hat + fx)*exp((prod_ds$rmse^2)/2)
   
-  # gen eresid=exp(resid)
-  # egen emean=mean(eresid), by(hullnum2)
-  # replace logh_hat_=((exp(logh_hat_))*emean)
+  #good way to smear
+  prod_ds$harvest_sim<- exp(prod_ds$logh_hat + fx)*prod_ds$emean
   
-  
-  #expected revenue
+    #expected revenue
   prod_ds$exp_rev_sim<- prod_ds$harvest_sim*prod_ds$price_lb_lag1
   prod_ds$exp_rev_total_sim<- prod_ds$harvest_sim*prod_ds$price_lb_lag1*prod_ds$multiplier
   
