@@ -24,29 +24,7 @@ rawpath <- 'data/data_raw/econ/'
 savepath <- 'data/data_processed/econ/'
 
 #Files to read -- sample data for now.
-targeting_source<-"sample_DCdata_gillnets_fy2012_forML_V2.dta"
-production_source<-"sample_PRODREGdata_gillnets_fy2012_forML_V2.dta"
-
-# 
-# # read in the datasets
-targeting <- read.dta13(file.path(rawpath, targeting_source))
-
-
-targeting$startfy = paste("5", "1",targeting$gffishingyear,sep=".")
-targeting$startfy = as.Date(paste("5", "1",targeting$gffishingyear,sep="."), "%m.%d.%Y")
-targeting$doffy=as.numeric(difftime(targeting$date,targeting$startfy, units="days")+1)
-
-
-targeting$spstock2<-tolower(targeting$spstock)
-targeting$spstock2<- gsub("_","",targeting$spstock2)
-
-# Right here, rebuild the spstock2 variable from it's constituent parts.  Needs to be done for the production dataset too
-# speciesSTOCK
-#codGB, haddockGOM, etc
-# pollock for the unit stocks
-
-
-colnames(targeting)[colnames(targeting)=="LApermit"] <- "lapermit"
+production_source<-"sample_PRODREGdata_forML_v3.dta"
 
 production <- read.dta13(file.path(rawpath, production_source))
 production$startfy = paste("5", "1",production$gffishingyear,sep=".")
@@ -55,31 +33,27 @@ production$doffy=as.numeric(difftime(production$date,production$startfy, units="
 
 ###############################################################
 #THIS IS JUST FOR TESTING, REMOVE THIS LATER.
+production$gfback <- production$gffishingyear
 production$gffishingyear <- sample(2004:2015,nrow(production), replace=T)
 #THIS IS JUST FOR TESTING, REMOVE THIS LATER.
-###############################################################                        
+###############################################################
 
 #clean up production dataset, expand month and year factor variables.
 production$gearcat<-tolower(production$gearcat)
 production$spstock2<-tolower(production$spstock)
 production$spstock2<- gsub("_","",production$spstock2)
 
-# Right here, rebuild the spstock2 variable from it's constituent parts.  Needs to be done for the production dataset too
-# speciesSTOCK
-#codGB, haddockGOM, etc
-# pollock for the unit stocks
+production$spstock2<-tolower(production$spstock)
+production$spstock2<- gsub("_","",production$spstock2)
+production$spstock2<- gsub("gb","GB",production$spstock2)
+production$spstock2<- gsub("ccgom","CCGOM",production$spstock2)
+production$spstock2<- gsub("gom","GOM",production$spstock2)
+production$spstock2<- gsub("snema","SNEMA",production$spstock2)
 
 
 
 mygfyear<-as.data.frame(factor(production$gffishingyear))
 mymonth<-as.data.frame(factor(production$month))
-###############################################################
-#THIS IS JUST FOR TESTING, REMOVE THIS LATER.
-production$gffishingyear <- 2012
-production$emean<-1
-#THIS IS JUST FOR TESTING, REMOVE THIS LATER.
-###############################################################                        
-
 
 mymonth<-as.data.frame(model.matrix(~ . + 0, data=mymonth, contrasts.arg = lapply(mymonth, contrasts, contrasts=FALSE)))
 
@@ -89,9 +63,6 @@ colnames(mymonth)<-paste0("months",1:12)
 colnames(mygfyear)<-paste0("fy",2004:2015)
 
 production<-cbind(production, mymonth,mygfyear)
-
-
-load(file.path(savepath,"targeting_coefs.RData"))
 load(file.path(savepath,"production_coefs.RData"))
 
 # merge production dataset and coefficients
@@ -115,13 +86,13 @@ if(ncol(production_dataset) !=check){
 #Keep a subset of the variables
 datavars=c("log_crew","log_trip_days","logh_cumul","primary","secondary")
 betavars=paste0("beta_",datavars)
-test<-colnames(production_dataset)
+pd_cols<-colnames(production_dataset)
 
-fydums<-test[grepl("^fy20", test)]
-fycoefs<-test[grepl("^beta_fy20", test)]
+fydums<-pd_cols[grepl("^fy20", pd_cols)]
+fycoefs<-pd_cols[grepl("^beta_fy20", pd_cols)]
 
-monthdums<-test[grepl("^months", test)]
-monthcoefs<-test[grepl("^beta_month", test)]
+monthdums<-pd_cols[grepl("^months", pd_cols)]
+monthcoefs<-pd_cols[grepl("^beta_month", pd_cols)]
 idvars=c("hullnum2", "id", "date","spstock2", "doffy")
 necessary=c("multiplier", "q", "rmse", "price_lb_lag1","emean")
 useful=c("gearcat","post", "logh")
@@ -141,38 +112,10 @@ pre_production_dataset<-inner_join(production,pre_only,by=c("gearcat","spstock2"
 save(production_dataset, file=file.path(savepath, "full_production.RData"))
 save(post_production_dataset, file=file.path(savepath, "post_production.RData"))
 save(pre_production_dataset, file=file.path(savepath, "pre_production.RData"))
+#
 
 
 
-# merge targeting dataset and coefficients
-# Note, you'll have some NAs for some rows, especially no fish.
-targeting_dataset<-left_join(targeting,targeting_coefs,by=c("gearcat","spstock2"))
-
-
-
-#I expect the number of columns in targeting dataset to be number in targeting, plus number in targeting coefs, minus 2 (because I had 2 match columns)
-
-check<- ncol(targeting)+ncol(targeting_coefs)-2
-if(ncol(targeting_dataset) !=check){
-  warning("Lost some Columns from the targeting dataset")
-}
-
-
-
-datavars=c("exp_rev_total","distance","das_charge","fuelprice_distance","start_of_season","crew","price_lb_lag1","mean_wind","mean_wind_2","permitted","lapermit","das_charge_len","max_wind","max_wind_2","fuelprice","fuelprice_len","wkly_crew_wage")
-betavars=paste0("beta_",datavars)
-idvars=c("id", "hullnum2", "date","spstock2", "doffy")
-necessary=c( "multiplier", "q", "price_lb_lag1")
-useful=c("gearcat","post","h_hat")
-mysubs=c(idvars,necessary,useful,datavars,betavars)
-
-
-targeting_dataset<-targeting_dataset[mysubs]
-
-
-
-
-save(targeting_dataset, file=file.path(savepath, "full_targeting.RData"))
 
 
 
