@@ -100,19 +100,15 @@ mysubs=c(idvars, useful, datavars,betavars, fydums, monthdums, fycoefs, monthcoe
 
 production_dataset<-production_dataset[mysubs]
 
+pre_only_dataset<-production_dataset[which(production_dataset$post==0),]
+post_only_dataset<-production_dataset[which(production_dataset$post==1),]
 
-
-# This is the place where you would drop-out the "post" variable
-post_only<-production_coefs[which(production_coefs$post==1),]
-post_production_dataset<-inner_join(production,post_only,by=c("gearcat","spstock2"))
-
-pre_only<-production_coefs[which(production_coefs$post==0),]
-pre_production_dataset<-inner_join(production,pre_only,by=c("gearcat","spstock2"))
 
 save(production_dataset, file=file.path(savepath, "full_production.RData"))
-save(post_production_dataset, file=file.path(savepath, "post_production.RData"))
-save(pre_production_dataset, file=file.path(savepath, "pre_production.RData"))
-#
+save(post_only_dataset, file=file.path(savepath, "post_production.RData"))
+save(pre_only_dataset, file=file.path(savepath, "pre_production.RData"))
+
+rm(list=ls())
 
 
 
