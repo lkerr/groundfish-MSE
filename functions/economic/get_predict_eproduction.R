@@ -19,7 +19,7 @@ get_predict_eproduction <- function(prod_ds){
   B[is.na(B)]<-0
   
   prod_ds$logh_hat<-rowSums(X*B)
-  prod_ds$logh_hat=prod_ds$logh_hat+q
+  prod_ds$logh_hat=prod_ds$logh_hat+prod_ds$q
 
   # Pull the fy dummies out, replace NAs with zeros, and multiply them by the fy coefs
   fydums<-subset(prod_ds, select = grepl("^fy20", names(prod_ds)))
