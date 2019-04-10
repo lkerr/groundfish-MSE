@@ -22,11 +22,15 @@ tds<-targeting_dataset
 
 
 
+part3<-0
+sa<-Sys.time()
 
 #code to test function. Remove when done.
 predicted_trips<-get_predict_etargeting(targeting_dataset)
 #targeting_dataset<-cbind(phat,targeting_dataset)
 
+sb<-Sys.time()
+part3<-part3+sb-sa
 
 predicted_trips <- predicted_trips %>% 
   group_by(hullnum2,date) %>%

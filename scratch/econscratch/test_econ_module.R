@@ -11,6 +11,8 @@ datapath <- 'data/data_processed/econ'
 load(file.path(datapath,"full_targeting.RData"))
 load(file.path(datapath,"full_production.RData"))
 
+production_dataset<-production_dataset[which(production_dataset$gffishingyear==2009),]
+targeting_dataset<-targeting_dataset[which(targeting_dataset$gffishingyear==2009),]
 
 #END SETUPS
 
@@ -29,17 +31,33 @@ fishery_holder$cumul_catch<-1
 fishery_holder$acl<-1e16
 
 
-start_time <- proc.time()
-for (day in 1:30){
-  
-# for (day in 1:365){
-#   subset both the targeting and production datasets based on date
-  
-working_production<-production_dataset[which(production_dataset$doffy==day),]
-working_targeting<-targeting_dataset[which(targeting_dataset$doffy==day),]
+#Test different ways to subset these datasets.  dplyr?
+#One time, load into a list and then 
 
+
+
+
+
+hold_prod<-split(production_dataset, production_dataset$doffy)
+hold_targ<-split(targeting_dataset, targeting_dataset$doffy)
+
+
+start_time<-proc.time()
+
+#for (day in 1:30){
+  
+ for (day in 1:365){
+#   subset both the targeting and production datasets based on date
+
+  working_production<-hold_prod[[day]]
+  working_targeting<-hold_targ[[day]]
+  
+    
+# working_production<-production_dataset[which(production_dataset$doffy==day),]
+# working_targeting<-targeting_dataset[which(targeting_dataset$doffy==day),]
 #   overwrite cumulative harvest and log cumulative catch of each stock.
-working_production<-merge(working_production,fishery_holder, by="spstock2")
+  
+working_production<-left_join(working_production,fishery_holder, by="spstock2")
 
 working_production$h_cumul<-working_production$cumul_catch
 working_production$logh_cumul<-log(working_production$cumul_catch)
@@ -49,12 +67,14 @@ working_production$logh_cumul<-log(working_production$cumul_catch)
 
 production_outputs<-get_predict_eproduction(working_production)
 
+
 #   
 #   use those three key variables to merge-update harvest, revenue, and expected revenue in the targeting dataset
 joincols<-c("hullnum2","date","spstock2")
+working_targeting<-left_join(working_targeting,production_outputs, by=joincols)
 
-working_targeting<-merge(working_targeting,production_outputs, by=joincols, all.x=TRUE)
 
+#############THIS BIT IS VERY FAST#######
 #fill exp_rev_sim, exp_rev_total_sim, harvest_sim=0 for the nofish options
 working_targeting$exp_rev_sim[is.na(working_targeting$exp_rev_sim)]<-0
 working_targeting$exp_rev_total_sim[is.na(working_targeting$exp_rev_total_sim)]<-0
@@ -65,18 +85,25 @@ working_targeting$harvest_sim[is.na(working_targeting$harvest_sim)]<-0
 working_targeting$exp_rev<-working_targeting$exp_rev_sim
 working_targeting$exp_rev_total<-working_targeting$exp_rev_total_sim
 working_targeting$h_hat<-working_targeting$harvest_sim
+#############END VERY FAST#######
 
-# Predict targeting
+
 trips<-get_predict_etargeting(working_targeting)
 
+
+# Predict targeting
 #this is where infeasible trips should be eliminated.
+#THIS BIT IS VERY FAST 
+
 trips<-zero_out_closed(trips,fishery_holder)
 
+
 #Keep the "best trip"  -- sort on hullnum2, date and prhat. then keep the hullnum2, date with the largest prhat.
+#THIS BIT IS MEDIUM 
+
 trips <- trips %>% 
   group_by(hullnum2,date) %>%
   filter(prhat == max(prhat)) 
-
 
 # Expand from harvest of the target to harvest of all.
 
@@ -84,17 +111,16 @@ trips <- trips %>%
 daily_catch<-aggregate(trips$h_hat,by=list(spstock2=trips$spstock2), FUN=sum)
 colnames(daily_catch)=c("spstock2","cumul_catch")
 
-
 #   rbind this to the previous cumulative catch
 daily_catch<-rbind(daily_catch,fishery_holder[c("spstock2","cumul_catch")])
 daily_catch<-aggregate(daily_catch$cumul_catch,by=list(spstock=daily_catch$spstock2), FUN=sum)
 colnames(daily_catch)=c("spstock2","cumul_catch")
 
 
+
 # update the fishery holder dataframe
 # spits out spstock2, acl, open, cumul_catch
 fishery_holder<-get_fishery_next_period(daily_catch,fishery_holder)
-
 #cast pounds to NAA
 
 }
