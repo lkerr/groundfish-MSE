@@ -22,15 +22,18 @@ X[is.na(X)]<-0
 B<-as.matrix(tds[betavars])
 B[is.na(B)]<-0
 
-xb<-rowSums(X*B)
-tds<-cbind(tds,xb)
+tds$xb=rowSums(X*B)
 tds$expu<-exp(tds$xb)
-  totexpu<-aggregate(tds$expu,by=list(id=tds$id), FUN=sum)
-  
-  colnames(totexpu)=c("id","totalu")
-  
-  # mergeback
-  tds<-merge(x = tds, y = totexpu, by = "id", all = TRUE)
+
+#This may be slightly faster
+#tds$expu=exp(rowSums(X*B))
+
+temp1<- tds %>% 
+  group_by(id) %>% 
+  summarise(totalu=sum(expu))
+  tds<-full_join(tds, temp1, by = "id")
+
+
   tds$prhat<- tds$expu/tds$totalu
   
   return(tds)
