@@ -51,10 +51,10 @@ colnames(targeting)[colnames(targeting)=="LApermit"] <- "lapermit"
 # merge targeting dataset and coefficients
 # Note, you'll have some NAs for some rows, especially no fish.
 targeting_dataset<-left_join(targeting,targeting_coefs,by=c("gearcat","spstock2"))
-targeting$spstock2<- gsub("gb","GB",targeting$spstock2)
-targeting$spstock2<- gsub("ccgom","CCGOM",targeting$spstock2)
-targeting$spstock2<- gsub("gom","GOM",targeting$spstock2)
-targeting$spstock2<- gsub("snema","SNEMA",targeting$spstock2)
+targeting_dataset$spstock2<- gsub("gb","GB",targeting_dataset$spstock2)
+targeting_dataset$spstock2<- gsub("ccgom","CCGOM",targeting_dataset$spstock2)
+targeting_dataset$spstock2<- gsub("gom","GOM",targeting_dataset$spstock2)
+targeting_dataset$spstock2<- gsub("snema","SNEMA",targeting_dataset$spstock2)
 
 
 

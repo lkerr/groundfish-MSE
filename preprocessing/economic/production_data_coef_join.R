@@ -51,7 +51,7 @@ mymonth<-as.data.frame(model.matrix(~ . + 0, data=mymonth, contrasts.arg = lappl
 
 mygfyear<-as.data.frame(model.matrix(~ . + 0, data=mygfyear, contrasts.arg = lapply(mygfyear, contrasts, contrasts=FALSE)))
 
-colnames(mymonth)<-paste0("months",1:12)
+colnames(mymonth)<-paste0("month",1:12)
 colnames(mygfyear)<-paste0("fy",2004:2015)
 
 production<-cbind(production, mymonth,mygfyear)
@@ -73,12 +73,12 @@ if(ncol(production_dataset) !=check){
 }
 
 
-production$spstock2<-tolower(production$spstock)
-production$spstock2<- gsub("_","",production$spstock2)
-production$spstock2<- gsub("gb","GB",production$spstock2)
-production$spstock2<- gsub("ccgom","CCGOM",production$spstock2)
-production$spstock2<- gsub("gom","GOM",production$spstock2)
-production$spstock2<- gsub("snema","SNEMA",production$spstock2)
+production_dataset$spstock2<-tolower(production_dataset$spstock)
+production_dataset$spstock2<- gsub("_","",production_dataset$spstock2)
+production_dataset$spstock2<- gsub("gb","GB",production_dataset$spstock2)
+production_dataset$spstock2<- gsub("ccgom","CCGOM",production_dataset$spstock2)
+production_dataset$spstock2<- gsub("gom","GOM",production_dataset$spstock2)
+production_dataset$spstock2<- gsub("snema","SNEMA",production_dataset$spstock2)
 
 
 
@@ -90,7 +90,7 @@ pd_cols<-colnames(production_dataset)
 fydums<-pd_cols[grepl("^fy20", pd_cols)]
 fycoefs<-pd_cols[grepl("^beta_fy20", pd_cols)]
 
-monthdums<-pd_cols[grepl("^months", pd_cols)]
+monthdums<-pd_cols[grepl("^month", pd_cols)]
 monthcoefs<-pd_cols[grepl("^beta_month", pd_cols)]
 idvars=c("hullnum2", "id", "date","spstock2", "doffy")
 necessary=c("multiplier", "q", "rmse", "price_lb_lag1","emean", "gffishingyear")
@@ -107,7 +107,7 @@ save(production_dataset, file=file.path(savepath, "full_production.RData"))
 save(post_only_dataset, file=file.path(savepath, "post_production.RData"))
 save(pre_only_dataset, file=file.path(savepath, "pre_production.RData"))
 
-rm(list=ls())
+#rm(list=ls())
 
 
 
