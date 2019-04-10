@@ -8,7 +8,11 @@
 # 
 
 get_predict_eproduction <- function(prod_ds){
-  datavars=c("log_crew","log_trip_days","logh_cumul","primary","secondary")
+  indepvars=c("log_crew","log_trip_days","logh_cumul","primary","secondary")
+  fyvars=paste0("fy",2004:2015)
+  monthvars=paste0("month",1:12)
+  
+  datavars=c(indepvars,fyvars,monthvars)
   betavars=paste0("beta_",datavars)
   
   
@@ -20,28 +24,15 @@ get_predict_eproduction <- function(prod_ds){
   
   prod_ds$logh_hat<-rowSums(X*B)
   prod_ds$logh_hat=prod_ds$logh_hat+prod_ds$q
-
-  # Pull the fy dummies out, replace NAs with zeros, and multiply them by the fy coefs
-  fydums<-subset(prod_ds, select = grepl("^fy20", names(prod_ds)))
-  fydums[is.na(fydums)]<-0
-  fycoefs<-subset(prod_ds, select = grepl("^beta_fy20", names(prod_ds)))
-  fycoefs[is.na(fycoefs)]<-0
   
-  fx<-rowSums(fydums*fycoefs)
-  monthdums<-subset(prod_ds, select = grepl("^months", names(prod_ds)))
-  monthdums[is.na(monthdums)]<-0
-  monthcoefs<-subset(prod_ds, select = grepl("^beta_month", names(prod_ds)))
-  monthcoefs[is.na(monthcoefs)]<-0
-  
-  fx<-fx+ rowSums(monthdums*monthcoefs)
   #production
   # bad way to smear
   #prod_ds$harvest_sim<- exp(prod_ds$logh_hat + fx)*exp((prod_ds$rmse^2)/2)
   
   #good way to smear
-  prod_ds$harvest_sim<- exp(prod_ds$logh_hat + fx)*prod_ds$emean
+  prod_ds$harvest_sim<- exp(prod_ds$logh_hat)*prod_ds$emean 
   
-    #expected revenue
+  #expected revenue
   prod_ds$exp_rev_sim<- prod_ds$harvest_sim*prod_ds$price_lb_lag1
   prod_ds$exp_rev_total_sim<- prod_ds$harvest_sim*prod_ds$price_lb_lag1*prod_ds$multiplier
   
