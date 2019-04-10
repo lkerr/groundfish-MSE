@@ -27,12 +27,12 @@ savepath <- 'data/data_processed/econ/'
 production_source<-"sample_PRODREGdata_forML_v3.dta"
 
 production <- read.dta13(file.path(rawpath, production_source))
-production$startfy = paste("5", "1",production$gffishingyear,sep=".")
 production$startfy = as.Date(paste("5", "1",production$gffishingyear,sep="."), "%m.%d.%Y")
 production$doffy=as.numeric(difftime(production$date,production$startfy, units="days")+1)
 
 ###############################################################
-#THIS IS JUST FOR TESTING, REMOVE THIS LATER.
+#THIS IS JUST FOR TESTING, REMOVE THIS LATER. I've faked the 2004-2015 variables so the factorization will work properly
+production$fybak<-production$gffishingyear
 production$gffishingyear <- sample(2004:2015,nrow(production), replace=T)
 #THIS IS JUST FOR TESTING, REMOVE THIS LATER.
 ###############################################################
@@ -55,6 +55,12 @@ colnames(mymonth)<-paste0("month",1:12)
 colnames(mygfyear)<-paste0("fy",2004:2015)
 
 production<-cbind(production, mymonth,mygfyear)
+###############################################################
+#THIS IS JUST FOR TESTING, REMOVE THIS LATER. I've faked the 2004-2015 variables so the factorization will work properly. Nothing bad will happen if you forget to remove this.
+production$gffishingyear<-production$fybak
+#THIS IS JUST FOR TESTING, REMOVE THIS LATER.
+###############################################################
+
 load(file.path(savepath,"production_coefs.RData"))
 
 # merge production dataset and coefficients
