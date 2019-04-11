@@ -1,9 +1,8 @@
 # This pre-processing file:
   # 1. Pulls in the production equation coefficients and data
   # 2. Joins them together (based on spstock2, gearcat, and post).  We may not want to do that.
+  #.3. Drop unnecessary variables.
 
-  # 3. Pulls in the targeting equation coefficients and data
-  # 4. Joins them together. 
 # This is a little stupid, because it make a big dataset, instead of making a pair of matrices (one for data and one for coefficients). But whatever.
 
 rm(list=ls())
@@ -20,13 +19,13 @@ if(!require(dplyr)) {
 
 # file paths for the raw and final directories
 
-rawpath <- 'data/data_raw/econ/'
-savepath <- 'data/data_processed/econ/'
+econrawpath <- 'data/data_raw/econ/'
+econsavepath <- 'data/data_processed/econ/'
 
 #Files to read -- sample data for now.
 production_source<-"sample_PRODREGdata_forML_v3.dta"
 
-production <- read.dta13(file.path(rawpath, production_source))
+production <- read.dta13(file.path(econrawpath, production_source))
 production$startfy = as.Date(paste("5", "1",production$gffishingyear,sep="."), "%m.%d.%Y")
 production$doffy=as.numeric(difftime(production$date,production$startfy, units="days")+1)
 
@@ -61,7 +60,7 @@ production$gffishingyear<-production$fybak
 #THIS IS JUST FOR TESTING, REMOVE THIS LATER.
 ###############################################################
 
-load(file.path(savepath,"production_coefs.RData"))
+load(file.path(econsavepath,"production_coefs.RData"))
 
 # merge production dataset and coefficients
 production_dataset<-inner_join(production,production_coefs,by=c("gearcat","spstock2","post"))
@@ -109,9 +108,9 @@ pre_only_dataset<-production_dataset[which(production_dataset$post==0),]
 post_only_dataset<-production_dataset[which(production_dataset$post==1),]
 
 
-save(production_dataset, file=file.path(savepath, "full_production.RData"))
-save(post_only_dataset, file=file.path(savepath, "post_production.RData"))
-save(pre_only_dataset, file=file.path(savepath, "pre_production.RData"))
+save(production_dataset, file=file.path(econsavepath, "full_production.RData"))
+save(post_only_dataset, file=file.path(econsavepath, "post_production.RData"))
+save(pre_only_dataset, file=file.path(econsavepath, "pre_production.RData"))
 
 #rm(list=ls())
 

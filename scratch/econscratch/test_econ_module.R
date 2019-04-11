@@ -1,66 +1,101 @@
-# some code to test "get_predict_etargeting.R"
+# some code to run the economic module.
+# This code will eventually take in the catch limits, by stock, and either biomass  
+
+
+############################################################
+#Preamble stuff that is contained in other places.
+#load in functions
+#set class to not HPCC
+#load libraries
+#declare some paths to read and save things that I'm scratchpadding
+############################################################
 
 
 rm(list=ls())
 
 ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
 invisible(sapply(ffiles, source))
+runClass<-'local'
+source('processes/loadLibs.R')
 
+econsavepath <- 'scratch/econscratch'
+econdatapath <- 'data/data_processed/econ'
+############################################################
+############################################################
+#Pull in datasets and clean them up a little (this is temporary cleaning, so it belongs here)
+############################################################
+############################################################
 
-datapath <- 'data/data_processed/econ'
-load(file.path(datapath,"full_targeting.RData"))
-load(file.path(datapath,"full_production.RData"))
+load(file.path(econdatapath,"full_targeting.RData"))
+load(file.path(econdatapath,"full_production.RData"))
 
 production_dataset<-production_dataset[which(production_dataset$gffishingyear==2009),]
 targeting_dataset<-targeting_dataset[which(targeting_dataset$gffishingyear==2009),]
 
-#END SETUPS
+#manually set the fy dummies to zero except for the 2009 one.
+production_dataset$fy2004<-0
+production_dataset$fy2005<-0
+production_dataset$fy2006<-0
+production_dataset$fy2007<-0
+production_dataset$fy2008<-0
+production_dataset$fy2010<-0
+production_dataset$fy2011<-0
+production_dataset$fy2012<-0
+production_dataset$fy2013<-0
+production_dataset$fy2014<-0
+production_dataset$fy2015<-0
+
+production_dataset$fy2009<-1
 
 
 
+############################################################
+############################################################
+#These should probably go into the container setup
+# fishery stats holder is a dataframe that holds
+#stock name, open=true/false, cumulative catch to that day, and the acl
+#revenue_holder holds daily revenue for each vessel (could contract this to the trip)
+############################################################
+############################################################
 
-#BEGIN PIECE OF ECON MODULE 
-
-#This should probably go into a container
-#dataframe to hold total catch, acls, and open/closed status by spstock2
-#set to Open, 1lb of catch on May 1, and all acls are 100,000 lbs
-fishery_holder<-targeting_dataset
-fishery_holder<-unique(fishery_holder[c("spstock2")])
+fishery_holder<-unique(targeting_dataset[c("spstock2")])
 fishery_holder$open<-as.logical("TRUE")
 fishery_holder$cumul_catch<-1
 fishery_holder$acl<-1e16
 
-
-#Test different ways to subset these datasets.  dplyr?
-#One time, load into a list and then 
+revenue_holder<-NULL
 
 
 
+############################################################
+############################################################
+#BEGIN PIECE OF ECON MODULE 
+############################################################
+############################################################
 
 
-hold_prod<-split(production_dataset, production_dataset$doffy)
-hold_targ<-split(targeting_dataset, targeting_dataset$doffy)
+
+#split the production and targeting datasets into a list of datasets
+production_dataset<-split(production_dataset, production_dataset$doffy)
+targeting_dataset<-split(targeting_dataset, targeting_dataset$doffy)
 
 
 start_time<-proc.time()
 
-#for (day in 1:30){
+for (day in 1:365){
   
- for (day in 1:365){
+# for (day in 1:365){
 #   subset both the targeting and production datasets based on date
 
-  working_production<-hold_prod[[day]]
-  working_targeting<-hold_targ[[day]]
+  working_production<-production_dataset[[day]]
+  working_targeting<-targeting_dataset[[day]]
   
     
-# working_production<-production_dataset[which(production_dataset$doffy==day),]
-# working_targeting<-targeting_dataset[which(targeting_dataset$doffy==day),]
 #   overwrite cumulative harvest and log cumulative catch of each stock.
-  
 working_production<-left_join(working_production,fishery_holder, by="spstock2")
 
-working_production$h_cumul<-working_production$cumul_catch
-working_production$logh_cumul<-log(working_production$cumul_catch)
+# working_production$h_cumul<-working_production$cumul_catch
+# working_production$logh_cumul<-log(working_production$cumul_catch)
 
 
 #   predict_eproduction: predict harvest of each stock by each vessel condition on targeting that stock.  Also predict revenue from that stock, and all revenue.  keep just 6 columns: hullnum, date, spstock as key variables.  harvest, revenue, and expected revenue as columns that I care about. 
@@ -82,9 +117,9 @@ working_targeting$harvest_sim[is.na(working_targeting$harvest_sim)]<-0
 
 #overwrite the values of the exp_rev_total, exp_rev, and harvest in the targeting dataset.
 
-working_targeting$exp_rev<-working_targeting$exp_rev_sim
-working_targeting$exp_rev_total<-working_targeting$exp_rev_total_sim
-working_targeting$h_hat<-working_targeting$harvest_sim
+# working_targeting$exp_rev<-working_targeting$exp_rev_sim
+# working_targeting$exp_rev_total<-working_targeting$exp_rev_total_sim
+# working_targeting$h_hat<-working_targeting$harvest_sim
 #############END VERY FAST#######
 
 
@@ -106,23 +141,34 @@ trips <- trips %>%
   filter(prhat == max(prhat)) 
 
 # Expand from harvest of the target to harvest of all.
+# Not written yet.  Not sure if we need revenue by stock to be saved for each vessel? Or just catch? 
 
-#   add up today's harvest across the vessels   
-daily_catch<-aggregate(trips$h_hat,by=list(spstock2=trips$spstock2), FUN=sum)
-colnames(daily_catch)=c("spstock2","cumul_catch")
 
-#   rbind this to the previous cumulative catch
+#   add up today's revenue across the vessels (not necessary right now, but we end up with 'long' dataset of revenue)  
+# revenue<- trips %>% 
+#   group_by(hullnum2) %>% 
+#   summarise(totalrev=sum(exp_rev_total))
+
+# revenue<-trips[c("hullnum2","spstock2","exp_rev_total")]
+# revenue_holder<-rbind(revenue_holder,revenue)
+
+revenue_holder<-rbind(revenue_holder,trips[c("hullnum2","spstock2","date","exp_rev_total")])
+
+
+#   Pull out daily catch, rename the catch colum, and rbind to the holder. aggregate to update cumulative catch 
+daily_catch<- trips[c("spstock2","h_hat")]
+colnames(daily_catch)[2]<-"cumul_catch"
 daily_catch<-rbind(daily_catch,fishery_holder[c("spstock2","cumul_catch")])
-daily_catch<-aggregate(daily_catch$cumul_catch,by=list(spstock=daily_catch$spstock2), FUN=sum)
-colnames(daily_catch)=c("spstock2","cumul_catch")
 
-
+daily_catch<- daily_catch %>% 
+  group_by(spstock2) %>% 
+  summarise(cumul_catch=sum(cumul_catch))
 
 # update the fishery holder dataframe
-# spits out spstock2, acl, open, cumul_catch
 fishery_holder<-get_fishery_next_period(daily_catch,fishery_holder)
-#cast pounds to NAA
 
+#cast pounds to NAA
+#Placeholder to convert pounds to NAA, will need to be aware of the selectivity
 }
 proc.time()-start_time
 

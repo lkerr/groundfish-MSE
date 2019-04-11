@@ -1,10 +1,8 @@
 # This pre-processing file:
-  # 1. Pulls in the production equation coefficients and data
-  # 2. Joins them together (based on spstock2, gearcat, and post).  We may not want to do that.
-
-  # 3. Pulls in the targeting equation coefficients and data
-  # 4. Joins them together. 
-# This is a little stupid, because it make a big dataset, instead of making a pair of matrices (one for data and one for coefficients). But whatever.
+  # 1. Pulls in the targeting equation coefficients and data
+  # 2. Joins them together (based on spstock2 and  gearcat). 
+  #.3. Drop unnecessary variables.
+# A little stupid to join the coefficients to the data, because it make a big dataset with lots of replicated data, instead of making a pair of matrices (one for data and one for coefficients). But whatever.
 
 rm(list=ls())
 if(!require(readstata13)) {  
@@ -20,17 +18,17 @@ if(!require(dplyr)) {
 
 # file paths for the raw and final directories
 
-rawpath <- 'data/data_raw/econ'
-savepath <- 'data/data_processed/econ'
+econrawpath <- 'data/data_raw/econ'
+econsavepath <- 'data/data_processed/econ'
 
 #Files to read -- sample data for now.
 targeting_source<-"sample_DCdata_fys2009_2010_forML.dta"
 
 #Load in targeting coefficients
-load(file.path(savepath,"targeting_coefs.RData"))
+load(file.path(econsavepath,"targeting_coefs.RData"))
 
 # read in the dataset
-targeting <- read.dta13(file.path(rawpath, targeting_source))
+targeting <- read.dta13(file.path(econrawpath, targeting_source))
 
 
 targeting$startfy = paste("5", "1",targeting$gffishingyear,sep=".")
@@ -80,7 +78,7 @@ targeting_dataset<-targeting_dataset[mysubs]
 
 
 
-save(targeting_dataset, file=file.path(savepath, "full_targeting.RData"))
+save(targeting_dataset, file=file.path(econsavepath, "full_targeting.RData"))
 
 rm(list=ls())
 

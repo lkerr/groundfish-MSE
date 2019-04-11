@@ -6,9 +6,9 @@ rm(list=ls())
 ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
 invisible(sapply(ffiles, source))
 
-savepath<-'scratch/econscratch'
-datapath <- 'data/data_processed/econ'
-load(file.path(datapath,"full_production.RData"))
+econsavepath<-'scratch/econscratch'
+econdatapath <- 'data/data_processed/econ'
+load(file.path(econdatapath,"full_production.RData"))
 
 
 
