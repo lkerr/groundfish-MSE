@@ -70,7 +70,7 @@ if(ncol(targeting_dataset) !=check){
 datavars=c("exp_rev_total","distance","das_charge","fuelprice_distance","start_of_season","crew","price_lb_lag1","mean_wind","mean_wind_2","permitted","lapermit","das_charge_len","max_wind","max_wind_2","fuelprice","fuelprice_len","wkly_crew_wage")
 betavars=paste0("beta_",datavars)
 idvars=c("id", "hullnum2", "date","spstock2", "doffy")
-necessary=c( "multiplier", "q", "price_lb_lag1","gffishingyear")
+necessary=c( "multiplier", "q", "gffishingyear")
 useful=c("gearcat","post","h_hat")
 mysubs=c(idvars,necessary,useful,datavars,betavars)
 
