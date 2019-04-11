@@ -218,6 +218,8 @@ targeting_coefs$spstock2<- gsub("_","",targeting_coefs$spstock2)
 
 
 colnames(targeting_coefs)[3:ncol(targeting_coefs)]<-paste0("beta_",colnames(targeting_coefs[3:ncol(targeting_coefs)]))
+targeting_coefs$spstock2[which(targeting_coefs$spstock2=="squidmackerelbutterfishherrin")]<-"squidmackerelbutterfishherring"
+
 
 #Force NAs to zero. This is legit. I promise. 
 targeting_coefs[is.na(targeting_coefs)]<-0
