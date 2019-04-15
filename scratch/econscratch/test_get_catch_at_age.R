@@ -49,21 +49,21 @@ if(any(next_weights<0)){
   fix_weight[fix_weight>=0]<-0
   fix_counts<-fix_weight/kgatage
   end<-length(NAA)
-  
+
 #### fancy way
 
 
 #deal with the first age class and last age class
 lc<-1
 if(fix_weight[lc] <0)  {
-  mycaa_weights<-get_e_smear_up(mycaa_weights,fix_weight,lc) 
-  mycaa<-get_e_smear_up(mycaa,fix_counts,lc) 
+  mycaa_weights<-get_e_smear_up(mycaa_weights,fix_weight,lc)
+  mycaa<-get_e_smear_up(mycaa,fix_counts,lc)
 }
 
 lc<-end
 if(fix_weight[lc] <0)  {
-  mycaa_weights<-get_e_smear_down(mycaa_weights,fix_weight,lc) 
-  mycaa<-get_e_smear_down(mycaa,fix_counts,lc) 
+  mycaa_weights<-get_e_smear_down(mycaa_weights,fix_weight,lc)
+  mycaa<-get_e_smear_down(mycaa,fix_counts,lc)
 }
 
 #deal with the age classes that are in the middle.
@@ -71,19 +71,19 @@ if(fix_weight[lc] <0)  {
 for (lc in 2:(end-1)) {
   if(fix_weight[lc] <0)  {
       if (next_weights[lc-1]>0 & next_weights[lc+1]>0){
-        mycaa_weights<-get_e_smear_both(mycaa_weights,fix_weight,lc) 
+        mycaa_weights<-get_e_smear_both(mycaa_weights,fix_weight,lc)
         print(paste0("smearing both lc=",lc) )
-        mycaa<-get_e_smear_both(mycaa,fix_counts,lc) 
+        mycaa<-get_e_smear_both(mycaa,fix_counts,lc)
         }
     if (next_weights[lc-1]>0 & next_weights[lc+1]<=0){
-      mycaa_weights<-get_e_smear_down(mycaa_weights,fix_weight,lc) 
+      mycaa_weights<-get_e_smear_down(mycaa_weights,fix_weight,lc)
       print(paste0("smearing down lc=",lc) )
-      mycaa<-get_e_smear_down(mycaa,fix_counts,lc) 
+      mycaa<-get_e_smear_down(mycaa,fix_counts,lc)
       }
     if (next_weights[lc-1]<=0 & next_weights[lc+1]>0){
-      mycaa_weights<-get_e_smear_up(mycaa_weights,fix_weight,lc) 
+      mycaa_weights<-get_e_smear_up(mycaa_weights,fix_weight,lc)
       print(paste0("smearing up lc=",lc) )
-      mycaa<-get_e_smear_up(mycaa,fix_counts,lc) 
+      mycaa<-get_e_smear_up(mycaa,fix_counts,lc)
       }
   }
 }
@@ -98,7 +98,3 @@ z<-rowSums(mycaa_weights)*pounds_per_kg
 
 z
 catch_pounds
-
-#outlist<-get_at_age_stats(catch_pounds/pounds_per_kg,NAA,kgatage,selectivity)
-
-#z2<-rowSums(outlist$weight_caa)*pounds_per_kg

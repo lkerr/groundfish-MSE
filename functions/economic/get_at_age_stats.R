@@ -1,4 +1,5 @@
-# Function to calculate catch-at-age, weight of the catch-at-age, and NAA that survive the pulse of fishing.   based on available numbers, selectivity, and catch.   This "inverts" the get_catch.R function.  It also error-handles for catch-at-age greater than NAA. Since we need to calculate weights and survivors to do this, we might as well return them as well
+# Function to calculate catch-at-age, weight of the catch-at-age, and NAA that survive the pulse of fishing.   based on available numbers, selectivity, and catch.   This "inverts" the get_catch.R function.  It also error-handles for catch-at-age greater than NAA. Since we need to calculate weights and survivors to do this, we might as well return them as well.
+# You've got a bunch of debug comments in here
 # 
 # INPUTS:
 # catch (1x1): scalar of removals. catch and waa should be in the same units (kilograms) 
@@ -8,10 +9,13 @@
 
 # Outputs
 # outList is a list containing:
-# caa (1xK): vector of catch-at-age.
-# weight_caa 
-# survivors = NAA of the survivors
-# scaleup is like a pseudo F-full. It ignores natural mortality rates. I don't think we want to report this.  
+  # caa (1xK): vector of catch-at-age.
+  # weight_caa 
+  # survivor_numbers = NAA of the survivors
+  # survivors = vector of weight of the survivors
+
+
+
 
 #Notes
 # Ignoring natural mortality, we have
@@ -24,83 +28,109 @@
 
 
 get_at_age_stats <- function(catch_kg, NAA, kilograms_at_age,selC){
+  works<-as.logical("TRUE")
+  
+   size_NAA<-length(NAA)
+  
+  #check to see if you've caught everything
+   #yes, these are transposed. don't ask.
+  total_weight<-NAA%*%kilograms_at_age
+  if (catch_kg>=total_weight){
+   print("congrats you caught it all") 
+    mycaa<-t(NAA)
+    mycaa_weights<-t(NAA)*kilograms_at_age
+    survivor_nums<-0*mycaa
+    next_weights<-0*mycaa
+    } else{
+  
+  
+  
   
   #Note, I tested doing this in one line. It's not faster
   oneu<-selC*NAA
   oneuW<-t(kilograms_at_age)%*% oneu
   scaleup<-catch_kg/oneuW
   mycaa<-scaleup %*% oneu
+  # scaleup is like a pseudo F-full. It ignores natural mortality rates. I don't think we want to report this.  
   
   # Error handle #
   # If any elements of caa are greater than the corresponding element of N
+  
+  #compute vector of aggregate weight by age class.
   NAA_weights<-NAA*kilograms_at_age
   mycaa_weights<-mycaa*kilograms_at_age
   next_weights<-NAA_weights - mycaa_weights
   
   
-  # You shold wrap a while around this.  But it might end up stuck (you'd need a pretty awful age structure for that).   # instead, loop a "small number of times". Then write something to hack/deal with a bad draw?
   
+  # A while would be more elegant, but it might end up stuck (you'd need a pretty awful age structure for that).  
+  # instead, loop a "small number of times". Then write something to hack/deal with a bad age structure?
   
+  for (iter in 1:6) {
+    print(paste0("part 1 iteration number ", iter))
+    
   if(any(next_weights<0)){
-    print("fixing negative")
+    print(paste0("part 2 iteration number ", iter))
+    
     fix_weight<-next_weights
     fix_weight[fix_weight>=0]<-0
-    fix_counts<-fix_weight/kilograms_at_age
-    end<-length(NAA)
-    
-    #### fancy way
-    
-    
+
     #deal with the first age class and last age class
     lc<-1
     if(fix_weight[lc] <0)  {
-      mycaa_weights<-e_smear_up(mycaa_weights,fix_weight,lc) 
-      mycaa<-e_smear_up(mycaa,fix_counts,lc) 
+      mycaa_weights<-get_e_smear_up(mycaa_weights,fix_weight,lc) 
     }
     
-    lc<-end
+    lc<-size_NAA
     if(fix_weight[lc] <0)  {
-      mycaa_weights<-e_smear_down(mycaa_weights,fix_weight,lc) 
-      mycaa<-e_smear_down(mycaa,fix_counts,lc) 
+      mycaa_weights<-get_e_smear_down(mycaa_weights,fix_weight,lc) 
     }
     
     #deal with the age classes that are in the middle.
     # if you were better at R, you could write this to facilitate an lapply. But you're not.
-    for (lc in 2:(end-1)) {
+    for (lc in 2:(size_NAA-1)) {
       if(fix_weight[lc] <0)  {
-        if (NAA_weights[lc-1]>0 & NAA_weights[lc+1]>0){
-          mycaa_weights<-e_smear_both(mycaa_weights,fix_weight,lc) 
-          mycaa<-e_smear_both(mycaa,fix_counts,lc) 
+        if (next_weights[lc-1]>0 & next_weights[lc+1]>0){
+          mycaa_weights<-get_e_smear_both(mycaa_weights,fix_weight,lc) 
+          print(paste0("smearing both lc=",lc) )
         }
-        if (NAA_weights[lc-1]>0 & NAA_weights[lc+1]<=0){
-          mycaa_weights<-e_smear_down(mycaa_weights,fix_weight,lc) 
-          mycaa<-e_smear_down(mycaa,fix_counts,lc) 
+        if (next_weights[lc-1]>0 & next_weights[lc+1]<=0){
+          mycaa_weights<-get_e_smear_down(mycaa_weights,fix_weight,lc) 
+          print(paste0("smearing down lc=",lc) )
         }
-        if (NAA_weights[lc-1]<=0 & NAA_weights[lc+1]>0){
-          mycaa_weights<-e_smear_up(mycaa_weights,fix_weight,lc) 
-          mycaa<-e_smear_down(mycaa,fix_counts,lc) 
+        if (next_weights[lc-1]<=0 & next_weights[lc+1]>0){
+          mycaa_weights<-get_e_smear_up(mycaa_weights,fix_weight,lc)
+          print(paste0("smearing up lc=",lc) )
         }
-      }
+      }else {
+          print("No change")
+        }    
+}
+    #To re-loop, you just need to compute next_weights.  NAA_weights doesn't change. mycaa and mycaa_weights are computed inside here.
+    next_weights<-NAA_weights-(mycaa_weights)
     }
-    
-    next_weights<-NAA_weights-mycaa_weights
-
+    else{
+      break      
+      #Obviously, dont' step through if all age classes are non-negative
+        }
   }
   
+    #Flag things that broke.  Set the weight in that age class to zero. 
+  if(any(next_weights<0)){
+    works<-as.logical("FALSE")
+    next_weights[next_weights<=0]<-0
+  }
   
-  
-  
-  survivor_weights<-NAA_weights-mycaa_weights
+
+  #Convert mycaa_weights to mycaa and compute survivor numbers
+  mycaa<-mycaa_weights/kgatage
   survivor_nums<-NAA-mycaa
+    }
   
-  outList <- list("caa" = mycaa, "weight_caa" = mycaa_weights, "survivor_weights"=survivor_weights,"survivor_numbers"=survivor_nums)
+  outList <- list("caa" = mycaa, "weight_caa" = mycaa_weights, "survivor_weights"=next_weights,"survivor_numbers"=survivor_nums, "worked"=works)
   return(outList)
   
 }
-
-
-
-#Note, I tested 
 
 
 
