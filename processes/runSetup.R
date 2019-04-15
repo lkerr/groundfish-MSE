@@ -8,9 +8,25 @@ ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
 invisible(sapply(ffiles, source))
 
 
-# get the operating model parameters
-source('processes/set_om_parameters.R')
-nage <- length(fage:page)
+# Load the overall operating model parameters
+source('processes/set_om_parameters_global.R')
+
+
+# get the operating model parameters -- first search the space for every
+# version of the set_stock_parameters_xx files and put them in this list.
+omPar <- as.list(numeric(10))
+fileList <- list.files('processes/', pattern = 'set_stock_parameters*', 
+                       full.names=TRUE)
+nstock <- length(fileList)
+for(i in 1:nstock){
+  tempEnv <- new.env()
+  source(fileList[[i]], local = tempEnv)
+  tempEnv$nage <- length(tempEnv$fage:tempEnv$page)
+  omPar[[i]] <- as.list(tempEnv)
+  rm(tempEnv)
+}
+
+
 
 
 # Get the run info so the functions work appropriately whether they are
@@ -67,7 +83,10 @@ if(!all(is.na(tst)) && any(tst & !is.na(tst))){
 
 
 # get all the necessary containers for the simulation
-source('processes/get_containers.R')
+stock <- list()
+for(i in 1:nstock){
+  stock[[i]] <- get_containers(omPar[[i]])
+}
 
 
 
