@@ -11,9 +11,9 @@ library(microbenchmark)
 econsavepath <- 'scratch/econscratch'
 econdatapath <- 'data/data_processed/econ'
 
-#Setup some fake data
+#Setup some fake data.  Just muck around with changes and see if you can get an error message
 
-catch_pounds<-800000
+catch_pounds<-10000
 pounds_per_kg<-2.20462
 catch<-catch_pounds/pounds_per_kg
 
@@ -28,6 +28,9 @@ selC<-selectivity
 
 
 outlist<-get_at_age_stats(catch_pounds/pounds_per_kg,NAA,kgatage,selectivity)
+
+
+microbenchmark(get_at_age_stats(catch_pounds/pounds_per_kg,NAA,kgatage,selectivity),times=10000)
 
 z2<-rowSums(outlist$weight_caa)*pounds_per_kg
 z2

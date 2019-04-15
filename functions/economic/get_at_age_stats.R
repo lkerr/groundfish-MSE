@@ -36,7 +36,7 @@ get_at_age_stats <- function(catch_kg, NAA, kilograms_at_age,selC){
    #yes, these are transposed. don't ask.
   total_weight<-NAA%*%kilograms_at_age
   if (catch_kg>=total_weight){
-   print("congrats you caught it all") 
+   #print("congrats you caught it all") 
     mycaa<-t(NAA)
     mycaa_weights<-t(NAA)*kilograms_at_age
     survivor_nums<-0*mycaa
@@ -61,16 +61,14 @@ get_at_age_stats <- function(catch_kg, NAA, kilograms_at_age,selC){
   mycaa_weights<-mycaa*kilograms_at_age
   next_weights<-NAA_weights - mycaa_weights
   
-  
-  
   # A while would be more elegant, but it might end up stuck (you'd need a pretty awful age structure for that).  
   # instead, loop a "small number of times". Then write something to hack/deal with a bad age structure?
   
   for (iter in 1:6) {
-    print(paste0("part 1 iteration number ", iter))
+    #print(paste0("part 1 iteration number ", iter))
     
   if(any(next_weights<0)){
-    print(paste0("part 2 iteration number ", iter))
+    #print(paste0("part 2 iteration number ", iter))
     
     fix_weight<-next_weights
     fix_weight[fix_weight>=0]<-0
@@ -92,18 +90,18 @@ get_at_age_stats <- function(catch_kg, NAA, kilograms_at_age,selC){
       if(fix_weight[lc] <0)  {
         if (next_weights[lc-1]>0 & next_weights[lc+1]>0){
           mycaa_weights<-get_e_smear_both(mycaa_weights,fix_weight,lc) 
-          print(paste0("smearing both lc=",lc) )
+          #print(paste0("smearing both lc=",lc) )
         }
         if (next_weights[lc-1]>0 & next_weights[lc+1]<=0){
           mycaa_weights<-get_e_smear_down(mycaa_weights,fix_weight,lc) 
-          print(paste0("smearing down lc=",lc) )
+          #print(paste0("smearing down lc=",lc) )
         }
         if (next_weights[lc-1]<=0 & next_weights[lc+1]>0){
           mycaa_weights<-get_e_smear_up(mycaa_weights,fix_weight,lc)
-          print(paste0("smearing up lc=",lc) )
+          #print(paste0("smearing up lc=",lc) )
         }
       }else {
-          print("No change")
+          #print("No change")
         }    
 }
     #To re-loop, you just need to compute next_weights.  NAA_weights doesn't change. mycaa and mycaa_weights are computed inside here.
