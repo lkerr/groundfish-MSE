@@ -69,18 +69,15 @@ datavars=c("exp_rev_total","distance","das_charge","fuelprice_distance","start_o
 betavars=paste0("beta_",datavars)
 idvars=c("id", "hullnum2", "date","spstock2", "doffy")
 necessary=c( "multiplier", "q", "gffishingyear")
-useful=c("gearcat","post","h_hat")
+useful=c("gearcat","post","h_hat","pr1","pr2","pr3","pr4","pr5")
 mysubs=c(idvars,necessary,useful,datavars,betavars)
 
 
 targeting_dataset<-targeting_dataset[mysubs]
 
-
-
-
 save(targeting_dataset, file=file.path(econsavepath, "full_targeting.RData"))
 
-rm(list=ls())
+#rm(list=ls())
 
 
 

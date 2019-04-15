@@ -179,7 +179,7 @@ asc_coefs$X[asc_coefs$X=="avg. wind speed squared"] <-"mean_wind_2"
 asc_coefs$X<-gsub("fuel price*vessel length","fuelprice_len ", asc_coefs$X)
 
 
-asc_coefs$X<-gsub("average weekly wages for non-crew work","wkly_crew_wage ", asc_coefs$X)
+asc_coefs$X<-gsub("average weekly wages for non-crew work","wkly_crew_wage", asc_coefs$X)
 
 
 
