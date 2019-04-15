@@ -23,42 +23,44 @@ econrawpath <- 'data/data_raw/econ/'
 econsavepath <- 'data/data_processed/econ/'
 
 #Files to read -- sample data for now.
-production_source<-"sample_PRODREGdata_forML_v3.dta"
+production_source<-"sample_PRODREGdata_fys2009_2010_forML.dta"
 
 production <- read.dta13(file.path(econrawpath, production_source))
 production$startfy = as.Date(paste("5", "1",production$gffishingyear,sep="."), "%m.%d.%Y")
 production$doffy=as.numeric(difftime(production$date,production$startfy, units="days")+1)
-
-###############################################################
-#THIS IS JUST FOR TESTING, REMOVE THIS LATER. I've faked the 2004-2015 variables so the factorization will work properly
-production$fybak<-production$gffishingyear
-production$gffishingyear <- sample(2004:2015,nrow(production), replace=T)
-#THIS IS JUST FOR TESTING, REMOVE THIS LATER.
-###############################################################
 
 #clean up production dataset, expand month and year factor variables.
 production$gearcat<-tolower(production$gearcat)
 production$spstock2<-tolower(production$spstock)
 production$spstock2<- gsub("_","",production$spstock2)
 
+production$month1<-as.numeric(production$month==1)
+production$month2<-as.numeric(production$month==2)
+production$month3<-as.numeric(production$month==3)
+production$month4<-as.numeric(production$month==4)
+production$month5<-as.numeric(production$month==5)
+production$month6<-as.numeric(production$month==6)
+production$month7<-as.numeric(production$month==7)
+production$month8<-as.numeric(production$month==8)
+production$month9<-as.numeric(production$month==9)
+production$month10<-as.numeric(production$month==10)
+production$month11<-as.numeric(production$month==11)
+production$month12<-as.numeric(production$month==12)
+
+production$fy2004<-as.numeric(production$gffishingyear==2004)
+production$fy2005<-as.numeric(production$gffishingyear==2005)
+production$fy2006<-as.numeric(production$gffishingyear==2006)
+production$fy2007<-as.numeric(production$gffishingyear==2007)
+production$fy2008<-as.numeric(production$gffishingyear==2008)
+production$fy2009<-as.numeric(production$gffishingyear==2009)
+production$fy2010<-as.numeric(production$gffishingyear==2010)
+production$fy2011<-as.numeric(production$gffishingyear==2011)
+production$fy2012<-as.numeric(production$gffishingyear==2012)
+production$fy2013<-as.numeric(production$gffishingyear==2013)
+production$fy2014<-as.numeric(production$gffishingyear==2014)
+production$fy2015<-as.numeric(production$gffishingyear==2015)
 
 
-mygfyear<-as.data.frame(factor(production$gffishingyear))
-mymonth<-as.data.frame(factor(production$month))
-
-mymonth<-as.data.frame(model.matrix(~ . + 0, data=mymonth, contrasts.arg = lapply(mymonth, contrasts, contrasts=FALSE)))
-
-mygfyear<-as.data.frame(model.matrix(~ . + 0, data=mygfyear, contrasts.arg = lapply(mygfyear, contrasts, contrasts=FALSE)))
-
-colnames(mymonth)<-paste0("month",1:12)
-colnames(mygfyear)<-paste0("fy",2004:2015)
-
-production<-cbind(production, mymonth,mygfyear)
-###############################################################
-#THIS IS JUST FOR TESTING, REMOVE THIS LATER. I've faked the 2004-2015 variables so the factorization will work properly. Nothing bad will happen if you forget to remove this.
-production$gffishingyear<-production$fybak
-#THIS IS JUST FOR TESTING, REMOVE THIS LATER.
-###############################################################
 
 load(file.path(econsavepath,"production_coefs.RData"))
 
