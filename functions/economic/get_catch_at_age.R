@@ -26,18 +26,9 @@ get_catch_at_age <- function(catch_kg, N, kilograms_at_age,selC){
   oneuW<-t(kilograms_at_age)%*% oneu
   scaleup<-catch_kg/oneuW
   caa<-scaleup %*% oneu
-  #Note, I tested doing this in one line. It's not faster
+# Note, I tested doing this in one line. It's not faster
   
-  
-  #Error handle #
-  #in development
-  # If any elements of caa are greater than the corresponding element of N
-  t<-N-caa
-  if(any(t < 0)){
-    cat("some catch too large\n")
-  } else { #Do nothing
-    }
-    return(caa)
+  return(caa)
 }
 
 
