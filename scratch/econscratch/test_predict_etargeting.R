@@ -29,15 +29,24 @@ sa<-Sys.time()
 predicted_trips<-get_predict_etargeting(targeting_dataset)
 #targeting_dataset<-cbind(phat,targeting_dataset)
 
-sb<-Sys.time()
-part3<-part3+sb-sa
-
-predicted_trips <- predicted_trips %>% 
-  group_by(hullnum2,date) %>%
-  filter(prhat == max(prhat)) 
 
 
-#Not sure where to put hhat right now, probably overwrite hhat in production_dataset.  
+predicted_trips$del<-predicted_trips$prhat-predicted_trips$pr1
+summary(predicted_trips$del)
 
-save(predicted_trips, file=file.path(savepath, "trips_combined.RData"))
+#We see maximum differences of magnitude .001 (A tenth of 1%), which is probably due to rounding differences.  I think stata will use quad precision internally, but only export in double precisions.  This is NBD.
+
+
+
+# sb<-Sys.time()
+# part3<-part3+sb-sa
+# 
+# predicted_trips <- predicted_trips %>% 
+#   group_by(hullnum2,date) %>%
+#   filter(prhat == max(prhat)) 
+# 
+# 
+# #Not sure where to put hhat right now, probably overwrite hhat in production_dataset.  
+# 
+# save(predicted_trips, file=file.path(savepath, "trips_combined.RData"))
 

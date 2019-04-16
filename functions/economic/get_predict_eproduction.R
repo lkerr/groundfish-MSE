@@ -8,7 +8,7 @@
 # 
 
 get_predict_eproduction <- function(prod_ds){
-  indepvars=c("log_crew","log_trip_days","logh_cumul","primary","secondary")
+  indepvars=c("log_crew","log_trip_days","logh_cumul","primary","secondary","constant")
   fyvars=paste0("fy",2004:2015)
   monthvars=paste0("month",1:12)
   
@@ -21,7 +21,7 @@ get_predict_eproduction <- function(prod_ds){
   
   B<-as.matrix(prod_ds[betavars])
   B[is.na(B)]<-0
-  
+  z<-X*B
   prod_ds$logh_hat<-rowSums(X*B)
   prod_ds$logh_hat=prod_ds$logh_hat+prod_ds$q
   
@@ -30,7 +30,7 @@ get_predict_eproduction <- function(prod_ds){
   #prod_ds$harvest_sim<- exp(prod_ds$logh_hat + fx)*exp((prod_ds$rmse^2)/2)
   
   #good way to smear
-  prod_ds$harvest_sim<- exp(prod_ds$logh_hat)*prod_ds$emean 
+  prod_ds$harvest_sim<- (exp(prod_ds$logh_hat))*prod_ds$emean 
   
   #expected revenue
   prod_ds$exp_rev_sim<- prod_ds$harvest_sim*prod_ds$price_lb_lag1
