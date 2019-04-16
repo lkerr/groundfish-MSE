@@ -32,20 +32,6 @@ load(file.path(econdatapath,"full_production.RData"))
 production_dataset<-production_dataset[which(production_dataset$gffishingyear==2009),]
 targeting_dataset<-targeting_dataset[which(targeting_dataset$gffishingyear==2009),]
 
-#manually set the fy dummies to zero except for the 2009 one.
-production_dataset$fy2004<-0
-production_dataset$fy2005<-0
-production_dataset$fy2006<-0
-production_dataset$fy2007<-0
-production_dataset$fy2008<-0
-production_dataset$fy2010<-0
-production_dataset$fy2011<-0
-production_dataset$fy2012<-0
-production_dataset$fy2013<-0
-production_dataset$fy2014<-0
-production_dataset$fy2015<-0
-
-production_dataset$fy2009<-1
 
 
 
@@ -60,8 +46,10 @@ production_dataset$fy2009<-1
 
 fishery_holder<-unique(targeting_dataset[c("spstock2")])
 fishery_holder$open<-as.logical("TRUE")
-fishery_holder$cumul_catch<-1
+fishery_holder$cumul_catch_pounds<-1
 fishery_holder$acl<-1e16
+fishery_holder$bio_model<-0
+fishery_holder$bio_model[fishery_holder$spstock2 %in% c("codGB","pollock","haddockGB","yellowtailflounderGB")]<-1
 
 revenue_holder<-NULL
 
@@ -82,9 +70,9 @@ targeting_dataset<-split(targeting_dataset, targeting_dataset$doffy)
 
 start_time<-proc.time()
 
-for (day in 1:365){
+#for (day in 2:2){
   
-# for (day in 1:365){
+ for (day in 1:365){
 #   subset both the targeting and production datasets based on date
 
   working_production<-production_dataset[[day]]
@@ -94,8 +82,8 @@ for (day in 1:365){
 #   overwrite cumulative harvest and log cumulative catch of each stock.
 working_production<-left_join(working_production,fishery_holder, by="spstock2")
 
-# working_production$h_cumul<-working_production$cumul_catch
-# working_production$logh_cumul<-log(working_production$cumul_catch)
+# working_production$h_cumul<-working_production$cumul_catch_pounds
+# working_production$logh_cumul<-log(working_production$cumul_catch_pounds)
 
 
 #   predict_eproduction: predict harvest of each stock by each vessel condition on targeting that stock.  Also predict revenue from that stock, and all revenue.  keep just 6 columns: hullnum, date, spstock as key variables.  harvest, revenue, and expected revenue as columns that I care about. 
@@ -140,7 +128,7 @@ trips <- trips %>%
   group_by(hullnum2,date) %>%
   filter(prhat == max(prhat)) 
 
-# Expand from harvest of the target to harvest of all.
+# Expand from harvest of the target to harvest of all using the catch multiplier matrices
 # Not written yet.  Not sure if we need revenue by stock to be saved for each vessel? Or just catch? 
 
 
@@ -157,19 +145,22 @@ revenue_holder<-rbind(revenue_holder,trips[c("hullnum2","spstock2","date","exp_r
 
 #   Pull out daily catch, rename the catch colum, and rbind to the holder. aggregate to update cumulative catch 
 daily_catch<- trips[c("spstock2","h_hat")]
-colnames(daily_catch)[2]<-"cumul_catch"
-daily_catch<-rbind(daily_catch,fishery_holder[c("spstock2","cumul_catch")])
+colnames(daily_catch)[2]<-"cumul_catch_pounds"
+daily_catch<-rbind(daily_catch,fishery_holder[c("spstock2","cumul_catch_pounds")])
 
 daily_catch<- daily_catch %>% 
   group_by(spstock2) %>% 
-  summarise(cumul_catch=sum(cumul_catch))
+  summarise(cumul_catch_pounds=sum(cumul_catch_pounds))
 
 # update the fishery holder dataframe
 fishery_holder<-get_fishery_next_period(daily_catch,fishery_holder)
 
-#cast pounds to NAA
-#Placeholder to convert pounds to NAA, will need to be aware of the selectivity
+#cast pounds to NAA  you only need to do this for spstock2's that have bio_model==1 in the fishery_holder dataset
+# Watch the units (lbs vs kg/mt)!!!  No 
+
 }
 proc.time()-start_time
 
+rm(list=c("production_dataset","targeting_dataset"))
 
+   
