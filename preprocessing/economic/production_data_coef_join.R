@@ -87,10 +87,11 @@ production_dataset$spstock2<- gsub("ccgom","CCGOM",production_dataset$spstock2)
 production_dataset$spstock2<- gsub("gom","GOM",production_dataset$spstock2)
 production_dataset$spstock2<- gsub("snema","SNEMA",production_dataset$spstock2)
 
-
+#I'm putting a constant in here, even though it's a waste of storage space. I don't want to forget it later on.
+production_dataset$constant<-1
 
 #Keep a subset of the variables
-datavars=c("log_crew","log_trip_days","logh_cumul","primary","secondary")
+datavars=c("log_crew","log_trip_days","logh_cumul","primary","secondary", "constant")
 betavars=paste0("beta_",datavars)
 pd_cols<-colnames(production_dataset)
 
@@ -101,18 +102,17 @@ monthdums<-pd_cols[grepl("^month", pd_cols)]
 monthcoefs<-pd_cols[grepl("^beta_month", pd_cols)]
 idvars=c("hullnum2", "id", "date","spstock2", "doffy")
 necessary=c("multiplier", "q", "rmse", "price_lb_lag1","emean", "gffishingyear")
-useful=c("gearcat","post", "logh")
+useful=c("gearcat","post", "logh", "h_hat")
 mysubs=c(idvars, useful, datavars,betavars, fydums, monthdums, fycoefs, monthcoefs, necessary)
 
 production_dataset<-production_dataset[mysubs]
-
 pre_only_dataset<-production_dataset[which(production_dataset$post==0),]
 post_only_dataset<-production_dataset[which(production_dataset$post==1),]
 
-
-save(production_dataset, file=file.path(econsavepath, "full_production.RData"))
-save(post_only_dataset, file=file.path(econsavepath, "post_production.RData"))
-save(pre_only_dataset, file=file.path(econsavepath, "pre_production.RData"))
+ 
+ save(production_dataset, file=file.path(econsavepath, "full_production.RData"))
+ save(post_only_dataset, file=file.path(econsavepath, "post_production.RData"))
+ save(pre_only_dataset, file=file.path(econsavepath, "pre_production.RData"))
 
 #rm(list=ls())
 

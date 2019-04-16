@@ -1,5 +1,6 @@
 # Read in Production and Targeting coefficients to .RData.  
 # Tested working. Make a small change if we want to get different regression results (there are 4 sets of models for each gear, we haven't picked a "best " model yet).
+
 rm(list=ls())
 if(!require(readstata13)) {  
   install.packages("readstata13")
@@ -112,6 +113,8 @@ colnames(production_coefs)[colnames(production_coefs)=="Primary Target"] <- "pri
 colnames(production_coefs)[colnames(production_coefs)=="Secondary Target"] <- "secondary"
 colnames(production_coefs)<- tolower(gsub("=","",colnames(production_coefs)))
 
+
+production_coefs<-production_coefs[,c(which(colnames(production_coefs)!="constant"),which(colnames(production_coefs)=="constant"))]
 production_coefs<-production_coefs[,c(which(colnames(production_coefs)!="rmse"),which(colnames(production_coefs)=="rmse"))]
 
 colnames(production_coefs)[5:ncol(production_coefs)-1]<-paste0("beta_",colnames(production_coefs[5:ncol(production_coefs)-1]))
