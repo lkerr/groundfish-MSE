@@ -2,14 +2,22 @@
 # Script to create containers (necessary because the main
 # script uses loops that it fills)
 
-get_containers <- function(omPar){
+get_containers <- function(stockPar){
+  
+  yxage = matrix(NA, nrow=nyear, ncol=stockPar$nage)
+  yx0 = rep(NA, nyear)
+  
+  nomyear = nyear - (stockPar$ncaayear + fyear + nburn)
+  nmproc = nrow(mproc)
+  
+  save_vector_ann = array(data = NA,
+                          dim = c(nrep, nmproc, nyear),
+                          dimnames = list(paste0('rep', 1:nrep), 
+                                          paste0('mproc', 1:nmproc),
+                                          paste0('nyear', 1:nyear)))
   
   out <- list(
-  
-    yxage = matrix(NA, nrow=nyear, ncol=nage),
-    yx0 = rep(NA, nyear),
-    
-    
+
     # Containers that save the simulation data
     J1N = yxage,
     CN = yxage,
@@ -26,7 +34,8 @@ get_containers <- function(omPar){
     Rhat = yx0,
     SSB = yx0,
     RPmat = matrix(NA, nrow=nyear, ncol=2,
-                   dimnames = list(paste0(1:nyear), c('FRefP', 'BRefP'))),
+                   dimnames = list(paste0(1:nyear), 
+                                   c('FRefP', 'BRefP'))),
     OFdStatus = yx0,
     mxGradCAA = yx0,
     
@@ -72,8 +81,7 @@ get_containers <- function(omPar){
     # container to hold operating/assessment model results
     # (operating model-assessment model comparison)
     
-    nomyear = nyear - (ncaayear + fyear + nburn),
-    nmproc = nrow(mproc),
+    
     
     dn_rep = paste0('rep', 1:nrep),
     dn_omyear = paste0('year', 1:nomyear),
@@ -199,11 +207,7 @@ get_containers <- function(omPar){
     
     # First year to output for saving OMresults
     # nomyear <- nyear#ncaayear + fyear + nburn + rburn
-    save_vector_ann = array(data = NA,
-                             dim = c(nrep, nmproc, nyear),
-                             dimnames = list(paste0('rep', 1:nrep), 
-                                             paste0('mproc', 1:nmproc),
-                                             paste0('nyear', 1:nyear))),
+    
     
     # save_2xmatrix_ann <- array(data = NA,
     #                            dim = c(nrep, nmproc, nyear-(fmyearIdx-1)+1, 2),
