@@ -70,7 +70,7 @@ if(mprocTest){
   
   mproc <- read.table('processes/mprocTest.txt', header=TRUE,
                       stringsAsFactors=FALSE)
-  cat('***mprocTest == TRUE (in set_om_parameters.R): testing run***') 
+  cat('***mprocTest == TRUE (in set_om_parameters.R): testing run***\n') 
    
 }
 
