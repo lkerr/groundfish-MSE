@@ -13,7 +13,7 @@ debugSink <- FALSE
 simpleTemperature <- FALSE
 
 # Testing run which uses mprocTest.txt instead of mproc.txt? (T/F)
-mprocTest <- TRUE
+mprocTest <- FALSE
 
 #### Structural parameters ####
 
@@ -28,9 +28,6 @@ fyear <- 5
 
 # maximum year predicted into the future
 mxyear <- 2050
-
-# number of years in assessment model
-ncaayear <- 30 
 
 
 #### Burn-in parameters ####
