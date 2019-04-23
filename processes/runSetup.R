@@ -14,7 +14,7 @@ source('processes/set_om_parameters_global.R')
 
 # get the operating model parameters -- first search the space for every
 # version of the set_stock_parameters_xx files and put them in this list.
-omPar <- as.list(numeric(10))
+stockPar <- as.list(numeric(10))
 fileList <- list.files('processes/', pattern = 'set_stock_parameters*', 
                        full.names=TRUE)
 nstock <- length(fileList)
@@ -22,7 +22,7 @@ for(i in 1:nstock){
   tempEnv <- new.env()
   source(fileList[[i]], local = tempEnv)
   tempEnv$nage <- length(tempEnv$fage:tempEnv$page)
-  omPar[[i]] <- as.list(tempEnv)
+  stockPar[[i]] <- as.list(tempEnv)
   rm(tempEnv)
 }
 
@@ -57,19 +57,19 @@ if(runClass == 'Local' && nrep == 1){
   warning('local run: nrep (in set_om_parameters.R) set to 2 to avoid errors')
 }
 
-# Warning regarding Bmsy calculation hindcasts
-tst <- !is.na(mproc$BREF_TYP) & 
-       mproc$BREF_TYP == 'SIM' &
-       mproc$RFUN_NM == 'hindcastMean' &
-       mproc$BREF_PAR0 > ncaayear
-if(any(tst)){
-  msg <- paste0('Number of years in hindcast that you specified (', 
-                mproc$BREF_PAR0[tst], ') is larger than the number of years in', 
-                ' the moving window of the stock assessment model (', 
-                ncaayear, '). Number of years used in the hindcast changed to ', 
-                ncaayear, '.\n')
-  warning(msg)
-}
+# # Warning regarding Bmsy calculation hindcasts
+# tst <- !is.na(mproc$BREF_TYP) & 
+#        mproc$BREF_TYP == 'SIM' &
+#        mproc$RFUN_NM == 'hindcastMean' &
+#        mproc$BREF_PAR0 > ncaayear
+# if(any(tst)){
+#   msg <- paste0('Number of years in hindcast that you specified (', 
+#                 mproc$BREF_PAR0[tst], ') is larger than the number of years in', 
+#                 ' the moving window of the stock assessment model (', 
+#                 ncaayear, '). Number of years used in the hindcast changed to ', 
+#                 ncaayear, '.\n')
+#   warning(msg)
+# }
 
 # Error regarding bad combinations of mproc
 tst <- mproc$BREF_TYP == 'RSSBR' & mproc$RFUN_NM == 'forecast'
@@ -83,11 +83,16 @@ if(!all(is.na(tst)) && any(tst & !is.na(tst))){
 
 
 # get all the necessary containers for the simulation
-stock <- list()
+stockCont <- list()
 for(i in 1:nstock){
-  stock[[i]] <- get_containers(omPar[[i]])
+  stockCont[[i]] <- get_containers(stockPar=stockPar[[i]])
 }
 
+# Combine the stock parameters and the stock containers into a single list
+stock <- list()
+for(i in 1:nstock){
+  stock[[i]] <- c(stockPar[[i]], stockCont[[i]])
+}
 
 
 # Set up a sink for debugging -- don't use this if on the HPCC because
