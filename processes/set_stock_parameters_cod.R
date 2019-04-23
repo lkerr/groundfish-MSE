@@ -1,6 +1,6 @@
 
 
-
+stockName <- 'codGB'
 
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.                                              
@@ -76,6 +76,9 @@ timeI <- 0.5 # when is the survey (as a proportion of the year)
 
 
 #### Stock assessment model parameters ####
+
+# number of years in assessment model
+ncaayear <- 30
 
 # Expansion range for setting limits on parameter bounds
 boundRgLev <- 1.5
