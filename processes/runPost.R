@@ -18,18 +18,27 @@ source('processes/loadLibs.R')
 flLst <- list()
 for(i in 1:length(fl)){
   load(fl[i])
-  flLst[[i]] <- omval
+  flLst[[i]] <- omvalGlobal
+  names(flLst[[i]]) <- names(omvalGlobal)
 }
 
-omval <- get_simcat(x=flLst)
-names(omval) <- names(flLst[[1]])
+for(i in 1:length(flLst[[1]])){
 
-# The "year" list element in omval is for plotting and needs to be
-# only the length of the number of years -- unlike the other categories
-# this doesn't change. So plotting doesn't get result in errors, change
-# the dimensions of this list element
-omval[['YEAR']] <- omval[['YEAR']][1:(length(omval[['YEAR']])/length(flLst))]
+  omval <- get_simcat(x=lapply(flLst, '[[', i))
+  names(omval) <- names(flLst[[1]][[i]])
+  stknm <- names(flLst[[1]])[i]
+  
+  # The "year" list element in omval is for plotting and needs to be
+  # only the length of the number of years -- unlike the other categories
+  # this doesn't change. So plotting doesn't get result in errors, change
+  # the dimensions of this list element
+  omval[['YEAR']] <- omval[['YEAR']][1:(length(omval[['YEAR']])/length(flLst))]
+  
+  dirOut <- paste0('results/fig/', stknm, '/')
+  
+  get_plots(x=omval, stockEnv = stock[[i]], 
+            dirIn='results/sim/', dirOut=dirOut)
 
-get_plots(x=omval, dirIn='results/sim/', dirOut='results/fig/')
+}
 
 get_memUsage(runClass = runClass)
