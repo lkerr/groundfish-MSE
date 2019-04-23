@@ -28,7 +28,7 @@
 get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
                      distillBmsy=mean){
 
-  
+   
   if(parmgt$BREF_TYP == 'RSSBR'){
     
     # There cannot be any forward projections associated with RSSBR. They
