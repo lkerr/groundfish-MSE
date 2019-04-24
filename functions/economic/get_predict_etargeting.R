@@ -38,7 +38,7 @@ tds$expu<-exp(tds$xb)
     group_by(id) %>% 
     mutate(totexpu=sum(expu))
   
-  tds$prhat<- tds$expu/tds$totalu
+  tds$prhat<- tds$expu/tds$totexpu
   
   return(tds)
 }
