@@ -2,7 +2,8 @@
 
 # Get the run info so the functions work appropriately whether they are
 # on Windows or Linux and whether this is an HPCC run or not.
-source('processes/get_runinfo.R')
+# source('processes/get_runinfo.R')
+source('processes/runSetup.R')
 
 
 # Load in the simulation results
@@ -35,8 +36,8 @@ for(i in 1:length(flLst[[1]])){
   omval[['YEAR']] <- omval[['YEAR']][1:(length(omval[['YEAR']])/length(flLst))]
   
   dirOut <- paste0('results/fig/', stknm, '/')
-  
-  get_plots(x=omval, stockEnv = stock[[i]], 
+
+  get_plots(x=omval, stockEnv = stockPar[[i]], 
             dirIn='results/sim/', dirOut=dirOut)
 
 }
