@@ -94,14 +94,14 @@ working_production<-left_join(working_production,fishery_holder, by="spstock2")
 # working_production$logh_cumul<-log(working_production$cumul_catch_pounds)
 
 
-#   predict_eproduction: predict harvest of each stock by each vessel condition on targeting that stock.  Also predict revenue from that stock, and all revenue.  keep just 6 columns: hullnum, date, spstock as key variables.  harvest, revenue, and expected revenue as columns that I care about. 
+#   predict_eproduction: predict harvest of each stock by each vessel condition on targeting that stock.  Also predict revenue from that stock, and all revenue.  keep just 5 columns: hullnum2, date, spstock as key variables.  harvest, revenue, and expected revenue as columns that I care about. 
 
 production_outputs<-get_predict_eproduction(working_production)
 
 
 #   
 #   use those three key variables to merge-update harvest, revenue, and expected revenue in the targeting dataset
-joincols<-c("id","spstock2")
+joincols<-c("hullnum2","date", "spstock2")
 working_targeting<-left_join(working_targeting,production_outputs, by=joincols)
 
 
@@ -129,7 +129,7 @@ trips<-get_predict_etargeting(working_targeting)
 trips<-zero_out_closed(trips,fishery_holder)
 
 
-#Keep the "best trip"  -- sort on hullnum2, date and prhat. then keep the hullnum2, date with the largest prhat.
+#Keep the "best trip"  -- sort on id and prhat. then keep the id with the largest prhat.
 #THIS BIT IS MEDIUM 
 
 trips <- trips %>% 

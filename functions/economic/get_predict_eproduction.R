@@ -36,7 +36,7 @@ get_predict_eproduction <- function(prod_ds){
   prod_ds$exp_rev_sim<- prod_ds$harvest_sim*prod_ds$price_lb_lag1
   prod_ds$exp_rev_total_sim<- prod_ds$harvest_sim*prod_ds$price_lb_lag1*prod_ds$multiplier
   
-  selectvars<-c("id", "spstock2","exp_rev_sim","exp_rev_total_sim","harvest_sim")
+  selectvars<-c("hullnum2", "date", "spstock2","exp_rev_sim","exp_rev_total_sim","harvest_sim")
   
   prod_out<-prod_ds[selectvars]
   return(prod_out)
