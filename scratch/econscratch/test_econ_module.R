@@ -57,7 +57,15 @@ revenue_holder<-NULL
 
 ############################################################
 ############################################################
-#BEGIN PIECE OF ECON MODULE 
+# BEGIN PIECE OF ECON MODULE 
+# Ideally, everthing from here to the end should be a function.  It's inputs are:
+# fishery_holder (which should contain info on the ACL, biomass or stock indices, and which stocks need biological outputs (Catch at age or survivors at age))
+# Production and targeting data
+
+# As a function, it can only have one output. A list of stuff?
+# Updated fishery_holder?
+# Catch or survivors at age -- if so, we'll have to do 
+# Revenue or catch by vessel? Topline catch/revenue?
 ############################################################
 ############################################################
 
@@ -93,7 +101,7 @@ production_outputs<-get_predict_eproduction(working_production)
 
 #   
 #   use those three key variables to merge-update harvest, revenue, and expected revenue in the targeting dataset
-joincols<-c("hullnum2","date","spstock2")
+joincols<-c("id","spstock2")
 working_targeting<-left_join(working_targeting,production_outputs, by=joincols)
 
 
@@ -125,7 +133,7 @@ trips<-zero_out_closed(trips,fishery_holder)
 #THIS BIT IS MEDIUM 
 
 trips <- trips %>% 
-  group_by(hullnum2,date) %>%
+  group_by(id) %>%
   filter(prhat == max(prhat)) 
 
 # Expand from harvest of the target to harvest of all using the catch multiplier matrices
