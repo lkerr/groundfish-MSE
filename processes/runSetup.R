@@ -14,10 +14,10 @@ source('processes/set_om_parameters_global.R')
 
 # get the operating model parameters -- first search the space for every
 # version of the set_stock_parameters_xx files and put them in this list.
-stockPar <- as.list(numeric(10))
 fileList <- list.files('processes/', pattern = 'set_stock_parameters*', 
                        full.names=TRUE)
 nstock <- length(fileList)
+stockPar <- as.list(nstock)
 for(i in 1:nstock){
   tempEnv <- new.env()
   source(fileList[[i]], local = tempEnv)
