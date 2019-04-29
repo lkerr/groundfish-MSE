@@ -84,18 +84,26 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R,
     Rhat_ym1 <- 1
     
   }
+  
+  if(type == 'BH'){
  
-  # Expected value
-  Rhat <- par['a'] * SSB / (par['b'] + SSB) * 
-    exp(TAnom_y * par['c'])
+    # Expected value
+    Rhat <- par['a'] * SSB / (par['b'] + SSB) * 
+      exp(TAnom_y * par['c'])
+    
+    # Autocorrelation component
+    ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
+    
+    # Random error component
+    rc <- rnorm(1, mean = 0, sd = pe_R)
+    
+    R <- Rhat * exp(ac + rc)
+    
+  }else if(type == 'BHSteep'){
   
-  # Autocorrelation component
-  ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
+    XXXXX  
   
-  # Random error component
-  rc <- rnorm(1, mean = 0, sd = pe_R)
-  
-  R <- Rhat * exp(ac + rc)
+  }
  
   out <- c(Rhat = unname(Rhat), R = unname(R))
 
