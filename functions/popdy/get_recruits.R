@@ -101,7 +101,11 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R,
     
   }else if(type == 'BHSteep'){
   
-    XXXXX  
+    4 * (h * exp(beta1 * TAnom)) * (SSB / ((R0 * exp(beta2 * TAnom)) * SSBRF0)) / 
+    ( (1 + (h * exp(beta1 * TAnom))) + 
+      (5 * (h * exp(beta1 * TAnom) - 1)) * 
+      ( (SSB / ((R0 * exp(beta2 * TAnom)) * SSBRF0)) ) ) * 
+    exp(beta3 * TAnom)
   
   }
  
