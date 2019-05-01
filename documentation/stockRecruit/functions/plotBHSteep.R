@@ -11,7 +11,9 @@ plotBHSteep <- function(rep, varyT=FALSE){
   newSSBMT <- seq(0, max(rep$SSBMT)*1.25, length.out=100)
   Rhat = sapply(1:length(newTANOM),
                 function(x){
-                  hPrime <- rep$h * exp(rep$beta1 * newTANOM[x])
+                  gamma <- -0.5 * log( (1 - 0.2) / 
+                           (rep$h - 0.2) - 1) + rep$beta1* newTANOM[x]
+                  hPrime <- 0.2 + (1 - 0.2) / (1 + exp(-2*gamma));
                   R0Prime <- rep$R0 * exp(rep$beta2 * newTANOM[x])
                   z <- 4 * hPrime * ( newSSBMT / (rep$SSBRF0) ) /
                     ( (1 - hPrime) + (5*hPrime - 1) * ( newSSBMT / 
