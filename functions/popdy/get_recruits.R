@@ -91,25 +91,50 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R,
     Rhat <- par['a'] * SSB / (par['b'] + SSB) * 
       exp(TAnom_y * par['c'])
     
-    # Autocorrelation component
-    ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
-    
-    # Random error component
-    rc <- rnorm(1, mean = 0, sd = pe_R)
-    
-    R <- Rhat * exp(ac + rc)
-    
   }else if(type == 'BHSteep'){
   
-    4 * (h * exp(beta1 * TAnom)) * (SSB / ((R0 * exp(beta2 * TAnom)) * SSBRF0)) / 
-    ( (1 + (h * exp(beta1 * TAnom))) + 
-      (5 * (h * exp(beta1 * TAnom) - 1)) * 
-      ( (SSB / ((R0 * exp(beta2 * TAnom)) * SSBRF0)) ) ) * 
-    exp(beta3 * TAnom)
+    # Note that the steepness version of the stock-recruit model requires SSBR
+    # at F=0 which is a function of selectivity. Percieved selectivity can
+    # change over the course of the time period according to how the assessment
+    # model estimates it; however for the predicted recruitment we are only
+    # interested in the realized recruitment. Thus we can just use the true
+    # selectivity in the model and not worry about the estimated version.
+    
+    if(is.na(par['beta1'])){
+      par['beta1'] <- 0
+    }
+    if(is.na(par['beta2'])){
+      par['beta2'] <- 0
+    }
+    if(is.na(par['beta3'])){
+      par['beta3'] <- 0
+    }
+
+    Rhat <- with(as.list(par), {
+      # gamma parameterization has to do with fitting model with steepness
+      # between 0 and 1. See A. Weston thesis p. 15 Eqns. 5&6.
+      gamma <- -0.5 * log( (1 - 0.2) / (h - 0.2) - 1) + beta1 * TAnom_y
+      hprime <- 0.2 + (1 - 0.2) / (1 + exp(-2*gamma))
+      hPrime <- h * exp(beta1 * TAnom_y)
+      R0prime <- R0 * exp(beta2 * TAnom_y)
+      num <- 4 * hprime * (SSB / SSBRF0)
+      den <- (1 - hprime) + (5 * hprime - 1) * (SSB / (R0prime * SSBRF0))
+      ans <- num / den * exp(beta3 * TAnom_y)
+      return(ans)
+    })
+    
   
   }
  
-  out <- c(Rhat = unname(Rhat), R = unname(R))
+  # Autocorrelation component
+  ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
+  
+  # Random error component
+  rc <- rnorm(1, mean = 0, sd = pe_R)
+  
+  R <- Rhat * exp(ac + rc)
+ 
+  out <- list(Rhat = unname(Rhat), R = unname(R))
 
   return(out)
 }
