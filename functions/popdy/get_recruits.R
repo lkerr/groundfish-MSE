@@ -113,14 +113,13 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R,
     Rhat <- with(as.list(par), {
       # gamma parameterization has to do with fitting model with steepness
       # between 0 and 1. See A. Weston thesis p. 15 Eqns. 5&6.
-      gamma <- -0.5 * log( (1 - 0.2) / (h - 0.2) - 1) + beta1 * TAnom_y
-      hprime <- 0.2 + (1 - 0.2) / (1 + exp(-2*gamma))
-      hPrime <- h * exp(beta1 * TAnom_y)
-      R0prime <- R0 * exp(beta2 * TAnom_y)
-      num <- 4 * hprime * (SSB / SSBRF0)
-      den <- (1 - hprime) + (5 * hprime - 1) * (SSB / (R0prime * SSBRF0))
-      ans <- num / den * exp(beta3 * TAnom_y)
-      return(ans)
+      gamma <- -0.5 * log( (1 - 0.2) / (h - 0.2) - 1) + beta1* TAnom_y
+      hPrime <- 0.2 + (1 - 0.2) / (1 + exp(-2*gamma));
+      R0Prime <- R0 * exp(beta2 * TAnom_y)
+      num <- 4 * hPrime * ( SSB / (SSBRF0) )
+      den <- ( (1 - hPrime) + (5*hPrime - 1) * ( SSB / (R0Prime * SSBRF0) ) )
+      z <-  num / den * exp(beta3 * TAnom_y)
+      return(z)
     })
     
   
