@@ -50,12 +50,14 @@ selC <- c(s0=5, s1=0.08)
 selC_typ <- 'Logistic'
 
 # Recruitment
-Rpar <- c(a = 1.953864e+07,
-          b = 3.631550e+04*2, # to get more contrast in the results
+Rpar <- c(h = 6.286813e-01,
+          R0 = 8.062700e+07,
           c = -0.540,
+          SSBRF0 = 0.01972,
           rho = 0,
-          sigR = 0.68)
-
+          sigR = 0.56,
+          beta3 = -2.501400e-01)
+R_typ <- 'BHSteep'
 
 # load('data/data_processed/SR/cod/BHTS.Rdata') #srpar
 
