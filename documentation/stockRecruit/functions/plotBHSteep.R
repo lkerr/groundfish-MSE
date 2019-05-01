@@ -20,7 +20,7 @@ plotBHSteep <- function(rep, varyT=FALSE){
                     (R0Prime * rep$SSBRF0) ) ) * exp(rep$beta3 * newTANOM[x])
                   return(z)
                 })
-  
+
   par(mar=c(4.5,4,1,1))
  
   colf <- colorRampPalette(c('blue', 'green'))
