@@ -12,7 +12,7 @@ useMprocTest <- FALSE
 debugSink <- FALSE
 
 # Debug using simple temperature trend that reduces variance?
-simpleTemperature <- FALSE
+simpleTemperature <- TRUE
 
 
 #### Structural parameters ####
