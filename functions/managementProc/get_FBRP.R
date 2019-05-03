@@ -30,11 +30,13 @@
 #         one value per age class.
 
 
-
+### !!!! Note: I think we need equiJ1N even under simulation
+### Conditions !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+### Mixing YPR/SPR and simulation for BBRP throws an error.
 
 
 get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
-  
+ 
   # Load in the recruitment function (recruitment function index is
   # found in the parmgt data frame but the actual functions are from
   # the list Rfun_BmsySim which is created in the processes folder.
@@ -71,6 +73,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
       # calculations
       
       equiJ1N <- simAtF$J1N
+      
     }else{
       equiJ1N <- NULL
     }
