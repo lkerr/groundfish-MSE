@@ -9,13 +9,12 @@ invisible(sapply(ffiles, source))
 
 
 # Load the overall operating model parameters
-source('processes/set_om_parameters_global.R')
+source('modelParameters/set_om_parameters_global.R')
 
 
 # get the operating model parameters -- first search the space for every
 # version of the set_stock_parameters_xx files and put them in this list.
-fileList <- list.files('processes/', pattern = 'set_stock_parameters*', 
-                       full.names=TRUE)
+fileList <- list.files('modelParameters/stockParameters', full.names=TRUE)
 nstock <- length(fileList)
 stockPar <- as.list(nstock)
 for(i in 1:nstock){
@@ -26,6 +25,9 @@ for(i in 1:nstock){
   rm(tempEnv)
 }
 
+# Get the names of each stock (stocks must follow naming convention)
+stockNames <- unname(sapply(fileList, function(x) 
+                strsplit(x, 'stockParameters/|\\.R')[[1]][2]))
 
 
 
@@ -93,6 +95,7 @@ stock <- list()
 for(i in 1:nstock){
   stock[[i]] <- c(stockPar[[i]], stockCont[[i]])
 }
+names(stock) <- stockNames
 
 
 # Set up a sink for debugging -- don't use this if on the HPCC because

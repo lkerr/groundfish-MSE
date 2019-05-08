@@ -87,7 +87,7 @@ names(omvalGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
 save(omvalGlobal, file=paste0('results/sim/omvalGlobal', td2, '.Rdata'))
 
 if(runClass != 'HPCC'){
-  omparGlobal <- readLines('processes/set_om_parameters_global.R')
+  omparGlobal <- readLines('modelParameters/set_om_parameters_global.R')
   cat('\n\nSuccess.\n\n',
       'Completion at: ',
       td,
