@@ -1,6 +1,6 @@
 
 
-stockName <- 'codGB2'
+stockName <- 'haddockGB'
 
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.                                              
@@ -10,21 +10,21 @@ burnFsd <- 0.2
 
 # first age and plus age
 fage <- 1
-page <- 12
+page <- 9
 
 
 #### Life history parameters ####
 
 # length-at-age parameters -- see get_lengthAtAge for including covariates
-laa_par <- c(Linf=114.1, K=0.22, t0=0.17, beta1=5)
+laa_par <- (Linf=73.8, K=0.3763, t0=0.1649, beta1=5)  #AEW
 laa_typ <- 'vonB'
 
 # weight-length parameters
-waa_par <- c(exp(-11.6913), 3.0219) #SAW 55 p.659
+waa_par <- c(0.00803, 3.059) #AEW
 waa_typ <- 'aLb'
 
 # maturity-length parameters
-mat_par <- c(0.127, 38.8) # O'brien GB cod female
+mat_par <- c(0.21, 29.7) #AEW
 mat_typ <- 'logistic'
 
 # natural mortality
@@ -49,7 +49,7 @@ qI <- 0.0001
 selC <- c(s0=5, s1=0.08)
 selC_typ <- 'Logistic'
 
-# Recruitment
+# Recruitment (parameters need updating!!!)
 Rpar <- c(h = 6.286813e-01,
           R0 = 8.062700e+07,
           c = -0.540,
