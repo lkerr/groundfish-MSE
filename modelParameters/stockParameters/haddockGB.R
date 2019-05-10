@@ -16,7 +16,7 @@ page <- 9
 #### Life history parameters ####
 
 # length-at-age parameters -- see get_lengthAtAge for including covariates
-laa_par <- (Linf=73.8, K=0.3763, t0=0.1649, beta1=5)  #AEW
+laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=5)  #AEW
 laa_typ <- 'vonB'
 
 # weight-length parameters
@@ -112,6 +112,7 @@ pe_R <- 0.5
 
 # implementation error of fishing mortality
 ie_F <- 0
+ie_typ <- 'lognorm'
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
 ob_sumCW <- 1

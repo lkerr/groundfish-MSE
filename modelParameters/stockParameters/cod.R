@@ -111,6 +111,7 @@ pe_R <- 0.5
 
 # implementation error of fishing mortality
 ie_F <- 0
+ie_typ <- 'lognorm'
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
 ob_sumCW <- 1
