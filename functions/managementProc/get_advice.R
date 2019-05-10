@@ -99,36 +99,36 @@ get_advice <- function(stock){
     }
     # Report overfished status
     tempStock <- within(tempStock, {
-    OFdStatus[y] <- gnF$OFdStatus
+      OFdStatus[y] <- gnF$OFdStatus
+      
+      # Report maximum gradient component for CAA model
+      mxGradCAA[y] <- ifelse(mproc[m,'ASSESSCLASS'] == 'CAA',
+                             yes = rep$maxGrad,
+                             no = NA)
+      
+      # Tabulate advice (plus small constant)
+      adviceF <- gnF$F + 1e-5 
     
-    # Report maximum gradient component for CAA model
-    mxGradCAA[y] <- ifelse(mproc[m,'ASSESSCLASS'] == 'CAA',
-                           yes = rep$maxGrad,
-                           no = NA)
-    
-    # Tabulate advice (plus small constant)
-    nextF <- gnF$F + 1e-5 
   
-
-    if(y < nyear){
-      F_full[y+1] <- nextF
-    }
-    })
-    
-  }else{
-    
-    # if the assessment model didn't work then fill the
-    # array with NAs
-    tempStock <- within(tempStock, {
-    for(i in 2:length(oacomp)){
-      # Determine the dimensionality of each oacomp list component
-      # and create a character object with the appropriate
-      # number of commas and then evaluate to fill arrays
-      # with NAs
-      d <- dim(oacomp[[i]])
-      commas <- paste0(rep(',', length(d)-1), collapse='')
-      eval(parse(text=paste0('oacomp[[i]][', commas, '] <- NA')))
-    }
+      if(y < nyear){
+        F_fullAdvice[y+1] <- adviceF
+      }
+      })
+      
+    }else{
+      
+      # if the assessment model didn't work then fill the
+      # array with NAs
+      tempStock <- within(tempStock, {
+      for(i in 2:length(oacomp)){
+        # Determine the dimensionality of each oacomp list component
+        # and create a character object with the appropriate
+        # number of commas and then evaluate to fill arrays
+        # with NAs
+        d <- dim(oacomp[[i]])
+        commas <- paste0(rep(',', length(d)-1), collapse='')
+        eval(parse(text=paste0('oacomp[[i]][', commas, '] <- NA')))
+      }
     })
     
     # After filling the arrays with NA values, break out of

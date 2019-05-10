@@ -30,6 +30,7 @@ get_containers <- function(stockPar){
     slxI = yxage,
     mat = yxage,
     F_full = yx0,
+    F_fullAdvice = yx0,
     R = yx0,
     Rhat = yx0,
     SSB = yx0,
@@ -223,6 +224,7 @@ get_containers <- function(stockPar){
       SSB = save_vector_ann,
       R = save_vector_ann,
       F_full = save_vector_ann,
+      F_fullAdvice = save_vector_ann,
       sumCW = save_vector_ann,
       sumCWcv = save_vector_ann, #cheap ... not really vector.
       ginipaaCN = save_vector_ann,

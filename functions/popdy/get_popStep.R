@@ -43,11 +43,8 @@ get_popStep <- function(stock){
     J1N[y,] <- get_J1Ny(J1Ny0=J1N[y-1,], Zy0=Z[y-1,], R[y])
     
   
-    
-    
-    ## Insert economic model here and convert to an instantaneous rate
-    ## here??  Basically -- apply the mgmnt advice from the
-    ## previous year
+
+    # F_full[y] <- get_implementationF(type='adviceWithError', stock=stock)
     
     
     
