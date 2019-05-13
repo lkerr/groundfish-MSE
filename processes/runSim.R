@@ -65,6 +65,7 @@ for(r in 1:nrep){
 }
 
 
+
 # Output run time / date information and OM inputs. The random number is
 # just ensuring that no simulations will be overwritten because the hpcc
 # might finish some in the same second. td is used for uniquely naming the
@@ -108,6 +109,8 @@ if(runClass != 'HPCC'){
 
 
 if(runClass != 'HPCC'){
+  # Note that runPost.R re-sets the containers; results have already been
+  # saved however.
   source('processes/runPost.R')
 }
 
