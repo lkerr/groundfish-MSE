@@ -48,9 +48,14 @@ get_containers <- function(stockPar){
     sumCW = yx0,
     obs_sumCW = yx0,
     
-    # total survey index
+    # total survey index in numbers
     sumIN = yx0,
     obs_sumIN = yx0,
+    
+    # total survey index in weight (if obs_sumIW is needed see note in
+    # get_indexData comments)
+    sumIW = yx0,
+    obs_sumIW = yx0,
     
     # catch proportions-at-age
     paaCN = yxage,
