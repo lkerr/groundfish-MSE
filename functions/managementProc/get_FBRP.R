@@ -30,10 +30,6 @@
 #         one value per age class.
 
 
-### !!!! Note: I think we need equiJ1N even under simulation
-### Conditions !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-### Mixing YPR/SPR and simulation for BBRP throws an error.
-
 
 get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
  
@@ -72,14 +68,14 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
       # Fmsy forecast calculations and for output for Bmsy forecast
       # calculations
       
-      equiJ1N <- simAtF$J1N
+      equiJ1N_MSY <- simAtF$J1N
       
     }else{
-      equiJ1N <- NULL
+      equiJ1N_MSY <- NULL
     }
     
   
-    return(list(RPvalue = F, equiJ1N = equiJ1N))
+    return(list(RPvalue = F, equiJ1N_MSY = equiJ1N_MSY))
     
   }else if(parmgt$FREF_TYP == 'FmsySim'){
     
@@ -112,7 +108,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
     # Extract the equilibrium population (at each level of F) for use in 
     # forecasts for Fmsy forecast calculations and for output for Bmsy 
     # forecast calculations
-    equiJ1N <- sapply(simAtF, '[', 'J1N')
+    equiJ1N_MSY <- sapply(simAtF, '[', 'J1N')
     
     
     # If using forward projection, use the equilibrium values for population
@@ -129,7 +125,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
       parpopTemp <- parpop
     
       simAtF <- lapply(1:length(candF), function(x){
-        parpopTemp$J1N <- equiJ1N[[x]]
+        parpopTemp$J1N <- equiJ1N_MSY[[x]]
         get_proj(type = 'FREF',
                  parmgt = parmgt, 
                  parpop = parpopTemp,
@@ -154,7 +150,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst){
     }
     
     # Equilibrium starting conditions at MSY (used in BMSY calculations)
-    equiJ1N_MSY <- equiJ1N[[which.max(meanSumCW)]]
+    equiJ1N_MSY <- equiJ1N_MSY[[which.max(meanSumCW)]]
     
     return(list(RPvalue = Fmsy, equiJ1N_MSY = equiJ1N_MSY))
     
