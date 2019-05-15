@@ -45,8 +45,10 @@
 
 
 get_recruits <- function(type, par, SSB, TAnom_y, pe_R, 
-                         R_ym1=NULL, Rhat_ym1=NULL){
+                         R_ym1=NULL, Rhat_ym1=NULL, stockEnv = stock){
 
+  with(stockEnv, {
+  
   if('rho' %in% names(par)){
     
     # Check that values for rho are between -1 and 1 as they should be for
@@ -84,7 +86,7 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R,
     Rhat_ym1 <- 1
     
   }
-  
+if(is.null(type)) browser()  
   if(type == 'BH'){
  
     # Expected value
@@ -136,6 +138,8 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R,
   out <- list(Rhat = unname(Rhat), R = unname(R))
 
   return(out)
+  
+  })
 }
 
 

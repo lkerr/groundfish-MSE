@@ -48,17 +48,54 @@
 
 
 
-get_proj <- function(parmgt, parpop, parenv, Rfun,
-                     F_val, stReportYr, ny=200, ...){
+get_proj <- function(type, parmgt, parpop, parenv, Rfun,
+                     F_val, stReportYr, ny=NULL, stockEnv, ...){
 
-  if(ny > (max(parenv$yrs_temp) - parenv$yrs_temp[y]) & 
-     parmgt['RFUN_NM'] == 'forecast'){
-    stop(paste('get_proj: please set parmgt$BREF_PAR0 to a smaller',
-               'number of years -- the cmip temperature series does not',
-               'predict far enough for the outlook you set ... the',
-               'difference is', ny - (max(parenv$yrs_temp) -
-                parenv$yrs_temp[y]), 'year(s)'))
+  
+  if(parmgt$RFUN_NM == 'hindcastMean'){
+    if(type == 'FREF'){
+      startHCM <- parmgt$FREF_PAR0
+      endHCM <- parmgt$FREF_PAR1
+    }else if(type == 'BREF'){
+      startHCM <- parmgt$BREF_PAR0
+      endHCM <- parmgt$BREF_PAR1
+    }
+    
+    # Tanom is unnecessary for hindcasts. Loop below is based on the length
+    # of Tanom (relevant to "forecast") so adapt this variable to be the
+    # appropriate length.
+    Tanom <- rep(0, ny)
+    
+    # length of recruitment time series
+    nR <- length(parpop$R)
+    
+    # historical R estimates over the time window specified in mproc.txt
+    Rest <- get_dwindow(parpop$R, 
+                        start = unlist(nR- (-startHCM) + 1), 
+                        end = unlist(nR - (-endHCM) + 1))
+    
   }
+  
+  if(parmgt$RFUN_NM == 'forecast'){
+    if(type == 'FREF'){
+      startFCST <- parenv$y
+      endFCST <- parenv$y + parmgt$FREF_PAR0
+    }else if(type == 'BREF'){
+      startFCST <- parenv$y
+      endFCST <- parenv$y + parmgt$BREF_PAR0
+    }
+    
+    if(is.na(parenv$Tanom[endFCST])){
+      stop(paste('get_proj: end projection year out of temperature anomaly',
+                 'range. Check FREF_PAR0 or BREF_PAR0 in mproc.'))
+    }
+    
+    Tanom <- parenv$Tanom[startFCST:endFCST]
+    
+    ny <- length(Tanom)
+    
+  }
+  
  
   # Get the initial population for the simulation -- assumes exponential 
   # survival based on the given F, mean recruitment and M
@@ -68,7 +105,7 @@ get_proj <- function(parmgt, parpop, parenv, Rfun,
   
   # The initial population is the estimates in the last year
   init <- tail(parpop$J1N, 1)
-  
+ 
   # Ensure that all vectors are the same length
   if(!all(length(parpop$sel) == length(init),
           length(parpop$sel) == length(parpop$waa))){
@@ -82,24 +119,15 @@ get_proj <- function(parmgt, parpop, parenv, Rfun,
     }
   }
   
+
   
-  # length of recruitment time series
-  nR <- length(parpop$R)
-  
-  # historical R estimates over the time window specified in mproc.txt
-  Rest <- get_dwindow(parpop$R, 
-                      start = unlist(nR- (-parmgt['FREF_PAR0']) + 1), 
-                      end = unlist(nR - (-parmgt['FREF_PAR1']) + 1))
-  # variance of historical R estimates
-  RestV <- var(Rest)
-  
-  # Calculate the average temperature to use in forward projections
-  TAnomP <- get_dwindow(parenv$Tanom,
-                        starty = parenv$y + 
-                                 unlist(parmgt['FREF_PAR0']),
-                        endy = parenv$y + 
-                               unlist(parmgt['FREF_PAR1']))
-  TAnomPMean <- mean(TAnomP)
+  # # Calculate the average temperature to use in forward projections
+  # TAnomP <- get_dwindow(parenv$Tanom,
+  #                       starty = parenv$y + 
+  #                                unlist(start),
+  #                       endy = parenv$y + 
+  #                              unlist(end))
+  # TAnomPMean <- mean(TAnomP)
   
   
   # number of ages in the model
@@ -113,10 +141,9 @@ get_proj <- function(parmgt, parpop, parenv, Rfun,
   # set up containers
   N <- matrix(0, nrow=ny, ncol=nage)
   
- 
   # set up initial conditions
   N[1,] <- init
-  for(y in 2:ny){
+  for(y in 2:length(Tanom)){
     for(a in 2:(nage-1)){
       # exponential survival to the next year/age
       N[y,a] <- N[y-1, a-1] * exp(-parpop$sel[a-1]*F_val - 
@@ -128,20 +155,20 @@ get_proj <- function(parmgt, parpop, parenv, Rfun,
                                        parpop$M[nage-1]) + 
                  N[y-1,nage] * exp(-parpop$sel[nage] * F_val - 
                                      parpop$M[nage])
-
-    ## Recruitment
     
+    ## Recruitment
     # sd of historical R estimates
 
-    N[y,1] <- Rfun(parpop = parpop, 
+    N[y,1] <- Rfun(type = stockEnv$R_typ,
+                   parpop = parpop, 
                    parenv = parenv, 
                    SSB = c(N[y-1,]) %*% c(parpop$waa),
-                   sdR = sdR,
-                   TAnom = TAnomPMean,
+                   sdR = stockEnv$pe_R,
+                   TAnom = Tanom[y],
                    Rest = Rest)
 
   }
-
+ 
   # Get weight-at-age
   Waa <- sweep(N, MARGIN=2, STATS=parpop$waa, FUN='*')
   

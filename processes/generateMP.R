@@ -71,7 +71,7 @@ if(mprocTest){
   mproc <- read.table('modelParameters/mprocTest.txt', header=TRUE,
                       stringsAsFactors=FALSE)
   cat('***mprocTest == TRUE (in set_om_parameters.R): testing run***\n') 
-   
+
 }
 
 

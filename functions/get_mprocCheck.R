@@ -29,6 +29,7 @@ get_mprocCheck <- function(mproc){
   }
   
   # Check that the string names that are entered are all correct
+
   
   if(!all(mproc$ASSESSCLASS %in% assessclass)){
     msg <- c(msg, 
@@ -47,6 +48,22 @@ get_mprocCheck <- function(mproc){
              paste0('unrecognized entry in FREF_TYP column of mproc.txt:',
               ' check names'))
   }
+
+  
+  if(!all(mproc$RFUN_NM %in% rfun_nm)){
+    msg <- c(msg, 
+             paste0('unrecognized entry in RFUN_NM column of mproc.txt:',
+                    ' check names'))
+  }
+
+
+  if(any(!is.na(mproc$FREF_PAR0) & 
+         !mproc$FREF_PAR0 == floor(mproc$FREF_PAR0))){
+    msg <- c(msg, 
+             paste0('value out of range in FREF_PAR0 column of mproc.txt:',
+             ' must be integer'))
+  }
+
   
   if(!all(mproc$BREF_TYP %in% bref_typ)){
     msg <- c(msg, 
@@ -54,11 +71,13 @@ get_mprocCheck <- function(mproc){
                     ' check names'))
   }
   
+
   if(!all(mproc$RFUN_NM %in% rfun_nm)){
     msg <- c(msg, 
              paste0('unrecognized entry in RFUN_NM column of mproc.txt:',
                     ' check names'))
   }
+
 
   
   # Check that the reference point interval is correct
