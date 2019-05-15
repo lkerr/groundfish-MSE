@@ -60,13 +60,12 @@ get_advice <- function(stock){
     }
     
     # Environmental parameters
-    tempStock <- within(tempStock, {
     parenv <- list(tempY = temp,
                    Tanom = Tanom,
                    yrs = yrs, # management years
                    yrs_temp = yrs_temp, # temperature years
                    y = y)
-    })
+
     
     #### Get ref points & assign F ####
     
@@ -80,21 +79,21 @@ get_advice <- function(stock){
           (y-fyear) > 0 & 
           (y-fyear-1) %% mproc[m,'RPInt'] == 0 ) ){
       
-      tempStock <- within(tempStock, {
-      gnF <- get_nextF(parmgt = mproc[m,], parpop = parpop,
+        gnF <- get_nextF(parmgt = mproc[m,], parpop = tempStock$parpop,
                        parenv = parenv,
-                       RPlast = NULL, evalRP = TRUE)
-      RPmat[y,] <- gnF$RPs
-      })
+                       RPlast = NULL, evalRP = TRUE,
+                       stock = tempStock)
+        tempStock$RPmat[y,] <- gnF$RPs
       
     }else{
       # Otherwise use old reference points to calculate stock
       # status
       tempStock <- within(tempStock, {
-      gnF <- get_nextF(parmgt = mproc[m,], parpop = parpop,
-                       parenv = parenv,
-                       RPlast = RPmat[y-1,], evalRP = FALSE)
-      RPmat[y,] <- RPmat[y-1,]
+        gnF <- get_nextF(parmgt = mproc[m,], parpop = parpop,
+                         parenv = parenv,
+                         RPlast = RPmat[y-1,], evalRP = FALSE,
+                         stock = tempStock)
+        RPmat[y,] <- RPmat[y-1,]
       })
     }
     # Report overfished status
@@ -113,13 +112,13 @@ get_advice <- function(stock){
       if(y < nyear){
         F_fullAdvice[y+1] <- adviceF
       }
-      })
+    })
       
-    }else{
-      
-      # if the assessment model didn't work then fill the
-      # array with NAs
-      tempStock <- within(tempStock, {
+  }else{
+    
+    # if the assessment model didn't work then fill the
+    # array with NAs
+    tempStock <- within(tempStock, {
       for(i in 2:length(oacomp)){
         # Determine the dimensionality of each oacomp list component
         # and create a character object with the appropriate
@@ -130,12 +129,12 @@ get_advice <- function(stock){
         eval(parse(text=paste0('oacomp[[i]][', commas, '] <- NA')))
       }
     })
-    
+  
     # After filling the arrays with NA values, break out of
     # the loop and move on to the next management strategy
     break
   }
-  
+
   return(tempStock)
   
 }

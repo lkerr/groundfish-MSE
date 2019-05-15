@@ -58,7 +58,7 @@ get_popStep <- function(stock){
     Z[y,] <- F_full[y]*slxC[y,] + M
     
   })
-
+  
   return(out)
     
 }

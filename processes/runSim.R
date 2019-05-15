@@ -5,7 +5,7 @@
 # empty the environment
 rm(list=ls())
 # set.seed(2) 
-
+ 
 source('processes/runSetup.R')
 
 # if on local machine (i.e., not hpcc) must compile the tmb code
@@ -117,4 +117,4 @@ if(runClass != 'HPCC'){
 
 print(unique(warnings()))
 
-cat('\n ---- Successfully Completed \n----')
+cat('\n ---- Successfully Completed ----\n')
