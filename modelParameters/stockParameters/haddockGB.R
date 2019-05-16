@@ -4,7 +4,7 @@ stockName <- 'haddockGB'
 
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.                                              
-burnFmean <- 0.45
+burnFmsyScalar <- 1.0
 burnFsd <- 0.2
 
 
