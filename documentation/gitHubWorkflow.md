@@ -4,7 +4,7 @@
 
 The purpose of this document is to describe the intended workflow for updates to the groundfish-MSE code. This is important because we have multiple contributors.
 
-If you are new to GitHub and are using RStudio, this is a pretty good tutorial: ![https://happygitwithr.com/index.html](https://happygitwithr.com/index.html)
+If you are new to GitHub and are using RStudio, this is a pretty good tutorial: [https://happygitwithr.com/index.html](https://happygitwithr.com/index.html)
 
 ## Branches
 
