@@ -51,7 +51,7 @@
 get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                      F_val, stReportYr, ny=NULL, stockEnv, ...){
 
-  
+   
   if(parmgt$RFUN_NM == 'hindcastMean'){
     if(type == 'FREF'){
       startHCM <- parmgt$FREF_PAR0
@@ -75,7 +75,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                         end = unlist(nR - (-endHCM) + 1))
     
   }
-  
+   
   if(parmgt$RFUN_NM == 'forecast'){
     if(type == 'FREF'){
       startFCST <- parenv$y
@@ -91,7 +91,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     }
     
     Tanom <- parenv$Tanom[startFCST:endFCST]
-    
+       
     ny <- length(Tanom)
     
   }
@@ -102,10 +102,10 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   # ages <- 1:length(parpop$sel)
   # meanR <- mean(parpop$R)
   # init <- meanR * exp(-ages * F_val*parpop$sel - as.numeric(parpop$M))
-  
+   
   # The initial population is the estimates in the last year
   init <- tail(parpop$J1N, 1)
- 
+
   # Ensure that all vectors are the same length
   if(!all(length(parpop$sel) == length(init),
           length(parpop$sel) == length(parpop$waa))){
@@ -119,7 +119,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     }
   }
   
-
+  
   
   # # Calculate the average temperature to use in forward projections
   # TAnomP <- get_dwindow(parenv$Tanom,
@@ -140,7 +140,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   
   # set up containers
   N <- matrix(0, nrow=ny, ncol=nage)
-  
+
   # set up initial conditions
   N[1,] <- init
   for(y in 2:length(Tanom)){
