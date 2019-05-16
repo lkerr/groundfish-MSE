@@ -4,6 +4,8 @@
 
 The purpose of this document is to describe the intended workflow for updates to the groundfish-MSE code. This is important because we have multiple contributors.
 
+If you are new to GitHub and are using RStudio, this is a pretty good tutorial: ![https://happygitwithr.com/index.html](https://happygitwithr.com/index.html)
+
 ## Branches
 
 * **Master**: The master branch. Ideally this branch will always be able to run with the available options in **mproc.txt**. Before other branches are merged into **Master** they have been reviewed by one or more people other than the author and thoroughly tested both on a local machine and on the HPCC. Merges to **Master** should come from the **Dev** branch rather than directly from feature branches.
