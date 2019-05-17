@@ -27,7 +27,7 @@ If you are new to GitHub and are using RStudio, this is a pretty good tutorial: 
 
   Note that **Dev** (and any other branch) can be run directly from the HPCC by updating the syntax in **runPre.sh** (see [groundfish-MSE/documentation/runMSE.md](runMSE.md)).
 
-* **Feature branches**: Named branches that represent substantial changes to the code. Before merging a feature branch into the Dev branch the code should be tested both on a local machine and on the HPCC and reviewed by someone else. The framework for the review should be through a pull request.
+* **Feature branches**: Named branches that represent substantial changes to the code. Before merging a feature branch into the Dev branch the code should be tested both on a local machine and on the HPCC and reviewed by someone else. The framework for the review should be through a pull request.  For ease of organization on GitHub, include your initials at the start of a new branch name. For example: **SBT-Feature001**. That way it is clear to everyone who created which branches.
 
 
 ## Pull requests into Dev
