@@ -38,7 +38,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
   # found in the parmgt data frame but the actual functions are from
   # the list Rfun_BmsySim which is created in the processes folder.
   # Necessary for any forecast simulation-based approaches.
-  Rfun <- Rfun_BmsySim[[parmgt$RFUN_NM]]
+  Rfun <- Rfun_lst[[parmgt$RFUN_NM]]
   
   if(parmgt$FREF_TYP == 'YPR' | parmgt$FREF_TYP == 'SPR'){
    
@@ -55,7 +55,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
       parmgtTemp <- parmgt
       parmgtTemp$FREF_PAR0 <- parmgtTemp$BREF_PAR0
       parmgtTemp$FREF_PAR1 <- parmgtTemp$BREF_PAR1
-     
+          
       simAtF <- get_proj(type = 'FREF',
                  parmgt = parmgtTemp, 
                  parpop = parpop, 
@@ -80,7 +80,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     return(list(RPvalue = F, equiJ1N_MSY = equiJ1N_MSY))
     
   }else if(parmgt$FREF_TYP == 'FmsySim'){
-    
+   
     candF <- seq(from=0, to=1.25, by=0.01)
 
     # Edit the environmental parameters for the initial run so that
@@ -91,7 +91,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     parenvTemp <- parenv
     parenvTemp$Tanom <- rep(parenv$Tanom[parenv$y],
                             times = length(parenv$Tanom))
-
+    
     simAtF <- lapply(1:length(candF), function(x){
                      get_proj(type = 'FREF',
                               parmgt = parmgt, 
@@ -146,7 +146,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
       
     }
     
-   
+
     # Warn if maximum yield did not occur within the range
     if(Fmsy %in% range(candF)){
       warning(paste('get_FBRP: maximum yield occurs at endpoint of',
