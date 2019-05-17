@@ -29,7 +29,7 @@ for(r in 1:nrep){
     # set.seed(rsd)
     
     
-    # Initialize stocks
+    # Initialize stocks and determine burn-in F
     for(i in 1:nstock){
       stock[[i]] <- get_popInit(stock[[i]])
     }

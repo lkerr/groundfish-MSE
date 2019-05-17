@@ -6,8 +6,8 @@ stockName <- 'codGB'
 
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.                                              
-burnFmean <- 0.45
-burnFsd <- 0.2
+burnFmsyScalar <- 3.0
+burnFsd <- 0.3
 
 
 # first age and plus age
