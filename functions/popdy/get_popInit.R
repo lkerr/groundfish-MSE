@@ -58,10 +58,9 @@ get_popInit <- function(stock){
   out <- within(stock, {  
     burnFmsy <- get_burnF(stock)
     burnFmean <- burnFmsyScalar * burnFmsy
-    F_full[((fyear-1)+1):fmyearIdx] <- rlnorm(fmyearIdx, 
+    F_full[((fyear-1)+1):fmyearIdx] <- rlnorm(fmyearIdx - ((fyear-1)+1)+1, 
                                               log(burnFmean), burnFsd)
   })
-  
   
   return(out)
   
