@@ -69,23 +69,24 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     # Determine whether the population is overfished and whether 
     # overfishing is occurring
 
-    overfished <- ifelse(tail(parpop$SSBhat,1) < BrefRPvalue, 1, 0)
+    BThresh <- BrefScalar * BrefRPvalue
+    FThresh <- FrefScalar * FrefRPvalue
+    
+    overfished <- ifelse(tail(parpop$SSBhat,1) < BThresh, 1, 0)
     
     if(tolower(parmgt$HCR) == 'slide'){
      
-      F <- get_slideHCR(parpop, Fmsy=FrefRPvalue, Bmsy=BrefRPvalue)['Fadvice']
+      F <- get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)['Fadvice']
   
   
     }else if(tolower(parmgt$HCR) == 'simplethresh'){
      
-      
-      
       # added small value to F because F = 0 causes some estimation errors
-      F <- ifelse(tail(parpop$SSBhat, 1) < BrefRPvalue, 0, FrefRPvalue)+1e-4
+      F <- ifelse(tail(parpop$SSBhat, 1) < BThresh, 0, FThresh)+1e-4
       
     }else if(tolower(parmgt$HCR) == 'constf'){
  
-      F <- FrefRPvalue
+      F <- FThresh
       
     }else{
       
@@ -93,7 +94,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       
     }
   
-    out <- list(F=F, RPs=c(FrefRPvalue, BrefRPvalue), OFdStatus=overfished)
+    out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue), 
+                ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished)
     
   }else if(parmgt$ASSESSCLASS == 'PLANB'){
     

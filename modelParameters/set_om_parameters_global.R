@@ -62,5 +62,12 @@ anomFun <- median
 # nyear <- nrow(cmip5) + nburn
 
 
+#### Management ####
+
+# Scalars to relate the calculated values of reference points to the
+# threshold values. Typically this will be 1/2 for Bmsy and 1.0 for F but
+# these can be changed to examine sensitivity.
+BrefScalar <- 0.5
+FrefScalar <- 1.0
 
 
