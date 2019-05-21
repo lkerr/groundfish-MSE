@@ -84,6 +84,13 @@ if(!all(is.na(tst)) && any(tst & !is.na(tst))){
              'the reference point should actually be.'))
 }
 
+# Error regarding number of years.
+inTest <- (plotBrkYrs + fmyearIdx) %in% (fmyearIdx+1):nyear
+if(!all(inTest)){
+  stop(paste('check plotBrkYrs in set_om_parameters_global. One or more',
+             'of your break years is outside the possible range.'))
+}
+
 
 # get all the necessary containers for the simulation
 stockCont <- list()

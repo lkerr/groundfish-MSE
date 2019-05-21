@@ -231,7 +231,7 @@ get_containers <- function(stockPar){
       F_full = save_vector_ann,
       F_fullAdvice = save_vector_ann,
       sumCW = save_vector_ann,
-      sumCWcv = save_vector_ann, #cheap ... not really vector.
+      annPercentChange = save_vector_ann, #cheap ... not really vector.
       ginipaaCN = save_vector_ann,
       ginipaaIN = save_vector_ann,
       FPROXY = save_vector_ann,
