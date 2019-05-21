@@ -71,3 +71,9 @@ BrefScalar <- 0.5
 FrefScalar <- 1.0
 
 
+#### Output ####
+# Years after the management period begins to break up the results. For
+# example, c(10, 20) would result in plots from 0-10 years after the mgmnt
+# period begins, 10-20 years and 20 years to the end of the series.
+plotBrkYrs <- c(5, 10, 20)
+

@@ -137,9 +137,10 @@ get_fillRepArrays <- function(stock){
     omval$OFdStatus[r,m,] <- OFdStatus
     omval$mxGradCAA[r,m,] <- mxGradCAA
     
-    # Deal with the CV later when creating the plots for particular time periods
-    omval$sumCWcv[r,m,] <- NA
-    
+    # annPercentChange not true vector -- just repeated values. This needs
+    # to be calculated after the run so that the appropriate time windows
+    # can be used.
+    omval$annPercentChange[r,m,] <- NA # placeholder -- calculated later
     giniCN <- apply(paaCN, 1, get_gini)
     omval$ginipaaCN[r,m,] <- giniCN
     giniIN <- apply(paaIN, 1, get_gini)

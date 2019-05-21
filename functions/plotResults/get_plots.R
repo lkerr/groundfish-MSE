@@ -33,7 +33,7 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
     
     nm <- names(x)
     # ny <- dim(x[[i]])[3]
-    bxidx <- which(nm %in% c("SSB", "R", "F_full", "sumCW", "sumCWcv", 
+    bxidx <- which(nm %in% c("SSB", "R", "F_full", "sumCW", "annPercentChange", 
                              "ginipaaCN", "ginipaaIN", "OFdStatus",
                              "mxGradCAA"))
     
@@ -50,55 +50,92 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
     
     
     #### Performance measure plots ####
-  
-    # Performance measures: medium term years 10-20
+
+    # Identify break points for selecting years to produce for each of the
+    # boxplots and also names for each of the categories for printing
+    brkYrsIdx <- plotBrkYrs + fmyearIdx
+    brkYrsIdxExt <- c(0, brkYrsIdx, nyear)
+    brkYrsNames <- yrs[c(1, brkYrsIdxExt)]
+    brkYrsNames2 <- sapply(2:length(brkYrsNames), function(x) 
+      paste(brkYrsNames[x-1], brkYrsNames[x], sep='-'))
+    
+    yearID <- cut(1:nyear, breaks=brkYrsIdxExt, labels=brkYrsNames2)
+    
+    # Create the boxplots
     for(i in bxidx){
-      jpeg(paste0(dirOut, nm[i], 'yrb10-20.jpg.'))
-  
-        # If you just have a bunch of NAs for some reason make an
-        # empty plot as a place-holder
-        if(all(is.na(x[[i]][,,(fmyearIdx+10-1):(fmyearIdx+20),drop=FALSE]))){
-          plot(0)
-        }else{
-          get_box(x=x[[i]][,,(fmyearIdx+10-1):(fmyearIdx+20),drop=FALSE])
+      for(j in 2:length(brkYrsNames2)){
+        tempIdx <- brkYrsNames2[j] == yearID
+        tempDat <- x[[i]][,,tempIdx, drop=FALSE]
+        # If calculating annual percentage change need to do this calculation
+        # on the same temporal scales as the divisions. This is an aggregate
+        # quantity so just repeat it over years so that the container is the
+        # correct shape when moving it into the boxplot.
+        if(nm[i] == 'annPercentChange'){
+          tempCW <- x[['sumCW']][,,tempIdx, drop=FALSE]
+          tempDatUnit <- apply(tempCW, 1:2, get_stability)
+          tempDat <- array(data=tempDatUnit, dim=dim(tempCW))
+          dimnames(tempDat) <- dimnames(tempCW)
         }
-      
-      dev.off()
+        jpeg(paste0(dirOut, nm[i], '_', brkYrsNames2[j], '.jpg.'))
         
-    }
-   
-    # Performance measures using first 5 years
-    for(i in bxidx){
-      
-      jpeg(paste0(dirOut, nm[i], 'yra1-5.jpg.'))
-      # If you just have a bunch of NAs for some reason make an
-      # empty plot as a place-holder
-      if(all(is.na(x[[i]][,,fmyearIdx:(fmyearIdx+5-1),drop=FALSE]))){
-        plot(0)
-      }else{
-        get_box(x=x[[i]][,,fmyearIdx:(fmyearIdx+5-1),drop=FALSE])
+          if(all(is.na(tempDat))){
+            plot(0)
+          }else{
+            get_box(x=tempDat)
+          }
+        dev.off()
       }
-      
-      dev.off()
-      
     }
-  
-    # Performance measures: long term 20-50 years
-    for(i in bxidx){
-      
-      jpeg(paste0(dirOut, nm[i], 'yrc20-end.jpg.'))
-      
-      # If you just have a bunch of NAs for some reason make an
-      # empty plot as a place-holder
-      if(all(is.na(x[[i]][,,(nyear-20+1):nyear,drop=FALSE]))){
-        plot(0)
-      }else{
-        get_box(x=x[[i]][,,(nyear-20+1):nyear,drop=FALSE])
-      }
-      
-      dev.off()
-      
-    }
+
+    
+    # # Performance measures: medium term years 10-20
+    # for(i in bxidx){
+    #   jpeg(paste0(dirOut, nm[i], 'yrb10-20.jpg.'))
+    # 
+    #     # If you just have a bunch of NAs for some reason make an
+    #     # empty plot as a place-holder
+    #     if(all(is.na(x[[i]][,,(fmyearIdx+10-1):(fmyearIdx+20),drop=FALSE]))){
+    #       plot(0)
+    #     }else{
+    #       get_box(x=x[[i]][,,(fmyearIdx+10-1):(fmyearIdx+20),drop=FALSE])
+    #     }
+    #   
+    #   dev.off()
+    #     
+    # }
+    # 
+    # # Performance measures using first 5 years
+    # for(i in bxidx){
+    #   
+    #   jpeg(paste0(dirOut, nm[i], 'yra1-5.jpg.'))
+    #   # If you just have a bunch of NAs for some reason make an
+    #   # empty plot as a place-holder
+    #   if(all(is.na(x[[i]][,,fmyearIdx:(fmyearIdx+5-1),drop=FALSE]))){
+    #     plot(0)
+    #   }else{
+    #     get_box(x=x[[i]][,,fmyearIdx:(fmyearIdx+5-1),drop=FALSE])
+    #   }
+    #   
+    #   dev.off()
+    #   
+    # }
+    # 
+    # # Performance measures: long term 20-50 years
+    # for(i in bxidx){
+    #   
+    #   jpeg(paste0(dirOut, nm[i], 'yrc20-end.jpg.'))
+    #   
+    #   # If you just have a bunch of NAs for some reason make an
+    #   # empty plot as a place-holder
+    #   if(all(is.na(x[[i]][,,(nyear-20+1):nyear,drop=FALSE]))){
+    #     plot(0)
+    #   }else{
+    #     get_box(x=x[[i]][,,(nyear-20+1):nyear,drop=FALSE])
+    #   }
+    #   
+    #   dev.off()
+    #   
+    # }
      
   
     #### Proxy Reference Point plots ####
