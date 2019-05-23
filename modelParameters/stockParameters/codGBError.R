@@ -1,7 +1,7 @@
 
 
 
-stockName <- 'codGB'
+stockName <- 'codGBError'
 
 
 # Average and sd F before the management period begins. Mean on real scale
