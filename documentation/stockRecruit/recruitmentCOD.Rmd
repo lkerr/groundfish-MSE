@@ -74,12 +74,16 @@ print(parTab)
 ```
 
 
-
 ```{r, echo = FALSE, results = 'hide'}
 # Run the model -- 
 # The function do.call() just tells R to run the model code using the 
 # parameters provided in the parameter list.
 rep <- do.call(srRunSteepness, codPar)
+```
+
+The SSBR at F=0 that was used for this analysis was
+```{R, echo=FALSE, comment = ''}
+cat(rep$SSBRF0)
 ```
 
 ## Results

@@ -81,6 +81,7 @@ srRunSteepness <- function(recDat, stock, start, lb, ub, estPar){
   rep$ub <- ub
   rep$start <- start
   rep$estPar <- estPar
+  rep$SSBRF0 <- data$SSBRF0
   
   return(rep)
 }
