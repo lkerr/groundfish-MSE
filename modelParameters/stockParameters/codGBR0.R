@@ -52,12 +52,11 @@ selC <- c(s0=5, s1=0.08)
 selC_typ <- 'Logistic'
 
 # Recruitment
-Rpar <- c(a = 1.953864e+07,
-          b = 3.631550e+04, # to get more contrast in the results
-          c = -0.540,
-          rho = 0,
-          sigR = 0.68)
-R_typ <- 'BH'
+Rpar <- c(h = 7.054068e-01,
+          R0 = 6.857184e+07,
+          beta2 = -2.600563e+00,
+          SSBRF0 = 0.01972)
+R_typ <- 'BHSteep'
 
 
 # load('data/data_processed/SR/cod/BHTS.Rdata') #srpar
@@ -109,7 +108,7 @@ oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 0.5
+pe_R <- 5.689368e-01
 
 # implementation error of fishing mortality
 ie_F <- 0
