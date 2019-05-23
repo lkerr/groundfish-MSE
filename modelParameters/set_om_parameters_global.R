@@ -15,6 +15,17 @@ simpleTemperature <- FALSE
 # Testing run which uses mprocTest.txt instead of mproc.txt? (T/F)
 mprocTest <- FALSE
 
+
+#### Stock parameters ####
+
+# If you have files in the modelParameters folder for stocks but you don't
+# want to include them in a run you can write them in here in the
+# stockExclude variable. Do not include the extension.R. For example,
+# stockExclude <- haddockGB will leave haddockGB.R out of the analysis.
+# stockExclude <- NULL indludes all stocks.
+stockExclude <- c('haddockGB')
+
+
 #### Structural parameters ####
 
 # number of times to repeat this analysis
