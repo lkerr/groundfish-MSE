@@ -141,10 +141,12 @@ get_fillRepArrays <- function(stock){
     # to be calculated after the run so that the appropriate time windows
     # can be used.
     omval$annPercentChange[r,m,] <- NA # placeholder -- calculated later
-    giniCN <- apply(paaCN, 1, get_gini)
-    omval$ginipaaCN[r,m,] <- giniCN
-    giniIN <- apply(paaIN, 1, get_gini)
-    omval$ginipaaIN[r,m,] <- giniIN
+    meanSizeCN <- sapply(1:nrow(CN), 
+                         function(x) laa[x,] %*% paaCN[x,])
+    omval$meanSizeCN[r,m,] <- meanSizeCN
+    meanSizeIN <- sapply(1:nrow(CN), 
+                         function(x) laa[x,] %*% paaIN[x,])
+    omval$meanSizeIN[r,m,] <- meanSizeIN
     omval$FPROXY[r,m,] <- RPmat[,1]
     omval$SSBPROXY[r,m,] <- RPmat[,2]
     if(y == nyear){

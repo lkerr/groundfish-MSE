@@ -34,7 +34,7 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
     nm <- names(x)
     # ny <- dim(x[[i]])[3]
     bxidx <- which(nm %in% c("SSB", "R", "F_full", "sumCW", "annPercentChange", 
-                             "ginipaaCN", "ginipaaIN", "OFdStatus",
+                             "meanSizeCN", "meanSizeIN", "OFdStatus",
                              "mxGradCAA"))
     
     rpidx <- which(nm %in% c("FPROXY", "SSBPROXY"))
