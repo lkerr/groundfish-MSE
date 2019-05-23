@@ -47,6 +47,11 @@
 get_recruits <- function(type, par, SSB, TAnom_y, pe_R, 
                          R_ym1=NULL, Rhat_ym1=NULL, stockEnv = stock){
 
+  if(!type %in% c('BH', 'BHSteep')){
+    stop(paste('get_recruits: check spelling of R_typ in individual stock 
+               parameter file for', stockNames[i]))
+  }
+  
   with(stockEnv, {
   
   if('rho' %in% names(par)){
@@ -86,7 +91,7 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R,
     Rhat_ym1 <- 1
     
   }
-if(is.null(type)) browser()  
+  
   if(type == 'BH'){
  
     # Expected value
