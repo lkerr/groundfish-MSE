@@ -230,4 +230,6 @@ and you wait for it to complete.  You can check the status using the command ```
 
 * On my local linux Ubuntu machine I've found I can't install R's tidyverse library (necessary for the planB assessment approach written by C Legault) under the default conditions.  I had to first update the system.  Based on a web search I found packages to add to the linux system: ```sudo apt-get install r-cran-curl r-cran-openssl r-cran-xml2``` and after I made these changes I could install tidyverse.
 
+* Simultaneous runs (e.g., to examine different scenarios) are possible. Make a new directory with the **.sh** files and submit the job from the new directory. This will not overwrite any work submitted from the first directory.
+
 [Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
