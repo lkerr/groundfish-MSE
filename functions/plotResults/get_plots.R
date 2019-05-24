@@ -191,11 +191,12 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
     
     # # Plot describing how average recruitment changed over time
     # jpeg(paste0(dirOut, 'laa.jpg.'),
-    #      width=480*1.75, height=480, pointsize=12*1.5)
-    #   ptyridx <- fmyearIdx:length(yrs)
-    #   get_laaPlot(rec_par=rec_par, laa_typ=laa_typ, laafun=get_lengthAtAge, 
-    #               ages=fage:(ceiling(1.5*page)), Tanom=Tanom[ptyridx], 
-    #               ptyrs=yrs[ptyridx])
+         # width=480*1.75, height=480, pointsize=12*1.5)
+browser()      
+      ptyridx <- fmyearIdx:length(yrs)
+      get_SRPlot(rec_par=rec_par, laa_typ=laa_typ, laafun=get_lengthAtAge,
+                  ages=fage:(ceiling(1.5*page)), Tanom=Tanom[ptyridx],
+                  ptyrs=yrs[ptyridx])
     # dev.off()
     # 
     
