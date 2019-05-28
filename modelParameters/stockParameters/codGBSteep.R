@@ -1,9 +1,6 @@
 
 
 
-stockName <- 'codGBSteep'
-
-
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.                                              
 burnFmsyScalar <- 3.0

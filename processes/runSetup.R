@@ -30,12 +30,21 @@ if(!is.null(stockExclude)){
                'removed all available stocks.'))
   }
 }
+
+# Retrieve the stock names from the file paths
+stockNameListExt <- sapply(fileList, basename)
+stockNameList <- unname(sapply(stockNameListExt, sub, 
+                               pattern='\\.R$', replacement=''))
+
 nstock <- length(fileList)
 stockPar <- as.list(nstock)
 for(i in 1:nstock){
   tempEnv <- new.env()
   source(fileList[[i]], local = tempEnv)
+  # Calculate number of ages (needed for other variables)
   tempEnv$nage <- length(tempEnv$fage:tempEnv$page)
+  # Add name of stock for labeling objects and plots
+  tempEnv$stockName <- stockNameList[i]
   stockPar[[i]] <- as.list(tempEnv)
   rm(tempEnv)
 }
