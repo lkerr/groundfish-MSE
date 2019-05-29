@@ -61,29 +61,31 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
     
     yearID <- cut(1:nyear, breaks=brkYrsIdxExt, labels=brkYrsNames2)
     
-    # Create the boxplots
-    for(i in bxidx){
-      for(j in 2:length(brkYrsNames2)){
-        tempIdx <- brkYrsNames2[j] == yearID
-        tempDat <- x[[i]][,,tempIdx, drop=FALSE]
-        # If calculating annual percentage change need to do this calculation
-        # on the same temporal scales as the divisions. This is an aggregate
-        # quantity so just repeat it over years so that the container is the
-        # correct shape when moving it into the boxplot.
-        if(nm[i] == 'annPercentChange'){
-          tempCW <- x[['sumCW']][,,tempIdx, drop=FALSE]
-          tempDatUnit <- apply(tempCW, 1:2, get_stability)
-          tempDat <- array(data=tempDatUnit, dim=dim(tempCW))
-          dimnames(tempDat) <- dimnames(tempCW)
-        }
-        jpeg(paste0(dirOut, nm[i], '_', brkYrsNames2[j], '.jpg.'))
-        
-          if(all(is.na(tempDat))){
-            plot(0)
-          }else{
-            get_box(x=tempDat)
+    if(plotBP){
+      # Create the boxplots
+      for(i in bxidx){
+        for(j in 2:length(brkYrsNames2)){
+          tempIdx <- brkYrsNames2[j] == yearID
+          tempDat <- x[[i]][,,tempIdx, drop=FALSE]
+          # If calculating annual percentage change need to do this calculation
+          # on the same temporal scales as the divisions. This is an aggregate
+          # quantity so just repeat it over years so that the container is the
+          # correct shape when moving it into the boxplot.
+          if(nm[i] == 'annPercentChange'){
+            tempCW <- x[['sumCW']][,,tempIdx, drop=FALSE]
+            tempDatUnit <- apply(tempCW, 1:2, get_stability)
+            tempDat <- array(data=tempDatUnit, dim=dim(tempCW))
+            dimnames(tempDat) <- dimnames(tempCW)
           }
-        dev.off()
+          jpeg(paste0(dirOut, nm[i], '_', brkYrsNames2[j], '.jpg.'))
+          
+            if(all(is.na(tempDat))){
+              plot(0)
+            }else{
+              get_box(x=tempDat)
+            }
+          dev.off()
+        }
       }
     }
 
@@ -138,70 +140,100 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
     # }
      
   
-    #### Proxy Reference Point plots ####
-    
-    dir.create(file.path(dirOut, 'RP'), showWarnings=FALSE)
-    for(i in 1:dim(x$FPROXY)[2]){
-    
-      jpeg(paste0(dirOut, 'RP/', 'mp', i, '.jpg.'))
+    if(plotRP){
+      #### Proxy Reference Point plots ####
+      
+      dir.create(file.path(dirOut, 'RP'), showWarnings=FALSE)
+      for(i in 1:dim(x$FPROXY)[2]){
+      
+        jpeg(paste0(dirOut, 'RP/', 'mp', i, '.jpg.'))
+          
+          if(all(is.na(x$FPROXY[,i,]))){
+            plot(0)
+          }else{
+            get_rptrend(x=x$FPROXY[,i,pyidx], 
+                        y=x$SSBPROXY[,i,pyidx])
+          }
         
-        if(all(is.na(x$FPROXY[,i,]))){
-          plot(0)
-        }else{
-          get_rptrend(x=x$FPROXY[,i,pyidx], 
-                      y=x$SSBPROXY[,i,pyidx])
-        }
-      
-      dev.off()
-      
-      # HCR plot not working -- got rid of RP. Not bothering to change
-      # back right now because I don't think it was that useful of a plot.
-      # jpeg(paste0(dirOut, 'RP/', 'hcr', i, '.jpg.'))
-      # 
-      #   get_hcrPlot(rp[,i,,])
-      # 
-      # dev.off()
-      
-      
+        dev.off()
+        
+        # HCR plot not working -- got rid of RP. Not bothering to change
+        # back right now because I don't think it was that useful of a plot.
+        # jpeg(paste0(dirOut, 'RP/', 'hcr', i, '.jpg.'))
+        # 
+        #   get_hcrPlot(rp[,i,,])
+        # 
+        # dev.off()
+        
+        
+      }
     }
    
   
-    # Get diagnostic plots that show (1) the temperature history; (2) the
-    # growth models (with temperature); and (3) the recruitment models
-    # (with temperature)
+    if(plotDrivers){
+      
+      # Get diagnostic plots that show (1) the temperature history; (2) the
+      # growth models (with temperature); and (3) the recruitment models
+      # (with temperature)
+    
+      #### Temperature time series ####
+      
+      # Time-series temperature plot
+      jpeg(paste0(dirOut, 'tempts.jpg.'),
+           width=480*1.75, height=480, pointsize=12*1.5)
+        get_tempTSPlot(temp = temp[yrs_temp %in% yrs], yrs = yrs,
+                       fmyear=fmyear, ftyear=yrs[nburn+1])
+      dev.off()
+     
+      #### Growth ####
+      # Plot describing how growth changed over time
+      jpeg(paste0(dirOut, 'laa.jpg.'),
+           width=480*1.75, height=480, pointsize=12*1.5)
+        ptyridx <- fmyearIdx:length(yrs)
+        get_laaPlot(laa_par=laa_par, laa_typ=laa_typ, laafun=get_lengthAtAge, 
+                    ages=fage:(ceiling(1.5*page)), Tanom=Tanom[pyidx], 
+                    ptyrs=yrs[pyidx])
+      dev.off()
+      
+      # # Plot describing how average recruitment changed over time
+      jpeg(paste0(dirOut, 'SR.jpg.'),
+           width=480*1.75, height=480, pointsize=12*1.5)
   
-    #### Temperature time series ####
+        ptyridx <- fmyearIdx:length(yrs)
+        get_SRPlot(par=Rpar, type=R_typ, stock=stockEnv, 
+                   Tanom=Tanom[ptyridx],
+                    ptyrs=yrs[ptyridx])
+      dev.off()
+      
+      
+      #### Selectivity plots ####
+      
+      par(mar=c(4.5,4.5,1.5,1.5))
+      
+      # age-based selectivity plot
+      jpeg(paste0(dirOut, 'slxAge.jpg.'),
+           width=480*1.5, height=480, pointsize=12*1.5)
+      
+        get_slxPlot(ages = fage:page, type = 'age', 
+                    laa_typ = laa_typ, laa_par = laa_par, 
+                    selC_typ = selC_typ, selCpar = selC, 
+                    TAnom = mean(Tanom[fmyearIdx:length(Tanom)]))
+      dev.off()
+      
+      # length-based selectivity plot
+      jpeg(paste0(dirOut, 'slxLength.jpg.'),
+           width=480*1.5, height=480, pointsize=12*1.5)
+      
+        get_slxPlot(ages = fage:page, type = 'length', 
+                    laa_typ = laa_typ, laa_par = laa_par, 
+                    selC_typ = selC_typ, selCpar = selC, 
+                    TAnom = mean(Tanom[fmyearIdx:length(Tanom)]))
+      dev.off()
+      
+      
+    } 
     
-    # Time-series temperature plot
-    jpeg(paste0(dirOut, 'tempts.jpg.'),
-         width=480*1.75, height=480, pointsize=12*1.5)
-      get_tempTSPlot(temp = temp[yrs_temp %in% yrs], yrs = yrs,
-                     fmyear=fmyear, ftyear=yrs[nburn+1])
-    dev.off()
    
-    #### Growth ####
-    # Plot describing how growth changed over time
-    jpeg(paste0(dirOut, 'laa.jpg.'),
-         width=480*1.75, height=480, pointsize=12*1.5)
-      ptyridx <- fmyearIdx:length(yrs)
-      get_laaPlot(laa_par=laa_par, laa_typ=laa_typ, laafun=get_lengthAtAge, 
-                  ages=fage:(ceiling(1.5*page)), Tanom=Tanom[pyidx], 
-                  ptyrs=yrs[pyidx])
-    dev.off()
-    
-    # # Plot describing how average recruitment changed over time
-    jpeg(paste0(dirOut, 'SR.jpg.'),
-         width=480*1.75, height=480, pointsize=12*1.5)
-
-      ptyridx <- fmyearIdx:length(yrs)
-      get_SRPlot(par=Rpar, type=R_typ, stock=stockEnv, 
-                 Tanom=Tanom[ptyridx],
-                  ptyrs=yrs[ptyridx])
-    dev.off()
-    # 
-    
-   
-    
     #### Trajectories of OM values ####
     dir.create(file.path(dirOut, 'Traj'), showWarnings=FALSE)
     
@@ -247,87 +279,74 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
           next
         }
   
-        # First do a general boxplot of the trajectory over years
-        jpeg(paste0(dirOut, 'Traj/', PMname, '/boxmp', mp, '.jpg.'),
-             width=480*1.75, height=480, pointsize=12*1.5)
-          
-          par(mar=c(4,4,1,1))
-  
-          get_tbxplot(x = tempPMmp, PMname=PMname, yrs=yrs[pyidx],
-                      printOutliers=FALSE, yrg=yrgbx, fmyear=yrs[fmyearIdx])
-        
-        dev.off()
-        
-      
-        # Do (up to) 5 trajectories as examples
-        for(r in repidx){
-  
-          jpeg(paste0(dirOut, 'Traj/', PMname, '/mp', mp, 'rep', r, '.jpg.'),
+        if(plotTrajBox){
+          # First do a general boxplot of the trajectory over years
+          jpeg(paste0(dirOut, 'Traj/', PMname, '/boxmp', mp, '.jpg.'),
                width=480*1.75, height=480, pointsize=12*1.5)
-          
-            get_tplot(x=tempPMmp[r,], yrs = yrs[pyidx], 
-                      mpName=paste('MP', mp), 
-                      PMname=PMname, ylim=yrgrsim, fmyear=yrs[fmyearIdx])
-            # plot(tempPM[r,mp,], type='o')
+            
+            par(mar=c(4,4,1,1))
+    
+            get_tbxplot(x = tempPMmp, PMname=PMname, yrs=yrs[pyidx],
+                        printOutliers=FALSE, yrg=yrgbx, fmyear=yrs[fmyearIdx])
           
           dev.off()
+        }
+        
+      
+        if(plotTrajInd){
+          # Do (up to) 5 trajectories as examples
+          for(r in repidx){
+    
+            jpeg(paste0(dirOut, 'Traj/', PMname, '/mp', mp, 'rep', r, '.jpg.'),
+                 width=480*1.75, height=480, pointsize=12*1.5)
+            
+              get_tplot(x=tempPMmp[r,], yrs = yrs[pyidx], 
+                        mpName=paste('MP', mp), 
+                        PMname=PMname, ylim=yrgrsim, fmyear=yrs[fmyearIdx])
+              # plot(tempPM[r,mp,], type='o')
+            
+            dev.off()
+            
+          }
+        }
+      }
+      
+      
+      if(plotTrajSummary){
+        # Trajectories for the medians of each MP over time
+        
+        # Get the means of each performance measure over time
+        # if(nm[i] == 'OFdStatus' | nm[i] == 'F_Full'){
+          mpMean <- apply(tempPM[,,pyidx, drop=FALSE], c(2,3), mean, na.rm=TRUE)
+        # }else{
+          # mpMed <- apply(tempPM[,,pyidx, drop=FALSE], c(2,3), median, na.rm=TRUE)
+        # }
+        
+        if(all(is.na(mpMean))){
+          next
+        }
+        
+        # Make the plot
+        jpeg(paste0(dirOut, 'Traj/', PMname, '/MPMeanTraj.jpg.'),
+             width=480*1.75, height=480, pointsize=12*1.5)
+          par(mar=c(4,4,1,1))
           
-        }
-      }
-      
-      # Trajectories for the medians of each MP over time
-      
-      # Get the means of each performance measure over time
-      # if(nm[i] == 'OFdStatus' | nm[i] == 'F_Full'){
-        mpMean <- apply(tempPM[,,pyidx, drop=FALSE], c(2,3), mean, na.rm=TRUE)
-      # }else{
-        # mpMed <- apply(tempPM[,,pyidx, drop=FALSE], c(2,3), median, na.rm=TRUE)
-      # }
-      
-      if(all(is.na(mpMean))){
-        next
-      }
-      
-      # Make the plot
-      jpeg(paste0(dirOut, 'Traj/', PMname, '/MPMeanTraj.jpg.'),
-           width=480*1.75, height=480, pointsize=12*1.5)
-        par(mar=c(4,4,1,1))
-        
-        # Jitter the overfished status if necessary so you can see the 
-        # trajectory
-        if(nm[i] == 'OFdStatus'){
-          mpMean <- jitter(mpMean, amount=0.05)
-        }
-        get_mpMeanTraj(mpMeanMat = mpMean, x=yrs[pyidx], ylab=nm[i], 
-                      fmyear=yrs[fmyearIdx])
-        
+          # Jitter the overfished status if necessary so you can see the 
+          # trajectory
+          if(nm[i] == 'OFdStatus'){
+            mpMean <- jitter(mpMean, amount=0.05)
+          }
+          get_mpMeanTraj(mpMeanMat = mpMean, x=yrs[pyidx], ylab=nm[i], 
+                        fmyear=yrs[fmyearIdx])
+          
         dev.off()
+      }
+      
     }
     
     
-    #### Selectivity plot ####
     
-    par(mar=c(4.5,4.5,1.5,1.5))
     
-    # age-based selectivity plot
-    jpeg(paste0(dirOut, 'slxAge.jpg.'),
-         width=480*1.5, height=480, pointsize=12*1.5)
-    
-      get_slxPlot(ages = fage:page, type = 'age', 
-                  laa_typ = laa_typ, laa_par = laa_par, 
-                  selC_typ = selC_typ, selCpar = selC, 
-                  TAnom = mean(Tanom[fmyearIdx:length(Tanom)]))
-    dev.off()
-    
-    # length-based selectivity plot
-    jpeg(paste0(dirOut, 'slxLength.jpg.'),
-         width=480*1.5, height=480, pointsize=12*1.5)
-    
-      get_slxPlot(ages = fage:page, type = 'length', 
-                  laa_typ = laa_typ, laa_par = laa_par, 
-                  selC_typ = selC_typ, selCpar = selC, 
-                  TAnom = mean(Tanom[fmyearIdx:length(Tanom)]))
-    dev.off()
   })
 }
 

@@ -88,3 +88,23 @@ FrefScalar <- 1.0
 # period begins, 10-20 years and 20 years to the end of the series.
 plotBrkYrs <- c(5, 10, 20)
 
+# Which sets of plots should be created? Set these objects to T/F
+
+# Boxplots of performance measures
+plotBP <- TRUE
+
+# Extra folder of reference point plots
+plotRP <- FALSE
+
+# Population drivers like temperature, recruitment growth histories
+# and selectivity plots
+plotDrivers <- TRUE
+
+# Trajectories over different metrics
+plotTrajInd <- FALSE     # samples of individual trajectories
+plotTrajBox <- FALSE     # boxplots of trajectories
+plotTrajSummary <- TRUE  # summary statistics
+
+
+
+
