@@ -31,6 +31,8 @@ For general information on GitHub workflows and how to use branches, see [ground
 
 * **multistock**: Branch dedicated to developing the initial multistock approach where management & fishing are applied to stocks in order via loops.
 
+* **realized_catch**: Branch dedicated to developing and integrating the alternative implementations of the management advice, i.e., producing the realized catch given the harvest regulation.  
+
 
 --------
 ## Stale / deleted branches
