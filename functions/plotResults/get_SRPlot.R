@@ -13,10 +13,43 @@ get_SRPlot <- function(type, par, Tanom, ptyrs, stockEnv){
   pal <- colorRamp(c('cornflowerblue', 'firebrick1'))
   normTAnom <- (ptyrs-min(ptyrs)) / (max(ptyrs)-min(ptyrs))
   col <- rgb(pal(normTAnom)/255)
+     
+  # Get avg SSB across runs for each year in each
+  # scenario
+  pltidx <- match(ptyrs, yrs)
+  avgSSB <- t(apply(omval$SSB[,,pltidx], c(2,3), mean))
+
+  m <- matrix(c(1, rep(2, 4)))
+  layout(m)
+  par(mar=c(0,4,1,2))
   
+  y1 <- rev(cumsum(rep(1/ncol(avgSSB), ncol(avgSSB))))
+  y0 <- y1 - 1/ncol(avgSSB)
+  
+  plot(NA, ylim=c(0, 1), xlim=range(SSBx), axes=FALSE,
+       ann=FALSE, yaxs='i')
+  
+  for(i in 1:nrow(avgSSB)){
+    segments(x0 = avgSSB[i,],
+             y0 = y0,
+             y1 = y1,
+             col = col[i])
+  }
+  abline(h = y1[-1])
+  box()
+  text(x = 0.95*par('usr')[2], y = (y0 + y1) / 2,
+       labels = paste('MP', 1:ncol(avgSSB)), 
+       pos=2, cex = 7/ncol(avgSSB))
+
+  par(mar=c(5,4,0,2))
   matplot(SSBx, R, type='l', col=col, lty=1,
           xlab = 'Spawner biomass', ylab = 'Recruitment')
-      
+  
+  
+
+
+  
+  
   legend('topleft', legend = c(ptyrs[1], tail(ptyrs, 1)),
          lty=1, lwd=2, col=c(col[1], tail(col, 1)), bty='n')
   
