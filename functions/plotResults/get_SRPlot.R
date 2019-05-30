@@ -43,10 +43,14 @@ get_SRPlot <- function(type, par, Tanom, ptyrs, stockEnv){
 
   par(mar=c(5,4,0,2))
   matplot(SSBx, R, type='l', col=col, lty=1,
-          xlab = 'Spawner biomass', ylab = 'Recruitment')
+          xlab = 'Spawner biomass', ylab = 'Recruitment',
+          ylim = c(0, par['R0']),
+          xlim = range(0, SSBx, par['SSBRF0'] * par['R0']))
   
-  
-
+  # Include reference points for R0 and SSB0 in the plot
+  abline(h = par['R0'], 
+         v = par['SSBRF0'] * par['R0'], 
+         lty=3, col='gray50')
 
   
   
