@@ -149,3 +149,63 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R,
 
 
 
+
+# Rpar1 <- c(h = 0.6,
+#           R0 = 6.087769e+07,
+#           beta3 = 0,
+#           SSBRF0 = 0.01972)
+# 
+# Rpar2 <- c(h = 0.3,
+#            R0 = 6.087769e+07,
+#            beta3 = 0,
+#            SSBRF0 = 0.01972)
+# 
+# 
+# R_typ <- 'BHSteep'
+# 
+# SSB <- seq(0, 8e6, length.out=100)
+# 
+# gr1 <- sapply(1:length(SSB), function(x)
+#               get_recruits(type = R_typ, 
+#                            par = Rpar1, 
+#                            SSB = SSB[x], 
+#                            TAnom_y = 0, 
+#                            pe_R = 0, 
+#                            R_ym1=NULL, 
+#                            Rhat_ym1=NULL, 
+#                            stockEnv = list(a=NA))$Rhat)
+# 
+# gr2 <- sapply(1:length(SSB), function(x)
+#   get_recruits(type = R_typ, 
+#                par = Rpar2, 
+#                SSB = SSB[x], 
+#                TAnom_y = 0, 
+#                pe_R = 0, 
+#                R_ym1=NULL, 
+#                Rhat_ym1=NULL, 
+#                stockEnv = list(a=NA))$Rhat)
+# 
+# xl <- range(SSB)
+# yl <- range(gr1, gr2)
+# 
+# plot(NA, xlim=xl, ylim=yl)
+# lines(gr1 ~ SSB, col='red')
+# lines(gr2 ~ SSB, col='blue')
+# 
+# legend('topleft', lty=1, col=c('red', 'blue'),
+#        legend=c('rpar1', 'rpar2'))
+# 
+# 
+# 
+# 
+# SSB <- 1e10
+# 
+# num1 <- 4 * Rpar1['h'] * ( SSB / (Rpar1['SSBRF0']) )
+# den1 <- ( (1 - Rpar1['h']) + (5*Rpar1['h'] - 1) * ( SSB / (Rpar1['R0'] * Rpar1['SSBRF0']) ) )
+# q1 <- num1/den1
+# 
+# num2 <- 4 * Rpar2['h'] * ( SSB / (Rpar2['SSBRF0']) )
+# den2 <- ( (1 - Rpar2['h']) + (5*Rpar2['h'] - 1) * ( SSB / (Rpar2['R0'] * Rpar2['SSBRF0']) ) )
+# q2 <- num2/den2
+
+
