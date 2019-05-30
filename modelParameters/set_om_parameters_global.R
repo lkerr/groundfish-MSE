@@ -10,7 +10,7 @@
 debugSink <- FALSE
 
 # Debug using simple temperature trend that reduces variance? (T/F)
-simpleTemperature <- TRUE
+simpleTemperature <- FALSE
 
 # Testing run which uses mprocTest.txt instead of mproc.txt? (T/F)
 mprocTest <- FALSE
