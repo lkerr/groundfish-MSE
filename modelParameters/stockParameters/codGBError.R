@@ -43,7 +43,7 @@ selC <- c(s0=5, s1=0.08)
 selC_typ <- 'Logistic'
 
 # Recruitment
-Rpar <- c(h = 6.630977e-01,
+Rpar <- c(h = 0.1,#6.630977e-01,
           R0 = 6.087769e+07,
           beta3 = -2.501400e-01,
           SSBRF0 = 0.01972)
