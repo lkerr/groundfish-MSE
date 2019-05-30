@@ -50,7 +50,7 @@ nburn <- 50
 #### Temperature information ####
 
 ## Do you want to include temperature projections (in S-R, growth, etc.)
-useTemp <- TRUE
+useTemp <- FALSE
 
 ## Temperature information ##
 cmip5model <- 'CMCC_CM'
@@ -78,8 +78,8 @@ anomFun <- median
 # Scalars to relate the calculated values of reference points to the
 # threshold values. Typically this will be 1/2 for Bmsy and 0.75 for F but
 # these can be changed to examine sensitivity.
-BrefScalar <- 1
-FrefScalar <- 1
+BrefScalar <- 0.5
+FrefScalar <- 0.75
 
 
 #### Output ####
