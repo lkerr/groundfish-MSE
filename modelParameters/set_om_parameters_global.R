@@ -76,10 +76,10 @@ anomFun <- median
 #### Management ####
 
 # Scalars to relate the calculated values of reference points to the
-# threshold values. Typically this will be 1/2 for Bmsy and 1.0 for F but
+# threshold values. Typically this will be 1/2 for Bmsy and 0.75 for F but
 # these can be changed to examine sensitivity.
-BrefScalar <- 0.5
-FrefScalar <- 0.75
+BrefScalar <- 1
+FrefScalar <- 1
 
 
 #### Output ####
