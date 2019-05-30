@@ -3,7 +3,7 @@
 
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.                                              
-burnFmsyScalar <- 0.5
+burnFmsyScalar <- 1
 burnFsd <- 0.3
 
 
