@@ -66,6 +66,7 @@ source('processes/loadLibs.R')
 # load the list of management procedures
 source('processes/generateMP.R')
 
+# Model structure (includes loading in temperature data)
 source('processes/genAnnStructure.R')
 
 # Load specific recruitment functions (these are a list for simulation-based 
