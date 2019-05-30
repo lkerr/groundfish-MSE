@@ -29,12 +29,6 @@ mat_typ <- 'logistic'
 # natural mortality
 M <- 0.2
 
-# Recruitment
-# load('data/data_processed/SR/cod/BHTS.Rdata') #srpar
-# include stochasticity in recruitment parameter estimates?
-# Rstoch_par <- FALSE
-# include stochasticity in annual recruitment estimate?
-# Rstoch_ann <- TRUE
 
 
 #### Fishery parameters ####
@@ -58,14 +52,7 @@ Rpar <- c(h = 6.286813e-01,
           beta3 = -2.501400e-01)
 R_typ <- 'BHSteep'
 
-# load('data/data_processed/SR/cod/BHTS.Rdata') #srpar
 
-## REMOVED parameters relating to R stochasticity -- prefer to adjust this
-## using the parameters.
-# include stochasticity in recruitment parameter estimates?
-# Rstoch_par <- FALSE
-# include stochasticity in annual recruitment estimate?
-# Rstoch_ann <- FALSE
 
 #### Survey parameters ####
 
