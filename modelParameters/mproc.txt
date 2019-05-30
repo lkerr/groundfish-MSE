@@ -1,4 +1,4 @@
   ASSESSCLASS          HCR FREF_TYP FREF_PAR0 FREF_PAR1 BREF_TYP BREF_PAR0 BREF_PAR1      RFUN_NM RPInt
-1         CAA slide      SPR       0.2        NA      SIM        -5        -1 hindcastMean     1
-2         CAA slide      SPR       0.2        NA      SIM       -10        -1 hindcastMean     1
-3         CAA slide      SPR       0.2        NA      SIM       -30        -1 hindcastMean     1
+1         CAA slide      SPR       0.4        NA      SIM        -5        -1 hindcastMean     1
+2         CAA slide      SPR       0.4        NA      SIM       -10        -1 hindcastMean     1
+3         CAA slide      SPR       0.4        NA      SIM       -30        -1 hindcastMean     1
