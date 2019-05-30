@@ -334,7 +334,7 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
           # Jitter the overfished status if necessary so you can see the 
           # trajectory
           if(nm[i] == 'OFdStatus'){
-            mpMean <- jitter(mpMean, amount=0.05)
+            mpMean <- jitter(mpMean, amount=0.01)
           }
           get_mpMeanTraj(mpMeanMat = mpMean, x=yrs[pyidx], ylab=nm[i], 
                         fmyear=yrs[fmyearIdx])
