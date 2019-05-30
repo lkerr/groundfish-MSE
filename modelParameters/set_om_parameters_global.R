@@ -23,7 +23,7 @@ mprocTest <- FALSE
 # stockExclude variable. Do not include the extension.R. For example,
 # stockExclude <- haddockGB will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
-stockExclude <- c('haddockGB')
+stockExclude <- c('haddockGB', 'codGBR0', 'codGBSteep')
 
 
 #### Structural parameters ####
@@ -50,7 +50,7 @@ nburn <- 50
 #### Temperature information ####
 
 ## Do you want to include temperature projections (in S-R, growth, etc.)
-useTemp <- FALSE
+useTemp <- TRUE
 
 ## Temperature information ##
 cmip5model <- 'CMCC_CM'
