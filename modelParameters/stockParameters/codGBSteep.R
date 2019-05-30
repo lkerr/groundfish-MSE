@@ -30,11 +30,11 @@ mat_typ <- 'logistic'
 M <- 0.2
 
 # Recruitment
-load('data/data_processed/SR/cod/BHTS.Rdata') #srpar
+# load('data/data_processed/SR/cod/BHTS.Rdata') #srpar
 # include stochasticity in recruitment parameter estimates?
-Rstoch_par <- FALSE
+# Rstoch_par <- FALSE
 # include stochasticity in annual recruitment estimate?
-Rstoch_ann <- TRUE
+# Rstoch_ann <- TRUE
 
 
 #### Fishery parameters ####
