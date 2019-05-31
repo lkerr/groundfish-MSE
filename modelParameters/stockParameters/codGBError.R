@@ -43,8 +43,8 @@ selC <- c(s0=5, s1=0.08)
 selC_typ <- 'Logistic'
 
 # Recruitment
-Rpar <- c(h = 6.630977e-01,
-          R0 = 6.087769e+07,
+Rpar <- c(h = 0.5,#6.630977e-01,
+          R0 = 6e5,#6.087769e+07,
           beta3 = -2.501400e-01,
           SSBRF0 = 0.01972)
 R_typ <- 'BHSteep'
@@ -92,7 +92,7 @@ oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 1.5#5.839408e-01
+pe_R <- 0.05#1.5#5.839408e-01
 
 # implementation error of fishing mortality
 ie_F <- 0
