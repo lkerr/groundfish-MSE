@@ -50,7 +50,7 @@ nburn <- 50
 #### Temperature information ####
 
 ## Do you want to include temperature projections (in S-R, growth, etc.)
-useTemp <- TRUE
+useTemp <- FALSE
 
 ## Temperature information ##
 cmip5model <- 'CMCC_CM'
@@ -101,7 +101,7 @@ plotRP <- FALSE
 plotDrivers <- TRUE
 
 # Trajectories over different metrics
-plotTrajInd <- FALSE     # samples of individual trajectories
+plotTrajInd <- TRUE     # samples of individual trajectories
 plotTrajBox <- FALSE     # boxplots of trajectories
 plotTrajSummary <- TRUE  # summary statistics
 
