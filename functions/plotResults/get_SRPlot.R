@@ -4,12 +4,6 @@
 
 get_SRPlot <- function(type, par, Tanom, ptyrs, stockEnv){
   
-  SSBx = seq(0, max(omval$SSB, na.rm=TRUE), length.out=100)
-
-  R <- sapply(1:length(Tanom), function(x)
-         get_recruits(type=type, par=par, SSBx, TAnom_y=Tanom[x], 
-                      stockEnv = stockEnv)$Rhat)
-  
   pal <- colorRamp(c('cornflowerblue', 'firebrick1'))
   normTAnom <- (ptyrs-min(ptyrs)) / (max(ptyrs)-min(ptyrs))
   col <- rgb(pal(normTAnom)/255)
@@ -22,6 +16,12 @@ get_SRPlot <- function(type, par, Tanom, ptyrs, stockEnv){
   m <- matrix(c(1, rep(2, 4)))
   layout(m)
   par(mar=c(0,4,1,2))
+  
+  SSBx = seq(0, max(avgSSB, na.rm=TRUE), length.out=100)
+  
+  R <- sapply(1:length(Tanom), function(x)
+    get_recruits(type=type, par=par, SSBx, TAnom_y=Tanom[x], 
+                 stockEnv = stockEnv)$Rhat)
   
   y1 <- rev(cumsum(rep(1/ncol(avgSSB), ncol(avgSSB))))
   y0 <- y1 - 1/ncol(avgSSB)
@@ -37,15 +37,15 @@ get_SRPlot <- function(type, par, Tanom, ptyrs, stockEnv){
   }
   abline(h = y1[-1])
   box()
-  text(x = 0.95*par('usr')[2], y = (y0 + y1) / 2,
-       labels = paste('MP', 1:ncol(avgSSB)), 
-       pos=2, cex = 7/ncol(avgSSB))
+  text(x = par('usr')[1], y = (y0 + y1) / 2,
+       labels = paste0('MP', 1:ncol(avgSSB)), 
+       pos=2, cex = 5/ncol(avgSSB), xpd=NA)
 
   par(mar=c(5,4,0,2))
   matplot(SSBx, R, type='l', col=col, lty=1,
           xlab = 'Spawner biomass', ylab = 'Recruitment',
           ylim = range(0, R, par['R0']),
-          xlim = range(0, SSBx, par['SSBRF0'] * par['R0']))
+          xlim = range(0, par['SSBRF0'] * par['R0']))
   
   # Include reference points for R0 and SSB0 in the plot
   abline(h = par['R0'], 
