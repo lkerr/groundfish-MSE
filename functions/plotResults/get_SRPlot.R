@@ -17,7 +17,8 @@ get_SRPlot <- function(type, par, Tanom, ptyrs, stockEnv){
   layout(m)
   par(mar=c(0,4,1,2))
   
-  SSBx = seq(0, max(avgSSB, na.rm=TRUE), length.out=100)
+  SSBx = seq(0, 1.2*max(avgSSB, par['SSBRF0'] * par['R0'], na.rm=TRUE), 
+             length.out=100)
   
   R <- sapply(1:length(Tanom), function(x)
     get_recruits(type=type, par=par, SSBx, TAnom_y=Tanom[x], 
