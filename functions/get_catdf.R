@@ -11,7 +11,7 @@ get_catdf <- function(df, file){
   
   w <- options('width')
   options(width = 9999)
-  capture.output(mproc, file=file)
+  capture.output(print(mproc, row.names=FALSE, right=FALSE), file=file)
   options(w)
   
 }
