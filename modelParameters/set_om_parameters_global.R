@@ -10,7 +10,7 @@
 debugSink <- FALSE
 
 # Debug using simple temperature trend that reduces variance? (T/F)
-simpleTemperature <- TRUE
+simpleTemperature <- FALSE
 
 # Testing run which uses mprocTest.txt instead of mproc.txt? (T/F)
 mprocTest <- FALSE
@@ -78,8 +78,8 @@ anomFun <- median
 # Scalars to relate the calculated values of reference points to the
 # threshold values. Typically this will be 1/2 for Bmsy and 0.75 for F but
 # these can be changed to examine sensitivity.
-BrefScalar <- 1
-FrefScalar <- 1
+BrefScalar <- 0.5
+FrefScalar <- 0.75
 
 
 #### Output ####
