@@ -122,7 +122,7 @@ in_haddockGB<-data.frame(ACL_haddockGB=seq(0,100000,length.out=20))
 
 # -Single stock prediction- #
 # predict cod catch given cod ACL
-psslm_codGB<-predict(sslm_codGB,in_cod,se.fit=TRUE)
+psslm_codGB<-predict(sslm_codGB,in_codGB,se.fit=TRUE)
 psslm_codGB2<-psslm_codGB %>%
   as_tibble() %>% 
   select(fit) %>% 
@@ -135,7 +135,7 @@ ggplot(psslm_codGB2, aes(x=ACL_codGB,y=Catch_CodGB)) +
   geom_line() + xlab("Cod ACL") + ylab("Catch")
 
 # predict haddock catch given haddock ACL
-psslm_haddockGB<-predict(sslm_haddockGBInt,in_haddock,se.fit=TRUE)
+psslm_haddockGB<-predict(sslm_haddockGBInt,in_haddockGB,se.fit=TRUE)
 psslm_haddockGB2<-psslm_haddockGB %>%
   as_tibble() %>% 
   select(fit) %>% 
@@ -148,19 +148,19 @@ ggplot(psslm_haddockGB2, aes(x=ACL_haddockGB,y=Catch_haddockGB)) +
   geom_line() + xlab("Haddock ACL") + ylab("Catch")
 
 # -Multiple stock prediction- #
-predictvglm(msvglm_codGB,list(ACL_cod=in_cod$ACL_cod),se.fit=TRUE)
-predictvglm(msvglm_both,list(ACL_cod=in_cod$ACL_cod,
-                            ACL_haddockGB=in_haddock$ACL_haddock),se.fit=TRUE)
+predictvglm(msvglm_codGB,list(ACL_codGB=in_codGB$ACL_codGB),se.fit=TRUE)
+predictvglm(msvglm_both,list(ACL_codGB=in_codGB$ACL_codGB,
+                            ACL_haddockGB=in_haddockGB$ACL_haddockGB),se.fit=TRUE)
 
-pred_plot<-predictvglm(msvglm_codGB,list(ACL_cod=in_cod$ACL_cod))
+pred_plot<-predictvglm(msvglm_codGB,list(ACL_codGB=in_codGB$ACL_codGB))
 pred_plot2<-pred_plot %>%
   as_tibble() %>% 
   select(mean1,mean2) %>% 
-  mutate(Catch_Cod=mean1) %>% 
-  mutate(Catch_Haddock=mean2) %>%
-  select(Catch_Cod,Catch_Haddock) %>% 
-  cbind(in_cod) %>% 
-  gather(catch,value, -ACL_cod)
+  mutate(Catch_codGB=mean1) %>% 
+  mutate(Catch_haddock=mean2) %>%
+  select(Catch_codGB,Catch_haddockGB) %>% 
+  cbind(in_codGB) %>% 
+  gather(catch,value, -ACL_codGB)
 
 # plot prediction
 ggplot(pred_plot2, aes(x=ACL_cod,y=value,group=catch,col=catch)) +
