@@ -200,7 +200,11 @@ save(sslm_codGB, file = "sslm_codGB.RData")
 sslm_haddockGB<-sslm_haddockGBInt  # Set intercept model (best fit model per AIC) as haddock sslm model for data files
 save(sslm_haddockGB, file = "sslm_haddockGB.RData")
 
-save(sslm_codGB,sslm_haddockGB, file = "sslm.RData")
+codGB<-sslm_codGB
+haddockGB<-sslm_haddockGB
+save(codGB,haddockGB, file = "sslm.RData")
+#save(sslm_codGB,sslm_haddockGB, file = "sslm.RData")
+
 
 # Multiple stock models
 msvglm<-msvglm_codGB
