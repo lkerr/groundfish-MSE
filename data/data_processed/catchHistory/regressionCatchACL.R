@@ -157,20 +157,20 @@ pred_plot2<-pred_plot %>%
   as_tibble() %>% 
   select(mean1,mean2) %>% 
   mutate(Catch_codGB=mean1) %>% 
-  mutate(Catch_haddock=mean2) %>%
+  mutate(Catch_haddockGB=mean2) %>%
   select(Catch_codGB,Catch_haddockGB) %>% 
   cbind(in_codGB) %>% 
   gather(catch,value, -ACL_codGB)
 
 # plot prediction
-ggplot(pred_plot2, aes(x=ACL_cod,y=value,group=catch,col=catch)) +
+ggplot(pred_plot2, aes(x=ACL_codGB,y=value,group=catch,col=catch)) +
   geom_line() + xlab("Cod ACL") + ylab("Catch")
 
 ##### - Set up prediction for Cod and Haddock ACL model - #####
 # Create ACL combos
-pred_vals<-expand.grid(in_cod$ACL_cod,in_haddock$ACL_haddock)
+pred_vals<-expand.grid(in_codGB$ACL_codGB,in_haddockGB$ACL_haddockGB)
 # Predict
-pred_plot_both<-predictvglm(msvglm_both,list(ACL_cod=pred_vals$Var1,ACL_haddock=pred_vals$Var2))
+pred_plot_both<-predictvglm(msvglm_both,list(ACL_codGB=pred_vals$Var1,ACL_haddockGB=pred_vals$Var2))
 # reorganize data
 pred_plot_both2<-pred_plot_both %>%
   as_tibble() %>% 
@@ -203,6 +203,6 @@ save(sslm_haddockGB, file = "sslm_haddockGB.RData")
 save(sslm_codGB,sslm_haddockGB, file = "sslm.RData")
 
 # Multiple stock models
-# codGB
-colnames(msvglm_codGB@predictors)[1:2]<- c('codGB', 'haddockGB')
+msvglm<-msvglm_codGB
+colnames(msvglm@predictors)[1:2]<- c('codGB', 'haddockGB')
 save(msvglm, file = "msvglm.RData")
