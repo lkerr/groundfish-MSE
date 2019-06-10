@@ -52,11 +52,15 @@ for(r in 1:nrep){
         for(i in 1:nstock){
           
           stock[[i]] <- get_advice(stock = stock[[i]])
-          stock[[i]] <- get_implementationF(type = 'adviceWithError', 
-                                            stock = stock[[i]])
           stock[[i]] <- get_relError(stock = stock[[i]])
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         }
+        
+        obsCatch <- get_implementationF(type = ie_typ, 
+                                        stock = stock)
+        for(i in 1:nstock){
+          stock[[i]] <- RESULT FROM GET IMPLEMENTATION
+        
       }
         
       

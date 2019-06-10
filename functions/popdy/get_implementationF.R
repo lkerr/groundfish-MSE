@@ -14,8 +14,20 @@ get_implementationF <- function(type, stock){
                                      par = ie_F)
       }
       
-    }else if(type == 'econModel'){
+    }else if(type == 'sslm'){
       
+      browser()
+
+
+      stMatch <- sapply(1:length(names(stock)), 
+                        function(i) startsWith(names(stock)[i], 
+                                               prefix=names(sslm)))
+      sapply(1:ncol(stMatch), function(i) which(stMatch[,i]))
+      
+      
+      x <- c('codGBError', 'codGB2', 'haddockGB')
+      y <- c('codGB', 'haddockGB')
+      sapply(1:length(x), function(i) startsWith(x[i], prefix=y))
       
     }else{
       

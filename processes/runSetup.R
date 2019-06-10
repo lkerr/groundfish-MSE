@@ -49,16 +49,16 @@ for(i in 1:nstock){
   # Add name of stock for labeling objects and plots
   tempEnv$stockName <- stockNameList[i]
   
-  # Find the appropriate implementation error models
-  ieFileName <- paste0(tempEnv$ie_typ, '_', tempEnv$stockName, '.Rdata')
-  ieFilePath <- file.path('data/data_processed/ieModels', ieFileName)
-  fpLoad <- try(load(ieFilePath, envir = tempEnv))
-  if(class(fpLoad) == 'try-error'){
-    stop(paste('runSetup: cannot find error implementation model file for',
-               'specified stock. Check stock names in',
-               'modelParameters/stockParameters and be sure they align with',
-               'the file names in data/dataProcessed/ieModels.'))
-  }
+  # # Find the appropriate implementation error models
+  # ieFileName <- paste0(tempEnv$ie_typ, '_', tempEnv$stockName, '.Rdata')
+  # ieFilePath <- file.path('data/data_processed/ieModels', ieFileName)
+  # fpLoad <- try(load(ieFilePath, envir = tempEnv))
+  # if(class(fpLoad) == 'try-error'){
+  #   stop(paste('runSetup: cannot find error implementation model file for',
+  #              'specified stock. Check stock names in',
+  #              'modelParameters/stockParameters and be sure they align with',
+  #              'the file names in data/dataProcessed/ieModels.'))
+  # }
   
   # Turn the temp environment into a list and clean up
   stockPar[[i]] <- as.list(tempEnv)
@@ -69,6 +69,11 @@ for(i in 1:nstock){
 stockNames <- unname(sapply(fileList, function(x) 
                 strsplit(x, 'stockParameters/|\\.R')[[1]][2]))
 
+
+# Load in the implementation error models
+ieFileName <- paste0(ie_typ, '.Rdata')
+ieMod <- file.path('data/data_processed/catchHistory', ieFileName)
+load(ieMod)
 
 
 # Get the run info so the functions work appropriately whether they are

@@ -82,6 +82,14 @@ BrefScalar <- 1
 FrefScalar <- 1
 
 
+#### Implementation ####
+
+# Type of implementation error:
+#   sslm: single species linear model
+#   msvglm: multi-species generalized linear model
+ie_typ <- 'sslm'
+
+
 #### Output ####
 # Years after the management period begins to break up the results. For
 # example, c(10, 20) would result in plots from 0-10 years after the mgmnt
