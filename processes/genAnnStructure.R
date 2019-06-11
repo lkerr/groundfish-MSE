@@ -21,6 +21,7 @@ cmip_dwn <- get_temperatureProj(prj_data = cmip_base,
 # Get the temperature vector
 msyears <- cmip_dwn$YEAR < baseTempYear
 if(useTemp == TRUE){
+  # Temperature years are 50 burns and then 1901-2099
   temp <- c(rep(anomFun(cmip_dwn[msyears,'T']), nburn),
             cmip_dwn[,'T'])
   

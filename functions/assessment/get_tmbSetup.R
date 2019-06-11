@@ -1,8 +1,8 @@
 
 
 get_tmbSetup <- function(stock){
-  
-  
+
+ 
   out <- within(stock, {
 
     # Ensure that TMB will use the Rtools compiler (only windows ... and 
@@ -25,8 +25,23 @@ get_tmbSetup <- function(stock){
     log_ipop_mean <- ipopInfo$lmean
     ipop_dev <- ipopInfo$lLMdevs
     
-# if(y == 151) browser()
-    tmb_dat <- list(
+
+    # Translate R_dev_typ to a number
+    if(R_dev_typ == 'meanDevs'){
+      R_dev_typNum <- 0
+    }else if(R_dev_typ == 'randomWalk'){
+      R_dev_typNum <- 1
+    }else{
+      stop('R_dev_typ not recognized')
+    }
+    
+    if(R_dev_temp){
+      R_dev_tempNum <- 1
+    }else{
+      R_dev_tempNum <- 0
+    }
+    
+    tmb_dat <- try(list(
     
                       # index bounds
                       ncaayear = ncaayear,
@@ -53,8 +68,19 @@ get_tmbSetup <- function(stock){
                       
                       # Survey info
                       slxI = get_dwindow(slxI, sty, y),
-                      timeI = timeI
-    )
+                      timeI = timeI,
+                      
+                      # Environmental data -- standardized (Z-score)
+                      # needs one fewer year because model does not estimate
+                      # year 1 recruitment using Rdevs
+                      TAnom_std = c(scale(get_dwindow(Tanom, sty+1, y))),
+                      
+                      # Type of Rdevs
+                      R_dev_typ = R_dev_typNum,
+                      
+                      # Match R_devs to temp devs in likelihood?
+                      R_dev_tempNum = R_dev_tempNum
+    ))
     
     # file.remove('results/caasink.txt')
     # sapply(1:length(tmb_dat), function(x){
@@ -67,6 +93,7 @@ get_tmbSetup <- function(stock){
     # Parameters on an arithmetic scale
     tmb_par_arith <- list(M = M,
                           R_dev = R_dev,
+                          R_dev_mean = mean(get_dwindow(R, sty, y)),
                           ipop_mean = exp(log_ipop_mean),
                           ipop_dev = ipop_dev,
                           qC = qC,
@@ -87,6 +114,7 @@ get_tmbSetup <- function(stock){
     # tmb_par_arith.
     tmb_par_scale <- c(M = 1, 
                        R_dev = 0, 
+                       R_dev_mean = 1,
                        ipop_mean = 1, 
                        ipop_dev = 0, 
                        qC = 1, 
@@ -114,7 +142,8 @@ get_tmbSetup <- function(stock){
                              function(x) ifelse(tmb_par_scale[x],
                                                 paste0('log_', names(tmb_par)[x]),
                                                 names(tmb_par)[x]))
-    
+
+
     # tmb_par will be used, although starting values may be altered for
     # the model; base is for an easy comparison to the true values
     # (i.e., tmb_par_base is not used later in the code)

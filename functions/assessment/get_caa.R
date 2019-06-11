@@ -22,19 +22,50 @@ get_caa <- function(stock){
     
     # whatever is contained in this list (i.e., not commented out) will be an
     # inactive parameter so the starting value will be used.
-    map_par <- list(
+    
+    toEstimate <- c(
+      # 'log_M',
+      'log_R_dev_mean',
+      'R_dev',
+      'log_ipop_mean',
+      'ipop_dev',
+      'log_qC',
+      'log_qI',
+      'log_selC'
+      # log_oe_sumCW',
+      # 'log_oe_sumIN',
+      # 'log_pe_R'
+    )
+                    
+    
+    map_par_base <- list(
       log_M = factor(NA),
-      # R_dev = factor(rep(NA, ncaayear-1)),
-      # log_ipop_mean = factor(NA),
-      # ipop_dev = factor(rep(NA, nage)),
-      # log_qC = factor(NA),
-      # log_qI = factor(NA),
-      # log_selC = factor(rep(NA, length(selC))),
+      log_R_dev_mean = factor(NA),
+      R_dev = factor(rep(NA, ncaayear-1)),
+      log_ipop_mean = factor(NA),
+      ipop_dev = factor(rep(NA, nage)),
+      log_qC = factor(NA),
+      log_qI = factor(NA),
+      log_selC = factor(rep(NA, length(selC))),
       log_oe_sumCW = factor(NA),
       log_oe_sumIN = factor(NA),
       log_pe_R = factor(NA)
     )
     
+
+    map_par <- map_par_base[-match(toEstimate, names(map_par_base))]
+
+    if(R_dev_typ == 'randomWalk'){
+      if(!'log_R_dev_mean' %in% names(map_par)){
+        log_R_dev_meanTemp <- list(log_R_dev_mean = factor(NA))
+        pos <- ifelse('log_M' %in% names(map_par),
+                      which('log_M' == names(map_par)),
+                      1)
+        map_par <- append(x = map_par, 
+                          values = log_R_dev_meanTemp, 
+                          after = pos)
+      }
+    }
     
     
     # map_par <- list() # all parameters active
@@ -67,8 +98,7 @@ get_caa <- function(stock){
     
     data <- tmb_dat
     parameters <- tmb_par
-    
-   
+  
     # make an objective function
     obj <- MakeADFun(data = data,
                      parameters = parameters,
@@ -77,7 +107,7 @@ get_caa <- function(stock){
                      silent = TRUE
     )
     
-    
+   
     # run the model using the R function nlminb()
     opt <- try(nlminb(start=obj$par, 
                       objective=obj$fn, 

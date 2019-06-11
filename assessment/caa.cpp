@@ -38,12 +38,22 @@ Type objective_function<Type>::operator() ()
   DATA_MATRIX(slxI); // survey selectivity
   DATA_SCALAR(timeI); // survey timing as proportion of year
   
+  // environmental data
+  DATA_VECTOR(TAnom_std); // standardized (z-score) temperature anomaly
+  
+  // Type of recruitment deviations
+  DATA_INTEGER(R_dev_typ);
+  
+  // Use temperature to inform Rdevs? 0:no 1:yes
+  DATA_INTEGER(R_dev_tempNum)
+  
   
   // PARAMETERS (and arithmetic scale containers)
   PARAMETER(log_M);
     matrix<Type> M(ncaayear,nage);
     M.fill(exp(log_M));
   PARAMETER_VECTOR(R_dev);
+  PARAMETER(log_R_dev_mean);
   PARAMETER(log_ipop_mean);
   PARAMETER_VECTOR(ipop_dev);
  
@@ -99,7 +109,6 @@ Type objective_function<Type>::operator() ()
   matrix<Type> paaCN(ncaayear,nage);  // predicted catch paa
   matrix<Type> paaIN(ncaayear,nage);  // predicted index paa
   
-  
 
   // Calculate selectivity -- note that TMB seems to be picky about
   // using subtraction on the same line as vector multiplications
@@ -138,7 +147,11 @@ Type objective_function<Type>::operator() ()
   for(int y=1; y<ncaayear; y++){
     // note Rdevs go from 0 to n-1 so here R_dev(y-1) does actually
     // refer to the Rdev in the last year.
-    R(y) = exp(log(R(y-1)) + R_dev(y-1));
+    if(R_dev_typ == 0){
+      R(y) = exp(log_R_dev_mean + R_dev(y-1));
+    }else{
+      R(y) = exp(log(R(y-1)) + R_dev(y-1));
+    }
   }
 
 
@@ -179,8 +192,13 @@ Type objective_function<Type>::operator() ()
     -sum(dnorm(log(obs_sumCW), log(sumCW), oe_sumCW, true));
   Type NLL_sumIN = 
     -sum(dnorm(log(obs_sumIN), log(sumIN), oe_sumIN, true));
-  Type NLL_R_dev =
-    -sum(dnorm(R_dev, 0, pe_R, true));
+  
+  Type NLL_R_dev;
+  if(R_dev_tempNum == 0){
+    NLL_R_dev = -sum(dnorm(R_dev, 0, pe_R, true));
+  }else{
+    NLL_R_dev = -sum(dnorm(R_dev, TAnom_std, pe_R, true));
+  }
 
   // TMB doesn't seem to like doing calculations inside the multinomial
   // function so use temporary vectors first.

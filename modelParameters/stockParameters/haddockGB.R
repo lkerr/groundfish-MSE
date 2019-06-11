@@ -90,7 +90,15 @@ startCV <- 1.5
 
 # scalar to bring pop numbers closer to zero (necessary
 # for model fitting)
-caaInScalar <- 1000  
+caaInScalar <- 1000
+
+# Type of recruitment deviations
+# option 1: 'meanDevs' (deviations from a mean on a log scale)
+# option 2: 'randomWalk' (random walk)
+R_dev_typ <- 'randomWalk'
+
+# Use temperature when fitting recruitment deviations? T/F
+R_dev_temp <- TRUE
 
 
 #### Error parameters ####
