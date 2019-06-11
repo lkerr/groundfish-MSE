@@ -27,3 +27,6 @@ data/data_raw/*
 *.pdf
 *.tex
 *.html
+=======
+*.*~
+*.dta
