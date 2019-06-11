@@ -49,9 +49,12 @@ for(r in 1:nrep){
       # if burn-in period is over...
       if(y > fmyearIdx-1){
 
+        
         for(i in 1:nstock){
-          
           stock[[i]] <- get_advice(stock = stock[[i]])
+        }
+        
+        for(i in 1:nstock){
           stock[[i]] <- get_implementationF(type = 'adviceWithError', 
                                             stock = stock[[i]])
           stock[[i]] <- get_relError(stock = stock[[i]])
