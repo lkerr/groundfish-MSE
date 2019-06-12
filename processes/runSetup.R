@@ -4,7 +4,7 @@
 # entire simulation.
 
 # load all the functions
-ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
+ffiles <- list.files(path='functions/', pattern="^.*\\.R$",full.names=TRUE, recursive=TRUE)
 invisible(sapply(ffiles, source))
 
 
