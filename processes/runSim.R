@@ -25,6 +25,9 @@ for(r in 1:nrep){
   
   #### Top MP loop ####
   for(m in 1:nrow(mproc)){
+    #this is temporary, we should add a column to mproc.txt
+    mproc$ImplementationClass<-"Economic"
+    mproc$ImplementationClass<-" "
     
     # set.seed(rsd)
     
@@ -50,16 +53,24 @@ for(r in 1:nrep){
       if(y >= fmyearIdx){
 
         
-        for(i in 1:nstock){
-          stock[[i]] <- get_advice(stock = stock[[i]])
+        if(mproc$ImplementationClass=="Economic"){ #Run the economic model
+          for(i in 1:nstock){
+            stock[[i]] <- get_advice(stock = stock[[i]])
+          }
+          # ---- Run the economic model here ----
+          # ---- this takes the place of the get_implementationF----
+          # ---- not sure about get_relError or get_fill_RepArrays ----
+
+        } else{ # Don't Run the economic model
+          for(i in 1:nstock){
+            stock[[i]] <- get_advice(stock = stock[[i]])
+            stock[[i]] <- get_implementationF(type = 'adviceWithError', 
+                                              stock = stock[[i]])
+            stock[[i]] <- get_relError(stock = stock[[i]])
+            stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
+          }
         }
         
-        for(i in 1:nstock){
-          stock[[i]] <- get_implementationF(type = 'adviceWithError', 
-                                            stock = stock[[i]])
-          stock[[i]] <- get_relError(stock = stock[[i]])
-          stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
-        }
       }
         
       
