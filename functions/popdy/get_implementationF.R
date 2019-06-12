@@ -14,9 +14,6 @@ get_implementationF <- function(type, stock){
                                      par = ie_F)
       }
       
-    }else if(type == 'econModel'){
-      
-      
     }else{
       
       stop('get_implementationF: type not recognized')
