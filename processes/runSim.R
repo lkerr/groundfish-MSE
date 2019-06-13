@@ -90,6 +90,10 @@ omvalGlobal <- sapply(1:nstock, function(x) stock[[x]]['omval'])
 names(omvalGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
 save(omvalGlobal, file=paste0('results/sim/omvalGlobal', td2, '.Rdata'))
 
+
+###### Silly way to get at relative error R comparison
+omvalGlobal$codGB$relE_R_dev[,,1:175] <- NA
+
 if(runClass != 'HPCC'){
   omparGlobal <- readLines('modelParameters/set_om_parameters_global.R')
   cat('\n\nSuccess.\n\n',
@@ -105,7 +109,6 @@ if(runClass != 'HPCC'){
         file='results/runInfo.txt', sep='\n', append=TRUE)
   }
 }
-
 
 
 if(runClass != 'HPCC'){

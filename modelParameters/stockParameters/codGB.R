@@ -99,7 +99,7 @@ caaInScalar <- 1000
 R_dev_typ <- 'randomWalk'
 
 # Use temperature when fitting recruitment deviations? T/F
-R_dev_temp <- FALSE
+R_dev_temp <- TRUE
 
 
 #### Error parameters ####
