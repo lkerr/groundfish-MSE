@@ -1,6 +1,6 @@
 ---
-title: 'Untitile Econ Paper II '
-author: Birkenbach, Truesdel(t), Cummings(t), Kerr(t), Lee, Fay(t)  
+title: 'Untitled Econ Paper II '
+author: Birkenbach, Truesdell, Cummings(t), Kerr, Lee, Fay(t)  
 csl: canadian-journal-of-fisheries-and-aquatic-sciences.csl
 output:
   pdf_document:
@@ -145,7 +145,7 @@ Single species models with random implementation error cannot credibly model int
 
 We realistically allow for leakages out of the main fishery into other fisheries [@Cunningham2016].  Because our model is grounded in a structural model of individuals's utility maximization, instead of a reduced form model of metiers, we are better able to predict changes in behavior that result from changes in policies.  For example, we can examine policies that include tradable output controls (ITQs), non-tradable output controls (IFQs), and certain input controls (Days-at-Sea).  We also do some other cool stuff.
 
-
+What's the take-home? Even without an ecological linkage (predator-prey or competition), a single species model of $F$ with implementation error lead to very recommendations compared to a multispecies model?
 
 
 
