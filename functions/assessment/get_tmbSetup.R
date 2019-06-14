@@ -73,7 +73,9 @@ get_tmbSetup <- function(stock){
                       # Environmental data -- standardized (Z-score)
                       # needs one fewer year because model does not estimate
                       # year 1 recruitment using Rdevs
-                      TAnom_std = c(scale(get_dwindow(Tanom, sty+1, y))),
+                      # TAnom_std = c(scale(get_dwindow(Tanom, sty+1, y))),
+                      TAnom_std = get_RWdevs(get_dwindow(Tanom, sty, y),
+                                             log=FALSE),
                       
                       # Type of Rdevs
                       R_dev_typ = R_dev_typNum,
@@ -106,7 +108,8 @@ get_tmbSetup <- function(stock){
                           # account only for the random error and are not based on 
                           # a S/R model like they are in the simulation so you need 
                           # extra variance.
-                          pe_R = pe_R * 5
+                          pe_R = pe_R * 5,
+                          slp_Tanom = -1
     )
     
     # Vector indicating whether each of the parameters should be on a log
@@ -122,7 +125,8 @@ get_tmbSetup <- function(stock){
                        selC = 1, 
                        oe_sumCW = 1, 
                        oe_sumIN = 1, 
-                       pe_R = 1)
+                       pe_R = 1,
+                       slp_Tanom = 0)
     
     # Check for consistency in tmb_par_arith and tmb_par_scale
     if(any(names(tmb_par_arith) != names(tmb_par_scale))){

@@ -67,6 +67,16 @@ get_caa <- function(stock){
       }
     }
     
+    if(!R_dev_temp){
+      if(!'slp_Tanom' %in% names(map_par)){
+        slp_Tanom <- list(slp_Tanom = factor(NA))
+        pos <- which('log_pe_R' == names(map_par))
+        map_par <- append(x = map_par, 
+                          values = slp_Tanom, 
+                          after = pos)
+      }
+    }
+    
     
     # map_par <- list() # all parameters active
     
@@ -117,16 +127,16 @@ get_caa <- function(stock){
                       control=list(iter.max = 100000,
                                    eval.max = 1000)))
     
-    
+
     
     # estimates and standard errors (run after model optimization)
-    sdrep <- try(sdreport(obj))
-    if(class(sdrep)[1] == 'try-error') browser()
+    sdrep <- sdreport(obj)
     
     
     # list of variables exported using REPORT() function in c++ code
     rep <- obj$report()
     
+if(y == 199) browser()
     # Report the gradients for each of the estimated parameters and
     # the maximum gradient
     rep$gradient.fixed <- sdrep$gradient.fixed

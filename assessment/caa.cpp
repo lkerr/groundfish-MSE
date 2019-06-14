@@ -73,6 +73,7 @@ Type objective_function<Type>::operator() ()
   PARAMETER(log_oe_sumCW);
   PARAMETER(log_oe_sumIN);
   PARAMETER(log_pe_R);
+  PARAMETER(slp_Tanom);
   // PARAMETER(log_oe_ipop_dev);
   Type oe_sumCW = exp(log_oe_sumCW);
   Type oe_sumIN = exp(log_oe_sumIN);
@@ -197,7 +198,7 @@ Type objective_function<Type>::operator() ()
   if(R_dev_tempNum == 0){
     NLL_R_dev = -sum(dnorm(R_dev, 0, pe_R, true));
   }else{
-    NLL_R_dev = -sum(dnorm(R_dev, TAnom_std, pe_R, true));
+    NLL_R_dev = -sum(dnorm(R_dev, TAnom_std*slp_Tanom, pe_R, true));
   }
 
   // TMB doesn't seem to like doing calculations inside the multinomial

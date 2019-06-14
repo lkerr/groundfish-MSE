@@ -9,15 +9,19 @@
 # x: the vector that you want the random walk from
 
 
-get_RWdevs <- function(x){
+get_RWdevs <- function(x, log=TRUE){
   
-  lRWdev <- numeric(length(x)-1)
+  dev <- numeric(length(x)-1)
   
   for(i in 2:length(x)){
-    lRWdev[i-1] <- log(x[i] / x[i-1])
+    if(log){
+      dev[i-1] <- log(x[i] / x[i-1])
+    }else{
+      dev[i-1] <- x[i] - x[i-1]
+    }
   }
   
-  return(lRWdev)
+  return(dev)
   
 }
 
