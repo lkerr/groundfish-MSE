@@ -136,7 +136,6 @@ get_caa <- function(stock){
     # list of variables exported using REPORT() function in c++ code
     rep <- obj$report()
     
-if(y == 199) browser()
     # Report the gradients for each of the estimated parameters and
     # the maximum gradient
     rep$gradient.fixed <- sdrep$gradient.fixed
