@@ -17,9 +17,6 @@ get_tmbSetup <- function(stock){
     
     sty <- y-ncaayear+1
     
-    # get the random walk deviations
-    R_dev <- get_RWdevs(get_dwindow(R, sty, y))
-    
     # get the initial population mean and deviations
     ipopInfo <- get_LMdevs(J1N[sty,] / caaInScalar)
     log_ipop_mean <- ipopInfo$lmean
@@ -29,8 +26,13 @@ get_tmbSetup <- function(stock){
     # Translate R_dev_typ to a number
     if(R_dev_typ == 'meanDevs'){
       R_dev_typNum <- 0
+      # Get the deviations from the mean
+      log_R_dev_mean <- log(mean(get_dwindow(R, sty, y)))
+      R_dev <- log(get_dwindow(R, sty, y)) - log_R_dev_mean
     }else if(R_dev_typ == 'randomWalk'){
       R_dev_typNum <- 1
+      # get the random walk deviations
+      R_dev <- get_RWdevs(get_dwindow(R, sty, y))
     }else{
       stop('R_dev_typ not recognized')
     }
@@ -187,8 +189,8 @@ get_tmbSetup <- function(stock){
                              function(x) ifelse(tmb_par_scale[x],
                                                 paste0('log_', names(tmb_ub)[x]),
                                                 names(tmb_ub)[x]))
-tmb_lb$R_dev <- tmb_lb$R_dev*3    
-tmb_ub$R_dev <- tmb_ub$R_dev*3
+tmb_lb$R_dev <- tmb_lb$R_dev*2    
+tmb_ub$R_dev <- tmb_ub$R_dev*2
 tmb_ub$ipop_dev <- tmb_ub$ipop_dev*2
 tmb_lb$ipop_dev <- tmb_lb$ipop_dev*2
     

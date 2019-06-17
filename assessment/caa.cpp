@@ -196,7 +196,7 @@ Type objective_function<Type>::operator() ()
   
   Type NLL_R_dev;
   if(R_dev_tempNum == 0){
-    NLL_R_dev = -sum(dnorm(R_dev, 0, pe_R*2, true));
+    NLL_R_dev = -sum(dnorm(R_dev, 0, pe_R, true));
   }else{
     NLL_R_dev = -sum(dnorm(R_dev, TAnom_std*slp_Tanom, pe_R, true));
   }

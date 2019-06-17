@@ -18,7 +18,7 @@ get_relError <- function(stock){
       relE_ipop_mean[y] = get_relE(rep$log_ipop_mean, log_ipop_mean)
       relE_ipop_dev[y] = mean(get_relE(rep$ipop_dev, ipop_dev))
  ##### -- remove tail ----- just looking at last 3 years relE R
-      relE_R_dev[y] = mean(tail(get_relE(rep$R_dev, R_dev),3))
+      relE_R_dev[y] = median(tail(get_relE(rep$R_dev, R_dev),3))
     } 
   })
 

@@ -36,12 +36,17 @@ get_caa <- function(stock){
       # 'log_oe_sumIN',
       # 'log_pe_R'
     )
-                    
     
+    if(R_dev_typ == 'randomWalk'){
+      R_devFac <- factor(rep(NA, ncaayear-1))
+    }else{
+      R_devFac <- factor(rep(NA, ncaayear))
+    }
+
     map_par_base <- list(
       log_M = factor(NA),
       log_R_dev_mean = factor(NA),
-      R_dev = factor(rep(NA, ncaayear-1)),
+      R_dev = R_devFac,
       log_ipop_mean = factor(NA),
       ipop_dev = factor(rep(NA, nage)),
       log_qC = factor(NA),
@@ -131,7 +136,7 @@ get_caa <- function(stock){
     
     # estimates and standard errors (run after model optimization)
     sdrep <- sdreport(obj)
-# browser()    
+# if(y == 180) browser()
     
     # list of variables exported using REPORT() function in c++ code
     rep <- obj$report()
