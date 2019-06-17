@@ -131,7 +131,7 @@ get_caa <- function(stock){
     
     # estimates and standard errors (run after model optimization)
     sdrep <- sdreport(obj)
-    
+# browser()    
     
     # list of variables exported using REPORT() function in c++ code
     rep <- obj$report()
