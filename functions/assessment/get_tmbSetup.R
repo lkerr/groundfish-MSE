@@ -189,10 +189,10 @@ get_tmbSetup <- function(stock){
                              function(x) ifelse(tmb_par_scale[x],
                                                 paste0('log_', names(tmb_ub)[x]),
                                                 names(tmb_ub)[x]))
-tmb_lb$R_dev <- tmb_lb$R_dev*2    
-tmb_ub$R_dev <- tmb_ub$R_dev*2
-tmb_ub$ipop_dev <- tmb_ub$ipop_dev*2
-tmb_lb$ipop_dev <- tmb_lb$ipop_dev*2
+# tmb_lb$R_dev <- tmb_lb$R_dev*2    
+# tmb_ub$R_dev <- tmb_ub$R_dev*2
+# tmb_ub$ipop_dev <- tmb_ub$ipop_dev*2
+# tmb_lb$ipop_dev <- tmb_lb$ipop_dev*2
     
     # make any deviations have identical scales across all
     devIdx <- match(c('R_dev', 'ipop_dev'),  names(tmb_lb))

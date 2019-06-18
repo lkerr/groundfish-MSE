@@ -96,7 +96,7 @@ caaInScalar <- 1000
 # Type of recruitment deviations
 # option 1: 'meanDevs' (deviations from a mean on a log scale)
 # option 2: 'randomWalk' (random walk)
-R_dev_typ <- 'meanDevs'
+R_dev_typ <- 'randomWalk'
 
 # Use temperature when fitting recruitment deviations? T/F
 R_dev_temp <- FALSE
