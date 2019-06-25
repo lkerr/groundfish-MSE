@@ -136,7 +136,11 @@ get_caa <- function(stock){
     
     # estimates and standard errors (run after model optimization)
     sdrep <- sdreport(obj)
-# if(y == 180) browser()
+if(y == 195) browser()
+    
+    save.image(file='C:/Users/struesdell/Desktop/imageGlobal.RData')
+    save(list=ls(), file='C:/Users/struesdell/Desktop/imageLocal.RData')
+    
     
     # list of variables exported using REPORT() function in c++ code
     rep <- obj$report()

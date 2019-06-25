@@ -6,7 +6,7 @@ stockName <- 'codGB'
 
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.                                              
-burnFmsyScalar <- 3.0
+burnFmsyScalar <- 1.5
 burnFsd <- 0.3
 
 
@@ -18,7 +18,7 @@ page <- 12
 #### Life history parameters ####
 
 # length-at-age parameters -- see get_lengthAtAge for including covariates
-laa_par <- c(Linf=114.1, K=0.22, t0=0.17, beta1=5)
+laa_par <- c(Linf=114.1, K=0.22, t0=0.17, beta1=0)
 laa_typ <- 'vonB'
 
 # weight-length parameters
@@ -105,19 +105,19 @@ R_dev_temp <- FALSE
 #### Error parameters ####
 
 # observation error levels
-oe_sumCW <- 0.25#0.05
+oe_sumCW <- 0.15
 oe_sumCW_typ <- 'lognorm'
-oe_paaCN <- 25#1000
+oe_paaCN <- 1000
 oe_paaCN_typ <- 'multinomial'
-oe_sumIN <- 0.4#0.2
+oe_sumIN <- 0.3
 oe_sumIN_typ <- 'lognorm'
-oe_paaIN <- 25#1000
+oe_paaIN <- 1000
 oe_paaIN_typ <- 'multinomial'
-oe_effort <- 0.2#0.01
+oe_effort <- 0.1
 oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 0.5
+pe_R <- 0.15
 
 # implementation error of fishing mortality
 ie_F <- 0
