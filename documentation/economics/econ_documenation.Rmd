@@ -12,6 +12,7 @@ output:
   word_document: null
 bibliography: minyang_bib.bib
 ---
+<!---Don't read, or touch this part -->
 
 
 ```{r setup, include=FALSE}
@@ -108,6 +109,7 @@ scale_colour_Publication <- function(...){
 
 }
 ```
+<!---End of the don't read, or touch this part -->
 
 \doublespacing
 
@@ -115,9 +117,17 @@ scale_colour_Publication <- function(...){
 
 A. Birkenbach: University of Delaware, College of Earth, Ocean, and Environment Street, 207 Robinson Hall, Newark , DE 19716. abirken@udel.edu tel: (302) 831-4664 Fax: (XXX) YYY-ZZZZ
 
+S. Truesdell:
+
+J. Cummins: 
+
+L. Kerr: 
+
+G. Fay: 
+
 M. Lee: NOAA Fisheries, Northeast Fisheries Science Center. 166 Water St. Woods Hole MA. 02543.  Min-Yang.Lee@noaa.gov 
 
-O. Authors:  
+
 
 This draft manuscript is distributed solely for purposes of scientific peer review.
 
@@ -129,17 +139,34 @@ Funding acknowledgements:
 To be reasonably accurate, a multispecies simulation model must account for techincal interactions. We do that for the northeast US groundfish fishery.  This allows for fishing mortality to be systematically different from the level set by fishery managers.
 
 #Introduction
-Many simulation models used to inform fisheries managers take a phenomenological (reduced-form) approach [@Fenichel2013] to the process by which humans kill fish.  For example, @punt2008evaluation, @Deroba2012Evaluating, and @Deroba2019 assume that the actual fishing mortality rate is equal to the fishing mortality rate set by the manager as modified by an idiosycratic error term.  The distribution of this error term is approximated from historical data.  @Fulton2011a note that implementation error encompassesto three distinct processes: (1) decisions where scientific advice on stock status is subordinated; (2) lack of direct regulatory control of fishing mortality due to inadequate enforcement or a lack of a direct link between controls (regulations) and harvest; and (3) unexpected behavioural responses of resource users.  
+Many of the complex simulation models used to inform fisheries managers take a phenomenological (reduced-form) approach [@Fenichel2013] to the process by which humans kill fish.  For example, @punt2008evaluation, @Deroba2012Evaluating, and @Deroba2019  assume that the actual fishing mortality rate is equal to the fishing mortality rate, set by the manager, but modified by an idiosycratic error term.  The distribution of this error term is approximated from historical data.  This abstract representation of fishing fleets allow for focus on biological and ecosystem complexities.  @Fulton2011a note that implementation error encompassesto three distinct processes: (1) decisions where scientific advice on stock status is subordinated; (2) lack of direct regulatory control of fishing mortality due to inadequate enforcement or a lack of a direct link between controls (regulations) and harvest; and (3) unexpected behavioural responses of resource users.  
 
 We aim to address (2) and (3); we will not address (1).  We pair a mechanistic (structural) model of production in a multispecies fishery with stock dynamics and assessment models. Our general approach is similar to that of @Ono2018.  We focus on one specific way that technical interactions (or jointness in production) matter: the bycatch or "choke stock" story[^choke]  in multispecies fishery.[^diffs] We apply the model to the northeast US multispecies fishery, commonly referred to as groundfish.  Participants in this fishery have been observed to change their  behavior in response to recent policy changes: @Scheld2018 and @Holzer2019 document changes in fishing behavior after changes in management.
+
+[^choke]: we are not actually going to call this the "choke stock" story.
+
+[^diffs]: We're doing something pretty different from @Ono2018.  Structural model instead of metier model. No "expansion factor" hacks for behavioral changes.  Fish stock model is fine.  
+
+When subsets of fishing vessels can be assumed homogeneous, the metier based approach [cf:@MerzereadYYYY,@Guillen2014, @Ono2018] can be applied.  The downside is ZZZZ.  Metier based approaches often classify, in part, on outcome variables (catch composition, gear-area fished, etc.)
+
+@Nielsen2018 review thirty-five integrated ecological-economic fisheries models: three (DISPLACE, IAM, and ELFSIM)  include models of individual fishing vessels, the rest use a metier or larger aggregation.  
+
+DISPLACE includes a phenomenological model of vessel behavior at a very fine spatial and temporal scale [@Bastardie2010a]. 
+
+Basic ELFSIM -- The (base) model is at the metier, but this has been updated with a quota market model [@Little2007, @Little2009].  Two species, vessels assumed will stop fishing if it runs out of coral trout quota. 
+
+IAM is listed as individual based, but that does not appear to be the case in Nephrops, Main documentation (@MerzereadYYYY), or biscay sole @Guillen2013estimating.  @Belanger2018 seems to be a very large IAM improvement, although there appears to be some funkiness.  @Belanger2018 maintains no "choke stocks", which is very reasonable based on historical outcomes as long as the policies are "local."  <!-- Given @Belanger2018, and the quota market model in @Little2009, we'll have to thread the needle carefully with pitching the improvement of paper -->.
+
+@Weninger2019 describes some shortcomings from EwE, Atlantis, FishRent, FCube, Temas, and DISPLACE as:
+
+> In sum, two key commonalities arise in fishery sector models: (1) restrictive assumptions for the structure of the multiple-species harvest technology in the form of fixed output proportions and (2) use of user-specified and ad hoc rules to characterize fishing behavior which are commonly estimated by naive prediction, i.e., next period behavior will be equal to last period behavior. I next argue that robust prediction of commercial fishing outcomes in complex and decentralized fishery environments requires less restrictive assumptions for multiple-species harvesting technologies and adoption of rational decision rules that are consistent with regulatory instruments used to manage real world fisheries
+
+
 
 
 @Ono2018 states:
 >Some MSE frameworks include some elements of fleet dynamics (e.g., Atlantis (Fulton et al. 2011), BIOMAS (Ives et al. 2013), FLR (Kell et al. 2007), and ISIS-FISH (Pelletier et al. 2009)), but a multi- species fishery quota allocation model with trade-offs and con- straints (i.e., based on constrained optimization) as well as the temporal dynamics of technical interactions has never been included in an MSE.
 
-[^choke]: we are not actually going to call this the "choke stock" story.
-
-[^diffs]: We're doing something pretty different from @Ono2018.  Structural model instead of metier model. No "expansion factor" hacks for behavioral changes.  Fish stock model is fine.  
 
 Single species models with random implementation error cannot credibly model interrelated fisheries with technical interactions. 
 
