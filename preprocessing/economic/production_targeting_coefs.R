@@ -19,8 +19,8 @@ savepath <- 'data/data_processed/econ/'
 
 
 targeting_coef_source<-"asclogits_ALL_forR.txt" #(I'll just pull the first GILLNET and FIRST TRAWL coefs)
-production_coef_pre<-"production_regs_actual_pre_forR.txt"
-production_coef_post<-"production_regs_actual_post_forR.txt"
+production_coef_pre<-"production_regs_actual_pre_forR2.txt"
+production_coef_post<-"production_regs_actual_post_forR2.txt"
 
 
 
@@ -107,10 +107,11 @@ production_coefs<-separate(production_coefs,model,into=c("gearcat","spstock2","p
 ## Rename columns 
 ### First, Unlabel.  Strip out the equal signs. Prepend "beta_" to all
 colnames(production_coefs)[colnames(production_coefs)=="Number of Crew (Log)"] <- "log_crew"
-colnames(production_coefs)[colnames(production_coefs)=="Trip Length (Log)"] <- "log_trip_days"
+colnames(production_coefs)[colnames(production_coefs)=="Trip Length Days (Log)"] <- "log_trip_days"
 colnames(production_coefs)[colnames(production_coefs)=="Cumulative Harvest (Log)"] <- "logh_cumul"
 colnames(production_coefs)[colnames(production_coefs)=="Primary Target"] <- "primary"
 colnames(production_coefs)[colnames(production_coefs)=="Secondary Target"] <- "secondary"
+colnames(production_coefs)[colnames(production_coefs)=="Trawl Survey Biomass (Log)"]<- "log_survey"
 colnames(production_coefs)<- tolower(gsub("=","",colnames(production_coefs)))
 
 
@@ -122,6 +123,10 @@ colnames(production_coefs)[5:ncol(production_coefs)-1]<-paste0("beta_",colnames(
 production_coefs$gearcat<-tolower(production_coefs$gearcat)
 production_coefs$spstock2<-tolower(production_coefs$spstock2)
 production_coefs$post<-as.numeric(production_coefs$post)
+
+############ I think the safest thing to do is fill any NA coefficients with zeros.
+production_coefs[is.na(production_coefs)] <- 0
+############ In the data, fill any corresponding NAs also with zeros -- this would mostly be biomass or fishing year
 
 save(production_coefs, file=file.path(savepath, "production_coefs.RData"))
 
