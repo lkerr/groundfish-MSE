@@ -16,7 +16,6 @@ if(runClass != 'HPCC'){
 }
 
 #### Top rep Loop ####
-
 for(r in 1:nrep){
 
   # Use the same random numbers for each of the management strategies
@@ -26,9 +25,7 @@ for(r in 1:nrep){
   #### Top MP loop ####
   for(m in 1:nrow(mproc)){
     #this is temporary, we should add a column to mproc.txt
-    mproc$ImplementationClass<-"Economic"
-    mproc$ImplementationClass<-" "
-    
+
     # set.seed(rsd)
     
     
@@ -61,13 +58,16 @@ for(r in 1:nrep){
           # ---- this takes the place of the get_implementationF----
           # ---- not sure about get_relError or get_fill_RepArrays ----
 
-        } else{ # Don't Run the economic model
+        } else if(mproc$ImplementationClass=="StandardFisheries"){
           for(i in 1:nstock){
             stock[[i]] <- get_advice(stock = stock[[i]])
             stock[[i]] <- get_implementationF(type = 'adviceWithError', 
                                               stock = stock[[i]])
             stock[[i]] <- get_relError(stock = stock[[i]])
             stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
+            }
+          }else{
+            #Add a warning about invalid ImplementationClass
           }
         }
         
@@ -75,7 +75,6 @@ for(r in 1:nrep){
         
       
     }
-  }
 }
 
 
