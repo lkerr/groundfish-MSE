@@ -52,9 +52,9 @@
 get_perRecruit <- function(parmgt, parpop, 
                            nage=100, nF=1000, nFrep=100){
   
-  mat <- c(0.02,0.32,0.90,0.99,1,1,1,1,1,1)
-  sel <- c(0.01, 0.11, 0.50, 0.89, 0.98, 1,1,1,1,1)
-  waa <- matrix(c(0.285,0.849,1.679,2.446,3.257,4.151,4.777,5.809,7.519,13.045), 
+  parpop$mat <- c(0.02,0.32,0.90,0.99,1,1,1,1,1,1)
+  parpop$sel <- c(0.01, 0.11, 0.50, 0.89, 0.98, 1,1,1,1,1)
+  parpop$waa <- matrix(c(0.285,0.849,1.679,2.446,3.257,4.151,4.777,5.809,7.519,13.045),
                 nrow=1)
   
   if(is.null(parpop$mat) & parmgt$FREF_TYP == 'SPR'){
@@ -144,7 +144,7 @@ get_perRecruit <- function(parmgt, parpop,
     
     # find the F @ the specified level of F_X%
     Fref <- F_full[which.min(abs(SSBR_ratio - parmgt$FREF_PAR0))]
-    
+
     # SSB / R at the reference point
     SSBatRP <- SSB[which.min(abs(SSBR_ratio - parmgt$FREF_PAR0))]
 
@@ -167,6 +167,8 @@ get_perRecruit <- function(parmgt, parpop,
               RPlevel = parmgt$FREF_PAR0,
               RPvalue = Fref,
               SSBvalue = SSBatRP)
+
+  return(out)
   
 }
 
