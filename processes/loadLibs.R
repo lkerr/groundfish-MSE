@@ -24,6 +24,7 @@ if(runClass == 'HPCC'){
   require(forcats, lib.loc='../Rlib/')
   require(readr, lib.loc='../Rlib/')
   require(tidyverse, lib.loc='../Rlib/')
+  require(dplyr, lib.loc='../Rlib/')
   
 }else{
   
