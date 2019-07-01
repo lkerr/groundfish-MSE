@@ -16,6 +16,7 @@ recT <- read.csv(file='documentation/stockRecruit/data/recT.csv',
                  header=TRUE)
 recT$SSBRF0 <- recT$SSBRF0 / 1000
 recT$REC <- recT$REC000S * 1000
+# recT <- subset(recT, YEAR > 1985)
 ```
 
 # Analysis of Cod stock-recruit data (Beverton-Holt steepness version)
@@ -39,7 +40,7 @@ codPar <- list(recDat = recT,
             
                start = c(log_h = log(0.5),
                          log_R0 = log(2e7),
-                         beta1 = 0.2,
+                         beta1 = 0,
                          beta2 = 0,
                          beta3 = 0,
                          log_sigR = log(0.3)),
@@ -62,9 +63,9 @@ codPar <- list(recDat = recT,
                # fix at starting value should have value of 0
                estPar = c(log_h = 1, 
                           log_R0 = 1, 
-                          beta1 = 1, 
+                          beta1 = 0, 
                           beta2 = 0, 
-                          beta3 = 0, 
+                          beta3 = 1, 
                           log_sigR = 1))
 
 parTab <- as.data.frame(round(do.call(cbind, codPar[3:6]), 2))
