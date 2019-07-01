@@ -1,6 +1,8 @@
 clear
-import delimited "catchHist.csv"
 
+*import delimited "catchHist.csv"
+
+import delimited C:\Users\Min-Yang.Lee\Desktop\catchHist.csv, clear 
 foreach var of varlist commercial sector smallmesh commonpool herringfishery recreational scallopfishery statewater other{
 replace `var'="0" if strmatch(`var',"NA")
 }
@@ -38,7 +40,7 @@ replace spstock2="Wolffish" if strmatch(stock,"wolffish")
 replace spstock2="OceanPout" if strmatch(stock,"ocean pout")
 replace spstock2="WitchFlounder" if strmatch(stock,"witch flounder")
 
-
+replace total=6700 if year==2012 & spstock2=="CodGOM" & data_type=="ACL"
 /*
 RedSilverOffshoreHake
 Other
@@ -51,11 +53,13 @@ SpinyDogfish
 
 */
 
+
+
 collapse (sum) total commercial sector commonpool recreational herringfishery scallopfishery statewater other smallmesh, by(spstock2 data_type)
 reshape wide total commercial sector commonpool recreational herringfishery scallopfishery statewater other smallmesh, i( spstock2) j(data_type) string
 gen nonsectorCatch=recreationalCatch +herringfisheryCatch +scallopfisheryCatch +statewaterCatch +otherCatch +smallmeshCatch
 gen nonsectorACL=totalACL-sectorACL
 
 order *ACL, after(spstock2)
-
+export delimited using "C:\Users\Min-Yang.Lee\Documents\groundfish-MSE\data\data_processed\econ\catch_acls.csv", replace
 
