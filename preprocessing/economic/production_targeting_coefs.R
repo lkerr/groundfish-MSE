@@ -17,6 +17,7 @@ if(!require(dplyr)) {
 rawpath <- 'data/data_raw/econ/'
 savepath <- 'data/data_processed/econ/'
 
+targeting_coef_source<-"nlogit_coefficients.txt" #(I'll just pull the first GILLNET and FIRST TRAWL coefs)
 
 targeting_coef_source<-"asclogits_ALL_forR.txt" #(I'll just pull the first GILLNET and FIRST TRAWL coefs)
 production_coef_pre<-"production_regs_actual_pre_forR2.txt"
@@ -111,7 +112,7 @@ colnames(production_coefs)[colnames(production_coefs)=="Trip Length Days (Log)"]
 colnames(production_coefs)[colnames(production_coefs)=="Cumulative Harvest (Log)"] <- "logh_cumul"
 colnames(production_coefs)[colnames(production_coefs)=="Primary Target"] <- "primary"
 colnames(production_coefs)[colnames(production_coefs)=="Secondary Target"] <- "secondary"
-colnames(production_coefs)[colnames(production_coefs)=="Trawl Survey Biomass (Log)"]<- "log_survey"
+colnames(production_coefs)[colnames(production_coefs)=="Trawl Survey Biomass (Log)"]<- "log_trawl_survey_weight"
 colnames(production_coefs)<- tolower(gsub("=","",colnames(production_coefs)))
 
 
@@ -124,6 +125,7 @@ production_coefs$gearcat<-tolower(production_coefs$gearcat)
 production_coefs$spstock2<-tolower(production_coefs$spstock2)
 production_coefs$post<-as.numeric(production_coefs$post)
 
+#You've zero filled the n/a's in the prediction code, but fine to keep here.
 ############ I think the safest thing to do is fill any NA coefficients with zeros.
 production_coefs[is.na(production_coefs)] <- 0
 ############ In the data, fill any corresponding NAs also with zeros -- this would mostly be biomass or fishing year
