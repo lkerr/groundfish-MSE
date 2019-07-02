@@ -53,6 +53,8 @@ for(r in 1:nrep){
         if(mproc$ImplementationClass=="Economic"){ #Run the economic model
           for(i in 1:nstock){
             stock[[i]] <- get_advice(stock = stock[[i]])
+            bio_params_for_econ<-get_bio_for_econ(stock)
+        
           }
           # ---- Run the economic model here ----
           # ---- this takes the place of the get_implementationF----
