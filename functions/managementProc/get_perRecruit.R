@@ -50,8 +50,9 @@
 
 
 get_perRecruit <- function(parmgt, parpop, 
-                           nage=1000, nF=1000, nFrep=100){
+                           nage=100, nF=1000, nFrep=100){
   
+
   if(is.null(parpop$mat) & parmgt$FREF_TYP == 'SPR'){
     stop('get_perRecruit: must provide maturity if using SPR')
   }
@@ -68,8 +69,10 @@ get_perRecruit <- function(parmgt, parpop,
   
   # Adjust input vectors so they match with the number of ages
   # over which the Y/R or SSB/R is being applied.
-  sel <- c(parpop$sel, rep(tail(parpop$sel, 1), nage-length(parpop$sel)))
-  waa <- c(parpop$waa, rep(tail(parpop$waa, 1), nage-length(parpop$waa)))
+  sel <- c(c(parpop$sel), rep(tail(c(parpop$sel), 1), nage-length(parpop$sel)))
+  waa <- c(c(parpop$waa), rep(tail(c(parpop$waa), 1), nage-length(parpop$waa)))
+  M <- c(c(parpop$M), rep(tail(c(parpop$M), 1), nage-length(parpop$M)))
+  mat <- c(c(parpop$mat), rep(tail(c(parpop$mat), 1), nage-length(parpop$mat)))
   if(!is.null(parpop$mat)){
     mat <- c(parpop$mat, rep(tail(parpop$mat, 1), nage-length(parpop$mat)))
   }
@@ -80,8 +83,7 @@ get_perRecruit <- function(parmgt, parpop,
   for(i in seq_along(Y)){
 
     # Calculate mortality, survival and catch
-    F <- parpop$sel * F_full[i]
-    M <- parpop$M
+    F <- sel * F_full[i]
     Z <- c(0, F[-length(F)] + M[-length(M)])
     N <- N_init * exp(-cumsum(Z))
     C <- sapply(1:length(N), function(x) 
@@ -89,10 +91,10 @@ get_perRecruit <- function(parmgt, parpop,
 
     # calculate yield and ssb over lifetime given the level of
     # fishing mortality
-    Y[i] <- C %*% c(parpop$waa) # (use c() for proper formatting)
-    SSB[i] <- sum(N * parpop$waa * parpop$mat)
+    Y[i] <- C %*% c(waa) # (use c() for proper formatting)
+    SSB[i] <- sum(N * waa * mat)
   }
-  
+
   if(parmgt$FREF_TYP == 'YPR'){
     ## find F(x)
     # get all slopes
@@ -138,7 +140,7 @@ get_perRecruit <- function(parmgt, parpop,
     
     # find the F @ the specified level of F_X%
     Fref <- F_full[which.min(abs(SSBR_ratio - parmgt$FREF_PAR0))]
-    
+
     # SSB / R at the reference point
     SSBatRP <- SSB[which.min(abs(SSBR_ratio - parmgt$FREF_PAR0))]
 
@@ -161,6 +163,8 @@ get_perRecruit <- function(parmgt, parpop,
               RPlevel = parmgt$FREF_PAR0,
               RPvalue = Fref,
               SSBvalue = SSBatRP)
+
+  return(out)
   
 }
 
