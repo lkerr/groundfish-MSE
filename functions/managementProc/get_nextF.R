@@ -32,7 +32,7 @@
 
 
 get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
-  
+    
   
   # A general application of national standard 1 reference points. There
   # are different ways to grab the F reference point and the B reference
@@ -54,9 +54,15 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       
     }
     
-    Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
-                     parenv = parenv, Rfun_lst = Rfun_BmsySim,
-                     FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
+    # only determine the biomass reference point if not using a constant
+    # F HCR.   
+    if(parmgt$HCR != 'constF'){
+      Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
+                       parenv = parenv, Rfun_lst = Rfun_BmsySim,
+                       FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
+    }else{
+      Bref <- list(RPvalue = -1)
+    }
 
     if(evalRP){
       FrefRPvalue <- Fref[['RPvalue']]
@@ -85,7 +91,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       F <- ifelse(tail(parpop$SSBhat, 1) < BThresh, 0, FThresh)+1e-4
       
     }else if(tolower(parmgt$HCR) == 'constf'){
- 
+       
       F <- FThresh
       
     }else{
