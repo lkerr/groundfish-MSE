@@ -40,15 +40,14 @@ for(r in 1:nrep){
     #### Top year loop ####
     for(y in fyear:nyear){
 
-      for(i in 1:nstock){
-        stock[[i]] <- get_popStep(stock = stock[[i]])
-        stock[[i]] <- get_indexData(stock = stock[[i]])
-      }
-      
+    
 
-      # if burn-in period is over...
+      # if burn-in period is over, start to give out catch advice
       if(y >= fmyearIdx){
 
+        ####################################################
+        #  Economic Type models#
+        ####################################################
         
         if(mproc$ImplementationClass=="Economic"){ #Run the economic model
           for(i in 1:nstock){
@@ -60,6 +59,10 @@ for(r in 1:nrep){
           # ---- this takes the place of the get_implementationF----
           # ---- not sure about get_relError or get_fill_RepArrays ----
 
+          ####################################################
+          #  Standard Fisheries Type Models Type models#
+          ####################################################
+          
         } else if(mproc$ImplementationClass=="StandardFisheries"){
           for(i in 1:nstock){
             stock[[i]] <- get_advice(stock = stock[[i]])
@@ -71,6 +74,15 @@ for(r in 1:nrep){
           }else{
             #Add a warning about invalid ImplementationClass
           }
+        
+          ####################################################
+          #  Populations age up a year#
+          ####################################################
+        for(i in 1:nstock){
+          stock[[i]] <- get_popStep(stock = stock[[i]])
+          stock[[i]] <- get_indexData(stock = stock[[i]])
+        }
+        
         }
         
       }
