@@ -50,7 +50,7 @@ nburn <- 50
 #### Temperature information ####
 
 ## Do you want to include temperature projections (in S-R, growth, etc.)
-useTemp <- TRUE
+useTemp <- FALSE
 
 ## Temperature information ##
 cmip5model <- 'CMCC_CM'
