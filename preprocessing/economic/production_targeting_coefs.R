@@ -13,6 +13,7 @@ if(!require(dplyr)) {
   require(dplyr)}
 
 # file paths for the raw and final directories
+# windows is kind of stupid, so you'll have to deal with it in some way.
 stupid<-'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE'
 rawpath <- '/data/data_raw/econ/'
 savepath <- '/data/data_processed/econ/'

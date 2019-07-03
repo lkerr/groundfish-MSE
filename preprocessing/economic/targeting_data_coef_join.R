@@ -3,7 +3,7 @@
   # 2. Joins them together (based on spstock2 and  gearcat). 
   #.3. Drop unnecessary variables.
 # A little stupid to join the coefficients to the data, because it make a big dataset with lots of replicated data, instead of making a pair of matrices (one for data and one for coefficients). But whatever.
-
+# need to update this file with variable changes and equation changes. Anna is sending over a stata .ster. for coefficients
 rm(list=ls())
 if(!require(readstata13)) {  
   install.packages("readstata13")

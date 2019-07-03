@@ -71,6 +71,15 @@ revenue_holder<-NULL
 
 
 
+
+# It may be faster to change the way this model runs.  Currently, it's day-by-day and the ACLs are checked at
+# the end of each day (to shut the fishery down).
+# It may be better to 
+#  predict for the entire year at the same time, generate a "cumulative harvest" under "all open"
+#  Find the date that the first quota binds, then predict from that point forward under "1 closed"
+#  Repeat until you get to the end of the year or all quotas bind.
+# It also might be better to "split" this feature off from the current working function.
+
 #split the production and targeting datasets into a list of datasets
 production_dataset<-split(production_dataset, production_dataset$doffy)
 targeting_dataset<-split(targeting_dataset, targeting_dataset$doffy)
@@ -79,96 +88,103 @@ targeting_dataset<-split(targeting_dataset, targeting_dataset$doffy)
 start_time<-proc.time()
 
 #for (day in 2:2){
-  
- for (day in 1:365){
-#   subset both the targeting and production datasets based on date
 
+for (day in 1:365){
+  #   subset both the targeting and production datasets based on date
+  
   working_production<-production_dataset[[day]]
   working_targeting<-targeting_dataset[[day]]
   
-    
-#   overwrite cumulative harvest and log cumulative catch of each stock.
-working_production<-left_join(working_production,fishery_holder, by="spstock2")
-
-# working_production$h_cumul<-working_production$cumul_catch_pounds
-# working_production$logh_cumul<-log(working_production$cumul_catch_pounds)
-
-
-#   predict_eproduction: predict harvest of each stock by each vessel condition on targeting that stock.  Also predict revenue from that stock, and all revenue.  keep just 5 columns: hullnum2, date, spstock as key variables.  harvest, revenue, and expected revenue as columns that I care about. 
-
-production_outputs<-get_predict_eproduction(working_production)
-
-
-#   
-#   use those three key variables to merge-update harvest, revenue, and expected revenue in the targeting dataset
-joincols<-c("hullnum2","date", "spstock2")
-working_targeting<-left_join(working_targeting,production_outputs, by=joincols)
-
-
-#############THIS BIT IS VERY FAST#######
-#fill exp_rev_sim, exp_rev_total_sim, harvest_sim=0 for the nofish options
-working_targeting$exp_rev_sim[is.na(working_targeting$exp_rev_sim)]<-0
-working_targeting$exp_rev_total_sim[is.na(working_targeting$exp_rev_total_sim)]<-0
-working_targeting$harvest_sim[is.na(working_targeting$harvest_sim)]<-0
-
-#overwrite the values of the exp_rev_total, exp_rev, and harvest in the targeting dataset.
-
-# working_targeting$exp_rev<-working_targeting$exp_rev_sim
-# working_targeting$exp_rev_total<-working_targeting$exp_rev_total_sim
-# working_targeting$h_hat<-working_targeting$harvest_sim
-#############END VERY FAST#######
-
-
-trips<-get_predict_etargeting(working_targeting)
-
-
-# Predict targeting
-#this is where infeasible trips should be eliminated.
-#THIS BIT IS VERY FAST 
-
-trips<-zero_out_closed(trips,fishery_holder)
-
-
-#Keep the "best trip"  -- sort on id and prhat. then keep the id with the largest prhat.
-#THIS BIT IS MEDIUM 
-
-trips <- trips %>% 
-  group_by(id) %>%
-  filter(prhat == max(prhat)) 
-
-# Expand from harvest of the target to harvest of all using the catch multiplier matrices
-# Not written yet.  Not sure if we need revenue by stock to be saved for each vessel? Or just catch? 
-
-
-#   add up today's revenue across the vessels (not necessary right now, but we end up with 'long' dataset of revenue)  
-# revenue<- trips %>% 
-#   group_by(hullnum2) %>% 
-#   summarise(totalrev=sum(exp_rev_total))
-
-# revenue<-trips[c("hullnum2","spstock2","exp_rev_total")]
-# revenue_holder<-rbind(revenue_holder,revenue)
-
-revenue_holder<-rbind(revenue_holder,trips[c("hullnum2","spstock2","date","exp_rev_total")])
-
-
-#   Pull out daily catch, rename the catch colum, and rbind to the holder. aggregate to update cumulative catch 
-daily_catch<- trips[c("spstock2","h_hat")]
-colnames(daily_catch)[2]<-"cumul_catch_pounds"
-daily_catch<-rbind(daily_catch,fishery_holder[c("spstock2","cumul_catch_pounds")])
-
-daily_catch<- daily_catch %>% 
-  group_by(spstock2) %>% 
-  summarise(cumul_catch_pounds=sum(cumul_catch_pounds))
-
-# update the fishery holder dataframe
-fishery_holder<-get_fishery_next_period(daily_catch,fishery_holder)
-
-#cast pounds to NAA  you only need to do this for spstock2's that have bio_model==1 in the fishery_holder dataset
-# Watch the units (lbs vs kg/mt)!!!  No 
-
+  
+  #   overwrite cumulative harvest and log cumulative catch of each stock.
+  working_production<-left_join(working_production,fishery_holder, by="spstock2")
+  
+  # working_production$h_cumul<-working_production$cumul_catch_pounds
+  # working_production$logh_cumul<-log(working_production$cumul_catch_pounds)
+  
+  
+  #   predict_eproduction: predict harvest of each stock by each vessel condition on targeting that stock.  Also predict revenue from that stock, and all revenue.  keep just 5 columns: hullnum2, date, spstock as key variables.  harvest, revenue, and expected revenue as columns that I care about. 
+  
+  production_outputs<-get_predict_eproduction(working_production)
+  
+  
+  #This bit needs to be replaced with a function that handles the "jointness"
+  #expected revenue from this species
+  production_outputs$exp_rev_sim<- production_outputs$harvest_sim*production_outputs$price_lb_lag1
+  #use the revenue multiplier to construct total revenue for this trip.
+  production_outputs$exp_rev_total_sim<- production_outputs$harvest_sim*production_outputs$price_lb_lag1*production_outputs$multiplier
+  #This bit needs to be replaced with a function that handles the "jointness"
+  
+  
+  #   
+  #   use those three key variables to merge-update harvest, revenue, and expected revenue in the targeting dataset
+  joincols<-c("hullnum2","date", "spstock2")
+  working_targeting<-left_join(working_targeting,production_outputs, by=joincols)
+  
+  
+  #############THIS BIT IS VERY FAST#######
+  #fill exp_rev_sim, exp_rev_total_sim, harvest_sim=0 for the nofish options
+  working_targeting$exp_rev_sim[is.na(working_targeting$exp_rev_sim)]<-0
+  working_targeting$exp_rev_total_sim[is.na(working_targeting$exp_rev_total_sim)]<-0
+  working_targeting$harvest_sim[is.na(working_targeting$harvest_sim)]<-0
+  
+  #overwrite the values of the exp_rev_total, exp_rev, and harvest in the targeting dataset.
+  
+  # working_targeting$exp_rev<-working_targeting$exp_rev_sim
+  # working_targeting$exp_rev_total<-working_targeting$exp_rev_total_sim
+  # working_targeting$h_hat<-working_targeting$harvest_sim
+  #############END VERY FAST#######
+  
+  
+  trips<-get_predict_etargeting(working_targeting)
+  
+  
+  # Predict targeting
+  #this is where infeasible trips should be eliminated.
+  #THIS BIT IS VERY FAST 
+  
+  trips<-zero_out_closed(trips,fishery_holder)
+  
+  
+  #Keep the "best trip"  -- sort on id and prhat. then keep the id with the largest prhat.
+  #THIS BIT IS MEDIUM 
+  
+  trips <- trips %>% 
+    group_by(id) %>%
+    filter(prhat == max(prhat)) 
+  
+  # Expand from harvest of the target to harvest of all using the catch multiplier matrices
+  # Not written yet.  Not sure if we need revenue by stock to be saved for each vessel? Or just catch? 
+  
+  
+  #   add up today's revenue across the vessels (not necessary right now, but we end up with 'long' dataset of revenue)  
+  # revenue<- trips %>% 
+  #   group_by(hullnum2) %>% 
+  #   summarise(totalrev=sum(exp_rev_total))
+  
+  # revenue<-trips[c("hullnum2","spstock2","exp_rev_total")]
+  # revenue_holder<-rbind(revenue_holder,revenue)
+  
+  revenue_holder<-rbind(revenue_holder,trips[c("hullnum2","spstock2","date","exp_rev_total")])
+  
+  
+  #   Pull out daily catch, rename the catch colum, and rbind to the holder. aggregate to update cumulative catch 
+  daily_catch<- trips[c("spstock2","h_hat")]
+  colnames(daily_catch)[2]<-"cumul_catch_pounds"
+  daily_catch<-rbind(daily_catch,fishery_holder[c("spstock2","cumul_catch_pounds")])
+  
+  daily_catch<- daily_catch %>% 
+    group_by(spstock2) %>% 
+    summarise(cumul_catch_pounds=sum(cumul_catch_pounds))
+  
+  # update the fishery holder dataframe
+  fishery_holder<-get_fishery_next_period(daily_catch,fishery_holder)
+  
+  #cast pounds to NAA  you only need to do this for spstock2's that have bio_model==1 in the fishery_holder dataset
+  # Watch the units (lbs vs kg/mt)!!!  No 
+  
 }
 proc.time()-start_time
 
 rm(list=c("production_dataset","targeting_dataset"))
 
-   
