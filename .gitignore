@@ -25,6 +25,7 @@ data/data_raw/*
 /documentation/.ipynb_checkpoints
 *.url
 *.pdf
+*.out
 *.tex
 *.html
 =======
