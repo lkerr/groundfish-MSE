@@ -113,9 +113,9 @@ get_advice <- function(stock){
       quota<-quota%*%waa[y,]
       
   
-      if(y < nyear){
-        F_fullAdvice[y+1] <- adviceF
-        ACL[y+1] <- quota
+      if(y <= nyear){
+        F_fullAdvice[y] <- adviceF
+        ACL[y] <- quota
       }
     })
       
