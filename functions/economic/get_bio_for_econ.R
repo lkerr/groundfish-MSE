@@ -47,6 +47,3 @@ get_bio_for_econ=function(stock){
   rownames(df)<- c()
   return(df)
 }
-
-
-str_split
