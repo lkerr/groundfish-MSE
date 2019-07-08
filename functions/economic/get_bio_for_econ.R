@@ -41,11 +41,12 @@ get_bio_for_econ=function(stock){
   df<-cbind(df,do.call(rbind,lapply(ACL,data.frame)))
   colnames(df)<-c("stockName","trawlsurvey","SSB","ACL")
   df$stockName<- as.character(df$stockName)
-  
-  df <- cbind(df, do.call("rbind", strsplit(df[,1], "_")))
-  colnames(df)<-c("stockName","trawlsurvey","SSB","ACL","spstock2","model_variant")
+
+  df<-separate(df,stockName,into=c("spstock2","variant"), remove=FALSE, fill="right")
   df$spstock2<- as.character(df$spstock2)
   rownames(df)<- c()
   return(df)
 }
 
+
+str_split
