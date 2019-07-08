@@ -1,4 +1,4 @@
-# Collect biological parameters for the economic model
+# Collect biological parameters for the economic model into a dataframe
 # There are *many* biological parameters stored in the stock lists
 # This collects a few of them into lists that are easier to pass to the economic model
 
@@ -17,7 +17,7 @@ get_bio_for_econ=function(stock){
   sn<-lapply(X = stock, FUN = `[[`, "stockName")
   
   #This stacks all the the metrics into individual lists
-  ACL<-lapply(X = stock, FUN = `[`, "ACL")
+  ACL<-lapply(X = stock, FUN = `[[`, "ACL")
   ACL<-lapply(X = ACL, FUN = `[`, y+1)
   
   SSB<-lapply(X = stock, FUN = `[[`, "SSB")
@@ -39,8 +39,13 @@ get_bio_for_econ=function(stock){
   df<-cbind(df,do.call(rbind,lapply(trawlsurvey,data.frame)))
   df<-cbind(df,do.call(rbind,lapply(SSB,data.frame)))
   df<-cbind(df,do.call(rbind,lapply(ACL,data.frame)))
-  colnames(df)<-c("spstock2","trawlsurvey","SSB","ACL")
-  rownames(df)<- c()
+  colnames(df)<-c("stockName","trawlsurvey","SSB","ACL")
+  df$stockName<- as.character(df$stockName)
+  
+  df <- cbind(df, do.call("rbind", strsplit(df[,1], "_")))
+  colnames(df)<-c("stockName","trawlsurvey","SSB","ACL","spstock2","model_variant")
   df$spstock2<- as.character(df$spstock2)
+  rownames(df)<- c()
   return(df)
 }
+
