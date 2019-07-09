@@ -50,17 +50,22 @@ for(r in 1:nrep){
       if(y >= fmyearIdx){
 
         
-        if(mproc$ImplementationClass=="Economic"){ #Run the economic model
+        if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
           bio_params_for_econ<-get_bio_for_econ(stock)
           for(i in 1:nstock){
             stock[[i]] <- get_advice(stock = stock[[i]])
-        
+            #This currently the standard fisheries model, but without error
+            stock[[i]] <- get_implementationF(type = 'advicenoError', 
+                                              stock = stock[[i]])
+            stock[[i]] <- get_relError(stock = stock[[i]])
+            stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
+            
           }
           # ---- Run the economic model here ----
           # ---- this takes the place of the get_implementationF----
           # ---- not sure about get_relError or get_fill_RepArrays ----
 
-        } else if(mproc$ImplementationClass=="StandardFisheries"){
+        } else if(mproc$ImplementationClass[m]=="StandardFisheries"){
           for(i in 1:nstock){
             stock[[i]] <- get_advice(stock = stock[[i]])
             stock[[i]] <- get_implementationF(type = 'adviceWithError', 
