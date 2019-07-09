@@ -1,3 +1,7 @@
+# July 8, 2019- ML believes this is unnecessary because 
+# (a) we don't need to run the model at the daily level
+# (b) we are going to back-calculate F at the end of the fishing year and then feed it through the get_popStep function
+
 # Equation to calculate catch-at-age based on available numbers, selectivity, and catch.   This is pretty much an inversion of the get_catch.R function.
 # 
 # INPUTS:

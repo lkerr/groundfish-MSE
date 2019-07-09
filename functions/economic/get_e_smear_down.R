@@ -1,3 +1,6 @@
+# July 8, 2019- ML believes this is unnecessary because 
+# (a) we don't need to run the model at the daily level
+# (b) we are going to back-calculate F at the end of the fishing year and then feed it through the get_popStep function
 
 
 # functions to smear age classes if there are negatives.  
