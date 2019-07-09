@@ -108,7 +108,7 @@ get_advice <- function(stock){
       # Tabulate advice (plus small constant)
       adviceF <- gnF$F + 1e-5 
     
-      # Absolute Catch advice
+      # Absolute Catch advice, inherits units of waa
       quota <- get_catch(F_full=adviceF, M=M, N=J1N[y,], selC=slxC[y,])
       quota<-quota%*%waa[y,]
       

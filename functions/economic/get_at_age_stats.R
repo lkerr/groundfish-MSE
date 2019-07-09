@@ -1,3 +1,6 @@
+# July 8, 2019- ML believes this is unnecessary because 
+  # (a) we don't need to run the model at the daily level
+  # (b) we are going to back-calculate F at the end of the fishing year and then feed it through the get_popStep function
 # Function to calculate catch-at-age, weight of the catch-at-age, and NAA that survive the pulse of fishing.   based on available numbers, selectivity, and catch.   This "inverts" the get_catch.R function.  It also error-handles for catch-at-age greater than NAA. Since we need to calculate weights and survivors to do this, we might as well return them as well.
 # You've got a bunch of debug comments in here
 # 

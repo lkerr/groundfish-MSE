@@ -73,6 +73,8 @@ source('processes/genAnnStructure.R')
 # approach to deriving Bproxy reference points
 source('processes/Rfun_BmsySim.R')
 
+# Load default ACLs and fractions of the ACL that are allocated to the catch share fishery
+source('processes/genBaselineACLs.R')
 
 
 
