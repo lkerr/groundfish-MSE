@@ -192,7 +192,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   sumCWpj <- sumCW[2:ny]
   
   out <- list(J1N = J1Npj,
-              SSBaa <- SSBaa,
+              SSBaa = SSBaa,
               SSB = SSBpj,
               sumCW = sumCWpj)
   
