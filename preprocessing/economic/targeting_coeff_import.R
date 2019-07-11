@@ -59,38 +59,11 @@ droppval<-function(working_coefs){
   working_coefs
 }
 
-# 
-#  nlogit_gillnet <- read.csv(file.path(rawpath,gillnet_targeting_coef_source), sep="\t", header=TRUE,stringsAsFactors=FALSE)
-#  nlogit_gillnet<-nlogit_gillnet[,-3]
-#  colnames(nlogit_gillnet)<-c("eq_co","value")
-#  #parse the combined "eq_co" column
-#  out <- do.call(rbind,strsplit(as.character(nlogit_gillnet$eq_co),':'))
-#  nlogit_gillnet<-cbind(out,nlogit_gillnet)
-#  #Add extra columns for gear and pre/post, just in case
-#  nlogit_gillnet<-cbind("gillnet","0",nlogit_gillnet)
-#  colnames(nlogit_gillnet)<-c("gear", "post","equation","variable","eq_co","value")
-#  
-#  nlogit_gillnet$variable<-as.character(nlogit_gillnet$variable)
-#  nlogit_gillnet$variable[which(nlogit_gillnet$variable=="_cons")]<-"constant"
-#  nlogit_gillnet$variable2<- paste0("beta_", nlogit_gillnet$variable)
-#  
-  #This is a good place to stop until I see the data.
  
 
 # This is code to pull out ASC logit coefficients for trawl
 asc_coefs <- read.csv(file.path(rawpath,trawl_targeting_coef_source), sep="\t", header=TRUE,stringsAsFactors=FALSE)
 asc_coefs<-asc_coefs[,-3]
-
-# I'm just extracting the 1st set of regression results, these are in columns 1:5.
-# asc_coefs<-asc_coefs[,1:5]
-
-
-# asc_coefs<-zero_out(asc_coefs,thresh)
-# asc_coefs<-droppval(asc_coefs)
-
-# fix up X (coef name)
-# asc_coefs$X<-tolower(asc_coefs$X)
-
 
 #Separate on the ":" and tidy up white space a bit
 asc_coefs<-separate(asc_coefs,X,into=c("equation","variable"),sep=":", remove=TRUE, fill="right")
@@ -118,6 +91,59 @@ asc_coefs<-rbind(asc_coefs,gn_coefs)
 asc_coefs$variable[asc_coefs$variable=="_cons"] <-"constant"
 
 rm(gn_coefs)
+
+
+
+# Split asc_coefs into two dataframes. One where equation=="spstock2" and the other where equation~="spstock2" 
+asc_coefs$variable<-paste0("beta_",asc_coefs$variable)
+
+all_coefs<-asc_coefs[which(asc_coefs$equation=="spstock2"),]
+#drop the equation column. Spread
+all_coefs<-all_coefs[,-1]
+all_coefs<-spread(all_coefs,variable,coefficient)
+
+
+
+asc_coefs2<-asc_coefs[which(asc_coefs$equation!="spstock2"),]
+colnames(asc_coefs2)[1]<-"spstock2"
+
+asc_coefs2<-spread(asc_coefs2,variable,coefficient)
+targeting_coefs<-inner_join(asc_coefs2,all_coefs, by="gearcat")
+
+#The "start of season" variable goes in slightly differently for gillnet and trawl
+
+#
+targeting_coefs$beta_start_of_season.x[is.na(targeting_coefs$beta_start_of_season.x)] <- targeting_coefs$beta_start_of_season.y[is.na(targeting_coefs$beta_start_of_season.x)]
+targeting_coefs<-within(targeting_coefs, rm(beta_start_of_season.y))
+
+colnames(targeting_coefs)[colnames(targeting_coefs)=="beta_start_of_season.x"] <- "beta_start_of_season"
+
+#Force NAs to zero. This is legit. I promise.
+targeting_coefs[is.na(targeting_coefs)]<-0
+targeting_coefs <- targeting_coefs[order(targeting_coefs$gearcat,targeting_coefs$spstock2),]
+
+save(targeting_coefs, file=file.path(savepath, "targeting_coefs.RData"))
+rm(list=c("all_coefs","asc_coefs","asc_coefs2"))
+
+#write.csv(targeting_coefs, file="asc.txt")
+#verified that coefficients match
+
+#  Deprecated 
+#  nlogit_gillnet <- read.csv(file.path(rawpath,gillnet_targeting_coef_source), sep="\t", header=TRUE,stringsAsFactors=FALSE)
+#  nlogit_gillnet<-nlogit_gillnet[,-3]
+#  colnames(nlogit_gillnet)<-c("eq_co","value")
+#  #parse the combined "eq_co" column
+#  out <- do.call(rbind,strsplit(as.character(nlogit_gillnet$eq_co),':'))
+#  nlogit_gillnet<-cbind(out,nlogit_gillnet)
+#  #Add extra columns for gear and pre/post, just in case
+#  nlogit_gillnet<-cbind("gillnet","0",nlogit_gillnet)
+#  colnames(nlogit_gillnet)<-c("gear", "post","equation","variable","eq_co","value")
+#  
+#  nlogit_gillnet$variable<-as.character(nlogit_gillnet$variable)
+#  nlogit_gillnet$variable[which(nlogit_gillnet$variable=="_cons")]<-"constant"
+#  nlogit_gillnet$variable2<- paste0("beta_", nlogit_gillnet$variable)
+#  
+#This is a good place to stop until I see the data.
 
 # outdated cleaning
 # asc_coefs$X<-gsub("\t)","", asc_coefs$X)
@@ -152,26 +178,6 @@ rm(gn_coefs)
 # 
 # asc_coefs$X<-gsub("average weekly wages for non-crew work","wkly_crew_wage", asc_coefs$X)
 # 
-
-
-# Split asc_coefs into two dataframes. One where equation=="spstock2" and the other where equation~="spstock2" 
-asc_coefs$variable<-paste0("beta_",asc_coefs$variable)
-
-all_coefs<-asc_coefs[which(asc_coefs$equation=="spstock2"),]
-#drop the equation column. Spread
-all_coefs<-all_coefs[,-1]
-all_coefs<-spread(all_coefs,variable,coefficient)
-
-
-
-asc_coefs2<-asc_coefs[which(asc_coefs$equation!="spstock2"),]
-colnames(asc_coefs2)[1]<-"spstock2"
-
-asc_coefs2<-spread(asc_coefs2,variable,coefficient)
-
-
-targeting_coefs<-inner_join(asc_coefs2,all_coefs, by="gearcat")
-
 # 
 # asc_coefs$spstock2<-0
 # 
@@ -201,17 +207,4 @@ targeting_coefs<-inner_join(asc_coefs2,all_coefs, by="gearcat")
 # targeting_coefs<-inner_join(stocks,ALL, by="gearcat")
 # 
 # targeting_coefs$spstock2<- gsub("_","",targeting_coefs$spstock2)
-
-
-targeting_coefs$spstock2[which(targeting_coefs$spstock2=="squidmackerelbutterfishherrin")]<-"squidmackerelbutterfishherring"
-
-
-#Force NAs to zero. This is legit. I promise.
-targeting_coefs[is.na(targeting_coefs)]<-0
-
-save(targeting_coefs, file=file.path(savepath, "targeting_coefs.RData"))
-
-
-
-
 
