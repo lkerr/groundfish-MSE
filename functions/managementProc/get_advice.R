@@ -107,12 +107,20 @@ get_advice <- function(stock){
       
       # Tabulate advice (plus small constant)
       adviceF <- gnF$F + 1e-5 
-  
+ 
+      # Calculate expected J1N using parameters from last year's assessment
+      # model (i.e., this is Dec 31 of the previous year). Recruitment is
+      # just recruitment from the previous year. This could be important
+      # depending on what the selectivity pattern is, but if age-1s are
+      # not very selected it won't matter much.
+      J1Ny <- get_J1Ny(J1Ny0 = tail(parpop$J1N, 1), 
+                       Zy0 = parpop$Fhat * parpop$sel + parpop$M, 
+                       Ry1 = tail(parpop$R, 1)) # last years R
       # Absolute Catch advice, inherits units of waa
       # This need to be revisited-- having a hard time with the indexing.  Do we want to feed in N=J1N[y-1,] or N=J1N[y,], or
       # the projection/expectation of J1N[y,] computed at time y-1? 
       quota <- get_catch(F_full = adviceF, M = M, 
-                         N = J1N[y-1,], selC = slxC[y,])
+                         N = J1Ny, selC = slxC[y,])
       quota <- quota %*% waa[y,]
       
   

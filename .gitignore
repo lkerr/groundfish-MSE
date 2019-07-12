@@ -31,3 +31,5 @@ data/data_raw/*
 =======
 *.*~
 *.dta
+*.xx*
+*.zip
