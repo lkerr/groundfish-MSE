@@ -1,10 +1,10 @@
-# Collect biological parameters for the economic model into a dataframe
+# Collect biological parameters for the economic model into a dataframe. 
+# Do a little processing to construct ACLs for the sector fleet
 # There are *many* biological parameters stored in the stock lists
 # This collects a few of them into lists that are easier to pass to the economic model
 
 
-# So far, I just need stockName, SSB, ACL, and 
-
+# So far, I just need stockName, SSB, ACL.  
 # Outer list is stocks 
 # Inner list is parameters inside
 
@@ -13,7 +13,7 @@
 # myfields<-c("stockName","ACL", "SSB", "IN","waa")
 # mybio<-lapply(X = stock, FUN = `[`, myfields)
 
-get_bio_for_econ=function(stock){
+get_bio_for_econ=function(stock,basecase){
   sn<-lapply(X = stock, FUN = `[[`, "stockName")
   
   #This stacks all the the metrics into individual lists
@@ -45,6 +45,10 @@ get_bio_for_econ=function(stock){
 
   df<-separate(df,stockName,into=c("spstock2","variant"), remove=FALSE, fill="right")
   df$spstock2<- as.character(df$spstock2)
+  
   rownames(df)<- c()
+  df<-merge(df,basecase,by="spstock2",all=TRUE)
+  df<-within(df, ACL_kg[is.na(ACL_kg)] <- baselineACL_kg[is.na(ACL_kg)])
+  df$sectorACL_kg<-df$ACL_kg*df$sector_frac
   return(df)
 }
