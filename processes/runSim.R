@@ -54,9 +54,13 @@ for(r in 1:nrep){
           bio_params_for_econ<-get_bio_for_econ(stock)
           for(i in 1:nstock){
             stock[[i]] <- get_advice(stock = stock[[i]])
-            #This currently the standard fisheries model, but without error
+          }
+            
+            # Placeholder for the econ model.
+            # currently the standard fisheries model, but without error
             stock[[i]] <- get_implementationF(type = 'advicenoError', 
                                               stock = stock[[i]])
+          for(i in 1:nstock){
             stock[[i]] <- get_relError(stock = stock[[i]])
             stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
             
