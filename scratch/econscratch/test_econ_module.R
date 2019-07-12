@@ -31,7 +31,7 @@ econdatapath <- 'data/data_processed/econ'
 
 load(file.path(econdatapath,"full_targeting.RData"))
 load(file.path(econdatapath,"full_production.RData"))
-load(file.path(econsavepath,"temp_biop.RData"))
+load(file.path(econsavepath,"temp_biop.Rdata"))
 
 production_dataset<-production_dataset[which(production_dataset$gffishingyear==2009),]
 targeting_dataset<-targeting_dataset[which(targeting_dataset$gffishingyear==2009),]
@@ -48,7 +48,7 @@ targeting_dataset<-targeting_dataset[which(targeting_dataset$gffishingyear==2009
 ############################################################
 ############################################################
 
-fishery_holder<-bio_params_for_econ[c("spstock2","sectorACL_kg","nonsector_catch_kg","bio_model")]
+fishery_holder<-bio_params_for_econ[c("spstock2","sectorACL_kg","nonsector_catch_kg","bio_model","SSB")]
 fishery_holder$open<-as.logical("TRUE")
 fishery_holder$cumul_catch_pounds<-1
 
@@ -214,7 +214,8 @@ for (day in 1:365){
   # Watch the units (lbs vs kg/mt)!!!  No 
   
 }
-proc.time()-start_time
 
+proc.time()-start_time
+fishery_holder$removals_kg<-fishery_holder$cumul_catch_pounds/pounds_per_kg+fishery_holder$nonsector_catch_kg
 rm(list=c("production_dataset","targeting_dataset"))
 
