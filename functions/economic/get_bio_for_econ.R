@@ -50,5 +50,7 @@ get_bio_for_econ=function(stock,basecase){
   df<-merge(df,basecase,by="spstock2",all=TRUE)
   df<-within(df, ACL_kg[is.na(ACL_kg)] <- baselineACL_kg[is.na(ACL_kg)])
   df$sectorACL_kg<-df$ACL_kg*df$sector_frac
+  df$nonsector_catch_kg<-df$ACL_kg*(1-df$sector_frac)
+  
   return(df)
 }
