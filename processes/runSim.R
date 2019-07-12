@@ -40,7 +40,10 @@ for(r in 1:nrep){
     #### Top year loop ####
     for(y in fyear:nyear){
 
-    
+      # Index data from the previous year so it is available for assessment
+      for(i in 1:nstock){
+        stock[[i]] <- get_indexData(stock = stock[[i]])
+      }
 
       # if burn-in period is over, start to give out catch advice
       if(y >= fmyearIdx){
@@ -74,7 +77,6 @@ for(r in 1:nrep){
             stock[[i]] <- get_implementationF(type = 'adviceWithError', 
                                               stock = stock[[i]])
             stock[[i]] <- get_relError(stock = stock[[i]])
-            stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
             }
           }else{
             #Add a warning about invalid ImplementationClass
@@ -83,17 +85,18 @@ for(r in 1:nrep){
           ####################################################
           #  Populations age up a year#
           ####################################################
-        for(i in 1:nstock){
-          stock[[i]] <- get_popStep(stock = stock[[i]])
-          stock[[i]] <- get_indexData(stock = stock[[i]])
-        }
-        
-        }
         
       }
         
-      
+      for(i in 1:nstock){
+        stock[[i]] <- get_popStep(stock = stock[[i]])
+        stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
+      }
+        
     }
+        
+      
+  }
 }
 
 
