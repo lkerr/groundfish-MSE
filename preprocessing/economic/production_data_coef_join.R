@@ -67,6 +67,8 @@ production$fy2015<-as.numeric(production$gffishingyear==2015)
 
 
 load(file.path(econsavepath,"production_coefs.RData"))
+#production_coefs$spstock2<-tolower(production_coefs$spstock2)
+#production_coefs$spstock2<- gsub("_","",production_coefs$spstock2)
 
 # merge production dataset and coefficients
 production_dataset<-inner_join(production,production_coefs,by=c("gearcat","spstock2","post"))
