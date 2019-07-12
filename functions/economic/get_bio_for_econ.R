@@ -17,8 +17,8 @@ get_bio_for_econ=function(stock,basecase){
   sn<-lapply(X = stock, FUN = `[[`, "stockName")
   
   #This stacks all the the metrics into individual lists
-  ACL_kg<-lapply(X = stock, FUN = `[[`, "ACL")
-  ACL_kg<-lapply(X = ACL_kg, FUN = `[`, y+1)
+  ACL_kg<-lapply(X = stock, FUN = `[[`, "ACL_kg")
+  ACL_kg<-lapply(X = ACL_kg, FUN = `[`, y)
   
   SSB<-lapply(X = stock, FUN = `[[`, "SSB")
   SSB<-lapply(X = SSB, FUN = `[`, y)
