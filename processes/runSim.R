@@ -15,6 +15,15 @@ if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
+
+#testing things'
+mproc<-mproc[1,]
+mproc$ImplementationClass<-"Economic"
+r<-1
+m<-1
+nyear<-152
+#
+
 #### Top rep Loop ####
 for(r in 1:nrep){
 
@@ -53,16 +62,16 @@ for(r in 1:nrep){
         ####################################################
         
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
-          bio_params_for_econ<-get_bio_for_econ(stock)
           for(i in 1:nstock){
             stock[[i]] <- get_advice(stock = stock[[i]])
           }
-            
+          bio_params_for_econ<-get_bio_for_econ(stock,econ_baseline)
+          
             # Placeholder for the econ model.
-            # currently the standard fisheries model, but without error
-            stock[[i]] <- get_implementationF(type = 'advicenoError', 
-                                              stock = stock[[i]])
+            # currently the standard fisheries model, 
           for(i in 1:nstock){
+            stock[[i]] <- get_implementationF(type = 'adviceWithError', 
+                                              stock = stock[[i]])
             stock[[i]] <- get_relError(stock = stock[[i]])
             stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
             
