@@ -31,6 +31,7 @@ get_containers <- function(stockPar){
     mat = yxage,
     F_full = yx0,
     F_fullAdvice = yx0,
+    ACL_kg = yx0,
     R = yx0,
     Rhat = yx0,
     SSB = yx0,
@@ -83,8 +84,6 @@ get_containers <- function(stockPar){
     relE_IN = yx0,
     
     
-    # Economic things - Annual Catch limit denominated in kg
-    ACL_kg = yx0,
     
     
     # container to hold operating/assessment model results
@@ -233,6 +232,7 @@ get_containers <- function(stockPar){
       R = save_vector_ann,
       F_full = save_vector_ann,
       F_fullAdvice = save_vector_ann,
+      ACL_kg = save_vector_ann,
       sumCW = save_vector_ann,
       annPercentChange = save_vector_ann, #cheap ... not really vector.
       meanSizeCN = save_vector_ann,
