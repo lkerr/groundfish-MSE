@@ -31,7 +31,7 @@ predicted_trips<-get_predict_etargeting(targeting_dataset)
 
 
 
-predicted_trips$del<-predicted_trips$prhat-predicted_trips$pr1
+predicted_trips$del<-predicted_trips$prhat-predicted_trips$pr
 summary(predicted_trips$del)
 
 
@@ -40,7 +40,10 @@ test<-test[test$date==as.Date("2009-09-05"),]
 
 #We see maximum differences of magnitude .001 (A tenth of 1%), which is probably due to rounding differences.  I think stata will use quad precision internally, but only export in double precisions.  This is NBD.
 
-
+predicted_trips <- predicted_trips %>%
+  select(xb,prhat, pr, del, spstock2, exp_rev_total, das_charge, fuelprice_distance, distance, mean_wind, mean_wind_noreast, permitted, lapermit ,partial_closure ,start_of_season, wkly_crew_wage, len, fuelprice, fuelprice_len, everything())
+ 
+predicted_trips<-predicted_trips[order(-predicted_trips$del),]
 
 # sb<-Sys.time()
 # part3<-part3+sb-sa

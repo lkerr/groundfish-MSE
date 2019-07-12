@@ -133,6 +133,12 @@ for(i in 1:nstock){
 names(stock) <- stockNames
 
 
+# Set up a container dataframe for Fleet-level Economic Results
+# These are simulation specific so they are stored in a single dataframe
+source('processes/genEcon_Containers.R')
+
+
+
 # Set up a sink for debugging -- don't use this if on the HPCC because
 # you will end up with multiple programs trying to access the same file
 # at the same time (if running in paralell).

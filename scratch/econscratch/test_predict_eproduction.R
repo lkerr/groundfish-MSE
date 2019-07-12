@@ -10,6 +10,9 @@ source('processes/loadLibs.R')
 
 econsavepath<-'scratch/econscratch'
 econdatapath <- 'data/data_processed/econ'
+econrawpath <- 'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE/data/data_raw/econ'
+econsavepath <- 'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE/data/data_processed/econ'
+
 load(file.path(econdatapath,"full_production.RData"))
 
 
@@ -31,7 +34,7 @@ production_outputs<-left_join(production_outputs,tester, by=c("hullnum2", "date"
 production_outputs$delta<-production_outputs$harvest_sim-production_outputs$h_hat
 summary(production_outputs$delta)
 
-#We see maximum differences of magnitude 0.05 (7 hundredths of a pound), which is probably due to rounding differences. 
+#We see maximum differences of magnitude 0.08 (7 hundredths of a pound), which is probably due to rounding differences. 
 #I think stata will use quad precision internally, but only export in double precisions.  This is NBD.
 
 

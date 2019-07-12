@@ -27,6 +27,9 @@ targeting_source<-"sample_DCdata_fys2009_2010_forML.dta"
 #Load in targeting coefficients
 load(file.path(econsavepath,"targeting_coefs.RData"))
 
+colnames(targeting_coefs)[colnames(targeting_coefs)=="beta_LApermit"] <- "beta_lapermit"
+targeting_coefs$spstock2<-tolower(targeting_coefs$spstock2)
+
 # read in the dataset
 targeting <- read.dta13(file.path(econrawpath, targeting_source))
 
@@ -36,7 +39,7 @@ targeting$startfy = as.Date(paste("5", "1",targeting$gffishingyear,sep="."), "%m
 targeting$doffy=as.numeric(difftime(targeting$date,targeting$startfy, units="days")+1)
 
 #Follow naming conventions
-targeting$spstock2<-tolower(targeting$spstock)
+targeting$spstock2<-tolower(targeting$spstock2)
 targeting$spstock2<- gsub("_","",targeting$spstock2)
 
 colnames(targeting)[colnames(targeting)=="LApermit"] <- "lapermit"
@@ -63,15 +66,16 @@ if(ncol(targeting_dataset) !=check){
   warning("Lost some Columns from the targeting dataset")
 }
 
+targeting_dataset$constant<- 1
 
 
-datavars=c("exp_rev_total","distance","das_charge","fuelprice_distance","start_of_season","crew","price_lb_lag1","mean_wind","mean_wind_2","permitted","lapermit","das_charge_len","max_wind","max_wind_2","fuelprice","fuelprice_len","wkly_crew_wage")
+datavars=c("exp_rev_total","das_charge","fuelprice_distance","mean_wind","mean_wind_noreast","permitted","lapermit","distance","wkly_crew_wage","len","fuelprice","fuelprice_len","start_of_season","partial_closure","constant")
 betavars=paste0("beta_",datavars)
 idvars=c("id", "hullnum2", "date","spstock2", "doffy")
 necessary=c( "multiplier", "q", "gffishingyear")
-useful=c("gearcat","post","h_hat","pr1","pr2","pr3","pr4","pr5")
+useful=c("gearcat","post","h_hat","pr")
 mysubs=c(idvars,necessary,useful,datavars,betavars)
-
+#mysubs is broken
 
 targeting_dataset<-targeting_dataset[mysubs]
 

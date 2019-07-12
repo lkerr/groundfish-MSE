@@ -18,9 +18,13 @@ if(!require(dplyr)) {
 
 
 # file paths for the raw and final directories
+# windows is kind of stupid, so you'll have to deal with it in some way.
 
 econrawpath <- 'data/data_raw/econ/'
 econsavepath <- 'data/data_processed/econ/'
+
+econrawpath <- 'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE/data/data_raw/econ'
+econsavepath <- 'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE/data/data_processed/econ'
 
 #Files to read -- sample data for now.
 production_source<-"sample_PRODREGdata_fys2009_2010_forML.dta"
@@ -63,6 +67,8 @@ production$fy2015<-as.numeric(production$gffishingyear==2015)
 
 
 load(file.path(econsavepath,"production_coefs.RData"))
+#production_coefs$spstock2<-tolower(production_coefs$spstock2)
+#production_coefs$spstock2<- gsub("_","",production_coefs$spstock2)
 
 # merge production dataset and coefficients
 production_dataset<-inner_join(production,production_coefs,by=c("gearcat","spstock2","post"))
@@ -102,10 +108,10 @@ fycoefs<-pd_cols[grepl("^beta_fy20", pd_cols)]
 monthdums<-pd_cols[grepl("^month", pd_cols)]
 monthcoefs<-pd_cols[grepl("^beta_month", pd_cols)]
 idvars=c("hullnum2", "id", "date","spstock2", "doffy")
-necessary=c("multiplier", "q", "rmse", "price_lb_lag1","emean", "gffishingyear")
+necessary=c("multiplier", "q", "rmse", "price_lb_lag1","emean", "gffishingyear", "gearcat", "post")
 # Need to sort out which things I need with Anna. There may be a few more that I need
 
-useful=c("gearcat","post", "logh", "h_hat")
+useful=c("logh", "h_hat")
 mysubs=c(idvars, useful, datavars,betavars, fydums, monthdums, fycoefs, monthcoefs, necessary)
 
  production_dataset<-production_dataset[mysubs]
