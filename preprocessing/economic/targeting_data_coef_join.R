@@ -18,8 +18,8 @@ if(!require(dplyr)) {
 
 # file paths for the raw and final directories
 
-econrawpath <- 'data/data_raw/econ'
-econsavepath <- 'data/data_processed/econ'
+econrawpath <- './data/data_raw/econ'
+econsavepath <- './data/data_processed/econ'
 
 #Files to read -- sample data for now.
 targeting_source<-"sample_DCdata_fys2009_2010_forML.dta"
