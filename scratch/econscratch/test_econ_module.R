@@ -10,6 +10,9 @@
 #declare some paths to read and save things that I'm scratchpadding
 ############################################################
 
+# you ran runSim.R and save the bio paramters here
+econsavepath <- 'scratch/econscratch'
+save(bio_params_for_econ,file=file.path(econsavepath,"temp_biop.Rdata"))
 
 rm(list=ls())
 
@@ -28,6 +31,7 @@ econdatapath <- 'data/data_processed/econ'
 
 load(file.path(econdatapath,"full_targeting.RData"))
 load(file.path(econdatapath,"full_production.RData"))
+load(file.path(econsavepath,"temp_biop.RData"))
 
 production_dataset<-production_dataset[which(production_dataset$gffishingyear==2009),]
 targeting_dataset<-targeting_dataset[which(targeting_dataset$gffishingyear==2009),]
@@ -44,12 +48,12 @@ targeting_dataset<-targeting_dataset[which(targeting_dataset$gffishingyear==2009
 ############################################################
 ############################################################
 
-fishery_holder<-unique(targeting_dataset[c("spstock2")])
+fishery_holder<-bio_params_for_econ[c("spstock2","sectorACL_kg","nonsector_catch_kg","bio_model")]
 fishery_holder$open<-as.logical("TRUE")
 fishery_holder$cumul_catch_pounds<-1
-fishery_holder$acl<-1e16
-fishery_holder$bio_model<-0
-fishery_holder$bio_model[fishery_holder$spstock2 %in% c("codGB","pollock","haddockGB","yellowtailflounderGB")]<-1
+
+#fishery_holder$bio_model<-0
+#fishery_holder$bio_model[fishery_holder$spstock2 %in% c("codGB","pollock","haddockGB","yellowtailflounderGB")]<-1
 
 revenue_holder<-NULL
 
@@ -87,9 +91,9 @@ targeting_dataset<-split(targeting_dataset, targeting_dataset$doffy)
 
 start_time<-proc.time()
 
-#for (day in 2:2){
-
 for (day in 1:365){
+
+#for (day in 1:365){
   #   subset both the targeting and production datasets based on date
   
   working_production<-production_dataset[[day]]
@@ -108,15 +112,17 @@ for (day in 1:365){
   production_outputs<-get_predict_eproduction(working_production)
   
   
+  
   #This bit needs to be replaced with a function that handles the "jointness"
   #expected revenue from this species
   production_outputs$exp_rev_sim<- production_outputs$harvest_sim*production_outputs$price_lb_lag1
+
+  production_outputs$exp_rev_sim<-production_outputs$exp_rev_sim
   #use the revenue multiplier to construct total revenue for this trip.
-  production_outputs$exp_rev_total_sim<- production_outputs$harvest_sim*production_outputs$price_lb_lag1*production_outputs$multiplier
   #This bit needs to be replaced with a function that handles the "jointness"
   
   
-  #   
+     
   #   use those three key variables to merge-update harvest, revenue, and expected revenue in the targeting dataset
   joincols<-c("hullnum2","date", "spstock2")
   working_targeting<-left_join(working_targeting,production_outputs, by=joincols)
@@ -147,11 +153,35 @@ for (day in 1:365){
   
   
   #Keep the "best trip"  -- sort on id and prhat. then keep the id with the largest prhat.
-  #THIS BIT IS MEDIUM 
+  # #THIS BIT IS MEDIUM 
+  # 
+  # trips <- trips %>% 
+  #   group_by(id) %>%
+  #   filter(prhat == max(prhat)) 
   
-  trips <- trips %>% 
+  #draw trips probabilistically
+  trips<-trips[order(trips$id,trips$prhat),]
+  
+  #This takes a while
+  trips<-trips%>% 
+    group_by(id) %>% 
+    mutate(csum = cumsum(prhat))
+  
+  trips$draw<-runif(nrow(trips), min = 0, max = 1)
+  
+  #This takes a while
+  trips<-trips%>%
     group_by(id) %>%
-    filter(prhat == max(prhat)) 
+    mutate(draw = first(draw))
+  
+  trips<-trips[trips$draw<trips$csum,]
+  
+  #This takes a while
+  trips <-
+    trips %>% 
+    group_by(id) %>% 
+    filter(row_number()==1)
+  
   
   # Expand from harvest of the target to harvest of all using the catch multiplier matrices
   # Not written yet.  Not sure if we need revenue by stock to be saved for each vessel? Or just catch? 

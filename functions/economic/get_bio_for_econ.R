@@ -40,7 +40,8 @@ get_bio_for_econ=function(stock,basecase){
   df<-cbind(df,do.call(rbind,lapply(trawlsurvey,data.frame)))
   df<-cbind(df,do.call(rbind,lapply(SSB,data.frame)))
   df<-cbind(df,do.call(rbind,lapply(ACL_kg,data.frame)))
-  colnames(df)<-c("stockName","trawlsurvey","SSB","ACL_kg")
+  df<-cbind(df,1)
+  colnames(df)<-c("stockName","trawlsurvey","SSB","ACL_kg","bio_model")
   df$stockName<- as.character(df$stockName)
 
   df<-separate(df,stockName,into=c("spstock2","variant"), remove=FALSE, fill="right")
@@ -49,6 +50,9 @@ get_bio_for_econ=function(stock,basecase){
   rownames(df)<- c()
   df<-merge(df,basecase,by="spstock2",all=TRUE)
   df<-within(df, ACL_kg[is.na(ACL_kg)] <- baselineACL_kg[is.na(ACL_kg)])
+  
+  df<-within(df, bio_model[is.na(bio_model)] <- 0)
+             
   df$sectorACL_kg<-df$ACL_kg*df$sector_frac
   df$nonsector_catch_kg<-df$ACL_kg*(1-df$sector_frac)
   
