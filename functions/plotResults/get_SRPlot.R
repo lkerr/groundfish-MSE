@@ -11,7 +11,7 @@ get_SRPlot <- function(type, par, Tanom, ptyrs, stockEnv){
   # Get avg SSB across runs for each year in each
   # scenario
   pltidx <- match(ptyrs, yrs)
-  avgSSB <- t(apply(omval$SSB[,,pltidx], c(2,3), mean))
+  avgSSB <- t(apply(omval$SSB[,,pltidx, drop=FALSE], c(2,3), mean))
 
   m <- matrix(c(1, rep(2, 4)))
   layout(m)
