@@ -7,7 +7,7 @@ get_tmbSetup <- function(stock){
 
     # Ensure that TMB will use the Rtools compiler (only windows ... and 
     # not necessary on all machines)
-    if(platform != 'Linux'){
+    if(platform != 'Linux' & y == fmyearIdx){
       path0 <- Sys.getenv('PATH')
       path1 <- paste0('c:\\Rtools\\bin;c:\\Rtools\\mingw_32\\bin;',
                       path_current)
@@ -15,17 +15,16 @@ get_tmbSetup <- function(stock){
     }
     
     
-    sty <- y-ncaayear+1
+    sty <- y-ncaayear
     
     # get the random walk deviations
-    R_dev <- get_RWdevs(get_dwindow(R, sty, y))
+    R_dev <- get_RWdevs(get_dwindow(R, sty, y-1))
     
     # get the initial population mean and deviations
     ipopInfo <- get_LMdevs(J1N[sty,] / caaInScalar)
     log_ipop_mean <- ipopInfo$lmean
     ipop_dev <- ipopInfo$lLMdevs
     
-# if(y == 151) browser()
     tmb_dat <- list(
     
                       # index bounds
@@ -33,26 +32,26 @@ get_tmbSetup <- function(stock){
                       nage = nage,
                       
                       # Catch
-                      obs_sumCW = get_dwindow(obs_sumCW, sty, y),
-                      obs_paaCN = get_dwindow(obs_paaCN, sty, y),
+                      obs_sumCW = get_dwindow(obs_sumCW, sty, y-1),
+                      obs_paaCN = get_dwindow(obs_paaCN, sty, y-1),
                     
                       # Index
-                      obs_sumIN = get_dwindow(obs_sumIN, sty, y) / caaInScalar,
-                      obs_paaIN = get_dwindow(obs_paaIN, sty, y),
+                      obs_sumIN = get_dwindow(obs_sumIN, sty, y-1) / caaInScalar,
+                      obs_paaIN = get_dwindow(obs_paaIN, sty, y-1),
                       
                       # Fishing effort
-                      obs_effort = get_dwindow(obs_effort, sty, y),
+                      obs_effort = get_dwindow(obs_effort, sty, y-1),
                       
                       # ESS
                       oe_paaCN = oe_paaCN,
                       oe_paaIN = oe_paaIN,
                       
                       # len/wt-at-age
-                      laa = get_dwindow(laa, sty, y),
-                      waa = get_dwindow(waa, sty, y) * caaInScalar,
+                      laa = get_dwindow(laa, sty, y-1),
+                      waa = get_dwindow(waa, sty, y-1) * caaInScalar,
                       
                       # Survey info
-                      slxI = get_dwindow(slxI, sty, y),
+                      slxI = get_dwindow(slxI, sty, y-1),
                       timeI = timeI
     )
     
@@ -119,7 +118,7 @@ get_tmbSetup <- function(stock){
     # the model; base is for an easy comparison to the true values
     # (i.e., tmb_par_base is not used later in the code)
     tmb_par_base <- tmb_par
-    
+   
     # get the lower and upper bounds. Be a little careful with value for p --
     # if it is 1.0 (or less) then if you have a positive value it will be bounded
     # to be positive and negative bounded to be negative always which may be
