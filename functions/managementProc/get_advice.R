@@ -109,14 +109,16 @@ get_advice <- function(stock){
       adviceF <- gnF$F + 1e-5 
   
       # Absolute Catch advice, inherits units of waa
+      # This need to be revisited-- having a hard time with the indexing.  Do we want to feed in N=J1N[y-1,] or N=J1N[y,], or
+      # the projection/expectation of J1N[y,] computed at time y-1? 
       quota <- get_catch(F_full = adviceF, M = M, 
-                         N = J1N[y-1,], selC = slxC[y,])
+                         N = J1N[y,], selC = slxC[y,])
       quota <- quota %*% waa[y,]
       
   
       if(y <= nyear){
         F_fullAdvice[y] <- adviceF
-        ACL[y] <- quota
+        ACL_kg[y] <- quota
       }
     })
       
