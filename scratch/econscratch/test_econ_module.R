@@ -11,8 +11,8 @@
 ############################################################
 
 # you ran runSim.R and save the bio paramters here
-econsavepath <- 'scratch/econscratch'
-save(bio_params_for_econ,file=file.path(econsavepath,"temp_biop.Rdata"))
+# econsavepath <- 'scratch/econscratch'
+# save(bio_params_for_econ,file=file.path(econsavepath,"temp_biop.Rdata"))
 
 rm(list=ls())
 
@@ -146,20 +146,22 @@ for (day in 1:365){
   
   
   # Predict targeting
-  #this is where infeasible trips should be eliminated.
-  #THIS BIT IS VERY FAST 
+  # this is where infeasible trips should be eliminated.
+
+  trips<-zero_out_closed_asc(trips,fishery_holder)
   
-  trips<-zero_out_closed(trips,fishery_holder)
-  
-  
+  ################################################################################################
   #Keep the "best trip"  -- sort on id and prhat. then keep the id with the largest prhat.
   # #THIS BIT IS MEDIUM 
   # 
   # trips <- trips %>% 
   #   group_by(id) %>%
   #   filter(prhat == max(prhat)) 
+  ################################################################################################
   
-  #draw trips probabilistically
+  # draw trips probabilistically.  A trip is selected randomly from the choice set. 
+  # The probability of selection is equal to prhat
+  
   trips<-trips[order(trips$id,trips$prhat),]
   
   #This takes a while
