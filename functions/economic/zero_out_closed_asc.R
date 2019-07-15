@@ -21,10 +21,3 @@ zero_out_closed_asc <- function(tds,open_hold){
   return(tds)
 }
 
-# testing
-tds <- tds %>%
-  select(prhat, prhat2,open, everything())
-
-
-#
-tds$open[which(tds$spstock2=="codGB")]<-"FALSE"
