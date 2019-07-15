@@ -3,6 +3,7 @@
 # There are *many* biological parameters stored in the stock lists
 # This collects a few of them into lists that are easier to pass to the economic model
 
+# trawlsurvey extraction not working.
 
 # So far, I just need stockName, SSB, ACL.  
 # Outer list is stocks 
@@ -25,10 +26,10 @@ get_bio_for_econ=function(stock,basecase){
   
   #IN and waa have a row vector per year
   waa<-lapply(X = stock, FUN = `[[`, "waa")
-  waa<-lapply(X = waa, FUN = `[`, y,)
+  waa<-lapply(X = waa, FUN = `[`, y)
   
   trawlsurvey<-lapply(X = stock, FUN = `[[`, "IN")
-  trawlsurvey<-lapply(X = trawlsurvey, FUN = `[`, y,)
+  trawlsurvey<-lapply(X = trawlsurvey, FUN = `[`, y)
   
   #multiply together
   trawlsurvey<-mapply(function(x, y) x%*%y, trawlsurvey, waa)
@@ -44,7 +45,7 @@ get_bio_for_econ=function(stock,basecase){
   colnames(df)<-c("stockName","trawlsurvey","SSB","ACL_kg","bio_model")
   df$stockName<- as.character(df$stockName)
 
-  df<-separate(df,stockName,into=c("spstock2","variant"), remove=FALSE, fill="right")
+  df<-separate(df,stockName,into=c("spstock2","variant"), sep="_", remove=FALSE, fill="right")
   df$spstock2<- as.character(df$spstock2)
   
   rownames(df)<- c()
