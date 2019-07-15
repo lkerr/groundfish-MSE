@@ -15,9 +15,10 @@
 # save(bio_params_for_econ,file=file.path(econsavepath,"temp_biop.Rdata"))
 
 rm(list=ls())
+# set.seed(2) 
+pounds_per_kg<-2.20462
 
-ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
-invisible(sapply(ffiles, source))
+source('processes/runSetup.R')
 runClass<-'local'
 source('processes/loadLibs.R')
 
@@ -48,7 +49,7 @@ targeting_dataset<-targeting_dataset[which(targeting_dataset$gffishingyear==2009
 ############################################################
 ############################################################
 
-fishery_holder<-bio_params_for_econ[c("spstock2","sectorACL_kg","nonsector_catch_kg","bio_model","SSB")]
+fishery_holder<-bio_params_for_econ[c("stockName","spstock2","sectorACL_kg","nonsector_catch_kg","bio_model","SSB")]
 fishery_holder$open<-as.logical("TRUE")
 fishery_holder$cumul_catch_pounds<-1
 
@@ -185,6 +186,26 @@ for (day in 1:365){
     filter(row_number()==1)
   
   
+  
+  
+  ####################################################################################################
+  # Expand from harvest of the target to harvest of all using the catch multiplier matrices
+  #   Not written yet.  Not sure if we need revenue by stock to be saved for each vessel? Or just catch? 
+  #   Pull out daily catch, rename the catch colum, and rbind to the holder. aggregate to update cumulative catch 
+  ####################################################################################################
+  # update the fishery holder dataframe
+  
+    daily_catch<- trips[c("spstock2","h_hat")]
+  colnames(daily_catch)[2]<-"cumul_catch_pounds"
+  daily_catch<-rbind(daily_catch,fishery_holder[c("spstock2","cumul_catch_pounds")])
+  
+  daily_catch<- daily_catch %>% 
+    group_by(spstock2) %>% 
+    summarise(cumul_catch_pounds=sum(cumul_catch_pounds))
+  
+  fishery_holder<-get_fishery_next_period(daily_catch,fishery_holder)
+  
+  ####################################################################################################
   # Expand from harvest of the target to harvest of all using the catch multiplier matrices
   # Not written yet.  Not sure if we need revenue by stock to be saved for each vessel? Or just catch? 
   
@@ -200,18 +221,6 @@ for (day in 1:365){
   revenue_holder<-rbind(revenue_holder,trips[c("hullnum2","spstock2","date","exp_rev_total")])
   
   
-  #   Pull out daily catch, rename the catch colum, and rbind to the holder. aggregate to update cumulative catch 
-  daily_catch<- trips[c("spstock2","h_hat")]
-  colnames(daily_catch)[2]<-"cumul_catch_pounds"
-  daily_catch<-rbind(daily_catch,fishery_holder[c("spstock2","cumul_catch_pounds")])
-  
-  daily_catch<- daily_catch %>% 
-    group_by(spstock2) %>% 
-    summarise(cumul_catch_pounds=sum(cumul_catch_pounds))
-  
-  # update the fishery holder dataframe
-  fishery_holder<-get_fishery_next_period(daily_catch,fishery_holder)
-  
   #cast pounds to NAA  you only need to do this for spstock2's that have bio_model==1 in the fishery_holder dataset
   # Watch the units (lbs vs kg/mt)!!!  No 
   
@@ -219,5 +228,21 @@ for (day in 1:365){
 
 proc.time()-start_time
 fishery_holder$removals_kg<-fishery_holder$cumul_catch_pounds/pounds_per_kg+fishery_holder$nonsector_catch_kg
-rm(list=c("production_dataset","targeting_dataset"))
+#rm(list=c("production_dataset","targeting_dataset"))
+
+
+
+
+#subset fishery_holder to have just things that have a biological model
+bio_output<-fishery_holder[which(fishery_holder$bio_model==1),]
+bio_output<-cbind(c(1,2),bio_output)
+colnames(bio_output)[1]<-"index_pos"
+
+# 
+# #hard code for now
+# realized_F<-getF(bio_output$removals_kg[1],
+#                  stock[[1]]$J1N[y,],
+#                  stock[[1]]$selC[y,],
+#                  stock[[1]]$M,
+#                  stock[[1]]$waa[y,])
 
