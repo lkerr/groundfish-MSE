@@ -1,5 +1,5 @@
-global inputdir "C:\Users\Min-Yang.Lee\Documents\groundfish-MSE\data\data_raw\econ"
-global outdir "C:\Users\Min-Yang.Lee\Documents\groundfish-MSE\data\data_raw\econ"
+global inputdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_raw/econ"
+global outdir"/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_raw/econ"
 
 
 

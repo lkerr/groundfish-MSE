@@ -16,6 +16,7 @@ data/data_raw/*
 *xlsx
 *.dll
 *.o
+*.out
 *.so
 /results/*
 *.pptx
@@ -30,3 +31,5 @@ data/data_raw/*
 =======
 *.*~
 *.dta
+*.xx*
+*.zip

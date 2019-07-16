@@ -83,6 +83,17 @@ replace nsnr=0 if nsnr==.
 replace rec_frac=0 if rec_frac==.
 rename nsnr_util nonsector_nonrec_fraction
 rename rec_frac rec_fraction
+gen mults_allocated=inlist(spstock2,"AmericanPlaiceFlounder","CodGB","CodGOM","HaddockGB","HaddockGOM","Pollock","Redfish","WhiteHake")
+replace mults_allocated=1 if inlist(spstock2,`"YellowtailFlounderCCGOM"',`"YellowtailFlounderGB"',`"YellowtailFlounderSNEMA"'`"WinterFlounderGB"',`"WinterFlounderGOM"',`"WinterFlounderSNEMA"',`"WitchFlounder"')
+gen mults_nonalloc=inlist(spstock2,`"WindowpaneN"',`"WindowpaneS"',`"Wolffish"',`"Halibut"',`"OceanPout"')
+gen non_mult=inlist(spstock2, `"AmericanLobster"',`"Monkfish"',`"Other"',`"RedSilverOffshoreHake"',`"SeaScallop"',`"Skates"',`"SpinyDogfish"',`"SquidMackerelButterfishHerring"',`"SummerFlounder"')
+gen stockarea="Unit"
+replace stockarea="GB" if inlist(spstock2,"CodGB", "HaddockGB", "WinterFlounderGB", "YellowtailFlounderGB")
+replace stockarea="GOM" if inlist(spstock2,"CodGOM", "HaddockGOM", "WinterFlounderGOM", "YellowtailFlounderCCGOM")
+replace stockarea="SNEMA" if inlist(spstock2, "WinterFlounderSNEMA", "YellowtailFloundeSNEMA")
+
+
+
 export delimited using "$output_data\catch_limits_2010_2017.csv", replace
 
 
@@ -174,6 +185,16 @@ replace nsnr=0 if nsnr==.
 replace rec_frac=0 if rec_frac==.
 rename nsnr_util nonsector_nonrec_fraction
 rename rec_frac rec_fraction
+gen mults_allocated=inlist(spstock2,"AmericanPlaiceFlounder","CodGB","CodGOM","HaddockGB","HaddockGOM","Pollock","Redfish","WhiteHake")
+replace mults_allocated=1 if inlist(spstock2,`"YellowtailFlounderCCGOM"',`"YellowtailFlounderGB"',`"YellowtailFlounderSNEMA"'`"WinterFlounderGB"',`"WinterFlounderGOM"',`"WinterFlounderSNEMA"',`"WitchFlounder"')
+gen mults_nonalloc=inlist(spstock2,`"WindowpaneN"',`"WindowpaneS"',`"Wolffish"',`"Halibut"',`"OceanPout"')
+gen non_mult=inlist(spstock2, `"AmericanLobster"',`"Monkfish"',`"Other"',`"RedSilverOffshoreHake"',`"SeaScallop"',`"Skates"',`"SpinyDogfish"',`"SquidMackerelButterfishHerring"',`"SummerFlounder"')
+gen stockarea="Unit"
+replace stockarea="GB" if inlist(spstock2,"CodGB", "HaddockGB", "WinterFlounderGB", "YellowtailFlounderGB")
+replace stockarea="GOM" if inlist(spstock2,"CodGOM", "HaddockGOM", "WinterFlounderGOM", "YellowtailFlounderCCGOM")
+replace stockarea="SNEMA" if inlist(spstock2, "WinterFlounderSNEMA", "YellowtailFlounderSNEMA")
+
+
 export delimited using "$output_data\catch_limits_2017.csv", replace
 
 

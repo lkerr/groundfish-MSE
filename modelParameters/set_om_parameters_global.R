@@ -23,7 +23,7 @@ mprocTest <- FALSE
 # stockExclude variable. Do not include the extension.R. For example,
 # stockExclude <- haddockGB will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
-stockExclude <- c('codGB_R0', 'codGB_Steep')
+stockExclude <- c()
 
 
 #### Structural parameters ####
@@ -35,7 +35,7 @@ nrep <- 1
 fmyear <- 2000
 
 # first year after the initial condition period  !!!! DEFINE THIS BETTER !!!!
-fyear <- 5
+fyear <- 35
 
 # maximum year predicted into the future
 mxyear <- 2050

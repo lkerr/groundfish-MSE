@@ -27,7 +27,7 @@ get_advice <- function(stock){
     
     # Retrieve the estimated spawner biomass (necessary for advice)
     tempStock <- within(tempStock, {
-      SSBaa <- rep$J1N * get_dwindow(waa, sty, y) * get_dwindow(mat, sty, y)
+      SSBaa <- rep$J1N * get_dwindow(waa, sty, y-1) * get_dwindow(mat, sty, y-1)
       SSBhat <- apply(SSBaa, 1, sum)
     })
     
@@ -40,7 +40,7 @@ get_advice <- function(stock){
       parpop <- list(waa = tail(rep$waa, 1) / caaInScalar, 
                      sel = tail(rep$slxC, 1), 
                      M = tail(rep$M, 1), 
-                     mat = mat[y,],
+                     mat = mat[y-1,],
                      R = rep$R * caaInScalar,
                      SSBhat = SSBhat * caaInScalar,
                      J1N = rep$J1N * caaInScalar,
@@ -52,10 +52,10 @@ get_advice <- function(stock){
       tempStock <- within(tempStock, {
         parpop <- list(obs_sumCW = tmb_dat$obs_sumCW,
                        mult = planBest$multiplier,
-                       waatrue_y = waa[y,],
-                       Ntrue_y = J1N[y,],
+                       waatrue_y = waa[y-1,],
+                       Ntrue_y = J1N[y-1,],
                        Mtrue_y = M,
-                       slxCtrue_y = slxC[y,])
+                       slxCtrue_y = slxC[y-1,])
         })
     }
     
@@ -64,7 +64,7 @@ get_advice <- function(stock){
                    Tanom = Tanom,
                    yrs = yrs, # management years
                    yrs_temp = yrs_temp, # temperature years
-                   y = y)
+                   y = y-1)
 
     
     #### Get ref points & assign F ####
@@ -96,26 +96,37 @@ get_advice <- function(stock){
         RPmat[y,] <- RPmat[y-1,]
       })
     }
-    # Report overfished status
+    # Report overfished status (based on previous year's data)
     tempStock <- within(tempStock, {
-      OFdStatus[y] <- gnF$OFdStatus
+      OFdStatus[y-1] <- gnF$OFdStatus
       
-      # Report maximum gradient component for CAA model
+      # Report maximum gradient component for CAA model (year model was run)
       mxGradCAA[y] <- ifelse(mproc[m,'ASSESSCLASS'] == 'CAA',
                              yes = rep$maxGrad,
                              no = NA)
       
       # Tabulate advice (plus small constant)
       adviceF <- gnF$F + 1e-5 
-    
+ 
+      # Calculate expected J1N using parameters from last year's assessment
+      # model (i.e., this is Dec 31 of the previous year). Recruitment is
+      # just recruitment from the previous year. This could be important
+      # depending on what the selectivity pattern is, but if age-1s are
+      # not very selected it won't matter much.
+      J1Ny <- get_J1Ny(J1Ny0 = tail(parpop$J1N, 1), 
+                       Zy0 = parpop$Fhat * parpop$sel + parpop$M, 
+                       Ry1 = tail(parpop$R, 1)) # last years R
       # Absolute Catch advice, inherits units of waa
-      quota <- get_catch(F_full=adviceF, M=M, N=J1N[y,], selC=slxC[y,])
-      quota<-quota%*%waa[y,]
+      # This need to be revisited-- having a hard time with the indexing.  Do we want to feed in N=J1N[y-1,] or N=J1N[y,], or
+      # the projection/expectation of J1N[y,] computed at time y-1? 
+      quota <- get_catch(F_full = adviceF, M = M, 
+                         N = J1Ny, selC = slxC[y,])
+      quota <- quota %*% waa[y,]
       
   
-      if(y < nyear){
-        F_fullAdvice[y+1] <- adviceF
-        ACL_kg[y+1] <- quota
+      if(y <= nyear){
+        F_fullAdvice[y] <- adviceF
+        ACL_kg[y] <- quota
       }
     })
       
