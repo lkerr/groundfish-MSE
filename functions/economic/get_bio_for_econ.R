@@ -18,8 +18,8 @@ get_bio_for_econ=function(stock,basecase){
   sn<-lapply(X = stock, FUN = `[[`, "stockName")
   
   #This stacks all the the metrics into individual lists
-  ACL_kg<-lapply(X = stock, FUN = `[[`, "ACL_kg")
-  ACL_kg<-lapply(X = ACL_kg, FUN = `[`, y)
+  ACL<-lapply(X = stock, FUN = `[[`, "ACL")
+  ACL<-lapply(X = ACL_kg, FUN = `[`, y)
   
   SSB<-lapply(X = stock, FUN = `[[`, "SSB")
   SSB<-lapply(X = SSB, FUN = `[`, y)
@@ -34,15 +34,16 @@ get_bio_for_econ=function(stock,basecase){
   #multiply together
   trawlsurvey<-mapply(function(x, y) x%*%y, trawlsurvey, waa)
   
-  # Hack the ACL to 1e12 kg if it is null
-  ACL_kg<-replace(ACL_kg, sapply(ACL_kg, is.null), 1e12) 
+  # Hack the ACL to 1e6 mt if it is null
+  ACL<-replace(ACL, sapply(ACL, is.null), 1e6) 
   
   df<-do.call(rbind,lapply(sn,data.frame))
+  df<-cbind(c(1:nrow(df)),df)
   df<-cbind(df,do.call(rbind,lapply(trawlsurvey,data.frame)))
   df<-cbind(df,do.call(rbind,lapply(SSB,data.frame)))
   df<-cbind(df,do.call(rbind,lapply(ACL_kg,data.frame)))
   df<-cbind(df,1)
-  colnames(df)<-c("stockName","trawlsurvey","SSB","ACL_kg","bio_model")
+  colnames(df)<-c("stocklist_index","stockName","trawlsurvey","SSB","ACL","bio_model")
   df$stockName<- as.character(df$stockName)
 
   df<-separate(df,stockName,into=c("spstock2","variant"), sep="_", remove=FALSE, fill="right")
@@ -50,12 +51,12 @@ get_bio_for_econ=function(stock,basecase){
   
   rownames(df)<- c()
   df<-merge(df,basecase,by="spstock2",all=TRUE)
-  df<-within(df, ACL_kg[is.na(ACL_kg)] <- baselineACL_kg[is.na(ACL_kg)])
+  df<-within(df, ACL[is.na(ACL)] <- baselineACL[is.na(ACL)])
   
   df<-within(df, bio_model[is.na(bio_model)] <- 0)
              
-  df$sectorACL_kg<-df$ACL_kg*df$sector_frac
-  df$nonsector_catch_kg<-df$ACL_kg*(1-df$sector_frac)
+  df$sectorACL<-df$ACL*df$sector_frac
+  df$nonsector_catch_kg<-df$ACL*(1-df$sector_frac)
   
   return(df)
 }
