@@ -18,9 +18,9 @@ econ_baseline <- read.csv(file.path(sourcepath,acls), sep=",", header=TRUE,strin
 
 #set anything na to 100,000,000 mt
 econ_baseline$totalACL_mt[is.na(econ_baseline$totalACL_mt)] <- 1e8
-econ_baseline$totalACL_mt<- econ_baseline$totalACL_mt*1000
+#econ_baseline$totalACL_mt<- econ_baseline$totalACL_mt*1000
 
-colnames(econ_baseline)[colnames(econ_baseline) == 'totalACL_mt'] <- 'baselineACL_kg'
+colnames(econ_baseline)[colnames(econ_baseline) == 'totalACL_mt'] <- 'baselineACL_mt'
 
 econ_baseline$spstock2<-tolower(econ_baseline$spstock2)
 

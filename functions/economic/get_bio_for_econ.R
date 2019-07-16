@@ -11,7 +11,7 @@ get_bio_for_econ=function(stock,basecase){
   
   #This stacks all the the metrics into individual lists
   ACL<-lapply(X = stock, FUN = `[[`, "ACL")
-  ACL<-lapply(X = ACL_kg, FUN = `[`, y)
+  ACL<-lapply(X = ACL, FUN = `[`, y)
   
   SSB<-lapply(X = stock, FUN = `[[`, "SSB")
   SSB<-lapply(X = SSB, FUN = `[`, y)
@@ -33,7 +33,7 @@ get_bio_for_econ=function(stock,basecase){
   biocontain<-cbind(c(1:nrow(biocontain)),biocontain)
   biocontain<-cbind(biocontain,do.call(rbind,lapply(trawlsurvey,data.frame)))
   biocontain<-cbind(biocontain,do.call(rbind,lapply(SSB,data.frame)))
-  biocontain<-cbind(biocontain,do.call(rbind,lapply(ACL_kg,data.frame)))
+  biocontain<-cbind(biocontain,do.call(rbind,lapply(ACL,data.frame)))
   biocontain<-cbind(biocontain,1)
   colnames(biocontain)<-c("stocklist_index","stockName","trawlsurvey","SSB","ACL","bio_model")
   biocontain$stockName<- as.character(biocontain$stockName)
@@ -43,7 +43,7 @@ get_bio_for_econ=function(stock,basecase){
   
   rownames(biocontain)<- c()
   biocontain<-merge(biocontain,basecase,by="spstock2",all=TRUE)
-  biocontain<-within(biocontain, ACL[is.na(ACL)] <- baselineACL[is.na(ACL)])
+  biocontain<-within(biocontain, ACL[is.na(ACL)] <- baselineACL_mt[is.na(ACL)])
   
   biocontain<-within(biocontain, bio_model[is.na(bio_model)] <- 0)
              
