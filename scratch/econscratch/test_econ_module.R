@@ -12,9 +12,9 @@
 
 # you ran runSim.R and save the bio paramters here
 # econsavepath <- 'scratch/econscratch'
-# save(bio_params_for_econ,file=file.path(econsavepath,"temp_biop.Rdata"))
+# save(bio_params_for_econ,file=file.path(econsavepath,"temp_biop.RData"))
 
-rm(list=ls())
+#rm(list=ls())
 # set.seed(2) 
 pounds_per_kg<-2.20462
 
@@ -23,16 +23,16 @@ runClass<-'local'
 source('processes/loadLibs.R')
 
 econsavepath <- 'scratch/econscratch'
-econdatapath <- 'data/data_processed/econ'
+ econdatapath <- 'data/data_processed/econ'
 ############################################################
 ############################################################
 #Pull in datasets and clean them up a little (this is temporary cleaning, so it belongs here)
 ############################################################
 ############################################################
 
+load(file.path(econsavepath,"temp_biop.RData"))
 load(file.path(econdatapath,"full_targeting.RData"))
 load(file.path(econdatapath,"full_production.RData"))
-load(file.path(econsavepath,"temp_biop.Rdata"))
 
 production_dataset<-production_dataset[which(production_dataset$gffishingyear==2009),]
 targeting_dataset<-targeting_dataset[which(targeting_dataset$gffishingyear==2009),]
@@ -49,9 +49,9 @@ targeting_dataset<-targeting_dataset[which(targeting_dataset$gffishingyear==2009
 ############################################################
 ############################################################
 
-fishery_holder<-bio_params_for_econ[c("stocklist_index","stockName","spstock2","sectorACL_kg","nonsector_catch_mt","bio_model","SSB", "mults_allocated", "stockarea")]
+fishery_holder<-bio_params_for_econ[c("stocklist_index","stockName","spstock2","sectorACL","nonsector_catch_mt","bio_model","SSB", "mults_allocated", "stockarea")]
 fishery_holder$open<-as.logical("TRUE")
-fishery_holder$cumul_catch_pounds<-1
+fishery_holder$cumul_catch_pounds<-0
 
 #fishery_holder$bio_model<-0
 #fishery_holder$bio_model[fishery_holder$spstock2 %in% c("codGB","pollock","haddockGB","yellowtailflounderGB")]<-1
@@ -227,20 +227,37 @@ for (day in 1:365){
 }
 
 proc.time()-start_time
-fishery_holder$removals_mt<-(fishery_holder$cumul_catch_pounds/pounds_per_kg)/1000+fishery_holder$nonsector_catch_mt)
+fishery_holder$removals_mt<-fishery_holder$cumul_catch_pounds/(pounds_per_kg*1000)+fishery_holder$nonsector_catch_mt
 #rm(list=c("production_dataset","targeting_dataset"))
 
 
 
 
-#subset fishery_holder to have just things that have a biological model
+#subset fishery_holder to have just things that have a biological model. send it to a list?
 bio_output<-fishery_holder[which(fishery_holder$bio_model==1),]
 
-# 
-# #hard code for now
-# realized_F<-getF(bio_output$removals_kg[1],
-#                  stock[[1]]$J1N[y,],
-#                  stock[[1]]$selC[y,],
-#                  stock[[1]]$M,
-#                  stock[[1]]$waa[y,])
+# This works, but it's #@$(*)&$#ing awful.
+# Take a look at how Sam passes things see what to do.
 
+#        for(i in 1:nstock){
+#stock[[i]] <- get_indexData(stock = stock[[i]])
+#  }
+
+# and
+#IN[y-1,] <- get_survey(F_full=F_full[y-1], M=M, N=J1N[y-1,], slxC[y-1,], 
+#                       slxI=selI, timeI=timeI, qI=qI)
+# within?
+
+ bio_output$realized_F[1]<-getF(bio_output$removals_mt[1],
+                  stock[[1]]$J1N[y,],
+                  stock[[1]]$slxC[y,],
+                  stock[[1]]$M,
+                  stock[[1]]$waa[y,])
+
+ bio_output$realized_F[2]<-getF(bio_output$removals_mt[2],
+                                stock[[2]]$J1N[y,],
+                                stock[[2]]$slxC[y,],
+                                stock[[2]]$M,
+                                stock[[2]]$waa[y,])
+ 
+ 
