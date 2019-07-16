@@ -41,7 +41,7 @@ for(r in 1:nrep){
     for(y in fyear:nyear){
 
       for(i in 1:nstock){
-        stock[[i]] <- get_popStep(stock = stock[[i]])
+        stock[[i]] <- get_J1Updates(stock = stock[[i]])
         stock[[i]] <- get_indexData(stock = stock[[i]])
       }
       
@@ -51,7 +51,8 @@ for(r in 1:nrep){
 
         
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
-          bio_params_for_econ<-get_bio_for_econ(stock)
+          bio_params_for_econ <- get_bio_for_econ(stock)
+          
           for(i in 1:nstock){
             stock[[i]] <- get_advice(stock = stock[[i]])
           }
@@ -60,7 +61,8 @@ for(r in 1:nrep){
             # currently the standard fisheries model, but without error
             stock[[i]] <- get_implementationF(type = 'advicenoError', 
                                               stock = stock[[i]])
-          for(i in 1:nstock){
+          
+            for(i in 1:nstock){
             stock[[i]] <- get_relError(stock = stock[[i]])
             stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
             
@@ -80,7 +82,11 @@ for(r in 1:nrep){
           }else{
             #Add a warning about invalid ImplementationClass
           }
-        }
+      }
+      
+      for(i in 1:nstock){
+        stock[[i]] <- get_mortality(stock = stock[[i]])
+      }
         
       }
         
