@@ -49,7 +49,7 @@ targeting_dataset<-targeting_dataset[which(targeting_dataset$gffishingyear==2009
 ############################################################
 ############################################################
 
-fishery_holder<-bio_params_for_econ[c("stockName","spstock2","sectorACL_kg","nonsector_catch_kg","bio_model","SSB")]
+fishery_holder<-bio_params_for_econ[c("stocklist_index","stockName","spstock2","sectorACL_kg","nonsector_catch_mt","bio_model","SSB", "mults_allocated", "stockarea")]
 fishery_holder$open<-as.logical("TRUE")
 fishery_holder$cumul_catch_pounds<-1
 
@@ -227,7 +227,7 @@ for (day in 1:365){
 }
 
 proc.time()-start_time
-fishery_holder$removals_kg<-fishery_holder$cumul_catch_pounds/pounds_per_kg+fishery_holder$nonsector_catch_kg
+fishery_holder$removals_mt<-(fishery_holder$cumul_catch_pounds/pounds_per_kg)/1000+fishery_holder$nonsector_catch_mt)
 #rm(list=c("production_dataset","targeting_dataset"))
 
 
@@ -235,8 +235,6 @@ fishery_holder$removals_kg<-fishery_holder$cumul_catch_pounds/pounds_per_kg+fish
 
 #subset fishery_holder to have just things that have a biological model
 bio_output<-fishery_holder[which(fishery_holder$bio_model==1),]
-bio_output<-cbind(c(1,2),bio_output)
-colnames(bio_output)[1]<-"index_pos"
 
 # 
 # #hard code for now
