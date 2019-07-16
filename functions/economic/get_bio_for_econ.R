@@ -3,16 +3,8 @@
 # There are *many* biological parameters stored in the stock lists
 # This collects a few of them into lists that are easier to pass to the economic model
 
-# trawlsurvey extraction not working.
-
-# So far, I just need stockName, SSB, ACL.  
-# Outer list is stocks 
-# Inner list is parameters inside
-
-# This subsets stock to just the few metrics that I care about
-
-# myfields<-c("stockName","ACL", "SSB", "IN","waa")
-# mybio<-lapply(X = stock, FUN = `[`, myfields)
+# trawlsurvey extraction not working, might be a timing thing. 
+# myfields<-c("stocklist_index","stockName","spstock2", ACL", "SSB", "IN","waa")
 
 get_bio_for_econ=function(stock,basecase){
   sn<-lapply(X = stock, FUN = `[[`, "stockName")
@@ -37,26 +29,26 @@ get_bio_for_econ=function(stock,basecase){
   # Hack the ACL to 1e6 mt if it is null
   ACL<-replace(ACL, sapply(ACL, is.null), 1e6) 
   
-  df<-do.call(rbind,lapply(sn,data.frame))
-  df<-cbind(c(1:nrow(df)),df)
-  df<-cbind(df,do.call(rbind,lapply(trawlsurvey,data.frame)))
-  df<-cbind(df,do.call(rbind,lapply(SSB,data.frame)))
-  df<-cbind(df,do.call(rbind,lapply(ACL_kg,data.frame)))
-  df<-cbind(df,1)
-  colnames(df)<-c("stocklist_index","stockName","trawlsurvey","SSB","ACL","bio_model")
-  df$stockName<- as.character(df$stockName)
+  biocontain<-do.call(rbind,lapply(sn,data.frame))
+  biocontain<-cbind(c(1:nrow(biocontain)),biocontain)
+  biocontain<-cbind(biocontain,do.call(rbind,lapply(trawlsurvey,data.frame)))
+  biocontain<-cbind(biocontain,do.call(rbind,lapply(SSB,data.frame)))
+  biocontain<-cbind(biocontain,do.call(rbind,lapply(ACL_kg,data.frame)))
+  biocontain<-cbind(biocontain,1)
+  colnames(biocontain)<-c("stocklist_index","stockName","trawlsurvey","SSB","ACL","bio_model")
+  biocontain$stockName<- as.character(biocontain$stockName)
 
-  df<-separate(df,stockName,into=c("spstock2","variant"), sep="_", remove=FALSE, fill="right")
-  df$spstock2<- as.character(df$spstock2)
+  biocontain<-separate(biocontain,stockName,into=c("spstock2","variant"), sep="_", remove=FALSE, fill="right")
+  biocontain$spstock2<- as.character(biocontain$spstock2)
   
-  rownames(df)<- c()
-  df<-merge(df,basecase,by="spstock2",all=TRUE)
-  df<-within(df, ACL[is.na(ACL)] <- baselineACL[is.na(ACL)])
+  rownames(biocontain)<- c()
+  biocontain<-merge(biocontain,basecase,by="spstock2",all=TRUE)
+  biocontain<-within(biocontain, ACL[is.na(ACL)] <- baselineACL[is.na(ACL)])
   
-  df<-within(df, bio_model[is.na(bio_model)] <- 0)
+  biocontain<-within(biocontain, bio_model[is.na(bio_model)] <- 0)
              
-  df$sectorACL<-df$ACL*df$sector_frac
-  df$nonsector_catch_kg<-df$ACL*(1-df$sector_frac)
+  biocontain$sectorACL<-biocontain$ACL*biocontain$sector_frac
+  biocontain$nonsector_catch_kg<-biocontain$ACL*(1-biocontain$sector_frac)
   
-  return(df)
+  return(biocontain)
 }
