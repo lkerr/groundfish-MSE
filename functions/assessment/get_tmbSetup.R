@@ -25,7 +25,7 @@ get_tmbSetup <- function(stock){
     log_ipop_mean <- ipopInfo$lmean
     ipop_dev <- ipopInfo$lLMdevs
     
-# if(y == 151) browser()
+
     tmb_dat <- list(
     
                       # index bounds
