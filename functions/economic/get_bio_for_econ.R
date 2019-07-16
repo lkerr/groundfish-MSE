@@ -48,7 +48,7 @@ get_bio_for_econ=function(stock,basecase){
   biocontain<-within(biocontain, bio_model[is.na(bio_model)] <- 0)
              
   biocontain$sectorACL<-biocontain$ACL*biocontain$sector_frac
-  biocontain$nonsector_catch_kg<-biocontain$ACL*(1-biocontain$sector_frac)
+  biocontain$nonsector_catch_mt<-biocontain$ACL*(1-biocontain$sector_frac)
   
   return(biocontain)
 }
