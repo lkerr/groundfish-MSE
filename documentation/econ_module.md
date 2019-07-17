@@ -71,7 +71,7 @@ There are few files in "scratch/econscratch" that may be useful
 
   There are a few files in "/preprocessing/economic/"  These primarily deal with converting data from stata format to RData and making the estimated coefficients "line up" with the data.  There is also a helper file to wrangle the historical catch limit and catch data.   
 
-### Inputs
+### Inputs,
 Data, starting values and parameter bounds are XXX.
 
 Running the model requires
@@ -85,7 +85,9 @@ Model outputs are XXX
 ### To do and known bugs
 * **zero_out_closed_asc:** currently only closes a target when it's ACL is reached. It should close all fisheries that would be caught with it. For example, if GB Cod quotas are hit, then *all* multispecies GB fishing stops. It also must adjust the landings and (probably catch) multipliers -- if a vessel targets skates after the GB Cod quota is hit, it should not land any GB cod. Whether it can catch GB cod is TBD.
 
-* **test_econ_module.R :** Does not yet incorporate catch/landings multipliers. So that's a big problem.
+* **test_econ_module.R :** 
+  1. Needs to be cleaned up: Pieces of this will be put into fragments that are called by "runSetup.R" (perhaps with an if cut-out for EconomicModel) because they only need to be run once.  Other parts should be converted into a function or many functions.  This is the first priority.
+  2. Does not yet incorporate catch/landings multipliers. So that's a big problem.  Will need to add the multiplier data, code to integrate, test, and adjust.  
 
 ### Notes
 * Here is a note
