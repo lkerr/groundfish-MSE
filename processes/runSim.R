@@ -4,7 +4,6 @@
 
 # empty the environment
 rm(list=ls())
-# set.seed(2) 
  
 source('processes/runSetup.R')
 
@@ -33,59 +32,66 @@ for(r in 1:nrep){
     for(i in 1:nstock){
       stock[[i]] <- get_popInit(stock[[i]])
     }
-    
-    
 
     
     #### Top year loop ####
     for(y in fyear:nyear){
+      
 
       for(i in 1:nstock){
         stock[[i]] <- get_J1Updates(stock = stock[[i]])
-        stock[[i]] <- get_indexData(stock = stock[[i]])
       }
       
 
       # if burn-in period is over...
       if(y >= fmyearIdx){
 
+        for(i in 1:nstock){
+          stock[[i]] <- get_advice(stock = stock[[i]])
+          stock[[i]] <- get_relError(stock = stock[[i]])
+        }
         
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
-          bio_params_for_econ <- get_bio_for_econ(stock)
           
           for(i in 1:nstock){
-            stock[[i]] <- get_advice(stock = stock[[i]])
+            within(stock[[i]], {
+              IJ1 <- get_survey(F_full=0, M=0, N=J1N[y,], slxC[y,], 
+                                slxI=selI, timeI=0, qI=qI)
+            })
           }
-            
-            # Placeholder for the econ model.
-            # currently the standard fisheries model, but without error
-            stock[[i]] <- get_implementationF(type = 'advicenoError', 
-                                              stock = stock[[i]])
           
-            for(i in 1:nstock){
-            stock[[i]] <- get_relError(stock = stock[[i]])
-            stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
+          bio_params_for_econ <- get_bio_for_econ(stock)
+        
+          # Placeholder for the econ model.
+          # currently the standard fisheries model, but without error
+          stock[[i]] <- get_implementationF(type = 'advicenoError', 
+                                            stock = stock[[i]])
+          
             
-          }
           # ---- Run the economic model here ----
           # ---- this takes the place of the get_implementationF----
           # ---- not sure about get_relError or get_fill_RepArrays ----
 
-        } else if(mproc$ImplementationClass[m]=="StandardFisheries"){
+        }else if(mproc$ImplementationClass[m] == "StandardFisheries"){
+          
           for(i in 1:nstock){
-            stock[[i]] <- get_advice(stock = stock[[i]])
             stock[[i]] <- get_implementationF(type = 'adviceWithError', 
                                               stock = stock[[i]])
-            stock[[i]] <- get_relError(stock = stock[[i]])
-            stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
-            }
+          }
+          
           }else{
             #Add a warning about invalid ImplementationClass
           }
+        
+        for(i in 1:nstock){
+          stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
+        }
+        
       }
       
       for(i in 1:nstock){
         stock[[i]] <- get_mortality(stock = stock[[i]])
+        stock[[i]] <- get_indexData(stock = stock[[i]])
       }
         
       }
