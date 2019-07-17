@@ -10,7 +10,7 @@
 #declare some paths to read and save things that I'm scratchpadding
 ############################################################
 
-# you ran runSim.R and save the bio paramters here
+# you ran runSim.R and save the bio parameters here
 # econsavepath <- 'scratch/econscratch'
 # save(bio_params_for_econ,file=file.path(econsavepath,"temp_biop.RData"))
 
@@ -100,15 +100,14 @@ for (day in 1:365){
   working_production<-production_dataset[[day]]
   working_targeting<-targeting_dataset[[day]]
   
-  
-  #   overwrite cumulative harvest and log cumulative catch of each stock.
-  working_production<-left_join(working_production,fishery_holder, by="spstock2")
-  
+  ###################################
+  #   overwrite cumulative harvest and log cumulative catch of each stock. This was needed for getting cumulative harvest back into the production functions. we're not doing that anymore.
+  # working_production<-left_join(working_production,fishery_holder, by="spstock2")
   # working_production$h_cumul<-working_production$cumul_catch_pounds
   # working_production$logh_cumul<-log(working_production$cumul_catch_pounds)
+  ###################################
   
-  
-  #   predict_eproduction: predict harvest of each stock by each vessel condition on targeting that stock.  Also predict revenue from that stock, and all revenue.  keep just 5 columns: hullnum2, date, spstock as key variables.  harvest, revenue, and expected revenue as columns that I care about. 
+  # predict_eproduction: predict harvest of each stock by each vessel condition on targeting that stock.  Also predict revenue from that stock, and all revenue.  keep just 5 columns: hullnum2, date, spstock as key variables.  harvest, revenue, and expected revenue as columns that I care about. 
   
   production_outputs<-get_predict_eproduction(working_production)
   
