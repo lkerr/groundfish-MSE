@@ -10,8 +10,8 @@ source('processes/loadLibs.R')
 
 econsavepath<-'scratch/econscratch'
 econdatapath <- 'data/data_processed/econ'
-econrawpath <- 'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE/data/data_raw/econ'
-econsavepath <- 'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE/data/data_processed/econ'
+# econrawpath <- 'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE/data/data_raw/econ'
+# econsavepath <- 'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE/data/data_processed/econ'
 
 load(file.path(econdatapath,"full_production.RData"))
 
