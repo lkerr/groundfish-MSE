@@ -45,17 +45,17 @@ The statistical estimation of the model takes place externally to the MSE model 
 There's a pile of code. It's quite janky.
 
 There are few files in "scratch/econscratch" that may be useful
-* **test_predict_eproduction.R :* was used to verify that the predict_eproduction.R function works properly. It runs as a standalone and might be fun to explore. 
-* **test_predict_etargeting.R :* was used to verify that the predict_etargeting.R function works properly. It runs as a standalone and might be fun to explore. 
+* **test_predict_eproduction.R :** was used to verify that the predict_eproduction.R function works properly. It runs as a standalone and might be fun to explore. 
+* **test_predict_etargeting.R :** was used to verify that the predict_etargeting.R function works properly. It runs as a standalone and might be fun to explore. 
 
 * **test_econ_module.R :**  is the economic module. The last part is incredibly janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop. I'm just waiting to have runSim.R reordered before I can use it to write out F_full to stock[[i]] for the modeled stocks.  Pieces of this will be put into fragments that are called by "runSetup.R" (perhaps with an if cut-out for EconomicModel) because they only need to be run once.  Other parts should be converted into a function or many functions.
 
-  There are two "processes" files: 
-  * **genBaselineACLs.R:** This is used to construct "baseline" ACLs for the non-modeled stocks. That includes Groundfish *and* non-groundfish stocks like lobster or skate that either caught with groundfish or altenatives to taking a groundfish trip.
+There are two "processes" files: 
+* **genBaselineACLs.R:** This is used to construct "baseline" ACLs for the non-modeled stocks. That includes Groundfish *and* non-groundfish stocks like lobster or skate that either caught with groundfish or altenatives to taking a groundfish trip.
 
-  * **genEcon_Containers.R:** Gets called in the runSetup.R file. It sets up a few placeholders for Fleet level economic outputs.
+* **genEcon_Containers.R:** Gets called in the runSetup.R file. It sets up a few placeholders for Fleet level economic outputs.
 
-    Functions:
+Functions:
 * **predict_eproduction:** Predicts harvest.
 
 * **predict_etargeting:** predicts targeting
@@ -69,7 +69,7 @@ There are few files in "scratch/econscratch" that may be useful
 * **get_at_age_stats, get_catch_at_age, get_e_smear, :** all probably are obsolete and should be removed.
 
 
-  There are a few files in "/preprocessing/economic/"  These primarily deal with converting data from stata format to RData and making the estimated coefficients "line up" with the data.  There is also a helper file to wrangle the historical catch limit and catch data.   
+There are a few files in "/preprocessing/economic/"  These primarily deal with converting data from stata format to RData and making the estimated coefficients "line up" with the data.  There is also a helper file to wrangle the historical catch limit and catch data.   
 
 ### Inputs,
 Data, starting values and parameter bounds are XXX.
@@ -86,8 +86,8 @@ Model outputs are XXX
 * **zero_out_closed_asc:** currently only closes a target when it's ACL is reached. It should close all fisheries that would be caught with it. For example, if GB Cod quotas are hit, then *all* multispecies GB fishing stops. It also must adjust the landings and (probably catch) multipliers -- if a vessel targets skates after the GB Cod quota is hit, it should not land any GB cod. Whether it can catch GB cod is TBD.
 
 * **test_econ_module.R :** 
-  1. Needs to be cleaned up: Pieces of this will be put into fragments that are called by "runSetup.R" (perhaps with an if cut-out for EconomicModel) because they only need to be run once.  Other parts should be converted into a function or many functions.  This is the first priority.
-  2. Does not yet incorporate catch/landings multipliers. So that's a big problem.  Will need to add the multiplier data, code to integrate, test, and adjust.  
+  * Needs to be cleaned up: Pieces of this will be put into fragments that are called by "runSetup.R" (perhaps with an if cut-out for EconomicModel) because they only need to be run once.  Other parts should be converted into a function or many functions.  This is the first priority.
+  * Does not yet incorporate catch/landings multipliers. So that's a big problem.  Will need to add the multiplier data, code to integrate, test, and adjust.  
 
 ### Notes
 * Here is a note
