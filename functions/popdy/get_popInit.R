@@ -15,15 +15,31 @@ get_popInit <- function(stock){
     #### Initilizations ####
     # initialize the model with numbers and mortality rates
     # in the first n (fyear-1) years.
-    
+   
     initN <- get_init(nage=nage, N0=2e7, F_full=F_full[1], M=M)
     J1N[1:(fyear-1),] <- rep(initN, each=(fyear-1))
     laa[1:(fyear-1),] <- rep(get_lengthAtAge(type='vonB', par=laa_par, 
                                              ages=fage:page, Tanom=0),
                              each=(fyear-1))
+    slxC[1:(fyear-1),] <- get_slx(type = selC_typ, par = selC, 
+                                  laa = laa[1:(fyear-1),])
+    CN[1:(fyear-1),] <- get_catch(F_full = F_full[1:(fyear-1)], M = M,
+                                  N = J1N[1:(fyear-1),],
+                                  selC = slxC[1:(fyear-1),])
     waa[1:(fyear-1),] <- get_weightAtAge(type='aLb', par=waa_par, 
                                          laa=laa[1:(fyear-1),],
                                          inputUnit='kg')
+    paaCN[1:(fyear-1),] <- (CN[1:(fyear-1),]) / sum(CN[1:(fyear-1),])
+    IN[1:(fyear-1),] <- get_survey(F_full=F_full[1:(fyear-1)], M=M, 
+                                   N=J1N[1:(fyear-1),], slxC[1:(fyear-1),], 
+                                   slxI=selI, timeI=timeI, qI=qI)
+    sumIN[1:(fyear-1)] <- sum(IN[1:(fyear-1),])
+    sumIW[1:(fyear-1)] <- apply(IN[1:(fyear-1),] * waa[1:(fyear-1),], 1, sum)
+    paaIN[1:(fyear-1),] <- IN[1:(fyear-1),] / sum(IN[1:(fyear-1),])
+    
+    effort[1:(fyear-1)] <- F_full[1:(fyear-1)] / qC
+    
+    
     Z[1:(fyear-1),] <- rep(F_full[1]+M, each=(fyear-1))
     
     
