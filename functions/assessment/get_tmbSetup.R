@@ -15,10 +15,11 @@ get_tmbSetup <- function(stock){
     }
     
     
-    sty <- y-ncaayear+1
+    sty <- y - ncaayear
+    lyr <- y - 1
     
     # get the random walk deviations
-    R_dev <- get_RWdevs(get_dwindow(R, sty, y))
+    R_dev <- get_RWdevs(get_dwindow(R, sty, lyr))
     
     # get the initial population mean and deviations
     ipopInfo <- get_LMdevs(J1N[sty,] / caaInScalar)
@@ -33,29 +34,29 @@ get_tmbSetup <- function(stock){
                       nage = nage,
                       
                       # Catch
-                      obs_sumCW = get_dwindow(obs_sumCW, sty, y),
-                      obs_paaCN = get_dwindow(obs_paaCN, sty, y),
+                      obs_sumCW = get_dwindow(obs_sumCW, sty, lyr),
+                      obs_paaCN = get_dwindow(obs_paaCN, sty, lyr),
                     
                       # Index
-                      obs_sumIN = get_dwindow(obs_sumIN, sty, y) / caaInScalar,
-                      obs_paaIN = get_dwindow(obs_paaIN, sty, y),
+                      obs_sumIN = get_dwindow(obs_sumIN, sty, lyr) / caaInScalar,
+                      obs_paaIN = get_dwindow(obs_paaIN, sty, lyr),
                       
                       # Fishing effort
-                      obs_effort = get_dwindow(obs_effort, sty, y),
+                      obs_effort = get_dwindow(obs_effort, sty, lyr),
                       
                       # ESS
                       oe_paaCN = oe_paaCN,
                       oe_paaIN = oe_paaIN,
                       
                       # len/wt-at-age
-                      laa = get_dwindow(laa, sty, y),
-                      waa = get_dwindow(waa, sty, y) * caaInScalar,
+                      laa = get_dwindow(laa, sty, lyr),
+                      waa = get_dwindow(waa, sty, lyr) * caaInScalar,
                       
                       # Survey info
-                      slxI = get_dwindow(slxI, sty, y),
+                      slxI = get_dwindow(slxI, sty, lyr),
                       timeI = timeI
     )
-    
+        
     # file.remove('results/caasink.txt')
     # sapply(1:length(tmb_dat), function(x){
     #   # cat(names(tmb_dat[[x]]), '\n', file='results/caasink.txt', append=TRUE)
