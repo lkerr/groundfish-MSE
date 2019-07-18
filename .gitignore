@@ -27,3 +27,8 @@ data/data_raw/*
 *.url
 *.pdf
 *.tex
+*.html
+*.zip
+*.out
+*.xx*
+documentation/stockRecruit/cod/recruitmentCOD_old.Rmd
