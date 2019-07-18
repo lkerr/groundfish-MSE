@@ -138,17 +138,6 @@ names(stock) <- stockNames
 source('processes/genEcon_Containers.R')
 
 
-
-# Set up a sink for debugging -- don't use this if on the HPCC because
-# you will end up with multiple programs trying to access the same file
-# at the same time (if running in parallel).
-if(debugSink & runClass != 'HPCC'){
-  dbf <- 'results/debugInfo.txt'
-  cat('############  Debug results:  ############\n',
-      file=dbf, sep='')
-}
-
-
 # Ensure that there are enough initial data points to support the
 # index generation at the beginning of the model.
 mxModYrs <- max(sapply(stock, '[[', 'ncaayear'))
