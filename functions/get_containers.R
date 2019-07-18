@@ -83,7 +83,9 @@ get_containers <- function(stockPar){
     relE_CW = yx0,
     relE_IN = yx0,
     
-    
+
+    # Economic things - Annual Catch limit (assumed MT)
+    ACL = yx0,
     
     
     # container to hold operating/assessment model results
