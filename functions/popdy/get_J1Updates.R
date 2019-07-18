@@ -2,7 +2,7 @@
 
 
 
-get_popStep <- function(stock){
+get_J1Updates <- function(stock){
   
   
   out <- within(stock, {
@@ -41,12 +41,7 @@ get_popStep <- function(stock){
     # depend on the numbers and mortality rate in the previous year and
     # on the recruitment this year
     J1N[y,] <- get_J1Ny(J1Ny0=J1N[y-1,], Zy0=Z[y-1,], R[y])
-    
-  
 
-    # F_full[y] <- get_implementationF(type='adviceWithError', stock=stock)
-    
-    
     
     # calculate the predicted catch in year y, the catch weight and the
     # proportions of catch numbers-at-age. Add small number in case F=0
