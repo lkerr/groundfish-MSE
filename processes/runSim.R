@@ -54,6 +54,8 @@ for(r in 1:nrep){
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
           
           for(i in 1:nstock){
+            # Specific "survey" meant to track the population on Jan1
+            # for use in the economic submodel. timeI=0 implies Jan1.
             within(stock[[i]], {
               IJ1 <- get_survey(F_full=0, M=0, N=J1N[y,], slxC[y,], 
                                 slxI=selI, timeI=0, qI=qI)
