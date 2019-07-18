@@ -43,10 +43,14 @@ selC <- c(s0=5, s1=0.08)
 selC_typ <- 'Logistic'
 
 # Recruitment (parameters need updating!!!)
-Rpar <- c(h = 4.118090e-01,
-          R0 = 1.312371e+07,
-          SSBRF0 = 0.0045,
-          sigR = 1.506112)
+
+Rpar <- c(h = 6.286813e-01,
+          R0 = 8.062700e+07,
+          c = -0.540,
+          SSBRF0 = 0.01972,
+          sigR = 0.56,
+          beta3 = -2.501400e-01)
+
 R_typ <- 'BHSteep'
 
 
