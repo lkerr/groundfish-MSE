@@ -47,7 +47,7 @@ get_advice <- function(stock){
                      Rpar = Rpar,
                      Fhat = tail(rep$F_full, 1))
       })
-      
+     
     }else if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
       tempStock <- within(tempStock, {
         parpop <- list(obs_sumCW = tmb_dat$obs_sumCW,
@@ -100,8 +100,8 @@ get_advice <- function(stock){
     tempStock <- within(tempStock, {
       OFdStatus[y-1] <- gnF$OFdStatus
       
-      # Report maximum gradient component for CAA model (year model was run)
-      mxGradCAA[y] <- ifelse(mproc[m,'ASSESSCLASS'] == 'CAA',
+      # Report maximum gradient component for CAA model
+      mxGradCAA[y-1] <- ifelse(mproc[m,'ASSESSCLASS'] == 'CAA',
                              yes = rep$maxGrad,
                              no = NA)
       
@@ -117,17 +117,12 @@ get_advice <- function(stock){
                        Zy0 = parpop$Fhat * parpop$sel + parpop$M, 
                        Ry1 = tail(parpop$R, 1)) # last years R
       # Absolute Catch advice, inherits units of waa
-      # This need to be revisited-- having a hard time with the indexing.  Do we want to feed in N=J1N[y-1,] or N=J1N[y,], or
-      # the projection/expectation of J1N[y,] computed at time y-1? 
-      quota <- get_catch(F_full = adviceF, M = M, 
-                         N = J1Ny, selC = slxC[y,])
+      quota <- get_catch(F_full = adviceF, M = M, N = J1N[y,], selC = slxC[y,])
       quota <- quota %*% waa[y,]
       
-  
-      if(y <= nyear){
-        F_fullAdvice[y] <- adviceF
-        ACL_kg[y] <- quota
-      }
+      F_fullAdvice[y] <- adviceF
+      ACL[y] <- quota
+      
     })
       
   }else{
