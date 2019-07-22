@@ -79,6 +79,15 @@ BrefScalar <- 0.5
 FrefScalar <- 0.75
 
 
+#### Helpful parameters ####
+# Scalars to convert things
+pounds_per_kg<-2.20462
+pounds_per_mt<-1000
+# Set the economic years that we'll use for simulation.  Right now, we'll pass  in 1 year.
+#baseEconYrs<-c(2009,2010)
+baseEconYrs<-c(2009)
+
+
 #### Output ####
 # Years after the management period begins to break up the results. For
 # example, c(10, 20) would result in plots from 0-10 years after the mgmnt
