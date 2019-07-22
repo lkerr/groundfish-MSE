@@ -64,6 +64,7 @@ reshape wide total sector nsnr recreational, i( spstock2) j(data_type) string
 gen nsnr_util=nsnrC/totalACL
 gen nsnr_CA=nsnrC/nsnrA
 gen rec_frac=0
+/*See the last full paragraph of page 18359 of the  Framework 44 federal register.  75 FR 68 page 18356-18375 .*/
 replace rec_frac=.337 if spstock2=="CodGOM"
 replace rec_frac=.275 if spstock2=="HaddockGOM"
 gen ns_frac=rec_frac+nsnr_util
