@@ -6,9 +6,6 @@
 
 #### Debugging ####
 
-# Debug? (windows only for now...) (T/F)
-debugSink <- FALSE
-
 # Debug using simple temperature trend that reduces variance? (T/F)
 simpleTemperature <- FALSE
 

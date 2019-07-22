@@ -3,8 +3,6 @@
 
 ## Overall MSE parameters: set_om_parameters_global.R
 
-* **debugSink**. T/F. If true then an output sink file is created that captures som checkpoints. Rarely used, untested of late.
-
 * **simpleTemperature**. T/F. If true then the temperature data are smoothed. This can be used for debugging because it is nice when you can know that the temperature is supposed to be increasing in every single year.
 
 * **mprocTest**. T/F. If true then **mproc.txt** is bypassed in favor of **mprocTest.txt**. **mprocTest** holds a variety of test cases for the management procedures that is meant to span the range of the potential options. The idea is that if you can run the code using **mprocTest** without errors cropping up then you are probably good to go. Feel free to add to this file to increase its utility; definitely add to this file if you make a substantive change to the management procedure options.

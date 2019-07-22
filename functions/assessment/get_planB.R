@@ -12,7 +12,7 @@ get_planB <- function(stock){
   
   out <- within(stock, {
 
-    
+
     # Compile the data for the annual trend
     planBdata <- data.frame(Year = sty:(y-1), 
                             avg = get_dwindow(obs_sumIN, sty, y-1))

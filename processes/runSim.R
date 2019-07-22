@@ -1,116 +1,103 @@
+
+
+#### Set up environment ####
+
+# empty the environment
+rm(list=ls())
+ 
+source('processes/runSetup.R')
+
+# if on local machine (i.e., not hpcc) must compile the tmb code
+# (HPCC runs have a separate call to compile this code). Keep out of
+# runSetup.R because it is really a separate process on the HPCC.
+if(runClass != 'HPCC'){
+  source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
+}
+
+#### Top rep Loop ####
+for(r in 1:nrep){
+
+  # Use the same random numbers for each of the management strategies
+  # set.seed(NULL)
+  # rsd <- rnorm()
   
-  
-  #### Set up environment ####
-  
-  # empty the environment
-  rm(list=ls())
-  # set.seed(2) 
-   
-  source('processes/runSetup.R')
-  
-  # if on local machine (i.e., not hpcc) must compile the tmb code
-  # (HPCC runs have a separate call to compile this code). Keep out of
-  # runSetup.R because it is really a separate process on the HPCC.
-  if(runClass != 'HPCC'){
-    source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
-  }
-  
-  
-  #testing things'
-  mproc<-mproc[1,]
-  mproc$ImplementationClass<-"Economic"
-  r<-1
-  m<-1
-  nyear<-152
-  #
-  
-  #this goes into a parameter file somewhere
-    pounds_per_kg<-2.20462
-  
-  #### Top rep Loop ####
-  for(r in 1:nrep){
-  
-    # Use the same random numbers for each of the management strategies
-    # set.seed(NULL)
-    # rsd <- rnorm()
+  #### Top MP loop ####
+  for(m in 1:nrow(mproc)){
+    #this is temporary, we should add a column to mproc.txt
+
+    # set.seed(rsd)
     
-    #### Top MP loop ####
-    for(m in 1:nrow(mproc)){
-      #this is temporary, we should add a column to mproc.txt
-  
-      # set.seed(rsd)
+    
+    # Initialize stocks and determine burn-in F
+    for(i in 1:nstock){
+      stock[[i]] <- get_popInit(stock[[i]])
+    }
+
+    
+    #### Top year loop ####
+    for(y in fyear:nyear){
       
-      
-      # Initialize stocks and determine burn-in F
+
       for(i in 1:nstock){
-        stock[[i]] <- get_popInit(stock[[i]])
+        stock[[i]] <- get_J1Updates(stock = stock[[i]])
       }
       
-      
-  
-      
-      #### Top year loop ####
-      for(y in fyear:nyear){
-  
-        # Index data from the previous year so it is available for assessment
+
+      # if burn-in period is over...
+      if(y >= fmyearIdx){
+
         for(i in 1:nstock){
-          stock[[i]] <- get_indexData(stock = stock[[i]])
+          stock[[i]] <- get_advice(stock = stock[[i]])
+          stock[[i]] <- get_relError(stock = stock[[i]])
         }
-  
-        # if burn-in period is over, start to give out catch advice
-        if(y >= fmyearIdx){
-  
-          ####################################################
-          #  Economic Type models#
-          ####################################################
+        
+        if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
           
-          if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
-            for(i in 1:nstock){
-              stock[[i]] <- get_advice(stock = stock[[i]])
-            }
-            bio_params_for_econ<-get_bio_for_econ(stock,econ_baseline)
+          for(i in 1:nstock){
+            # Specific "survey" meant to track the population on Jan1
+            # for use in the economic submodel. timeI=0 implies Jan1.
+            within(stock[[i]], {
+              IJ1 <- get_survey(F_full=0, M=0, N=J1N[y,], slxC[y,], 
+                                slxI=selI, timeI=0, qI=qI)
+            })
+          }
+          
+          bio_params_for_econ <- get_bio_for_econ(stock)
+        
+          # Placeholder for the econ model.
+          # currently the standard fisheries model, but without error
+          stock[[i]] <- get_implementationF(type = 'advicenoError', 
+                                            stock = stock[[i]])
+          
             
-              # Placeholder for the econ model.
-              # currently the standard fisheries model, 
-            for(i in 1:nstock){
-              stock[[i]] <- get_implementationF(type = 'adviceWithError', 
-                                                stock = stock[[i]])
-              stock[[i]] <- get_relError(stock = stock[[i]])
-              stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
-              
-            }
-            # ---- Run the economic model here ----
-            # ---- this takes the place of the get_implementationF----
-            # ---- not sure about get_relError or get_fill_RepArrays ----
-  
-            ####################################################
-            #  Standard Fisheries Type Models Type models#
-            ####################################################
-            
-          } else if(mproc$ImplementationClass[m]=="StandardFisheries"){
-            for(i in 1:nstock){
-              stock[[i]] <- get_advice(stock = stock[[i]])
-              stock[[i]] <- get_implementationF(type = 'adviceWithError', 
-                                                stock = stock[[i]])
-              stock[[i]] <- get_relError(stock = stock[[i]])
-              }
-            }else{
-              #Add a warning about invalid ImplementationClass
-            }
+          # ---- Run the economic model here ----
+          # ---- this takes the place of the get_implementationF----
+          # ---- not sure about get_relError or get_fill_RepArrays ----
+
+        }else if(mproc$ImplementationClass[m] == "StandardFisheries"){
           
-            ####################################################
-            #  Populations age up a year#
-            ####################################################
+          for(i in 1:nstock){
+            stock[[i]] <- get_implementationF(type = 'adviceWithError', 
+                                              stock = stock[[i]])
+          }
           
-        }
-          
+          }else{
+            #Add a warning about invalid ImplementationClass
+          }
+        
         for(i in 1:nstock){
-          stock[[i]] <- get_popStep(stock = stock[[i]])
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         }
           
       }
-          
+
+      for(i in 1:nstock){
+        stock[[i]] <- get_mortality(stock = stock[[i]])
+        stock[[i]] <- get_indexData(stock = stock[[i]])
+      }
+        
+      }
+
         
     }
   }
