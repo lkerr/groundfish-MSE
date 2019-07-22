@@ -16,29 +16,21 @@
 
 #rm(list=ls())
 # set.seed(2) 
-pounds_per_kg<-2.20462
+
+# empty the environment
+rm(list=ls())
 
 source('processes/runSetup.R')
-runClass<-'local'
-source('processes/loadLibs.R')
+source('processes/loadEcon.R')
 
 econsavepath <- 'scratch/econscratch'
- econdatapath <- 'data/data_processed/econ'
 ############################################################
 ############################################################
-#Pull in datasets and clean them up a little (this is temporary cleaning, so it belongs here)
+#Pull in temporary dataset that contains economic data clean them up a little (this is temporary cleaning, so it belongs here)
 ############################################################
 ############################################################
 
 load(file.path(econsavepath,"temp_biop.RData"))
-load(file.path(econdatapath,"full_targeting.RData"))
-load(file.path(econdatapath,"full_production.RData"))
-
-production_dataset<-production_dataset[which(production_dataset$gffishingyear==2009),]
-targeting_dataset<-targeting_dataset[which(targeting_dataset$gffishingyear==2009),]
-
-
-
 
 ############################################################
 ############################################################
@@ -52,9 +44,6 @@ targeting_dataset<-targeting_dataset[which(targeting_dataset$gffishingyear==2009
 fishery_holder<-bio_params_for_econ[c("stocklist_index","stockName","spstock2","sectorACL","nonsector_catch_mt","bio_model","SSB", "mults_allocated", "stockarea")]
 fishery_holder$open<-as.logical("TRUE")
 fishery_holder$cumul_catch_pounds<-0
-
-#fishery_holder$bio_model<-0
-#fishery_holder$bio_model[fishery_holder$spstock2 %in% c("codGB","pollock","haddockGB","yellowtailflounderGB")]<-1
 
 revenue_holder<-NULL
 
@@ -83,11 +72,7 @@ revenue_holder<-NULL
 #  predict for the entire year at the same time, generate a "cumulative harvest" under "all open"
 #  Find the date that the first quota binds, then predict from that point forward under "1 closed"
 #  Repeat until you get to the end of the year or all quotas bind.
-# It also might be better to "split" this feature off from the current working function.
 
-#split the production and targeting datasets into a list of datasets
-production_dataset<-split(production_dataset, production_dataset$doffy)
-targeting_dataset<-split(targeting_dataset, targeting_dataset$doffy)
 
 
 start_time<-proc.time()
@@ -151,12 +136,14 @@ for (day in 1:365){
   trips<-zero_out_closed_asc(trips,fishery_holder)
   
   ################################################################################################
-  #Keep the "best trip"  -- sort on id and prhat. then keep the id with the largest prhat.
-  # #THIS BIT IS MEDIUM 
+  #  OBSOLETE!
+  #  Keep the "best trip"  -- sort on id and prhat. then keep the id with the largest prhat.
+  #  #THIS BIT IS MEDIUM FAST 
   # 
   # trips <- trips %>% 
   #   group_by(id) %>%
   #   filter(prhat == max(prhat)) 
+  #  OBSOLETE!
   ################################################################################################
   
   # draw trips probabilistically.  A trip is selected randomly from the choice set. 
@@ -194,7 +181,7 @@ for (day in 1:365){
   ####################################################################################################
   # update the fishery holder dataframe
   
-    daily_catch<- trips[c("spstock2","h_hat")]
+  daily_catch<- trips[c("spstock2","h_hat")]
   colnames(daily_catch)[2]<-"cumul_catch_pounds"
   daily_catch<-rbind(daily_catch,fishery_holder[c("spstock2","cumul_catch_pounds")])
   
@@ -225,7 +212,7 @@ for (day in 1:365){
   
 }
 
-proc.time()-start_time
+end_time<-proc.time()
 fishery_holder$removals_mt<-fishery_holder$cumul_catch_pounds/(pounds_per_kg*1000)+fishery_holder$nonsector_catch_mt
 #rm(list=c("production_dataset","targeting_dataset"))
 
