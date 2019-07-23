@@ -7,10 +7,10 @@
 
 ***
 ### Status
-The full code doesn't run yet, I'm having trouble with reading in a few biological parameters, but I expect this problem to resolve once the sequencing of  runSim.R is updated.  
+The code runs, but is missing a few things. "runSim.R" runs, but will take a while to run. 
 
 
-### What is Beneath Economic module
+### Statistics Behind the Economic simulation module
 The population of vessels in the statistical model is: "Vessels that landed groundfish in the 2004-2015 time period, primarily used gillnet or trawl to catch groundfish, elected to fish in the sector program in 2010-2015, and were not falsifying their catch or sales records."  $i$ indexes individuals, $n$ indexes target, and $t$ indexes time (days).
 
 The statistical economic module has two stages. In the first stage, we estimate a Schaefer's harvest equation   
@@ -48,9 +48,12 @@ There are few files in "scratch/econscratch" that may be useful
 * **test_predict_eproduction.R :** was used to verify that the predict_eproduction.R function works properly. It runs as a standalone and might be fun to explore. 
 * **test_predict_etargeting.R :** was used to verify that the predict_etargeting.R function works properly. It runs as a standalone and might be fun to explore. 
 
-* **test_econ_module.R :**  is the economic module. The last part is incredibly janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop. I'm just waiting to have runSim.R reordered before I can use it to write out F_full to stock[[i]] for the modeled stocks.  Pieces of this will be put into fragments that are called by "runSetup.R" (perhaps with an if cut-out for EconomicModel) because they only need to be run once.  Other parts should be converted into a function or many functions.
+* **working_econ_module.R :**  is a *working* economic module. The last part is kinda janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop.  Currently does not do the catch multipliers.  
 
-There are two "processes" files: 
+
+* **test_econ_module.R :**  is a test economic module. The last part is incredibly janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop. I'm just waiting to have runSim.R reordered before I can use it to write out F_full to stock[[i]] for the modeled stocks.  Pieces of this will be put into fragments that are called by "runSetup.R" (perhaps with an if cut-out for EconomicModel) because they only need to be run once.  Other parts should be converted into a function or many functions.
+
+There are  "processes" files: 
 * **genBaselineACLs.R:** This is used to construct "baseline" ACLs for the non-modeled stocks. That includes Groundfish *and* non-groundfish stocks like lobster or skate that either caught with groundfish or altenatives to taking a groundfish trip.
 
 * **genEcon_Containers.R:** Gets called in the runSetup.R file. It sets up a few placeholders for Fleet level economic outputs.
@@ -61,6 +64,10 @@ Functions:
 * **predict_etargeting:** predicts targeting
 
 * **get_bio_for_econ:** passes *things* from the biological model (in stock[[i]]) to the economic model.
+
+* **get_best_trip:** for each vessel-day (id) selects the choice (spstock2) with the highest prhat
+
+* **get_random_draw_trip:** for each vessel-day (id) randomly selects a choice (spstock2) based on prhat
 
 * **get_fishery_next_period:** adds up catch from individual vessels to the daily level and then aggregates with prior catch.  Checks if the sector sub-ACL is reached and closes the fishery if so.
 
@@ -85,11 +92,16 @@ Model outputs are XXX
 ### To do and known bugs
 * **zero_out_closed_asc:** currently only closes a target when it's ACL is reached. It should close all fisheries that would be caught with it. For example, if GB Cod quotas are hit, then *all* multispecies GB fishing stops. It also must adjust the landings and (probably catch) multipliers -- if a vessel targets skates after the GB Cod quota is hit, it should not land any GB cod. Whether it can catch GB cod is TBD.
 
-* **test_econ_module.R :** 
-  * Needs to be cleaned up: Pieces of this will be put into fragments that are called by "runSetup.R" (perhaps with an if cut-out for EconomicModel) because they only need to be run once.  Other parts should be converted into a function or many functions.  This is the first priority.
-  * Does not yet incorporate catch/landings multipliers. So that's a big problem.  Will need to add the multiplier data, code to integrate, test, and adjust.  
+* **working_econ_module.R :** 
+  * Needs to be cleaned up.  I'm using over 6GB of RAM in a single simulation, so that's probably too much. Doesn't look like I have a leak, just using lots of memory.  
+  * Needs to be sped up.  data.table instead of tidyverse?  Currently takes over 16 minutes to run nyear=170 (so 20 years)
+  * Does not yet incorporate catch/landings multipliers. So that's a big problem.  Will need to add the multiplier data, code to integrate, test, and adjust.
+  * Doesn't read/use IJ1 trawl survey index(biomass index computed on Jan 1).
 
 ### Notes
 * Here is a note
+* packages are gmm, mvtnorm, tmvtnorm, expm, msm, Matrix, TMB, forcats, readr, tidyverse, dplyr
+
+
 
 [Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
