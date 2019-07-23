@@ -14,7 +14,8 @@ if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
-
+top_loop_start<-Sys.time()
+econ_timer<-0
 #### Top rep Loop ####
 for(r in 1:nrep){
 
@@ -37,8 +38,6 @@ for(r in 1:nrep){
     
     #### Top year loop ####
     for(y in fyear:nyear){
-      
-
       for(i in 1:nstock){
         stock[[i]] <- get_J1Updates(stock = stock[[i]])
       }
@@ -53,31 +52,24 @@ for(r in 1:nrep){
         }
         
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
-          
+
           for(i in 1:nstock){
             # Specific "survey" meant to track the population on Jan1
             # for use in the economic submodel. timeI=0 implies Jan1.
-            within(stock[[i]], {
-              IJ1 <- get_survey(F_full=0, M=0, N=J1N[y,], slxC[y,], 
+            stock[[i]]<- within(stock[[i]], {
+              IJ1[y,] <- get_survey(F_full=0, M=0, N=J1N[y,], slxC[y,], 
                                 slxI=selI, timeI=0, qI=qI)
             })
           }
-          
-          bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline)
-        
+
           
           # ---- Run the economic model here ----
-          
-          # Placeholder for the econ model.
-          # currently the standard fisheries model, but without error
-          for(i in 1:nstock){
-            
-          stock[[i]] <- get_implementationF(type = 'advicenoError', 
-                                            stock = stock[[i]])
-          }
-            
-          # ---- End of Run the economic model here ----
-          # End of Placeholder for the econ model.
+          bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline)
+
+          start_time<-proc.time() 
+          # progress(y,progress.bar=TRUE)
+          source('scratch/econscratch/working_econ_module.R')
+          econ_timer<-econ_timer+proc.time()[3]-start_time[3]
           
         }else if(mproc$ImplementationClass[m] == "StandardFisheries"){
           
@@ -107,6 +99,11 @@ for(r in 1:nrep){
     }
   }
   
+top_loop_end<-Sys.time()
+big_loop<-top_loop_end-top_loop_start
+big_loop
+econ_timer
+
   
   
   # Output run time / date information and OM inputs. The random number is
