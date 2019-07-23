@@ -82,7 +82,7 @@ FrefScalar <- 0.75
 #### Helpful parameters ####
 # Scalars to convert things
 pounds_per_kg<-2.20462
-pounds_per_mt<-1000
+kg_per_mt<-1000
 # Set the economic years that we'll use for simulation.  Right now, we'll pass  in 1 year.
 #baseEconYrs<-c(2009,2010)
 baseEconYrs<-c(2009)
