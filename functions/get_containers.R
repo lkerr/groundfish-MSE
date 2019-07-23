@@ -84,6 +84,11 @@ get_containers <- function(stockPar){
     relE_CW = yx0,
     relE_IN = yx0,
     
+    
+    # Econ model containers
+    # Total Weight of catch
+    econCW= yx0, 
+    
 
     # container to hold operating/assessment model results
     # (operating model-assessment model comparison)
@@ -232,6 +237,7 @@ get_containers <- function(stockPar){
       F_full = save_vector_ann,
       F_fullAdvice = save_vector_ann,
       ACL = save_vector_ann,
+      econCW= save_vector_ann, 
       sumCW = save_vector_ann,
       annPercentChange = save_vector_ann, #cheap ... not really vector.
       meanSizeCN = save_vector_ann,
