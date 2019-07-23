@@ -9,7 +9,7 @@ get_fishery_next_period <- function(accumulated_catch,fish_stats){
   
   fs<-within(fish_stats, rm(cumul_catch_pounds))
   accumulated_catch<-left_join(fs,accumulated_catch, by=c("spstock2"), all.x=TRUE)
-  accumulated_catch$sectorACL_pounds<-accumulated_catch$sectorACL*pounds_per_kg*1000
+  accumulated_catch$sectorACL_pounds<-accumulated_catch$sectorACL*pounds_per_kg*kg_per_mt
   accumulated_catch$open<-accumulated_catch$cumul_catch<accumulated_catch$sectorACL_pounds
   return(accumulated_catch)
 }
