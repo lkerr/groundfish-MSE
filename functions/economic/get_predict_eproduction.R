@@ -23,10 +23,7 @@ get_predict_eproduction <- function(prod_ds){
   
   
   X<-as.matrix(prod_ds[, ..datavars])
-  X[is.na(X)]<-0
-  
   B<-as.matrix(prod_ds[,..betavars])
-  B[is.na(B)]<-0
   
   prod_ds$logh_hat<-rowSums(X*B)
   prod_ds$logh_hat=prod_ds$logh_hat+prod_ds$q
