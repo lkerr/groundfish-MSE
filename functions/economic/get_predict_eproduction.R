@@ -22,10 +22,10 @@ get_predict_eproduction <- function(prod_ds){
   betavars=paste0("beta_",datavars)
   
   
-  X<-as.matrix(prod_ds[datavars])
+  X<-as.matrix(prod_ds[, ..datavars])
   X[is.na(X)]<-0
   
-  B<-as.matrix(prod_ds[betavars])
+  B<-as.matrix(prod_ds[,..betavars])
   B[is.na(B)]<-0
   
   prod_ds$logh_hat<-rowSums(X*B)
@@ -49,7 +49,7 @@ get_predict_eproduction <- function(prod_ds){
   #selectvars<-c("hullnum2", "date", "spstock2","exp_rev_sim","exp_rev_total_sim","harvest_sim")
   selectvars<-c("hullnum2", "date", "spstock2","harvest_sim","price_lb_lag1","exp_rev_total_sim")
   
-  prod_out<-prod_ds[selectvars]
+  prod_out<-prod_ds[,..selectvars]
   return(prod_out)
 }
 

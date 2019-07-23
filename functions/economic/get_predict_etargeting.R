@@ -18,16 +18,17 @@ get_predict_etargeting <- function(tds){
   datavars=c("exp_rev_total","das_charge","fuelprice_distance","mean_wind","mean_wind_noreast","permitted","lapermit","distance","wkly_crew_wage","len","fuelprice","fuelprice_len","start_of_season","partial_closure","constant")
   
   betavars=paste0("beta_",datavars)
+
   
-X<-as.matrix(tds[datavars])
+X<-as.matrix(tds[, ..datavars])
 X[is.na(X)]<-0
   
-B<-as.matrix(tds[betavars])
+B<-as.matrix(tds[, ..betavars])
 B[is.na(B)]<-0
 
 tds$xb=rowSums(X*B)
 tds$expu<-exp(tds$xb)
-
+tds<-as.data.table(tds)
 #This may be slightly faster
 #tds$expu=exp(rowSums(X*B))
 
@@ -37,10 +38,11 @@ tds$expu<-exp(tds$xb)
 #   tds<-full_join(tds, temp1, by = "id")
 
 #dplyr with mutate is approx 1/3rd faster than dplyr plus a full join
-  tds<-tds%>% 
-    group_by(id) %>% 
-    mutate(totexpu=sum(expu))
-  
+  # tds<-tds%>% 
+  #   group_by(id) %>% 
+  #   mutate(totexpu=sum(expu))
+  tds[, totexpu := sum(expu), by = id]
+
   tds$prhat<- tds$expu/tds$totexpu
   
   return(tds)

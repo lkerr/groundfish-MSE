@@ -19,25 +19,23 @@
 
 # empty the environment
 rm(list=ls())
-
 source('processes/runSetup.R')
-source('processes/loadEcon.R')
 
 econsavepath <- 'scratch/econscratch'
 ############################################################
 ############################################################
-#Pull in temporary dataset that contains economic data clean them up a little (this is temporary cleaning, so it belongs here)
+# Pull in temporary dataset that contains economic data clean them up a little (this is temporary cleaning, so it belongs here)
 ############################################################
 ############################################################
 
 load(file.path(econsavepath,"temp_biop.RData"))
 
+
+
+
 ############################################################
 ############################################################
-#These should probably go into the container setup
-# fishery stats holder is a dataframe that holds
-#stock name, open=true/false, cumulative catch to that day, and the acl
-#revenue_holder holds daily revenue for each vessel (could contract this to the trip)
+# Not sure if there's a cleaner place to put this.  This sets up a container data.frame for each year of the economic model. 
 ############################################################
 ############################################################
 
@@ -45,7 +43,7 @@ fishery_holder<-bio_params_for_econ[c("stocklist_index","stockName","spstock2","
 fishery_holder$open<-as.logical("TRUE")
 fishery_holder$cumul_catch_pounds<-0
 
-revenue_holder<-NULL
+revenue_holder<-as.data.table(NULL)
 
 
 
@@ -77,13 +75,12 @@ revenue_holder<-NULL
 
 start_time<-proc.time()
 
-for (day in 1:365){
 
-#for (day in 1:365){
-  #   subset both the targeting and production datasets based on date
+for (day in 1:365){
+  #   subset both the targeting and production datasets based on date and jams them to data.tables
   
-  working_production<-production_dataset[[day]]
-  working_targeting<-targeting_dataset[[day]]
+  working_production<-data.table(production_dataset[[day]])
+  working_targeting<-data.table(targeting_dataset[[day]])
   
   ###################################
   #   overwrite cumulative harvest and log cumulative catch of each stock. This was needed for getting cumulative harvest back into the production functions. we're not doing that anymore.
@@ -110,23 +107,20 @@ for (day in 1:365){
      
   #   use those three key variables to merge-update harvest, revenue, and expected revenue in the targeting dataset
   joincols<-c("hullnum2","date", "spstock2")
-  working_targeting<-left_join(working_targeting,production_outputs, by=joincols)
+  working_targeting<-as.data.table(left_join(working_targeting,production_outputs, by=joincols))
   
   
-  #############THIS BIT IS VERY FAST#######
   #fill exp_rev_sim, exp_rev_total_sim, harvest_sim=0 for the nofish options
   working_targeting$exp_rev_sim[is.na(working_targeting$exp_rev_sim)]<-0
   working_targeting$exp_rev_total_sim[is.na(working_targeting$exp_rev_total_sim)]<-0
   working_targeting$harvest_sim[is.na(working_targeting$harvest_sim)]<-0
   
   #overwrite the values of the exp_rev_total, exp_rev, and harvest in the targeting dataset.
-  
-  # working_targeting$exp_rev<-working_targeting$exp_rev_sim
-  # working_targeting$exp_rev_total<-working_targeting$exp_rev_total_sim
-  # working_targeting$h_hat<-working_targeting$harvest_sim
-  #############END VERY FAST#######
-  
-  
+   working_targeting$exp_rev<-working_targeting$exp_rev_sim
+   working_targeting$exp_rev_total<-working_targeting$exp_rev_total_sim
+   working_targeting$h_hat<-working_targeting$harvest_sim
+
+   
   trips<-get_predict_etargeting(working_targeting)
   
   
@@ -138,39 +132,13 @@ for (day in 1:365){
   ################################################################################################
   #  OBSOLETE!
   #  Keep the "best trip"  -- sort on id and prhat. then keep the id with the largest prhat.
-  #  #THIS BIT IS MEDIUM FAST 
-  # 
-  # trips <- trips %>% 
-  #   group_by(id) %>%
-  #   filter(prhat == max(prhat)) 
+  #  trips<-get_best_trip(trips)
   #  OBSOLETE!
   ################################################################################################
   
   # draw trips probabilistically.  A trip is selected randomly from the choice set. 
   # The probability of selection is equal to prhat
-  
-  trips<-trips[order(trips$id,trips$prhat),]
-  
-  #This takes a while
-  trips<-trips%>% 
-    group_by(id) %>% 
-    mutate(csum = cumsum(prhat))
-  
-  trips$draw<-runif(nrow(trips), min = 0, max = 1)
-  
-  #This takes a while
-  trips<-trips%>%
-    group_by(id) %>%
-    mutate(draw = first(draw))
-  
-  trips<-trips[trips$draw<trips$csum,]
-  
-  #This takes a while
-  trips <-
-    trips %>% 
-    group_by(id) %>% 
-    filter(row_number()==1)
-  
+  trips<-get_random_draw_tripsDT(trips)
   
   
   
@@ -180,8 +148,8 @@ for (day in 1:365){
   #   Pull out daily catch, rename the catch colum, and rbind to the holder. aggregate to update cumulative catch 
   ####################################################################################################
   # update the fishery holder dataframe
-  
-  daily_catch<- trips[c("spstock2","h_hat")]
+ 
+  daily_catch<- trips[, c("spstock2","h_hat")]
   colnames(daily_catch)[2]<-"cumul_catch_pounds"
   daily_catch<-rbind(daily_catch,fishery_holder[c("spstock2","cumul_catch_pounds")])
   
@@ -204,46 +172,22 @@ for (day in 1:365){
   # revenue<-trips[c("hullnum2","spstock2","exp_rev_total")]
   # revenue_holder<-rbind(revenue_holder,revenue)
   
-  revenue_holder<-rbind(revenue_holder,trips[c("hullnum2","spstock2","date","exp_rev_total")])
-  
-  
-  #cast pounds to NAA  you only need to do this for spstock2's that have bio_model==1 in the fishery_holder dataset
-  # Watch the units (lbs vs kg/mt)!!!  No 
-  
+  revenue_holder<-rbind(revenue_holder,trips[, c("hullnum2","spstock2","date","exp_rev_total")])
 }
-
+  
 end_time<-proc.time()
-fishery_holder$removals_mt<-fishery_holder$cumul_catch_pounds/(pounds_per_kg*1000)+fishery_holder$nonsector_catch_mt
-#rm(list=c("production_dataset","targeting_dataset"))
-
-
-
+fishery_holder$removals_mt<-fishery_holder$cumul_catch_pounds/(pounds_per_kg*kg_per_mt)+fishery_holder$nonsector_catch_mt
 
 #subset fishery_holder to have just things that have a biological model. send it to a list?
 bio_output<-fishery_holder[which(fishery_holder$bio_model==1),]
 
-# This works, but it's #@$(*)&$#ing awful.
-# Take a look at how Sam passes things see what to do.
+# Put catch (mt) into the stock list, then compute F_full
+for(i in 1:nstock){
+  stock[[i]]$econCW[y]<-bio_output$removals_mt[bio_output$stocklist_index==i]
 
-#        for(i in 1:nstock){
-#stock[[i]] <- get_indexData(stock = stock[[i]])
-#  }
+    stock[[i]]<-within(stock[[i]], {
+    F_full[y]<- getF(econCW[y],J1N[y,],slxC[y,],M,waa[y,])
+  }) 
+}
 
-# and
-#IN[y-1,] <- get_survey(F_full=F_full[y-1], M=M, N=J1N[y-1,], slxC[y-1,], 
-#                       slxI=selI, timeI=timeI, qI=qI)
-# within?
 
- bio_output$realized_F[1]<-getF(bio_output$removals_mt[1],
-                  stock[[1]]$J1N[y,],
-                  stock[[1]]$slxC[y,],
-                  stock[[1]]$M,
-                  stock[[1]]$waa[y,])
-
- bio_output$realized_F[2]<-getF(bio_output$removals_mt[2],
-                                stock[[2]]$J1N[y,],
-                                stock[[2]]$slxC[y,],
-                                stock[[2]]$M,
-                                stock[[2]]$waa[y,])
- 
- 

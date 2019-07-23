@@ -25,6 +25,7 @@ if(runClass == 'HPCC'){
   require(readr, lib.loc='../Rlib/')
   require(tidyverse, lib.loc='../Rlib/')
   require(dplyr, lib.loc='../Rlib/')
+  require(data.table, lib.loc='../Rlib/')
   
 }else{
   
@@ -39,7 +40,7 @@ if(runClass == 'HPCC'){
     sapply(pkg, require, character.only = TRUE)
   }
   
-  pkg<-c("msm", "tmvtnorm", "TMB", "abind", "tidyverse","dplyr")
+  pkg<-c("msm", "tmvtnorm", "TMB", "abind", "tidyverse","dplyr","data.table")
   check.packages(pkg)
   
   require(msm)
@@ -48,6 +49,7 @@ if(runClass == 'HPCC'){
   require(abind)
   require(tidyverse)
   require(dplyr)
+  require(data.table)
   
   
 }
