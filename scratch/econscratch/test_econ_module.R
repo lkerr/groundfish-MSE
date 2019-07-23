@@ -71,17 +71,26 @@ revenue_holder<-as.data.table(NULL)
 #  Find the date that the first quota binds, then predict from that point forward under "1 closed"
 #  Repeat until you get to the end of the year or all quotas bind.
 
+subset<-0
+eproduction<-0
+prep_target_join<-0
+prep_target_dc<-0
+etargeting<-0
+zero_out<-0
+randomdraw<-0
+holder_update_flatten <-0
+next_period_flatten <-0
+runtime<-0
+loop_start<-proc.time()
 
-
-start_time<-proc.time()
-
-
+for (run in 1:10){
+  
 for (day in 1:365){
   #   subset both the targeting and production datasets based on date and jams them to data.tables
-  
+  start_time<-proc.time()
   working_production<-data.table(production_dataset[[day]])
   working_targeting<-data.table(targeting_dataset[[day]])
-  
+  subset<-subset+proc.time()[3]-start_time[3]
   ###################################
   #   overwrite cumulative harvest and log cumulative catch of each stock. This was needed for getting cumulative harvest back into the production functions. we're not doing that anymore.
   # working_production<-left_join(working_production,fishery_holder, by="spstock2")
@@ -91,10 +100,12 @@ for (day in 1:365){
   
   # predict_eproduction: predict harvest of each stock by each vessel condition on targeting that stock.  Also predict revenue from that stock, and all revenue.  keep just 5 columns: hullnum2, date, spstock as key variables.  harvest, revenue, and expected revenue as columns that I care about. 
   
+  start_time<-proc.time()
   production_outputs<-get_predict_eproduction(working_production)
+  eproduction<-eproduction+proc.time()[3]-start_time[3]
   
   
-  
+  start_time<-proc.time()
   #This bit needs to be replaced with a function that handles the "jointness"
   #expected revenue from this species
   production_outputs$exp_rev_sim<- production_outputs$harvest_sim*production_outputs$price_lb_lag1
@@ -108,7 +119,9 @@ for (day in 1:365){
   #   use those three key variables to merge-update harvest, revenue, and expected revenue in the targeting dataset
   joincols<-c("hullnum2","date", "spstock2")
   working_targeting<-as.data.table(left_join(working_targeting,production_outputs, by=joincols))
+  prep_target_join<-prep_target_join+proc.time()[3]-start_time[3]
   
+  start_time<-proc.time()
   
   #fill exp_rev_sim, exp_rev_total_sim, harvest_sim=0 for the nofish options
   working_targeting$exp_rev_sim[is.na(working_targeting$exp_rev_sim)]<-0
@@ -120,14 +133,21 @@ for (day in 1:365){
    working_targeting$exp_rev_total<-working_targeting$exp_rev_total_sim
    working_targeting$h_hat<-working_targeting$harvest_sim
 
-   
+  prep_target_dc<-prep_target_dc+proc.time()[3]-start_time[3]
+  
+  
+  
+  start_time<-proc.time() 
   trips<-get_predict_etargeting(working_targeting)
+  etargeting<-etargeting+proc.time()[3]-start_time[3]
   
   
   # Predict targeting
   # this is where infeasible trips should be eliminated.
-
+  start_time<-proc.time() 
+  
   trips<-zero_out_closed_asc(trips,fishery_holder)
+  zero_out<-zero_out+proc.time()[3]-start_time[3]
   
   ################################################################################################
   #  OBSOLETE!
@@ -138,7 +158,9 @@ for (day in 1:365){
   
   # draw trips probabilistically.  A trip is selected randomly from the choice set. 
   # The probability of selection is equal to prhat
+  start_time<-proc.time() 
   trips<-get_random_draw_tripsDT(trips)
+  randomdraw<-randomdraw+proc.time()[3]-start_time[3]
   
   
   
@@ -148,7 +170,9 @@ for (day in 1:365){
   #   Pull out daily catch, rename the catch colum, and rbind to the holder. aggregate to update cumulative catch 
   ####################################################################################################
   # update the fishery holder dataframe
- 
+  
+  start_time<-proc.time() 
+  
   daily_catch<- trips[, c("spstock2","h_hat")]
   colnames(daily_catch)[2]<-"cumul_catch_pounds"
   daily_catch<-rbind(daily_catch,fishery_holder[c("spstock2","cumul_catch_pounds")])
@@ -157,7 +181,9 @@ for (day in 1:365){
     group_by(spstock2) %>% 
     summarise(cumul_catch_pounds=sum(cumul_catch_pounds))
   
+  
   fishery_holder<-get_fishery_next_period(daily_catch,fishery_holder)
+  holder_update_flatten<-holder_update_flatten+proc.time()[3]-start_time[3]
   
   ####################################################################################################
   # Expand from harvest of the target to harvest of all using the catch multiplier matrices
@@ -171,23 +197,42 @@ for (day in 1:365){
   
   # revenue<-trips[c("hullnum2","spstock2","exp_rev_total")]
   # revenue_holder<-rbind(revenue_holder,revenue)
-  
+  start_time<-proc.time() 
   revenue_holder<-rbind(revenue_holder,trips[, c("hullnum2","spstock2","date","exp_rev_total")])
-}
+  next_period_flatten<-next_period_flatten+proc.time()[3]-start_time[3]
   
-end_time<-proc.time()
-fishery_holder$removals_mt<-fishery_holder$cumul_catch_pounds/(pounds_per_kg*kg_per_mt)+fishery_holder$nonsector_catch_mt
-
-#subset fishery_holder to have just things that have a biological model. send it to a list?
-bio_output<-fishery_holder[which(fishery_holder$bio_model==1),]
-
-# Put catch (mt) into the stock list, then compute F_full
-for(i in 1:nstock){
-  stock[[i]]$econCW[y]<-bio_output$removals_mt[bio_output$stocklist_index==i]
-
-    stock[[i]]<-within(stock[[i]], {
-    F_full[y]<- getF(econCW[y],J1N[y,],slxC[y,],M,waa[y,])
-  }) 
+  
 }
+}
+loop_end<-proc.time()
 
+runtime<-loop_end[3]-loop_start[3]
+
+subset
+eproduction
+prep_target_join
+prep_target_dc
+etargeting
+zero_out
+randomdraw
+holder_update_flatten
+next_period_flatten
+runtime
+
+
+# 
+# fishery_holder$removals_mt<-fishery_holder$cumul_catch_pounds/(pounds_per_kg*kg_per_mt)+fishery_holder$nonsector_catch_mt
+# 
+# #subset fishery_holder to have just things that have a biological model. send it to a list?
+# bio_output<-fishery_holder[which(fishery_holder$bio_model==1),]
+# 
+# # Put catch (mt) into the stock list, then compute F_full
+# for(i in 1:nstock){
+#   stock[[i]]$econCW[y]<-bio_output$removals_mt[bio_output$stocklist_index==i]
+# 
+#     stock[[i]]<-within(stock[[i]], {
+#     F_full[y]<- getF(econCW[y],J1N[y,],slxC[y,],M,waa[y,])
+#   }) 
+# }
+# 
 
