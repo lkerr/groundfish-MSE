@@ -15,10 +15,11 @@
 # save(bio_params_for_econ,file=file.path(econsavepath,"temp_biop.RData"))
 
 #rm(list=ls())
-# set.seed(2) 
 
 # empty the environment
 rm(list=ls())
+set.seed(2) 
+
 source('processes/runSetup.R')
 
 econsavepath <- 'scratch/econscratch'
@@ -83,7 +84,7 @@ next_period_flatten <-0
 runtime<-0
 loop_start<-proc.time()
 
-for (run in 1:10){
+for (run in 1:3){
   
 for (day in 1:365){
   #   subset both the targeting and production datasets based on date and jams them to data.tables
@@ -106,11 +107,13 @@ for (day in 1:365){
   
   
   start_time<-proc.time()
+  
+
   #This bit needs to be replaced with a function that handles the "jointness"
   #expected revenue from this species
   production_outputs$exp_rev_sim<- production_outputs$harvest_sim*production_outputs$price_lb_lag1
-
-  production_outputs$exp_rev_sim<-production_outputs$exp_rev_sim
+  production_outputs$exp_rev_total_sim<- production_outputs$harvest_sim*production_outputs$price_lb_lag1*production_outputs$multiplier
+  
   #use the revenue multiplier to construct total revenue for this trip.
   #This bit needs to be replaced with a function that handles the "jointness"
   
@@ -145,7 +148,7 @@ for (day in 1:365){
   # Predict targeting
   # this is where infeasible trips should be eliminated.
   start_time<-proc.time() 
-  
+  # IF ALL fishery_holder$open=TRUE, we can skip the zero_out_closed_asc step
   trips<-zero_out_closed_asc(trips,fishery_holder)
   zero_out<-zero_out+proc.time()[3]-start_time[3]
   
