@@ -82,11 +82,11 @@ randomdraw<-0
 holder_update_flatten <-0
 next_period_flatten <-0
 runtime<-0
-loop_start<-proc.time()
+
 
 
 set.seed(2)
-
+loop_start<-proc.time()
 for (day in 1:365){
   #   subset both the targeting and production datasets based on date and jams them to data.tables
   start_time<-proc.time()

@@ -14,7 +14,8 @@ targeting_dataset<- targeting_dataset   %>%
   group_by(id) %>%
   mutate(nchoices=n())
 
-
+#temp for debugging
+targeting_dataset$prhat<-targeting_dataset$pr
 
 targeting_dataset<-data.table(targeting_dataset)
 #split the production and targeting datasets into a list of datasets

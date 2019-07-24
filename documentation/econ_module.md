@@ -99,10 +99,10 @@ Model outputs are XXX
   * Doesn't read/use IJ1 trawl survey index(biomass index computed on Jan 1).
   * does not store fishery revenue anywhere, just overwrites it.
   * slowest parts are eproduction, prepping and joining the targeting dataset, etargeting, and randomdraw.
-### Notes
-* Here is a note
-* packages are gmm, mvtnorm, tmvtnorm, expm, msm, Matrix, TMB, forcats, readr, tidyverse, dplyr, data.table
 
+### Notes
+* packages are gmm, mvtnorm, tmvtnorm, expm, msm, Matrix, TMB, forcats, readr, tidyverse, dplyr, data.table
+* the targeting and production datasets don't "conform" because there are some dates for which a vessel cannot target a stock due to regulatory closures.
 
 
 [Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
