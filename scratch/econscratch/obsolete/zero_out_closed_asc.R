@@ -7,15 +7,13 @@
 
 
 zero_out_closed_asc <- function(tds,open_hold){
+
   tds<-left_join(tds,open_hold, by=c("spstock2"="spstock2"))
   tds$open[which(tds$spstock2=="nofish")]<-"TRUE"
   #tds<-merge(tds,open_hold, by=c("spstock2"))
   tds$prhat[tds$open=="FALSE"]<-0
   tds<-as.data.table(tds)
   # 
-  # tds<-tds%>% 
-  #   group_by(id) %>% 
-  #   mutate(prsum=sum(prhat))
   tds<-tds[, prsum := sum(prhat), by = id]
   
   tds$prhat<- tds$prhat/tds$prsum

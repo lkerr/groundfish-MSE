@@ -85,6 +85,8 @@ runtime<-0
 loop_start<-proc.time()
 
 
+set.seed(2)
+
 for (day in 1:365){
   #   subset both the targeting and production datasets based on date and jams them to data.tables
   start_time<-proc.time()
@@ -148,7 +150,7 @@ for (day in 1:365){
   # this is where infeasible trips should be eliminated.
   start_time<-proc.time() 
   # IF ALL fishery_holder$open=TRUE, we can skip the zero_out_closed_asc step
-  trips<-zero_out_closed_asc(trips,fishery_holder)
+  trips<-zero_out_closed_asc_cutout(trips,fishery_holder)
   zero_out<-zero_out+proc.time()[3]-start_time[3]
   
   ################################################################################################

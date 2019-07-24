@@ -94,7 +94,7 @@ for (day in 1:365){
   # Predict targeting
   # this is where infeasible trips should be eliminated.
 
-  trips<-zero_out_closed_asc(trips,fishery_holder)
+  trips<-zero_out_closed_asc_cutout(trips,fishery_holder)
   
   ################################################################################################
   #  OBSOLETE!
