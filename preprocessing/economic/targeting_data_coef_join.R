@@ -26,6 +26,7 @@ targeting_source<-"sample_DCdata_fys2009_2010_forML.dta"
 
 #Load in targeting coefficients
 load(file.path(econsavepath,"targeting_coefs.RData"))
+load(file.path(econsavepath,"production_coefs.RData"))
 
 colnames(targeting_coefs)[colnames(targeting_coefs)=="beta_LApermit"] <- "beta_lapermit"
 targeting_coefs$spstock2<-tolower(targeting_coefs$spstock2)
@@ -44,14 +45,53 @@ targeting$spstock2<- gsub("_","",targeting$spstock2)
 
 colnames(targeting)[colnames(targeting)=="LApermit"] <- "lapermit"
 
+targeting$log_crew<-log(targeting$crew)
+targeting$log_trip_days<-log(targeting$trip_days)
+targeting$log_trawl_survey_weight<-log(targeting$trawl_survey_weight)
+
+targeting$primary<-1
+targeting$secondary<-0
+
+count_rows<-nrow(targeting)
+cols_t<-ncol(targeting)
+
+#pull in the targeting dataset
+targeting<-left_join(targeting,production_coefs,by=c("gearcat","spstock2","post"))
+count_rows_post<-nrow(targeting)
+cols_pc<-ncol(production_coefs)
+cols_final<-ncol(targeting)
+
+#same number of rows.  sum of columns, minus the 3 merge columns
+cols_final==(cols_pc+cols_t-3)
+count_rows_post==count_rows
 
 
-
+#same number of rows. Sum of number of columns, minus the 2 merge columns
+if(cols_final !=(cols_pc+cols_t-3)){
+  warning("Lost some Columns from the targeting dataset")
+}
+if(count_rows_post !=(count_rows)){
+  warning("Lost some Rows from the targeting dataset")
+}
 
 
 # merge targeting dataset and coefficients
 # Note, you'll have some NAs for some rows, especially no fish.
 targeting_dataset<-left_join(targeting,targeting_coefs,by=c("gearcat","spstock2"))
+cols_final2<-ncol(targeting_dataset)
+count_rows_post2<-nrow(targeting_dataset)
+
+cols_tc<-ncol(targeting_coefs)
+
+#same number of rows. Sum of number of columns, minus the 2 merge columns
+if(cols_final2 !=(cols_final+cols_tc-2)){
+  warning("Lost some Columns from the targeting dataset")
+}
+if(count_rows_post2 !=(count_rows_post)){
+  warning("Lost some Rows from the targeting dataset")
+}
+
+
 targeting_dataset$spstock2<- gsub("gb","GB",targeting_dataset$spstock2)
 targeting_dataset$spstock2<- gsub("ccgom","CCGOM",targeting_dataset$spstock2)
 targeting_dataset$spstock2<- gsub("gom","GOM",targeting_dataset$spstock2)
@@ -59,26 +99,58 @@ targeting_dataset$spstock2<- gsub("snema","SNEMA",targeting_dataset$spstock2)
 
 
 
-#I expect the number of columns in targeting dataset to be number in targeting, plus number in targeting coefs, minus 2 (because I had 2 match columns)
-
-check<- ncol(targeting)+ncol(targeting_coefs)-2
-if(ncol(targeting_dataset) !=check){
-  warning("Lost some Columns from the targeting dataset")
-}
-
 targeting_dataset$constant<- 1
 
 
-datavars=c("exp_rev_total","das_charge","fuelprice_distance","mean_wind","mean_wind_noreast","permitted","lapermit","distance","wkly_crew_wage","len","fuelprice","fuelprice_len","start_of_season","partial_closure","constant")
-betavars=paste0("beta_",datavars)
-idvars=c("id", "hullnum2", "date","spstock2", "doffy")
+
+targeting_dataset$month1<-as.numeric(targeting_dataset$month==1)
+targeting_dataset$month2<-as.numeric(targeting_dataset$month==2)
+targeting_dataset$month3<-as.numeric(targeting_dataset$month==3)
+targeting_dataset$month4<-as.numeric(targeting_dataset$month==4)
+targeting_dataset$month5<-as.numeric(targeting_dataset$month==5)
+targeting_dataset$month6<-as.numeric(targeting_dataset$month==6)
+targeting_dataset$month7<-as.numeric(targeting_dataset$month==7)
+targeting_dataset$month8<-as.numeric(targeting_dataset$month==8)
+targeting_dataset$month9<-as.numeric(targeting_dataset$month==9)
+targeting_dataset$month10<-as.numeric(targeting_dataset$month==10)
+targeting_dataset$month11<-as.numeric(targeting_dataset$month==11)
+targeting_dataset$month12<-as.numeric(targeting_dataset$month==12)
+
+targeting_dataset$fy2004<-as.numeric(targeting_dataset$gffishingyear==2004)
+targeting_dataset$fy2005<-as.numeric(targeting_dataset$gffishingyear==2005)
+targeting_dataset$fy2006<-as.numeric(targeting_dataset$gffishingyear==2006)
+targeting_dataset$fy2007<-as.numeric(targeting_dataset$gffishingyear==2007)
+targeting_dataset$fy2008<-as.numeric(targeting_dataset$gffishingyear==2008)
+targeting_dataset$fy2009<-as.numeric(targeting_dataset$gffishingyear==2009)
+targeting_dataset$fy2010<-as.numeric(targeting_dataset$gffishingyear==2010)
+targeting_dataset$fy2011<-as.numeric(targeting_dataset$gffishingyear==2011)
+targeting_dataset$fy2012<-as.numeric(targeting_dataset$gffishingyear==2012)
+targeting_dataset$fy2013<-as.numeric(targeting_dataset$gffishingyear==2013)
+targeting_dataset$fy2014<-as.numeric(targeting_dataset$gffishingyear==2014)
+targeting_dataset$fy2015<-as.numeric(targeting_dataset$gffishingyear==2015)
+
+
+
+
+
+
+targeting_vars=c("exp_rev_total","das_charge","fuelprice_distance","mean_wind","mean_wind_noreast","permitted","lapermit","distance","wkly_crew_wage","len","fuelprice","fuelprice_len","start_of_season","partial_closure","constant")
+betavars=paste0("beta_",targeting_vars)
+
+production_vars=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight")
+alphavars=paste0("alpha_",production_vars)
+alphavars=c(alphavars,"alpha_constant")
+
+idvars=c("id", "hullnum", "date","spstock2", "doffy")
 necessary=c( "multiplier", "q", "gffishingyear")
 useful=c("gearcat","post","h_hat","pr")
-mysubs=c(idvars,necessary,useful,datavars,betavars)
-#mysubs is broken
+mysubs=c(idvars,necessary,useful,targeting_vars,betavars,production_vars, alphavars)
+#mysubs=c(idvars,necessary,useful,targeting_vars,betavars)
+
+
 
 targeting_dataset<-targeting_dataset[mysubs]
-
+targeting_dataset[is.na(targeting_dataset)]<-0
 save(targeting_dataset, file=file.path(econsavepath, "full_targeting.RData"))
 
 #rm(list=ls())
