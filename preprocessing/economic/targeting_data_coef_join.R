@@ -14,6 +14,9 @@ if(!require(tidyr)) {
 if(!require(dplyr)) {  
   install.packages("dplyr")
   require(dplyr)}
+if(!require(data.table)) {  
+  install.packages("data.table")
+  require(data.table)}
 
 
 # file paths for the raw and final directories
@@ -131,8 +134,12 @@ targeting_dataset$fy2015<-as.numeric(targeting_dataset$gffishingyear==2015)
 
 
 
+targeting_dataset[is.na(targeting_dataset)]<-0
+save(targeting_dataset, file=file.path(econsavepath, "giant_targeting.RData"))
 
 
+
+#load("~/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_processed/econ/giant_targeting.RData")
 
 targeting_vars=c("exp_rev_total","das_charge","fuelprice_distance","mean_wind","mean_wind_noreast","permitted","lapermit","distance","wkly_crew_wage","len","fuelprice","fuelprice_len","start_of_season","partial_closure","constant")
 betavars=paste0("beta_",targeting_vars)
@@ -141,17 +148,28 @@ production_vars=c("log_crew","log_trip_days","primary","secondary", "log_trawl_s
 alphavars=paste0("alpha_",production_vars)
 alphavars=c(alphavars,"alpha_constant")
 
+td_cols<-colnames(targeting_dataset)
+
+fydums<-td_cols[grepl("^fy20", td_cols)]
+fycoefs<-td_cols[grepl("^alpha_fy20", td_cols)]
+
+monthdums<-td_cols[grepl("^month", td_cols)]
+monthcoefs<-td_cols[grepl("^alpha_month", td_cols)]
+
+
+
 idvars=c("id", "hullnum", "date","spstock2", "doffy")
-necessary=c( "multiplier", "q", "gffishingyear")
+necessary=c( "multiplier", "q", "gffishingyear", "emean","price_lb_lag1")
 useful=c("gearcat","post","h_hat","pr")
-mysubs=c(idvars,necessary,useful,targeting_vars,betavars,production_vars, alphavars)
+mysubs=c(idvars,necessary,useful,fydums, monthdums, fycoefs, monthcoefs, targeting_vars,betavars,production_vars, alphavars)
 #mysubs=c(idvars,necessary,useful,targeting_vars,betavars)
 
 
 
 targeting_dataset<-targeting_dataset[mysubs]
-targeting_dataset[is.na(targeting_dataset)]<-0
 save(targeting_dataset, file=file.path(econsavepath, "full_targeting.RData"))
+#rm(targeting_dataset)
+#load("~/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_processed/econ/full_targeting.RData")
 
 #rm(list=ls())
 
