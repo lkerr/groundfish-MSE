@@ -73,7 +73,7 @@ Functions:
 
 * **zero_out_closed_asc:** Closes a fishery and redistributes the probability associated with that stock to the other options.
 
-* **get_at_age_stats, get_catch_at_age, get_e_smear, :** all probably are obsolete and should be removed.
+* **get_at_age_stats, get_catch_at_age, get_e_smear, :** all probably are obsolete and have been moved to /scratch/econscratch/obsolete.
 
 
 There are a few files in "/preprocessing/economic/"  These primarily deal with converting data from stata format to RData and making the estimated coefficients "line up" with the data.  There is also a helper file to wrangle the historical catch limit and catch data.   
@@ -93,14 +93,15 @@ Model outputs are XXX
 * **zero_out_closed_asc:** currently only closes a target when it's ACL is reached. It should close all fisheries that would be caught with it. For example, if GB Cod quotas are hit, then *all* multispecies GB fishing stops. It also must adjust the landings and (probably catch) multipliers -- if a vessel targets skates after the GB Cod quota is hit, it should not land any GB cod. Whether it can catch GB cod is TBD.
 
 * **working_econ_module.R :** 
-  * Needs to be cleaned up.  I'm using over 6GB of RAM in a single simulation, so that's probably too much. Doesn't look like I have a leak, just using lots of memory.  
-  * Needs to be sped up.  data.table instead of tidyverse?  Currently takes over 16 minutes to run nyear=170 (so 20 years)
+  * Needs to be cleaned up.  Tidyverse version uses 6GB of RAM in a single simulation. Doesn't look like I have a leak, just using lots of memory.  data.table version is down to ~4.4GB. 
+  * Needs to be sped up.  data.table instead of seems to speed up?  Tidyverse version takes 16 minutes to run 1 replicated for 20 years (48sec/yr).  The data.table version takes 22-23 to run 2 replicates for 20 years (33 sec/yr).  approx 31% faster
   * Does not yet incorporate catch/landings multipliers. So that's a big problem.  Will need to add the multiplier data, code to integrate, test, and adjust.
   * Doesn't read/use IJ1 trawl survey index(biomass index computed on Jan 1).
-
+  * does not store fishery revenue anywhere, just overwrites it.
+  * slowest parts are eproduction, prepping and joining the targeting dataset, etargeting, and randomdraw.
 ### Notes
 * Here is a note
-* packages are gmm, mvtnorm, tmvtnorm, expm, msm, Matrix, TMB, forcats, readr, tidyverse, dplyr
+* packages are gmm, mvtnorm, tmvtnorm, expm, msm, Matrix, TMB, forcats, readr, tidyverse, dplyr, data.table
 
 
 
