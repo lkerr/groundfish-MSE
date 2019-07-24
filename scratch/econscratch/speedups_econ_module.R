@@ -166,7 +166,7 @@ production_outputs<-get_predict_eproduction(working_production)
 
 #   
 #   use those three key variables to merge-update harvest, revenue, and expected revenue in the targeting dataset
-joincols<-c("hullnum2","date","spstock2")
+joincols<-c("hullnum","date","spstock2")
 working_targeting<-left_join(working_targeting,production_outputs, by=joincols)
 
 

@@ -56,7 +56,7 @@ for (day in 1:365){
   # working_production$logh_cumul<-log(working_production$cumul_catch_pounds)
   ###################################
   
-  # predict_eproduction: predict harvest of each stock by each vessel condition on targeting that stock.  Also predict revenue from that stock, and all revenue.  keep just 5 columns: hullnum2, date, spstock as key variables.  harvest, revenue, and expected revenue as columns that I care about. 
+  # predict_eproduction: predict harvest of each stock by each vessel condition on targeting that stock.  Also predict revenue from that stock, and all revenue.  keep just 5 columns: hullnum, date, spstock as key variables.  harvest, revenue, and expected revenue as columns that I care about. 
   
   production_outputs<-get_predict_eproduction(working_production)
   
@@ -73,7 +73,7 @@ for (day in 1:365){
   
      
   #   use those three key variables to merge-update harvest, revenue, and expected revenue in the targeting dataset
-  joincols<-c("hullnum2","date", "spstock2")
+  joincols<-c("hullnum","date", "spstock2")
   working_targeting<-as.data.table(left_join(working_targeting,production_outputs, by=joincols))
   
   
@@ -137,13 +137,13 @@ for (day in 1:365){
   
   #   add up today's revenue across the vessels (not necessary right now, but we end up with 'long' dataset of revenue)  
   # revenue<- trips %>% 
-  #   group_by(hullnum2) %>% 
+  #   group_by(hullnum) %>% 
   #   summarise(totalrev=sum(exp_rev_total))
   
-  # revenue<-trips[c("hullnum2","spstock2","exp_rev_total")]
+  # revenue<-trips[c("hullnum","spstock2","exp_rev_total")]
   # revenue_holder<-rbind(revenue_holder,revenue)
   
-  revenue_holder<-rbind(revenue_holder,trips[, c("hullnum2","spstock2","date","exp_rev_total")])
+  revenue_holder<-rbind(revenue_holder,trips[, c("hullnum","spstock2","date","exp_rev_total")])
 }
 
 fishery_holder$removals_mt<-fishery_holder$cumul_catch_pounds/(pounds_per_kg*kg_per_mt)+fishery_holder$nonsector_catch_mt

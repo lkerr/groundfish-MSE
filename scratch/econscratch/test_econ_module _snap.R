@@ -61,7 +61,7 @@ production_outputs<-get_predict_eproduction(working_production)
 
 #   
 #   use those three key variables to merge-update harvest, revenue, and expected revenue in the targeting dataset
-joincols<-c("hullnum2","date","spstock2")
+joincols<-c("hullnum","date","spstock2")
 wtcols<-ncol(working_targeting)
 
 working_targeting<-merge(working_targeting,production_outputs, by=joincols, all.x=TRUE)
@@ -97,10 +97,10 @@ trips<-get_predict_etargeting(working_targeting)
 #this is where infeasible trips should be eliminated.
 trips<-zero_out_closed(trips,fishery_holder)
 
-#Keep the "best trip"  -- sort on hullnum2, date and prhat. then keep the hullnum2, date with the largest prhat.
+#Keep the "best trip"  -- sort on hullnum, date and prhat. then keep the hullnum, date with the largest prhat.
 
 trips <- trips %>% 
-  group_by(hullnum2,date) %>%
+  group_by(hullnum,date) %>%
   filter(prhat == max(prhat)) 
 
 

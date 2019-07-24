@@ -35,8 +35,8 @@ predicted_trips$del<-predicted_trips$prhat-predicted_trips$pr
 summary(predicted_trips$del)
 
 
-test<-predicted_trips[predicted_trips$hullnum2==286,]
-test<-test[test$date==as.Date("2009-09-05"),]
+#test<-predicted_trips[predicted_trips$hullnum==286,]
+#test<-test[test$date==as.Date("2009-09-05"),]
 
 #We see maximum differences of magnitude .001 (A tenth of 1%), which is probably due to rounding differences.  I think stata will use quad precision internally, but only export in double precisions.  This is NBD.
 
@@ -49,7 +49,7 @@ predicted_trips<-predicted_trips[order(-predicted_trips$del),]
 # part3<-part3+sb-sa
 # 
 # predicted_trips <- predicted_trips %>% 
-#   group_by(hullnum2,date) %>%
+#   group_by(hullnum,date) %>%
 #   filter(prhat == max(prhat)) 
 # 
 # 

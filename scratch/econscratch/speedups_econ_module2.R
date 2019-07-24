@@ -58,7 +58,7 @@ production_outputs$exp_rev_total_sim<- production_outputs$harvest_sim*production
 
 
 #   use those three key variables to merge-update harvest, revenue, and expected revenue in the targeting dataset
-joincols<-c("hullnum2","date", "spstock2")
+joincols<-c("hullnum","date", "spstock2")
 
 
 

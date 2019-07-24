@@ -27,10 +27,10 @@ production_outputs<-get_predict_eproduction(production_dataset)
 #here, subset prod_ds to just contain the cols in mysubs
 #then try to rerun the get_predict_eproduction on that and see if it works
 
-needcols<-c("hullnum2","date","spstock2","gearcat","h_hat")
+needcols<-c("hullnum","date","spstock2","gearcat","h_hat")
 tester<-prod_ds[needcols]
 
-production_outputs<-left_join(production_outputs,tester, by=c("hullnum2", "date", "spstock2"))
+production_outputs<-left_join(production_outputs,tester, by=c("hullnum", "date", "spstock2"))
 production_outputs$delta<-production_outputs$harvest_sim-production_outputs$h_hat
 summary(production_outputs$delta)
 
