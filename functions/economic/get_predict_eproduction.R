@@ -19,13 +19,13 @@ get_predict_eproduction <- function(prod_ds){
   monthvars=paste0("month",1:12)
   
   datavars=c(indepvars,fyvars,monthvars)
-  betavars=paste0("beta_",datavars)
+  alphavars=paste0("alpha_",datavars)
   
   
-  X<-as.matrix(prod_ds[, ..datavars])
-  B<-as.matrix(prod_ds[,..betavars])
+  Z<-as.matrix(prod_ds[, ..datavars])
+  A<-as.matrix(prod_ds[,..alphavars])
   
-  prod_ds$logh_hat<-rowSums(X*B)
+  prod_ds$logh_hat<-rowSums(Z*A)
   prod_ds$logh_hat=prod_ds$logh_hat+prod_ds$q
   
   #production
@@ -36,8 +36,8 @@ get_predict_eproduction <- function(prod_ds){
   prod_ds$harvest_sim<- (exp(prod_ds$logh_hat))*prod_ds$emean 
   
 
-  #selectvars<-c("hullnum2", "date", "spstock2","exp_rev_sim","exp_rev_total_sim","harvest_sim")
-  selectvars<-c("hullnum2", "date", "spstock2","harvest_sim","price_lb_lag1","multiplier")
+  #selectvars<-c("hullnum", "date", "spstock2","exp_rev_sim","exp_rev_total_sim","harvest_sim")
+  selectvars<-c("hullnum", "date", "spstock2","harvest_sim","price_lb_lag1","multiplier")
   
   prod_out<-prod_ds[,..selectvars]
   return(prod_out)
