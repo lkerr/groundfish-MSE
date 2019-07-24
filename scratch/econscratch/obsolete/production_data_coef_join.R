@@ -107,7 +107,7 @@ fycoefs<-pd_cols[grepl("^beta_fy20", pd_cols)]
 
 monthdums<-pd_cols[grepl("^month", pd_cols)]
 monthcoefs<-pd_cols[grepl("^beta_month", pd_cols)]
-idvars=c("hullnum2", "id", "date","spstock2", "doffy")
+idvars=c("hullnum", "id", "date","spstock2", "doffy")
 necessary=c("multiplier", "q", "rmse", "price_lb_lag1","emean", "gffishingyear", "gearcat", "post")
 # Need to sort out which things I need with Anna. There may be a few more that I need
 
