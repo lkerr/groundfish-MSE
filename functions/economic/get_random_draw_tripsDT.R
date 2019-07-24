@@ -10,7 +10,7 @@ get_random_draw_tripsDT <- function(tdsDT){
   
   tds<-tdsDT[order(tdsDT$id,tdsDT$prhat),]
   
-   tds[, csum := cumsum(prhat), by = id]
+   tds<-tds[, csum := cumsum(prhat), by = id]
     
     #make one draw per id, then replicate it nchoices time and place it into tds$draw
     tdss<-unique(tds[,c("id","nchoices")])

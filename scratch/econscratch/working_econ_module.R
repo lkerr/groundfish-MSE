@@ -8,7 +8,7 @@
 ############################################################
 ############################################################
 
-fishery_holder<-bio_params_for_econ[c("stocklist_index","stockName","spstock2","sectorACL","nonsector_catch_mt","bio_model","SSB", "mults_allocated", "stockarea")]
+fishery_holder<-bio_params_for_econ[,c("stocklist_index","stockName","spstock2","sectorACL","nonsector_catch_mt","bio_model","SSB", "mults_allocated", "stockarea")]
 fishery_holder$open<-as.logical("TRUE")
 fishery_holder$cumul_catch_pounds<-0
 
@@ -65,8 +65,8 @@ for (day in 1:365){
   #This bit needs to be replaced with a function that handles the "jointness"
   #expected revenue from this species
   production_outputs$exp_rev_sim<- production_outputs$harvest_sim*production_outputs$price_lb_lag1
-
-  production_outputs$exp_rev_sim<-production_outputs$exp_rev_sim
+  production_outputs$exp_rev_total_sim<- production_outputs$harvest_sim*production_outputs$price_lb_lag1*production_outputs$multiplier
+  
   #use the revenue multiplier to construct total revenue for this trip.
   #This bit needs to be replaced with a function that handles the "jointness"
   
@@ -116,13 +116,17 @@ for (day in 1:365){
   ####################################################################################################
   # update the fishery holder dataframe
   
+  
   daily_catch<- trips[, c("spstock2","h_hat")]
   colnames(daily_catch)[2]<-"cumul_catch_pounds"
-  daily_catch<-rbind(daily_catch,fishery_holder[c("spstock2","cumul_catch_pounds")])
+  daily_catch<-rbind(daily_catch,fishery_holder[, c("spstock2","cumul_catch_pounds")])
+
+  #DT style
+  daily_catch<-daily_catch[,.(cumul_catch_pounds = sum(cumul_catch_pounds)),by=spstock2]
   
-  daily_catch<- daily_catch %>% 
-    group_by(spstock2) %>% 
-    summarise(cumul_catch_pounds=sum(cumul_catch_pounds))
+  #daily_catch<- daily_catch %>% 
+  #  group_by(spstock2) %>% 
+  #  summarise(cumul_catch_pounds=sum(cumul_catch_pounds))
   
   fishery_holder<-get_fishery_next_period(daily_catch,fishery_holder)
   

@@ -40,7 +40,7 @@ load(file.path(econsavepath,"temp_biop.RData"))
 ############################################################
 ############################################################
 
-fishery_holder<-bio_params_for_econ[c("stocklist_index","stockName","spstock2","sectorACL","nonsector_catch_mt","bio_model","SSB", "mults_allocated", "stockarea")]
+fishery_holder<-bio_params_for_econ[,c("stocklist_index","stockName","spstock2","sectorACL","nonsector_catch_mt","bio_model","SSB", "mults_allocated", "stockarea")]
 fishery_holder$open<-as.logical("TRUE")
 fishery_holder$cumul_catch_pounds<-0
 
@@ -84,8 +84,7 @@ next_period_flatten <-0
 runtime<-0
 loop_start<-proc.time()
 
-for (run in 1:3){
-  
+
 for (day in 1:365){
   #   subset both the targeting and production datasets based on date and jams them to data.tables
   start_time<-proc.time()
@@ -175,15 +174,16 @@ for (day in 1:365){
   # update the fishery holder dataframe
   
   start_time<-proc.time() 
-  
   daily_catch<- trips[, c("spstock2","h_hat")]
   colnames(daily_catch)[2]<-"cumul_catch_pounds"
-  daily_catch<-rbind(daily_catch,fishery_holder[c("spstock2","cumul_catch_pounds")])
+  daily_catch<-rbind(daily_catch,fishery_holder[, c("spstock2","cumul_catch_pounds")])
   
-  daily_catch<- daily_catch %>% 
-    group_by(spstock2) %>% 
-    summarise(cumul_catch_pounds=sum(cumul_catch_pounds))
+  #DT style
+  daily_catch<-daily_catch[,.(cumul_catch_pounds = sum(cumul_catch_pounds)),by=spstock2]
   
+  #daily_catch<- daily_catch %>% 
+  #  group_by(spstock2) %>% 
+  #  summarise(cumul_catch_pounds=sum(cumul_catch_pounds))
   
   fishery_holder<-get_fishery_next_period(daily_catch,fishery_holder)
   holder_update_flatten<-holder_update_flatten+proc.time()[3]-start_time[3]
@@ -206,7 +206,7 @@ for (day in 1:365){
   
   
 }
-}
+
 loop_end<-proc.time()
 
 runtime<-loop_end[3]-loop_start[3]

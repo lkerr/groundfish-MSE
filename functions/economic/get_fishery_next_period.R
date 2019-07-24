@@ -11,6 +11,7 @@ get_fishery_next_period <- function(accumulated_catch,fish_stats){
   accumulated_catch<-left_join(fs,accumulated_catch, by=c("spstock2"), all.x=TRUE)
   accumulated_catch$sectorACL_pounds<-accumulated_catch$sectorACL*pounds_per_kg*kg_per_mt
   accumulated_catch$open<-accumulated_catch$cumul_catch<accumulated_catch$sectorACL_pounds
+  accumulated_catch<-as.data.table(accumulated_catch)
   return(accumulated_catch)
 }
 
