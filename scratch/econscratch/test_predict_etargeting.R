@@ -18,7 +18,7 @@ load(file.path(econsavepath,"temp_biop.RData"))
 
 datapath <- 'data/data_processed/econ'
 savepath<-'scratch/econscratch'
-targeting_dataset<-load(file.path(datapath,"full_targeting.Rds"))
+targeting_dataset<-readRDS(file.path(datapath,"full_targeting.Rds"))
 
 
 
@@ -37,28 +37,22 @@ sa<-Sys.time()
 predicted_trips<-get_predict_etargeting(tds)
 #targeting_dataset<-cbind(phat,targeting_dataset)
 
-
-
 predicted_trips$del<-predicted_trips$prhat-predicted_trips$pr
 summary(predicted_trips$del)
 
 
 
-prod_ds<-tds
 
 #code to test function. Remove when done.
-production_outputs<-get_predict_eproduction(tds)
+tds<-get_predict_eproduction(tds)
+
 
 
 #here, subset prod_ds to just contain the cols in mysubs
 #then try to rerun the get_predict_eproduction on that and see if it works
 
-needcols<-c("hullnum","date","spstock2","gearcat","h_hat")
-tester<-tds[, ..needcols]
-
-production_outputs<-left_join(production_outputs,tester, by=c("hullnum", "date", "spstock2"))
-production_outputs$delta<-production_outputs$harvest_sim-production_outputs$h_hat
-summary(production_outputs$delta)
+tds$delta<-tds$harvest_sim-tds$h_hat
+summary(tds$delta)
 
 #We see maximum differences of magnitude 0.08 (7 hundredths of a pound), which is probably due to rounding differences. 
 #I think stata will use quad precision internally, but only export in double precisions.  This is NBD.
