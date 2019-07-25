@@ -66,7 +66,7 @@ production$fy2015<-as.numeric(production$gffishingyear==2015)
 
 
 
-load(file.path(econsavepath,"production_coefs.RData"))
+production_coefs<-readRDS(file.path(econsavepath,"production_coefs.Rds"))
 #production_coefs$spstock2<-tolower(production_coefs$spstock2)
 #production_coefs$spstock2<- gsub("_","",production_coefs$spstock2)
 
@@ -119,9 +119,9 @@ mysubs=c(idvars, useful, datavars,betavars, fydums, monthdums, fycoefs, monthcoe
  post_only_dataset<-production_dataset[which(production_dataset$post==1),]
 
  
- save(production_dataset, file=file.path(econsavepath, "full_production.RData"))
- save(post_only_dataset, file=file.path(econsavepath, "post_production.RData"))
- save(pre_only_dataset, file=file.path(econsavepath, "pre_production.RData"))
+ saveRDS(production_dataset, file=file.path(econsavepath, "full_production.Rds"))
+ saveRDS(post_only_dataset, file=file.path(econsavepath, "post_production.Rds"))
+ saveRDS(pre_only_dataset, file=file.path(econsavepath, "pre_production.Rds"))
 
 #rm(list=ls())
 
