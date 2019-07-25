@@ -1,4 +1,4 @@
-# Read in Production and Targeting coefficients to .RData.  
+# Read in Production and Targeting coefficients to .Rds  
 # Tested working. Make a small change if we want to get different regression results (there are 4 sets of models for each gear, we haven't picked a "best " model yet).
 
 rm(list=ls())
@@ -128,7 +128,7 @@ targeting_coefs <- targeting_coefs[order(targeting_coefs$gearcat,targeting_coefs
 
 targeting_coefs<-as.data.table(targeting_coefs)
 
-save(targeting_coefs, file=file.path(savepath, "targeting_coefs.RData"))
+saveRDS(targeting_coefs, file=file.path(savepath, "targeting_coefs.Rds"))
 rm(list=c("all_coefs","asc_coefs","asc_coefs2"))
 
 #write.csv(targeting_coefs, file="asc.txt")

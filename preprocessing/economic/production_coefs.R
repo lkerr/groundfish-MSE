@@ -1,4 +1,4 @@
-# Read in Production and Targeting coefficients to .RData.  
+# Read in Production and Targeting coefficients to RDS  
 # Tested working. Make a small change if we want to get different regression results (there are 4 sets of models for each gear, we haven't picked a "best " model yet).
 
 rm(list=ls())
@@ -137,7 +137,7 @@ production_coefs[is.na(production_coefs)] <- 0
 production_coefs<-as.data.table(production_coefs)
 
 
-save(production_coefs, file=file.path(savepath, "production_coefs.RData"))
+saveRDS(production_coefs, file=file.path(savepath, "production_coefs.Rds"))
 
 
 

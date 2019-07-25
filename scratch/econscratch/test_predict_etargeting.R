@@ -1,23 +1,31 @@
-# some code to test "get_predict_etargeting.R"
+# some code to test "get_predict_etargeting.R" and "get_predict_eproduction.R" makes more sense to test them here, because there's some overhead from loading stuff.
 
-
+# empty the environment
 rm(list=ls())
+set.seed(2) 
 
-ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
-invisible(sapply(ffiles, source))
+source('processes/runSetup.R')
+
+econsavepath <- 'scratch/econscratch'
+############################################################
+############################################################
+# Pull in temporary dataset that contains economic data clean them up a little (this is temporary cleaning, so it belongs here)
+############################################################
+############################################################
+
+load(file.path(econsavepath,"temp_biop.RData"))
 
 
 datapath <- 'data/data_processed/econ'
 savepath<-'scratch/econscratch'
-load(file.path(datapath,"full_targeting.RData"))
-#End code to test function. Remove when done.
+targeting_dataset<-load(file.path(datapath,"full_targeting.Rds"))
 
 
 
 
 
 #data wrangling on test datasets  -- once you have a full set of coefficients, you should be able to delete this.
-tds<-targeting_dataset
+tds<-as.data.table(targeting_dataset)
 #end data wrangling on test dataset
 
 
@@ -26,7 +34,7 @@ part3<-0
 sa<-Sys.time()
 
 #code to test function. Remove when done.
-predicted_trips<-get_predict_etargeting(targeting_dataset)
+predicted_trips<-get_predict_etargeting(tds)
 #targeting_dataset<-cbind(phat,targeting_dataset)
 
 
@@ -35,15 +43,39 @@ predicted_trips$del<-predicted_trips$prhat-predicted_trips$pr
 summary(predicted_trips$del)
 
 
-#test<-predicted_trips[predicted_trips$hullnum==286,]
-#test<-test[test$date==as.Date("2009-09-05"),]
+
+prod_ds<-tds
+
+#code to test function. Remove when done.
+production_outputs<-get_predict_eproduction(tds)
+
+
+#here, subset prod_ds to just contain the cols in mysubs
+#then try to rerun the get_predict_eproduction on that and see if it works
+
+needcols<-c("hullnum","date","spstock2","gearcat","h_hat")
+tester<-tds[, ..needcols]
+
+production_outputs<-left_join(production_outputs,tester, by=c("hullnum", "date", "spstock2"))
+production_outputs$delta<-production_outputs$harvest_sim-production_outputs$h_hat
+summary(production_outputs$delta)
+
+#We see maximum differences of magnitude 0.08 (7 hundredths of a pound), which is probably due to rounding differences. 
+#I think stata will use quad precision internally, but only export in double precisions.  This is NBD.
+
+
+
+
+
+
+
 
 #We see maximum differences of magnitude .001 (A tenth of 1%), which is probably due to rounding differences.  I think stata will use quad precision internally, but only export in double precisions.  This is NBD.
-
-predicted_trips <- predicted_trips %>%
-  select(xb,prhat, pr, del, spstock2, exp_rev_total, das_charge, fuelprice_distance, distance, mean_wind, mean_wind_noreast, permitted, lapermit ,partial_closure ,start_of_season, wkly_crew_wage, len, fuelprice, fuelprice_len, everything())
- 
-predicted_trips<-predicted_trips[order(-predicted_trips$del),]
+# 
+# predicted_trips <- predicted_trips %>%
+#   select(xb,prhat, pr, del, spstock2, exp_rev_total, das_charge, fuelprice_distance, distance, mean_wind, mean_wind_noreast, permitted, lapermit ,partial_closure ,start_of_season, wkly_crew_wage, len, fuelprice, fuelprice_len, everything())
+#  
+# predicted_trips<-predicted_trips[order(-predicted_trips$del),]
 
 # sb<-Sys.time()
 # part3<-part3+sb-sa
@@ -55,5 +87,5 @@ predicted_trips<-predicted_trips[order(-predicted_trips$del),]
 # 
 # #Not sure where to put hhat right now, probably overwrite hhat in production_dataset.  
 # 
-# save(predicted_trips, file=file.path(savepath, "trips_combined.RData"))
+# saveRDS(predicted_trips, file=file.path(savepath, "trips_combined.Rds"))
 

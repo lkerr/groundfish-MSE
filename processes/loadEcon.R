@@ -1,7 +1,7 @@
 # Read in Economic Production Data
 
 econdatapath <- 'data/data_processed/econ'
-load(file.path(econdatapath,"full_targeting.RData"))
+targeting_dataset<-readRDS(file.path(econdatapath,"full_targeting.Rds"))
 targeting_dataset[is.na(targeting_dataset)]<-0
 
 targeting_dataset<-targeting_dataset[which(targeting_dataset$gffishingyear %in% baseEconYrs),]
