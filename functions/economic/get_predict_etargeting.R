@@ -8,6 +8,7 @@
 # D. Compute prob = exp(xb)/total exp(xb)
 
 #.Unsure if the NA are handled properly.  Also unsure if the "No Fish" option will be properly constructed (Troubleshoot: if the utility function equation is fixed AND I get a matrix of NAs, then the utility for the no-fish option isn't properly being constructed. I'm pretty sure that this gets set =0 (so exp(0)=1). There are no coefficients for no fish model.
+# returns a data.table with extra columns in it (xb, expu, totexpu, and prhat).
 
 get_predict_etargeting <- function(tds){
   # pull the betas into matrix, pull the data variables into a matrix and mulitiply them.  
@@ -24,7 +25,7 @@ X<-as.matrix(tds[, ..datavars])
 
 B<-as.matrix(tds[, ..betavars])
 
-tds$xb=rowSums(X*B)
+tds$xb<-rowSums(X*B)
 tds$expu<-exp(tds$xb)
 tds<-as.data.table(tds)
 
