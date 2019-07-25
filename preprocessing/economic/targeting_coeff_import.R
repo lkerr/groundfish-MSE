@@ -11,6 +11,10 @@ if(!require(tidyr)) {
 if(!require(dplyr)) {  
   install.packages("dplyr")
   require(dplyr)}
+if(!require(data.table)) {  
+  install.packages("data.table")
+  require(data.table)}
+
 
 # file paths for the raw and final directories
 # windows is kind of stupid, so you'll have to deal with it in some way.
@@ -121,6 +125,8 @@ colnames(targeting_coefs)[colnames(targeting_coefs)=="beta_start_of_season.x"] <
 #Force NAs to zero. This is legit. I promise.
 targeting_coefs[is.na(targeting_coefs)]<-0
 targeting_coefs <- targeting_coefs[order(targeting_coefs$gearcat,targeting_coefs$spstock2),]
+
+targeting_coefs<-as.data.table(targeting_coefs)
 
 save(targeting_coefs, file=file.path(savepath, "targeting_coefs.RData"))
 rm(list=c("all_coefs","asc_coefs","asc_coefs2"))

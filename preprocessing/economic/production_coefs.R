@@ -11,6 +11,9 @@ if(!require(tidyr)) {
 if(!require(dplyr)) {  
   install.packages("dplyr")
   require(dplyr)}
+if(!require(data.table)) {  
+  install.packages("data.table")
+  require(data.table)}
 
 # file paths for the raw and final directories
 # windows is kind of stupid, so you'll have to deal with it in some way.
@@ -130,6 +133,9 @@ production_coefs$post<-as.numeric(production_coefs$post)
 ############ I think the safest thing to do is fill any NA coefficients with zeros.
 production_coefs[is.na(production_coefs)] <- 0
 ############ In the data, fill any corresponding NAs also with zeros -- this would mostly be biomass or fishing year
+
+production_coefs<-as.data.table(production_coefs)
+
 
 save(production_coefs, file=file.path(savepath, "production_coefs.RData"))
 
