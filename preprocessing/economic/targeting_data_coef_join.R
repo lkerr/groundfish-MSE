@@ -60,15 +60,31 @@ targeting$spstock2<- gsub("_","",targeting$spstock2)
 
 colnames(targeting)[colnames(targeting)=="LApermit"] <- "lapermit"
 
+# HANDLE missings and NA.
+# Crew and trip_days is coded as zero for no-fish. We will set these to NA.
+# trawl_survey_weight is coded as NA if it's missing. Nothing to do here.
+
+targeting$crew[targeting$crew==0]<-NA
+targeting$trip_days[targeting$trip_days==0]<-NA
+
+# Take Logs of these three
 targeting$log_crew<-log(targeting$crew)
 targeting$log_trip_days<-log(targeting$trip_days)
 targeting$log_trawl_survey_weight<-log(targeting$trawl_survey_weight)
+
+# Set the log-values to zero.This is kludgy 
+
+targeting$log_crew[is.na(targeting$log_crew)]<-0
+targeting$log_trip_days[is.na(targeting$log_trip_days)]<-0
+targeting$log_trawl_survey_weight[is.na(targeting$log_trawl_survey_weight)]<-0
+
 
 targeting$primary<-1
 targeting$secondary<-0
 
 count_rows<-nrow(targeting)
 cols_t<-ncol(targeting)
+
 
 #pull in the targeting dataset
 # note that left_join converts things to data.frames (not data.tables)
@@ -148,7 +164,29 @@ targeting_dataset$fy2015<-as.numeric(targeting_dataset$gffishingyear==2015)
 
 
 targeting_dataset[is.na(targeting_dataset)]<-0
+
+
+
+
+# Add nchoices column to the targeting dataset
+targeting_dataset<- targeting_dataset   %>%
+  group_by(id) %>%
+  mutate(nchoices=n())
+
+#Flag 1 row per gffishingyear, date, hullnum, id. This means instead of doing a unique, we can do a subset.
+# Somethign like this retains only the first row tds<-tds[tds[, .I[1], by = id]$V1] 
+targeting_dataset<-targeting_dataset %>% 
+  group_by(id) %>% 
+  mutate(idflag = row_number())
+
+targeting_dataset$idflag[targeting_dataset$idflag>1]<-0
 targeting_dataset<-as.data.table(targeting_dataset)
+
+
+
+
+keycols<-c("gffishingyear","date", "hullnum", "id","spstock2")
+setorderv(targeting_dataset, keycols)
 saveRDS(targeting_dataset, file=file.path(econsavepath, "giant_targeting.Rds"))
 
 
@@ -171,7 +209,7 @@ monthcoefs<-td_cols[grepl("^alpha_month", td_cols)]
 
 
 idvars=c("id", "hullnum", "date","spstock2", "doffy")
-necessary=c("multiplier", "q", "gffishingyear", "emean","price_lb_lag1")
+necessary=c("multiplier", "q", "gffishingyear", "emean","price_lb_lag1", "nchoices", "idflag")
 useful=c("gearcat","post","h_hat","pr")
 mysubs=c(idvars,necessary,useful,fydums, monthdums, fycoefs, monthcoefs, targeting_vars,betavars,production_vars, alphavars)
 #mysubs=c(idvars,necessary,useful,targeting_vars,betavars)
@@ -179,6 +217,12 @@ mysubs=c(idvars,necessary,useful,fydums, monthdums, fycoefs, monthcoefs, targeti
 
 
 targeting_dataset<-targeting_dataset[, ..mysubs]
+#The targeting_dataset should have no NA values
+sum(is.na(targeting_dataset))==0
+# If that fails, use this to figure out which colSums(is.na(targeting_dataset))
+keycols<-c("gffishingyear","date", "hullnum", "id","spstock2")
+setorderv(targeting_dataset, keycols)
+
 
 saveRDS(targeting_dataset, file=file.path(econsavepath, "full_targeting.Rds"))
 
