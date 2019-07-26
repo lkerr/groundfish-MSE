@@ -30,5 +30,6 @@ data/data_raw/*
 *.html
 *.zip
 *.out
+*.DAT
 *.xx*
 documentation/stockRecruit/cod/recruitmentCOD_old.Rmd
