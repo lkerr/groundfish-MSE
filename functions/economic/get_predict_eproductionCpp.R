@@ -20,7 +20,8 @@ get_predict_eproductionCpp <- function(prod_ds){
   
   Z<-as.matrix(prod_ds[, ..datavars])
   A<-as.matrix(prod_ds[,..alphavars])
-  prod_ds$harvest_sim<-Sugar_rowSums(Z*A)
+  ZA<-Z*A
+  prod_ds$harvest_sim<-Sugar_rowSums(ZA)
   prod_ds$harvest_sim=prod_ds$harvest_sim+prod_ds$q  #old version.  
 
   #production
