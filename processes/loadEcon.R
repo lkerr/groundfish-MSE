@@ -6,10 +6,6 @@ targeting_dataset[is.na(targeting_dataset)]<-0
 
 targeting_dataset<-targeting_dataset[which(targeting_dataset$gffishingyear %in% baseEconYrs),]
 
-# Add nchoices column to the targeting dataset
-targeting_dataset<- targeting_dataset   %>%
-  group_by(id) %>%
-  mutate(nchoices=n())
 
 #temp for debugging
 targeting_dataset$prhat<-targeting_dataset$pr
