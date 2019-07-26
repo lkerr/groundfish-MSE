@@ -27,7 +27,6 @@ B<-as.matrix(tds[, ..betavars])
 
 tds$xb<-rowSums(X*B)
 tds$expu<-exp(tds$xb)
-tds<-as.data.table(tds)
 
 tds[, totexpu := sum(expu), by = id]
 
