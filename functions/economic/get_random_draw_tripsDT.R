@@ -6,29 +6,22 @@
 
 
 
-get_random_draw_tripsDT <- function(tdsDT){
-  
-  tds<-tdsDT[order(tdsDT$id,tdsDT$prhat),]
+get_random_draw_tripsDT <- function(tds){
+  #not needed, data comes in sorted on id and we dont' need to sort on prhat
+  #tds<-tdsDT[order(tdsDT$id,tdsDT$prhat),]
   
    tds<-tds[, csum := cumsum(prhat), by = id]
     
     #make one draw per id, then replicate it nchoices time and place it into tds$draw
-    tdss<-unique(tds[,c("id","nchoices")])
-    td<-runif(nrow(tdss), min = 0, max = 1)
-    tds$draw<-rep(td,tdss$nchoices)
-    
+   tdss<-unique(tdsDT[,c("id","nchoices")])
+   td<-runif(nrow(tdss), min = 0, max = 1)
+   tds$draw<-rep(td,tdss$nchoices)
+
     #Foreach id, keep the row for which draw is the smallest value that is greater than csum
     
     tds<-tds[tds$draw<tds$csum,]
     tds<-tds[tds[, .I[1], by = id]$V1] 
-  tds<-tds[tds$draw<tds$csum,]
-  
-  #This takes a while
-  # tds <-
-  #   tds %>% 
-  #   group_by(id) %>% 
-  #   filter(row_number()==1)
-  tds[tds[, .I[1:1], by = id]$V1]
+
     return(tds)
 }
 
