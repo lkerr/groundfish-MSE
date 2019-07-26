@@ -8,10 +8,6 @@
 # Returns a data.table with an extra column in it.
 
 get_predict_eproduction <- function(prod_ds){
-  #This is the original version, comment the next line out (or remove)
-  #indepvars=c("log_crew","log_trip_days","logh_cumul","primary","secondary","constant")
-  
-  #This is the updated version
   indepvars=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","constant")
   
   # crew, trip days, trawl survey, 
