@@ -47,7 +47,7 @@ fishery_holder<-bio_params_for_econ[,c("stocklist_index","stockName","spstock2",
 fishery_holder$open<-as.logical("TRUE")
 fishery_holder$cumul_catch_pounds<-0
 
-revenue_list<-as.list(NULL)
+revenue_holder<-as.list(NULL)
 
 
 ############################################################
@@ -175,7 +175,7 @@ loop_start<-proc.time()
   # revenue_holder<-rbind(revenue_holder,revenue)
 
   start_time<-proc.time() 
-  revenue_list[[day]]<-trips[, c("hullnum","spstock2","date","exp_rev_total")]
+  revenue_holder[[day]]<-trips[, c("hullnum","spstock2","date","exp_rev_total")]
   next_period_flatten2<-next_period_flatten2+proc.time()[3]-start_time[3]
   
 }
@@ -183,7 +183,7 @@ loop_start<-proc.time()
 # 
 
   start_time<-proc.time() 
-  rl<-rbindlist(revenue_list) 
+  revenue_holder<-rbindlist(revenue_holder) 
   next_period_flatten2<-next_period_flatten2+proc.time()[3]-start_time[3]
   
   
