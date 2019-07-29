@@ -28,3 +28,8 @@ econ_baseline$spstock2<- gsub("gb","GB",econ_baseline$spstock2)
 econ_baseline$spstock2<- gsub("ccgom","CCGOM",econ_baseline$spstock2)
 econ_baseline$spstock2<- gsub("gom","GOM",econ_baseline$spstock2)
 econ_baseline$spstock2<- gsub("snema","SNEMA",econ_baseline$spstock2)
+
+
+econ_baseline<-as.data.table(econ_baseline)
+setorder(econ_baseline,spstock2)
+
