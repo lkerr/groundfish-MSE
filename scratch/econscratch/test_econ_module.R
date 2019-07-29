@@ -180,7 +180,6 @@ revenue_holder<-as.list(NULL)
   #   summarise(totalrev=sum(exp_rev_total))
   
   # revenue<-trips[c("hullnum","spstock2","exp_rev_total")]
-  # revenue_holder<-rbind(revenue_holder,revenue)
 
   start_time<-proc.time() 
   revenue_holder[[day]]<-trips[, c("hullnum","spstock2","date","exp_rev_total")]
