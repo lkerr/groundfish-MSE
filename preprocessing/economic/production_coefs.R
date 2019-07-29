@@ -125,7 +125,6 @@ production_coefs<-production_coefs[,c(which(colnames(production_coefs)!="rmse"),
 
 colnames(production_coefs)[5:ncol(production_coefs)-1]<-paste0("alpha_",colnames(production_coefs[5:ncol(production_coefs)-1]))
 # you will eventually merge on post, gearcat, and spstock
-production_coefs$gearcat<-tolower(production_coefs$gearcat)
 production_coefs$spstock2<-tolower(production_coefs$spstock2)
 production_coefs$post<-as.numeric(production_coefs$post)
 
