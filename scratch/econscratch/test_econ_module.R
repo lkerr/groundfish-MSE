@@ -31,9 +31,10 @@ econsavepath <- 'scratch/econscratch'
 ############################################################
 
 load(file.path(econsavepath,"temp_biop.RData"))
+#make sure there is a nofish in bio_params_for_econ
 
-scratchdir<-"/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/scratch/econscratch"
-Rcpp::sourceCpp(file.path(scratchdir,"matsums.cpp"))
+#scratchdir<-"/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/scratch/econscratch"
+#Rcpp::sourceCpp(file.path(scratchdir,"matsums.cpp"))
 
 
 
@@ -46,6 +47,7 @@ Rcpp::sourceCpp(file.path(scratchdir,"matsums.cpp"))
 fishery_holder<-bio_params_for_econ[,c("stocklist_index","stockName","spstock2","sectorACL","nonsector_catch_mt","bio_model","SSB", "mults_allocated", "stockarea")]
 fishery_holder$open<-as.logical("TRUE")
 fishery_holder$cumul_catch_pounds<-0
+fishery_holder$targeted<-0
 
 revenue_holder<-as.list(NULL)
 
@@ -85,8 +87,10 @@ randomdraw<-0
 holder_update_flatten <-0
 next_period_flatten2 <-0
 runtime<-0
-
+holder_update_flatten2<-0
 loop_start<-proc.time()
+revenue_holder<-as.list(NULL)
+
 # 
 # 
 # z<-function(){
@@ -98,7 +102,7 @@ loop_start<-proc.time()
   for (day in 1:365){
   #   subset both the targeting and production datasets based on date and jams them to data.tables
     start_time<-proc.time()
-  
+  # Subset for the day.  Predict targeting
   working_targeting<-targeting_dataset[[day]]
   working_targeting<-get_predict_eproduction(working_targeting)
   eproduction2<-eproduction2+proc.time()[3]-start_time[3]
@@ -151,13 +155,17 @@ loop_start<-proc.time()
   # update the fishery holder dataframe
   
   start_time<-proc.time() 
-  daily_catch<- trips[, c("spstock2","harvest_sim")]
+  daily_catch<- trips[, c("spstock2","harvest_sim", "targeted")]
   colnames(daily_catch)[2]<-"cumul_catch_pounds"
-  daily_catch<-rbind(daily_catch,fishery_holder[, c("spstock2","cumul_catch_pounds")])
+  daily_catch<-rbind(daily_catch,fishery_holder[, c("spstock2","cumul_catch_pounds","targeted")])
   
   #DT style
-  daily_catch<-daily_catch[,.(cumul_catch_pounds = sum(cumul_catch_pounds)),by=spstock2]
+  daily_catch<-daily_catch[,.(cumul_catch_pounds = sum(cumul_catch_pounds), targeted = sum(targeted)),by=spstock2]
+  setorder(daily_catch,spstock2)
+  setorder(fishery_holder,spstock2)
+  nrow(daily_catch)==nrow(fishery_holder)
   
+
   fishery_holder<-get_fishery_next_period(daily_catch,fishery_holder)
   holder_update_flatten<-holder_update_flatten+proc.time()[3]-start_time[3]
   
@@ -200,6 +208,7 @@ etargeting
 zero_out
 randomdraw
 holder_update_flatten
+holder_update_flatten2
 next_period_flatten2
 runtime
 

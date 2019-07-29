@@ -21,7 +21,8 @@ get_random_draw_tripsDT <- function(tds){
     
     tds<-tds[tds$draw<tds$csum,]
     tds<-tds[tds[, .I[1], by = id]$V1] 
-
+    tds$targeted<-1
+    
     return(tds)
 }
 
