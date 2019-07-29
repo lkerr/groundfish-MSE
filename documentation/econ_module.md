@@ -112,5 +112,8 @@ Model outputs are XXX
 * to do for monday-  
    * check out the get_fishery_next_period.  somehow daily_catch is giving me some catch of "nofish"  This is probably a result of the (emean) or an exp(0)=1 thing. I have 30 rows in daily catch and 29 in the fishery holder. Need to drop nofish. Order and cbind. 
    * integrate 'test' changed to working
+   * The Econ module is a little bit fragile.  A few datasets need to be merged. I initially used "base::merge."   That was slow, so I used "dplyr::left_join," which was faster.  Now, I'm ensuring that the merged datasets are the same length and order and using "cbind."
+      * get_bio_for_econ.R
+      * There is a left_join in get_fishery_next_period and zero_out_closed_asc_cutout.R
 
 [Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
