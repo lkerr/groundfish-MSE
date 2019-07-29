@@ -13,10 +13,12 @@
 get_predict_etargeting <- function(tds){
   # pull the betas into matrix, pull the data variables into a matrix and mulitiply them.  
   
-  #These need to be changed
+  #
   
   
-  datavars=c("exp_rev_total","das_charge","fuelprice_distance","mean_wind","mean_wind_noreast","permitted","lapermit","distance","wkly_crew_wage","len","fuelprice","fuelprice_len","start_of_season","partial_closure","constant")
+  spstock_equation=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
+  choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len", "das_price_mean", "das_price_mean_len")
+  datavars=c(spstock_equation, choice_equation,"constant")
   
   betavars=paste0("beta_",datavars)
 
