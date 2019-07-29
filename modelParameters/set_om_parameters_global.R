@@ -10,7 +10,7 @@
 simpleTemperature <- FALSE
 
 # Testing run which uses mprocTest.txt instead of mproc.txt? (T/F)
-mprocTest <- TRUE
+mprocTest <- FALSE
 
 
 #### Stock parameters ####
@@ -26,7 +26,7 @@ stockExclude <- c()
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 1
+nrep <- 12
 
 # First year to begin actual management
 fmyear <- 2000
