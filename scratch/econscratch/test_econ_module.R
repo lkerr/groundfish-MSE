@@ -111,7 +111,7 @@ revenue_holder<-as.list(NULL)
   start_time<-proc.time()
   #This bit needs to be replaced with a function that handles the "jointness"
   #expected revenue from this species
-  working_targeting$exp_rev_total<- working_targeting$harvest_sim*working_targeting$price_lb_lag1*working_targeting$multiplier
+  working_targeting$exp_rev_total<- working_targeting$harvest_sim*working_targeting$price_lb_lag1*working_targeting$landing_multiplier_dollars
   
   #use the revenue multiplier to construct total revenue for this trip.
   #This bit needs to be replaced with a function that handles the "jointness"
