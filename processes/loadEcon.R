@@ -8,7 +8,7 @@ targeting_dataset<-targeting_dataset[which(targeting_dataset$gffishingyear %in% 
 
 
 #temp for debugging
-targeting_dataset$prhat<-targeting_dataset$pr
+#targeting_dataset$prhat<-targeting_dataset$pr
 
 targeting_dataset<-data.table(targeting_dataset)
 #split the targeting dataset into a list of datasets
