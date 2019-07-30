@@ -1,5 +1,7 @@
 # some code to test "get_predict_etargeting.R" and "get_predict_eproduction.R" makes more sense to test them here, because there's some overhead from loading stuff.
 
+# something is broken -- verify primary==1 and secondary==0?  Check if things work for choice==1
+
 # empty the environment
 rm(list=ls())
 set.seed(2) 
@@ -13,20 +15,37 @@ econsavepath <- 'scratch/econscratch'
 ############################################################
 ############################################################
 
-load(file.path(econsavepath,"temp_biop.RData"))
+#load(file.path(econsavepath,"temp_biop.RData"))
 
 
 datapath <- 'data/data_processed/econ'
 savepath<-'scratch/econscratch'
 targeting_dataset<-readRDS(file.path(datapath,"full_targeting.Rds"))
 
+tds<-targeting_dataset
+is.data.table(tds)
+# prODUCTION SHOULD WORK.
+#code to test function. Remove when done.
+tds<-get_predict_eproduction(tds)
 
+#here, subset prod_ds to just contain the cols in mysubs
+#then try to rerun the get_predict_eproduction on that and see if it works
 
+tds$harvest_sim[tds$spstock2=="nofish"]<-0
+tds$delta<-abs(tds$harvest_sim-tds$h_hat)
 
+summary(tds$delta)
+#Works well!  
+#setcolorder(tds,c("spstock2","delta","harvest_sim","h_hat"))
+#setorder(tds,-delta)
 
-#data wrangling on test datasets  -- once you have a full set of coefficients, you should be able to delete this.
-tds<-as.data.table(targeting_dataset)
-#end data wrangling on test dataset
+#here, you can summary if choice==0 or choice==1
+#tdss<-tds[which(tds$choice==1)]
+#summary(tdss$delta)
+
+#data wrangling on test datasets  -- once you have a full set of coefficients, you should be able to delete this
+tds<-targeting_dataset
+#end data wrangling on test dataset. lol no so much wrangling.
 
 
 
@@ -40,19 +59,9 @@ predicted_trips<-get_predict_etargeting(tds)
 predicted_trips$del<-predicted_trips$prhat-predicted_trips$pr
 summary(predicted_trips$del)
 
-
-
-
-#code to test function. Remove when done.
-tds<-get_predict_eproduction(tds)
-
-
-
-#here, subset prod_ds to just contain the cols in mysubs
-#then try to rerun the get_predict_eproduction on that and see if it works
-
-tds$delta<-tds$harvest_sim-tds$h_hat
-summary(tds$delta)
+setcolorder(predicted_trips,c("prhat", "pr", "del", "xb"))
+fy9<-predicted_trips[which(predicted_trips$gffishingyear==2009)]
+summary(fy9$del)
 
 #We see maximum differences of magnitude 0.08 (7 hundredths of a pound), which is probably due to rounding differences. 
 #I think stata will use quad precision internally, but only export in double precisions.  This is NBD.
