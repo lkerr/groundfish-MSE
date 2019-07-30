@@ -88,6 +88,9 @@ Data, starting values and parameter bounds are XXX.
 Running the model requires
 /data/data_processed/econ/full_production.RData, /data/data_processed/econ/full_targeting.RData, and /data/data_processed/econ/catch_limits_2010_2017.csv
 
+I should probably write up a small file or parameters.
+  * which gffishingyear
+
 
 ### Outputs
 Model outputs are XXX
@@ -102,18 +105,15 @@ Model outputs are XXX
   * Does not yet incorporate catch/landings multipliers. So that's a big problem.  Will need to add the multiplier data, code to integrate, test, and adjust.
   * Doesn't read/use IJ1 trawl survey index(biomass index computed on Jan 1).
   * does not store fishery revenue anywhere, just overwrites it.
-  * slowest parts are eproduction, prepping and joining the targeting dataset, etargeting, and randomdraw.
+  * slowest parts are eproduction, etargeting, and randomdraw.
   
 ### Notes
 * packages are gmm, mvtnorm, tmvtnorm, expm, msm, Matrix, TMB, forcats, readr, tidyverse, dplyr, data.table
 * the targeting and production datasets now conform. Production dataset is not necessary.
-* There is a left_join in 'get_fishery_next_period." this is slow ANd it forces things to data.table.
 
-* to do for monday-  
-   * check out the get_fishery_next_period.  somehow daily_catch is giving me some catch of "nofish"  This is probably a result of the (emean) or an exp(0)=1 thing. I have 30 rows in daily catch and 29 in the fishery holder. Need to drop nofish. Order and cbind. 
-   * integrate 'test' changed to working
-   * The Econ module is a little bit fragile.  A few datasets need to be merged. I initially used "base::merge."   That was slow, so I used "dplyr::left_join," which was faster.  Now, I'm ensuring that the merged datasets are the same length and order and using "cbind."
-      * get_bio_for_econ.R
-      * There is a left_join in get_fishery_next_period and zero_out_closed_asc_cutout.R
+ * The Econ module is a little bit fragile.  A few datasets need to be merged *during* the simulation. I initially used "base::merge."   That was slow, so I used "dplyr::left_join," which was faster.  Now, I'm ensuring that the merged datasets are the same length and order and using "cbind."
+    * There is a left_join in zero_out_closed_asc_cutout.R. I don't think I can avoid this.
+* I've verified that the functions are working, but I *think* there is an underlying data error.
+
 
 [Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
