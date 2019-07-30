@@ -1,11 +1,14 @@
 
 
-cmip5 <- read.table(file='data/data_raw/NEUS_CMIP5_annual_means.txt',
-                    header=TRUE, skip=2)
-# cmip5 <- subset(cmip5, year <= lastyear)
+# Read in the temperature data
+cmip5 <- read.csv(file = 'data/data_raw/NEUS_CMIP5_annual_meansLong.csv',
+                    header=TRUE)
 
-# Load in the baseline projected temperature data to use
-cmip_base <- cmip5[,c('year', cmip5model)]
+# manipulate data to get desired percentile
+cmip_base <- get_temperatureSeries(cmip5, 
+                                   RCP = trcp, 
+                                   Model = tmods,
+                                   quant = tq)
 names(cmip_base) <- c('YEAR', 'T')
 
 # Load in the GB temperature data for downscaling

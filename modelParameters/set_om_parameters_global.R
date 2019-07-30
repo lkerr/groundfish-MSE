@@ -49,8 +49,16 @@ nburn <- 50
 ## Do you want to include temperature projections (in S-R, growth, etc.)
 useTemp <- TRUE
 
-## Temperature information ##
-cmip5model <- 'CMCC_CM'
+## Do you want to use particular models from the cmip data series? If so
+## tmods should be a vector of column names (see 
+## data/data_raw/NEUS_CMIP5_annual_meansLong.csv'). If NULL use all data
+tmods <- NULL
+
+## The temperature quantile of the cmip data series to use. 0.5 for median.
+tq <- 0.5
+
+## Representative concentration pathway to use. Currently only 8.5 available.
+trcp <- 8.5
 
 ## Reference years for temperature downscale
 ref0 <- 1982

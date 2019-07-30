@@ -11,7 +11,7 @@
 /misc/*
 /Reports/*
 /Rlib/*
-data/data_raw/*
+*.gz
 *.xls
 *xlsx
 *.dll
@@ -33,3 +33,10 @@ data/data_raw/*
 *.dta
 *.xx*
 *.zip
+data/data_raw/recruitment/compileRecData.R
+data/data_raw/recruitment/codHadPolYTFCompiled.csv
+data/data_raw/recruitment/YTF_S_R.csv
+data/data_raw/recruitment/SAW55SR_codGB.csv
+data/data_raw/recruitment/POL_S_R.csv
+data/data_raw/recruitment/HAD_S_R.csv
+data/data_raw/recruitment/2017_POK_UNIT_MOD_BaseASAPOutput.rep
