@@ -81,9 +81,9 @@ targeting$log_trip_days[is.na(targeting$log_trip_days)]<-0
 targeting$log_trawl_survey_weight[is.na(targeting$log_trawl_survey_weight)]<-0
 
 #handle the no fish option
-targeting_dataset$log_avg_crew[which(targeting_dataset$spstock2=="nofish")]<-0
-targeting_dataset$log_trip_days[which(targeting_dataset$spstock2=="nofish")]<-0
-targeting_dataset$log_crew[which(targeting_dataset$spstock2=="nofish")]<-0
+targeting$log_avg_crew[which(targeting$spstock2=="nofish")]<-0
+targeting$log_trip_days[which(targeting$spstock2=="nofish")]<-0
+targeting$log_crew[which(targeting$spstock2=="nofish")]<-0
 
 
 targeting$primary<-1
