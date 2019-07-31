@@ -43,46 +43,53 @@ The statistical estimation of the model takes place externally to the MSE model 
 
 ### The R code
 There's a pile of code. It's quite janky.
-
 There are few files in "scratch/econscratch" that may be useful
-* **test_predict_eproduction.R :** was used to verify that the predict_eproduction.R function works properly. It runs as a standalone and might be fun to explore. 
-* **test_predict_etargeting.R :** was used to verify that the predict_etargeting.R function works properly. It runs as a standalone and might be fun to explore. 
+* **test_predict_etargeting_and_production.R :** was used to verify that the predict_etargeting.R and predict_eproduction.R functions works properly. It runs as a standalone and might be fun to explore. 
 
-* **working_econ_module.R :**  is a *working* economic module. The last part is kinda janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop.  Currently does not do the catch multipliers.  
-
+* **working_econ_module.R :**  is a *working* economic module. The last part is kinda janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop.  Currently does not do the catch multipliers. 
 
 * **test_econ_module.R :**  is a test economic module. The last part is incredibly janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop. I'm just waiting to have runSim.R reordered before I can use it to write out F_full to stock[[i]] for the modeled stocks.  Pieces of this will be put into fragments that are called by "runSetup.R" (perhaps with an if cut-out for EconomicModel) because they only need to be run once.  Other parts should be converted into a function or many functions.
 
+* **speedups_econ_module2.R :**  code for benchmarking the economic model.
+ 
 There are  "processes" files: 
 * **genBaselineACLs.R:** This is used to construct "baseline" ACLs for the non-modeled stocks. That includes Groundfish *and* non-groundfish stocks like lobster or skate that either caught with groundfish or altenatives to taking a groundfish trip.
 
 * **genEcon_Containers.R:** Gets called in the runSetup.R file. It sets up a few placeholders for Fleet level economic outputs.
 
 Functions:
-* **predict_eproduction:** Predicts harvest.
+* **predict_eproduction:** Predicts harvest of the target species, returns a data.table
 
-* **predict_etargeting:** predicts targeting
+* **predict_etargeting:** predicts targeting, returns a data.table.
 
 * **get_bio_for_econ:** passes *things* from the biological model (in stock[[i]]) to the economic model.
 
 * **get_best_trip:** for each vessel-day (id) selects the choice (spstock2) with the highest prhat
 
-* **get_random_draw_trip:** for each vessel-day (id) randomly selects a choice (spstock2) based on prhat
+* **get_random_draw_tripsDT:** for each vessel-day (id) randomly selects a choice (spstock2) based on prhat. Reworked to  data.table
 
 * **get_fishery_next_period:** adds up catch from individual vessels to the daily level and then aggregates with prior catch.  Checks if the sector sub-ACL is reached and closes the fishery if so.
 
-* **zero_out_closed_asc:** Closes a fishery and redistributes the probability associated with that stock to the other options.
-
-* **get_at_age_stats, get_catch_at_age, get_e_smear, :** all probably are obsolete and have been moved to /scratch/econscratch/obsolete.
+* **zero_out_closed_asc_cutout:** Closes a fishery and redistributes the probability associated with that stock to the other options.  Skips math if all stocks are open
 
 
+
+Obsolete
+These are obsolete and have been moved to /scratch/econscratch/obsolete
+* **get_at_age_stats, get_catch_at_age, get_e_smear, test_get_at_age_stats, test_get_catch_at_age, test_predict_eproduction:** all probably are obsolete and have been moved to /scratch/econscratch/obsolete.
+* **get_random_draw_trips:** for each vessel-day (id) randomly selects a choice (spstock2) based on prhat
 There are a few files in "/preprocessing/economic/"  These primarily deal with converting data from stata format to RData and making the estimated coefficients "line up" with the data.  There is also a helper file to wrangle the historical catch limit and catch data.   
+* **zero_out_closed_asc:** Closes a fishery and redistributes the probability associated with that stock to the other options.
+* **speed_asclogit:** Speed testing for an asc logit.
 
 ### Inputs,
 Data, starting values and parameter bounds are XXX.
 
 Running the model requires
 /data/data_processed/econ/full_production.RData, /data/data_processed/econ/full_targeting.RData, and /data/data_processed/econ/catch_limits_2010_2017.csv
+
+I should probably write up a small file or parameters.
+  * which gffishingyear
 
 
 ### Outputs
@@ -93,16 +100,20 @@ Model outputs are XXX
 * **zero_out_closed_asc:** currently only closes a target when it's ACL is reached. It should close all fisheries that would be caught with it. For example, if GB Cod quotas are hit, then *all* multispecies GB fishing stops. It also must adjust the landings and (probably catch) multipliers -- if a vessel targets skates after the GB Cod quota is hit, it should not land any GB cod. Whether it can catch GB cod is TBD.
 
 * **working_econ_module.R :** 
-  * Needs to be cleaned up.  Tidyverse version uses 6GB of RAM in a single simulation. Doesn't look like I have a leak, just using lots of memory.  data.table version is down to ~4.4GB. 
-  * Needs to be sped up.  data.table instead of seems to speed up?  Tidyverse version takes 16 minutes to run 1 replicated for 20 years (48sec/yr).  The data.table version takes 22-23 to run 2 replicates for 20 years (33 sec/yr).  approx 31% faster
+  * Needs to be cleaned up.  Tidyverse version uses 6GB of RAM in a single simulation. Doesn't look like I have a leak, just using lots of memory.  data.table version is down to ~4.4GB. data.table version back up to 6+gb
+  * Needs to be sped up.  data.table instead of seems to speed up?  Tidyverse version takes 16 minutes to run 1 replicated for 20 years (48sec/yr).  The data.table version takes 22-23 to run 2 replicates for 20 years (33 sec/yr).  approx 31% faster. Down to 18-20seconds/yr (depending on how often fisheries are closed.
   * Does not yet incorporate catch/landings multipliers. So that's a big problem.  Will need to add the multiplier data, code to integrate, test, and adjust.
   * Doesn't read/use IJ1 trawl survey index(biomass index computed on Jan 1).
   * does not store fishery revenue anywhere, just overwrites it.
-  * slowest parts are eproduction, prepping and joining the targeting dataset, etargeting, and randomdraw.
-
+  * slowest parts are eproduction, etargeting, and randomdraw.
+  
 ### Notes
 * packages are gmm, mvtnorm, tmvtnorm, expm, msm, Matrix, TMB, forcats, readr, tidyverse, dplyr, data.table
-* the targeting and production datasets don't "conform" because there are some dates for which a vessel cannot target a stock due to regulatory closures.
+* the targeting and production datasets now conform. Production dataset is not necessary.
+
+ * The Econ module is a little bit fragile.  A few datasets need to be merged *during* the simulation. I initially used "base::merge."   That was slow, so I used "dplyr::left_join," which was faster.  Now, I'm ensuring that the merged datasets are the same length and order and using "cbind."
+    * There is a left_join in zero_out_closed_asc_cutout.R. I don't think I can avoid this.
+* I've verified that the functions are working, but I *think* there is an underlying data error.
 
 
 [Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)

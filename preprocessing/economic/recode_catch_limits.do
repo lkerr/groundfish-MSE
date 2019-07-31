@@ -1,8 +1,10 @@
 clear
-global source_data "C:\Users\Min-Yang.Lee\Documents\groundfish-MSE\data\data_raw\econ"
-global output_data "C:\Users\Min-Yang.Lee\Documents\groundfish-MSE\data\data_processed\econ"
+global bio_data "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_processed/catchHistory"
 
-import delimited "$source_data\catchHist.csv"
+global econ_data "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_processed/econ"
+
+global output_data "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_processed/econ"
+import delimited "$bio_data/catchHist.csv"
 
 foreach var of varlist commercial sector smallmesh commonpool herringfishery recreational scallopfishery statewater other{
 replace `var'="0" if strmatch(`var',"NA")
@@ -75,7 +77,7 @@ gen sectorCL=sector_frac*sectorACL
 */
 order *ACL, after(spstock2)
 keep spstock2 totalACL sector_frac nsnr_util rec_frac
-merge 1:1 spstock2 using "$source_data\stocks_in_choice_set.dta"
+merge 1:1 spstock2 using "$econ_data/stocks_in_choiceset.dta"
 drop _merge
 rename totalACL totalACL_mt
 sort spstock2
@@ -95,17 +97,12 @@ replace stockarea="SNEMA" if inlist(spstock2, "WinterFlounderSNEMA", "Yellowtail
 
 
 
-export delimited using "$output_data\catch_limits_2010_2017.csv", replace
-
-
-
-
-
+export delimited using "$output_data/catch_limits_2010_2017.csv", replace
 clear
-global source_data "C:\Users\Min-Yang.Lee\Documents\groundfish-MSE\data\data_raw\econ"
-global output_data "C:\Users\Min-Yang.Lee\Documents\groundfish-MSE\data\data_processed\econ"
 
-import delimited "$source_data\catchHist.csv"
+import delimited "$bio_data/catchHist.csv"
+
+
 
 foreach var of varlist commercial sector smallmesh commonpool herringfishery recreational scallopfishery statewater other{
 replace `var'="0" if strmatch(`var',"NA")
@@ -177,7 +174,7 @@ gen sectorCL=sector_frac*sectorACL
 */
 order *ACL, after(spstock2)
 keep spstock2 totalACL sector_frac nsnr_util rec_frac
-merge 1:1 spstock2 using "$source_data\stocks_in_choice_set.dta"
+merge 1:1 spstock2 using "$econ_data/stocks_in_choiceset.dta"
 drop _merge
 rename totalACL totalACL_mt
 sort spstock2
@@ -196,11 +193,7 @@ replace stockarea="GOM" if inlist(spstock2,"CodGOM", "HaddockGOM", "WinterFlound
 replace stockarea="SNEMA" if inlist(spstock2, "WinterFlounderSNEMA", "YellowtailFlounderSNEMA")
 
 
-export delimited using "$output_data\catch_limits_2017.csv", replace
-
-
-
-
+export delimited using "$output_data/catch_limits_2017.csv", replace
 
 
 

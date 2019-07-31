@@ -66,7 +66,7 @@ production$fy2015<-as.numeric(production$gffishingyear==2015)
 
 
 
-load(file.path(econsavepath,"production_coefs.RData"))
+production_coefs<-readRDS(file.path(econsavepath,"production_coefs.Rds"))
 #production_coefs$spstock2<-tolower(production_coefs$spstock2)
 #production_coefs$spstock2<- gsub("_","",production_coefs$spstock2)
 
@@ -107,7 +107,7 @@ fycoefs<-pd_cols[grepl("^beta_fy20", pd_cols)]
 
 monthdums<-pd_cols[grepl("^month", pd_cols)]
 monthcoefs<-pd_cols[grepl("^beta_month", pd_cols)]
-idvars=c("hullnum2", "id", "date","spstock2", "doffy")
+idvars=c("hullnum", "id", "date","spstock2", "doffy")
 necessary=c("multiplier", "q", "rmse", "price_lb_lag1","emean", "gffishingyear", "gearcat", "post")
 # Need to sort out which things I need with Anna. There may be a few more that I need
 
@@ -119,9 +119,9 @@ mysubs=c(idvars, useful, datavars,betavars, fydums, monthdums, fycoefs, monthcoe
  post_only_dataset<-production_dataset[which(production_dataset$post==1),]
 
  
- save(production_dataset, file=file.path(econsavepath, "full_production.RData"))
- save(post_only_dataset, file=file.path(econsavepath, "post_production.RData"))
- save(pre_only_dataset, file=file.path(econsavepath, "pre_production.RData"))
+ saveRDS(production_dataset, file=file.path(econsavepath, "full_production.Rds"))
+ saveRDS(post_only_dataset, file=file.path(econsavepath, "post_production.Rds"))
+ saveRDS(pre_only_dataset, file=file.path(econsavepath, "pre_production.Rds"))
 
 #rm(list=ls())
 

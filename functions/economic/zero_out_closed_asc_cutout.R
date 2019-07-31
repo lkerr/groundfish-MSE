@@ -1,8 +1,8 @@
 # A function to zero out trips that are closed after estimating an ASCLOGIT.
 #
 # tds: working targeting dataset with asclogit coefficients 
-# open_hold: a dataset of hullnum2 and spstock2 with one extra column (open=1 if open and =0 if closed).
-# I need to fix this. 
+# open_hold: a dataset of hullnum and spstock2 with one extra column (open=1 if open and =0 if closed).
+# I need to fix this, because it does not close an entire stock area when a single catch limit is reached. 
 #  
 
 

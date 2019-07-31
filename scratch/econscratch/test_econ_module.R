@@ -21,7 +21,8 @@ rm(list=ls())
 set.seed(2) 
 
 source('processes/runSetup.R')
-
+library(microbenchmark)
+library(Rcpp)
 econsavepath <- 'scratch/econscratch'
 ############################################################
 ############################################################
@@ -30,7 +31,10 @@ econsavepath <- 'scratch/econscratch'
 ############################################################
 
 load(file.path(econsavepath,"temp_biop.RData"))
+#make sure there is a nofish in bio_params_for_econ
 
+#scratchdir<-"/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/scratch/econscratch"
+#Rcpp::sourceCpp(file.path(scratchdir,"matsums.cpp"))
 
 
 
@@ -43,9 +47,9 @@ load(file.path(econsavepath,"temp_biop.RData"))
 fishery_holder<-bio_params_for_econ[,c("stocklist_index","stockName","spstock2","sectorACL","nonsector_catch_mt","bio_model","SSB", "mults_allocated", "stockarea")]
 fishery_holder$open<-as.logical("TRUE")
 fishery_holder$cumul_catch_pounds<-0
+fishery_holder$targeted<-0
 
-revenue_holder<-as.data.table(NULL)
-
+revenue_holder<-as.list(NULL)
 
 
 ############################################################
@@ -72,71 +76,46 @@ revenue_holder<-as.data.table(NULL)
 #  Find the date that the first quota binds, then predict from that point forward under "1 closed"
 #  Repeat until you get to the end of the year or all quotas bind.
 
-subset<-0
+subset<-0 
 eproduction<-0
+eproduction2<-0
 prep_target_join<-0
 prep_target_dc<-0
 etargeting<-0
 zero_out<-0
 randomdraw<-0
 holder_update_flatten <-0
-next_period_flatten <-0
+next_period_flatten2 <-0
 runtime<-0
-
-
-
-set.seed(2)
+holder_update_flatten2<-0
 loop_start<-proc.time()
-for (day in 1:365){
-  #   subset both the targeting and production datasets based on date and jams them to data.tables
-  start_time<-proc.time()
-  working_production<-data.table(production_dataset[[day]])
-  working_targeting<-data.table(targeting_dataset[[day]])
-  subset<-subset+proc.time()[3]-start_time[3]
-  ###################################
-  #   overwrite cumulative harvest and log cumulative catch of each stock. This was needed for getting cumulative harvest back into the production functions. we're not doing that anymore.
-  # working_production<-left_join(working_production,fishery_holder, by="spstock2")
-  # working_production$h_cumul<-working_production$cumul_catch_pounds
-  # working_production$logh_cumul<-log(working_production$cumul_catch_pounds)
-  ###################################
-  
-  # predict_eproduction: predict harvest of each stock by each vessel condition on targeting that stock.  Also predict revenue from that stock, and all revenue.  keep just 5 columns: hullnum2, date, spstock as key variables.  harvest, revenue, and expected revenue as columns that I care about. 
-  
-  start_time<-proc.time()
-  production_outputs<-get_predict_eproduction(working_production)
-  eproduction<-eproduction+proc.time()[3]-start_time[3]
-  
-  
-  start_time<-proc.time()
-  
+revenue_holder<-as.list(NULL)
 
+# 
+# 
+# z<-function(){
+  set.seed(2)
+  # start_time<-proc.time()
+  # targeting_dataset<-lapply(targeting_dataset, get_predict_eproductionCpp)
+  # eproduction<-eproduction+proc.time()[3]-start_time[3]
+  
+  for (day in 1:365){
+  #   subset both the targeting and production datasets based on date and jams them to data.tables
+    start_time<-proc.time()
+  # Subset for the day.  Predict targeting
+  working_targeting<-targeting_dataset[[day]]
+  working_targeting<-get_predict_eproduction(working_targeting)
+  eproduction2<-eproduction2+proc.time()[3]-start_time[3]
+  
+  
+  start_time<-proc.time()
   #This bit needs to be replaced with a function that handles the "jointness"
   #expected revenue from this species
-  production_outputs$exp_rev_sim<- production_outputs$harvest_sim*production_outputs$price_lb_lag1
-  production_outputs$exp_rev_total_sim<- production_outputs$harvest_sim*production_outputs$price_lb_lag1*production_outputs$multiplier
+  working_targeting$exp_rev_total<- working_targeting$harvest_sim*working_targeting$price_lb_lag1*working_targeting$landing_multiplier_dollars
   
   #use the revenue multiplier to construct total revenue for this trip.
   #This bit needs to be replaced with a function that handles the "jointness"
   
-  
-     
-  #   use those three key variables to merge-update harvest, revenue, and expected revenue in the targeting dataset
-  joincols<-c("hullnum2","date", "spstock2")
-  working_targeting<-as.data.table(left_join(working_targeting,production_outputs, by=joincols))
-  prep_target_join<-prep_target_join+proc.time()[3]-start_time[3]
-  
-  start_time<-proc.time()
-  
-  #fill exp_rev_sim, exp_rev_total_sim, harvest_sim=0 for the nofish options
-  working_targeting$exp_rev_sim[is.na(working_targeting$exp_rev_sim)]<-0
-  working_targeting$exp_rev_total_sim[is.na(working_targeting$exp_rev_total_sim)]<-0
-  working_targeting$harvest_sim[is.na(working_targeting$harvest_sim)]<-0
-  
-  #overwrite the values of the exp_rev_total, exp_rev, and harvest in the targeting dataset.
-   working_targeting$exp_rev<-working_targeting$exp_rev_sim
-   working_targeting$exp_rev_total<-working_targeting$exp_rev_total_sim
-   working_targeting$h_hat<-working_targeting$harvest_sim
-
   prep_target_dc<-prep_target_dc+proc.time()[3]-start_time[3]
   
   
@@ -176,17 +155,17 @@ for (day in 1:365){
   # update the fishery holder dataframe
   
   start_time<-proc.time() 
-  daily_catch<- trips[, c("spstock2","h_hat")]
+  daily_catch<- trips[, c("spstock2","harvest_sim", "targeted")]
   colnames(daily_catch)[2]<-"cumul_catch_pounds"
-  daily_catch<-rbind(daily_catch,fishery_holder[, c("spstock2","cumul_catch_pounds")])
+  daily_catch<-rbind(daily_catch,fishery_holder[, c("spstock2","cumul_catch_pounds","targeted")])
   
   #DT style
-  daily_catch<-daily_catch[,.(cumul_catch_pounds = sum(cumul_catch_pounds)),by=spstock2]
+  daily_catch<-daily_catch[,.(cumul_catch_pounds = sum(cumul_catch_pounds), targeted = sum(targeted)),by=spstock2]
+  setorder(daily_catch,spstock2)
+  setorder(fishery_holder,spstock2)
+  nrow(daily_catch)==nrow(fishery_holder)
   
-  #daily_catch<- daily_catch %>% 
-  #  group_by(spstock2) %>% 
-  #  summarise(cumul_catch_pounds=sum(cumul_catch_pounds))
-  
+
   fishery_holder<-get_fishery_next_period(daily_catch,fishery_holder)
   holder_update_flatten<-holder_update_flatten+proc.time()[3]-start_time[3]
   
@@ -197,32 +176,42 @@ for (day in 1:365){
   
   #   add up today's revenue across the vessels (not necessary right now, but we end up with 'long' dataset of revenue)  
   # revenue<- trips %>% 
-  #   group_by(hullnum2) %>% 
+  #   group_by(hullnum) %>% 
   #   summarise(totalrev=sum(exp_rev_total))
   
-  # revenue<-trips[c("hullnum2","spstock2","exp_rev_total")]
-  # revenue_holder<-rbind(revenue_holder,revenue)
+  # revenue<-trips[c("hullnum","spstock2","exp_rev_total")]
+
   start_time<-proc.time() 
-  revenue_holder<-rbind(revenue_holder,trips[, c("hullnum2","spstock2","date","exp_rev_total")])
-  next_period_flatten<-next_period_flatten+proc.time()[3]-start_time[3]
-  
+  revenue_holder[[day]]<-trips[, c("hullnum","spstock2","date","exp_rev_total")]
+  next_period_flatten2<-next_period_flatten2+proc.time()[3]-start_time[3]
   
 }
+# }
+# 
 
+  start_time<-proc.time() 
+  revenue_holder<-rbindlist(revenue_holder) 
+  next_period_flatten2<-next_period_flatten2+proc.time()[3]-start_time[3]
+  
+  
 loop_end<-proc.time()
 
 runtime<-loop_end[3]-loop_start[3]
 
 subset
 eproduction
+eproduction2
 prep_target_join
 prep_target_dc
 etargeting
 zero_out
 randomdraw
 holder_update_flatten
-next_period_flatten
+holder_update_flatten2
+next_period_flatten2
 runtime
+
+
 
 
 # 

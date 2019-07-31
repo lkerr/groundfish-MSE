@@ -1,212 +1,236 @@
-# some code to test speeds
 
 
+# empty the environment
 rm(list=ls())
+set.seed(2) 
 
-
-ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
-invisible(sapply(ffiles, source))
-
-#source('processes/loadLibs.R')
+source('processes/runSetup.R')
 library(microbenchmark)
-library(data.table)
+library("Rcpp")
 
-datapath <- 'data/data_processed/econ'
-load(file.path(datapath,"full_targeting.RData"))
-load(file.path(datapath,"full_production.RData"))
-
-targeting_dataset<-targeting_dataset[which(targeting_dataset$gffishingyear==2009),]
-production_dataset<-production_dataset[which(production_dataset$gffishingyear==2009),]
+scratchdir<-"/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/scratch/econscratch"
+Rcpp::sourceCpp(file.path(scratchdir,"matsums.cpp"))
 
 
-fishery_holder<-unique(targeting_dataset[c("spstock2")])
-fishery_holder$open<-as.logical("TRUE")
-fishery_holder$cumul_catch_pounds<-1
-fishery_holder$acl<-1e16
-fishery_holder$bio_model<-0
-fishery_holder$bio_model[fishery_holder$spstock2 %in% c("codGB","pollock","haddockGB","yellowtailflounderGB")]<-1
 
-revenue_holder<-NULL
-
-#END SETUPS
-
-#Test different ways to subset these datasets. 
-# BASELINE METHOD using which
-
-production_dataset<-split(production_dataset, production_dataset$doffy)
-targeting_dataset<-split(targeting_dataset, targeting_dataset$doffy)
-
-
-#METHOD 2-- BASELINE
-
-
-#METHOD 1-  baseline aggregate
-f1 <- function() {
+sq<-function(){
   for (day in 1:365){
-    tds<-hold_targ[[day]]
-    
-    datavars=c("exp_rev_total","distance","das_charge","fuelprice_distance","start_of_season","crew","price_lb_lag1","mean_wind","mean_wind_2","permitted","lapermit","das_charge_len","max_wind","max_wind_2","fuelprice","fuelprice_len","wkly_crew_wage")
-    
-    betavars=paste0("beta_",datavars)
-    
-    X<-as.matrix(tds[datavars])
-    X[is.na(X)]<-0
-    
-    B<-as.matrix(tds[betavars])
-    B[is.na(B)]<-0
-    
-    tds$xb=rowSums(X*B)
-    tds$expu<-exp(tds$xb)
-    
-
-    totexpu<-aggregate(tds$expu,by=list(id=tds$id), FUN=sum)
-    colnames(totexpu)=c("id","totalu")
-    tds<-full_join(tds, totexpu, by = "id")
-    
+tdsDT<-targeting_dataset[[day]]
+tdsDT<-get_predict_eproductionCpp(tdsDT)
   }
 }
-
-
-#METHOD 2-  tapply
-f2  <- function() {
-  for (day in 1:365){
-    tds<-hold_targ[[day]]
-    
-    datavars=c("exp_rev_total","distance","das_charge","fuelprice_distance","start_of_season","crew","price_lb_lag1","mean_wind","mean_wind_2","permitted","lapermit","das_charge_len","max_wind","max_wind_2","fuelprice","fuelprice_len","wkly_crew_wage")
-    
-    betavars=paste0("beta_",datavars)
-    
-    X<-as.matrix(tds[datavars])
-    X[is.na(X)]<-0
-    
-    B<-as.matrix(tds[betavars])
-    B[is.na(B)]<-0
-    
-    tds$xb=rowSums(X*B)
-    tds$expu<-exp(tds$xb)
-    
-    
-    totexpu<-tapply(tds$expu, tds$id, FUN=sum)
-  }
   
-}
-
-
-
-
-
-#METHOD 3-  dplyr 
-f3  <- function() {
-  for (day in 1:365){
-    tds<-hold_targ[[day]]
-    
-    datavars=c("exp_rev_total","distance","das_charge","fuelprice_distance","start_of_season","crew","price_lb_lag1","mean_wind","mean_wind_2","permitted","lapermit","das_charge_len","max_wind","max_wind_2","fuelprice","fuelprice_len","wkly_crew_wage")
-    
-    betavars=paste0("beta_",datavars)
-    
-    X<-as.matrix(tds[datavars])
-    X[is.na(X)]<-0
-    
-    B<-as.matrix(tds[betavars])
-    B[is.na(B)]<-0
-    
-    tds$xb=rowSums(X*B)
-    tds$expu<-exp(tds$xb)
-    
-    temp1<- tds %>% 
-      group_by(id) %>% 
-      summarise(totexpu2=sum(expu))
-    tds<-full_join(tds, temp1, by = "id")
-    
-  }
+  dist<-function(){
+     targeting_dataset<-lapply(targeting_dataset, get_predict_eproductionCpp)
+  }     
   
-}
-
-
-
-
-#METHOD 4-  ave 
-f4  <- function() {
-  for (day in 1:365){
-    tds<-hold_targ[[day]]
-    
-    datavars=c("exp_rev_total","distance","das_charge","fuelprice_distance","start_of_season","crew","price_lb_lag1","mean_wind","mean_wind_2","permitted","lapermit","das_charge_len","max_wind","max_wind_2","fuelprice","fuelprice_len","wkly_crew_wage")
-    
-    betavars=paste0("beta_",datavars)
-    
-    X<-as.matrix(tds[datavars])
-    X[is.na(X)]<-0
-    
-    B<-as.matrix(tds[betavars])
-    B[is.na(B)]<-0
-    
-    tds$xb=rowSums(X*B)
-    tds$expu<-exp(tds$xb)
-    
-    tds<-tds%>% 
-      group_by(id) %>% 
-      mutate(totexpu3=sum(expu))
-    
-  }
+  microbenchmark(ans_cf<-sq(),ans_cb <- dist(),  times=2)
   
-}
+uniq
+drawu
+tileout
+tileout2
+reorder
+accum
+filter1
+filter2
 
 
 
-f5  <- function() {
-  
-for (day in 1:365){
-  
-working_production<-production_dataset[[day]]
-working_targeting<-targeting_dataset[[day]]
+ get_draws <- function(){
+   #make one draw per id, then replicate it nchoices time and place it into tds$draw
+   tdss<-unique(tdsDT[,c("id","nchoices")])
+   td<-runif(nrow(tdss), min = 0, max = 1)
+   tdsDT$draw<-rep(td,tdss$nchoices)
+   return(tdsDT)
+ }
+ 
+ 
+ get_draws2 <- function(){
+    #make one draw per id, then replicate it nchoices time and place it into tds$draw
+    tdss<-tdsDT[idflag== 1]
+    tdss<-tdss[,c("id","nchoices")]
+    td<-runif(nrow(tdss), min = 0, max = 1)
+    tdsDT$draw<-rep(td,tdss$nchoices)
+    return(tdsDT)
+ }
+ 
+ 
+ 
+ tdsDT<-targeting_dataset[[2]]
+ 
+ microbenchmark(ans_sq<-get_draws(),ans2 <-get_draws2(),   times=10)
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ filter_out <- function(tdsDT){
+   
+   tds<-tdsDT[order(tdsDT$id,tdsDT$prhat),]
+   tds<-tds[, csum := cumsum(prhat), by = id]
+ 
+   tds<-tds[tds$draw<tds$csum,]
+   tds<-tds[tds[, .I[1], by = id]$V1] 
+   return(tds)
+   }
+ 
+ day<-2
+ 
+   working_targeting<-targeting_dataset[[day]]
+   working_targeting<-get_predict_eproduction(working_targeting)
+   working_targeting$exp_rev_total<- working_targeting$harvest_sim*working_targeting$price_lb_lag1*working_targeting$multiplier
+   trips<-get_predict_etargeting(working_targeting)
+   #trips<-zero_out_closed_asc_cutout(trips,fishery_holder)
 
-working_production<-left_join(working_production,fishery_holder, by="spstock2")
+   set.seed(2)
+   tripsSQ<-get_random_draw_tripsDT(trips)
 
-production_outputs<-get_predict_eproduction(working_production)
+   set.seed(2)
+   
+   tripsnew<-get_draws(trips)
+   tripsnew<-filter_out(tripsnew)
+   setcolorder(tripsnew,"draw")
+   
+   setcolorder(tripsnew,colnames(tripsSQ))
+   all.equal(tripsnew, tripsSQ)
+   
+   
+   
+   
+   sq<-function(){
+     set.seed(2)
+     for (day in 1:365){
+       working_targeting<-targeting_dataset[[day]]
+       #   subset both the targeting and production datasets based on date and jams them to data.tables
+       trips<-get_predict_etargeting(working_targeting)
+       trips<-get_random_draw_tripsDT(trips)
+     }
+   }
+   
+   
+   
+   
+   sq2<-function(){
+     set.seed(2)
+     for (day in 1:365){
+       working_targeting<-targeting_dataset[[day]]
+       #   subset both the targeting and production datasets based on date and jams them to data.tables
+       trips<-get_predict_etargeting(working_targeting)
+       trips<-get_draws(trips)
+       trips<-filter_out(trips)
+       }
+   }
+   
+   
+   
+   
+   set.seed(2)
+   targeting_dataset<-lapply(targeting_dataset,get_draws)
+   
+   
+   
+   applydraw<-function(){
+     set.seed(2)
+     targeting_dataset<-lapply(targeting_dataset,get_draws)
+     for (day in 1:365){
+       #   subset both the targeting and production datasets based on date and jams them to data.tables
+       working_targeting<-targeting_dataset[[day]]
+       trips<-get_predict_etargeting(working_targeting)
+       trips<-filter_out(trips)
+     }
+   }
+   
+   
+   
+   applydrawCpp<-function(){
+     set.seed(2)
+     targeting_dataset<-lapply(targeting_dataset,get_draws)
+     for (day in 1:365){
+       #   subset both the targeting and production datasets based on date and jams them to data.tables
+       working_targeting<-targeting_dataset[[day]]
+       trips<-get_predict_etargetingCpp(working_targeting)
+       trips<-filter_out(trips)
+     }
+   }
+   
+   
+    microbenchmark(ans_cf<-sq(),ans_cb <- applydrawCpp(),  times=5)
+   
+   
+   
+   
 
+# 
+# tds<-targeting_dataset
+# 
+# datavars=c("exp_rev_total","das_charge","fuelprice_distance","mean_wind","mean_wind_noreast","permitted","lapermit","distance","wkly_crew_wage","len","fuelprice","fuelprice_len","start_of_season","partial_closure","constant")
+# 
+# betavars=paste0("beta_",datavars)
+# 
+# 
+# 
+# sq <- function() {
+#   for (day in 1:365){
+#     tds<-targeting_dataset[[day]]
+#     
+#  X<-as.matrix(tds[, ..datavars])
+#  B<-as.matrix(tds[, ..betavars])
+#  Z<-rowSums(X*B)
+# }
+# }
+# 
+# 
+# matrixing <- function() {
+#   for (day in 1:365){
+#     tds<-targeting_dataset[[day]]
+#     
+#     X<-as.matrix(tds[, ..datavars])
+#     B<-as.matrix(tds[, ..betavars])
+# 
+#     Z<-.rowSums(X*B, nrow(X), ncol(X))
+#   }
 #   
-#   use those three key variables to merge-update harvest, revenue, and expected revenue in the targeting dataset
-joincols<-c("hullnum2","date","spstock2")
-working_targeting<-left_join(working_targeting,production_outputs, by=joincols)
-
-
-
-}
-}
-
-  
-
-f6  <- function() {
-  
-  for (day in 1:365){
-    
-    working_production<-production_dataset[[day]]
-    working_targeting<-targeting_dataset[[day]]
-    working_production<-left_join(working_production,fishery_holder, by="spstock2")
-    
-    production_outputs<-get_predict_eproduction(working_production)
-    
-    #   
-    #   use those three key variables to merge-update harvest, revenue, and expected revenue in the targeting dataset
-    joincols<-c("id","spstock2")
-    working_targeting<-left_join(working_targeting,production_outputs, by=joincols)
-    
-    
-    
-  }
-}
-
-
-
-
-microbenchmark(ans5 <- f5(), ans6<-f6(), times=10)
-
-
-tdsb<-tds
-
-tds<-tds%>% 
-  group_by(id) %>% 
-  mutate(totexpu3=sum(expu))
+#   }
+# 
+# 
+# rfasting <- function() {
+#   for (day in 1:365){
+#     tds<-targeting_dataset[[day]]
+#     
+#     X<-as.matrix(tds[, ..datavars])
+#     B<-as.matrix(tds[, ..betavars])
+#     x1 <-Rfast::rowsums(X*B)
+#     }
+# }
+# 
+# 
+# 
+# 
+# 
+# microbenchmark(ans_cf<-sq(), ans_cb <- matrixing(), ans_cb <- rfasting(), times=10)
+# 
+# 
+# 
+# A<-matrix(1:6, nrow=3, ncol=2)
+# B<-matrix(4:9, nrow=3, ncol=2)
+# 
+# Z<-A*B
+# Z<-rowSums(Z)
+# 
+# Z2<-diag(A%*%t(B))
 
 
 

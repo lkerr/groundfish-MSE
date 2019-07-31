@@ -10,15 +10,13 @@
 #.Unsure if the NA are handled properly.  Also unsure if the "No Fish" option will be properly constructed (Troubleshoot: if the utility function equation is fixed AND I get a matrix of NAs, then the utility for the no-fish option isn't properly being constructed. I'm pretty sure that this gets set =0 (so exp(0)=1). There are no coefficients for no fish model.
 # returns a data.table with extra columns in it (xb, expu, totexpu, and prhat).
 
-get_predict_etargeting <- function(tds){
+get_predict_etargetingCpp <- function(tds){
   # pull the betas into matrix, pull the data variables into a matrix and mulitiply them.  
   
-  #
+  #These need to be changed
   
   
-  spstock_equation=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
-  choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len", "das_price_mean", "das_price_mean_len")
-  datavars=c(spstock_equation, choice_equation,"constant")
+  datavars=c("exp_rev_total","das_charge","fuelprice_distance","mean_wind","mean_wind_noreast","permitted","lapermit","distance","wkly_crew_wage","len","fuelprice","fuelprice_len","start_of_season","partial_closure","constant")
   
   betavars=paste0("beta_",datavars)
 
@@ -27,7 +25,7 @@ X<-as.matrix(tds[, ..datavars])
 
 B<-as.matrix(tds[, ..betavars])
 
-tds$xb<-rowSums(X*B)
+tds$xb<-Sugar_rowSums(X*B)
 tds$expu<-exp(tds$xb)
 
 tds[, totexpu := sum(expu), by = id]

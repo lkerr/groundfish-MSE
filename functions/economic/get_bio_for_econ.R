@@ -1,5 +1,6 @@
 # Collect biological parameters for the economic model into a dataframe. 
 # Do a little processing to construct ACLs for the sector fleet
+# This function runs 1x per simulation year, so it's not worth spending time optimizing.
 # There are *many* biological parameters stored in the stock lists
 # This collects a few of them into lists that are easier to pass to the economic model
 
@@ -51,6 +52,8 @@ get_bio_for_econ=function(stock,basecase){
              
   biocontain$sectorACL<-biocontain$ACL*biocontain$sector_frac
   biocontain$nonsector_catch_mt<-biocontain$ACL*(1-biocontain$sector_frac)
+  biocontain<-as.data.table(biocontain)
+  setorder(biocontain,spstock2)
   
   return(biocontain)
 }

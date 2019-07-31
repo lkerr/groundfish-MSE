@@ -1,4 +1,4 @@
-# Read in Production and Targeting coefficients to .RData.  
+# Read in Production and Targeting coefficients to .Rds  
 # Tested working. Make a small change if we want to get different regression results (there are 4 sets of models for each gear, we haven't picked a "best " model yet).
 
 rm(list=ls())
@@ -11,6 +11,10 @@ if(!require(tidyr)) {
 if(!require(dplyr)) {  
   install.packages("dplyr")
   require(dplyr)}
+if(!require(data.table)) {  
+  install.packages("data.table")
+  require(data.table)}
+
 
 # file paths for the raw and final directories
 # windows is kind of stupid, so you'll have to deal with it in some way.
@@ -122,7 +126,9 @@ colnames(targeting_coefs)[colnames(targeting_coefs)=="beta_start_of_season.x"] <
 targeting_coefs[is.na(targeting_coefs)]<-0
 targeting_coefs <- targeting_coefs[order(targeting_coefs$gearcat,targeting_coefs$spstock2),]
 
-save(targeting_coefs, file=file.path(savepath, "targeting_coefs.RData"))
+targeting_coefs<-as.data.table(targeting_coefs)
+
+saveRDS(targeting_coefs, file=file.path(savepath, "targeting_coefs.Rds"))
 rm(list=c("all_coefs","asc_coefs","asc_coefs2"))
 
 #write.csv(targeting_coefs, file="asc.txt")

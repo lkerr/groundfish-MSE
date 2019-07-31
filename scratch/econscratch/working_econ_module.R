@@ -11,8 +11,10 @@
 fishery_holder<-bio_params_for_econ[,c("stocklist_index","stockName","spstock2","sectorACL","nonsector_catch_mt","bio_model","SSB", "mults_allocated", "stockarea")]
 fishery_holder$open<-as.logical("TRUE")
 fishery_holder$cumul_catch_pounds<-0
+fishery_holder$targeted<-0
 
-revenue_holder<-as.data.table(NULL)
+#set up a list to hold the expected revenue by date, hullnum, and target spstock2
+revenue_holder<-as.list(NULL)
 
 
 
@@ -45,49 +47,23 @@ revenue_holder<-as.data.table(NULL)
 
 for (day in 1:365){
   #   subset both the targeting and production datasets based on date and jams them to data.tables
+  # Subset for the day.  Predict targeting
+  working_targeting<-targeting_dataset[[day]]
+  working_targeting<-get_predict_eproduction(working_targeting)
   
-  working_production<-data.table(production_dataset[[day]])
-  working_targeting<-data.table(targeting_dataset[[day]])
-  
-  ###################################
-  #   overwrite cumulative harvest and log cumulative catch of each stock. This was needed for getting cumulative harvest back into the production functions. we're not doing that anymore.
-  # working_production<-left_join(working_production,fishery_holder, by="spstock2")
-  # working_production$h_cumul<-working_production$cumul_catch_pounds
-  # working_production$logh_cumul<-log(working_production$cumul_catch_pounds)
-  ###################################
-  
-  # predict_eproduction: predict harvest of each stock by each vessel condition on targeting that stock.  Also predict revenue from that stock, and all revenue.  keep just 5 columns: hullnum2, date, spstock as key variables.  harvest, revenue, and expected revenue as columns that I care about. 
-  
-  production_outputs<-get_predict_eproduction(working_production)
   
   
   
   #This bit needs to be replaced with a function that handles the "jointness"
   #expected revenue from this species
-  production_outputs$exp_rev_sim<- production_outputs$harvest_sim*production_outputs$price_lb_lag1
-  production_outputs$exp_rev_total_sim<- production_outputs$harvest_sim*production_outputs$price_lb_lag1*production_outputs$multiplier
+  working_targeting$exp_rev_total<- working_targeting$harvest_sim*working_targeting$price_lb_lag1*working_targeting$landing_multiplier_dollars
   
   #use the revenue multiplier to construct total revenue for this trip.
   #This bit needs to be replaced with a function that handles the "jointness"
   
   
-     
-  #   use those three key variables to merge-update harvest, revenue, and expected revenue in the targeting dataset
-  joincols<-c("hullnum2","date", "spstock2")
-  working_targeting<-as.data.table(left_join(working_targeting,production_outputs, by=joincols))
   
   
-  #fill exp_rev_sim, exp_rev_total_sim, harvest_sim=0 for the nofish options
-  working_targeting$exp_rev_sim[is.na(working_targeting$exp_rev_sim)]<-0
-  working_targeting$exp_rev_total_sim[is.na(working_targeting$exp_rev_total_sim)]<-0
-  working_targeting$harvest_sim[is.na(working_targeting$harvest_sim)]<-0
-  
-  #overwrite the values of the exp_rev_total, exp_rev, and harvest in the targeting dataset.
-   working_targeting$exp_rev<-working_targeting$exp_rev_sim
-   working_targeting$exp_rev_total<-working_targeting$exp_rev_total_sim
-   working_targeting$h_hat<-working_targeting$harvest_sim
-
-   
   trips<-get_predict_etargeting(working_targeting)
   
   
@@ -117,17 +93,15 @@ for (day in 1:365){
   # update the fishery holder dataframe
   
   
-  daily_catch<- trips[, c("spstock2","h_hat")]
+  daily_catch<- trips[, c("spstock2","harvest_sim", "targeted")]
   colnames(daily_catch)[2]<-"cumul_catch_pounds"
-  daily_catch<-rbind(daily_catch,fishery_holder[, c("spstock2","cumul_catch_pounds")])
-
+  daily_catch<-rbind(daily_catch,fishery_holder[, c("spstock2","cumul_catch_pounds","targeted")])
+  
   #DT style
-  daily_catch<-daily_catch[,.(cumul_catch_pounds = sum(cumul_catch_pounds)),by=spstock2]
-  
-  #daily_catch<- daily_catch %>% 
-  #  group_by(spstock2) %>% 
-  #  summarise(cumul_catch_pounds=sum(cumul_catch_pounds))
-  
+  daily_catch<-daily_catch[,.(cumul_catch_pounds = sum(cumul_catch_pounds), targeted = sum(targeted)),by=spstock2]
+  setorder(daily_catch,spstock2)
+  setorder(fishery_holder,spstock2)
+  nrow(daily_catch)==nrow(fishery_holder)
   fishery_holder<-get_fishery_next_period(daily_catch,fishery_holder)
   
   ####################################################################################################
@@ -135,18 +109,18 @@ for (day in 1:365){
   # Not written yet.  Not sure if we need revenue by stock to be saved for each vessel? Or just catch? 
   
   
-  #   add up today's revenue across the vessels (not necessary right now, but we end up with 'long' dataset of revenue)  
-  # revenue<- trips %>% 
-  #   group_by(hullnum2) %>% 
-  #   summarise(totalrev=sum(exp_rev_total))
+  # save the hullnum, target spstock2, date, and expected revenue to a list
+  revenue_holder[[day]]<-trips[, c("hullnum","spstock2","date","exp_rev_total")]
   
-  # revenue<-trips[c("hullnum2","spstock2","exp_rev_total")]
-  # revenue_holder<-rbind(revenue_holder,revenue)
-  
-  revenue_holder<-rbind(revenue_holder,trips[, c("hullnum2","spstock2","date","exp_rev_total")])
 }
 
 fishery_holder$removals_mt<-fishery_holder$cumul_catch_pounds/(pounds_per_kg*kg_per_mt)+fishery_holder$nonsector_catch_mt
+ 
+#contract that list down to a single data.table
+  revenue_holder<-rbindlist(revenue_holder) 
+  revenue_holder$r<-r
+  revenue_holder$m<-m
+  revenue_holder$y<-y
 
 #subset fishery_holder to have just things that have a biological model. send it to a list?
 bio_output<-fishery_holder[which(fishery_holder$bio_model==1),]
