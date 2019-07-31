@@ -31,7 +31,10 @@ nrep <- 1
 # First year to begin actual management
 fmyear <- 2000
 
-# first year after the initial condition period  !!!! DEFINE THIS BETTER !!!!
+# first year after the initial condition period. The initial condition period
+# simply fills up the arrays as necessary even before the burn-in period
+# begins. This is rather arbitrary but should be larger than the number of
+# years in the assessment model and greater than the first age in the model.
 fyear <- 35
 
 # maximum year predicted into the future
