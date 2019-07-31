@@ -26,7 +26,6 @@ for(r in 1:nrep){
   
   #### Top MP loop ####
   for(m in 1:nrow(mproc)){
-    #this is temporary, we should add a column to mproc.txt
 
     # set.seed(rsd)
     
