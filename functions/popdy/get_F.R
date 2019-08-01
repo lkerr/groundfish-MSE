@@ -21,7 +21,7 @@
 
 
 
-getF <- function(x, Nv, slxCv, M, waav){
+get_F <- function(x, Nv, slxCv, M, waav){
   
   # Function to calculate the difference between the true catch weight (x)
   # and the catch weight calculated assuming a value of F.
