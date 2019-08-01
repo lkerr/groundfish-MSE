@@ -32,10 +32,6 @@ if(runClass == 'Local'){
   unlink('results/*', recursive=TRUE)
 }
 
-# create a results & sim directories
-dir.create('results', showWarnings = FALSE)
-dir.create('results/sim', showWarnings = FALSE)
-dir.create('results/fig', showWarnings = FALSE)
 
 # load the required libraries
 source('processes/loadLibs.R')

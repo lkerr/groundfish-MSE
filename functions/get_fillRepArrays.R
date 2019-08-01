@@ -124,51 +124,62 @@
 ## management time-period so you can see the response. It is set pretty
 ## arbitrarily though.
 
-omval$SSB[r,m,] <- SSB
-omval$R[r,m,] <- R
-omval$F_full[r,m,] <- F_full
-omval$sumCW[r,m,] <- sumCW
-omval$OFdStatus[r,m,] <- OFdStatus
-omval$mxGradCAA[r,m,] <- mxGradCAA
 
-# Deal with the CV later when creating the plots for particular time periods
-omval$sumCWcv[r,m,] <- NA
+get_fillRepArrays <- function(stock){
 
-giniCN <- apply(paaCN, 1, get_gini)
-omval$ginipaaCN[r,m,] <- giniCN
-giniIN <- apply(paaIN, 1, get_gini)
-omval$ginipaaIN[r,m,] <- giniIN
-omval$FPROXY[r,m,] <- RPmat[,1]
-omval$SSBPROXY[r,m,] <- RPmat[,2]
-if(y == nyear){
-  # Determine whether additional years should be added on to the
-  # beginning of the series
-  if(nyear > length(cmip_dwn$YEAR)){
-    nprologueY <- nyear - length(cmip_dwn$YEAR)
-    prologueY <- (cmip_dwn$YEAR[1]-nprologueY):(cmip_dwn$YEAR[1]-1)
-    yrs <- c(prologueY, cmip_dwn$YEAR)
-  # If no additional years needed then just take them from the years
-  # time series.
-  }else{
-    yrs <- rev(rev(cmip_dwn$YEAR)[1:nyear])
-  }
-  omval$YEAR <- yrs
+  
+  out <- within(stock, {
+      
+    omval$SSB[r,m,] <- SSB
+    omval$R[r,m,] <- R
+    omval$F_full[r,m,] <- F_full
+    omval$sumCW[r,m,] <- sumCW
+    omval$OFdStatus[r,m,] <- OFdStatus
+    omval$mxGradCAA[r,m,] <- mxGradCAA
+    
+    # annPercentChange not true vector -- just repeated values. This needs
+    # to be calculated after the run so that the appropriate time windows
+    # can be used.
+    omval$annPercentChange[r,m,] <- NA # placeholder -- calculated later
+    meanSizeCN <- sapply(1:nrow(CN), 
+                         function(x) laa[x,] %*% paaCN[x,])
+    omval$meanSizeCN[r,m,] <- meanSizeCN
+    meanSizeIN <- sapply(1:nrow(CN), 
+                         function(x) laa[x,] %*% paaIN[x,])
+    omval$meanSizeIN[r,m,] <- meanSizeIN
+    omval$FPROXY[r,m,] <- RPmat[,1]
+    omval$SSBPROXY[r,m,] <- RPmat[,2]
+    if(y == nyear){
+      # Determine whether additional years should be added on to the
+      # beginning of the series
+      if(nyear > length(cmip_dwn$YEAR)){
+        nprologueY <- nyear - length(cmip_dwn$YEAR)
+        prologueY <- (cmip_dwn$YEAR[1]-nprologueY):(cmip_dwn$YEAR[1]-1)
+        yrs <- c(prologueY, cmip_dwn$YEAR)
+      # If no additional years needed then just take them from the years
+      # time series.
+      }else{
+        yrs <- rev(rev(cmip_dwn$YEAR)[1:nyear])
+      }
+      omval$YEAR <- yrs
+    }
+    
+    
+    # Assessment model diagnostics ... -1 gives 1 NA. Will change when I get
+    # around to reporting all years for all metrics.
+    omval$relE_qI[r,m,] <- relE_qI
+    omval$relE_qC[r,m,] <- relE_qC
+    omval$relE_selCs0[r,m,] <- relE_selCs0
+    omval$relE_selCs1[r,m,] <- relE_selCs1
+    omval$relE_ipop_mean[r,m,] <- relE_ipop_mean
+    omval$relE_ipop_dev[r,m,] <- relE_ipop_dev
+    omval$relE_R_dev[r,m,] <- relE_R_dev
+    omval$relE_SSB[r,m,] <- relE_SSB
+    omval$relE_CW[r,m,] <- relE_CW
+    omval$relE_IN[r,m,] <- relE_IN
+  })
+
+  return(out)
+  
 }
-
-
-# Assessment model diagnostics ... -1 gives 1 NA. Will change when I get
-# around to reporting all years for all metrics.
-omval$relE_qI[r,m,] <- relE_qI
-omval$relE_qC[r,m,] <- relE_qC
-omval$relE_selCs0[r,m,] <- relE_selCs0
-omval$relE_selCs1[r,m,] <- relE_selCs1
-omval$relE_ipop_mean[r,m,] <- relE_ipop_mean
-omval$relE_ipop_dev[r,m,] <- relE_ipop_dev
-omval$relE_R_dev[r,m,] <- relE_R_dev
-omval$relE_SSB[r,m,] <- relE_SSB
-omval$relE_CW[r,m,] <- relE_CW
-omval$relE_IN[r,m,] <- relE_IN
-
-
-
 

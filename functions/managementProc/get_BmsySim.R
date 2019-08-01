@@ -52,12 +52,14 @@ get_BmsySim <- function(parmgt, parpop, parenv, Rfun,
                         F_val, distillBmsy = mean, ...){
 
   
-  get_proj(parmgt = parmgt, 
+  get_proj(type = 'BREF',
+           parmgt = parmgt, 
            parpop = parpop, 
            parenv = parenv, 
            Rfun = Rfun,
            F_val = Fprox['RPvalue'],
-           stReportYr)
+           stReportYr,
+           stockEnv = stock)
   
 
   # Find the total SSB / year ([-1,] to get rid of the initial year, where
