@@ -29,7 +29,10 @@
 *.pdf
 *.tex
 *.html
-=======
+*.out
+*.DAT
+*.xx*
+documentation/stockRecruit/cod/recruitmentCOD_old.Rmd
 *.*~
 *.dta
 *.xx*

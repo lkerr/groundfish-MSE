@@ -6,7 +6,7 @@ The purpose of this document is to describe the intended workflow for updates to
 
 ## Branches
 
-* **Master**: The master branch. Ideally this branch will always be able to run with the available options in **mproc.txt**. Before other branches are merged into **Master** they have been reviewed by one or more people other than the author and thoroughly tested both on both a local machine and on the HPCC. Merges to **Master** should come from the **Dev** branch rather than directly from feature branches.
+* **Master**: The master branch. Ideally this branch will always be able to run with the available options in **mproc.txt**. Before other branches are merged into **Master** they have been reviewed by one or more people other than the author and thoroughly tested both on a local machine and on the HPCC. Merges to **Master** should come from the **Dev** branch rather than directly from feature branches.
 
   * *exception*: Small edits to the documentation are less critical -- it seems reasonable that these can be committed to the Master branch directly. Large changes to the documentation, like new files, could benefit from review however.
 
@@ -29,7 +29,7 @@ The purpose of this document is to describe the intended workflow for updates to
 
 
 ## Pull requests into Dev
-To create a pull request, click on **Pull Request** in the list of branches on the GitHub site. You will then be taken to a page where you can describe the nature of the features and what in particular you would like to be evaluated by the reviewers. On the right-hand sidebar under reviewers choose at least one reviewer other than yourself to assign them the pull request to review.
+Use a Pull Request when your changes to a branch are ready for prime time. This is the process to merge a branch you have been working on into the established model files. The philosophy behind the "request" is that the files get reviewed before they are integrated. To create a pull request, click on **Pull Request** in the list of branches on the GitHub site. You will then be taken to a page where you can describe the nature of the features and what in particular you would like to be evaluated by the reviewers. On the right-hand sidebar under reviewers choose at least one reviewer other than yourself to assign them the pull request to review.
 
 ![gitHubWorkflow_openAssign](images/gitHubWorkflow_openAssign.JPG)
 

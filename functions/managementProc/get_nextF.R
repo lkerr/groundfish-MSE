@@ -111,7 +111,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     # Calculate what the corresponding true F is that matches with
     # the actual biomass-at-age in the current year
-    trueF <- getF(x = CWrec,
+    trueF <- get_F(x = CWrec,
                   Nv = parpop$Ntrue_y, 
                   slxCv = parpop$slxCtrue_y, 
                   M = parpop$Mtrue_y, 
