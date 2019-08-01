@@ -46,11 +46,23 @@ Refers to the parameters necessary for developing the F<sub>MSY</sub> proxy. The
 
 * **SPR**: The value representing the desired quotient of spawning biomass-per-recruit at the reference point to spawning biomass-per-recruit at zero fishing. A value of 0.4 (corresponding to F<sub>40%</sub>) would indicate that F should be set at a level that represents 40% survival relative to F=0.
 
-* **Fmed**: Fmed does not require additional parameters so FREF_PARO should be set to NA.
+* **Fmed**: Fmed does not require additional parameters so FREF_PAR0 should be set to NA.
 
 * **FmsySim**: The parameter value if using FmsySim is related to how recruitment should be treated. If the recruitment function is *hindcastMean* this will represent how many years to look back into the past for this calculation. For example, if the value is set to 10, recruitment in each year of the projection that is used to generate F<sub>MSY</sub> will be the average of the (assessment model-estimated) previous 10 years of recruitment. If the recruitment function is *forecast*, this parameter represents the number of years to look into the future when running the simulation. Each year in the future will use the projected recruitment for that year (including temperature effects if they are switched on).
 
 * **NA**: A possible value for situations where there is no harvest control rule (e.g., planB) or the reference point does not require a parameter (e.g., F<sub>MED</sub>).
+
+## FREF_PAR1
+
+* **For YPR**: Does not require additional parameters; should be NA.
+
+* **For SPR**: Does not require additional parameters; should be NA.
+
+* **For Fmed**: Fmed does not require additional parameters so FREF_PAR0 should be set to NA.
+
+* **For FmsySim**: If RFUN_NM is *hindcastMean* this should be the most recent year to use the the backward-looking projection. In most cases this will be *-1* to indicate that the projection should go all the way to the previous year. Other values are possible if testing issues related to assessments that are not updated frequently.  If RFUN_NM is *forecast* then this should be NA.
+
+* **NA**: A possible value for situations where there is no harvest control rule (e.g., planB).
 
 
 ## BREF_TYP
@@ -66,9 +78,16 @@ Methods for determining the SSB<sub>MSY</sub> proxy.
 ## BREF_PAR0
 Refers to the parameters necessary for developing the B<sub>MSY</sub> proxy. These are presented here as linked to the reference point types above.
 
-* **RSSBR**: The value entered is the number of years to look back in a hindcast recruitment function. For example, if the value is 10 the average recruitment that will be used would be the average (assessment model-estimated) recruitment over the previous 10 years.
+* **For RSSBR**: The value entered is the number of years to look back in a hindcast recruitment function. For example, if the value is 10 the average recruitment that will be used would be the average (assessment model-estimated) recruitment over the previous 10 years.
 
-* **SIM**: This parameter has options depending on the type of recruitment function that is used. If the *hindcastMean* recruitment function is used then it represents the number of years over which the average is calculated (see example in previous entry for RSSBR). If the *forecast* recruitment function is specified the parameter represents the number of years that will be averaged over in the forecast simulation (which involves temperature if that functionality is switched on).
+* **For SIM**: This parameter has options depending on the type of recruitment function that is used. If the *hindcastMean* recruitment function is used then it represents the number of years over which the average is calculated (see example in previous entry for RSSBR). If the *forecast* recruitment function is specified the parameter represents the number of years that will be averaged over in the forecast simulation (which involves temperature if that functionality is switched on).
+
+* **NA**: A possible value for situations where there is no harvest control rule (e.g., planB).
+
+## BREF_PAR1
+Refers to the parameters necessary for developing the B<sub>MSY</sub> proxy. These are presented here as linked to the reference point types above.
+
+* **For SIM**: If RFUN_NM is *hindcastMean* this should be the most recent year to use the the backward-looking projection. In most cases this will be *-1* to indicate that the projection should go all the way to the previous year. Other values are possible if testing issues related to assessments that are not updated frequently.  If RFUN_NM is *forecast* then this should be NA.
 
 * **NA**: A possible value for situations where there is no harvest control rule (e.g., planB).
 
