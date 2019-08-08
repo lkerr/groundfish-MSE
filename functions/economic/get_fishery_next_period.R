@@ -11,9 +11,9 @@ get_fishery_next_period <- function(dc,fh){
   fh$targeted<-dc$targeted
   
   fh$sectorACL_pounds<-fh$sectorACL*pounds_per_kg*kg_per_mt
-  fh$open<-fh$cumul_catch<fh$sectorACL_pounds
+  fh$underACL<-fh$cumul_catch<fh$sectorACL_pounds
   
-  num_closed<-sum(fh$open==FALSE)
+  num_closed<-sum(fh$underACL==FALSE)
   if (num_closed==0){
     # If nothing is closed, just return fh
   }

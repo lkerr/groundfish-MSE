@@ -12,7 +12,7 @@ get_fishery_next_period_areaclose <- function(dc,fh){
   fh$targeted<-dc$targeted
   
   fh$sectorACL_pounds<-fh$sectorACL*pounds_per_kg*kg_per_mt
-  fh$open<-fh$cumul_catch<fh$sectorACL_pounds
+  fh$underACL<-fh$cumul_catch<fh$sectorACL_pounds
   
   #split into allocated and non-allocated
   z0<-fh[which(fh$mults_allocated==0)]
@@ -20,7 +20,7 @@ get_fishery_next_period_areaclose <- function(dc,fh){
   
   fh<-fh[which(fh$mults_allocated==1)]
   
-  num_closed<-sum(fh$open==FALSE)
+  num_closed<-sum(fh$underACL==FALSE)
   if (num_closed==0){
     fh$stockarea_closed<-as.logical(FALSE)
     # If nothing is closed, just return fh
@@ -29,7 +29,7 @@ get_fishery_next_period_areaclose <- function(dc,fh){
     
     #it's easer to check if "any" stock in an area is closed than it is to check that ALL stocks are open.
     # so we'll do that, then "flip" it over to a new open variable.
-    fh<-fh[,stockarea_closed :=(sum(open==FALSE))>0, by=list(mults_allocated,stockarea)]
+    fh<-fh[,stockarea_closed :=(sum(underACL==FALSE))>0, by=list(mults_allocated,stockarea)]
     
     unit_check<-length(which(fh$stockarea_closed==TRUE & fh$stockarea=="Unit"))
     gb_check<-length(which(fh$stockarea_closed==TRUE & fh$stockarea=="GB"))

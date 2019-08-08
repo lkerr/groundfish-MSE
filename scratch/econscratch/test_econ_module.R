@@ -45,7 +45,8 @@ load(file.path(econsavepath,"temp_biop.RData"))
 ############################################################
 
 fishery_holder<-bio_params_for_econ[,c("stocklist_index","stockName","spstock2","sectorACL","nonsector_catch_mt","bio_model","SSB", "mults_allocated", "stockarea")]
-fishery_holder$open<-as.logical("TRUE")
+fishery_holder$underACL<-as.logical("TRUE")
+fishery_holder$stockareaopen<-as.logical("TRUE")
 fishery_holder$cumul_catch_pounds<-0
 fishery_holder$targeted<-0
 
