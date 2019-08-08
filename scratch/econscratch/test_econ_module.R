@@ -22,7 +22,7 @@ set.seed(2)
 
 source('processes/runSetup.R')
 library(microbenchmark)
-library(Rcpp)
+#library(Rcpp)
 econsavepath <- 'scratch/econscratch'
 ############################################################
 ############################################################
@@ -166,9 +166,9 @@ revenue_holder<-as.list(NULL)
   nrow(daily_catch)==nrow(fishery_holder)
   
 
-  fishery_holder<-get_fishery_next_period(daily_catch,fishery_holder)
+  fishery_holder<-get_fishery_next_period_areaclose(daily_catch,fishery_holder)
   holder_update_flatten<-holder_update_flatten+proc.time()[3]-start_time[3]
-  
+
   ####################################################################################################
   # Expand from harvest of the target to harvest of all using the catch multiplier matrices
   # Not written yet.  Not sure if we need revenue by stock to be saved for each vessel? Or just catch? 
