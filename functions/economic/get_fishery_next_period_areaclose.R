@@ -16,7 +16,10 @@ get_fishery_next_period_areaclose <- function(dc,fh){
   
   #split into allocated and non-allocated
   z0<-fh[which(fh$mults_allocated==0)]
-  z0$stockarea_closed<-as.logical(FALSE)
+  
+  #for non-allocated stocks, set their stockarea_closed value to the negation of the underACL 
+  z0$stockarea_closed<-!z0$underACL
+  
   
   fh<-fh[which(fh$mults_allocated==1)]
   
@@ -29,8 +32,11 @@ get_fishery_next_period_areaclose <- function(dc,fh){
     
     #it's easer to check if "any" stock in an area is closed than it is to check that ALL stocks are open.
     # so we'll do that, then "flip" it over to a new open variable.
+    
+    #by mults_allocated and stock area, sum up the number of overACLs, and set to TRUE if>0 and FALSE if ==0
     fh<-fh[,stockarea_closed :=(sum(underACL==FALSE))>0, by=list(mults_allocated,stockarea)]
     
+    # examine and recode the stock areas 
     unit_check<-length(which(fh$stockarea_closed==TRUE & fh$stockarea=="Unit"))
     gb_check<-length(which(fh$stockarea_closed==TRUE & fh$stockarea=="GB"))
     gom_check<-length(which(fh$stockarea_closed==TRUE & fh$stockarea=="GOM"))
