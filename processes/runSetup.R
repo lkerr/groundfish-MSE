@@ -4,12 +4,55 @@
 # entire simulation.
 
 # load all the functions
-ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
+ffiles <- list.files(path='functions/', pattern="^.*\\.R$",full.names=TRUE, recursive=TRUE)
 invisible(sapply(ffiles, source))
 
 
-# prepare directories
-#prepFiles()
+# Load the overall operating model parameters
+source('modelParameters/set_om_parameters_global.R')
+
+
+# get the operating model parameters -- first search the space for every
+# version of the set_stock_parameters_xx files and put them in this list.
+fileList <- list.files('modelParameters/stockParameters', full.names=TRUE)
+if(!is.null(stockExclude)){
+  stockExclude <- paste0(stockExclude, '.R')
+  rem <- match(stockExclude, basename(fileList))
+  if(any(is.na(rem))){
+    stop(paste('run_setup.R: check names of excluded stocks in', 
+          'set_om_parameters_global file and be sure they match the actual', 
+          'stock file names'))
+  }
+  fileList <- fileList[-rem]
+  if(length(fileList) < 1){
+    stop(paste('run_setup.R: check names of excluded stocks in', 
+               'set_om_parameters_global file. It looks like you have',
+               'removed all available stocks.'))
+  }
+}
+
+# Retrieve the stock names from the file paths
+stockNameListExt <- sapply(fileList, basename)
+stockNameList <- unname(sapply(stockNameListExt, sub, 
+                               pattern='\\.R$', replacement=''))
+
+nstock <- length(fileList)
+stockPar <- as.list(nstock)
+for(i in 1:nstock){
+  tempEnv <- new.env()
+  source(fileList[[i]], local = tempEnv)
+  # Calculate number of ages (needed for other variables)
+  tempEnv$nage <- length(tempEnv$fage:tempEnv$page)
+  # Add name of stock for labeling objects and plots
+  tempEnv$stockName <- stockNameList[i]
+  stockPar[[i]] <- as.list(tempEnv)
+  rm(tempEnv)
+}
+
+# Get the names of each stock (stocks must follow naming convention)
+stockNames <- unname(sapply(fileList, function(x) 
+                strsplit(x, 'stockParameters/|\\.R')[[1]][2]))
+
 
 
 # Get the run info so the functions work appropriately whether they are
@@ -19,18 +62,24 @@ source('processes/get_runinfo.R')
 # load the required libraries
 source('processes/loadLibs.R')
 
+
 # load the list of management procedures
 source('processes/generateMP.R')
 
-# get the operating model parameters
-source('processes/set_om_parameters.R')
-nage <- length(fage:page)
-
+# Model structure (includes loading in temperature data)
 source('processes/genAnnStructure.R')
 
 # Load specific recruitment functions (these are a list for simulation-based 
 # approach to deriving Bproxy reference points
 source('processes/Rfun_BmsySim.R')
+
+# Load default ACLs and fractions of the ACL that are allocated to the catch share fishery
+source('processes/genBaselineACLs.R')
+
+#if there are any 
+if(sum(mproc$ImplementationClass=="Economic")>=1){ #Load in Economic Data if there's at least 1 Economic model in mproc
+  source('processes/loadEcon.R')
+}
 
 
 
@@ -44,19 +93,19 @@ if(runClass == 'Local' && nrep == 1){
   warning('local run: nrep (in set_om_parameters.R) set to 2 to avoid errors')
 }
 
-# Warning regarding Bmsy calculation hindcasts
-tst <- !is.na(mproc$BREF_TYP) & 
-       mproc$BREF_TYP == 'SIM' &
-       mproc$RFUN_NM == 'hindcastMean' &
-       mproc$BREF_PAR0 > ncaayear
-if(any(tst)){
-  msg <- paste0('Number of years in hindcast that you specified (', 
-                mproc$BREF_PAR0[tst], ') is larger than the number of years in', 
-                ' the moving window of the stock assessment model (', 
-                ncaayear, '). Number of years used in the hindcast changed to ', 
-                ncaayear, '.\n')
-  warning(msg)
-}
+# # Warning regarding Bmsy calculation hindcasts
+# tst <- !is.na(mproc$BREF_TYP) & 
+#        mproc$BREF_TYP == 'SIM' &
+#        mproc$RFUN_NM == 'hindcastMean' &
+#        mproc$BREF_PAR0 > ncaayear
+# if(any(tst)){
+#   msg <- paste0('Number of years in hindcast that you specified (', 
+#                 mproc$BREF_PAR0[tst], ') is larger than the number of years in', 
+#                 ' the moving window of the stock assessment model (', 
+#                 ncaayear, '). Number of years used in the hindcast changed to ', 
+#                 ncaayear, '.\n')
+#   warning(msg)
+# }
 
 # Error regarding bad combinations of mproc
 tst <- mproc$BREF_TYP == 'RSSBR' & mproc$RFUN_NM == 'forecast'
@@ -68,23 +117,42 @@ if(!all(is.na(tst)) && any(tst & !is.na(tst))){
              'the reference point should actually be.'))
 }
 
-
-# get all the necessary containers for the simulation
-source('processes/get_containers.R')
-
-
-
-# Set up a sink for debugging -- don't use this if on the HPCC because
-# you will end up with multiple programs trying to access the same file
-# at the same time (if running in paralell).
-if(debugSink & runClass != 'HPCC'){
-  dbf <- 'results/debugInfo.txt'
-  cat('############  Debug results:  ############\n',
-      file=dbf, sep='')
+# Error regarding number of years.
+inTest <- (plotBrkYrs + fmyearIdx) %in% (fmyearIdx+1):nyear
+if(!all(inTest)){
+  stop(paste('check plotBrkYrs in set_om_parameters_global. One or more',
+             'of your break years is outside the possible range.'))
 }
 
 
+# get all the necessary containers for the simulation
+stockCont <- list()
+for(i in 1:nstock){
+  stockCont[[i]] <- get_containers(stockPar=stockPar[[i]])
+}
 
+# Combine the stock parameters and the stock containers into a single list
+stock <- list()
+for(i in 1:nstock){
+  stock[[i]] <- c(stockPar[[i]], stockCont[[i]])
+}
+names(stock) <- stockNames
+
+
+# Set up a container dataframe for Fleet-level Economic Results
+# These are simulation specific so they are stored in a single dataframe
+source('processes/genEcon_Containers.R')
+
+
+# Ensure that there are enough initial data points to support the
+# index generation at the beginning of the model.
+mxModYrs <- max(sapply(stock, '[[', 'ncaayear'))
+if(fyear < mxModYrs){
+  stop(paste('fyear is less than the maximum number of years used',
+             'for assessment for one of the stocks (ensure that fyear',
+             'in the global parameters file is less than ncaayear for',
+             'each stock'))
+}
 
 
 

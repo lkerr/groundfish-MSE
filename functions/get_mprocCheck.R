@@ -9,17 +9,27 @@
 
 get_mprocCheck <- function(mproc){
   
+  # List all the potential values for each of the columns that require
+  # text input (i.e., everything but the parameter columns)
+  
+  
   assessclass <- c('CAA', 'PLANB')
   hcr <- c('slide', 'simplethresh', 'constF', NA)
   fref_typ <- c('YPR', 'SPR', 'SSBR', 'Fmed', 'FmsySim', NA)
   bref_typ <- c('RSSBR', 'SIM', NA)
-  # rfun_nm <- c('MEAN', 'L5SAMP', 'recT', NA)
   rfun_nm <- c('forecast', 'hindcastMean', NA)
   
   msg <- c()
   
   # Note: use paste0 when splitting text over multiple lines to get correct-
   #       looking error message output
+  
+  if(any(is.na(mproc$BREF_TYP) | mproc$BREF_TYP == 'RSSBR')){
+    msg <- c(msg, 'RSSBR unimplemented: change to SIM')
+  }
+  
+  # Check that the string names that are entered are all correct
+
   
   if(!all(mproc$ASSESSCLASS %in% assessclass)){
     msg <- c(msg, 
@@ -39,82 +49,256 @@ get_mprocCheck <- function(mproc){
               ' check names'))
   }
 
+  
+  if(!all(mproc$RFUN_NM %in% rfun_nm)){
+    msg <- c(msg, 
+             paste0('unrecognized entry in RFUN_NM column of mproc.txt:',
+                    ' check names'))
+  }
+
+
   if(any(!is.na(mproc$FREF_PAR0) & 
          !mproc$FREF_PAR0 == floor(mproc$FREF_PAR0))){
     msg <- c(msg, 
              paste0('value out of range in FREF_PAR0 column of mproc.txt:',
              ' must be integer'))
   }
+
   
   if(!all(mproc$BREF_TYP %in% bref_typ)){
     msg <- c(msg, 
              paste0('unrecognized entry in BREF_TYP column of mproc.txt:',
-             ' check names'))
+                    ' check names'))
   }
   
-  if(!all(is.na(mproc$BREF_PAR0) | mproc$BREF_PAR0 == floor(mproc$BREF_PAR0))){
-    msg <- c(msg, 
-             paste0('value out of range in BREF_PAR0 column of mproc.txt:',
-             ' check values'))
-  }
-  
+
   if(!all(mproc$RFUN_NM %in% rfun_nm)){
     msg <- c(msg, 
              paste0('unrecognized entry in RFUN_NM column of mproc.txt:',
-             ' check names'))
+                    ' check names'))
   }
 
+
+  
+  # Check that the reference point interval is correct
+  
   if(any(!is.na(mproc$RPInt) & 
          ( mproc$RPInt < 1 | !mproc$RPInt == floor(mproc$RPInt) )
-     )){
+  )){
     msg <- c(msg, 
              paste0('value out of range in RPInt column of mproc.txt:',
-             ' must be both an integer and greater than 0'))
+                    ' must be both an integer and greater than 0'))
   }
-# browser()  
-#   if(any(!is.na(mproc$RFUN_NM == 'hindcastMean' & 
-#          ( (mproc$FREF_TYP == 'FMSY' & mproc$FREF_PAR0 < 100) | 
-#            (mproc$BREF_TYP == 'SIM' & mproc$BREF_PAR0 < 100) )))){
-#     msg <- c(msg,
-#              pasteo('number of years for hindcast is probably too low',
-#                     'for stable estimate of FMSY or BMSY. Try setting',
-#                     'FREF_PAR0 (if FREF_TYP==FMSY) or BREF_PAR0 (if ',
-#                     'FREF_TYP==SIM) to something larger than 100.'))
-#   }
   
-  # If there were any errors then 
-  if(length(msg) > 0){
-    stop(c(paste(length(msg), 'error(s) in mproc.txt file\n'), 
-           paste(msg, collapse='\n')))
-  }
+  # If there were any errors then stop and report
+    if(length(msg) > 0){
+      stop(c(paste(length(msg), 'error(s) in mproc.txt file:\n'),
+             paste(msg, collapse='\n')))
+    }
   
 }
 
 
-#### Test
+#
+#
+# More checks below but complicated conditions -- will wait to complete
+# until management procedures are finalized.
+#
+#
 
-# (just random stuff -- not actual sets of trials!)
 
-# correct
+
+  
+#   # Check that the parameter values are all in range given the
+#   # other inputs. Looped to help deal with different classes of MPs in the
+#   # same input file.
+#   
+#   for(i in 1:length(mproc)){
+#   
+#     # Per-recruit approaches to Fmsy
+#     
+#     if(!is.na(mproc$FREF_TYP[i]) & 
+#        (mproc$FREF_TYP[i] == 'YPR' | mproc$FREF_TYP[i] == 'SPR')){
+#       
+#       if(!is.na(mproc$FREF_PAR1[i])){
+#         msg <- c(msg, 
+#                  paste0('if using per-recruit F reference point do ',
+#                         'not include a value for FREF_PAR1 ',
+#                         '(line ', i, ')'))
+#       }
+#       
+#       if(!is.na(mproc$FREF_PAR0[i]) & 
+#          (mproc$FREF_PAR0[i] < 0 | mproc$FREF_PAR0[i] > 1)){
+#         msg <- c(msg, 
+#                  paste0('if using per-recruit F reference point FREF_PAR0 ',
+#                         'must be between 0.0 and 1.0 ', 
+#                         '(line', i, ')'))
+#       }
+#     }
+#     
+#     # Fmsy simulation-based approaches
+#     
+#     if(!is.na(mproc$FREF_TYP[i]) & mproc$FREF_TYP[i] == 'FmsySim'){
+#       
+#       if(is.na(mproc$FREF_PAR0[i]) | is.na(mproc$FREF_PAR1[i])){
+#         msg <- c(msg, 
+#                  paste0('If using simulations then FREF_PAR1 and FREF_PAR0', 
+#                         'must both be integers (line', i, ')'))
+#       }
+#       
+#       if(mproc$RFUN_NM[i] == 'hindcastMean'){
+#         
+#         if(mproc$FREF_PAR0[i] < mproc$FREF_PAR1[i]){
+#           
+#           msg <- c(msg, 
+#                    paste0('If using simulations and hindcastMean then', 
+#                           'FREF_PAR1 must be > FREF_PAR0 ',
+#                           '(line', i, ')'))
+#         }
+#         
+#         if(!is.integer(mproc$FREF_PAR0[i]) | 
+#            !is.integer(mproc$FREF_PAR1[i])){
+#           
+#           msg <- c(msg, 
+#                    paste0('If using simulations and hindcastMean then', 
+#                           'FREF_PAR1 and FREF_PAR0 must be (negative) integers ',
+#                           '(line', i, ')'))
+#         }
+#         
+#         if(mproc$FREF_PAR1[i] > -1 | mproc$FREF_PAR1[i] > -1){
+#           msg <- c(msg, 
+#                    paste0('If using simulations and hindcastMean then', 
+#                           'FREF_PAR1 and FREF_PAR0 must be (negative) integers ',
+#                           '(line', i, ')'))
+#         }
+#       }
+#       
+#       if(mproc$RFUN_NM[i] == 'forecast'){
+#       
+#         if(!is.na(mproc$FREF_PAR1[i])){
+#           msg <- c(msg, 
+#                    paste0('If using simulations and forecast then', 
+#                           'FREF_PAR1 should be NA ',
+#                           '(line', i, ')'))
+#         }
+#         
+#         if(!is.integer(mproc$FREF_PAR1[i])){
+#           msg <- c(msg, 
+#                    paste0('If using simulations and forecast then', 
+#                           'FREF_PAR1 should be an integer > 0 ',
+#                           '(line', i, ')'))
+#         }
+#         
+#         if(mproc$FREF_PAR1[i] < 0){
+#           msg <- c(msg, 
+#                    paste0('If using simulations and forecast then', 
+#                           'FREF_PAR1 should be an integer > 0 ',
+#                           '(line', i, ')'))
+#         }
+#       }
+#     }
+#     
+#     # Bmsy simulation-based approaches
+#     
+#     if(!is.na(mproc$BREF_TYP[i]) & mproc$BREF_TYP[i] == 'SIM'){
+#       
+#       if(is.na(mproc$BREF_PAR0[i]) | is.na(mproc$BREF_PAR1[i])){
+#         msg <- c(msg, 
+#                  paste0('If using simulations then BREF_PAR1 and BREF_PAR0', 
+#                         'must both be integers (line', i, ')'))
+#       }
+#       
+#       if(mproc$RFUN_NM[i] == 'hindcastMean'){
+#         
+#         if(mproc$BREF_PAR0[i] < mproc$BREF_PAR1[i]){
+#           
+#           msg <- c(msg, 
+#                    paste0('If using simulations and hindcastMean then', 
+#                           'BREF_PAR1 must be > BREF_PAR0',
+#                           '(line', i, ')'))
+#         }
+#         
+#         if(!is.integer(mproc$BREF_PAR0[i]) | 
+#            !is.integer(mproc$BREF_PAR1[i])){
+#           
+#           msg <- c(msg, 
+#                    paste0('If using simulations and hindcastMean then', 
+#                           'BREF_PAR1 and FREF_PAR0 must be (negative) integers ',
+#                           '(line', i, ')'))
+#         }
+#         
+#         if(mproc$BREF_PAR1[i] > -1 | mproc$BREF_PAR1[i] > -1){
+#           msg <- c(msg, 
+#                    paste0('If using simulations and hindcastMean then', 
+#                           'BREF_PAR1 and BREF_PAR0 must be (negative) integers ',
+#                           '(line', i, ')'))
+#         }
+#       }
+#       
+#       if(mproc$RFUN_NM[i] == 'forecast'){
+#         
+#         if(!is.na(mproc$BREF_PAR1[i])){
+#           msg <- c(msg, 
+#                    paste0('If using simulations and forecast then', 
+#                           'BREF_PAR1 should be NA ',
+#                           '(line', i, ')'))
+#         }
+#         
+#         if(!is.integer(mproc$BREF_PAR1[i])){
+#           msg <- c(msg, 
+#                    paste0('If using simulations and forecast then', 
+#                           'BREF_PAR1 should be an integer > 0 ',
+#                           '(line', i, ')'))
+#         }
+#         
+#         if(!is.na(mproc$BREF_PAR1[i]) & mproc$BREF_PAR1[i] < 0){
+#           msg <- c(msg, 
+#                    paste0('If using simulations and forecast then', 
+#                           'BREF_PAR1 should be an integer > 0 ',
+#                           '(line', i, ')'))
+#         }
+#       }
+#     }
+#       
+#   }
+# 
+#   
+#   # If there were any errors then stop and report
+#   if(length(msg) > 0){
+#     stop(c(paste(length(msg), 'error(s) in mproc.txt file:\n'), 
+#            paste(msg, collapse='\n')))
+#   }
+#   
+# }
+# 
+# 
+# #### Test
+# 
+# # (just random stuff -- not actual sets of trials!)
+# 
+# # correct
 # mproc1 <- data.frame(ASSESSCLASS = c('CAA', 'CAA', 'PLANB'),
-#                      HCR = c('slide', 'simplethresh', 'constF'),
-#                      FREF_TYP = c('YPR', 'SPR', 'Fmed'),
+#                      HCR = c('slide', 'simplethresh', NA),
+#                      FREF_TYP = c('YPR', 'SPR', NA),
 #                      FREF_PAR0 = c(0.1, 0.5, 0.1),
-#                      BREF_TYP = c('SIM', 'SIM', 'RSSBR'),
-#                      BREF_PAR0 = c(NA, NA, NA),
+#                      FREF_PAR1 = c(NA, NA, NA),
+#                      BREF_TYP = c('SIM', 'SIM', NA),
+#                      BREF_PAR0 = c(-30, 10, NA),
+#                      BREF_PAR1 = c(-1, NA, NA),
 #                      RFUN_NM = c('hindcastMean', 'forecast', NA),
-#                      RPInt = c(1, 3, 5))
-
-# incorrect
+#                      RPInt = c(1, 3, NA))
+# 
+# # incorrect
 # mproc2 <- data.frame(ASSESSCLASS = c('CAAXXX', 'CAA', 'PLANB'),
 #                      HCR = c('slide', 'simplethresh', 'constF'),
 #                      FREF_TYP = c('YPR', 'SPR', 'Fmed'),
 #                      FREF_PAR0 = c(0.1, 0.5, 0.1),
+#                      FREF_PAR1 = c(0.1, 0.5, 0.1),
 #                      BREF_TYP = c('SIM', 'SIMXXX', 'RSSBR'),
 #                      BREF_PAR0 = c(NA, NA, NA),
 #                      RFUN_NM = c('L5SAMPXXX', 'MEAN', 'recT'),
 #                      RPInt = c(1, 3, 5))
-
+# 
 # mproc3 <- data.frame(ASSESSCLASS = c('CAA', 'CAA', 'PLANB'),
 #                      HCR = c('slide', 'simplethresh', 'constF'),
 #                      FREF_TYP = c('YPR', 'SPR', 'FMSY'),
@@ -123,8 +307,8 @@ get_mprocCheck <- function(mproc){
 #                      BREF_PAR0 = c(25.999, NA, NA),
 #                      RFUN_NM = c('L5SAMP', 'MEAN', 'recT'),
 #                      RPInt = c(1, 3, 5.999))
-
-
+# 
+# 
 # get_mprocCheck(mproc1)
 # get_mprocCheck(mproc2)
-# get_mprocCheck(mproc3)
+# # get_mprocCheck(mproc3)

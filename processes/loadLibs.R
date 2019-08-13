@@ -15,7 +15,7 @@ if(runClass == 'HPCC'){
   require(gmm, lib.loc='../Rlib/')
   require(mvtnorm, lib.loc='../Rlib/')
   require(tmvtnorm, lib.loc='../Rlib/')
-  
+
   require(expm, lib.loc='../Rlib/')
   require(msm, lib.loc='../Rlib/')
   require(Matrix, lib.loc='../Rlib/')
@@ -24,28 +24,32 @@ if(runClass == 'HPCC'){
   require(forcats, lib.loc='../Rlib/')
   require(readr, lib.loc='../Rlib/')
   require(tidyverse, lib.loc='../Rlib/')
-  
+  require(dplyr, lib.loc='../Rlib/')
+  require(data.table, lib.loc='../Rlib/')
+
 }else{
-  
+
   # check.packages function: install and load multiple R packages.
-  # Check to see if packages are installed. Install them if they are not, 
+  # Check to see if packages are installed. Install them if they are not,
   # then load them into the R session.
   # https://gist.github.com/smithdanielle/9913897
   check.packages <- function(pkg){
     new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
-    if (length(new.pkg)) 
+    if (length(new.pkg))
       install.packages(new.pkg, dependencies = TRUE)
     sapply(pkg, require, character.only = TRUE)
   }
-  
-  pkg<-c("msm", "tmvtnorm", "TMB", "abind", "tidyverse")
+
+  pkg<-c("msm", "tmvtnorm", "TMB", "abind", "tidyverse","dplyr","data.table")
   check.packages(pkg)
-  
+
   require(msm)
   require(tmvtnorm)
   require(TMB)
   require(abind)
-  
+  require(tidyverse)
+  require(dplyr)
+  require(data.table)
+
+
 }
-
-

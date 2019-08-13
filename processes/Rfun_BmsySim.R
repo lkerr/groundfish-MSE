@@ -15,11 +15,11 @@ Rfun_BmsySim <- list(
   # are 25 years available in the series -- otherwise it just uses what is
   # left).
   
-  forecast = function(parpop, parenv, SSB, TAnom, sdR, ...){
+  forecast = function(type, parpop, parenv, SSB, TAnom, sdR, ...){
     
     
     parpop$Rpar['rho'] <- 0
-    gr <- get_recruits(type = 'BHTS', 
+    gr <- get_recruits(type = type, 
                  par = parpop$Rpar, 
                  SSB = SSB,
                  TAnom = TAnom,
@@ -33,7 +33,7 @@ Rfun_BmsySim <- list(
     mean(Rest)
   },
 
-  hindcastSample = function(Rest, ...){
+  hindcastSample = function(Rest,...){
     sample(Rest, 1)
   }
   

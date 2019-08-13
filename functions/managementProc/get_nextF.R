@@ -31,7 +31,7 @@
 #         it is pretty clear this way at least.
 
 
-get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
+get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
   
   
   # A general application of national standard 1 reference points. There
@@ -39,13 +39,25 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
   # point and those will be implemented in get_FBRP
   
   if(parmgt$ASSESSCLASS == 'CAA'){
-     
+   
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpop, 
-                     parenv = parenv, Rfun_lst = Rfun_BmsySim)
-    Bref <- get_BBRP(parmgt = parmgt, parpop = parpop, 
+                     parenv = parenv, Rfun_lst = Rfun_BmsySim, 
+                     stockEnv = stockEnv)
+    
+    # if using forecast start the BMSY initial population at the equilibrium
+    # FMSY level (before any temperature projections). This is consistent
+    # with how the Fmsy is calculated.
+    parpopUpdate <- parpop
+    if(parmgt$RFUN_NM == 'forecast'){
+      
+      parpopUpdate$J1N <- Fref$equiJ1N_MSY
+      
+    }
+    
+    Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
-                     FBRP = Fref[['RPvalue']])
-  
+                     FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
+
     if(evalRP){
       FrefRPvalue <- Fref[['RPvalue']]
       BrefRPvalue <- Bref[['RPvalue']]
@@ -57,23 +69,24 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
     # Determine whether the population is overfished and whether 
     # overfishing is occurring
 
-    overfished <- ifelse(tail(parpop$SSBhat,1) < BrefRPvalue, 1, 0)
+    BThresh <- BrefScalar * BrefRPvalue
+    FThresh <- FrefScalar * FrefRPvalue
+    
+    overfished <- ifelse(tail(parpop$SSBhat,1) < BThresh, 1, 0)
     
     if(tolower(parmgt$HCR) == 'slide'){
      
-      F <- get_slideHCR(parpop, Fmsy=FrefRPvalue, Bmsy=BrefRPvalue)['Fadvice']
+      F <- get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)['Fadvice']
   
   
     }else if(tolower(parmgt$HCR) == 'simplethresh'){
      
-      
-      
       # added small value to F because F = 0 causes some estimation errors
-      F <- ifelse(tail(parpop$SSBhat, 1) < BrefRPvalue, 0, FrefRPvalue)+1e-4
+      F <- ifelse(tail(parpop$SSBhat, 1) < BThresh, 0, FThresh)+1e-4
       
     }else if(tolower(parmgt$HCR) == 'constf'){
  
-      F <- FrefRPvalue
+      F <- FThresh
       
     }else{
       
@@ -81,7 +94,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
       
     }
   
-    out <- list(F=F, RPs=c(FrefRPvalue, BrefRPvalue), OFdStatus=overfished)
+    out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue), 
+                ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished)
     
   }else if(parmgt$ASSESSCLASS == 'PLANB'){
     
@@ -97,7 +111,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
     
     # Calculate what the corresponding true F is that matches with
     # the actual biomass-at-age in the current year
-    trueF <- getF(x = CWrec,
+    trueF <- get_F(x = CWrec,
                   Nv = parpop$Ntrue_y, 
                   slxCv = parpop$slxCtrue_y, 
                   M = parpop$Mtrue_y, 
@@ -110,8 +124,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP){
     stop('Assessment class not recognized')
     
   }
-  
-  return(out)
   
 }
 
