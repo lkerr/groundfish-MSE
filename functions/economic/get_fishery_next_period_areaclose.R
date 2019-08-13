@@ -27,8 +27,7 @@ get_fishery_next_period_areaclose <- function(dc,fh){
   if (num_closed==0){
     fh$stockarea_closed<-as.logical(FALSE)
     # If nothing is closed, just return fh
-  }
-  else{
+  } else{
     
     #it's easer to check if "any" stock in an area is closed than it is to check that ALL stocks are open.
     # so we'll do that, then "flip" it over to a new open variable.

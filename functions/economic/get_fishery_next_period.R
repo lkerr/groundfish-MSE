@@ -16,8 +16,7 @@ get_fishery_next_period <- function(dc,fh){
   num_closed<-sum(fh$underACL==FALSE)
   if (num_closed==0){
     # If nothing is closed, just return fh
-  }
-  else{
+  }  else{
     
   }  
   #fh<-as.data.table(fh)

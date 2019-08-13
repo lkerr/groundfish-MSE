@@ -10,8 +10,7 @@ zero_out_closed_areas_asc_cutout <- function(tds,open_hold){
   num_closed<-sum(open_hold$stockarea_open==FALSE)
   if (num_closed==0){
     # If nothing is closed, just return tds
-  }
-  else{
+  } else{
   tds<-left_join(tds,open_hold, by=c("spstock2"="spstock2"))
   tds$stockarea_open[which(tds$spstock2=="nofish")]<-TRUE
   #tds<-merge(tds,open_hold, by=c("spstock2"))
