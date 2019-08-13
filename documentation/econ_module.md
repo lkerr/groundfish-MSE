@@ -43,10 +43,14 @@ The statistical estimation of the model takes place externally to the MSE model 
 
 ### The R code
 There's a pile of code. It's quite janky.
+* **runEcon_module.R :**  is a *working* economic module. The last part is kinda janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop.  Currently does not do the catch multipliers. This used to be on the scratch folder with a different name.
+
+
+
 There are few files in "scratch/econscratch" that may be useful
 * **test_predict_etargeting_and_production.R :** was used to verify that the predict_etargeting.R and predict_eproduction.R functions works properly. It runs as a standalone and might be fun to explore. 
 
-* **working_econ_module.R :**  is a *working* economic module. The last part is kinda janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop.  Currently does not do the catch multipliers. 
+
 
 * **test_econ_module.R :**  is a test economic module. The last part is incredibly janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop. I'm just waiting to have runSim.R reordered before I can use it to write out F_full to stock[[i]] for the modeled stocks.  Pieces of this will be put into fragments that are called by "runSetup.R" (perhaps with an if cut-out for EconomicModel) because they only need to be run once.  Other parts should be converted into a function or many functions.
 
@@ -104,15 +108,15 @@ I should probably write up a small file or parameters.
 
 
 ### Outputs
-Model outputs are XXX
+Model outputs are TBD
 
 
 ### To do and known bugs
-* **zero_out_closed_asc:** currently only closes a target when it's ACL is reached. It should close all fisheries that would be caught with it. For example, if GB Cod quotas are hit, then *all* multispecies GB fishing stops. It also must adjust the landings and (probably catch) multipliers -- if a vessel targets skates after the GB Cod quota is hit, it should not land any GB cod. Whether it can catch GB cod is TBD.
 
-* **working_econ_module.R :** 
+
+* **runEcon_module.R :** 
   * Needs to be cleaned up.  Tidyverse version uses 6GB of RAM in a single simulation. Doesn't look like I have a leak, just using lots of memory.  data.table version is down to ~4.4GB. data.table version back up to 6+gb
-  * Needs to be sped up.  data.table instead of seems to speed up?  Tidyverse version takes 16 minutes to run 1 replicated for 20 years (48sec/yr).  The data.table version takes 22-23 to run 2 replicates for 20 years (33 sec/yr).  approx 31% faster. Down to 18-20seconds/yr (depending on how often fisheries are closed.
+  * Needs to be sped up.  data.table instead of seems to speed up?  Tidyverse version takes 16 minutes to run 1 replicated for 20 years (48sec/yr).  The data.table version takes 19 seconds/yr (depending on how often fisheries are closed).
   * Does not yet incorporate catch/landings multipliers. So that's a big problem.  Will need to add the multiplier data, code to integrate, test, and adjust.
   * Doesn't read/use IJ1 trawl survey index(biomass index computed on Jan 1).
   * does not store fishery revenue anywhere, just overwrites it.
