@@ -70,7 +70,13 @@ Functions:
 
 * **get_fishery_next_period:** adds up catch from individual vessels to the daily level and then aggregates with prior catch.  Checks if the sector sub-ACL is reached and closes the fishery if so.
 
-* **zero_out_closed_asc_cutout:** Closes a fishery and redistributes the probability associated with that stock to the other options.  Skips math if all stocks are open
+* **get_fishery_next_period:** adds up catch from individual vessels to the daily level and then aggregates with prior catch.  Checks if the sector sub-ACL is reached and closes the fishery if so.  For the allocated multispecie stocks, this creates and extrac column that indicates if that stockarea is closed.
+
+
+* **zero_out_closed_asc_cutout:** Closes a fishery and redistributes the probability associated with that stock to the other options. This is based on the "underACL" logical column.   Skips math if all stocks are open.
+
+* **zero_out_closed_areas_asc_cutout:** Closes a fishery and redistributes the probability associated with that stock to the other options.  This is based on the "stockarea_open" logical column.   Skips math if all stocks are open
+
 
 
 
@@ -81,6 +87,11 @@ These are obsolete and have been moved to /scratch/econscratch/obsolete
 There are a few files in "/preprocessing/economic/"  These primarily deal with converting data from stata format to RData and making the estimated coefficients "line up" with the data.  There is also a helper file to wrangle the historical catch limit and catch data.   
 * **zero_out_closed_asc:** Closes a fishery and redistributes the probability associated with that stock to the other options.
 * **speed_asclogit:** Speed testing for an asc logit.
+
+* **predict_eproductionCpp:** A version that uses RCpp sugar. This wasn't faster than base R.  I think this is because each "day" is a relatively small dataset.  Predicts harvest of the target species, returns a data.table
+
+* **predict_etargetingCpp:** A version that uses RCpp sugar. This wasn't faster than base R.  Predicts targeting, returns a data.table.
+
 
 ### Inputs,
 Data, starting values and parameter bounds are XXX.
