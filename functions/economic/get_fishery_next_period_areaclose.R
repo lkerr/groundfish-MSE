@@ -1,6 +1,6 @@
 # A function to deal with the end of the day. 
-# set the fishery to open if the catch is less than the ACL.  Set it to closed if it's greater than the ACL.
-# For the allocated multispecies stocks, set another variable (stockarea_open as a logical True/False if that stockarea is open.
+# Set the column "underACL"="TRUE" if removals are  less than the ACL.  Set the column "underACL"="FALSE" otherwise. # For the allocated multispecies stocks, set another variable (stockarea_open as a logical True/False if that stockarea is open.
+# Any allocated multispecies with "underACL"=FALSE will also have "stockarea_open=FALSE"
 # dc: catch for that day of all stocks by the fleet
 # fh: data frame containing stock name, logical for open/closed, catch limit, and cumulative catch
 # Returns the updated version of that matrix.
