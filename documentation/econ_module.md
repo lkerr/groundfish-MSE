@@ -7,10 +7,13 @@
 
 ***
 ### Status
-The code runs, but is missing a few things. "runSim.R" runs, but will take a while to run. 
+The code runs, but is missing a few features.  When mproc.txt contains a row with ImplementationClass=="Economic", the economic model will run.
+
+## Overview
+The runSim.R file has been modified to allow for an economic model of harvesting to substitute for a standardFisheries model of implementation error.  The economic module can be viewed as an alternative to the get_implementationF() function in a the standard fisheries model.  It takes inputs from the stock dynamics models and outputs an F_full.  It also constructs some economic metrics, but I haven't coded where to save them yet.
 
 
-### Statistics Behind the Economic simulation module
+## Statistics Behind the Economic simulation module
 The population of vessels in the statistical model is: "Vessels that landed groundfish in the 2004-2015 time period, primarily used gillnet or trawl to catch groundfish, elected to fish in the sector program in 2010-2015, and were not falsifying their catch or sales records."  $i$ indexes individuals, $n$ indexes target, and $t$ indexes time (days).
 
 The statistical economic module has two stages. In the first stage, we estimate a Schaefer's harvest equation   
@@ -41,9 +44,9 @@ For both the production and targeting models, the unit of observation is a permi
 
 The statistical estimation of the model takes place externally to the MSE model -- there isn't a need to have this occur simultaneously (yet).
 
-### The R code
+## The R code
 There's a pile of code. It's quite janky.
-* **runEcon_module.R :**  is a *working* economic module. The last part is kinda janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop.  Currently does not do the catch multipliers. This used to be on the scratch folder with a different name.
+* **runEcon_module.R :**  is a *working* economic module. The last part is kinda janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop.  Currently does not do the catch multipliers. This used to be in the scratch folder with a different name.
 
 
 
@@ -97,13 +100,13 @@ There are a few files in "/preprocessing/economic/"  These primarily deal with c
 * **predict_etargetingCpp:** A version that uses RCpp sugar. This wasn't faster than base R.  Predicts targeting, returns a data.table.
 
 
-### Inputs,
-Data, starting values and parameter bounds are XXX.
+## Inputs,
+Data, starting values and parameter bounds.
 
 Running the model requires
 /data/data_processed/econ/full_production.RData, /data/data_processed/econ/full_targeting.RData, and /data/data_processed/econ/catch_limits_2010_2017.csv
 
-I should probably write up a small file or parameters.
+I should probably write up a small control file or set of parameters.
   * which gffishingyear
 
 
@@ -115,8 +118,10 @@ Model outputs are TBD
 
 
 * **runEcon_module.R :** 
-  * Needs to be cleaned up.  Tidyverse version uses 6GB of RAM in a single simulation. Doesn't look like I have a leak, just using lots of memory.  data.table version is down to ~4.4GB. data.table version back up to 6+gb
-  * Needs to be sped up.  data.table instead of seems to speed up?  Tidyverse version takes 16 minutes to run 1 replicated for 20 years (48sec/yr).  The data.table version takes 19 seconds/yr (depending on how often fisheries are closed).
+  * Needs to be cleaned up.  Uses about 4-6gb of memory.
+  * Needs to be sped up.
+    * The tidyverse version took approx 48sec/yr.
+    * The revised data.table version takes 19 seconds/yr (depending on how often fisheries are closed). I should probably profile the code to speed it up.
   * Does not yet incorporate catch/landings multipliers. So that's a big problem.  Will need to add the multiplier data, code to integrate, test, and adjust.
   * Doesn't read/use IJ1 trawl survey index(biomass index computed on Jan 1).
   * does not store fishery revenue anywhere, just overwrites it.
