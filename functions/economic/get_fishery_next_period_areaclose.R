@@ -45,14 +45,14 @@ get_fishery_next_period_areaclose <- function(dc,fh){
     
     if (unit_check>=1){
       fh$stockarea_closed=TRUE 
-    } else{
-      
-      if (gb_check>=1 & gom_check>=1){
+    } 
+    
+    if (gb_check>=1 & gom_check>=1){
         fh$stockarea_closed[which(fh$stockarea=="CCGOM")]=TRUE 
         snema_check<-length(which(fh$stockarea_closed==TRUE & fh$stockarea=="SNEMA"))
       }
     }
-  }  
+  
   
   #reassemble
   fh<-rbind(fh,z0)
