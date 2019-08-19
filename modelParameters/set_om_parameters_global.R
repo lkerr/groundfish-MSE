@@ -18,7 +18,7 @@ mprocTest <- TRUE
 # If you have files in the modelParameters folder for stocks but you don't
 # want to include them in a run you can write them in here in the
 # stockExclude variable. Do not include the extension.R. For example,
-# stockExclude <- haddockGB will leave haddockGB.R out of the analysis.
+# stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
 stockExclude <- c()
 
