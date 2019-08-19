@@ -1,10 +1,17 @@
-# some code to run the economic module.
-# This code will eventually take in the catch limits, by stock, and either biomass  
-
+# This code runs the economic module.
+# It is essentially an alternate to the "get_implementationF" function.  
+# It takes in 
+#   Values from the stock dynamics models 
+#   Data from the econometric models
+#   
+# And outputs F_full for each modeled stock and a dataset of daily targeting  outcomes
+  
 
 ############################################################
 ############################################################
 # Not sure if there's a cleaner place to put this.  This sets up a container data.frame for each year of the economic model. 
+
+### Probably need to add the trawl survey (trawlsurvey) index here and then push over trawl survey values into the targeting dataset.  But you might do that in outside this function.
 ############################################################
 ############################################################
 
@@ -20,7 +27,7 @@ revenue_holder<-as.list(NULL)
 
 ############################################################
 ############################################################
-# BEGIN PIECE OF ECON MODULE 
+# BEGIN ECON MODULE 
 # Ideally, everthing from here to the end should be a function.  It's inputs are:
 # fishery_holder (which should contain info on the ACL, biomass or stock indices, and which stocks need biological outputs (Catch at age or survivors at age))
 # Production and targeting data
@@ -109,8 +116,8 @@ for (day in 1:365){
   # Not written yet.  Not sure if we need revenue by stock to be saved for each vessel? Or just catch? 
   
   
-  # save the hullnum, target spstock2, date, and expected revenue to a list
-  revenue_holder[[day]]<-trips[, c("hullnum","spstock2","date","exp_rev_total")]
+  # save the hullnum, target spstock2, date, expected revenue, and targeted to a list
+  revenue_holder[[day]]<-trips[, c("hullnum","spstock2","date","exp_rev_total","targeted")]
   
 }
 
@@ -121,7 +128,10 @@ fishery_holder$removals_mt<-fishery_holder$cumul_catch_pounds/(pounds_per_kg*kg_
   revenue_holder$r<-r
   revenue_holder$m<-m
   revenue_holder$y<-y
-
+# We probably want to contract this down further to a data.table of "hullnum","spstock2","exp_rev_total","targeted"
+  
+  
+  
 #subset fishery_holder to have just things that have a biological model. send it to a list?
 bio_output<-fishery_holder[which(fishery_holder$bio_model==1),]
 

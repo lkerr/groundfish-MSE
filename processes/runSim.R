@@ -68,7 +68,7 @@ for(r in 1:nrep){
 
           start_time<-proc.time() 
           # progress(y,progress.bar=TRUE)
-          source('scratch/econscratch/working_econ_module.R')
+          source('processes/runEcon_module.R')
           econ_timer<-econ_timer+proc.time()[3]-start_time[3]
           
         }else if(mproc$ImplementationClass[m] == "StandardFisheries"){
