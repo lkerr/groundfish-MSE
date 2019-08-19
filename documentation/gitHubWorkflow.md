@@ -4,6 +4,8 @@
 
 The purpose of this document is to describe the intended workflow for updates to the groundfish-MSE code. This is important because we have multiple contributors.
 
+If you are new to GitHub and are using RStudio, this is a pretty good tutorial: [https://happygitwithr.com/index.html](https://happygitwithr.com/index.html)
+
 ## Branches
 
 * **Master**: The master branch. Ideally this branch will always be able to run with the available options in **mproc.txt**. Before other branches are merged into **Master** they have been reviewed by one or more people other than the author and thoroughly tested both on a local machine and on the HPCC. Merges to **Master** should come from the **Dev** branch rather than directly from feature branches.
@@ -25,7 +27,7 @@ The purpose of this document is to describe the intended workflow for updates to
 
   Note that **Dev** (and any other branch) can be run directly from the HPCC by updating the syntax in **runPre.sh** (see [groundfish-MSE/documentation/runMSE.md](runMSE.md)).
 
-* **Feature branches**: Named branches that represent substantial changes to the code. Before merging a feature branch into the Dev branch the code should be tested both on a local machine and on the HPCC and reviewed by someone else. The framework for the review should be through a pull request.
+* **Feature branches**: Named branches that represent substantial changes to the code. Before merging a feature branch into the Dev branch the code should be tested both on a local machine and on the HPCC and reviewed by someone else. The framework for the review should be through a pull request.  For ease of organization on GitHub, include your initials at the start of a new branch name. For example: **SBT-Feature001**. That way it is clear to everyone who created which branches.
 
 
 ## Pull requests into Dev
@@ -58,3 +60,6 @@ Pull requests from **Dev** into **Master** are ideally not direct. The idea is t
 Below is the summary of the intended workflow on GitHub:
 
 ![gitHubWorkflow](images/gitHubWorkflow.jpg)
+
+
+[Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
