@@ -10,7 +10,7 @@
 simpleTemperature <- FALSE
 
 # Testing run which uses mprocTest.txt instead of mproc.txt? (T/F)
-mprocTest <- TRUE
+mprocTest <- FALSE
 
 
 #### Stock parameters ####
@@ -20,7 +20,7 @@ mprocTest <- TRUE
 # stockExclude variable. Do not include the extension.R. For example,
 # stockExclude <- haddockGB will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
-stockExclude <- c()
+stockExclude <- c('haddockGB')
 
 
 #### Structural parameters ####
