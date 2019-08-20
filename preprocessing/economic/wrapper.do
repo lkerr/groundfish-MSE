@@ -15,7 +15,8 @@ do "$codedir/price_mult_join.do"
 do "$codedir/nlogit_coef_export.do" */
 
 do "$codedir/asclogit_coef_export.do"
-do "$codedir/recode_catch_limits.do"
 do "$codedir/stocks_in_model.do"
+
+do "$codedir/recode_catch_limits.do"
 
 

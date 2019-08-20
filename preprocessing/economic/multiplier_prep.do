@@ -8,6 +8,15 @@ use "$inputdir/multipliers", clear
 
 drop sppname gearcat calyear
 
+
+replace spstock2=lower(spstock2)
+replace spstock2=subinstr(spstock2,"ccgom","CCGOM",.)
+replace spstock2=subinstr(spstock2,"snema","SNEMA",.)
+replace spstock2=subinstr(spstock2,"gom","GOM",.)
+
+replace spstock2=subinstr(spstock2,"gb","GB",.)
+
+
 /*using l_ c_ and q_ as landings multiplier, catch multiplier, and quotaprice prefixes respectively */
 rename landing_m l_
 rename catch_m c_

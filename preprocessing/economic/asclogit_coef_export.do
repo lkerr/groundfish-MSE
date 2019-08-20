@@ -4,10 +4,10 @@ global outdir"/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/d
 
 
 cd $inputdir
-est use preCSasclogit.ster, number(1)
+est use postCSasclogit1.ster, number(1)
 est store gillnetasc
 
-est use preCSasclogit.ster, number(2)
+est use postCSasclogit1.ster, number(2)
 est store trawlasc
 /*
 putexcel set nlogit_gillnet_pre_coefs.xls, replace
@@ -26,7 +26,7 @@ mat b=e(b)
 mat b=b'
 
 mat colnames b="coefficient"
-mat2txt, matrix(b) saving(asclogit_gillnet_pre_coefs.txt) replace
+mat2txt, matrix(b) saving(asclogit_gillnet_post_coefs.txt) replace
 
 
 
@@ -35,4 +35,4 @@ mat b=e(b)
 mat b=b'
 
 mat colnames b="coefficient"
-mat2txt, matrix(b) saving(asclogit_trawl_pre_coefs.txt) replace
+mat2txt, matrix(b) saving(asclogit_trawl_post_coefs.txt) replace

@@ -26,8 +26,8 @@ savepath <- './data/data_processed/econ'
 
 # gillnet_targeting_coef_source<-"nlogit_gillnet_pre_coefs.txt" #(I'll just pull the first GILLNET and FIRST TRAWL coefs)
 
-trawl_targeting_coef_source<-"asclogit_trawl_pre_coefs.txt" 
-gillnet_targeting_coef_source<-"asclogit_gillnet_pre_coefs.txt"
+trawl_targeting_coef_source<-"asclogit_trawl_post_coefs.txt" 
+gillnet_targeting_coef_source<-"asclogit_gillnet_post_coefs.txt"
 
 
 
@@ -124,9 +124,10 @@ colnames(targeting_coefs)[colnames(targeting_coefs)=="beta_start_of_season.x"] <
 
 #Force NAs to zero. This is legit. I promise.
 targeting_coefs[is.na(targeting_coefs)]<-0
-targeting_coefs <- targeting_coefs[order(targeting_coefs$gearcat,targeting_coefs$spstock2),]
-
 targeting_coefs<-as.data.table(targeting_coefs)
+
+setcolorder(targeting_coefs,c("gearcat", "spstock2"))
+targeting_coefs[, c("beta_o.das_price_mean","beta_o.das_price_mean_len"):=NULL]
 
 saveRDS(targeting_coefs, file=file.path(savepath, "targeting_coefs.Rds"))
 rm(list=c("all_coefs","asc_coefs","asc_coefs2"))

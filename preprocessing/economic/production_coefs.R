@@ -24,7 +24,7 @@ savepath <- './data/data_processed/econ'
 #savepath <- 'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE/data/data_processed/econ'
 
 
-production_coef_pre<-"production_regs_actual_pre_forR.txt"
+#production_coef_pre<-"production_regs_actual_pre_forR.txt"
 production_coef_post<-"production_regs_actual_post_forR.txt"
 
 
@@ -60,25 +60,25 @@ droppval<-function(working_coefs){
   }
   working_coefs
 }
-
-# read in the estimated coefficients from txt files
-production_coefs <- read.csv(file.path(rawpath,production_coef_pre), sep="\t", header=TRUE,stringsAsFactors=FALSE)
-
-production_coefs<-zero_out(production_coefs,thresh)
-production_coefs<-droppval(production_coefs)
-
-
-# Drop out the p-values since we don't need them anymore. these are the odd columns 3:nc. Super ugly code, but works.
-## End zeroing out coefficients ##
-
-
-
-#push the first column into the row names and drop that column
-rownames(production_coefs)<-production_coefs[,1]
-production_coefs<-production_coefs[,-1]
-
-#transpose and send to dataframe, fix naming, and characters
-production_coefs<-as.data.frame(t(production_coefs))
+# 
+# # read in the estimated coefficients from txt files
+# production_coefs <- read.csv(file.path(rawpath,production_coef_pre), sep="\t", header=TRUE,stringsAsFactors=FALSE)
+# 
+# production_coefs<-zero_out(production_coefs,thresh)
+# production_coefs<-droppval(production_coefs)
+# 
+# 
+# # Drop out the p-values since we don't need them anymore. these are the odd columns 3:nc. Super ugly code, but works.
+# ## End zeroing out coefficients ##
+# 
+# 
+# 
+# #push the first column into the row names and drop that column
+# rownames(production_coefs)<-production_coefs[,1]
+# production_coefs<-production_coefs[,-1]
+# 
+# #transpose and send to dataframe, fix naming, and characters
+# production_coefs<-as.data.frame(t(production_coefs))
 
 
 ### Repeat for the post coefs 
@@ -93,11 +93,13 @@ rownames(production_coefs_post)<-production_coefs_post[,1]
 production_coefs_post<-production_coefs_post[,-1]
 #transpose and send to dataframe, fix naming, and characters
 production_coefs_post<-as.data.frame(t(production_coefs_post))
+# 
+# ### Bring together 
+# production_coefs[setdiff(names(production_coefs_post), names(production_coefs))] <- NA
+# production_coefs_post[setdiff(names(production_coefs), names(production_coefs_post))] <- NA
+production_coefs<-production_coefs_post
+#production_coefs<-rbind(production_coefs,production_coefs_post)
 
-### Bring together 
-production_coefs[setdiff(names(production_coefs_post), names(production_coefs))] <- NA
-production_coefs_post[setdiff(names(production_coefs), names(production_coefs_post))] <- NA
-production_coefs<-rbind(production_coefs,production_coefs_post)
 rm(production_coefs_post)
 #take the rownames, push them into a column, and make sure they are characters. un-name the rows
 model <- rownames(production_coefs)
@@ -134,6 +136,28 @@ production_coefs[is.na(production_coefs)] <- 0
 ############ In the data, fill any corresponding NAs also with zeros -- this would mostly be biomass or fishing year
 
 production_coefs<-as.data.table(production_coefs)
+
+pc_colnames<-colnames(production_coefs)
+if (!('alpha_fy2004' %in% pc_colnames)){
+  production_coefs$alpha_fy2004<-0
+}
+
+if (!('alpha_fy2005' %in% pc_colnames)){
+  production_coefs$alpha_fy2005<-0
+}
+if (!('alpha_fy2006' %in% pc_colnames)){
+  production_coefs$alpha_fy2006<-0
+}
+if (!('alpha_fy2007' %in% pc_colnames)){
+  production_coefs$alpha_fy2007<-0
+}
+if (!('alpha_fy2008' %in% pc_colnames)){
+  production_coefs$alpha_fy2008<-0
+}
+if (!('alpha_fy2009' %in% pc_colnames)){
+  production_coefs$alpha_fy2009<-0
+}
+
 
 
 saveRDS(production_coefs, file=file.path(savepath, "production_coefs.Rds"))
