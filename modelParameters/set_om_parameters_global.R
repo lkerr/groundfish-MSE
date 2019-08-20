@@ -96,9 +96,13 @@ pounds_per_kg<-2.20462
 kg_per_mt<-1000
 # Set the economic years that we'll use for simulation.  Right now, we'll pass  in 1 year.
 
-baseEconYr<-2010
+baseEconYr<-2015
 econdatapath <- 'data/data_processed/econ'
 econdatafile<-paste0("full_targeting_",baseEconYr,".Rds")
+
+spstock2s<-c("americanlobster","americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","monkfish", "other","pollock","redsilveroffshorehake","redfish","seascallop","skates","spinydogfish","squidmackerelbutterfishherring","summerflounder","whitehake","winterflounderGB","winterflounderGOM","witchflounder","yellowtailflounderCCGOM", "yellowtailflounderGB","yellowtailflounderSNEMA")
+
+
 
 #### Output ####
 # Years after the management period begins to break up the results. For
