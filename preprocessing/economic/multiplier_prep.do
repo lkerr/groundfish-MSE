@@ -24,6 +24,7 @@ rename aceprice q_
 
 
 reshape wide l_ c_ q_, i(hullnum month gffishingyear spstock2_prim) j(spstock2) string
+/*fill in missing l, c, and q variables that arise from the reshape */
 
 qui foreach var of varlist l_* c_* q_* {
 replace `var'=0 if `var'==.
