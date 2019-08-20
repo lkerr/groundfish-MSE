@@ -95,9 +95,10 @@ FrefScalar <- 0.75
 pounds_per_kg<-2.20462
 kg_per_mt<-1000
 # Set the economic years that we'll use for simulation.  Right now, we'll pass  in 1 year.
-#baseEconYrs<-c(2009,2010)
-baseEconYrs<-c(2009)
 
+baseEconYr<-2010
+econdatapath <- 'data/data_processed/econ'
+econdatafile<-paste0("full_targeting_",baseEconYr,".Rds")
 
 #### Output ####
 # Years after the management period begins to break up the results. For
