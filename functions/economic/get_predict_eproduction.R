@@ -8,13 +8,12 @@
 # Returns a data.table with an extra column in it.
 
 get_predict_eproduction <- function(prod_ds){
-  indepvars=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","constant")
   
   # crew, trip days, trawl survey, 
   fyvars=paste0("fy",2004:2015)
   monthvars=paste0("month",1:12)
   
-  datavars=c(indepvars,fyvars,monthvars)
+  datavars=c(production_vars,fyvars,monthvars)
   alphavars=paste0("alpha_",datavars)
   
   

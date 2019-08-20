@@ -103,6 +103,13 @@ econdatafile<-paste0("full_targeting_",baseEconYr,".Rds")
 spstock2s<-c("americanlobster","americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","monkfish", "other","pollock","redsilveroffshorehake","redfish","seascallop","skates","spinydogfish","squidmackerelbutterfishherring","summerflounder","whitehake","winterflounderGB","winterflounderGOM","witchflounder","yellowtailflounderCCGOM", "yellowtailflounderGB","yellowtailflounderSNEMA")
 
 
+spstock_equation=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
+#choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len", "das_price_mean", "das_price_mean_len")
+choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
+
+
+production_vars=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","constant")
+
 
 #### Output ####
 # Years after the management period begins to break up the results. For

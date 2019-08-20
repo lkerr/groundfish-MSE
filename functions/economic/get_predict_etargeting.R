@@ -13,11 +13,8 @@
 get_predict_etargeting <- function(tds){
   # pull the betas into matrix, pull the data variables into a matrix and mulitiply them.  
   
-  #
+  #The names of the variables in the spstock_equation and choice_equation have been put into the set_om_parameters_global.R file.
   
-  
-  spstock_equation=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
-  choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len", "das_price_mean", "das_price_mean_len")
   datavars=c(spstock_equation, choice_equation,"constant")
   
   betavars=paste0("beta_",datavars)
