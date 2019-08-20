@@ -30,7 +30,7 @@ get_fishery_next_period_areaclose <- function(dc,fh){
   } else{
     
     #it's easer to check if "any" stock in an area is closed than it is to check that ALL stocks are open.
-    # so we'll do that, then "flip" it over to a new open variable.
+    # so we'll do that, then "negate" it over to a new open variable.
     
     #by mults_allocated and stock area, sum up the number of overACLs, and set to TRUE if>0 and FALSE if ==0
     fh<-fh[,stockarea_closed :=(sum(underACL==FALSE))>0, by=list(mults_allocated,stockarea)]
