@@ -26,8 +26,12 @@ econsavepath <- './data/data_processed/econ'
 
 #Files to read -- sample data for now.
 #targeting_source<-"sample_PRODREGdata_fys2009_2010_forML.dta"
-targeting_source<-"sample_DCdata_fys2009_2010_forML.dta"
 
+
+for (wy in 2010:2015) {
+targeting_source<-paste0("econ_data_",wy,".dta")
+savefile<-paste0("full_targeting_",wy,".Rds")
+gc()
 
 #Load in targeting coefficients
 targeting_coefs<-readRDS(file.path(econsavepath,"targeting_coefs.Rds"))
@@ -54,40 +58,15 @@ if("emean" %in% colnames(targeting)){
 
 targeting$startfy = paste("5", "1",targeting$gffishingyear,sep=".")
 targeting$startfy = as.Date(paste("5", "1",targeting$gffishingyear,sep="."), "%m.%d.%Y")
-targeting$doffy=as.numeric(difftime(targeting$date,targeting$startfy, units="days")+1)
+targeting$doffy=as.integer(difftime(targeting$date,targeting$startfy, units="days")+1)
 
 #Follow naming conventions
 targeting$spstock2<-tolower(targeting$spstock2)
 targeting$spstock2<- gsub("_","",targeting$spstock2)
 
 colnames(targeting)[colnames(targeting)=="LApermit"] <- "lapermit"
-
-# HANDLE missings and NA.
-# Crew and trip_days is coded as zero for no-fish. We will set these to NA.
-# trawl_survey_weight is coded as NA if it's missing. Nothing to do here.
-
-#targeting$crew[targeting$crew==0]<-NA
-#targeting$trip_days[targeting$trip_days==0]<-NA
-
-# Take Logs of these three
-# targeting$log_crew<-log(targeting$crew)
-# targeting$log_trip_days<-log(targeting$trip_days)
-# targeting$log_trawl_survey_weight<-log(targeting$trawl_survey_weight)
-
-# Set the log-values to zero.This is kludgy 
-
-targeting$log_crew[is.na(targeting$log_crew)]<-0
-targeting$log_trip_days[is.na(targeting$log_trip_days)]<-0
-targeting$log_trawl_survey_weight[is.na(targeting$log_trawl_survey_weight)]<-0
-
-#handle the no fish option
-targeting$log_avg_crew[which(targeting$spstock2=="nofish")]<-0
-targeting$log_trip_days[which(targeting$spstock2=="nofish")]<-0
-targeting$log_crew[which(targeting$spstock2=="nofish")]<-0
-
-
-targeting$primary<-1
-targeting$secondary<-0
+targeting$primary<-as.integer(1)
+targeting$secondary<-as.integer(0)
 
 count_rows<-nrow(targeting)
 cols_t<-ncol(targeting)
@@ -113,15 +92,17 @@ if(count_rows_post !=(count_rows)){
   warning("Lost some Rows from the production-join")
 }
 
+
+
 # merge targeting dataset and coefficients
 # Note, you'll have some NAs for some rows, especially no fish.
 # Currently, I only have targeting coefficients for the pre-period.
-#targeting_dataset<-left_join(targeting,targeting_coefs,by=c("gearcat","spstock2","post"))
+#targeting<-left_join(targeting,targeting_coefs,by=c("gearcat","spstock2","post"))
 
-targeting_dataset<-left_join(targeting,targeting_coefs,by=c("gearcat","spstock2"))
-cols_final2<-ncol(targeting_dataset)
-count_rows_post2<-nrow(targeting_dataset)
-
+targeting<-left_join(targeting,targeting_coefs,by=c("gearcat","spstock2"))
+cols_final2<-ncol(targeting)
+count_rows_post2<-nrow(targeting)
+gc()
 cols_tc<-ncol(targeting_coefs)
 
 #same number of rows. Sum of number of columns, minus the 2 merge columns
@@ -133,107 +114,80 @@ if(count_rows_post2 !=(count_rows_post)){
 }
 
 
-targeting_dataset$spstock2<- gsub("gb","GB",targeting_dataset$spstock2)
-targeting_dataset$spstock2<- gsub("ccgom","CCGOM",targeting_dataset$spstock2)
-targeting_dataset$spstock2<- gsub("gom","GOM",targeting_dataset$spstock2)
-targeting_dataset$spstock2<- gsub("snema","SNEMA",targeting_dataset$spstock2)
+targeting$spstock2<- gsub("gb","GB",targeting$spstock2)
+targeting$spstock2<- gsub("ccgom","CCGOM",targeting$spstock2)
+targeting$spstock2<- gsub("gom","GOM",targeting$spstock2)
+targeting$spstock2<- gsub("snema","SNEMA",targeting$spstock2)
 
 
 
-targeting_dataset$constant<- 1
+targeting$constant<- as.numeric(1)
 
 
 
-targeting_dataset$month1<-as.numeric(targeting_dataset$month==1)
-targeting_dataset$month2<-as.numeric(targeting_dataset$month==2)
-targeting_dataset$month3<-as.numeric(targeting_dataset$month==3)
-targeting_dataset$month4<-as.numeric(targeting_dataset$month==4)
-targeting_dataset$month5<-as.numeric(targeting_dataset$month==5)
-targeting_dataset$month6<-as.numeric(targeting_dataset$month==6)
-targeting_dataset$month7<-as.numeric(targeting_dataset$month==7)
-targeting_dataset$month8<-as.numeric(targeting_dataset$month==8)
-targeting_dataset$month9<-as.numeric(targeting_dataset$month==9)
-targeting_dataset$month10<-as.numeric(targeting_dataset$month==10)
-targeting_dataset$month11<-as.numeric(targeting_dataset$month==11)
-targeting_dataset$month12<-as.numeric(targeting_dataset$month==12)
+targeting$month1<-as.integer(targeting$month==1)
+targeting$month2<-as.integer(targeting$month==2)
+targeting$month3<-as.integer(targeting$month==3)
+targeting$month4<-as.integer(targeting$month==4)
+targeting$month5<-as.integer(targeting$month==5)
+targeting$month6<-as.integer(targeting$month==6)
+targeting$month7<-as.integer(targeting$month==7)
+targeting$month8<-as.integer(targeting$month==8)
+targeting$month9<-as.integer(targeting$month==9)
+targeting$month10<-as.integer(targeting$month==10)
+targeting$month11<-as.integer(targeting$month==11)
+targeting$month12<-as.integer(targeting$month==12)
 
-targeting_dataset$fy2004<-as.numeric(targeting_dataset$gffishingyear==2004)
-targeting_dataset$fy2005<-as.numeric(targeting_dataset$gffishingyear==2005)
-targeting_dataset$fy2006<-as.numeric(targeting_dataset$gffishingyear==2006)
-targeting_dataset$fy2007<-as.numeric(targeting_dataset$gffishingyear==2007)
-targeting_dataset$fy2008<-as.numeric(targeting_dataset$gffishingyear==2008)
-targeting_dataset$fy2009<-as.numeric(targeting_dataset$gffishingyear==2009)
-targeting_dataset$fy2010<-as.numeric(targeting_dataset$gffishingyear==2010)
-targeting_dataset$fy2011<-as.numeric(targeting_dataset$gffishingyear==2011)
-targeting_dataset$fy2012<-as.numeric(targeting_dataset$gffishingyear==2012)
-targeting_dataset$fy2013<-as.numeric(targeting_dataset$gffishingyear==2013)
-targeting_dataset$fy2014<-as.numeric(targeting_dataset$gffishingyear==2014)
-targeting_dataset$fy2015<-as.numeric(targeting_dataset$gffishingyear==2015)
+targeting$fy2004<-as.integer(targeting$gffishingyear==2004)
+targeting$fy2005<-as.integer(targeting$gffishingyear==2005)
+targeting$fy2006<-as.integer(targeting$gffishingyear==2006)
+targeting$fy2007<-as.integer(targeting$gffishingyear==2007)
+targeting$fy2008<-as.integer(targeting$gffishingyear==2008)
+targeting$fy2009<-as.integer(targeting$gffishingyear==2009)
+targeting$fy2010<-as.integer(targeting$gffishingyear==2010)
+targeting$fy2011<-as.integer(targeting$gffishingyear==2011)
+targeting$fy2012<-as.integer(targeting$gffishingyear==2012)
+targeting$fy2013<-as.integer(targeting$gffishingyear==2013)
+targeting$fy2014<-as.integer(targeting$gffishingyear==2014)
+targeting$fy2015<-as.integer(targeting$gffishingyear==2015)
 
-#there will be na values here because the nofish option is full of nas.  push these to zeros.
-
-targeting_dataset[is.na(targeting_dataset)]<-0
 
 
 
 
 # Add nchoices column to the targeting dataset
-targeting_dataset<- targeting_dataset   %>%
+targeting<- targeting   %>%
   group_by(id) %>%
   mutate(nchoices=n())
 
 #Flag 1 row per gffishingyear, date, hullnum, id. This means instead of doing a unique, we can do a subset.
 # Somethign like this retains only the first row tds<-tds[tds[, .I[1], by = id]$V1] 
-targeting_dataset<-targeting_dataset %>% 
+targeting<-targeting %>% 
   group_by(id) %>% 
   mutate(idflag = row_number())
 
-targeting_dataset$idflag[targeting_dataset$idflag>1]<-0
-targeting_dataset<-as.data.table(targeting_dataset)
+targeting$idflag[targeting$idflag>1]<-as.integer(0)
+targeting<-as.data.table(targeting)
 
-
+gc()
 
 
 keycols<-c("gffishingyear","date", "hullnum", "id","spstock2")
-setorderv(targeting_dataset, keycols)
+setorderv(targeting, keycols)
 
 spstock_equation=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
-choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len", "das_price_mean", "das_price_mean_len")
+choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
 
 targeting_vars=c(spstock_equation, choice_equation)
 
 betavars=paste0("beta_",targeting_vars)
 betavars=c(betavars,"beta_constant")
 
-#stop here. Assert that all the targeting and beta variables are zero for spstock2=="nofish"
-test<-targeting_dataset[which(spstock2=="nofish")]
-#table gffishingyear
-# we will convert all the RHS variables and corresponding coefficients to zero for spstock=="nofish". This will force the eventual prediction of xb=0 and exp(xb)=1. This seems a little silly, but will be faster than doing setting them to 1 later on in the loop.
-#also, you should really have written an lapply here.so lame
-
-targeting_dataset$exp_rev_total[which(targeting_dataset$spstock2=="nofish")]<-0
-targeting_dataset$fuelprice_distance[which(targeting_dataset$spstock2=="nofish")]<-0
-targeting_dataset$distance[which(targeting_dataset$spstock2=="nofish")]<-0
-targeting_dataset$mean_wind[which(targeting_dataset$spstock2=="nofish")]<-0
-targeting_dataset$mean_wind_noreast[which(targeting_dataset$spstock2=="nofish")]<-0
-targeting_dataset$permitted[which(targeting_dataset$spstock2=="nofish")]<-0
-targeting_dataset$choice_prev_fish[which(targeting_dataset$spstock2=="nofish")]<-0
-targeting_dataset$partial_closure[which(targeting_dataset$spstock2=="nofish")]<-0
-targeting_dataset$start_of_season[which(targeting_dataset$spstock2=="nofish")]<-0
-targeting_dataset$wkly_crew_wage[which(targeting_dataset$spstock2=="nofish")]<-0
-targeting_dataset$len[which(targeting_dataset$spstock2=="nofish")]<-0
-targeting_dataset$fuelprice[which(targeting_dataset$spstock2=="nofish")]<-0
-targeting_dataset$fuelprice_len[which(targeting_dataset$spstock2=="nofish")]<-0
-targeting_dataset$das_price_mean[which(targeting_dataset$spstock2=="nofish")]<-0
-targeting_dataset$das_price_mean_len[which(targeting_dataset$spstock2=="nofish")]<-0
-
-
-
 
 production_vars=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","constant")
 alphavars=paste0("alpha_",production_vars)
 
-td_cols<-colnames(targeting_dataset)
+td_cols<-colnames(targeting)
 
 fydums<-td_cols[grepl("^fy20", td_cols)]
 fycoefs<-td_cols[grepl("^alpha_fy20", td_cols)]
@@ -241,29 +195,39 @@ fycoefs<-td_cols[grepl("^alpha_fy20", td_cols)]
 monthdums<-td_cols[grepl("^month", td_cols)]
 monthcoefs<-td_cols[grepl("^alpha_month", td_cols)]
 
+cmultipliers<-td_cols[grepl("^c_", td_cols)]
+lmultipliers<-td_cols[grepl("^l_", td_cols)]
+quota_prices<-td_cols[grepl("^q_", td_cols)]
+lag_output_prices<-td_cols[grepl("^p_", td_cols)]
+output_prices<-td_cols[grepl("^r_", td_cols)]
+
 
 
 idvars=c("id", "hullnum", "date","spstock2", "doffy")
-necessary=c("landing_multiplier_dollars", "catch_multiplier_dollars", "q", "gffishingyear", "emean","price_lb_lag1", "nchoices", "idflag")
+necessary=c("q", "gffishingyear", "emean","nchoices", "idflag")
 useful=c("gearcat","post","h_hat","pr","choice")
-mysubs=c(idvars,necessary,useful,fydums, monthdums, fycoefs, monthcoefs, targeting_vars,betavars,production_vars, alphavars)
-#mysubs=c(idvars,necessary,useful,targeting_vars,betavars)
-#mysubs=c(idvars,production_vars, alphavars, fydums, monthdums, fycoefs, monthcoefs,"q", "emean")
+useful=c("gearcat","post","h_hat","choice")
+
+mysubs=c(idvars,necessary,useful,fydums, monthdums, fycoefs, monthcoefs, targeting_vars,betavars,production_vars, alphavars, cmultipliers, lmultipliers, quota_prices, output_prices,lag_output_prices)
+
+targeting<-targeting[, ..mysubs]
 
 
+#there will be na values here because the nofish option is full of nas.  push these to zeros.
 
-targeting_dataset<-targeting_dataset[, ..mysubs]
-#The targeting_dataset should have no NA values
-sum(is.na(targeting_dataset))==0
+targeting[is.na(targeting)]<-0
 
-# If that fails, use this to figure out which colSums(is.na(targeting_dataset))
-keycols<-c("gffishingyear","date", "hullnum", "id","spstock2")
-setorderv(targeting_dataset, keycols)
+#The targeting should have no NA values
+sum(is.na(targeting))==0
 
+# If that fails, use this to figure out which colSums(is.na(targeting))
+#keycols<-c("gffishingyear","date", "hullnum", "id","spstock2")
+#setorderv(targeting, keycols)
 
-saveRDS(targeting_dataset, file=file.path(econsavepath, "full_targeting.Rds"))
-
-#  print(unique(warnings()))
+saveRDS(targeting, file=file.path(econsavepath, savefile))
+rm(targeting)
+gc()
+}
 
 #rm(list=ls())
 
