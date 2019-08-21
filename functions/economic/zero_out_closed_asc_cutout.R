@@ -20,9 +20,11 @@ zero_out_closed_asc_cutout <- function(tds,open_hold){
   tds$underACL[which(tds$spstock2=="nofish")]<-TRUE
   tds$prhat[tds$underACL==FALSE]<-0
 
+  tds[, prsum := sum(prhat), by = id]
+  tds[, prhat:=prhat/prsum]
   
-  tds<-tds[, prsum := sum(prhat), by = id]
-  tds$prhat<- tds$prhat/tds$prsum
+  #tds$prhat<- tds$prhat/tds$prsum
+  
   }
     return(tds)
 }

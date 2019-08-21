@@ -20,8 +20,10 @@ zero_out_closed_areas_asc_cutout <- function(tds,open_hold){
   tds$stockarea_open[which(tds$spstock2=="nofish")]<-TRUE
   tds$prhat[tds$stockarea_open==FALSE]<-0
    
-  tds<-tds[, prsum := sum(prhat), by = id]
-  tds$prhat<- tds$prhat/tds$prsum
+  tds[, prsum := sum(prhat), by = id]
+  tds[, prhat:=prhat/prsum]
+  
+  #tds$prhat<- tds$prhat/tds$prsum
   }
     return(tds)
 }
