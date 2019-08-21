@@ -20,9 +20,9 @@ econsavepath <- 'scratch/econscratch'
 
 datapath <- 'data/data_processed/econ'
 savepath<-'scratch/econscratch'
-targeting_dataset<-readRDS(file.path(datapath,"full_targeting.Rds"))
+#targeting_dataset<-readRDS(file.path(datapath,"full_targeting.Rds"))
 
-tds<-targeting_dataset
+tds<-targeting_dataset[[1]]
 is.data.table(tds)
 # prODUCTION SHOULD WORK.
 #code to test function. Remove when done.
@@ -56,7 +56,7 @@ sa<-Sys.time()
 predicted_trips<-get_predict_etargeting(tds)
 #targeting_dataset<-cbind(phat,targeting_dataset)
 
-predicted_trips$del<-predicted_trips$prhat-predicted_trips$pr
+predicted_trips[, del:=prhat-pr]
 summary(predicted_trips$del)
 
 setcolorder(predicted_trips,c("prhat", "pr", "del", "xb"))

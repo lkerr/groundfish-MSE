@@ -37,20 +37,24 @@ get_joint_production <- function(wt,spstock_names){
   #compute quota costs of a choice  
   Z<-as.matrix(wt[, ..quotaprices])
   A<-as.matrix(wt[,..catches])
-  wt$quota_cost<-rowSums(Z*A)
+  wt[, quota_cost:=rowSums(Z*A)]
   
   #compute total expected revenues in 1000s of dollars
   Z<-as.matrix(wt[, ..landings])
   A<-as.matrix(wt[,..lagp])
   A<-Z*A
-  wt$exp_rev_total<-(rowSums(A)-wt$quota_cost)/1000
+  
+  wt[, exp_rev_total:=(rowSums(A)-quota_cost)]
+  #wt$exp_rev_total<-(rowSums(A)-wt$quota_cost)/1000
   #Right here, you could replace the columns (p_*) of wt with the columns of A (also p_*) if you wanted to save expected revenue by species
   
   
   #compute actual revenues
   A<-as.matrix(wt[,..prices])
   A<-Z*A
-  wt$actual_rev_total<-(rowSums(A)-wt$quota_cost)/1000
+  wt[, actual_rev_total:=(rowSums(A)-quota_cost)]
+  
+  #wt$actual_rev_total<-(rowSums(A)-wt$quota_cost)
   #Right here, you could replace the columns (r_*) of wt with the columns of A (also r_*) if you wanted to save actual revenue by species
   
 
