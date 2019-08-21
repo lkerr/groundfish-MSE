@@ -16,20 +16,23 @@ get_predict_etargeting <- function(tds){
   #The names of the variables in the spstock_equation and choice_equation have been put into the set_om_parameters_global.R file.
   
   datavars=c(spstock_equation, choice_equation,"constant")
-  
   betavars=paste0("beta_",datavars)
 
   
 X<-as.matrix(tds[, ..datavars])
-
 B<-as.matrix(tds[, ..betavars])
 
-tds$xb<-rowSums(X*B)
-tds$expu<-exp(tds$xb)
 
+
+tds[, xb:=rowSums(X*B)]
+tds[, expu:=exp(xb)]
 tds[, totexpu := sum(expu), by = id]
+tds[, prhat := expu/totexpu]
 
-tds$prhat<- tds$expu/tds$totexpu
+
+#tds$xb<-rowSums(X*B)
+#tds$expu<-exp(tds$xb)
+#tds$prhat<- tds$expu/tds$totexpu
   
   return(tds)
 }
