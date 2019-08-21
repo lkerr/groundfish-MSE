@@ -10,9 +10,9 @@ get_fishery_next_period <- function(dc,fh){
   fh$cumul_catch_pounds<-dc$cumul_catch_pounds
   fh$targeted<-dc$targeted
   fh[,sectorACL_pounds:=sectorACL*pounds_per_kg*kg_per_mt]
+  fh[,underACL:=cumul_catch_pounds<sectorACL_pounds]
   
-  #fh[,underACL:=cumul_catch_pounds<sectorACL_pounds]
-  #fh$underACL<-fh$cumul_catch<fh$sectorACL_pounds
+  
   
   num_closed<-sum(fh$underACL==FALSE)
   if (num_closed==0){

@@ -11,8 +11,12 @@ get_fishery_next_period_areaclose <- function(dc,fh){
   fh$cumul_catch_pounds<-dc$cumul_catch_pounds
   fh$targeted<-dc$targeted
   
-  fh$sectorACL_pounds<-fh$sectorACL*pounds_per_kg*kg_per_mt
-  fh$underACL<-fh$cumul_catch<fh$sectorACL_pounds
+  fh[,sectorACL_pounds:=sectorACL*pounds_per_kg*kg_per_mt]
+  fh[,underACL:=cumul_catch_pounds<sectorACL_pounds]
+  
+  
+  #fh$sectorACL_pounds<-fh$sectorACL*pounds_per_kg*kg_per_mt
+  #fh$underACL<-fh$cumul_catch<fh$sectorACL_pounds
   
   #split into allocated and non-allocated
   z0<-fh[which(fh$mults_allocated==0)]
@@ -54,7 +58,7 @@ get_fishery_next_period_areaclose <- function(dc,fh){
     }
   
   
-  #reassemble
+  #reassemble, negate stockarea_closed to form stockarea_open, and drop stockarea_closed
   fh<-rbind(fh,z0)
   fh$stockarea_open=!fh$stockarea_closed
   fh[,stockarea_closed:=NULL]
