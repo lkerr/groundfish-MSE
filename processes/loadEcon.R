@@ -10,6 +10,8 @@ targeting_dataset[is.na(targeting_dataset)]<-0
 #targeting_dataset$prhat<-targeting_dataset$pr
 
 targeting_dataset<-data.table(targeting_dataset)
+keycols<-c("id","spstock2")
+setkeyv(targeting_dataset, keycols)
 #split the targeting dataset into a list of datasets
 targeting_dataset<-split(targeting_dataset, targeting_dataset$doffy)
 
