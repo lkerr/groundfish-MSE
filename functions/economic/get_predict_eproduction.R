@@ -8,7 +8,6 @@
 # Returns a data.table with an extra column in it.
 
 get_predict_eproduction <- function(prod_ds){
-  
   # crew, trip days, trawl survey, 
   fyvars=paste0("fy",2004:2015)
   monthvars=paste0("month",1:12)
@@ -33,8 +32,5 @@ get_predict_eproduction <- function(prod_ds){
   #good way to smear
   prod_ds[, harvest_sim:=(exp(harvest_sim))*emean]
   #prod_ds$harvest_sim<- (exp(prod_ds$harvest_sim))*prod_ds$emean 
-  
-
-  return(prod_ds)
 }
 
