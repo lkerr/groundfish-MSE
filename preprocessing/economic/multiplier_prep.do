@@ -6,7 +6,11 @@ global outdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/
 *cd $inputdir
 use "$inputdir/multipliers", clear
 
-drop sppname gearcat calyear
+cap drop sppname gearcat calyear
+
+/*Anna will send a fixed version to me 
+replace aceprice=0 if ifq==0 & spstock2=="SeaScallop"*/
+cap drop ifq ladas access_area
 
 
 replace spstock2=lower(spstock2)

@@ -206,7 +206,7 @@ output_prices<-td_cols[grepl("^r_", td_cols)]
 idvars=c("id", "hullnum", "date","spstock2", "doffy")
 necessary=c("q", "gffishingyear", "emean","nchoices", "idflag")
 useful=c("gearcat","post","h_hat","pr","choice")
-useful=c("gearcat","post","h_hat","choice")
+#useful=c("gearcat","post","h_hat","choice")
 
 mysubs=c(idvars,necessary,useful,fydums, monthdums, fycoefs, monthcoefs, targeting_vars,betavars,production_vars, alphavars, cmultipliers, lmultipliers, quota_prices, output_prices,lag_output_prices)
 

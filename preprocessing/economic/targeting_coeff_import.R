@@ -121,13 +121,14 @@ targeting_coefs$beta_start_of_season.x[is.na(targeting_coefs$beta_start_of_seaso
 targeting_coefs<-within(targeting_coefs, rm(beta_start_of_season.y))
 
 colnames(targeting_coefs)[colnames(targeting_coefs)=="beta_start_of_season.x"] <- "beta_start_of_season"
+colnames(targeting_coefs)[colnames(targeting_coefs)=="beta_exp_rev_total_das"] <- "beta_exp_rev_total"
 
 #Force NAs to zero. This is legit. I promise.
 targeting_coefs[is.na(targeting_coefs)]<-0
 targeting_coefs<-as.data.table(targeting_coefs)
 
 setcolorder(targeting_coefs,c("gearcat", "spstock2"))
-targeting_coefs[, c("beta_o.das_price_mean","beta_o.das_price_mean_len"):=NULL]
+#targeting_coefs[, c("beta_o.das_price_mean","beta_o.das_price_mean_len"):=NULL]
 
 saveRDS(targeting_coefs, file=file.path(savepath, "targeting_coefs.Rds"))
 rm(list=c("all_coefs","asc_coefs","asc_coefs2"))

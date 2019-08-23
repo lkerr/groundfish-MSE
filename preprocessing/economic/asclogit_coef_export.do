@@ -4,10 +4,10 @@ global outdir"/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/d
 
 
 cd $inputdir
-est use postCSasclogit1.ster, number(1)
+est use postCSasclogit2.ster, number(1)
 est store gillnetasc
 
-est use postCSasclogit1.ster, number(2)
+est use postCSasclogit2.ster, number(2)
 est store trawlasc
 /*
 putexcel set nlogit_gillnet_pre_coefs.xls, replace
