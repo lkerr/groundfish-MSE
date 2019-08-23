@@ -20,7 +20,7 @@ mprocTest <- FALSE
 # stockExclude variable. Do not include the extension.R. For example,
 # stockExclude <- haddockGB will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
-stockExclude <- c('haddockGB')
+stockExclude <- c()
 
 
 #### Structural parameters ####
