@@ -6,10 +6,11 @@
 # Returns the updated version of that matrix.
 
 
-
-get_fishery_next_period_areaclose <- function(dc,fh){
-  fh$cumul_catch_pounds<-dc$cumul_catch_pounds
-  fh$targeted<-dc$targeted
+#get_fishery_next_period_areaclose <- function(dc,fh){
+  
+get_fishery_next_period_areaclose2 <- function(fh){
+  #fh$cumul_catch_pounds<-dc$cumul_catch_pounds
+  #fh$targeted<-dc$targeted
   
   fh[,sectorACL_pounds:=sectorACL*pounds_per_kg*kg_per_mt]
   fh[,underACL:=cumul_catch_pounds<sectorACL_pounds]
@@ -64,5 +65,4 @@ get_fishery_next_period_areaclose <- function(dc,fh){
   fh[,stockarea_closed:=NULL]
   
   #fh<-as.data.table(fh)
-  return(fh)
 }
