@@ -20,7 +20,7 @@ econsavepath <- 'scratch/econscratch'
 
 datapath <- 'data/data_processed/econ'
 savepath<-'scratch/econscratch'
-#targeting_dataset<-readRDS(file.path(datapath,"full_targeting.Rds"))
+#targeting_dataset<-readRDS(file.path(datapath,"full_targeting_2015.Rds"))
 
 tds<-targeting_dataset[[1]]
 is.data.table(tds)
@@ -35,9 +35,20 @@ tds$harvest_sim[tds$spstock2=="nofish"]<-0
 tds$delta<-abs(tds$harvest_sim-tds$h_hat)
 
 summary(tds$delta)
+#get_predict_eproduction works
+
+tds$exp_rev_bak<-tds$exp_rev_total
+
+
+tds<-get_joint_production(tds,spstock2s) 
+tds$exp_rev_total<-tds$exp_rev_total/1000
+setcolorder(tds,c("exp_rev_bak","exp_rev_total"))
+tds$delta2<-abs(tds$exp_rev_total-tds$exp_rev_bak)
+summary(tds$delta2)
+
 #Works well!  
 #setcolorder(tds,c("spstock2","delta","harvest_sim","h_hat"))
-#setorder(tds,-delta)
+setorder(tds,-delta2)
 
 #here, you can summary if choice==0 or choice==1
 #tdss<-tds[which(tds$choice==1)]
