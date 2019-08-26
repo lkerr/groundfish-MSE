@@ -25,7 +25,7 @@
 # This is a single-species management scenario , that assumes perfect "untargeting." If they did take a trip in that stockarea, it would not encounter any of the closed groundfish. 
 ##############################################################################
 
-adjust_joint_allocated_mults <- function(wt,fh, ec_type){
+joint_adjust_allocated_mults <- function(wt,fh, ec_type){
     mul_alloc<-fh[mults_allocated==1]
     closeds<-NULL
     if (ec_type$EconType=="Multi" & ec_type$CatchZero=="FALSE"){
