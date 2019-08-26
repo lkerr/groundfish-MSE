@@ -8,7 +8,7 @@
 
 #get_fishery_next_period_areaclose <- function(dc,fh){
   
-get_fishery_next_period_areaclose2 <- function(fh){
+get_fishery_next_period_areaclose <- function(fh){
   #fh$cumul_catch_pounds<-dc$cumul_catch_pounds
   #fh$targeted<-dc$targeted
   
@@ -52,6 +52,7 @@ get_fishery_next_period_areaclose2 <- function(fh){
       fh$stockarea_closed=TRUE 
     } 
     
+    
     if (gb_check>=1 & gom_check>=1){
         fh$stockarea_closed[which(fh$stockarea=="CCGOM")]=TRUE 
         snema_check<-length(which(fh$stockarea_closed==TRUE & fh$stockarea=="SNEMA"))
@@ -63,6 +64,7 @@ get_fishery_next_period_areaclose2 <- function(fh){
   fh<-rbind(fh,z0)
   fh$stockarea_open=!fh$stockarea_closed
   fh[,stockarea_closed:=NULL]
-  
+  setorder(fh,"spstock2")
+  return(fh)
   #fh<-as.data.table(fh)
 }
