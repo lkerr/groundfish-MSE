@@ -22,8 +22,9 @@ zero_out_closed_areas_asc_cutout <- function(tds,open_hold){
    
   tds[, prsum := sum(prhat), by = id]
   tds[, prhat:=prhat/prsum]
-  
   #tds$prhat<- tds$prhat/tds$prsum
   }
+  return(tds)
+  
 }
 
