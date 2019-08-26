@@ -1,4 +1,4 @@
-# A function to zero out the catch and/or landings multipliers for targeted and non_targeted Allocated Multispecies stocks.
+# A function to adjust the catch and/or landings multipliers for targeted and non_targeted Allocated Multispecies stocks.
 ##########################
 # What am I going to do for unallocated multispeices stocks and non-multispecies stocks?
 ##########################
@@ -10,7 +10,7 @@
 ##############################################################################
 # Multi: For the "Multi" econ model, set the landings multipliers=0 for all spstock2 that have stockarea_open==FALSE
 # This closely mimics how multispecies currently works.  In theory, the landings multipliers for these closed groundfish might be unchanged for some species. But, for the most part, in order to land regulated groundfish, you'll have to be in the catch share program. 
-# There are no changes to the catch multipliers.  However, since vessels can't land groundfish from these stockareasthey shouldn't end up targeting.  If they did take a trip, they'd have to discard.
+# We also set the catch multipliers to zero.  We assuming that vessels would declare out of groundfish and into something else if parts of the multispecies fishery were closed.  While they may encounter groundfish, this catch would not count against their ACE.
 ##############################################################################
 
 ##############################################################################
@@ -25,16 +25,20 @@
 # This is a single-species management scenario , that assumes perfect "untargeting." If they did take a trip in that stockarea, it would not encounter any of the closed groundfish. 
 ##############################################################################
 
-zero_out_multalloc <- function(wt,fh, ec_type){
+adjust_joint_allocated_mults <- function(wt,fh, ec_type){
     mul_alloc<-fh[mults_allocated==1]
     closeds<-NULL
-    if (ec_type$EconType=="Multi"){
+    if (ec_type$EconType=="Multi" & ec_type$CatchZero=="FALSE"){
       # For the "Multi" econ model, set the landings multipliers=0 for all spstock2 that have stockarea_open==FALSE
       # Multi above.     
       
       closeds<-mul_alloc[stockarea_open==FALSE]$spstock2
       closed<-paste0("l_", closeds)
-    } else if (ec_type$EconType=="Single" & ec_type$CatchZero=="FALSE"){
+    } else if  (ec_type$EconType=="Multi" & ec_type$CatchZero=="TRUE"){
+      # This if statement sets the landings multipliers=0 for all spstock2 that have underACL==FALSE
+      closeds<-mul_alloc[underACL==FALSE]$spstock2
+      closed<-c(paste0("l_", closeds), paste0("c_",closeds))
+    }else if (ec_type$EconType=="Single" & ec_type$CatchZero=="FALSE"){
       # This if statement sets the landings multipliers=0 for all spstock2 that have underACL==FALSE
       closeds<-mul_alloc[underACL==FALSE]$spstock2
       closed<-paste0("l_", closeds)
