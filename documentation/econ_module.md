@@ -26,7 +26,7 @@ This is estimated equation-by-equation with ordinary least squares, using a log-
 	\end{equation}
 although there are more than just these 3 explanatory variables.
 
-Catchability $q$ varies by vessel-target.  The results are used to predict expected harvest of target $n$. These are then adjusted to account for the jointness in catching fish. For example, a trip that is targeting GB cod and that lands 1000 lbs of GB cod is also likely to land 500 lb of GB haddock, 200 lb of pollock, and 80 lb of skates.  We track all these and multiply by expected prices to construct expected revenue for vessel $i$'s trip that targets GB cod on day $t$. We repeat for all $i$,$n$, $t$ to construct expected revenue for all feasible choices.
+Catchability $q$ varies by vessel-target.  The results are used to predict expected harvest of target $n$. These are then adjusted to account for the jointness in catching fish. For example, a trip that is targeting GB cod and that lands 1000 lbs of GB cod is also likely to land 500 lb of GB haddock, 200 lb of pollock, and 80 lb of skates.  We track all these individually and multiply by expected prices to construct expected revenue for vessel $i$'s trip that targets GB cod on day $t$. We repeat for all $i$,$n$, $t$ to construct expected revenue for all feasible choices.  Some of these things also have quota costs -- we subtract quota costs from the expected revenue.
 
 In the second stage, we estimate the probability that a vessel will target "thing" t: 
 \begin{equation}
@@ -53,8 +53,6 @@ There's a pile of code. It's quite janky.
 There are few files in "scratch/econscratch" that may be useful
 * **test_predict_etargeting_and_production.R :** was used to verify that the predict_etargeting.R and predict_eproduction.R functions works properly. It runs as a standalone and might be fun to explore. 
 
-
-
 * **test_econ_module.R :**  is a test economic module. The last part is incredibly janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop. I'm just waiting to have runSim.R reordered before I can use it to write out F_full to stock[[i]] for the modeled stocks.  Pieces of this will be put into fragments that are called by "runSetup.R" (perhaps with an if cut-out for EconomicModel) because they only need to be run once.  Other parts should be converted into a function or many functions.
 
 * **speedups_econ_module2.R :**  code for benchmarking the economic model.
@@ -71,20 +69,28 @@ Functions:
 
 * **get_bio_for_econ:** passes *things* from the biological model (in stock[[i]]) to the economic model.
 
-* **get_best_trip:** for each vessel-day (id) selects the choice (spstock2) with the highest prhat
+
 
 * **get_random_draw_tripsDT:** for each vessel-day (id) randomly selects a choice (spstock2) based on prhat. Reworked to  data.table
 
 * **get_fishery_next_period:** adds up catch from individual vessels to the daily level and then aggregates with prior catch.  Checks if the sector sub-ACL is reached and closes the fishery if so.
 
-* **get_fishery_next_period:** adds up catch from individual vessels to the daily level and then aggregates with prior catch.  Checks if the sector sub-ACL is reached and closes the fishery if so.  For the allocated multispecie stocks, this creates and extrac column that indicates if that stockarea is closed.
+* **get_fishery_next_period_areaclose:** adds up catch from individual vessels to the daily level and then aggregates with prior catch.  Checks if the sector sub-ACL is reached and closes the fishery if so.  For the allocated multispecie stocks, this creates and extrac column that indicates if that stockarea is closed.
 
-
-* **zero_out_closed_asc_cutout:** Closes a fishery and redistributes the probability associated with that stock to the other options. This is based on the "underACL" logical column.   Skips math if all stocks are open.
+* **get_joint_production:** Replaces the catch multiplier, landings multiplier, quota prices, lag prices, and prices with catch (lbs), landings(lbs), quota prices, lag prices, and prices.  This accounts for the jointness in production. These variables are now a little misleading in names.  However, I chose to replace instead of create new columns to save on space.
 
 * **zero_out_closed_areas_asc_cutout:** Closes a fishery and redistributes the probability associated with that stock to the other options.  This is based on the "stockarea_open" logical column.   Skips math if all stocks are open
 
+* **joint_adjust_allocated_mults:** Replaces the catch multiplier and/or  landings multiplier with zeros when a stockarea_open="FALSE". Only for the allocated multispecies.  Precise behavior controlled by "EconType" and "CatchZero" lines in mproc.
 
+
+* **joint_adjust_others:** Replaces the catch multiplier and/or  landings multiplier with zeros when a underACL="FALSE".  Only for non-allocated multispecies and non-groundfish.  Precise behavior controlled by "EconType" and "CatchZero" lines in mproc.
+
+* **get_reshape_catches:** A small "helper" function to reshape catch per trip to and 'long' dataset.
+
+* **get_reshape_landings:** A small "helper" function to reshape landings per trip to and 'long' dataset.
+
+* **get_reshape_targets_revenues:** A small "helper" function to reshape targets and revenues.
 
 
 Obsolete
@@ -99,6 +105,10 @@ There are a few files in "/preprocessing/economic/"  These primarily deal with c
 
 * **predict_etargetingCpp:** A version that uses RCpp sugar. This wasn't faster than base R.  Predicts targeting, returns a data.table.
 
+* **get_best_trip:** for each vessel-day (id) selects the choice (spstock2) with the highest prhat. Obsolete and should be removed.
+
+* **zero_out_closed_asc_cutout:** Closes a fishery and redistributes the probability associated with that stock to the other options. This is based on the "underACL" logical column.   Skips math if all stocks are open.  This is obsolete because the underACL logical is always equal to the stockarea_open, regardless of how we are modeling closures.
+
 
 ## Inputs,
 Data, starting values and parameter bounds.
@@ -106,7 +116,7 @@ Data, starting values and parameter bounds.
 Running the model requires
 /data/data_processed/econ/full_production.RData, /data/data_processed/econ/full_targeting.RData, and /data/data_processed/econ/catch_limits_2010_2017.csv
 
-I should probably write up a small control file or set of parameters.
+I've been making small changes to mproc_test.txt and the "set_om_parameters_global.R" file.
   * which gffishingyear
 
 
@@ -115,14 +125,13 @@ Model outputs are TBD
 
 
 ### To do and known bugs
-
+* needs to do state dependence properly.
 
 * **runEcon_module.R :** 
-  * Needs to be cleaned up.  Uses about 4-6gb of memory.
+  * Needs to be cleaned up.  Uses about 8gb of memory.
   * Needs to be sped up.
     * The tidyverse version took approx 48sec/yr.
     * The revised data.table version takes 19 seconds/yr (depending on how often fisheries are closed). I should probably profile the code to speed it up.
-  * Does not yet incorporate catch/landings multipliers. So that's a big problem.  Will need to add the multiplier data, code to integrate, test, and adjust.
   * Doesn't read/use IJ1 trawl survey index(biomass index computed on Jan 1).
   * does not store fishery revenue anywhere, just overwrites it.
   * slowest parts are eproduction, etargeting, and randomdraw.
@@ -131,9 +140,7 @@ Model outputs are TBD
 * packages are gmm, mvtnorm, tmvtnorm, expm, msm, Matrix, TMB, forcats, readr, tidyverse, dplyr, data.table
 * the targeting and production datasets now conform. Production dataset is not necessary.
 
- * The Econ module is a little bit fragile.  A few datasets need to be merged *during* the simulation. I initially used "base::merge."   That was slow, so I used "dplyr::left_join," which was faster.  Now, I'm ensuring that the merged datasets are the same length and order and using "cbind."
-    * There is a left_join in zero_out_closed_asc_cutout.R. I don't think I can avoid this.
-* I've verified that the functions are working, but I *think* there is an underlying data error.
-
+ * The Econ module is a little bit fragile.  A few datasets need to be merged *during* the simulation. I initially used "base::merge."   That was slow, so I used "dplyr::left_join," which was faster.  Now, I'm ensuring that the merged datasets are the same length and order and using "cbind." Or using the join syntax from data.table DTL[DTR, on="joincols"]
+ 
 
 [Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
