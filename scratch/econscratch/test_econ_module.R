@@ -35,7 +35,9 @@ load(file.path(econsavepath,"temp_biop.RData"))
 
 #scratchdir<-"/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/scratch/econscratch"
 #Rcpp::sourceCpp(file.path(scratchdir,"matsums.cpp"))
-m<-1
+
+m<-2
+
 econtype<-mproc[m,]
 myvars<-c("LandZero","CatchZero","EconType")
 econtype<-econtype[myvars]
@@ -56,15 +58,15 @@ revenue_holder<-as.list(NULL)
 ##########################################################################################
 ##############SOME CODE TO SET ACLS low to verify closing works###########################
 #here's a couple lines to quickly set underACL to "FALSE", stockarea_open to FALSE
-# fishery_holder$underACL[3]<-as.logical("FALSE")
-# fishery_holder$stockarea_open[fishery_holder$stockarea=="GB"] <-as.logical("FALSE")
+# fishery_holder$underACL[2]<-as.logical("FALSE")
+# fishery_holder$stockarea_open[fishery_holder$stockarea=="Unit" & fishery_holder$mults_allocated==1] <-as.logical("FALSE")
 
 #Set the sectorACLS for lobster, plaice, codGB, codGOM, halibut, winterSNEMA, yellowtail CCGOM to a small number
 #This is a non-mult, unit stock, GB stock, GOM stock, non-allocated, SNEMA, and CCGOM stock.
-# fishery_holder$sectorACL[1]<-100
-# fishery_holder$sectorACL[2]<-100
-# fishery_holder$sectorACL[3]<-100
-# fishery_holder$sectorACL[4]<-100
+# fishery_holder$sectorACL[1]<-600/2204
+ fishery_holder$sectorACL[3]<-100/2204
+# fishery_holder$sectorACL[30]<-1/2204
+# fishery_holder$sectorACL[4]<-100/2204
 # fishery_holder$sectorACL[7]<-100
 # fishery_holder$sectorACL[25]<-100
 # fishery_holder$sectorACL[28]<-100
@@ -99,56 +101,65 @@ revenue_holder<-as.list(NULL)
   #source('processes/loadEcon.R')
   
   
-   day<-30
+  # day<-1
   # test30<-targeting_dataset[[day]]
-  
-  #for (day in 1:365){
+  set.seed(2)
+  for (day in 1:3){
   #   subset the targeting dataset based on date 
-  start_time<-proc.time()
+  
   # Subset for the day.  Predict targeting
   working_targeting<-copy(targeting_dataset[[day]])
   get_predict_eproduction(working_targeting)
 
-  eproduction2<-eproduction2+proc.time()[3]-start_time[3]
   
   #Right here is where we need to zero things out.
   #zero_out_targets will set the catch and landings multipliers to zero depending on the value of underACL, stockarea_open, and mproc$EconType
-  zero_out_targets(working_targeting,fishery_holder, econtype)
-
-  # working_targeting<-zero_out_nontargets(working_targeting,fishery_holder, econtype)
-
-
+  # wt<-working_targeting
+  # fh<-fishery_holder
+  # ec_type<-econtype
   
+  working_targeting<-joint_adjust_allocated_mults(working_targeting,fishery_holder, econtype)
+  working_targeting<-joint_adjust_others(working_targeting,fishery_holder, econtype)
   
+  # # working_targeting<-zero_out_nontargets(working_targeting,fishery_holder, econtype)
+    GBs<-c(paste0("l_", c(spstock2s[c(3,5,18,22)])), paste0("c_", c(spstock2s[c(3,5,18,22)])))
+  #  
+    GOMs<-c(paste0("l_", c(spstock2s[c(4,6,19)])), paste0("c_", c(spstock2s[c(4,6,19)])))
+    Unit<-c(paste0("l_", c(spstock2s[c(2,9,11,17,20)])), paste0("c_", c(spstock2s[c(2,9,11,17,20)])))
+    SNEMA<-c(paste0("l_", c(spstock2s[c(23)])), paste0("c_", c(spstock2s[c(23)])))
+    CCGOM<-c(paste0("l_", c(spstock2s[c(21)])), paste0("c_", c(spstock2s[c(21)])))
+    nongf<-c(paste0("l_", c(spstock2s[c(1,7,8,10,12,13,14,15,16)])), paste0("c_", c(spstock2s[c(1,7,8,10,12,13,14,15,16)])))
+  #  
+  # 
+  # 
+    summary(working_targeting[, ..GBs])
+    summary(working_targeting[, ..GOMs])
+    summary(working_targeting[, ..Unit])
+    summary(working_targeting[, ..SNEMA])
+    summary(working_targeting[, ..CCGOM])
+    summary(working_targeting[, ..nongf])
+  #  
   
-  start_time<-proc.time()
   #Update the dataset with expected revenue that accounts for jointness and quota costs
-  working_targeting<-get_joint_production2(working_targeting,spstock2s) 
+  working_targeting<-get_joint_production(working_targeting,spstock2s) 
   working_targeting[, exp_rev_total:=exp_rev_total/1000]
-  working_targeting[, wkly_crew_wage:=wkly_crew_wage/1000]
+  #working_targeting[, wkly_crew_wage:=wkly_crew_wage/1000]
   
 
-  prep_target_dc<-prep_target_dc+proc.time()[3]-start_time[3]
   
   
   
-  start_time<-proc.time() 
   trips<-get_predict_etargeting(working_targeting)
   #setcolorder(trips,"xb","prhat")
-  etargeting<-etargeting+proc.time()[3]-start_time[3]
-  
   
   # Predict targeting
   # this is where infeasible trips should be eliminated.
-  start_time<-proc.time() 
-  zero_out_closed_asc_cutout(trips,fishery_holder)
-  zero_out<-zero_out+proc.time()[3]-start_time[3]
+
+  trips<-zero_out_closed_areas_asc_cutout(trips,fishery_holder)
   
   # draw trips probabilistically.  A trip is selected randomly from the choice set. 
   # The probability of selection is equal to prhat
-  start_time<-proc.time() 
   trips<-get_random_draw_tripsDT(trips)
-  randomdraw<-randomdraw+proc.time()[3]-start_time[3]
   
   catches<-get_reshape_catches(trips)
   landings<-get_reshape_landings(trips)
@@ -158,10 +169,6 @@ revenue_holder<-as.list(NULL)
   #I don't think I need to do this.
   
   
-  ####################################################################################################
-  # This will need to get restructured a bit -- catch and landings are now coming out of the c_ and l_ columns
-  # Easy to contract/collapse these down, but then they have to get stripped of the c_ prefixes and reshaped wide.
-  ####################################################################################################
   # update the fishery holder dataframe
   
   
@@ -171,7 +178,7 @@ revenue_holder<-as.list(NULL)
   fishery_holder[, cumul_catch_pounds:= cumul_catch_pounds+daily_pounds_caught]
   fishery_holder[, daily_pounds_caught :=NULL]
 
-  get_fishery_next_period_areaclose2(fishery_holder)
+  fishery_holder<-get_fishery_next_period_areaclose(fishery_holder)
   
   
   # old way
@@ -235,8 +242,9 @@ holder_update_flatten2
 next_period_flatten2
 runtime
 
-
-
+setcolorder(fishery_holder,c("spstock2","cumul_catch_pounds", "underACL","stockarea_open"))
+view(fishery_holder)
+view(trips[which(trips$spstock2 !="nofish")])
 
 # 
 # fishery_holder$removals_mt<-fishery_holder$cumul_catch_pounds/(pounds_per_kg*kg_per_mt)+fishery_holder$nonsector_catch_mt
