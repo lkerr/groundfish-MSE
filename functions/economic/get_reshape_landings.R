@@ -18,7 +18,7 @@ get_reshape_landings=function(trips){
   
   landings$spstock2<-gsub("l_","", landings$spstock2)
   setorder(landings,spstock2)
-  catches$daily_pounds_landed<-as.numeric(catches$daily_pounds_landed)
+  landings$daily_pounds_landed<-as.numeric(landings$daily_pounds_landed)
   
   return(landings)
 }
