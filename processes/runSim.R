@@ -4,7 +4,6 @@
 
 # empty the environment
 rm(list=ls())
- 
 source('processes/runSetup.R')
 
 # if on local machine (i.e., not hpcc) must compile the tmb code
@@ -15,8 +14,14 @@ if(runClass != 'HPCC'){
 }
 
 top_loop_start<-Sys.time()
+####################These are temporary changes for testing ####################
 econ_timer<-0
 set.seed(2)
+mproc_bak<-mproc
+mproc<-mproc_bak[1,]
+nrep<-1
+####################End Temporary changes for testing ####################
+
 #### Top rep Loop ####
 for(r in 1:nrep){
 
@@ -27,6 +32,11 @@ for(r in 1:nrep){
   #### Top MP loop ####
   for(m in 1:nrow(mproc)){
 
+    #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached.
+    econtype<-mproc[m,]
+    myvars<-c("LandZero","CatchZero","EconType")
+    econtype<-econtype[myvars]
+    
     # set.seed(rsd)
     
     
