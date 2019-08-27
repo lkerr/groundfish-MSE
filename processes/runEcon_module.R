@@ -23,6 +23,12 @@ fishery_holder$targeted<-0
 
 #set up a list to hold the expected revenue by date, hullnum, and target spstock2
 revenue_holder<-as.list(NULL)
+  #Initialize the trips data.table. I need it to store the previous choice.
+  keepcols<-c("hullnum","spstock2","choice_prev_fish")
+  trips<-copy(targeting_dataset[[1]])
+  trips<-trips[, ..keepcols]
+  trips<-trips[spstock2!="nofish"]
+  colnames(trips)[3]<-"targeted"
 
 
 
@@ -57,35 +63,40 @@ for (day in 1:365){
   #   subset both the targeting and production datasets based on date and jams them to data.tables
   # Subset for the day.  Predict targeting
   working_targeting<-copy(targeting_dataset[[day]])
-  get_predict_eproduction(working_targeting)
-  
-  
-  #zero_out_targets will set the catch and landings multipliers to zero depending on the value of underACL, stockarea_open, and mproc$EconType
-  
-  working_targeting<-joint_adjust_allocated_mults(working_targeting,fishery_holder, econtype)
-  working_targeting<-joint_adjust_others(working_targeting,fishery_holder, econtype)
-  working_targeting<-get_joint_production(working_targeting,spstock2s) 
-  working_targeting[, exp_rev_total:=exp_rev_total/1000]
-  
-  
-  # Predict targeting
-  trips<-get_predict_etargeting(working_targeting)
-  
-  # Predict targeting
-  # this is where infeasible trips should be eliminated.
-
-  trips<-zero_out_closed_areas_asc_cutout(trips,fishery_holder)
-  
-  # draw trips probabilistically.  A trip is selected randomly from the choice set. 
-  # The probability of selection is equal to prhat
-  trips<-get_random_draw_tripsDT(trips)
-  
-  catches<-get_reshape_catches(trips)
-  landings<-get_reshape_landings(trips)
-
-  #I don't think I need to do this.
-  target_rev<-get_reshape_targets_revenues(trips)
-  #I don't think I need to do this.
+    working_targeting[, choice_prev_fish:=0]
+    working_targeting<-working_targeting[trips, choice_prev_fish:=targeted , on=c("hullnum","spstock2")]
+    
+    get_predict_eproduction(working_targeting)
+    
+    
+    #zero_out_targets will set the catch and landings multipliers to zero depending on the value of underACL, stockarea_open, and mproc$EconType
+    
+    working_targeting<-joint_adjust_allocated_mults(working_targeting,fishery_holder, econtype)
+    working_targeting<-joint_adjust_others(working_targeting,fishery_holder, econtype)
+    working_targeting<-get_joint_production(working_targeting,spstock2s) 
+    working_targeting[, exp_rev_total:=exp_rev_total/1000]
+    
+    
+    # Predict targeting
+    trips<-get_predict_etargeting(working_targeting)
+    
+    # Predict targeting
+    # this is where infeasible trips should be eliminated.
+    
+    trips<-zero_out_closed_areas_asc_cutout(trips,fishery_holder)
+    
+    # draw trips probabilistically.  A trip is selected randomly from the choice set. 
+    # The probability of selection is equal to prhat
+    trips<-get_random_draw_tripsDT(trips)
+    #drop out trip that did not fish (they have no landings or catch). 
+    trips<-trips[spstock2!="nofish"]
+    
+    catches<-get_reshape_catches(trips)
+    landings<-get_reshape_landings(trips)
+    
+    #I don't think I need to do this.
+    target_rev<-get_reshape_targets_revenues(trips)
+    #I don't think I need to do this.
   
   
   # update the fishery holder dataframe
