@@ -1,5 +1,5 @@
 ASSESSCLASS HCR FREF_TYP FREF_PAR0 FREF_PAR1 BREF_TYP BREF_PAR0 BREF_PAR1 RFUN_NM RPInt ImplementationClass
-CAA simplethresh  FmsySim       -30        -1      SIM       -30        -1 hindcastMean     1 StandardFisheries
-CAA simplethresh  FmsySim        -5        -1      SIM        -5        -1 hindcastMean     1 StandardFisheries
-CAA simplethresh  FmsySim         5        NA      SIM         5        NA     forecast     1 StandardFisheries
-CAA simplethresh  FmsySim        30        NA      SIM        30        NA     forecast     1 StandardFisheries
+CAA slide  FmsySim       -30        -1      SIM       -30        -1 hindcastMean     1 StandardFisheries
+CAA slide  FmsySim        -5        -1      SIM        -5        -1 hindcastMean     1 StandardFisheries
+CAA slide  FmsySim         5        NA      SIM         5        NA     forecast     1 StandardFisheries
+CAA slide  FmsySim        30        NA      SIM        30        NA     forecast     1 StandardFisheries
