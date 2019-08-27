@@ -205,6 +205,7 @@ output_prices<-td_cols[grepl("^r_", td_cols)]
 
 idvars=c("id", "hullnum", "date","spstock2", "doffy")
 necessary=c("q", "gffishingyear", "emean","nchoices", "idflag")
+necessary=c("q", "gffishingyear", "emean","nchoices")
 useful=c("gearcat","post","h_hat","pr","choice")
 #useful=c("gearcat","post","h_hat","choice")
 
