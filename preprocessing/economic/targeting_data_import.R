@@ -143,7 +143,7 @@ colnames(targeting)[colnames(targeting)=="month"] <- "MONTH"
 idvars=c("id", "hullnum","spstock2", "doffy")
 necessary=c("q", "gffishingyear", "emean","nchoices", "idflag")
 necessary=c("q", "gffishingyear", "emean","nchoices", "MONTH")
-useful=c("gearcat","post","h_hat","pr","choice")
+useful=c("gearcat","post","h_hat","xb_post","choice")
 #useful=c("gearcat","post","h_hat","choice")
 
 mysubs=c(idvars,necessary,useful, targeting_vars, production_vars)
