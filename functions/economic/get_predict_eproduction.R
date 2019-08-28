@@ -9,8 +9,8 @@
 
 get_predict_eproduction <- function(prod_ds){
   # crew, trip days, trawl survey, 
-  fyvars=paste0("fy",2004:2015)
-  monthvars=paste0("month",1:12)
+  fyvars<-grep("^fy",colnames(prod_ds) , value=TRUE)
+  monthvars<-grep("^month",colnames(prod_ds) , value=TRUE)
   
   datavars=c(production_vars,fyvars,monthvars)
   alphavars=paste0("alpha_",datavars)
