@@ -96,9 +96,18 @@ pounds_per_kg<-2.20462
 kg_per_mt<-1000
 # Set the economic years that we'll use for simulation.  Right now, we'll pass  in 1 year.
 
-baseEconYr<-2015
+#baseEconYr<-2015
 econdatapath <- 'data/data_processed/econ'
-econdatafile<-paste0("full_targeting_",baseEconYr,".Rds")
+econdatafile<-paste0("full_targeting_datalist.Rds")
+
+target_coefs<-"targeting_coefs.Rds"
+production_coefs<-"production_coefs.Rds"
+
+#multiplier_loc<-"sim_multipliers_pre.Rds"
+multiplier_loc<-"sim_multipliers_post.Rds"
+output_price_loc<-"sim_prices_post.Rds"
+input_price_loc<-"sim_post_vessel_stock_prices.Rds"
+
 
 spstock2s<-c("americanlobster","americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","monkfish", "other","pollock","redsilveroffshorehake","redfish","seascallop","skates","spinydogfish","squidmackerelbutterfishherring","summerflounder","whitehake","winterflounderGB","winterflounderGOM","witchflounder","yellowtailflounderCCGOM", "yellowtailflounderGB","yellowtailflounderSNEMA")
 

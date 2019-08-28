@@ -24,21 +24,9 @@ if(!require(data.table)) {
 econrawpath <- './data/data_raw/econ'
 econsavepath <- './data/data_processed/econ'
 
-#Files to read -- sample data for now.
-#targeting_source<-"sample_PRODREGdata_fys2009_2010_forML.dta"
+targeting_source<-"data_for_simulations_mse.dta"
+savefile<-"full_targeting_datalist.Rds"
 
-
-for (wy in 2010:2015) {
-targeting_source<-paste0("econ_data_",wy,".dta")
-savefile<-paste0("full_targeting_",wy,".Rds")
-gc()
-
-#Load in targeting coefficients
-targeting_coefs<-readRDS(file.path(econsavepath,"targeting_coefs.Rds"))
-production_coefs<-readRDS(file.path(econsavepath,"production_coefs.Rds"))
-
-colnames(targeting_coefs)[colnames(targeting_coefs)=="beta_LApermit"] <- "beta_lapermit"
-targeting_coefs$spstock2<-tolower(targeting_coefs$spstock2)
 
 # read in the dataset
 targeting <- read.dta13(file.path(econrawpath, targeting_source))
@@ -51,11 +39,6 @@ if("emean" %in% colnames(targeting)){
   warning('emean hack, production predictions will be wrong')
   targeting$emean<-1
 }  
-  
-  
-
-
-
 targeting$startfy = paste("5", "1",targeting$gffishingyear,sep=".")
 targeting$startfy = as.Date(paste("5", "1",targeting$gffishingyear,sep="."), "%m.%d.%Y")
 targeting$doffy=as.integer(difftime(targeting$date,targeting$startfy, units="days")+1)
@@ -64,60 +47,17 @@ targeting$doffy=as.integer(difftime(targeting$date,targeting$startfy, units="day
 targeting$spstock2<-tolower(targeting$spstock2)
 targeting$spstock2<- gsub("_","",targeting$spstock2)
 
-colnames(targeting)[colnames(targeting)=="LApermit"] <- "lapermit"
-targeting$primary<-as.integer(1)
-targeting$secondary<-as.integer(0)
-
-count_rows<-nrow(targeting)
-cols_t<-ncol(targeting)
-
-
-#pull in the targeting dataset
-# note that left_join converts things to data.frames (not data.tables)
-targeting<-left_join(targeting,production_coefs,by=c("gearcat","spstock2","post"))
-count_rows_post<-nrow(targeting)
-cols_pc<-ncol(production_coefs)
-cols_final<-ncol(targeting)
-
-#same number of rows.  sum of columns, minus the 3 merge columns
-cols_final==(cols_pc+cols_t-3)
-count_rows_post==count_rows
-
-
-#same number of rows. Sum of number of columns, minus the 2 merge columns
-if(cols_final !=(cols_pc+cols_t-3)){
-  warning("Lost some Columns from the production-join")
-}
-if(count_rows_post !=(count_rows)){
-  warning("Lost some Rows from the production-join")
-}
-
-
-
-# merge targeting dataset and coefficients
-# Note, you'll have some NAs for some rows, especially no fish.
-# Currently, I only have targeting coefficients for the pre-period.
-#targeting<-left_join(targeting,targeting_coefs,by=c("gearcat","spstock2","post"))
-
-targeting<-left_join(targeting,targeting_coefs,by=c("gearcat","spstock2"))
-cols_final2<-ncol(targeting)
-count_rows_post2<-nrow(targeting)
-gc()
-cols_tc<-ncol(targeting_coefs)
-
-#same number of rows. Sum of number of columns, minus the 2 merge columns
-if(cols_final2 !=(cols_final+cols_tc-2)){
-  warning("Lost some Columns from the targeting dataset")
-}
-if(count_rows_post2 !=(count_rows_post)){
-  warning("Lost some Rows from the targeting dataset")
-}
-
 
 targeting$spstock2<- gsub("gb","GB",targeting$spstock2)
 targeting$spstock2<- gsub("ccgom","CCGOM",targeting$spstock2)
 targeting$spstock2<- gsub("gom","GOM",targeting$spstock2)
 targeting$spstock2<- gsub("snema","SNEMA",targeting$spstock2)
+
+# need to fix up these.
+
+
+colnames(targeting)[colnames(targeting)=="LApermit"] <- "lapermit"
+targeting$primary<-as.integer(1)
 
 
 
@@ -172,44 +112,41 @@ targeting<-as.data.table(targeting)
 gc()
 
 
-keycols<-c("gffishingyear","date", "hullnum", "id","spstock2")
+keycols<-c("gffishingyear","doffy", "hullnum", "id","spstock2")
 setorderv(targeting, keycols)
 
 spstock_equation=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
+spstock_equation=c("exp_rev_total",  "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
+
 choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
+choice_equation=c("len" )
+
 
 targeting_vars=c(spstock_equation, choice_equation)
-
-betavars=paste0("beta_",targeting_vars)
-betavars=c(betavars,"beta_constant")
-
-
-production_vars=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","constant")
-alphavars=paste0("alpha_",production_vars)
+production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight")
 
 td_cols<-colnames(targeting)
 
-fydums<-td_cols[grepl("^fy20", td_cols)]
-fycoefs<-td_cols[grepl("^alpha_fy20", td_cols)]
-
-monthdums<-td_cols[grepl("^month", td_cols)]
-monthcoefs<-td_cols[grepl("^alpha_month", td_cols)]
-
-cmultipliers<-td_cols[grepl("^c_", td_cols)]
-lmultipliers<-td_cols[grepl("^l_", td_cols)]
-quota_prices<-td_cols[grepl("^q_", td_cols)]
-lag_output_prices<-td_cols[grepl("^p_", td_cols)]
-output_prices<-td_cols[grepl("^r_", td_cols)]
 
 
+# 
+# cmultipliers<-td_cols[grepl("^c_", td_cols)]
+# lmultipliers<-td_cols[grepl("^l_", td_cols)]
+# quota_prices<-td_cols[grepl("^q_", td_cols)]
+# lag_output_prices<-td_cols[grepl("^p_", td_cols)]
+# output_prices<-td_cols[grepl("^r_", td_cols)]
+# notinsubs<-c(betavars,production_vars, alphavars, cmultipliers, lmultipliers, quota_prices, output_prices,lag_output_prices)
 
-idvars=c("id", "hullnum", "date","spstock2", "doffy")
+colnames(targeting)[colnames(targeting)=="month"] <- "MONTH"
+
+
+idvars=c("id", "hullnum","spstock2", "doffy")
 necessary=c("q", "gffishingyear", "emean","nchoices", "idflag")
-necessary=c("q", "gffishingyear", "emean","nchoices")
+necessary=c("q", "gffishingyear", "emean","nchoices", "MONTH")
 useful=c("gearcat","post","h_hat","pr","choice")
 #useful=c("gearcat","post","h_hat","choice")
 
-mysubs=c(idvars,necessary,useful,fydums, monthdums, fycoefs, monthcoefs, targeting_vars,betavars,production_vars, alphavars, cmultipliers, lmultipliers, quota_prices, output_prices,lag_output_prices)
+mysubs=c(idvars,necessary,useful, targeting_vars, production_vars)
 
 targeting<-targeting[, ..mysubs]
 
@@ -225,10 +162,25 @@ sum(is.na(targeting))==0
 #keycols<-c("gffishingyear","date", "hullnum", "id","spstock2")
 #setorderv(targeting, keycols)
 
-saveRDS(targeting, file=file.path(econsavepath, savefile))
+
+
+#split the targeting datatable into many smaller data.tables
+
+for (wy in 2010:2015) {
+  yrsavefile<-paste0("full_targeting_",wy,".Rds")
+ tfile<-targeting[gffishingyear==wy]
+ saveRDS(tfile, file=file.path(econsavepath, yrsavefile),compress=FALSE)
+ 
+}
+
+#split the targeting dataset into a list of datasets
+targeting<-split(targeting, targeting$gffishingyear)
+
+
+saveRDS(targeting, file=file.path(econsavepath, savefile),compress=FALSE)
 rm(targeting)
 gc()
-}
+
 
 #rm(list=ls())
 

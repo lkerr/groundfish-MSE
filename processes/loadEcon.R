@@ -4,16 +4,17 @@
 targeting_dataset<-readRDS(file.path(econdatapath,econdatafile))
 targeting_dataset[is.na(targeting_dataset)]<-0
 
+targeting_coefs<-readRDS(file.path(econdatapath,target_coefs))
+production_coefs<-readRDS(file.path(econdatapath, production_coefs))
 
+multipliers<-readRDS(file.path(econdatapath, multiplier_loc))
+outputprices<-readRDS(file.path(econdatapath, output_price_loc))
+
+inputprices<-readRDS(file.path(econdatapath, input_price_loc))
 
 #temp for debugging
 #targeting_dataset$prhat<-targeting_dataset$pr
 
-targeting_dataset<-data.table(targeting_dataset)
-keycols<-c("id","spstock2")
-setkeyv(targeting_dataset, keycols)
-#split the targeting dataset into a list of datasets
-targeting_dataset<-split(targeting_dataset, targeting_dataset$doffy)
 
 
 #load(file.path(econdatapath,"full_production.RData"))

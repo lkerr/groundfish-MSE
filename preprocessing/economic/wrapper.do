@@ -9,12 +9,13 @@ global codedir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/prep
 
 /* done */
 do "$codedir/asclogit_coef_export.do"
-do "$codedir/multiplier_prep.do"
 do "$codedir/price_prep.do"
+
+do "$codedir/multiplier_prep.do"
 
 /* to do */
 
-do "$codedir/price_mult_join.do"
+
 
 
 do "$codedir/stocks_in_model.do"

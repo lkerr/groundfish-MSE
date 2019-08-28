@@ -26,6 +26,7 @@ savepath <- './data/data_processed/econ'
 
 #production_coef_pre<-"production_regs_actual_pre_forR.txt"
 production_coef_post<-"production_regs_actual_post_forR.txt"
+outfile<-"production_coefs.Rds"
 
 
 
@@ -159,8 +160,12 @@ if (!('alpha_fy2009' %in% pc_colnames)){
 }
 
 
+production_coefs$spstock2<- gsub("gb","GB",production_coefs$spstock2)
+production_coefs$spstock2<- gsub("ccgom","CCGOM",production_coefs$spstock2)
+production_coefs$spstock2<- gsub("gom","GOM",production_coefs$spstock2)
+production_coefs$spstock2<- gsub("snema","SNEMA",production_coefs$spstock2)
 
-saveRDS(production_coefs, file=file.path(savepath, "production_coefs.Rds"))
+saveRDS(production_coefs, file=file.path(savepath, outfile), compress=FALSE)
 
 
 
