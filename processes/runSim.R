@@ -20,7 +20,13 @@ set.seed(2)
 mproc_bak<-mproc
 mproc<-mproc_bak[1,]
 nrep<-1
+mydraw<-6
+day<-1
+## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
 ####################End Temporary changes for testing ####################
+eyears<-nrep*nyear
+random_sim_draw <-as.data.table(cbind(1:eyears, sample(1:6, eyears, replace=T),sample(1:6, eyears, replace=T)))
+colnames(random_sim_draw)<-c("econrd","pricedraw","otherdraw")
 
 #### Top rep Loop ####
 for(r in 1:nrep){
@@ -62,7 +68,13 @@ for(r in 1:nrep){
         }
         
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
-
+          #setup yearly stuff 
+          wm<-multipliers[[mydraw]]
+          wo<-outputprices[[mydraw]]
+          wi<-inputprices[[mydraw]]
+          
+          
+          
           for(i in 1:nstock){
             # Specific "survey" meant to track the population on Jan1
             # for use in the economic submodel. timeI=0 implies Jan1.
