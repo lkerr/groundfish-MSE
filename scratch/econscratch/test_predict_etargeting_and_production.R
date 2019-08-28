@@ -20,78 +20,83 @@ colnames(random_sim_draw)<-c("simyear","pricedraw","otherdraw")
 
 mydraw<-6
 day<-1
-#setup yearly stuff
+#setup yearly stuff THIS GOES INTO THE TOP YEAR LOOP AREA
 wm<-multipliers[[mydraw]]
 wo<-outputprices[[mydraw]]
 wi<-inputprices[[mydraw]]
 
 
-tds_day<-(targeting_dataset[[mydraw]])[doffy==day]
-tds_day<-copy(tds_day)
+
+
+
+
+
+working_targeting<-(targeting_dataset[[mydraw]])[doffy==day]
+working_targeting<-copy(working_targeting)
 
 # bring in production coefficients
-tds_day<-production_coefs[tds_day, on=c("spstock2","gearcat","post")]
+working_targeting<-production_coefs[working_targeting, on=c("spstock2","gearcat","post")]
 
 # Construct Primary and Secondary
-set(tds_day,i=NULL, j="primary",as.integer(1))
-set(tds_day,i=NULL, j="secondary",as.integer(0))
-set(tds_day,i=NULL, j="constant",as.integer(1))
+set(working_targeting,i=NULL, j="primary",as.integer(1))
+set(working_targeting,i=NULL, j="secondary",as.integer(0))
+set(working_targeting,i=NULL, j="constant",as.integer(1))
 
 # Construct Month and Year
-df2<-dcast(tds_day,  id +spstock2 ~ gffishingyear , fun.aggregate = function(x) 1L, fill=0L,value.var = "gffishingyear")
+df2<-dcast(working_targeting,  id +spstock2 ~ gffishingyear , fun.aggregate = function(x) 1L, fill=0L,value.var = "gffishingyear")
 df2[,c("id","spstock2"):=NULL]
 colnames(df2)<-paste0("fy", colnames(df2))
 
-df3<-dcast(tds_day,  id +spstock2 ~ MONTH, fun.aggregate = function(x) 1L, fill=0L,value.var = "MONTH")
+df3<-dcast(working_targeting,  id +spstock2 ~ MONTH, fun.aggregate = function(x) 1L, fill=0L,value.var = "MONTH")
 df3[,c("id","spstock2"):=NULL]
 colnames(df3)<-paste0("month", colnames(df3))
 
-tds_day<-cbind(tds_day,df2, df3)
+working_targeting<-cbind(working_targeting,df2, df3)
 
-tds_day<-get_predict_eproduction(tds_day)
+working_targeting<-get_predict_eproduction(working_targeting)
 
 #here, subset prod_ds to just contain the cols in mysubs
 #then try to rerun the get_predict_eproduction on that and see if it works
 
-tds_day$harvest_sim[tds_day$spstock2=="nofish"]<-0
-tds_day$delta<-abs(tds_day$harvest_sim-tds_day$h_hat)
+working_targeting$harvest_sim[working_targeting$spstock2=="nofish"]<-0
+working_targeting$delta<-abs(working_targeting$harvest_sim-working_targeting$h_hat)
 
-summary(tds_day$delta)
+summary(working_targeting$delta)
 #get_predict_eproduction works
 
-tds_day$exp_rev_bak<-tds_day$exp_rev_total
+working_targeting$exp_rev_bak<-working_targeting$exp_rev_total
 # Drop unnecessary columns 
-dropper<-grep("^alpha_",colnames(tds_day), value=TRUE)
-tds_day[, (dropper):=NULL]
+dropper<-grep("^alpha_",colnames(working_targeting), value=TRUE)
+working_targeting[, (dropper):=NULL]
 
 # Pull in multipliers 
 
 
 
-tds_day<-wm[tds_day, on=c("hullnum","MONTH","spstock2","gffishingyear","post")]
+working_targeting<-wm[working_targeting, on=c("hullnum","MONTH","spstock2","gffishingyear","post")]
 
 # Pull in output prices
-tds_day<-wo[tds_day, on=c("doffy","gffishingyear", "post")]
+working_targeting<-wo[working_targeting, on=c("doffy","gffishingyear", "post")]
 
 # Pull in input prices
-tds_day<-wi[tds_day, on=c("hullnum","doffy","spstock2","gffishingyear","post")]
+working_targeting<-wi[working_targeting, on=c("hullnum","doffy","spstock2","gffishingyear","post")]
 
 
-tds_day<-get_joint_production(tds_day,spstock2s) 
-tds_day$exp_rev_total<-tds_day$exp_rev_total/1000
-setcolorder(tds_day,c("exp_rev_bak","exp_rev_total"))
+    working_targeting<-get_joint_production(working_targeting,spstock2s) 
+    working_targeting[, exp_rev_total:=exp_rev_total/1000]
+setcolorder(working_targeting,c("exp_rev_bak","exp_rev_total"))
 
-tds_day$exp_rev_total[tds_day$spstock2=="nofish"]<-0
+working_targeting$exp_rev_total[working_targeting$spstock2=="nofish"]<-0
 
-tds_day$delta2<-abs(tds_day$exp_rev_total-tds_day$exp_rev_bak)
-summary(tds_day$delta2)
+working_targeting$delta2<-abs(working_targeting$exp_rev_total-working_targeting$exp_rev_bak)
+summary(working_targeting$delta2)
 
 #Works well!  
-setcolorder(tds_day,c("spstock2","delta","harvest_sim","h_hat"))
-setorder(tds_day,-delta2)
+setcolorder(working_targeting,c("spstock2","delta","harvest_sim","h_hat"))
+setorder(working_targeting,-delta2)
 
 # can drop out extraneous columns, but the daily dataset is still pretty small
-format(object.size(tds_day), units="MB")
+format(object.size(working_targeting), units="MB")
 
 
 #here, you can summary if choice==0 or choice==1
@@ -101,14 +106,14 @@ format(object.size(tds_day), units="MB")
 #targeting_vars
 #data wrangling on test datasets  -- once you have a full set of coefficients, you should be able to delete this
 
-tds_day[, fuelprice_len:=fuelprice*len]
-tds_day[, fuelprice_distance:=fuelprice*distance]
+working_targeting[, fuelprice_len:=fuelprice*len]
+working_targeting[, fuelprice_distance:=fuelprice*distance]
 
-setcolorder(tds_day,choice_equation)
-setcolorder(tds_day,spstock_equation)
+setcolorder(working_targeting,choice_equation)
+setcolorder(working_targeting,spstock_equation)
 
 
-tds_day<-targeting_coefs[tds_day, on=c("gearcat","spstock2")]
+working_targeting<-targeting_coefs[working_targeting, on=c("gearcat","spstock2")]
 #Need to set some of the betas  to zero for spstock2==nofish
 # there aren't even any rows for spstock2==nofish in the targeting_coefs data.table
 
@@ -123,7 +128,7 @@ tds_day<-targeting_coefs[tds_day, on=c("gearcat","spstock2")]
 # 
 # choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
 
-tds<-tds_day
+tds<-working_targeting
 
 
 
