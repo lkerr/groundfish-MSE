@@ -41,5 +41,15 @@ rename spstock2_prim spstock2
 order hullnum month gffishingyear spstock2
 sort hullnum month gffishingyear spstock2
 notes drop _all
+gen post=0
+replace post=1 if gffishingyear>=2010
 
+replace spstock2=lower(spstock2)
+replace spstock2=subinstr(spstock2,"ccgom","CCGOM",.)
+replace spstock2=subinstr(spstock2,"snema","SNEMA",.)
+replace spstock2=subinstr(spstock2,"gom","GOM",.)
+
+replace spstock2=subinstr(spstock2,"gb","GB",.)
+
+notes  drop _all 
 save "$inputdir/reshape_multipliers.dta", replace
