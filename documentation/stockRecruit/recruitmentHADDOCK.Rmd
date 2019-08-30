@@ -67,7 +67,7 @@ hadPar <- list(recDat = recT,
                           log_R0 = 1, 
                           beta1 = 0, 
                           beta2 = 0, 
-                          beta3 = 0, 
+                          beta3 = 1, 
                           log_sigR = 1))
 
 parTab <- as.data.frame(round(do.call(cbind, hadPar[3:6]), 2))
