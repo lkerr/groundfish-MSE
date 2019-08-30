@@ -132,6 +132,9 @@ Model outputs are TBD
   * Needs to be sped up.
     * The tidyverse version took approx 48sec/yr.
     * The revised data.table version takes 19 seconds/yr (depending on how often fisheries are closed). I should probably profile the code to speed it up.
+    * I tried rewriting the model to economize on memory by only loading "small" data.tables and then mergeing them. That actually takes a large amount of time (>2-3 minutes). So now I need to revert those changes.
+    
+    
   * Doesn't read/use IJ1 trawl survey index(biomass index computed on Jan 1).
   * does not store fishery revenue anywhere, just overwrites it.
   * slowest parts are eproduction, etargeting, and randomdraw.

@@ -13,6 +13,15 @@ if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
+
+#############Into the economic setup?########################################
+eyears<-nrep*nyear
+random_sim_draw <-as.data.table(cbind(1:eyears, sample(2010:2015, eyears, replace=T),sample(2010:2015, eyears, replace=T)))
+colnames(random_sim_draw)<-c("econrd","price_gfy","other_gfy")
+random_sim_draw[, price_gfy_idx:=price_gfy-2009]
+random_sim_draw[, other_gfy_idx:=other_gfy-2009]
+#####################################################
+
 top_loop_start<-Sys.time()
 ####################These are temporary changes for testing ####################
 econ_timer<-0
@@ -20,13 +29,13 @@ set.seed(2)
 mproc_bak<-mproc
 mproc<-mproc_bak[1,]
 nrep<-1
-mydraw<-6
+mydraw<-random_sim_draw[1,4]
+myyear<-random_sim_draw[1,2]
 day<-1
 ## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
 ####################End Temporary changes for testing ####################
-eyears<-nrep*nyear
-random_sim_draw <-as.data.table(cbind(1:eyears, sample(1:6, eyears, replace=T),sample(1:6, eyears, replace=T)))
-colnames(random_sim_draw)<-c("econrd","pricedraw","otherdraw")
+
+
 
 #### Top rep Loop ####
 for(r in 1:nrep){
@@ -72,7 +81,9 @@ for(r in 1:nrep){
           wm<-multipliers[[mydraw]]
           wo<-outputprices[[mydraw]]
           wi<-inputprices[[mydraw]]
-          
+          econdatafile<-paste0("full_targeting_",myyear,".Rds")
+          targeting_dataset<-readRDS(file.path(econdatapath,econdatafile))
+          targeting_dataset[is.na(targeting_dataset)]<-0
           
           
           for(i in 1:nstock){

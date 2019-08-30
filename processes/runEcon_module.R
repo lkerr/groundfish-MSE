@@ -60,13 +60,57 @@ revenue_holder<-as.list(NULL)
 
 
 for (day in 1:365){
-  #   subset both the targeting and production datasets based on date and jams them to data.tables
-  # Subset for the day.  Predict targeting
-  working_targeting<-copy(targeting_dataset[[day]])
+
+  # Subset for the day.  Add in production coeffients and construct some extra data.
+
+working_targeting<-targeting_dataset[doffy==day]
+working_targeting<-copy(working_targeting)
+
+# bring in production coefficients
+working_targeting<-production_coefs[working_targeting, on=c("spstock2","gearcat","post")]
+
+# Construct Primary and Secondary
+set(working_targeting,i=NULL, j="primary",as.integer(1))
+set(working_targeting,i=NULL, j="secondary",as.integer(0))
+set(working_targeting,i=NULL, j="constant",as.integer(1))
+
+# Construct Month and Year
+df2<-dcast(working_targeting,  id +spstock2 ~ gffishingyear , fun.aggregate = function(x) 1L, fill=0L,value.var = "gffishingyear")
+df2[,c("id","spstock2"):=NULL]
+colnames(df2)<-paste0("fy", colnames(df2))
+
+df3<-dcast(working_targeting,  id +spstock2 ~ MONTH, fun.aggregate = function(x) 1L, fill=0L,value.var = "MONTH")
+df3[,c("id","spstock2"):=NULL]
+colnames(df3)<-paste0("month", colnames(df3))
+
+working_targeting<-cbind(working_targeting,df2, df3)
+  
+  
+  
+  
+working_targeting<-get_predict_eproduction(working_targeting)
+working_targeting$harvest_sim[working_targeting$spstock2=="nofish"]<-0
+# Drop unnecessary columns 
+dropper<-grep("^alpha_",colnames(working_targeting), value=TRUE)
+working_targeting[, (dropper):=NULL]
+
+# Pull in multipliers 
+
+
+working_targeting<-wm[working_targeting, on=c("hullnum","MONTH","spstock2","gffishingyear","post")]
+
+# Pull in output prices
+working_targeting<-wo[working_targeting, on=c("doffy","gffishingyear", "post")]
+
+# Pull in input prices
+working_targeting<-wi[working_targeting, on=c("hullnum","doffy","spstock2","gffishingyear","post")]
+
+  
+  
+  
     working_targeting[, choice_prev_fish:=0]
     working_targeting<-working_targeting[trips, choice_prev_fish:=targeted , on=c("hullnum","spstock2")]
     
-    get_predict_eproduction(working_targeting)
     
     
     #zero_out_targets will set the catch and landings multipliers to zero depending on the value of underACL, stockarea_open, and mproc$EconType
@@ -75,7 +119,11 @@ for (day in 1:365){
     working_targeting<-joint_adjust_others(working_targeting,fishery_holder, econtype)
     working_targeting<-get_joint_production(working_targeting,spstock2s) 
     working_targeting[, exp_rev_total:=exp_rev_total/1000]
-    
+working_targeting$exp_rev_total[working_targeting$spstock2=="nofish"]<-0
+
+working_targeting[, fuelprice_len:=fuelprice*len]
+working_targeting[, fuelprice_distance:=fuelprice*distance]
+working_targeting<-targeting_coefs[working_targeting, on=c("gearcat","spstock2")]
     
     # Predict targeting
     trips<-get_predict_etargeting(working_targeting)

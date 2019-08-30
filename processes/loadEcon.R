@@ -1,8 +1,6 @@
 # Read in Economic Production Data
 
 
-targeting_dataset<-readRDS(file.path(econdatapath,econdatafile))
-targeting_dataset[is.na(targeting_dataset)]<-0
 
 targeting_coefs<-readRDS(file.path(econdatapath,target_coefs))
 production_coefs<-readRDS(file.path(econdatapath, production_coefs))
