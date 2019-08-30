@@ -11,6 +11,9 @@
 
 # This bit of code will run some stata.  
 stata_exec<-"/usr/local/stata15/stata-mp"
+#This one for windows0
+#stata_opts<-" /b do" 
+#this one for *nix
 stata_opts <- "-b do"
 stata_codedir <-"/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/preprocessing/economic"
 #stata_dofiles<-c("wrapper.do")
