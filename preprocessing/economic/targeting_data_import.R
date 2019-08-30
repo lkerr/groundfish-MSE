@@ -22,15 +22,47 @@ if(!require(data.table)) {
 # file paths for the raw and final directories
 
 econrawpath <- './data/data_raw/econ'
-econsavepath <- './data/data_processed/econ'
+econdatapath <- 'data/data_processed/econ'
 
-targeting_source<-"data_for_simulations_mse.dta"
 savefile<-"full_targeting_datalist.Rds"
 
+target_coefs<-"targeting_coefs.Rds"
+production_coefs<-"production_coefs.Rds"
 
-# read in the dataset
-targeting <- read.dta13(file.path(econrawpath, targeting_source))
 
+
+targeting_coefs<-readRDS(file.path(econdatapath,target_coefs))
+production_coefs<-readRDS(file.path(econdatapath, production_coefs))
+
+multiplier_loc<-"sim_multipliers_post.Rds"
+output_price_loc<-"sim_prices_post.Rds"
+input_price_loc<-"sim_post_vessel_stock_prices.Rds"
+
+multipliers<-readRDS(file.path(econdatapath, multiplier_loc))
+outputprices<-readRDS(file.path(econdatapath, output_price_loc))
+
+inputprices<-readRDS(file.path(econdatapath, input_price_loc))
+
+
+
+
+for (wy in 2011:2015) {
+    idx<-wy-2009
+  
+  yrsavefile<-paste0("full_targeting_",wy,".Rds")
+  targeting_source<-paste0("econ_data_",wy,".dta")
+  
+  targeting <- read.dta13(file.path(econrawpath, targeting_source))
+  
+  
+  
+  
+  wm<-multipliers[[idx]]
+  wo<-outputprices[[idx]]
+  wi<-inputprices[[idx]]
+  
+  
+  
 
 # My current 
 if("emean" %in% colnames(targeting)){
@@ -58,9 +90,7 @@ targeting$spstock2<- gsub("snema","SNEMA",targeting$spstock2)
 
 colnames(targeting)[colnames(targeting)=="LApermit"] <- "lapermit"
 targeting$primary<-as.integer(1)
-
-
-
+targeting$secondary<-as.integer(0)
 targeting$constant<- as.numeric(1)
 
 
@@ -100,45 +130,61 @@ targeting<- targeting   %>%
   group_by(id) %>%
   mutate(nchoices=n())
 
-#Flag 1 row per gffishingyear, date, hullnum, id. This means instead of doing a unique, we can do a subset.
-# Somethign like this retains only the first row tds<-tds[tds[, .I[1], by = id]$V1] 
-targeting<-targeting %>% 
-  group_by(id) %>% 
-  mutate(idflag = row_number())
 
-targeting$idflag[targeting$idflag>1]<-as.integer(0)
 targeting<-as.data.table(targeting)
-
 gc()
+# pull in coefficients
+targeting<-production_coefs[targeting, on=c("spstock2","gearcat","post")]
+targeting<-targeting_coefs[targeting, on=c("gearcat","spstock2")]
+
 
 
 keycols<-c("gffishingyear","doffy", "hullnum", "id","spstock2")
 setorderv(targeting, keycols)
 
 spstock_equation=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
-spstock_equation=c("exp_rev_total",  "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
+#spstock_equation=c("exp_rev_total",  "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
 
 choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
-choice_equation=c("len" )
+#choice_equation=c("len" )
 
 
 targeting_vars=c(spstock_equation, choice_equation)
-production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight")
+production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","primary", "secondary", "constant")
 
 td_cols<-colnames(targeting)
 
 
-
-# 
-# cmultipliers<-td_cols[grepl("^c_", td_cols)]
-# lmultipliers<-td_cols[grepl("^l_", td_cols)]
-# quota_prices<-td_cols[grepl("^q_", td_cols)]
-# lag_output_prices<-td_cols[grepl("^p_", td_cols)]
-# output_prices<-td_cols[grepl("^r_", td_cols)]
-# notinsubs<-c(betavars,production_vars, alphavars, cmultipliers, lmultipliers, quota_prices, output_prices,lag_output_prices)
-
+# Bring in multipliers
 colnames(targeting)[colnames(targeting)=="month"] <- "MONTH"
 
+targeting<-wm[targeting, on=c("hullnum","MONTH","spstock2","gffishingyear","post")]
+
+# Pull in output prices (day) -- could add this to the wi dataset
+targeting<-wo[targeting, on=c("doffy","gffishingyear", "post", "gearcat")]
+
+# Pull in input prices (hullnum-day-spstock2)
+targeting<-wi[targeting, on=c("hullnum","doffy","spstock2","gffishingyear","post")]
+
+targeting[, fuelprice_len:=fuelprice*len]
+targeting[, fuelprice_distance:=fuelprice*distance]
+targeting[is.na(targeting)]<-0
+
+td_cols<-colnames(targeting)
+
+ 
+ cmultipliers<-td_cols[grepl("^c_", td_cols)]
+ lmultipliers<-td_cols[grepl("^l_", td_cols)]
+ quota_prices<-td_cols[grepl("^q_", td_cols)]
+ lag_output_prices<-td_cols[grepl("^p_", td_cols)]
+ output_prices<-td_cols[grepl("^r_", td_cols)]
+# notinsubs<-c(betavars,production_vars, alphavars, cmultipliers, lmultipliers, quota_prices, output_prices,lag_output_prices)
+
+betavars<-grep("^beta",colnames(targeting) , value=TRUE)
+alphavars<-grep("^alpha",colnames(targeting) , value=TRUE)
+
+fyvars<-grep("^fy",colnames(targeting) , value=TRUE)
+monthvars<-grep("^month",colnames(targeting) , value=TRUE)
 
 idvars=c("id", "hullnum","spstock2", "doffy")
 necessary=c("q", "gffishingyear", "emean","nchoices", "idflag")
@@ -146,7 +192,7 @@ necessary=c("q", "gffishingyear", "emean","nchoices", "MONTH")
 useful=c("gearcat","post","h_hat","xb_post","choice")
 #useful=c("gearcat","post","h_hat","choice")
 
-mysubs=c(idvars,necessary,useful, targeting_vars, production_vars)
+mysubs=c(idvars,necessary,useful, targeting_vars, production_vars, fyvars, monthvars, betavars, alphavars, cmultipliers, lmultipliers, quota_prices, lag_output_prices, output_prices)
 
 targeting<-targeting[, ..mysubs]
 
@@ -163,25 +209,14 @@ sum(is.na(targeting))==0
 #setorderv(targeting, keycols)
 
 
+targeting<-split(targeting, targeting$doffy)
 
-#split the targeting datatable into many smaller data.tables
+saveRDS(targeting, file=file.path(econdatapath, yrsavefile),compress=FALSE)
 
-for (wy in 2010:2015) {
-  yrsavefile<-paste0("full_targeting_",wy,".Rds")
- tfile<-targeting[gffishingyear==wy]
- saveRDS(tfile, file=file.path(econsavepath, yrsavefile),compress=FALSE)
- 
-}
-
-#split the targeting dataset into a list of datasets
-targeting<-split(targeting, targeting$gffishingyear)
-
-
-saveRDS(targeting, file=file.path(econsavepath, savefile),compress=FALSE)
 rm(targeting)
 gc()
 
-
+}
 #rm(list=ls())
 
 
