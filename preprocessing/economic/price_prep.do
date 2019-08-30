@@ -12,11 +12,19 @@ foreach var of varlist _all {
 	_strip_labels `var'
 	label var `var' ""
 }
+
+replace spstock2=lower(spstock2)
+replace spstock2=subinstr(spstock2,"ccgom","CCGOM",.)
+replace spstock2=subinstr(spstock2,"snema","SNEMA",.)
+replace spstock2=subinstr(spstock2,"gom","GOM",.)
+
+replace spstock2=subinstr(spstock2,"gb","GB",.)
+
 save "$inputdir/data_for_simulations_mse.dta", replace
 
 
-keep spstock2 post gffishingyear date price_lb price_lb_lag1
-bysort spstock2 date: keep if _n==1
+keep spstock2 post gffishingyear gearcat date price_lb price_lb_lag1
+bysort gearcat spstock2 date: keep if _n==1
 
 
 replace spstock2=lower(spstock2)
@@ -27,7 +35,7 @@ replace spstock2=subinstr(spstock2,"gb","GB",.)
 
 rename price_lb_lag1 p_
 rename price_lb r_
-reshape wide p_ r_,  i(date) j(spstock2) string
+reshape wide p_ r_,  i(gearcat date) j(spstock2) string
 drop p_nofish r_nofish
 
 foreach var of varlist p_* r_*{
@@ -42,12 +50,12 @@ expand 2 if doffy==365, gen(myg)
 replace doffy=366 if myg==1
 
 
-bysort gffishingyear doffy: gen marker=_N
+bysort gearcat gffishingyear doffy: gen marker=_N
 drop if marker==2 & myg==1
 cap drop marker myg
-bysort gffishingyear doffy: assert _N==1
-order post gffishingyear doffy
-sort post gffishingyear doffy
+bysort gearcat gffishingyear doffy: assert _N==1
+order post gearcat gffishingyear doffy
+sort post gearcat gffishingyear doffy
 save "$inputdir/output_price_series.dta", replace
 
 

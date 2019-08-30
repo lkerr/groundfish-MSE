@@ -17,7 +17,7 @@ stata_exec<-"/usr/local/stata15/stata-mp"
 stata_opts <- "-b do"
 stata_codedir <-"/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/preprocessing/economic"
 #stata_dofiles<-c("wrapper.do")
-stata_dofiles<-c("asclogit_coef_export.do", "stocks_in_model.do", "recode_catch_limits.do", "multiplier_prep.do","price_prep.do")
+stata_dofiles<-c("asclogit_coef_export.do", "stocks_in_model.do", "recode_catch_limits.do", "multiplier_prep.do","price_prep.do","econ_data_split.do")
 stata_dofiles_list<-as.list(stata_dofiles)
 
 
@@ -39,9 +39,10 @@ for (i in stata_dofiles) {
 
 source('preprocessing/economic/targeting_coeff_import.R')
 source('preprocessing/economic/production_coefs.R')
-source('preprocessing/economic/targeting_data_import.R')
+
 source('preprocessing/economic/price_import.R')
-
-
 source('preprocessing/economic/multiplier_import.R')
 source('preprocessing/economic/vessel_specific_prices.R')
+
+source('preprocessing/economic/targeting_data_import.R')
+

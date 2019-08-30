@@ -100,8 +100,6 @@ kg_per_mt<-1000
 econdatapath <- 'data/data_processed/econ'
 econdatafile<-paste0("full_targeting_datalist.Rds")
 
-target_coefs<-"targeting_coefs.Rds"
-production_coefs<-"production_coefs.Rds"
 
 #multiplier_loc<-"sim_multipliers_pre.Rds"
 multiplier_loc<-"sim_multipliers_post.Rds"
