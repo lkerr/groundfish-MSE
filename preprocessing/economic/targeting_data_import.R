@@ -46,7 +46,7 @@ inputprices<-readRDS(file.path(econdatapath, input_price_loc))
 
 
 
-for (wy in 2011:2015) {
+for (wy in 2010:2015) {
     idx<-wy-2009
   
   yrsavefile<-paste0("full_targeting_",wy,".Rds")
