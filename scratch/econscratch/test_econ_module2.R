@@ -75,31 +75,10 @@ top_loop_start<-Sys.time()
 myyear<-2015
 mydraw<-myyear-2009
 
-#################all this stuff should go into the targeting_data_import step#####################
-wm<-multipliers[[mydraw]]
-wo<-outputprices[[mydraw]]
-wi<-inputprices[[mydraw]]
+
 econdatafile<-paste0("full_targeting_",myyear,".Rds")
 
 targeting_dataset<-readRDS(file.path(econdatapath,econdatafile))
-start<-Sys.time()
-
-targeting_dataset<-wm[targeting_dataset, on=c("hullnum","MONTH","spstock2","gffishingyear","post")]
-
-# Pull in output prices (day) -- could add this to the wi dataset
-targeting_dataset<-wo[targeting_dataset, on=c("doffy","gffishingyear", "post", "gearcat")]
-
-# Pull in input prices (hullnum-day-spstock2)
-targeting_dataset<-wi[targeting_dataset, on=c("hullnum","doffy","spstock2","gffishingyear","post")]
-
-targeting_dataset[, fuelprice_len:=fuelprice*len]
-targeting_dataset[, fuelprice_distance:=fuelprice*distance]
-targeting_dataset[is.na(targeting_dataset)]<-0
-merge.multipliers<-merge.multipliers+Sys.time()-start
-
-#################end #####################
-
-
 
 
 
