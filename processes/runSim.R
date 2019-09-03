@@ -18,14 +18,13 @@ if(runClass != 'HPCC'){
 top_loop_start<-Sys.time()
 ####################These are temporary changes for testing ####################
 econ_timer<-0
-set.seed(2)
 mproc_bak<-mproc
-mproc<-mproc_bak[1,]
-nrep<-1
+#mproc<-mproc_bak[1,]
+#nrep<-1
 #econ_year_draw<-random_sim_draw[1,2]
 #econ_idx_draw<-random_sim_draw[1,4]
 #day<-1
-nyear<-152
+#nyear<-152
 ## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
 ####################End Temporary changes for testing ####################
 
