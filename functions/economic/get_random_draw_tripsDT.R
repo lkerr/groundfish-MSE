@@ -15,7 +15,6 @@ get_random_draw_tripsDT <- function(tds){
     #make one draw per id, then replicate it nchoices time and place it into tds$draw
    tdss<-unique(tds[,c("id","nchoices")])
    td<-runif(nrow(tdss), min = 0, max = 1)
-   uniq<-uniq+Sys.time()-start
 
    tds$draw<-rep(td,tdss$nchoices)
 

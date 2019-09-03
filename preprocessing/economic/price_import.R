@@ -1,4 +1,4 @@
-# Read in pre- and post- multipliers to two lists and save those to Rds 
+# Read in pre- and post- prices and save to Rds 
 # Tested working. Make a small change if we want to get different regression results (there are 4 sets of models for each gear, we haven't picked a "best " model yet).
 
 rm(list=ls())

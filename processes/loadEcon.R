@@ -1,18 +1,8 @@
-# Read in Economic Production Data
+# Read in Economic Production Data. These are relatively lists of data.tables. So it makes sense to read in once and then list-subset [[]] later on.
 
-
-
-
-
-#temp for debugging
-#targeting_dataset$prhat<-targeting_dataset$pr
-
-
-
-#load(file.path(econdatapath,"full_production.RData"))
-#production_dataset[is.na(production_dataset)]<-0
-#production_dataset<-production_dataset[which(production_dataset$gffishingyear %in% baseEconYrs),]
-#production_dataset<-split(production_dataset, production_dataset$doffy)
+multipliers<-readRDS(file.path(econdatapath,multiplier_loc))
+outputprices<-readRDS(file.path(econdatapath,output_price_loc))
+inputprices<-readRDS(file.path(econdatapath,input_price_loc))
 
 
 
