@@ -7,20 +7,13 @@ rm(list=ls())
 source('processes/runSetup.R')
 
 # if on local machine (i.e., not hpcc) must compile the tmb code
-# (HPCC runs have a separate call to compile this code). Keep out of
+# (HPCC runs have a separate cal  l to compile this code). Keep out of
 # runSetup.R because it is really a separate process on the HPCC.
 if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
 
-#############Into the economic setup?########################################
-eyears<-nrep*nyear
-random_sim_draw <-as.data.table(cbind(1:eyears, sample(2010:2015, eyears, replace=T),sample(2010:2015, eyears, replace=T)))
-colnames(random_sim_draw)<-c("econrd","price_gfy","other_gfy")
-random_sim_draw[, price_gfy_idx:=price_gfy-2009]
-random_sim_draw[, other_gfy_idx:=other_gfy-2009]
-#####################################################
 
 top_loop_start<-Sys.time()
 ####################These are temporary changes for testing ####################
@@ -29,11 +22,19 @@ set.seed(2)
 mproc_bak<-mproc
 mproc<-mproc_bak[1,]
 nrep<-1
-mydraw<-random_sim_draw[1,4]
-myyear<-random_sim_draw[1,2]
-day<-1
+#econ_year_draw<-random_sim_draw[1,2]
+#econ_idx_draw<-random_sim_draw[1,4]
+#day<-1
+nyear<-152
 ## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
 ####################End Temporary changes for testing ####################
+
+# Set up a small table that is useful for variablity across years in the economic model.
+eyears<-nrep*nyear
+random_sim_draw <-as.data.table(cbind(1:eyears, sample(first_econ_yr:last_econ_yr, eyears, replace=T),sample(first_econ_yr:last_econ_yr, eyears, replace=T)))
+colnames(random_sim_draw)<-c("econrd","price_gfy","other_gfy")
+random_sim_draw[, price_gfy_idx:=price_gfy-first_econ_yr+1]
+random_sim_draw[, other_gfy_idx:=other_gfy-first_econ_yr+1]
 
 
 
@@ -63,6 +64,13 @@ for(r in 1:nrep){
     
     #### Top year loop ####
     for(y in fyear:nyear){
+      
+      #Construct the year-replicate index and use those to look up their values from random_sim_draw
+      eyear_idx<-(y-fyear+1)*r
+      econ_year_draw<-random_sim_draw[[eyear_idx,2]]
+      econ_idx_draw<-random_sim_draw[[eyear_idx,4]]
+      
+      
       for(i in 1:nstock){
         stock[[i]] <- get_J1Updates(stock = stock[[i]])
       }
@@ -77,14 +85,6 @@ for(r in 1:nrep){
         }
         
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
-          #setup yearly stuff 
-          wm<-multipliers[[mydraw]]
-          wo<-outputprices[[mydraw]]
-          wi<-inputprices[[mydraw]]
-          econdatafile<-paste0("full_targeting_",myyear,".Rds")
-          targeting_dataset<-readRDS(file.path(econdatapath,econdatafile))
-          targeting_dataset[is.na(targeting_dataset)]<-0
-          
           
           for(i in 1:nstock){
             # Specific "survey" meant to track the population on Jan1
@@ -97,6 +97,9 @@ for(r in 1:nrep){
 
           
           # ---- Run the economic model here ----
+          source('processes/loadEcon2.R')
+       
+          
           bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline)
 
           start_time<-proc.time() 
@@ -125,7 +128,7 @@ for(r in 1:nrep){
         stock[[i]] <- get_mortality(stock = stock[[i]])
         stock[[i]] <- get_indexData(stock = stock[[i]])
       }
-        
+        gc()
       }
 
         

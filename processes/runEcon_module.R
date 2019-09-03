@@ -23,13 +23,14 @@ fishery_holder$targeted<-0
 
 #set up a list to hold the expected revenue by date, hullnum, and target spstock2
 revenue_holder<-as.list(NULL)
-  #Initialize the trips data.table. I need it to store the previous choice.
-  keepcols<-c("hullnum","spstock2","choice_prev_fish")
+
+#Initialize the trips data.table. 
+  if(y == fmyearIdx){
+  keepcols<-c("id","spstock2","choice_prev_fish")
   trips<-copy(targeting_dataset[[1]])
   trips<-trips[, ..keepcols]
-  trips<-trips[spstock2!="nofish"]
   colnames(trips)[3]<-"targeted"
-
+  }
 
 
 ############################################################
@@ -62,32 +63,28 @@ revenue_holder<-as.list(NULL)
 for (day in 1:365){
 
   # Subset for the day.  Add in production coeffients and construct some extra data.
-start<-Sys.time()
 working_targeting<-copy(targeting_dataset[[day]])
-readin<-readin+Sys.time()-start
-
-start<-Sys.time()
 working_targeting<-get_predict_eproduction(working_targeting)
 #working_targeting$harvest_sim[working_targeting$spstock2=="nofish"]<-0
-working_targeting[spstock2=="nofish", harvest_sim :=0]
+working_targeting[.("nofish"), on=c("spstock2"), harvest_sim:=0]
 
 
     # Keep or update choice_prev_fish
-    # 
-    # working_targeting[, choice_prev_fish:=0]
-    # working_targeting<-working_targeting[trips, choice_prev_fish:=targeted , on=c("hullnum","spstock2")]
-    # 
+     
+     working_targeting[, choice_prev_fish:=0]
+     working_targeting<-working_targeting[trips, choice_prev_fish:=targeted , on=c("id","spstock2")]
+     
     
     
     #zero_out_targets will set the catch and landings multipliers to zero depending on the value of underACL, stockarea_open, and mproc$EconType
 
-  
-  
-  working_targeting<-joint_adjust_allocated_mults(working_targeting,fishery_holder, econtype)
-  working_targeting<-joint_adjust_others(working_targeting,fishery_holder, econtype)
-  working_targeting<-get_joint_production(working_targeting,spstock2s) 
-  working_targeting[, exp_rev_total:=exp_rev_total/1000]
-  working_targeting$exp_rev_total[working_targeting$spstock2=="nofish"]<-0
+
+    working_targeting<-joint_adjust_allocated_mults(working_targeting,fishery_holder, econtype)
+    working_targeting<-joint_adjust_others(working_targeting,fishery_holder, econtype)
+    working_targeting<-get_joint_production(working_targeting,spstock2s) 
+    working_targeting[, exp_rev_total:=exp_rev_total/1000]
+    working_targeting[.("nofish"), on=c("spstock2"), exp_rev_total:=0]
+    
     
     # Predict targeting
   trips<-get_predict_etargeting(working_targeting)
@@ -95,20 +92,20 @@ working_targeting[spstock2=="nofish", harvest_sim :=0]
     # Predict targeting
     # this is where infeasible trips should be eliminated.
     
-  trips<-zero_out_closed_areas_asc_cutout(trips,fishery_holder)
+    trips<-zero_out_closed_areas_asc_cutout(trips,fishery_holder)
   
   # draw trips probabilistically.  A trip is selected randomly from the choice set. 
   # The probability of selection is equal to prhat
-  trips<-get_random_draw_tripsDT(trips)
+    trips<-get_random_draw_tripsDT(trips)
   #drop out trip that did not fish (they have no landings or catch). 
-  trips<-trips[spstock2!="nofish"]
+    #trips<-trips[spstock2!="nofish"]
   
-  catches<-get_reshape_catches(trips)
-  landings<-get_reshape_landings(trips)
-  
-  #I don't think I need to do this.
-  target_rev<-get_reshape_targets_revenues(trips)
-  #I don't think I need to do this.
+    catches<-get_reshape_catches(trips)
+    landings<-get_reshape_landings(trips)
+    
+    #I don't think I need to do this.
+    #target_rev<-get_reshape_targets_revenues(trips)
+    #I don't think I need to do this.
   
   
   # update the fishery holder dataframe
@@ -123,14 +120,15 @@ working_targeting[spstock2=="nofish", harvest_sim :=0]
   fishery_holder<-get_fishery_next_period_areaclose(fishery_holder)
   # Expand from harvest of the target to harvest of all using the catch multiplier matrices
   # Not written yet.  Not sure if we need revenue by stock to be saved for each vessel? Or just catch? 
-  savelist<-c("hullnum","spstock2","doffy","exp_rev_total","actual_rev_total")
+  
+  savelist<-c("id","hullnum","spstock2","doffy","exp_rev_total","actual_rev_total")
   mm<-c(grep("^c_",colnames(trips), value=TRUE),grep("^l_",colnames(trips), value=TRUE),grep("^r_",colnames(trips), value=TRUE))
   savelist=c(savelist,mm)
   revenue_holder[[day]]<-trips[, ..savelist]
   
 }
 
-fishery_holder$removals_mt<-fishery_holder$cumul_catch_pounds/(pounds_per_kg*kg_per_mt)+fishery_holder$nonsector_catch_mt
+  fishery_holder[, removals_mt:=cumul_catch_pounds/(pounds_per_kg*kg_per_mt)+nonsector_catch_mt]
  
 #contract that list down to a single data.table
   revenue_holder<-rbindlist(revenue_holder) 
