@@ -53,7 +53,12 @@ fishery_holder$stockarea_open<-as.logical("TRUE")
 fishery_holder$cumul_catch_pounds<-0
 fishery_holder$targeted<-0
 
+fishery_holder$sectorACL[3]<-10
+
 revenue_holder<-as.list(NULL)
+
+
+
   #source('processes/loadEcon.R')
 
 
@@ -69,60 +74,60 @@ cleanup1<-0
 cleanup2<-0
 joint.product<-0
 e.targeting<-0
-
-top_loop_start<-Sys.time()
+random <-0
+zeroout<-0
+uniq<-0
+replicateout<-0
+keeper<-0
+overhead<-0
 
 myyear<-2015
 mydraw<-myyear-2009
 
+start<-Sys.time()
 
 econdatafile<-paste0("full_targeting_",myyear,".Rds")
-
 targeting_dataset<-readRDS(file.path(econdatapath,econdatafile))
-
-
-
-
-
-
-
-day<-1
-
-
-
-
-#Initialize the trips data.table. I need it to store the previous choice.
-keepcols<-c("hullnum","spstock2","choice_prev_fish")
-trips<-copy(targeting_dataset[[day]])
-trips<-trips[, ..keepcols]
-trips<-trips[spstock2!="nofish"]
-colnames(trips)[3]<-"targeted"
 
 
 
 
 set.seed(2)
 day<-1
-  
+#Initialize the trips data.table. I need it to store the previous choice.
+keepcols<-c("id","spstock2","choice_prev_fish")
+trips<-copy(targeting_dataset[[day]])
+trips<-trips[, ..keepcols]
+#trips<-trips[spstock2!="nofish"]
+colnames(trips)[3]<-"targeted"
+
+
+
+
+overhead<-overhead+Sys.time()-start
+
+top_loop_start<-Sys.time()
 
 for (day in 1:365){
 
   # Subset for the day.  Add in production coeffients and construct some extra data.
 start<-Sys.time()
-working_targeting<-copy(targeting_dataset[[doffy]])
+working_targeting<-copy(targeting_dataset[[day]])
 readin<-readin+Sys.time()-start
 
 start<-Sys.time()
 working_targeting<-get_predict_eproduction(working_targeting)
-working_targeting$harvest_sim[working_targeting$spstock2=="nofish"]<-0
+
+#working_targeting$harvest_sim[working_targeting$spstock2=="nofish"]<-0
+working_targeting[.("nofish"), on=c("spstock2"), harvest_sim:=0]
 
 predict.production<-predict.production+Sys.time()-start
 
 
     # Keep or update choice_prev_fish
     # 
-    # working_targeting[, choice_prev_fish:=0]
-    # working_targeting<-working_targeting[trips, choice_prev_fish:=targeted , on=c("hullnum","spstock2")]
+     working_targeting[, choice_prev_fish:=0]
+     working_targeting<-working_targeting[trips, choice_prev_fish:=targeted , on=c("id","spstock2")]
     # 
     
     
@@ -133,7 +138,9 @@ start<-Sys.time()
     working_targeting<-joint_adjust_others(working_targeting,fishery_holder, econtype)
     working_targeting<-get_joint_production(working_targeting,spstock2s) 
     working_targeting[, exp_rev_total:=exp_rev_total/1000]
-working_targeting$exp_rev_total[working_targeting$spstock2=="nofish"]<-0
+    working_targeting[.("nofish"), on=c("spstock2"), exp_rev_total:=0]
+    
+    #working_targeting$exp_rev_total[working_targeting$spstock2=="nofish"]<-0
 
 joint.product<-joint.product+Sys.time()-start
 
@@ -149,18 +156,22 @@ start<-Sys.time()
     start<-Sys.time()
     
     trips<-zero_out_closed_areas_asc_cutout(trips,fishery_holder)
+    zeroout<-zeroout+Sys.time()-start
     
+    start<-Sys.time()
     # draw trips probabilistically.  A trip is selected randomly from the choice set. 
     # The probability of selection is equal to prhat
     trips<-get_random_draw_tripsDT(trips)
     #drop out trip that did not fish (they have no landings or catch). 
-    trips<-trips[spstock2!="nofish"]
+    #trips<-trips[spstock2!="nofish"]
+    random<-random+Sys.time()-start
     
+    start<-Sys.time()
     catches<-get_reshape_catches(trips)
     landings<-get_reshape_landings(trips)
     
     #I don't think I need to do this.
-    target_rev<-get_reshape_targets_revenues(trips)
+    #target_rev<-get_reshape_targets_revenues(trips)
     #I don't think I need to do this.
     
     cleanup1<-cleanup1+Sys.time()-start
@@ -178,7 +189,7 @@ start<-Sys.time()
   # Expand from harvest of the target to harvest of all using the catch multiplier matrices
   # Not written yet.  Not sure if we need revenue by stock to be saved for each vessel? Or just catch? 
   
-  savelist<-c("hullnum","spstock2","doffy","exp_rev_total","actual_rev_total")
+  savelist<-c("id","hullnum","spstock2","doffy","exp_rev_total","actual_rev_total")
   mm<-c(grep("^c_",colnames(trips), value=TRUE),grep("^l_",colnames(trips), value=TRUE),grep("^r_",colnames(trips), value=TRUE))
   savelist=c(savelist,mm)
   revenue_holder[[day]]<-trips[, ..savelist]
@@ -190,33 +201,27 @@ start<-Sys.time()
   big_loop<-top_loop_end-top_loop_start
   
   
+  # merge.prod
+  # construct.months
+  # merge.inputs
+  # merge.outputs
+  # merge.multipliers
   
   readin
-  
-  merge.prod
-  construct.months
   predict.production
-  merge.inputs
-  merge.outputs
-  merge.multipliers
   cleanup1
   cleanup2
   joint.product
   e.targeting
   big_loop
+  zeroout
+  random
+  
+  fishery_holder[, removals_mt:=cumul_catch_pounds/(pounds_per_kg*kg_per_mt)+nonsector_catch_mt]
   
   
-  
-  
-  fishery_holder$removals_mt<-fishery_holder$cumul_catch_pounds/(pounds_per_kg*kg_per_mt)+fishery_holder$nonsector_catch_mt
+#  fishery_holder$removals_mt<-fishery_holder$cumul_catch_pounds/(pounds_per_kg*kg_per_mt)+fishery_holder$nonsector_catch_mt
   
   
   
 # 
-#   trips2<-trips[spstock2!="nofish"]
-# 
-#   working_targeting<-copy(targeting_dataset[[2]])
-#   working_targeting[trips2, choice_prev_fish2:=targeted , on=c("hullnum","spstock2")]
-#   setcolorder(working_targeting, c("hullnum", "spstock2", "choice_prev_fish","choice_prev_fish2"))
-#   
-              
