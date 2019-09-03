@@ -208,7 +208,9 @@ sum(is.na(targeting))==0
 #keycols<-c("gffishingyear","date", "hullnum", "id","spstock2")
 #setorderv(targeting, keycols)
 
-
+#the id is the distinct "hullnum-date" combination.  date encompasses gffishingyear and doffy.
+# so I really only need 2 key columns (id and spstock2)
+setkeyv(targeting, c("id","spstock2"))
 targeting<-split(targeting, targeting$doffy)
 
 saveRDS(targeting, file=file.path(econdatapath, yrsavefile),compress=FALSE)
