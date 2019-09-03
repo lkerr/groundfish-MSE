@@ -21,6 +21,7 @@ get_containers <- function(stockPar){
     # Containers that save the simulation data
     J1N = yxage,
     CN = yxage,
+    CN_temp = yxage,
     CW = yxage,
     IN = yxage,
     IJ1= yxage,
