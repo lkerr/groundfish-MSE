@@ -89,7 +89,39 @@ for(r in 1:nrep){
       }
 
       for(i in 1:nstock){
+        stock[[i]] <- get_mortality(stock = stock[[i]], hotW=TRUE)
+      }
+      for(i in 1:nstock){
+        
+        if(stock[[i]]$stockName == 'haddockGB' & mproc$hotwireHaddock[m]){
+          
+          # Figure out the advised catches
+          codCW <- with(stock$codGB_Error, CN_temp[y,] %*%  waa[y,])
+          hadCW <- with(stock$haddockGB, CN_temp[y,] %*%  waa[y,])
+          
+          # X value from the linear model: codACL / haddockACL
+          lmX <- codCW / hadCW
+          
+          # Predicted level of bias to apply to the catch
+          lmY <- 2.6501*lmX - 0.9637
+          
+          # New haddock catch
+          hadCW2 <- c( hadCW + lmY * hadCW)
+          
+          # Determine what the fishing mortality would have to be to get
+          # that catch level. Update haddock fully selected fishing
+          # mortality to that value.
+          stock$haddockGB$F_full[y] <- get_F(x = hadCW2, 
+                                            Nv = stock$haddockGB$J1N[y,], 
+                                            slxCv = stock$haddockGB$slxC[y,], 
+                                            M = stock$haddockGB$M, 
+                                            waav = stock$haddockGB$waa[y,])
+        }
+        
         stock[[i]] <- get_mortality(stock = stock[[i]])
+      }
+      
+      for(i in 1:nstock){
         stock[[i]] <- get_indexData(stock = stock[[i]])
       }
         
