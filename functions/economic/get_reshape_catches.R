@@ -4,21 +4,17 @@
 #Outputs- a data.table with two columns, spstock2 and pounds.
 
 get_reshape_catches=function(trips){
-  mm<-grep("^c_",colnames(trips))
-  
+  mm<-grep("^c_",colnames(trips),value=TRUE)
   
   catches<-trips[, ..mm]
   
   catches<-catches[, lapply(.SD, sum, na.rm=TRUE)]
-  catches<-t(catches)
-  
-  catches<-cbind(rownames(catches),catches)
-  catches<-as.data.table(catches)
+  #This should be changed to a melt"
+  catches<-melt(catches, measure.vars=mm, variable.factor=FALSE)
   colnames(catches)<-c("spstock2","daily_pounds_caught")
   
   catches$spstock2<-gsub("c_","", catches$spstock2)
   
   setorder(catches,spstock2)
-  catches$daily_pounds_caught<-as.numeric(catches$daily_pounds_caught)
   return(catches)
 }

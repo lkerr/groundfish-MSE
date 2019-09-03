@@ -4,21 +4,17 @@
 #Outputs- a data.table with two columns, spstock2 and pounds.
 
 get_reshape_landings=function(trips){
-  mm<-grep("^l_",colnames(trips))
-  
-  
+  mm<-grep("^l_",colnames(trips),value=TRUE)
   landings<-trips[, ..mm]
-  
   landings<-landings[, lapply(.SD, sum, na.rm=TRUE)]
-  landings<-t(landings)
+  #This should be changed to a melt"
+  landings<-melt(landings, measure.vars=mm, variable.factor=FALSE)
+  colnames(landings)<-c("spstock2","daily_pounds_caught")
   
-  landings<-cbind(rownames(landings),landings)
-  landings<-as.data.table(landings)
-  colnames(landings)<-c("spstock2","daily_pounds_landed")
+  landings$spstock2<-gsub("c_","", landings$spstock2)
   
-  landings$spstock2<-gsub("l_","", landings$spstock2)
   setorder(landings,spstock2)
-  landings$daily_pounds_landed<-as.numeric(landings$daily_pounds_landed)
-  
   return(landings)
-}
+}  
+  
+  

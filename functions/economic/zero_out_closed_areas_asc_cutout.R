@@ -17,9 +17,11 @@ zero_out_closed_areas_asc_cutout <- function(tds,open_hold){
   #A data table left join
     
   tds<-open_hold[tds, on="spstock2"]
-  tds$stockarea_open[which(tds$spstock2=="nofish")]<-TRUE
-  tds$prhat[tds$stockarea_open==FALSE]<-0
-   
+  tds[spstock2=="nofish", stockarea_open :=TRUE]
+  tds[stockarea_open==FALSE, prhat :=0]
+  
+  #tds$stockarea_open[which(tds$spstock2=="nofish")]<-TRUE
+  #tds$prhat[tds$stockarea_open==FALSE]<-0
   tds[, prsum := sum(prhat), by = id]
   tds[, prhat:=prhat/prsum]
   #tds$prhat<- tds$prhat/tds$prsum
