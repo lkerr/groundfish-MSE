@@ -27,6 +27,9 @@ mproc_bak<-mproc
 #nyear<-152
 ## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
 ####################End Temporary changes for testing ####################
+# should go somewhere else
+revenue_holder<-list()
+
 
 # Set up a small table that is useful for variablity across years in the economic model.
 eyears<-nrep*nyear
@@ -35,7 +38,6 @@ colnames(random_sim_draw)<-c("econrd","price_gfy","other_gfy")
 random_sim_draw[, price_gfy_idx:=price_gfy-first_econ_yr+1]
 random_sim_draw[, other_gfy_idx:=other_gfy-first_econ_yr+1]
 eyear_idx<-0
-
 
 #### Top rep Loop ####
 for(r in 1:nrep){
