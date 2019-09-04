@@ -3,7 +3,7 @@
 
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.                                              
-burnFmsyScalar <- 2
+burnFmsyScalar <- 4 #2
 burnFsd <- 0.3
 
 
@@ -97,7 +97,7 @@ pe_R <- 5.839408e-01
 # implementation error of fishing mortality
 ie_F <- 0
 ie_typ <- 'lognorm'
-ie_bias <- -0.1 # % bias in implementation error
+ie_bias <- 0 #-0.1 # % bias in implementation error
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
 ob_sumCW <- 1
