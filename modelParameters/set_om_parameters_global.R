@@ -20,7 +20,7 @@ mprocTest <- TRUE
 # stockExclude variable. Do not include the extension.R. For example,
 # stockExclude <- haddockGB will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
-stockExclude <- c()
+stockExclude <- c(haddockGB, codGB_Error) #AEW
 
 
 #### Structural parameters ####
@@ -50,7 +50,7 @@ nburn <- 50
 #### Temperature information ####
 
 ## Do you want to include temperature projections (in S-R, growth, etc.)
-useTemp <- TRUE
+useTemp <-  FALSE #AEW
 
 ## Do you want to use particular models from the cmip data series? If so
 ## tmods should be a vector of column names (see 
