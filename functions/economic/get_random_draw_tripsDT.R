@@ -25,8 +25,8 @@ get_random_draw_tripsDT <- function(tds){
 
     tds<-tds[tds$draw<tds$csum,]
     tds<-tds[tds[, .I[1], by = id]$V1] 
-    tds[i, targeted := as.integer(1)]
-    #tds$targeted<-as.integer(1)
+    #tds[i, targeted := as.integer(1)]
+    tds$targeted<-as.integer(1)
 
     #Could I subtract and keep the first positive difference?
     #tds$choose<-tds$draw-tds$csum
