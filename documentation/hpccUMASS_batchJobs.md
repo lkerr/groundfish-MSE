@@ -200,6 +200,12 @@ Read file <./1003.e> for stderr output of this job.
 
 * I've found UMASS GHPCC support to be very responsive -- you can e-mail them at hpcc-support@umassmed.edu. They helped me figure out ```-w 'done()'``` and they provided me this example.
 
+* At some point you might have to troubleshoot on the HPCC. Staff advise not to use the head node to run anything. Instead you can use a different node by first running the command
+  ```
+  bsub -Is -q interactive -n5 -R "span[hosts=1]" /bin/bash
+  ```
+  Then you can proceed to do your work interactively and you will still have access to your files.
+
 ***
 
 [Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
