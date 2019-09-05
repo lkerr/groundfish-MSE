@@ -40,25 +40,19 @@ We can also simulate what happens when a fishery (GOM Cod, Pollock, Skates) are 
 
 McFadden,  D.  L.  1974.  Conditional  logit  analysis  of  qualitative  choice  behavior.  In Frontiers  in  Econometrics,  ed.P.  Zarembka,  105–142.  New  York:  Academic  Press
 
-For both the production and targeting models, the unit of observation is a permit-day.
+For both the production and targeting models, the unit of observation is a hullnum-day.
 
 The statistical estimation of the model takes place externally to the MSE model -- there isn't a need to have this occur simultaneously (yet).
 
 
 ## The R code
-There's a pile of code. It's quite janky.
+There's a pile of code.
+
 * **runEcon_module.R :**  is a *working* economic module. The last part is kinda janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop.  This used to be in the scratch folder with a different name.
-
-
-
-There are few files in "scratch/econscratch" that may be useful
-* **test_predict_etargeting_and_production.R :** was used to verify that the predict_etargeting.R and predict_eproduction.R functions works properly. It runs as a standalone and might be fun to explore. 
-
-* **test_econ_module.R :**  is a test economic module. The last part is incredibly janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop. I'm just waiting to have runSim.R reordered before I can use it to write out F_full to stock[[i]] for the modeled stocks.  Pieces of this will be put into fragments that are called by "runSetup.R" (perhaps with an if cut-out for EconomicModel) because they only need to be run once.  Other parts should be converted into a function or many functions.
 
 * **speedups_econ_module2.R :**  code for benchmarking the economic model.
  
-There are  "processes" files: 
+There are  "processes" files that run one time per simulation run: 
 * **genBaselineACLs.R:** This is used to construct "baseline" ACLs for the non-modeled stocks. That includes Groundfish *and* non-groundfish stocks like lobster or skate that either caught with groundfish or altenatives to taking a groundfish trip.
 
 * **genEcon_Containers.R:** Gets called in the runSetup.R file. It sets up a few placeholders for Fleet level economic outputs.
@@ -67,7 +61,7 @@ There are  "processes" files:
 
 * **loadEcon2.R:** Gets called in the runSim.R file.  Loads in a single large data.table that remains in memory for one simulated year.  These files are too big to load and hold in memory for the entire simulation.  
 
-Functions:
+Functions - these run many times per simulation:
 * **get_bio_for_econ:** passes *things* from the biological model (in stock[[i]]) to the economic model.
 
 * **get_fishery_next_period:** adds up catch from individual vessels to the daily level and then aggregates with prior catch.  Checks if the sector sub-ACL is reached and closes the fishery if so.
@@ -94,6 +88,10 @@ Functions:
 
 * **get_reshape_targets_revenues:** A small "helper" function to reshape targets and revenues.
 
+There are few files in "scratch/econscratch" that may be useful
+* **test_predict_etargeting_and_production.R :** was used to verify that the predict_etargeting.R and predict_eproduction.R functions works properly. It runs as a standalone and might be fun to explore. 
+
+* **test_econ_module.R :**  is a test economic module. The last part is incredibly janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop. I'm just waiting to have runSim.R reordered before I can use it to write out F_full to stock[[i]] for the modeled stocks.  Pieces of this will be put into fragments that are called by "runSetup.R" (perhaps with an if cut-out for EconomicModel) because they only need to be run once.  Other parts should be converted into a function or many functions.
 
 Obsolete
 These are obsolete and have been moved to /scratch/econscratch/obsolete
@@ -111,6 +109,28 @@ There are a few files in "/preprocessing/economic/"  These primarily deal with c
 
 * **zero_out_closed_asc_cutout:** Closes a fishery and redistributes the probability associated with that stock to the other options. This is based on the "underACL" logical column.   Skips math if all stocks are open.  This is obsolete because the underACL logical is always equal to the stockarea_open, regardless of how we are modeling closures.
 
+## Pre-processing
+A bunch of pre-processing is needed to go from the stata econometric output to R data.tables.  Some of this is written in Stata .do files.  The rest is written as R batch files.  
+
+
+* **wrapper.do** This is a wrapper to run all the stata .do files. You'll need to change the projectdir global. You may need to change the file names themselves.
+
+* **asclogit_coef_export.do** This exports the stata estimates to csv.
+* **stocks_in_model.do** This makes a 1 column dataset of spstock2.  
+* **recode_catch_limits.do** A little cleanup and conforming of the catch limit csv.
+* **price_prep.do** : Construct output prices at the spstock2-date level and input prices at the hullnum-spstock2-date level.
+
+* **pre_process_econ.R:** This is a wrapper to  run *all* of the R and stata code. You will need to change paths to directories, you may need to change some filenames.  We set all the input and output filenames here.  This has been tested to work on a post-as-post scenario. It will need minor modifications to do pre-as-pre. 
+
+
+* **targeting_coeff_import.R** converts the results of asclogit_coef_export to an R data.table
+* **production_coefs.R** imports the targeting regression coefficients to an R data.table
+* **price_import.R** imports and save sdata.tables containing  prices
+* **multiplier_import.R** constructs vessel 
+* **vessel_specific_prices.R** imports and saves data.tables containing vessel level prices
+* **targeting_data_import.R** constructs the simulation datasets.  There are the "data" is joined to coefficients, prices, and multipliers using various combinations of "hullnum", "MONTH" , "spstock2", "gffishingyear", "post", "doffy" (day of groundfish fishing year), "gearcat".  We'll need to do some medium size modifications to the joins to do post-as-pre here. (the joins use gffishingyear and post)
+
+
 
 ## Input Data
 There are a few input datasets needed to run. 
@@ -124,9 +144,7 @@ There are a few input datasets needed to run.
 
 * **sim_multipliers_post.Rds**  These are vessel specific coefficients that scale landings of a target species to catch/landings of other (non-target) species that are used for simulating the post catch-share period.
 
-I've been making small changes to mproc_test.txt and the "set_om_parameters_global.R" file.
-  * which gffishingyear
-
+I've been making small changes to mproc_test.txt and the "set_om_parameters_global.R" file.  The set_om_parameters_global.R contains things like file/folder locations, stocks that are in the model, and the RHS variables for the simulations.
 
 ### Outputs
 Model outputs are TBD
