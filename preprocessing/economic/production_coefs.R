@@ -129,6 +129,10 @@ if (!('alpha_fy2007' %in% pc_colnames)){
 if (!('alpha_fy2008' %in% pc_colnames)){
   production_coefs$alpha_fy2008<-0
 }
+if (!('alpha_fy2009' %in% pc_colnames)){
+  production_coefs$alpha_fy2009<-0
+}
+
 if (!('alpha_fy2010' %in% pc_colnames)){
   production_coefs$alpha_fy2010<-0
 }
