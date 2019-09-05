@@ -1,32 +1,6 @@
 # Read in Production and Targeting coefficients to RDS  
 # Tested working. Make a small change if we want to get different regression results (there are 4 sets of models for each gear, we haven't picked a "best " model yet).
 
-rm(list=ls())
-if(!require(readstata13)) {  
-  install.packages("readstata13")
-  require(readstata13)}
-if(!require(tidyr)) {  
-  install.packages("tidyr")
-  require(tidyr)}
-if(!require(dplyr)) {  
-  install.packages("dplyr")
-  require(dplyr)}
-if(!require(data.table)) {  
-  install.packages("data.table")
-  require(data.table)}
-
-# file paths for the raw and final directories
-# windows is kind of stupid, so you'll have to deal with it in some way.
-rawpath <- './data/data_raw/econ'
-savepath <- './data/data_processed/econ'
-
-#rawpath <- 'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE/data/data_raw/econ'
-#savepath <- 'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE/data/data_processed/econ'
-
-
-#production_coef_pre<-"production_regs_actual_pre_forR.txt"
-production_coef_post<-"production_regs_actual_post_forR.txt"
-outfile<-"production_coefs.Rds"
 
 
 
@@ -155,9 +129,30 @@ if (!('alpha_fy2007' %in% pc_colnames)){
 if (!('alpha_fy2008' %in% pc_colnames)){
   production_coefs$alpha_fy2008<-0
 }
-if (!('alpha_fy2009' %in% pc_colnames)){
-  production_coefs$alpha_fy2009<-0
+if (!('alpha_fy2010' %in% pc_colnames)){
+  production_coefs$alpha_fy2010<-0
 }
+if (!('alpha_fy2011' %in% pc_colnames)){
+  production_coefs$alpha_fy2011<-0
+}
+if (!('alpha_fy2012' %in% pc_colnames)){
+  production_coefs$alpha_fy2012<-0
+}
+if (!('alpha_fy2013' %in% pc_colnames)){
+  production_coefs$alpha_fy2013<-0
+}
+if (!('alpha_fy2013' %in% pc_colnames)){
+  production_coefs$alpha_fy2013<-0
+}
+if (!('alpha_fy2014' %in% pc_colnames)){
+  production_coefs$alpha_fy2014<-0
+}
+if (!('alpha_fy2015' %in% pc_colnames)){
+  production_coefs$alpha_fy2015<-0
+}
+
+
+
 
 
 production_coefs$spstock2<- gsub("gb","GB",production_coefs$spstock2)
@@ -165,7 +160,7 @@ production_coefs$spstock2<- gsub("ccgom","CCGOM",production_coefs$spstock2)
 production_coefs$spstock2<- gsub("gom","GOM",production_coefs$spstock2)
 production_coefs$spstock2<- gsub("snema","SNEMA",production_coefs$spstock2)
 
-saveRDS(production_coefs, file=file.path(savepath, outfile), compress=FALSE)
+saveRDS(production_coefs, file=file.path(savepath, production_outfile), compress=FALSE)
 
 
 

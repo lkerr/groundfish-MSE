@@ -22,14 +22,17 @@ fishery_holder$cumul_catch_pounds<-0
 fishery_holder$targeted<-0
 
 #set up a list to hold the expected revenue by date, hullnum, and target spstock2
-revenue_holder<-as.list(NULL)
+annual_revenue_holder<-as.list(NULL)
 
 #Initialize the trips data.table. 
   if(y == fmyearIdx){
-  keepcols<-c("id","spstock2","choice_prev_fish")
+  keepcols<-c("hullnum","spstock2","choice_prev_fish")
   trips<-copy(targeting_dataset[[1]])
   trips<-trips[, ..keepcols]
+  trips<-trips[spstock2!="nofish"]
   colnames(trips)[3]<-"targeted"
+  trips<-trips[targeted==1]
+  
   }
 
 
@@ -65,17 +68,22 @@ for (day in 1:365){
   # Subset for the day.  Add in production coeffients and construct some extra data.
 working_targeting<-copy(targeting_dataset[[day]])
 working_targeting<-get_predict_eproduction(working_targeting)
-#working_targeting$harvest_sim[working_targeting$spstock2=="nofish"]<-0
 working_targeting[.("nofish"), on=c("spstock2"), harvest_sim:=0]
 
 
     # Keep or update choice_prev_fish
+     working_targeting[trips, `:=` (tx2=targeted, tx=targeted) , on=c("hullnum","spstock2")]
      
-     working_targeting[, choice_prev_fish:=0]
-     working_targeting<-working_targeting[trips, choice_prev_fish:=targeted , on=c("id","spstock2")]
+     working_targeting[is.na(tx2), tx2 := 0]     
+     working_targeting[is.na(tx), tx := choice_prev_fish]     
+     working_targeting[, ttx := sum(tx),by=id]
+     working_targeting[ttx>=2, tx := tx2]
+     working_targeting[, choice_prev_fish :=tx]
      
-    
-    
+     dropcol<-c('ttx', 'tx2', 'tx')
+     working_targeting[, (dropcol) := NULL]
+     
+     
     #zero_out_targets will set the catch and landings multipliers to zero depending on the value of underACL, stockarea_open, and mproc$EconType
 
 
@@ -83,6 +91,7 @@ working_targeting[.("nofish"), on=c("spstock2"), harvest_sim:=0]
     working_targeting<-joint_adjust_others(working_targeting,fishery_holder, econtype)
     working_targeting<-get_joint_production(working_targeting,spstock2s) 
     working_targeting[, exp_rev_total:=exp_rev_total/1000]
+    working_targeting[, actual_rev_total:=actual_rev_total/1000]
     working_targeting[.("nofish"), on=c("spstock2"), exp_rev_total:=0]
     
     
@@ -98,7 +107,6 @@ working_targeting[.("nofish"), on=c("spstock2"), harvest_sim:=0]
   # The probability of selection is equal to prhat
     trips<-get_random_draw_tripsDT(trips)
   #drop out trip that did not fish (they have no landings or catch). 
-    #trips<-trips[spstock2!="nofish"]
   
     catches<-get_reshape_catches(trips)
     landings<-get_reshape_landings(trips)
@@ -121,20 +129,26 @@ working_targeting[.("nofish"), on=c("spstock2"), harvest_sim:=0]
   # Expand from harvest of the target to harvest of all using the catch multiplier matrices
   # Not written yet.  Not sure if we need revenue by stock to be saved for each vessel? Or just catch? 
   
-  savelist<-c("id","hullnum","spstock2","doffy","exp_rev_total","actual_rev_total")
+  savelist<-c("id","hullnum","spstock2","doffy","exp_rev_total","actual_rev_total", "gearcat")
+  savelist<-c("id","hullnum","spstock2","doffy","exp_rev_total","actual_rev_total", "gearcat","choice_prev_fish")
   mm<-c(grep("^c_",colnames(trips), value=TRUE),grep("^l_",colnames(trips), value=TRUE),grep("^r_",colnames(trips), value=TRUE))
   savelist=c(savelist,mm)
-  revenue_holder[[day]]<-trips[, ..savelist]
+  annual_revenue_holder[[day]]<-trips[, ..savelist]
+  trips<-trips[spstock2!="nofish"]
+  trips<-trips[, c("spstock2","hullnum", "targeted")]
   
 }
 
   fishery_holder[, removals_mt:=cumul_catch_pounds/(pounds_per_kg*kg_per_mt)+nonsector_catch_mt]
  
 #contract that list down to a single data.table
-  revenue_holder<-rbindlist(revenue_holder) 
-  revenue_holder$r<-r
-  revenue_holder$m<-m
-  revenue_holder$y<-y
+  annual_revenue_holder<-rbindlist(annual_revenue_holder) 
+  annual_revenue_holder$r<-r
+  annual_revenue_holder$m<-m
+  annual_revenue_holder$y<-y
+  revenue_holder[[eyear_idx]]<-annual_revenue_holder
+  
+  rm(annual_revenue_holder)
 # We probably want to contract this down further to a data.table of "hullnum","spstock2","exp_rev_total","targeted"
   
   

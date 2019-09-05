@@ -89,7 +89,7 @@ anomFun <- median
 BrefScalar <- 0.5
 FrefScalar <- 0.75
 
-
+##################################ECON SECTION ##################################
 #### Helpful parameters ####
 # Scalars to convert things
 pounds_per_kg<-2.20462
@@ -118,6 +118,7 @@ choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
 
 ##############Independent variables in the Production equation ##########################
 production_vars=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","constant")
+############################## END ECON SECTION ##################################
 
 
 

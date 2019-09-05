@@ -1,11 +1,37 @@
 /* Order of doing stuff. */
 /* Run this file to load/prep the economic data */
-global inputdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_raw/econ"
-global outdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_processed/econ"
+global projectdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE"
 
-global codedir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/preprocessing/economic"
+global inputdir "$projectdir/data/data_raw/econ"
+global outdir "$projectdir/data/data_processed/econ"
+global codedir "$projectdir/preprocessing/economic"
+global bio_data "$projectdir/data/data_processed/catchHistory"
+
+
+
+
+/* filenames for sters  and outputs*/
+global post_input_ster "postCSasclogit2.ster"
+global post_gillnet_out "asclogit_gillnet_post_coefs.txt"
+global post_trawl_out "asclogit_trawl_post_coefs.txt"
+
+
+global pre_input_ster "postCSasclogit2.ster"
+global pre_gillnet_out "asclogit_gillnet_pre_coefs.txt"
+global pre_trawl_out "asclogit_trawl_pre_coefs.txt"
+
+
+/*name of main data file */
+global datafilename "data_for_simulations_mse.dta"
+global datafile_split_prefix "econ_data"
 
 /*construct prices, reshape multipliers, and bring both into the targeting dataset */
+global catch_hist_file "catchHist.csv"
+
+/*name of multiplier file*/
+
+global multiplier_file "multipliers.dta"
+global multiplier_out "reshape_multipliers.dta"
 
 /* done */
 do "$codedir/asclogit_coef_export.do"

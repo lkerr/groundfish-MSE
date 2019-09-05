@@ -4,44 +4,17 @@
   #.3. Drop unnecessary variables.
 # A little stupid to join the coefficients to the data, because it make a big dataset with lots of replicated data, instead of making a pair of matrices (one for data and one for coefficients). But whatever.
 # need to update this file with variable changes and equation changes. Anna is sending over a stata .ster. for coefficients
-rm(list=ls())
-if(!require(readstata13)) {  
-  install.packages("readstata13")
-  require(readstata13)}
-if(!require(tidyr)) {  
-  install.packages("tidyr")
-  require(tidyr)}
-if(!require(dplyr)) {  
-  install.packages("dplyr")
-  require(dplyr)}
-if(!require(data.table)) {  
-  install.packages("data.table")
-  require(data.table)}
 
 
-# file paths for the raw and final directories
+target_coefs<-target_coef_outfile
+production_coefs<-production_outfile
 
-econrawpath <- './data/data_raw/econ'
-econdatapath <- 'data/data_processed/econ'
+targeting_coefs<-readRDS(file.path(savepath,target_coefs))
+production_coefs<-readRDS(file.path(savepath, production_coefs))
 
-savefile<-"full_targeting_datalist.Rds"
-
-target_coefs<-"targeting_coefs.Rds"
-production_coefs<-"production_coefs.Rds"
-
-
-
-targeting_coefs<-readRDS(file.path(econdatapath,target_coefs))
-production_coefs<-readRDS(file.path(econdatapath, production_coefs))
-
-multiplier_loc<-"sim_multipliers_post.Rds"
-output_price_loc<-"sim_prices_post.Rds"
-input_price_loc<-"sim_post_vessel_stock_prices.Rds"
-
-multipliers<-readRDS(file.path(econdatapath, multiplier_loc))
-outputprices<-readRDS(file.path(econdatapath, output_price_loc))
-
-inputprices<-readRDS(file.path(econdatapath, input_price_loc))
+multipliers<-readRDS(file.path(savepath, multiplier_loc))
+outputprices<-readRDS(file.path(savepath, output_price_loc))
+inputprices<-readRDS(file.path(savepath, input_price_loc))
 
 
 
@@ -50,9 +23,9 @@ for (wy in 2010:2015) {
     idx<-wy-2009
   
   yrsavefile<-paste0("full_targeting_",wy,".Rds")
-  targeting_source<-paste0("econ_data_",wy,".dta")
+  targeting_source<-paste0(yrstub,"_",wy,".dta")
   
-  targeting <- read.dta13(file.path(econrawpath, targeting_source))
+  targeting <- read.dta13(file.path(rawpath, targeting_source))
   
   
   
@@ -142,19 +115,9 @@ targeting<-targeting_coefs[targeting, on=c("gearcat","spstock2")]
 keycols<-c("gffishingyear","doffy", "hullnum", "id","spstock2")
 setorderv(targeting, keycols)
 
-spstock_equation=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
-#spstock_equation=c("exp_rev_total",  "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
-
-choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
-#choice_equation=c("len" )
-
-
-targeting_vars=c(spstock_equation, choice_equation)
-production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","primary", "secondary", "constant")
-
 td_cols<-colnames(targeting)
 
-
+##################################  JOINS START HERE ###############
 # Bring in multipliers
 colnames(targeting)[colnames(targeting)=="month"] <- "MONTH"
 
@@ -165,14 +128,15 @@ targeting<-wo[targeting, on=c("doffy","gffishingyear", "post", "gearcat")]
 
 # Pull in input prices (hullnum-day-spstock2)
 targeting<-wi[targeting, on=c("hullnum","doffy","spstock2","gffishingyear","post")]
+##################################  JOINS END HERE ###############
 
 targeting[, fuelprice_len:=fuelprice*len]
 targeting[, fuelprice_distance:=fuelprice*distance]
-targeting[is.na(targeting)]<-0
+
 
 td_cols<-colnames(targeting)
 
- 
+ # We don't need every column, so this section of code keeps just the columns we need.
  cmultipliers<-td_cols[grepl("^c_", td_cols)]
  lmultipliers<-td_cols[grepl("^l_", td_cols)]
  quota_prices<-td_cols[grepl("^q_", td_cols)]
@@ -187,7 +151,6 @@ fyvars<-grep("^fy",colnames(targeting) , value=TRUE)
 monthvars<-grep("^month",colnames(targeting) , value=TRUE)
 
 idvars=c("id", "hullnum","spstock2", "doffy")
-necessary=c("q", "gffishingyear", "emean","nchoices", "idflag")
 necessary=c("q", "gffishingyear", "emean","nchoices", "MONTH")
 useful=c("gearcat","post","h_hat","xb_post","choice")
 #useful=c("gearcat","post","h_hat","choice")
@@ -213,7 +176,7 @@ sum(is.na(targeting))==0
 setkeyv(targeting, c("id","spstock2"))
 targeting<-split(targeting, targeting$doffy)
 
-saveRDS(targeting, file=file.path(econdatapath, yrsavefile),compress=FALSE)
+saveRDS(targeting, file=file.path(savepath, yrsavefile),compress=FALSE)
 
 rm(targeting)
 gc()

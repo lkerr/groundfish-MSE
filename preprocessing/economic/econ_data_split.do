@@ -1,9 +1,7 @@
-global inputdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_raw/econ"
-global outdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_processed/econ"
 
-/* Construct prices at the spstock2-date level */
+/* minor data cleanup */
 
-use "$inputdir/data_for_simulations_mse.dta", clear
+use "$inputdir/$datafilename", clear
 cap notes drop _all
 ds
 local all `r(varlist)'
@@ -17,18 +15,19 @@ replace spstock2=lower(spstock2)
 replace spstock2=subinstr(spstock2,"ccgom","CCGOM",.)
 replace spstock2=subinstr(spstock2,"snema","SNEMA",.)
 replace spstock2=subinstr(spstock2,"gom","GOM",.)
-
 replace spstock2=subinstr(spstock2,"gb","GB",.)
 
-save "$inputdir/data_for_simulations_mse.dta", replace
+levelsof gffishingyear, local(yrloc)
 
+save "$inputdir/$datafilename", replace
 
+/* save year-by-year */
 
-foreach gfy of numlist 2010(1)2015{
+foreach gfy of local yrloc {
 clear
-use "$inputdir/data_for_simulations_mse.dta" if gffishingyear==`gfy'
+use "$inputdir/$datafilename" if gffishingyear==`gfy'
 cap drop spstock year hullnum2
 
-save "$inputdir/econ_data_`gfy'.dta", replace
+save "$inputdir/${datafile_split_prefix}_`gfy'.dta", replace
 }
 

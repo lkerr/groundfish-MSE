@@ -1,10 +1,6 @@
-global inputdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_raw/econ"
-global outdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_processed/econ"
-
-
 
 *cd $inputdir
-use "$inputdir/multipliers", clear
+use "$inputdir/$multiplier_file", clear
 
 cap drop sppname gearcat calyear
 
@@ -52,4 +48,4 @@ replace spstock2=subinstr(spstock2,"gom","GOM",.)
 replace spstock2=subinstr(spstock2,"gb","GB",.)
 
 notes  drop _all 
-save "$inputdir/reshape_multipliers.dta", replace
+save "$inputdir/$multiplier_out", replace
