@@ -1,38 +1,6 @@
 # Read in Production and Targeting coefficients to .Rds  
 # Tested working. Make a small change if we want to get different regression results (there are 4 sets of models for each gear, we haven't picked a "best " model yet).
 
-rm(list=ls())
-if(!require(readstata13)) {  
-  install.packages("readstata13")
-  require(readstata13)}
-if(!require(tidyr)) {  
-  install.packages("tidyr")
-  require(tidyr)}
-if(!require(dplyr)) {  
-  install.packages("dplyr")
-  require(dplyr)}
-if(!require(data.table)) {  
-  install.packages("data.table")
-  require(data.table)}
-
-
-# file paths for the raw and final directories
-# windows is kind of stupid, so you'll have to deal with it in some way.
-rawpath <- './data/data_raw/econ'
-savepath <- './data/data_processed/econ'
-
-#rawpath <- 'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE/data/data_raw/econ'
-#savepath <- 'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE/data/data_processed/econ'
-
-# gillnet_targeting_coef_source<-"nlogit_gillnet_pre_coefs.txt" #(I'll just pull the first GILLNET and FIRST TRAWL coefs)
-
-trawl_targeting_coef_source<-"asclogit_trawl_post_coefs.txt" 
-gillnet_targeting_coef_source<-"asclogit_gillnet_post_coefs.txt"
-
-outfile<-"targeting_coefs.Rds"
-
-
-##########################
 # BEGIN readin of econometric model of production coefficients 
 ##########################
 # p value, above which we set the coefficient to zero.  You can set this to 1.0 if you want.
@@ -155,7 +123,7 @@ targeting_coefs$spstock2<- gsub("gom","GOM",targeting_coefs$spstock2)
 targeting_coefs$spstock2<- gsub("snema","SNEMA",targeting_coefs$spstock2)
 
 
-saveRDS(targeting_coefs, file=file.path(savepath, outfile), compress=FALSE)
+saveRDS(targeting_coefs, file=file.path(savepath, target_coef_outfile), compress=FALSE)
 rm(list=c("all_coefs","asc_coefs","asc_coefs2","extra"))
 
 

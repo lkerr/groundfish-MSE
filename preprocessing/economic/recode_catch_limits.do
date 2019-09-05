@@ -1,10 +1,6 @@
 clear
-global bio_data "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_processed/catchHistory"
 
-global econ_data "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_processed/econ"
-
-global output_data "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_processed/econ"
-import delimited "$bio_data/catchHist.csv"
+import delimited "$bio_data/$catch_hist_file"
 
 foreach var of varlist commercial sector smallmesh commonpool herringfishery recreational scallopfishery statewater other{
 replace `var'="0" if strmatch(`var',"NA")
@@ -94,7 +90,7 @@ replace spstock2=subinstr(spstock2,"gb","GB",.)
 
 
 
-merge 1:1 spstock2 using "$econ_data/stocks_in_choiceset.dta"
+merge 1:1 spstock2 using "$outdir/stocks_in_choiceset.dta"
 drop _merge
 rename totalACL totalACL_mt
 sort spstock2
@@ -117,10 +113,10 @@ replace stockarea="SNEMA" if inlist(spstock2, "winterflounderSNEMA", "yellowtail
 replace stockarea="CCGOM" if inlist(spstock2,"yellowtailflounderCCGOM")
 
 
-export delimited using "$output_data/catch_limits_2010_2017.csv", replace
+export delimited using "$outdir/catch_limits_2010_2017.csv", replace
 clear
 
-import delimited "$bio_data/catchHist.csv"
+import delimited "$bio_data/$catch_hist_file"
 
 
 
@@ -203,7 +199,7 @@ replace spstock2=subinstr(spstock2,"snema","SNEMA",.)
 replace spstock2=subinstr(spstock2,"gom","GOM",.)
 
 replace spstock2=subinstr(spstock2,"gb","GB",.)
-merge 1:1 spstock2 using "$econ_data/stocks_in_choiceset.dta"
+merge 1:1 spstock2 using "$outdir/stocks_in_choiceset.dta"
 drop _merge
 rename totalACL totalACL_mt
 sort spstock2
@@ -224,7 +220,7 @@ replace stockarea="GOM" if inlist(spstock2,"codGOM", "haddockGOM", "winterflound
 replace stockarea="SNEMA" if inlist(spstock2, "winterflounderSNEMA", "yellowtailflounderSNEMA")
 
 replace stockarea="CCGOM" if inlist(spstock2,"yellowtailflounderCCGOM")
-export delimited using "$output_data/catch_limits_2017.csv", replace
+export delimited using "$outdir/catch_limits_2017.csv", replace
 
 
 

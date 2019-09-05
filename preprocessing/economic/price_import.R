@@ -1,45 +1,21 @@
 # Read in pre- and post- prices and save to Rds 
-# Tested working. Make a small change if we want to get different regression results (there are 4 sets of models for each gear, we haven't picked a "best " model yet).
 
-rm(list=ls())
-if(!require(readstata13)) {  
-  install.packages("readstata13")
-  require(readstata13)}
-if(!require(tidyr)) {  
-  install.packages("tidyr")
-  require(tidyr)}
-if(!require(dplyr)) {  
-  install.packages("dplyr")
-  require(dplyr)}
-if(!require(data.table)) {  
-  install.packages("data.table")
-  require(data.table)}
-
-# file paths for the raw and final directories
-# windows is kind of stupid, so you'll have to deal with it in some way.
-rawpath <- './data/data_raw/econ'
-savepath <- './data/data_processed/econ'
-
-
-price_location<-"output_price_series.dta"
-
-preoutfile<-"sim_prices_pre.Rds"
-postoutfile<-"sim_prices_post.Rds"
 
 mults <- read.dta13(file.path(rawpath, price_location))
 mults<-as.data.table(mults)
 
 colnames(mults)[colnames(mults)=="month"] <- "MONTH"
 
-#multipre<-mults[post==0]
-#multipre<-split(multipre,multipre$gffishingyear)
+multipre<-mults[post==0]
+multipre<-split(multipre,multipre$gffishingyear)
 
 multipost<-mults[post==1]
 multipost<-split(multipost,multipost$gffishingyear)
 
 
-saveRDS(multipost, file=file.path(savepath, postoutfile), compress=FALSE)
-#saveRDS(multipre, file=file.path(savepath, preoutfile), compress=FALSE)
-rm(list=ls())
+saveRDS(multipost, file=file.path(savepath, pricepostoutfile), compress=FALSE)
+
+saveRDS(multipre, file=file.path(savepath, pricepreoutfile), compress=FALSE)
+rm(list=c("multipre", "multipost", "mults"))
 
 
