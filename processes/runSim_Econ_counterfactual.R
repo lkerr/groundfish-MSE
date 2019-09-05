@@ -29,12 +29,18 @@ mproc<-mproc_bak[1,]
 
 ####################End Temporary changes for testing ####################
 firstrepno<-1
-replicates<-2
+replicates<-6
 lastrepno<-replicates-firstrepno+1
+chunksize<-5
 fyear<-2010
 nyear<-2015
 nyear<-2011
+
 fmyearIdx<-fyear
+set.seed(2)
+
+# I started running this around 1630.  It looks like I ran out of memory around 2127 (5 hours). This might be  because because the list containing our data.tables are continuing to grow and grow.  Or because of R's meh memory management.
+  #. chunksize=10
 
 
 # Set up a small table that is useful for variablity across years in the economic model.
@@ -45,7 +51,9 @@ colnames(random_sim_draw)<-c("econ_replicate","econ_year")
 random_sim_draw[, econ_year_idx:=econ_year-fyear+1]
 
 eyear_idx<-0
+max_eyear<-nrow(random_sim_draw)
 revenue_holder<-list()
+rng_holder<-list()
 
 #### Top rep Loop ####
 for(r in firstrepno:lastrepno){
@@ -58,7 +66,6 @@ for(r in firstrepno:lastrepno){
     myvars<-c("LandZero","CatchZero","EconType")
     econtype<-econtype[myvars]
     
-    # set.seed(rsd)
     
     
     # Initialize stocks and determine burn-in F
@@ -74,7 +81,10 @@ for(r in firstrepno:lastrepno){
       eyear_idx<-eyear_idx+1
       econ_year_draw<-random_sim_draw[[eyear_idx,2]]
       econ_idx_draw<-random_sim_draw[[eyear_idx,3]]
-
+      
+      rngstate<-  .Random.seed 
+      rng_holder[[eyear_idx]]<-rngstate    
+      chunk_flag<-eyear_idx %% chunksize
             # 
       # for(i in 1:nstock){
       #   stock[[i]] <- get_J1Updates(stock = stock[[i]])
@@ -124,7 +134,21 @@ for(r in firstrepno:lastrepno){
         # for(i in 1:nstock){
         #   stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         # }
-          
+         
+      #Save results once in a while to a stata dta file. 
+      if (chunk_flag==0 | eyear_idx==max_eyear) {
+        revenue_holder<-rbindlist(revenue_holder) 
+        td <- as.character(Sys.time())
+        td <- gsub(':', '', td)
+        td<-gsub(' ', '_', td)
+        td2 <- paste0(td,"_", round(runif(1, 0, 10000)))
+        save.dta13(revenue_holder, file.path(econ_results_location, paste0("econ_",td2, ".dta")))
+        saveRDS(rng_holder, file.path(econ_results_location,  paste0("rng_",td2, ".Rds")), compress=FALSE)
+        rng_holder<-list()
+        revenue_holder<-list()
+        gc()
+        }
+       
       }
 
       # for(i in 1:nstock){
@@ -137,19 +161,10 @@ for(r in firstrepno:lastrepno){
   
 top_loop_end<-Sys.time()
 big_loop<-top_loop_end-top_loop_start
-big_loop
-econ_timer
-revenue_holder<-rbindlist(revenue_holder) 
 
-
- td <- as.character(Sys.time())
- td2 <- gsub(':', '', td)
- td2 <- paste(gsub(' ', '_', td2), round(runif(1, 0, 10000)), sep='_')
- td2<-paste0("econ", td2, ".dta")
-
- save.dta13(revenue_holder, file.path(econ_results_location, td2))
-
-
+ econ_timer
+  big_loop
+ 
 
 #   
 # revenue_holder<-rbindlist(revenue_holder) 

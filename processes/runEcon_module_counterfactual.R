@@ -25,7 +25,7 @@ fishery_holder$cumul_catch_pounds<-0
 fishery_holder$targeted<-0
 
 #set up a list to hold the expected revenue by date, hullnum, and target spstock2
-annual_revenue_holder<-as.list(NULL)
+annual_revenue_holder<-list()
 
 #Initialize the trips data.table. 
   if(y == fmyearIdx){
@@ -39,6 +39,8 @@ annual_revenue_holder<-as.list(NULL)
   }
 
 for (day in 1:365){
+  
+  
   
   # Subset for the day.  Add in production coeffients and construct some extra data.
 working_targeting<-copy(targeting_dataset[[day]])
