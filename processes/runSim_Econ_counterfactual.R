@@ -29,12 +29,12 @@ mproc<-mproc_bak[1,]
 
 ####################End Temporary changes for testing ####################
 firstrepno<-1
-replicates<-6
+replicates<-10
 lastrepno<-replicates-firstrepno+1
 chunksize<-5
 fyear<-2010
 nyear<-2015
-nyear<-2011
+
 
 fmyearIdx<-fyear
 set.seed(2)
