@@ -10,7 +10,7 @@
 simpleTemperature <- FALSE
 
 # Testing run which uses mprocTest.txt instead of mproc.txt? (T/F)
-mprocTest <- TRUE
+mprocTest <- FALSE #TRUE #AEW
 
 
 #### Stock parameters ####
@@ -18,15 +18,15 @@ mprocTest <- TRUE
 # If you have files in the modelParameters folder for stocks but you don't
 # want to include them in a run you can write them in here in the
 # stockExclude variable. Do not include the extension.R. For example,
-# stockExclude <- haddockGB will leave haddockGB.R out of the analysis.
+# stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
-stockExclude <- c(haddockGB, codGB_Error) #AEW
+stockExclude <- c('haddockGB', 'codGB_Error')
 
 
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 1
+nrep <- 2 #1 #AEW
 
 # First year to begin actual management
 fmyear <- 2000
@@ -50,7 +50,7 @@ nburn <- 50
 #### Temperature information ####
 
 ## Do you want to include temperature projections (in S-R, growth, etc.)
-useTemp <-  FALSE #AEW
+useTemp <- TRUE
 
 ## Do you want to use particular models from the cmip data series? If so
 ## tmods should be a vector of column names (see 
