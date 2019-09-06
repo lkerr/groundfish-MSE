@@ -33,7 +33,7 @@ revenue_holder<-list()
 
 # Set up a small table that is useful for variablity across years in the economic model.
 eyears<-nrep*nyear
-random_sim_draw <-as.data.table(cbind(1:eyears, sample(first_econ_yr:last_econ_yr, eyears, replace=T),sample(first_econ_yr:last_econ_yr, eyears, replace=T)))
+random_sim_draw <-as.data.table(cbind(1:eyears, sample(first_econ_yr:last_econ_yr, eyears, replace=TRUE),sample(first_econ_yr:last_econ_yr, eyears, replace=TRUE)))
 colnames(random_sim_draw)<-c("econrd","price_gfy","other_gfy")
 random_sim_draw[, price_gfy_idx:=price_gfy-first_econ_yr+1]
 random_sim_draw[, other_gfy_idx:=other_gfy-first_econ_yr+1]
