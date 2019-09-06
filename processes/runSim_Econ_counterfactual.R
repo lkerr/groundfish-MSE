@@ -7,18 +7,20 @@
 
 # empty the environment
 rm(list=ls())
+gc()
+
 source('processes/runSetup.R')
 source('processes/loadEconCF.R')
 if(!require(readstata13)) {  
   install.packages("readstata13")
   require(readstata13)}
+proj_dir<- "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE"
 
- dir.create('results', showWarnings = FALSE)
- dir.create('results/econ', showWarnings = FALSE)
- dir.create('results/econ/raw', showWarnings = FALSE)
- econ_results_location<-"results/econ/raw"
+dir.create('results', showWarnings = FALSE)
+dir.create('results/econ', showWarnings = FALSE)
+dir.create('results/econ/raw', showWarnings = FALSE)
+econ_results_location<-"results/econ/raw"
  
-
 
 top_loop_start<-Sys.time()
 ####################These are temporary changes for testing ####################
@@ -28,33 +30,38 @@ mproc<-mproc_bak[1,]
 
 
 ####################End Temporary changes for testing ####################
-firstrepno<-1
-replicates<-10
-lastrepno<-replicates-firstrepno+1
-chunksize<-5
+replicates<-2
+firstrepno<-3
+
+set.seed(53)
+
+# Need to load in the previous RNG state?
+full.pathRNG<-file.path(proj_dir, econ_results_location)
+rng_pattern<-"end_rng.*Rds$"
+source('processes/loadsetRNG.R')
+
+#how many years before writing out the results to csv? 6 corresponds to 1 simulation
+chunksize<-6
+
+
+############################################################
+#dont change these
+lastrepno<-replicates+firstrepno-1
 fyear<-2010
 nyear<-2015
-
-
 fmyearIdx<-fyear
-set.seed(2)
-
-# I started running this around 1630.  It looks like I ran out of memory around 2127 (5 hours). This might be  because because the list containing our data.tables are continuing to grow and grow.  Or because of R's meh memory management.
-  #. chunksize=10
-
-
 # Set up a small table that is useful for variablity across years in the economic model.
 eyears<-nyear-fyear+1
 random_sim_draw <-as.data.table(cbind(rep(firstrepno:lastrepno,each=eyears), rep(fyear:nyear,replicates)))
-
 colnames(random_sim_draw)<-c("econ_replicate","econ_year")
 random_sim_draw[, econ_year_idx:=econ_year-fyear+1]
-
 eyear_idx<-0
 max_eyear<-nrow(random_sim_draw)
-revenue_holder<-list()
-rng_holder<-list()
+############################################################
 
+revenue_holder<-list()
+begin_rng_holder<-list()
+end_rng_holder<-list()
 #### Top rep Loop ####
 for(r in firstrepno:lastrepno){
 
@@ -82,8 +89,8 @@ for(r in firstrepno:lastrepno){
       econ_year_draw<-random_sim_draw[[eyear_idx,2]]
       econ_idx_draw<-random_sim_draw[[eyear_idx,3]]
       
-      rngstate<-  .Random.seed 
-      rng_holder[[eyear_idx]]<-rngstate    
+      begin_rngstate<-  .Random.seed 
+      begin_rng_holder[[eyear_idx]]<-begin_rngstate    
       chunk_flag<-eyear_idx %% chunksize
             # 
       # for(i in 1:nstock){
@@ -118,6 +125,10 @@ for(r in firstrepno:lastrepno){
           start_time<-proc.time() 
           source('processes/runEcon_module_counterfactual.R')
           econ_timer<-econ_timer+proc.time()[3]-start_time[3]
+          
+          end_rngstate<-  .Random.seed 
+          end_rng_holder[[eyear_idx]]<-end_rngstate    
+          
         }
       }
         # else if(mproc$ImplementationClass[m] == "StandardFisheries"){
@@ -142,9 +153,8 @@ for(r in firstrepno:lastrepno){
         td <- gsub(':', '', td)
         td<-gsub(' ', '_', td)
         td2 <- paste0(td,"_", round(runif(1, 0, 10000)))
-        save.dta13(revenue_holder, file.path(econ_results_location, paste0("econ_",td2, ".dta")))
-        saveRDS(rng_holder, file.path(econ_results_location,  paste0("rng_",td2, ".Rds")), compress=FALSE)
-        rng_holder<-list()
+        #save.dta13(revenue_holder, file.path(econ_results_location, paste0("econ_",td2, ".dta")))
+        write.table(revenue_holder, file.path(econ_results_location, paste0("econ_",td2, ".csv")), sep=",", row.names=FALSE)
         revenue_holder<-list()
         gc()
         }
@@ -161,6 +171,10 @@ for(r in firstrepno:lastrepno){
   
 top_loop_end<-Sys.time()
 big_loop<-top_loop_end-top_loop_start
+
+saveRDS(begin_rng_holder, file.path(econ_results_location,  paste0("begin_rng_",td2, ".Rds")), compress=FALSE)
+saveRDS(end_rng_holder, file.path(econ_results_location,  paste0("end_rng_",td2, ".Rds")), compress=FALSE)
+
 
  econ_timer
   big_loop
