@@ -10,7 +10,7 @@
 simpleTemperature <- FALSE
 
 # Testing run which uses mprocTest.txt instead of mproc.txt? (T/F)
-mprocTest <- TRUE
+mprocTest <- FALSE #TRUE #AEW
 
 
 #### Stock parameters ####
