@@ -3,7 +3,7 @@
 ## 
 
 # which scenario to extract results from
-setwd("C:/Users/aweston/Box/Ashley Weston/Discard Sims/Scenarios for LK/results_scenario1_v2/sim")
+setwd("C:/Users/aweston/Box/Ashley Weston/Discard Sims/Scenarios for LK/results_scenario1_v3/sim")
 #setwd("C:/Users/aweston/Box/Ashley Weston/Discard Sims/Scenarios for LK/results_scenario2_v2/sim")
 #setwd("C:/Users/aweston/Box/Ashley Weston/Discard Sims/Scenarios for LK/results_scenario3_v2/sim")
 
@@ -62,7 +62,7 @@ all_sd_SSB <- cbind(sd_cod_SSB_MP1, sd_cod_SSB_MP2, sd_haddock_SSB_MP1, sd_haddo
 all_mean_cw <- cbind(mean_cod_cw_MP1, mean_cod_cw_MP2, mean_haddock_cw_MP1, mean_haddock_cw_MP2)
 all_sd_cw <- cbind(sd_cod_cw_MP1, sd_cod_cw_MP2, sd_haddock_cw_MP1, sd_haddock_cw_MP2)
 
-setwd("C:/Users/aweston/Box/Ashley Weston/Discard Sims/Scenarios for LK/results_scenario1_v2")
+setwd("C:/Users/aweston/Box/Ashley Weston/Discard Sims/Scenarios for LK/results_scenario1_v3")
 #setwd("C:/Users/aweston/Box/Ashley Weston/Discard Sims/Scenarios for LK/results_scenario2_v2")
 #setwd("C:/Users/aweston/Box/Ashley Weston/Discard Sims/Scenarios for LK/results_scenario3_v2")
 
