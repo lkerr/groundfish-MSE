@@ -86,7 +86,7 @@ for(r in 1:nrep){
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         }
           
-      }
+      
 
       for(i in 1:nstock){
         stock[[i]] <- get_mortality(stock = stock[[i]], hotW=TRUE)
@@ -119,6 +119,8 @@ for(r in 1:nrep){
         }
         
         stock[[i]] <- get_mortality(stock = stock[[i]])
+      }
+      
       }
       
       for(i in 1:nstock){
