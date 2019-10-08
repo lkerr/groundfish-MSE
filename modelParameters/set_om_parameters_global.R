@@ -10,7 +10,7 @@
 simpleTemperature <- FALSE
 
 # Testing run which uses mprocTest.txt instead of mproc.txt? (T/F)
-mprocTest <- FALSE #TRUE #AEW
+mprocTest <- FALSE 
 
 
 #### Stock parameters ####
@@ -23,13 +23,20 @@ mprocTest <- FALSE #TRUE #AEW
 stockExclude <- c('haddockGB', 'codGB_Error')
 
 
+#### historic assessment values #### AEW
+# if you want to use an input of historic assessment data 
+# just fishing mortality for now
+
+histAssess <- TRUE
+
+
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 2 #1 #AEW
+nrep <- 2
 
 # First year to begin actual management
-fmyear <- 2000
+fmyear <- 2019
 
 # first year after the initial condition period. The initial condition period
 # simply fills up the arrays as necessary even before the burn-in period
@@ -38,7 +45,7 @@ fmyear <- 2000
 fyear <- 35
 
 # maximum year predicted into the future
-mxyear <- 2050
+mxyear <- 2039
 
 
 #### Burn-in parameters ####
@@ -50,7 +57,7 @@ nburn <- 50
 #### Temperature information ####
 
 ## Do you want to include temperature projections (in S-R, growth, etc.)
-useTemp <- FALSE #TRUE
+useTemp <- FALSE 
 
 ## Do you want to use particular models from the cmip data series? If so
 ## tmods should be a vector of column names (see 

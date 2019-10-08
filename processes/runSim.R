@@ -34,6 +34,13 @@ for(r in 1:nrep){
     for(i in 1:nstock){
       stock[[i]] <- get_popInit(stock[[i]])
     }
+    
+    #### get historic assessment info if there is any
+    if (histAssess == TRUE) {
+      for (i in 1:nstock){
+      assess_vals <- get_HistAssess(stock = stock[[i]])
+      }
+    }
 
     
     #### Top year loop ####
@@ -41,11 +48,26 @@ for(r in 1:nrep){
       for(i in 1:nstock){
         stock[[i]] <- get_J1Updates(stock = stock[[i]])
       }
+    
       
-
+      # option to overwrite calcualted values with historic assessment input values for each year #AEW 
+      # just fishing mortality for now
+      if (histAssess == TRUE) {
+        for(i in 1:nstock){
+          if(y %in% assess_vals$assessdat$MSEyr){
+          rep_assess <- get_AssessVals(stock = stock[[i]])
+          stock[[i]]$F_full[y] <- rep_assess$fish_mort   
+       }
+      
+      }
+      }
+        
+      
+    
       # if burn-in period is over...
       if(y >= fmyearIdx){
 
+        
         for(i in 1:nstock){
           stock[[i]] <- get_advice(stock = stock[[i]])
           stock[[i]] <- get_relError(stock = stock[[i]])
@@ -95,8 +117,8 @@ for(r in 1:nrep){
         
       }
 
-        
-    }
+    }   
+    
   }
   
 top_loop_end<-Sys.time()
