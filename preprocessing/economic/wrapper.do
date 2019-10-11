@@ -16,7 +16,7 @@ global post_gillnet_out "asclogit_gillnet_post_coefs.txt"
 global post_trawl_out "asclogit_trawl_post_coefs.txt"
 
 
-global pre_input_ster "postCSasclogitnc2.ster"
+global pre_input_ster "preCSasclogitnc2.ster"
 global pre_gillnet_out "asclogit_gillnet_pre_coefs.txt"
 global pre_trawl_out "asclogit_trawl_pre_coefs.txt"
 

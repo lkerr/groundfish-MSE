@@ -35,7 +35,7 @@ stata_dofiles<-c("wrapper.do")
 #stata_dofiles_list<-as.list(stata_dofiles)
 
 
-
+# doesn't quite work -- the quotes aren't in the right place
 full_cmd<-paste(stata_exec, stata_opts,file.path(stata_codedir,stata_dofiles) , sep=" ") 
 system(full_cmd, timeout=0, intern=FALSE)
    
