@@ -24,16 +24,21 @@ if(!require(data.table)) {
 
 
 # This bit of code will run some stata.  
-# stata_exec<-"/usr/local/stata15/stata-mp"
-# This one for windows0
-# stata_opts<-" /b do" 
-# this one for *nix
-# stata_opts <- "-b do"
-# stata_codedir <-"/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/preprocessing/economic"
-# stata_dofiles<-c("wrapper.do")
-# stata_dofiles<-c("asclogit_coef_export.do", "stocks_in_model.do", "recode_catch_limits.do", "multiplier_prep.do","price_prep.do","econ_data_split.do")
-# stata_dofiles_list<-as.list(stata_dofiles)
+stata_exec<-"/usr/local/stata15/stata-mp"
+#This one for windows0
+#stata_opts<-" /b do" 
+#this one for *nix
+stata_opts <- "-b do"
+stata_codedir <-"/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/preprocessing/economic"
+stata_dofiles<-c("wrapper.do")
+#stata_dofiles<-c("asclogit_coef_export.do", "stocks_in_model.do", "recode_catch_limits.do", "multiplier_prep.do","price_prep.do","econ_data_split.do")
+#stata_dofiles_list<-as.list(stata_dofiles)
 
+
+# doesn't quite work -- the quotes aren't in the right place
+full_cmd<-paste(stata_exec, stata_opts,file.path(stata_codedir,stata_dofiles) , sep=" ") 
+system(full_cmd, timeout=0, intern=FALSE)
+   
 
 # The lapply method hung, but it might just be that my code takes a long time.
 # readin <-function(files){
@@ -113,7 +118,8 @@ choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
 
 
 targeting_vars=c(spstock_equation, choice_equation)
-production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","primary", "secondary", "constant")
+#production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","primary", "secondary")
+production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","log_sector_acl","primary", "secondary")
 production_vars<-c(production_vars, "constant")
 
 

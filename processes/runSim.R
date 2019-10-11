@@ -19,12 +19,13 @@ top_loop_start<-Sys.time()
 ####################These are temporary changes for testing ####################
 econ_timer<-0
 mproc_bak<-mproc
-#mproc<-mproc_bak[1,]
-#nrep<-1
-#econ_year_draw<-random_sim_draw[1,2]
-#econ_idx_draw<-random_sim_draw[1,4]
+
+mproc<-mproc_bak[2,]
+nrep<-1
+econ_year_draw<-random_sim_draw[1,2]
+econ_idx_draw<-random_sim_draw[1,4]
 #day<-1
-#nyear<-152
+nyear<-155
 ## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
 ####################End Temporary changes for testing ####################
 # should go somewhere else
@@ -33,7 +34,7 @@ revenue_holder<-list()
 
 # Set up a small table that is useful for variablity across years in the economic model.
 eyears<-nrep*nyear
-random_sim_draw <-as.data.table(cbind(1:eyears, sample(first_econ_yr:last_econ_yr, eyears, replace=T),sample(first_econ_yr:last_econ_yr, eyears, replace=T)))
+random_sim_draw <-as.data.table(cbind(1:eyears, sample(first_econ_yr:last_econ_yr, eyears, replace=TRUE),sample(first_econ_yr:last_econ_yr, eyears, replace=TRUE)))
 colnames(random_sim_draw)<-c("econrd","price_gfy","other_gfy")
 random_sim_draw[, price_gfy_idx:=price_gfy-first_econ_yr+1]
 random_sim_draw[, other_gfy_idx:=other_gfy-first_econ_yr+1]

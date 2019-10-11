@@ -15,7 +15,7 @@ get_predict_etargeting <- function(tds){
   
   #The names of the variables in the spstock_equation and choice_equation have been put into the set_om_parameters_global.R file.
   
-  datavars=c(spstock_equation, choice_equation,"constant")
+  datavars=c(spstock_equation, choice_equation)
   betavars=paste0("beta_",datavars)
 
   
