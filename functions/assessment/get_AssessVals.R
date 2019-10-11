@@ -8,8 +8,10 @@
 get_AssessVals <- function(stock){
   replacement <- assess_vals$assessdat[assess_vals$assessdat$MSEyr == y,]
 fish_mort <- replacement$F
+rec <- replacement$R
 
 return(list(
- fish_mort = fish_mort))
+ fish_mort = fish_mort,
+ rec = rec))
 
 }

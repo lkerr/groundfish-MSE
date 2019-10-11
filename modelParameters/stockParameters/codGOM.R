@@ -3,7 +3,7 @@
 
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.                                              
-burnFmsyScalar <- 2 
+burnFmsyScalar <- 1
 burnFsd <- 0.3
 
 
@@ -43,12 +43,16 @@ selC <- c(s0=5, s1=0.08)
 selC_typ <- 'Logistic'
 
 # Recruitment #AEW from GOM COD 2019 Update M0.2 .rep
-Rpar <- c(h = 1,
-          R0 = 4456.87,
-          beta3 = 0,
-          SSBRF0 = 81202.9)
-R_typ <- 'BHSteep'
+  Rpar <- c(h = 1,
+            R0 = 4456.87,
+            SSBRF0 = 0.168992) # this value is wrong
+  R_typ <- 'BHSteep'
 
+  # Rpar <- c(a = 4456.87, # values from assessment
+#           b = 0)
+# R_typ <- 'BH'
+
+ 
 
 
 
@@ -92,14 +96,14 @@ oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 5.839408e-01
+pe_R <- .5839408
 
 # implementation error of fishing mortality
 ie_F <- 0
 ie_typ <- 'lognorm'
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
-ob_sumCW <- 1
+ob_sumCW <- 0.75
 ob_sumIN <- 1
 
 

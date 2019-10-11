@@ -45,7 +45,7 @@ fmyear <- 2019
 fyear <- 35
 
 # maximum year predicted into the future
-mxyear <- 2039
+mxyear <- 2050
 
 
 #### Burn-in parameters ####
@@ -122,7 +122,7 @@ plotRP <- FALSE
 
 # Population drivers like temperature, recruitment growth histories
 # and selectivity plots
-plotDrivers <- TRUE
+plotDrivers <- FALSE
 
 # Trajectories over different metrics
 plotTrajInd <- FALSE     # samples of individual trajectories
