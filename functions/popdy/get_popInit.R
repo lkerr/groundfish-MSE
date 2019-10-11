@@ -17,7 +17,9 @@ get_popInit <- function(stock){
 
     # in the first n (fyear-1) years.
    
-    initN <- get_init(nage=nage, N0=2e7, F_full=F_full[1], M=M)
+    initN <- get_init(nage=nage, N0= 2e7, F_full=F_full[1], M=M)      
+    #initN <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)  
+    
     J1N[1:fyear,] <- rep(initN, each=fyear)
     
     laa[1:(fyear-1),] <- rep(get_lengthAtAge(type='vonB', par=laa_par, 
@@ -81,6 +83,8 @@ get_popInit <- function(stock){
     burnFmean <- burnFmsyScalar * burnFmsy
     F_full[(fyear+1):fmyearIdx] <- rlnorm(fmyearIdx - (fyear+1)+1, 
                                               log(burnFmean), burnFsd)
+    
+    
   })
   
   return(out)
