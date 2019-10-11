@@ -50,6 +50,12 @@ There's a pile of code.
 
 * **runEcon_module.R :**  is a *working* economic module. The last part is kinda janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop.  This used to be in the scratch folder with a different name.
 
+* **runEcon_module_counterfactual.R :**  is a *working* economic module.  It has been revised a bit in preparation to run the counterfactual simulations (2010-2015 as-if Days-at-Sea).  But a few details need to be ironed out, because it has only been prototyped using post-as-post ( 2010-2015 as-if catch shares) data.
+
+* **runSim_Econ_counterfactual.R :**  is a modified version of runSim.R. This should only need minor changes (setting parameters) before it is finalized.
+
+* **loadsetRNG.R :**  code to load/reset the RNG state based on a list.
+
 * **speedups_econ_module2.R :**  code for benchmarking the economic model.
  
 There are  "processes" files that run one time per simulation run: 
