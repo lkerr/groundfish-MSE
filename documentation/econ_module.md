@@ -128,7 +128,7 @@ A bunch of pre-processing is needed to go from the stata econometric output to R
 * **price_import.R** imports and save sdata.tables containing  prices
 * **multiplier_import.R** constructs vessel 
 * **vessel_specific_prices.R** imports and saves data.tables containing vessel level prices
-* **targeting_data_import.R** constructs the simulation datasets.  There are the "data" is joined to coefficients, prices, and multipliers using various combinations of "hullnum", "MONTH" , "spstock2", "gffishingyear", "post", "doffy" (day of groundfish fishing year), "gearcat".  We'll need to do some medium size modifications to the joins to do post-as-pre here. (the joins use gffishingyear and post)
+* **targeting_data_import.R** constructs the simulation datasets.  There are the "data" is joined to coefficients, prices, and multipliers using various combinations of "hullnum", "MONTH" , "spstock2", "gffishingyear", "post", "doffy" (day of groundfish fishing year), "gearcat".  We'll need to do some medium size modifications to the joins to do post-as-pre here. (the joins use gffishingyear and post) 
 
 
 
