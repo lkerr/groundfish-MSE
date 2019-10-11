@@ -94,6 +94,8 @@ colnames(production_coefs)[colnames(production_coefs)=="Cumulative Harvest (Log)
 colnames(production_coefs)[colnames(production_coefs)=="Primary Target"] <- "primary"
 colnames(production_coefs)[colnames(production_coefs)=="Secondary Target"] <- "secondary"
 colnames(production_coefs)[colnames(production_coefs)=="Trawl Survey Biomass (Log)"]<- "log_trawl_survey_weight"
+colnames(production_coefs)[colnames(production_coefs)=="Sector ACL (Log)"]<- "log_sector_acl"
+
 colnames(production_coefs)<- tolower(gsub("=","",colnames(production_coefs)))
 
 
