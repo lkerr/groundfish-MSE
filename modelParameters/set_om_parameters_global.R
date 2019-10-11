@@ -114,6 +114,7 @@ spstock2s<-c("americanlobster","americanplaiceflounder","codGB","codGOM","haddoc
 ##############Independent variables in the targeting equation ##########################
 spstock_equation=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
 #choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len", "das_price_mean", "das_price_mean_len")
+#choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len", "constant")
 choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
 
 ##############Independent variables in the Production equation ##########################
