@@ -21,8 +21,8 @@ inputprices<-readRDS(file.path(savepath, input_price_loc))
 
 for (wy in 2010:2015) {
     idx<-wy-2009
-  
-  yrsavefile<-paste0("full_targeting_",wy,".Rds")
+    
+  yrsavefile<-paste0(yearly_savename,wy,".Rds")
   targeting_source<-paste0(yrstub,"_",wy,".dta")
   
   targeting <- read.dta13(file.path(rawpath, targeting_source))
@@ -152,8 +152,8 @@ monthvars<-grep("^month",colnames(targeting) , value=TRUE)
 
 idvars=c("id", "hullnum","spstock2", "doffy")
 necessary=c("q", "gffishingyear", "emean","nchoices", "MONTH")
-useful=c("gearcat","post","h_hat","xb_post","choice")
-#useful=c("gearcat","post","h_hat","choice")
+#useful=c("gearcat","post","h_hat","xb_post","choice")
+useful=c("gearcat","post","h_hat","choice")
 
 mysubs=c(idvars,necessary,useful, targeting_vars, production_vars, fyvars, monthvars, betavars, alphavars, cmultipliers, lmultipliers, quota_prices, lag_output_prices, output_prices)
 
