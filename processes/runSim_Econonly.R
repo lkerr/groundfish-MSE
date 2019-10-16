@@ -75,13 +75,24 @@ for(r in firstrepno:lastrepno){
     econtype<-econtype[myvars]
     econ_data_stub<-econtype["EconData"]
     if (econ_data_stub='validation'){
-      multiplier_loc<-"sim_multipliers_post.Rds"
+    multiplier_loc<-"sim_multipliers_post.Rds"
+      # Read in Economic Production Data. These are relatively lists of data.tables. So it makes sense to read in once and then list-subset [[]] later on.
+      
     } else if (econ_data_stub='counterfactual'){
     multiplier_loc<-"sim_multipliers_pre.Rds"
+    output_price_loc<-"sim_prices_post.Rds"
+    input_price_loc<-"sim_post_vessel_stock_prices.Rds"
+    
     }
     else {
     multiplier_loc<-"sim_multipliers_post.Rds"
+    output_price_loc<-"sim_prices_post.Rds"
+    input_price_loc<-"sim_post_vessel_stock_prices.Rds"
+    
     }
+    multipliers<-readRDS(file.path(econdatapath,multiplier_loc))
+    outputprices<-readRDS(file.path(econdatapath,output_price_loc))
+    inputprices<-readRDS(file.path(econdatapath,input_price_loc))
     
     
     # Initialize stocks and determine burn-in F
@@ -132,7 +143,7 @@ for(r in firstrepno:lastrepno){
           bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline)
 
           start_time<-proc.time() 
-          source('processes/runEcon_module_counterfactual.R')
+          source('processes/runEcon_module_only.R')
           econ_timer<-econ_timer+proc.time()[3]-start_time[3]
           
           end_rngstate<-  .Random.seed 

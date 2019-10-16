@@ -15,11 +15,6 @@ last_econ_yr<-2015
 econdatapath <- 'data/data_processed/econ'
 
 
-#multiplier_loc<-"sim_multipliers_pre.Rds"
-
-#multiplier_loc<-"sim_multipliers_post.Rds"
-output_price_loc<-"sim_prices_post.Rds"
-input_price_loc<-"sim_post_vessel_stock_prices.Rds"
 
 
 ##############Stocks in the Economic Model #############################
@@ -38,15 +33,6 @@ production_vars=c("log_crew","log_trip_days","primary","secondary", "log_trawl_s
 
 
 
-
-
-
-
-# Read in Economic Production Data. These are relatively lists of data.tables. So it makes sense to read in once and then list-subset [[]] later on.
-
-multipliers<-readRDS(file.path(econdatapath,multiplier_loc))
-outputprices<-readRDS(file.path(econdatapath,output_price_loc))
-inputprices<-readRDS(file.path(econdatapath,input_price_loc))
 
 
 
