@@ -1,6 +1,6 @@
 /* Order of doing stuff. */
 /* Run this file to load/prep the economic data */
-global projectdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE"
+global projectdir "C:/Users/abirken/Documents/GitHub/groundfish-MSE"
 
 global inputdir "$projectdir/data/data_raw/econ"
 global outdir "$projectdir/data/data_processed/econ"
@@ -34,11 +34,11 @@ global multiplier_file "multipliers.dta"
 global multiplier_out "reshape_multipliers.dta"
 
 /* done */
-/*do "$codedir/asclogit_coef_export.do"
+do "$codedir/asclogit_coef_export.do"
 do "$codedir/stocks_in_model.do"
 do "$codedir/recode_catch_limits.do"
 do "$codedir/price_prep.do"
-do "$codedir/multiplier_prep.do"*/ 
+do "$codedir/multiplier_prep.do"
 do "$codedir/econ_data_split.do"
 
 /* to do 
