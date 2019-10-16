@@ -1,6 +1,8 @@
 /* Order of doing stuff. */
 /* Run this file to load/prep the economic data */
-global projectdir "C:/Users/abirken/Documents/GitHub/groundfish-MSE"
+global projectdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE"
+
+*global projectdir "C:/Users/abirken/Documents/GitHub/groundfish-MSE"
 
 global inputdir "$projectdir/data/data_raw/econ"
 global outdir "$projectdir/data/data_processed/econ"
