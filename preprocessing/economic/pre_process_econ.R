@@ -124,6 +124,7 @@ production_vars<-c(production_vars, "constant")
 
 
 
+yearly_savename<-"full_targeting"
 
 
 source('preprocessing/economic/targeting_coeff_import.R')
