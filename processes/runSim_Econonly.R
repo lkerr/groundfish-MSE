@@ -10,7 +10,7 @@ rm(list=ls())
 gc()
 
 source('processes/runSetup.R')
-source('processes/loadEcon_extra.R')
+source('processes/setupEcon_extra.R')
 if(!require(readstata13)) {  
   install.packages("readstata13")
   require(readstata13)}
@@ -26,7 +26,7 @@ top_loop_start<-Sys.time()
 ####################These are temporary changes for testing ####################
 econ_timer<-0
 mproc_bak<-mproc
-mproc<-mproc_bak[3,]
+mproc<-mproc_bak[c(3,4),]
 
 
 ####################End Temporary changes for testing ####################
@@ -64,6 +64,11 @@ begin_rng_holder<-list()
 end_rng_holder<-list()
 #### Top rep Loop ####
 
+
+
+# for testing purposes
+nyear<-2010
+
 for(r in firstrepno:lastrepno){
 
   #### Top MP loop ####
@@ -74,11 +79,11 @@ for(r in firstrepno:lastrepno){
     myvars<-c("LandZero","CatchZero","EconType","EconData")
     econtype<-econtype[myvars]
     econ_data_stub<-econtype["EconData"]
-    if (econ_data_stub='validation'){
+    if (econ_data_stub=='validation'){
     multiplier_loc<-"sim_multipliers_post.Rds"
       # Read in Economic Production Data. These are relatively lists of data.tables. So it makes sense to read in once and then list-subset [[]] later on.
       
-    } else if (econ_data_stub='counterfactual'){
+    } else if (econ_data_stub=='counterfactual'){
     multiplier_loc<-"sim_multipliers_pre.Rds"
     output_price_loc<-"sim_prices_post.Rds"
     input_price_loc<-"sim_post_vessel_stock_prices.Rds"
@@ -143,7 +148,7 @@ for(r in firstrepno:lastrepno){
           bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline)
 
           start_time<-proc.time() 
-          source('processes/runEcon_module_only.R')
+          source('processes/runEcon_moduleonly.R')
           econ_timer<-econ_timer+proc.time()[3]-start_time[3]
           
           end_rngstate<-  .Random.seed 
@@ -166,7 +171,7 @@ for(r in firstrepno:lastrepno){
         #   stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         # }
          
-      #Save results once in a while to a stata dta file. 
+      #Save results once in a while to a csv file. 
       if (chunk_flag==0 | eyear_idx==max_eyear) {
         revenue_holder<-rbindlist(revenue_holder) 
         td <- as.character(Sys.time())
