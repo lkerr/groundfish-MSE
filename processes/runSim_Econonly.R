@@ -10,7 +10,7 @@ rm(list=ls())
 gc()
 
 source('processes/runSetup.R')
-source('processes/loadEconCF.R')
+source('processes/loadEcon_extra.R')
 if(!require(readstata13)) {  
   install.packages("readstata13")
   require(readstata13)}
@@ -26,19 +26,19 @@ top_loop_start<-Sys.time()
 ####################These are temporary changes for testing ####################
 econ_timer<-0
 mproc_bak<-mproc
-mproc<-mproc_bak[1,]
+mproc<-mproc_bak[3,]
 
 
 ####################End Temporary changes for testing ####################
-replicates<-2
-firstrepno<-3
+replicates<-1
+firstrepno<-1
 
 set.seed(53)
 
 # Need to load in the previous RNG state?
-full.pathRNG<-file.path(proj_dir, econ_results_location)
-rng_pattern<-"end_rng.*Rds$"
-source('processes/loadsetRNG.R')
+# full.pathRNG<-file.path(proj_dir, econ_results_location)
+# rng_pattern<-"end_rng.*Rds$"
+# source('processes/loadsetRNG.R')
 
 #how many years before writing out the results to csv? 6 corresponds to 1 simulation
 chunksize<-6
@@ -63,6 +63,7 @@ revenue_holder<-list()
 begin_rng_holder<-list()
 end_rng_holder<-list()
 #### Top rep Loop ####
+
 for(r in firstrepno:lastrepno){
 
   #### Top MP loop ####
@@ -70,9 +71,17 @@ for(r in firstrepno:lastrepno){
 
     #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached.
     econtype<-mproc[m,]
-    myvars<-c("LandZero","CatchZero","EconType")
+    myvars<-c("LandZero","CatchZero","EconType","EconData")
     econtype<-econtype[myvars]
-    
+    econ_data_stub<-econtype["EconData"]
+    if (econ_data_stub='validation'){
+      multiplier_loc<-"sim_multipliers_post.Rds"
+    } else if (econ_data_stub='counterfactual'){
+    multiplier_loc<-"sim_multipliers_pre.Rds"
+    }
+    else {
+    multiplier_loc<-"sim_multipliers_post.Rds"
+    }
     
     
     # Initialize stocks and determine burn-in F
