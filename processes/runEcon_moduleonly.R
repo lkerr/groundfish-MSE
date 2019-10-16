@@ -1,7 +1,6 @@
-# This code is just the counterfactual economic module.  There are a few differences from the standard "runEcon_module"
+# This code is for running a standalone economic module.  There are a few differences from the standard "runEcon_module"
     #.  This does not produce an F.
     #.  We do not zero-out the "multipliers" for the closed stocks.
-    #.  We do not 
 
 # It takes in 
 #   Values from the stock dynamics models 
@@ -44,7 +43,8 @@ for (day in 1:365){
   
   # Subset for the day.  Add in production coeffients and construct some extra data.
 working_targeting<-copy(targeting_dataset[[day]])
-working_targeting<-get_predict_eproduction(working_targeting)
+# this might not be necessary, if the hhats are coming in from AB.
+working_targeting<-get_predict_eproduction(working_targeting) 
 working_targeting[.("nofish"), on=c("spstock2"), harvest_sim:=0]
 
 
