@@ -65,63 +65,31 @@
   revenue_holder<-list()
   begin_rng_holder<-list()
   end_rng_holder<-list()
-  #### Top rep Loop ####
+  eyear_idx<-0
   
   
-  
-  
-  
-  # for testing purposes
-  
-    #### Top MP loop ####
-    for(m in 1:nrow(mproc)){
+#### Top rep Loop ####
+for(r in firstrepno:lastrepno){
+
+  # Use the same random numbers for each of the management strategies
+  set.seed(NULL)
+  rsd <- 3
+  #### Top MP loop ####
+  for(m in 1:nrow(mproc)){
+    eyear_idx<-0
+    
       #set the seed here, each run through mproc starts at the same RNG state
-      set.seed(53)
-      eyear_idx<-0
-      
+      set.seed(rsd)
       
       #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached.
       econtype<-mproc[m,]
-      myvars<-c("LandZero","CatchZero","EconType","EconData")
-      econtype<-econtype[myvars]
-      econ_data_stub<-econtype["EconData"]
-      if (econ_data_stub=='validation'){
-      multiplier_loc<-"sim_multipliers_post.Rds"
-      output_price_loc<-"sim_prices_post.Rds"
-      input_price_loc<-"sim_post_vessel_stock_prices.Rds"
-      production_vars<- production_vars_post
-      spstock_equation<-spstock_equation_pre
-      choice_equation<-choice_equation_pre
-      # Read in Economic Production Data. These are relatively lists of data.tables. So it makes sense to read in once and then list-subset [[]] later on.
-        
-      } else if (econ_data_stub=='counterfactual'){
-      multiplier_loc<-"sim_multipliers_pre.Rds"
-      output_price_loc<-"sim_prices_post.Rds"
-      input_price_loc<-"sim_post_vessel_stock_prices.Rds"
-      production_vars<-production_vars_pre
-      spstock_equation<-spstock_equation_pre
-      choice_equation<-choice_equation_pre
-      
-      } else {
-      multiplier_loc<-"sim_multipliers_post.Rds"
-      output_price_loc<-"sim_prices_post.Rds"
-      input_price_loc<-"sim_post_vessel_stock_prices.Rds"
-      production_vars<-production_vars_post
-      spstock_equation<-spstock_equation_pre
-      choice_equation<-choice_equation_pre
-      
-      }
-      multipliers<-readRDS(file.path(econdatapath,multiplier_loc))
-      outputprices<-readRDS(file.path(econdatapath,output_price_loc))
-      inputprices<-readRDS(file.path(econdatapath,input_price_loc))
-      
+      source('processes/setupEconType.R')
       
       # Initialize stocks and determine burn-in F
       # for(i in 1:nstock){
       #   stock[[i]] <- get_popInit(stock[[i]])
       # }
   
-for(r in firstrepno:lastrepno){
         
       #### Top year loop ####
       for(y in fyear:nyear){
