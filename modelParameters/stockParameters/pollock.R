@@ -15,15 +15,15 @@ page <- 9
 #### Life history parameters ####
 
 # length-at-age parameters -- see get_lengthAtAge for including covariates
-laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=5)  #AEW
+laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=5) #udpate
 laa_typ <- 'vonB'
 
 # weight-length parameters
-waa_par <- c(0.00803, 3.059) #AEW
+waa_par <- c(exp(-11.9), 3.1024) 
 waa_typ <- 'aLb'
 
 # maturity-length parameters
-mat_par <- c(0.21, 29.7) #AEW
+mat_par <- c(0.154, 39.1) 
 mat_typ <- 'logistic'
 
 # natural mortality
@@ -42,14 +42,14 @@ qI <- 0.0001
 selC <- c(s0=5, s1=0.08)
 selC_typ <- 'Logistic'
 
-# Recruitment (parameters need updating!!!)
+# Recruitment (parameters need updating!!!) #AEW 
 
-Rpar <- c(h = 6.286813e-01,
-          R0 = 8.062700e+07,
-          c = -0.540,
-          SSBRF0 = 0.01972,
-          sigR = 0.56,
-          beta3 = -2.501400e-01)
+Rpar <- c(h = 0.94,
+          R0 = 24198,
+          c = -0.540,            #update
+          SSBRF0 = 0.01972,      #update
+          sigR = 0.4,
+          beta3 = -2.501400e-01) #update
 
 R_typ <- 'BHSteep'
 
