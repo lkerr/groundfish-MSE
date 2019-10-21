@@ -20,7 +20,7 @@ top_loop_start<-Sys.time()
 econ_timer<-0
 mproc_bak<-mproc
 
-mproc<-mproc_bak[2,]
+#mproc<-mproc_bak[2,]
 nrep<-1
 econ_year_draw<-random_sim_draw[1,2]
 econ_idx_draw<-random_sim_draw[1,4]
@@ -38,25 +38,23 @@ random_sim_draw <-as.data.table(cbind(1:eyears, sample(first_econ_yr:last_econ_y
 colnames(random_sim_draw)<-c("econrd","price_gfy","other_gfy")
 random_sim_draw[, price_gfy_idx:=price_gfy-first_econ_yr+1]
 random_sim_draw[, other_gfy_idx:=other_gfy-first_econ_yr+1]
-eyear_idx<-0
 
-#### Top rep Loop ####
-for(r in 1:nrep){
-
+  #### Top MP loop ####
+  for(m in 1:nrow(mproc)){
+    
   # Use the same random numbers for each of the management strategies
   # set.seed(NULL)
   # rsd <- rnorm()
+  # set.seed(rsd)
   
-  #### Top MP loop ####
-  for(m in 1:nrow(mproc)){
-
+  eyear_idx<-0
+  #### Top rep Loop ####
+    for(r in 1:nrep){
+      
     #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached.
     econtype<-mproc[m,]
     myvars<-c("LandZero","CatchZero","EconType")
     econtype<-econtype[myvars]
-    
-    # set.seed(rsd)
-    
     
     # Initialize stocks and determine burn-in F
     for(i in 1:nstock){
