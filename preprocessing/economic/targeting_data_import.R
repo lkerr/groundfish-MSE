@@ -10,10 +10,13 @@ target_coefs<-target_coef_outfile
 production_coefs<-production_outfile
 
 targeting_coefs<-readRDS(file.path(savepath,target_coefs))
+
 production_coefs<-readRDS(file.path(savepath, production_coefs))
+production_coefs[, post:=NULL]
 
 multipliers<-readRDS(file.path(savepath, multiplier_loc))
 outputprices<-readRDS(file.path(savepath, output_price_loc))
+
 inputprices<-readRDS(file.path(savepath, input_price_loc))
 
 
@@ -107,8 +110,8 @@ targeting<- targeting   %>%
 targeting<-as.data.table(targeting)
 gc()
 # pull in coefficients
-targeting<-production_coefs[targeting, on=c("spstock2","gearcat","post")]
-targeting<-targeting_coefs[targeting, on=c("gearcat","spstock2")]
+targeting<-production_coefs[targeting, on=c("spstock2","gearcat")]
+targeting<-targeting_coefs[targeting, on=c("spstock2","gearcat")]
 
 
 
@@ -121,13 +124,13 @@ td_cols<-colnames(targeting)
 # Bring in multipliers
 colnames(targeting)[colnames(targeting)=="month"] <- "MONTH"
 
-targeting<-wm[targeting, on=c("hullnum","MONTH","spstock2","gffishingyear","post")]
+targeting<-wm[targeting, on=c("hullnum","MONTH","spstock2","gffishingyear")]
 
 # Pull in output prices (day) -- could add this to the wi dataset
-targeting<-wo[targeting, on=c("doffy","gffishingyear", "post", "gearcat")]
+targeting<-wo[targeting, on=c("doffy","gffishingyear", "gearcat")]
 
 # Pull in input prices (hullnum-day-spstock2)
-targeting<-wi[targeting, on=c("hullnum","doffy","spstock2","gffishingyear","post")]
+targeting<-wi[targeting, on=c("hullnum","doffy","spstock2","gffishingyear")]
 ##################################  JOINS END HERE ###############
 
 targeting[, fuelprice_len:=fuelprice*len]
@@ -152,10 +155,8 @@ monthvars<-grep("^month",colnames(targeting) , value=TRUE)
 
 idvars=c("id", "hullnum","spstock2", "doffy")
 necessary=c("q", "gffishingyear", "emean","nchoices", "MONTH")
-#useful=c("gearcat","post","h_hat","xb_post","choice")
-useful=c("gearcat","post","h_hat","choice")
 
-mysubs=c(idvars,necessary,useful, targeting_vars, production_vars, fyvars, monthvars, betavars, alphavars, cmultipliers, lmultipliers, quota_prices, lag_output_prices, output_prices)
+mysubs=c(idvars,necessary,useful_vars, targeting_vars, production_vars, fyvars, monthvars, betavars, alphavars, cmultipliers, lmultipliers, quota_prices, lag_output_prices, output_prices)
 
 targeting<-targeting[, ..mysubs]
 

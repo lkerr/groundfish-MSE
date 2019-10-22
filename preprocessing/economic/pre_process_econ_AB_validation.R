@@ -122,11 +122,12 @@ choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
 
 targeting_vars=c(spstock_equation, choice_equation)
 #these are the postRHS variables
-#production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","primary", "secondary")
+production_vars_pre=c("log_crew","log_trip_days","log_trawl_survey_weight","primary", "secondary")
 #these are the post RHS variables
-production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","log_sector_acl","primary", "secondary")
-production_vars<-c(production_vars, "constant")
+production_vars_post=c("log_crew","log_trip_days","log_trawl_survey_weight","log_sector_acl","primary", "secondary")
+production_vars<-c(production_vars_post, "constant")
 
+useful_vars=c("gearcat","post","h_hat","choice", "pr_hat")
 
 yearly_savename<-"validation"
 
