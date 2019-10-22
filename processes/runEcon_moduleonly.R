@@ -43,9 +43,9 @@ for (day in 1:365){
   
 # Subset for the day.  Add in production coeffients and construct some extra data.
 working_targeting<-copy(targeting_dataset[[day]])
-working_targeting[,harvest_sim :=h_hat]
 # this might not be necessary, if the hhats are coming in from AB.
 #working_targeting<-get_predict_eproduction(working_targeting) 
+working_targeting[,harvest_sim :=h_hat]
 working_targeting[.("nofish"), on=c("spstock2"), harvest_sim:=0]
 
 
@@ -63,7 +63,6 @@ working_targeting[.("nofish"), on=c("spstock2"), harvest_sim:=0]
      
      
     #zero_out_targets will set the catch and landings multipliers to zero depending on the value of underACL, stockarea_open, and mproc$EconType
-
 
     #working_targeting<-joint_adjust_allocated_mults(working_targeting,fishery_holder, econtype)
     #working_targeting<-joint_adjust_others(working_targeting,fishery_holder, econtype)
