@@ -27,20 +27,14 @@
   econ_timer<-0
   mproc_bak<-mproc
   mproc<-mproc_bak[c(3,4),]
-  #mproc<-mproc_bak[c(3),]
+  mproc<-mproc_bak[c(4),]
   
   
   
   ####################End Temporary changes for testing ####################
-  replicates<-2
+  replicates<-1
   firstrepno<-1
   
-  set.seed(53)
-  
-  # Need to load in the previous RNG state?
-  # full.pathRNG<-file.path(proj_dir, econ_results_location)
-  # rng_pattern<-"end_rng.*Rds$"
-  # source('processes/loadsetRNG.R')
   
   #how many years before writing out the results to csv? 6 corresponds to 1 simulation
   chunksize<-6
@@ -50,7 +44,7 @@
   #dont change these
   lastrepno<-replicates+firstrepno-1
   fyear<-2010
-  nyear<-2015
+  nyear<-2011
   fmyearIdx<-fyear
   # Set up a small table that is useful for variablity across years in the economic model.
   eyears<-nyear-fyear+1
@@ -59,27 +53,35 @@
   
   random_sim_draw[, econ_year_idx:=econ_year-fyear+1]
   max_eyear<-nrow(random_sim_draw)
-  
   ############################################################
-  
   revenue_holder<-list()
   begin_rng_holder<-list()
   end_rng_holder<-list()
   eyear_idx<-0
+
+  #set the rng state.  Store the random state.  
+  set.seed(3)
+  oldseed1 <- .Random.seed
   
+  
+  # Need to load in the previous RNG state?
+  # full.pathRNG<-file.path(proj_dir, econ_results_location)
+  # rng_pattern<-"end_rng.*Rds$"
+  # source('processes/loadsetRNG.R')
   
 #### Top rep Loop ####
 for(r in firstrepno:lastrepno){
-
-  # Use the same random numbers for each of the management strategies
-  set.seed(NULL)
-  rsd <- 3
-  #### Top MP loop ####
+  oldseed2 <- .Random.seed
+  
+#### Top MP loop ####
   for(m in 1:nrow(mproc)){
-    eyear_idx<-0
     
-      #set the seed here, each run through mproc starts at the same RNG state
-      set.seed(rsd)
+     eyear_idx<-0
+    
+      #Restore the rng state.  Depending on whether you use oldseed1 or oldseed2, you'll get different behavior.
+     
+      #.Random.seed<-oldseed1
+     .Random.seed<-oldseed2
       
       #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached.
       econtype<-mproc[m,]
