@@ -6,9 +6,13 @@ mults<-as.data.table(mults)
 colnames(mults)[colnames(mults)=="month"] <- "MONTH"
 
 multipre<-mults[post==0]
+multipre[, post:=NULL]
+
 multipre<-split(multipre,multipre$gffishingyear)
 
 multipost<-mults[post==1]
+multipost[, post:=NULL]
+
 multipost<-split(multipost,multipost$gffishingyear)
 
 

@@ -6,9 +6,12 @@ mults <- read.dta13(file.path(rawpath, vsp_location))
 mults<-as.data.table(mults)
 
 multipre<-mults[post==0]
+multipre[, post:= NULL]
+
 multipre<-split(multipre,multipre$gffishingyear)
 
 multipost<-mults[post==1]
+multipost[, post:= NULL]
 
 multipost<-split(multipost,multipost$gffishingyear)
 
