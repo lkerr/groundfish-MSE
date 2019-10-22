@@ -30,3 +30,6 @@ gen caldate=mdy(5,1,y)+doffy-1
 gen target=1
 collapse (count) target, by(caldate spstock2 r m)
 
+encode spstock2, gen(mys)
+tsset mys cal
+xtline target
