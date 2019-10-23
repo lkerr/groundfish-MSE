@@ -32,7 +32,7 @@ if(!require(data.table)) {
 
 
 # This bit of code will run some stata.  
-stata_exec<-"/usr/local/stata15/stata-mp"
+#stata_exec<-"/usr/local/stata15/stata-mp"
 #This one for windows0
 #stata_opts<-" /b do" 
 #this one for *nix
@@ -43,7 +43,7 @@ stata_exec<-"/usr/local/stata15/stata-mp"
 #stata_dofiles_list<-as.list(stata_dofiles)
 
 
-    # doesn't quite work -- the quotes aren't in the right place
+# doesn't quite work -- the quotes aren't in the right place
 #full_cmd<-paste(stata_exec, stata_opts,file.path(stata_codedir,stata_dofiles) , sep=" ") 
 #system(full_cmd, timeout=0, intern=FALSE)
    
@@ -79,7 +79,7 @@ target_coef_outfile<-"targeting_coefs_pre.Rds"
 
 # bits for production_coefs.R 
 production_coef_pre<-"production_regs_actual_pre_forR.txt"
-production_coef_post<-"production_regs_actual_pre_forR.txt"
+production_coef_post<-"production_regs_actual_post_forR.txt"
 
 #production_coef_post<-"production_regs_actual_post_forR.txt"
 production_outfile<-"production_coefs_pre.Rds"
@@ -93,6 +93,8 @@ pricepostoutfile<-"sim_prices_post.Rds"
 multip_location<-"reshape_multipliers.dta"
 multipreoutfile<-"sim_multipliers_pre.Rds"
 multipostoutfile<-"sim_multipliers_post.Rds"
+#Counterfactual multipliers are hullnum, spstock2, month averages over the pre period.
+multicounteroutfile<-"sim_multipliers_counter.Rds"
 
 # bits for vessel_specific_prices.R 
 vsp_location<-"hullnum_spstock2_input_prices.dta"
@@ -102,11 +104,10 @@ vsp_postoutfile<-"sim_post_vessel_stock_prices.Rds"
 
 # bits for targeting_data_import.R 
 # Which multipliers, output prices, and input prices do you want to use.
-#multiplier_loc<-"sim_multipliers_post.Rds"
-multiplier_loc<-"sim_multipliers_pre.Rds"
+multiplier_loc<-multipreoutfile
 
-output_price_loc<-"sim_prices_post.Rds"
-input_price_loc<-"sim_post_vessel_stock_prices.Rds"
+output_price_loc<- pricepostoutfile
+input_price_loc<-vsp_postoutfile
 ####prefix  (see datafile_split_prefix in wrapper.do)
 yrstub<-"POSTasPRE"
 
@@ -117,7 +118,6 @@ spstock_equation=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind
 #spstock_equation=c("exp_rev_total",  "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
 
 choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
-#choice_equation=c("len" )
 
 
 targeting_vars=c(spstock_equation, choice_equation)

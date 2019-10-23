@@ -16,8 +16,11 @@ production_coefs[, post:=NULL]
 
 multipliers<-readRDS(file.path(savepath, multiplier_loc))
 outputprices<-readRDS(file.path(savepath, output_price_loc))
-
 inputprices<-readRDS(file.path(savepath, input_price_loc))
+
+
+#for the counterfactual, we do something else -- we need average multipliers by hullnum, MONTH, spstock2.
+
 
 
 
@@ -31,11 +34,22 @@ for (wy in 2010:2015) {
   targeting <- read.dta13(file.path(rawpath, targeting_source))
   
   
-  
-  
+  if (yearly_savename =="counterfactual"){
+    wm<-rbindlist(multipliers)
+    mygroup<-c("hullnum", "MONTH", "spstock2")
+    wm<-wm[, lapply(.SD,mean), by=mygroup]
+    wm[, gffishingyear:= NULL]
+  }else {
   wm<-multipliers[[idx]]
+  }
+  wm[, gffishingyear:=0]
+  
   wo<-outputprices[[idx]]
+  wo[, gffishingyear:=0]
+  
   wi<-inputprices[[idx]]
+  wi[, gffishingyear:=0]
+  
   
   
   
@@ -120,17 +134,17 @@ setorderv(targeting, keycols)
 
 td_cols<-colnames(targeting)
 
-##################################  JOINS START HERE ###############
+##################################  JOINS START HERE. We're processing over years, so no need to join on GFFISHINGYEAR or POST ###############
 # Bring in multipliers
 colnames(targeting)[colnames(targeting)=="month"] <- "MONTH"
 
-targeting<-wm[targeting, on=c("hullnum","MONTH","spstock2","gffishingyear")]
+targeting<-wm[targeting, on=c("hullnum","MONTH","spstock2")]
 
 # Pull in output prices (day) -- could add this to the wi dataset
-targeting<-wo[targeting, on=c("doffy","gffishingyear", "gearcat")]
+targeting<-wo[targeting, on=c("doffy", "gearcat")]
 
 # Pull in input prices (hullnum-day-spstock2)
-targeting<-wi[targeting, on=c("hullnum","doffy","spstock2","gffishingyear")]
+targeting<-wi[targeting, on=c("hullnum","doffy","spstock2")]
 ##################################  JOINS END HERE ###############
 
 targeting[, fuelprice_len:=fuelprice*len]
