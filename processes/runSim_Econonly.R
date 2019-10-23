@@ -34,8 +34,8 @@
     ####################These are temporary changes for testing ####################
     econ_timer<-0
     mproc_bak<-mproc
-    #mproc<-mproc_bak[c(3,4),]
-    mproc<-mproc_bak[c(4),]
+    mproc<-mproc_bak[c(3,4),]
+    #mproc<-mproc_bak[c(4),]
     firstrepno<-1
     ####################End Temporary changes for testing ####################
     
@@ -43,7 +43,7 @@
     ####################BEGIN Parameter and storage Setup ####################
     #dont change these
     
-    replicates<-2
+    replicates<-1
     #how many years before writing out the results to csv? 6 corresponds to 1 simulation
     chunksize<-6
     
@@ -108,7 +108,7 @@
          
              # ---- Run the economic model here ----
            
-                 source('processes/loadEcon2.R')
+                source('processes/loadEcon2.R')
               bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline)
       
               start_time<-proc.time() 

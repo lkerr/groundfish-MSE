@@ -11,9 +11,9 @@ cap mkdir $process_results
 
 cd $raw_results
 
-#local imports: dir "." files "econ_2019-10-22*.csv"
+local imports: dir "." files "econ_2019-10-23*.csv"
 
-local imports: dir "." files "*.csv"
+*local imports: dir "." files "*.csv"
 
 foreach l of local imports{
 	tempfile new
