@@ -58,7 +58,7 @@ droppval<-function(working_coefs){
 
 ### Repeat for the post coefs 
 
-production_coefs_post <- read.csv(file.path(rawpath,production_coef_post), sep="\t", header=TRUE,stringsAsFactors=FALSE)
+production_coefs_post <- read.csv(file.path(rawpath,production_coef_in), sep="\t", header=TRUE,stringsAsFactors=FALSE)
 
 production_coefs_post<-zero_out(production_coefs_post,thresh)
 production_coefs_post<-droppval(production_coefs_post)
