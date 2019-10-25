@@ -3,7 +3,7 @@
 
 /* Construct prices at the spstock2-date level */
 
-use "$inputdir/data_for_simulations_mse.dta", clear
+use "$inputdir/$datafilename", clear
 cap notes drop _all
 ds
 local all `r(varlist)'
@@ -20,7 +20,7 @@ replace spstock2=subinstr(spstock2,"gom","GOM",.)
 
 replace spstock2=subinstr(spstock2,"gb","GB",.)
 
-save "$inputdir/data_for_simulations_mse.dta", replace
+save "$inputdir/$datafilename", replace
 
 
 keep spstock2 post gffishingyear gearcat date price_lb price_lb_lag1
@@ -56,12 +56,12 @@ cap drop marker myg
 bysort gearcat gffishingyear doffy: assert _N==1
 order post gearcat gffishingyear doffy
 sort post gearcat gffishingyear doffy
-save "$inputdir/output_price_series.dta", replace
+save "$inputdir/$output_prices", replace
 
 
 
 /*crew wage varies by vessel-spstock2 -- so does fuelprice */
-use "$inputdir/data_for_simulations_mse.dta", clear
+use "$inputdir/$datafilename", clear
 keep hullnum spstock2 post gffishingyear date wkly_crew fuelprice
 gen gfstart=mdy(5,1,gffishingyear)
 
@@ -86,7 +86,7 @@ drop gfstart date myg marker
 order post gffishingyear hullnum spstock2 doffy
 sort post gffishingyear hullnum spstock2 doffy
 
-save "$inputdir/hullnum_spstock2_input_prices.dta", replace
+save "$inputdir/$input_prices", replace
 
 
 

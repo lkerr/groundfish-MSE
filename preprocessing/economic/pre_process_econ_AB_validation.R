@@ -86,7 +86,8 @@ prodution_pre_out<-"production_coefs_pre.Rds"
 prodution_post_out<-"production_coefs_post.Rds"
 
 # bits for price_import.R 
-price_location<-"output_price_series.dta"
+price_location_pre<-"output_price_series_pre.dta"
+price_location_post<-"output_price_series_post.dta"
 pricepreoutfile<-"sim_prices_pre.Rds"
 pricepostoutfile<-"sim_prices_post.Rds"
 
@@ -96,7 +97,8 @@ multipreoutfile<-"sim_multipliers_pre.Rds"
 multipostoutfile<-"sim_multipliers_post.Rds"
 
 # bits for vessel_specific_prices.R 
-vsp_location<-"hullnum_spstock2_input_prices.dta"
+vsp_location_pre<-"input_price_series_pre.dta"
+vsp_location_post<-"input_price_series_post.dta"
 vsp_preoutfile<-"sim_pre_vessel_stock_prices.Rds"
 vsp_postoutfile<-"sim_post_vessel_stock_prices.Rds"
 
@@ -130,9 +132,8 @@ production_outfile<-prodution_post_out
 #multiplier_loc<-multipreoutfile
 # OR 
 multiplier_loc<-multipostoutfile
-
-output_price_loc<- pricepostoutfile
-input_price_loc<-vsp_postoutfile
+output_price_loc<- price_location_post
+input_price_loc<-vsp_location_post
 ####prefix  (see datafile_split_prefix in wrapper.do)
 yrstub<-"POSTasPOST"
 
@@ -141,6 +142,10 @@ yrstub<-"POSTasPOST"
 
 
 ######################You finished commenting through here.   We will want to add more comments, pull through to the other data processing files, commit and save.  OR just run with 1 processing file?
+
+production_vars<-c(production_vars_post, "constant")
+
+useful_vars=c("gearcat","post","h_hat","choice", "xb_hat", "log_h_hat")
 
 
 yearly_savename<-"validation"

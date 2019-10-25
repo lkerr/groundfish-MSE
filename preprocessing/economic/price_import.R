@@ -1,7 +1,7 @@
 # Read in pre- and post- prices and save to Rds 
 
 
-mults <- read.dta13(file.path(rawpath, price_location))
+mults <- read.dta13(file.path(rawpath, output_price_loc))
 mults<-as.data.table(mults)
 
 colnames(mults)[colnames(mults)=="month"] <- "MONTH"
