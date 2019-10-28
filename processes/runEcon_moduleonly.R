@@ -46,7 +46,7 @@ working_targeting<-copy(targeting_dataset[[day]])
 # this might not be necessary, if the hhats are coming in from AB.
 #working_targeting<-get_predict_eproduction(working_targeting) 
 working_targeting[,harvest_sim :=h_hat]
-working_targeting[.("nofish"), on=c("spstock2"), harvest_sim:=0]
+working_targeting[spstock2=="nofish", harvest_sim:=0L]
 
 
     # Keep or update choice_prev_fish
@@ -69,9 +69,9 @@ working_targeting[.("nofish"), on=c("spstock2"), harvest_sim:=0]
     working_targeting<-get_joint_production(working_targeting,spstock2s) 
     working_targeting[, exp_rev_total:=exp_rev_total/1000]
     working_targeting[, actual_rev_total:=actual_rev_total/1000]
+    working_targeting[spstock2=="nofish", exp_rev_total:=0L]
     
-    working_targeting[.("nofish"), on=c("spstock2"), exp_rev_total:=0]
-    
+
     
     # Predict targeting
   trips<-get_predict_etargeting(working_targeting)

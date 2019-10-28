@@ -6,7 +6,6 @@
 #       post prices
 
 # Nearly all of this code is setting parameters that get passed through to other .R files. 
-Sys.sleep(1000)
 rm(list=ls())
 if(!require(readstata13)) {  
     install.packages("readstata13")
