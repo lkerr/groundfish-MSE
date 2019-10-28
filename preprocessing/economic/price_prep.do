@@ -6,9 +6,9 @@
 /* we monthly quota prices */
 use "$inputdir/$multiplier_file" if spstock2_prim=="CodGB", clear
 
-keep aceprice month gffishingyear spstock2
+keep aceprice month gffishingyear spstock2 hullnum
 
-bysort month gffishingyear spstock2: keep if _n==1
+bysort hullnum month gffishingyear spstock2: keep if _n==1
 
 
 replace spstock2=lower(spstock2)
@@ -23,7 +23,7 @@ replace spstock2=subinstr(spstock2,"gb","GB",.)
 rename aceprice q_
 
 
-reshape wide q_, i(gffishingyear month) j(spstock2) string
+reshape wide q_, i(hullnum gffishingyear month) j(spstock2) string
 
 qui foreach var of varlist q_* {
 replace `var'=0 if `var'==.
@@ -147,7 +147,7 @@ drop gfstart date myg marker
 order post gffishingyear hullnum spstock2 doffy
 sort post gffishingyear hullnum spstock2 doffy
 
-merge m:1 post gffishingyear month using `t1', keep(1 3)
+merge m:1 post gffishingyear hullnum month using `t1', keep(1 3)
 assert _merge==3
 drop _merge
 drop month
