@@ -12,7 +12,7 @@
     rm(list=ls())
     gc()
     
-    #runSetup.R loads things and sets them up. This is used by the integrated simulation, so be careful making changes with it. Instead....
+    #runSetup.R loads things and sets them up. This is used by the integrated simulation, so be careful making changes with it. Instead, overwrite them using the setupEcon_extra.R file.
     source('processes/runSetup.R')
     
     #setupEcon_extra.R makes modfications for the "Econ_only" run.  
