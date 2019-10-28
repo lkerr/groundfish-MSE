@@ -5,13 +5,13 @@ targeting_dataset<-readRDS(file.path(econdatapath,econdatafile))
 
 #Counterfactual only uses 
 wm<-multipliers[[econ_idx_draw]]
-wm[, gffishingyear:=0]
+wm[, gffishingyear:=NULL]
 
 wo<-outputprices[[econ_idx_draw]]
-wo[, gffishingyear:=0]
+wo[, gffishingyear:=NULL]
 
 wi<-inputprices[[econ_idx_draw]]
-wi[, gffishingyear:=0]
+wi[, gffishingyear:=NULL]
 
 #temp for debugging
 #targeting_dataset$prhat<-targeting_dataset$pr
