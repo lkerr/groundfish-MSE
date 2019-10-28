@@ -3,7 +3,7 @@
 
 
 
-/* we monthly quota prices */
+/* we need hullnum-month quota prices */
 use "$inputdir/$multiplier_file" if spstock2_prim=="CodGB", clear
 
 keep aceprice month gffishingyear spstock2 hullnum
@@ -86,13 +86,6 @@ save "$inputdir/$datafilename", replace
 keep spstock2 post gffishingyear gearcat date price_lb price_lb_lag1
 bysort gearcat spstock2 date: keep if _n==1
 
-
-replace spstock2=lower(spstock2)
-replace spstock2=subinstr(spstock2,"ccgom","CCGOM",.)
-replace spstock2=subinstr(spstock2,"snema","SNEMA",.)
-replace spstock2=subinstr(spstock2,"gom","GOM",.)
-replace spstock2=subinstr(spstock2,"gb","GB",.)
-
 rename price_lb_lag1 p_
 rename price_lb r_
 reshape wide p_ r_,  i(gearcat date) j(spstock2) string
@@ -124,14 +117,6 @@ save "$inputdir/$output_prices", replace
 use "$inputdir/$datafilename", clear
 keep hullnum spstock2 post gffishingyear date wkly_crew fuelprice
 gen gfstart=mdy(5,1,gffishingyear)
-
-
-replace spstock2=lower(spstock2)
-replace spstock2=subinstr(spstock2,"ccgom","CCGOM",.)
-replace spstock2=subinstr(spstock2,"snema","SNEMA",.)
-replace spstock2=subinstr(spstock2,"gom","GOM",.)
-replace spstock2=subinstr(spstock2,"gb","GB",.)
-
 
 /* pad out an extra day, where wkly_crew and fuel price for day 366 are equal to day=265 */
 gen doffy=date-gfstart+1
