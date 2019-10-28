@@ -103,9 +103,9 @@ econdatapath <- 'data/data_processed/econ'
 
 
 #multiplier_loc<-"sim_multipliers_pre.Rds"
-multiplier_loc<-"sim_multipliers_post.Rds"
-output_price_loc<-"sim_prices_post.Rds"
-input_price_loc<-"sim_post_vessel_stock_prices.Rds"
+multiplier_loc<-"sim_multipliers_post_MSE.Rds"
+output_price_loc<-"output_prices_post_MSE.Rds"
+input_price_loc<-"output_prices_post_MSE.Rds"
 
 
 ##############Stocks in the Economic Model #############################
