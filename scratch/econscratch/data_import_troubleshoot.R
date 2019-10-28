@@ -23,11 +23,14 @@ savepath <- './data/data_processed/econ'
 
 econsavepath <- 'scratch/econscratch'
 load(file.path(econsavepath,"temp_biop.RData"))
+m<-2
 
-m<-3
+mproc_bak<-mproc
+mproc<-mproc_bak[c(m),]
 
 
-econtype<-mproc[m,]
+
+econtype<-mproc_bak[m,]
 myvars<-c("LandZero","CatchZero","EconType")
 econtype<-econtype[myvars]
 

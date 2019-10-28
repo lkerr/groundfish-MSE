@@ -118,7 +118,7 @@ use "$inputdir/$datafilename", clear
 keep hullnum spstock2 post gffishingyear date wkly_crew fuelprice
 gen gfstart=mdy(5,1,gffishingyear)
 
-/* pad out an extra day, where wkly_crew and fuel price for day 366 are equal to day=265 */
+/* pad out an extra day, where wkly_crew and fuel price for day 366 are equal to day=365 */
 gen doffy=date-gfstart+1
 expand 2 if doffy==365, gen(myg)
 replace doffy=366 if myg==1
