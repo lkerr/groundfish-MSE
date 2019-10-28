@@ -25,7 +25,7 @@ if (econ_data_stub=='validation'){
   spstock_equation<-spstock_equation_pre
   choice_equation<-choice_equation_pre
   
-} else {
+} else if (econ_data_stub=='full_targeting'){
   multiplier_loc<-"sim_multipliers_post.Rds"
   output_price_loc<-"sim_prices_post.Rds"
   input_price_loc<-"sim_post_vessel_stock_prices.Rds"
