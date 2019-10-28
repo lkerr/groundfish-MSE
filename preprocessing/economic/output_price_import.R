@@ -17,9 +17,9 @@ multipost[, post:= NULL]
 multipost<-split(multipost,multipost$gffishingyear)
 
 
-saveRDS(multipost, file=file.path(savepath, pricepostoutfile), compress=FALSE)
+saveRDS(multipost, file=file.path(savepath, output_postoutfile), compress=FALSE)
 
-saveRDS(multipre, file=file.path(savepath, pricepreoutfile), compress=FALSE)
+saveRDS(multipre, file=file.path(savepath, output_preoutfile), compress=FALSE)
 rm(list=c("multipre", "multipost", "mults"))
 
 

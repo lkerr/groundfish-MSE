@@ -2,7 +2,7 @@
 
 
 
-mults <- read.dta13(file.path(rawpath, vsp_location))
+mults <- read.dta13(file.path(rawpath, input_price_loc))
 mults<-as.data.table(mults)
 
 multipre<-mults[post==0]
@@ -16,8 +16,8 @@ multipost[, post:= NULL]
 multipost<-split(multipost,multipost$gffishingyear)
 
 
-saveRDS(multipost, file=file.path(savepath, vsp_postoutfile), compress=FALSE)
-saveRDS(multipre, file=file.path(savepath, vsp_preoutfile),compress=FALSE)
+saveRDS(multipost, file=file.path(savepath, input_postoutfile), compress=FALSE)
+saveRDS(multipre, file=file.path(savepath, input_preoutfile),compress=FALSE)
 rm(list=c("multipre", "multipost", "mults"))
 
 

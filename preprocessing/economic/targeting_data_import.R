@@ -14,9 +14,11 @@ targeting_coefs<-readRDS(file.path(savepath,target_coefs))
 production_coefs<-readRDS(file.path(savepath, production_coefs))
 production_coefs[, post:=NULL]
 
-multipliers<-readRDS(file.path(savepath, multiplier_loc))
-outputprices<-readRDS(file.path(savepath, output_price_loc))
-inputprices<-readRDS(file.path(savepath, input_price_loc))
+
+
+inputprices<-readRDS(file.path(savepath, input_working))
+multipliers<-readRDS(file.path(savepath, multiplier_working))
+outputprices<-readRDS(file.path(savepath, output_working))
 
 
 #for the counterfactual, we do something else -- we need average multipliers by hullnum, MONTH, spstock2.
@@ -25,7 +27,7 @@ inputprices<-readRDS(file.path(savepath, input_price_loc))
 
 
 
-for (wy in 2010:2015) {
+for (wy in 2015:2015) {
     idx<-wy-2009
     
   yrsavefile<-paste0(yearly_savename,wy,".Rds")
@@ -33,22 +35,21 @@ for (wy in 2010:2015) {
   
   targeting <- read.dta13(file.path(rawpath, targeting_source))
   
-  
+  # Not quite right. I
   if (yearly_savename =="counterfactual"){
     wm<-rbindlist(multipliers)
     mygroup<-c("hullnum", "MONTH", "spstock2")
     wm<-wm[, lapply(.SD,mean), by=mygroup]
-    wm[, gffishingyear:= NULL]
   }else {
   wm<-multipliers[[idx]]
   }
-  wm[, gffishingyear:=0]
+  wm[, gffishingyear:=NULL]
   
   wo<-outputprices[[idx]]
-  wo[, gffishingyear:=0]
+  wo[, gffishingyear:=NULL]
   
   wi<-inputprices[[idx]]
-  wi[, gffishingyear:=0]
+  wi[, gffishingyear:=NULL]
   
   
   

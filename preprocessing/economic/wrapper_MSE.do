@@ -2,6 +2,7 @@
 /* Run this file to load/prep the economic data */
 global projectdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE"
 
+*global projectdir "C:/Users/abirken/Documents/GitHub/groundfish-MSE"
 global inputdir "$projectdir/data/data_raw/econ"
 global outdir "$projectdir/data/data_processed/econ"
 global codedir "$projectdir/preprocessing/economic"
@@ -32,22 +33,16 @@ global catch_hist_file "catchHist.csv"
 
 global multiplier_file "multipliers.dta"
 global multiplier_out "reshape_multipliers.dta"
+global quota_price_out "reshape_quota_pricesMSE.dta"
 
-/* done */
-do "$codedir/asclogit_coef_export.do"
-do "$codedir/stocks_in_model.do"
-do "$codedir/recode_catch_limits.do"
-do "$codedir/price_prep.do" 
-do "$codedir/multiplier_prep.do"
+
+/*filenames for input prices and output prices */
+global output_prices "output_price_series_MSE.dta"
+global input_prices "input_price_series_MSE.dta"
+
+
+do "$codedir/price_prep.do"
 do "$codedir/econ_data_split.do"
-
-/* to do 
-
-
-do "$codedir/price_mult_join.do"*/
-
-
-
 
 /*obsolete 
 do "$codedir/nlogit_coef_export.do" */

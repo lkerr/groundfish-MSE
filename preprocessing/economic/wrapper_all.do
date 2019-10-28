@@ -1,8 +1,13 @@
 /* Order of doing stuff. */
-/* Run this file to load/prep the economic data */
+/* Run this file to load/prep the economic data 
+This set of data processing is the same for all of the different scenarios.
+So we only need to run this once. And run this before you run the other wrappers
+
+*/
 global projectdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE"
 
 *global projectdir "C:/Users/abirken/Documents/GitHub/groundfish-MSE"
+
 global inputdir "$projectdir/data/data_raw/econ"
 global outdir "$projectdir/data/data_processed/econ"
 global codedir "$projectdir/preprocessing/economic"
@@ -22,9 +27,6 @@ global pre_gillnet_out "asclogit_gillnet_pre_coefs.txt"
 global pre_trawl_out "asclogit_trawl_pre_coefs.txt"
 
 
-/*name of main data file */
-global datafilename "data_for_simulations_POSTasPRE.dta"
-global datafile_split_prefix "POSTasPRE"
 
 /*construct prices, reshape multipliers, and bring both into the targeting dataset */
 global catch_hist_file "catchHist.csv"
@@ -33,16 +35,32 @@ global catch_hist_file "catchHist.csv"
 
 global multiplier_file "multipliers.dta"
 global multiplier_out "reshape_multipliers.dta"
-global quota_price_out "reshape_quota_pricesCF.dta"
+
+global datafilename "data_for_simulations_POSTasPRE.dta"
 
 
+
+do "$codedir/asclogit_coef_export.do"
+do "$codedir/stocks_in_model.do"
+
+do "$codedir/recode_catch_limits.do"
+do "$codedir/multiplier_prep.do"
+
+
+
+/*
 /*filenames for input prices and output prices */
-global output_prices "output_price_series_CF.dta"
-global input_prices "input_price_series_CF.dta"
+global output_prices "output_price_series_post.dta"
+global input_prices "input_price_series_post.dta"
+global quota_price_out "reshape_quota_prices.dta"
 
+name of main data file 
 
+global datafilename "data_for_simulations_POSTasPRE.dta"
+global datafile_split_prefix "POSTasPRE"
 do "$codedir/price_prep.do"
-do "$codedir/econ_data_split.do"
+
+do "$codedir/econ_data_split.do"*/
 
 /*obsolete 
 do "$codedir/nlogit_coef_export.do" */
