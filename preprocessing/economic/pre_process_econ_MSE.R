@@ -54,8 +54,9 @@ if(!require(data.table)) {
 # windows is kind of stupid, so you'll have to deal with it in some way.
 rawpath <- './data/data_raw/econ'
 savepath <- './data/data_processed/econ'
-#rawpath <- 'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE/data/data_raw/econ'
-#savepath <- 'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE/data/data_processed/econ'
+# Just a guess on your paths.  
+#rawpath <- 'C:/Users/abirken/Documents/GitHub/groundfish-MSE/data/data_raw/econ'
+#savepath <- 'C:/Users/abirken/Documents/GitHub/groundfish-MSE/data/data_raw/econ'
 
 
 
