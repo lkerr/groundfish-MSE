@@ -69,9 +69,11 @@ production_vars_pre=c("log_crew","log_trip_days","log_trawl_survey_weight","prim
 production_vars_post=c("log_crew","log_trip_days","log_trawl_survey_weight","log_sector_acl","primary", "secondary")
 
 ####################Locations of files. You shouldn't have to change these unless you're adding new datasets (like a pre-as-pre or pre-as-pre), new coefficients, new multipliers, etc) 
+
 trawl_targeting_post<-"asclogit_trawl_post_coefs.txt" 
-gillnet_targeting_post<-"asclogit_gillnet_post_coefs.txt"
 trawl_targeting_pre<-"asclogit_trawl_pre_coefs.txt" 
+
+gillnet_targeting_post<-"asclogit_gillnet_post_coefs.txt"
 gillnet_targeting_pre<-"asclogit_trawl_pre_coefs.txt" 
 
 target_pre_out<-"targeting_coefs_pre.Rds"
@@ -84,23 +86,27 @@ production_coef_post<-"production_regs_actual_post_forR.txt"
 
 prodution_pre_out<-"production_coefs_pre.Rds"
 prodution_post_out<-"production_coefs_post.Rds"
+# bits for input_price_import.R 
+file_suffix<-"_valid"
 
-# bits for price_import.R 
-price_location_pre<-"output_price_series_pre.dta"
-price_location_post<-"output_price_series_post.dta"
-pricepreoutfile<-"sim_prices_pre.Rds"
-pricepostoutfile<-"sim_prices_post.Rds"
+input_price_loc<-paste0("input_price_series",file_suffix,".dta")
+input_preoutfile<-paste0("input_prices_pre",file_suffix,".Rds")
+input_postoutfile<-paste0("input_prices_post",file_suffix,".Rds")
+input_working<-input_postoutfile
 
 # bits for multiplier_import.R 
 multip_location<-"reshape_multipliers.dta"
-multipreoutfile<-"sim_multipliers_pre.Rds"
-multipostoutfile<-"sim_multipliers_post.Rds"
+multi_postoutfile<-paste0("sim_multipliers_post",file_suffix,".Rds")
+multi_preoutfile<-paste0("sim_multipliers_pre",file_suffix,".Rds")
+multiplier_working<-multi_postoutfile
 
-# bits for vessel_specific_prices.R 
-vsp_location_pre<-"input_price_series_pre.dta"
-vsp_location_post<-"input_price_series_post.dta"
-vsp_preoutfile<-"sim_pre_vessel_stock_prices.Rds"
-vsp_postoutfile<-"sim_post_vessel_stock_prices.Rds"
+# bits for output_price_import.R 
+output_price_loc<-paste0("output_price_series",file_suffix,".dta")
+output_preoutfile<-paste0("output_prices_pre",file_suffix,".Rds")
+output_postoutfile<-paste0("output_prices_post",file_suffix,".Rds")
+output_working<-output_postoutfile
+
+
 
 ####################END Locations of files. You shouldn't have to change these unless you're adding new datasets (like a pre-as-pre or pre-as-pre), new coefficients, new multipliers, etc) 
 
@@ -123,25 +129,14 @@ target_coef_outfile<-target_pre_out
 # Tell R which production coefficients to read in and where to store them.
 # production_coef_in<-production_coef_pre
 # production_outfile<-prodution_pre_out 
-production_coef_in<-production_coef_post
-production_outfile<-prodution_post_out
+# OR
+  production_coef_in<-production_coef_post
+  production_outfile<-prodution_post_out
 
 
-# bits for targeting_data_import.R 
-# Which multipliers, output prices, and input prices do you want to use.
-#multiplier_loc<-multipreoutfile
-# OR 
-multiplier_loc<-multipostoutfile
-output_price_loc<- price_location_post
-input_price_loc<-vsp_location_post
 ####prefix  (see datafile_split_prefix in wrapper.do)
 yrstub<-"POSTasPOST"
 
-
-
-
-
-######################You finished commenting through here.   We will want to add more comments, pull through to the other data processing files, commit and save.  OR just run with 1 processing file?
 
 production_vars<-c(production_vars_post, "constant")
 
@@ -152,10 +147,11 @@ yearly_savename<-"validation"
 
 source('preprocessing/economic/targeting_coeff_import.R')
 source('preprocessing/economic/production_coefs.R')
-
-source('preprocessing/economic/price_import.R')
+#output prices
+source('preprocessing/economic/output_price_import.R')
 source('preprocessing/economic/multiplier_import.R')
-source('preprocessing/economic/vessel_specific_prices.R')
+#input prices
+source('preprocessing/economic/input_price_import.R')
 
 
 # This takes quite a while 
