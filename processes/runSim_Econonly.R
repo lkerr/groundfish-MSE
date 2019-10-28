@@ -8,6 +8,12 @@
       #   CatchZero ==FALSE --> catch of GB Cod happens even if GB cod is closed (but all catch would be discarded).
       # LandZero is unused.
 
+
+# NEEDS: 
+  # zero out quota prices for the counterfactual.
+  # check/verify that closing fisheries for jointness is coded properly.
+
+
 #### Set up environment ####
     rm(list=ls())
     gc()

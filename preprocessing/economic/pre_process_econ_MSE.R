@@ -56,7 +56,7 @@ rawpath <- './data/data_raw/econ'
 savepath <- './data/data_processed/econ'
 # Just a guess on your paths.  
 #rawpath <- 'C:/Users/abirken/Documents/GitHub/groundfish-MSE/data/data_raw/econ'
-#savepath <- 'C:/Users/abirken/Documents/GitHub/groundfish-MSE/data/data_raw/econ'
+#savepath <- 'C:/Users/abirken/Documents/GitHub/groundfish-MSE/data/data_processed/econ'
 
 
 

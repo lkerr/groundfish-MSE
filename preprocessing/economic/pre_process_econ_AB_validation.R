@@ -55,7 +55,7 @@ if(!require(data.table)) {
 rawpath <- './data/data_raw/econ'
 savepath <- './data/data_processed/econ'
 #rawpath <- 'C:/Users/abirken/Documents/GitHub/groundfish-MSE/data/data_raw/econ'
-#savepath <- 'C:/Users/abirken/Documents/GitHub/groundfish-MSE/data/data_raw/econ'
+#savepath <- 'C:/Users/abirken/Documents/GitHub/groundfish-MSE/data/data_processed/econ'
 
 
 
