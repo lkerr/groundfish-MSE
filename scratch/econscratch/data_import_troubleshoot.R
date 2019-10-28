@@ -37,7 +37,7 @@ fishery_holder$stockarea_open<-as.logical("TRUE")
 fishery_holder$cumul_catch_pounds<-0
 fishery_holder$targeted<-0
 
-revenue_holder<-as.list(NULL)
+revenue_holder<-as.list(NULL)#
 
 
 ###########################Make sure you have the correct set of RHS variables.
@@ -58,8 +58,8 @@ production_vars<-c(production_vars_post, "constant")
 useful_vars=c("gearcat","post","h_hat","choice", "xb_hat", "log_h_hat")
 #useful_vars=c("gearcat","post","h_hat","xb_post","choice")
 
-yearly_savename<-"full_targeting"
-#yearly_savename<-"counterfactual"
+#yearly_savename<-"full_targeting"
+yearly_savename<-"counterfactual"
 #yearly_savename<-"validation"
 wy<-2015
 
@@ -81,10 +81,13 @@ is.data.table(t2)
 # Adjust the fishing year dummies (to 2009)
 # You could probably pass this in through the control file (what do you want to set the fy to?)
  yearzero<-grep("^fy",colnames(t2) , value=TRUE)
-
+ quotaprice_zero<-c("q_americanplaiceflounder","q_codGB","q_codGOM","q_haddockGB","q_haddockGOM","q_pollock","q_redfish","q_whitehake","q_winterflounderGB","q_winterfounderGOM","q_witchflounder","q_yellowtailflounderCCGOM","q_yellowtailflounderGB", "q_yellowtailflounderSNEMA")
+ 
+ 
  if (yearly_savename=="counterfactual"){
    t2[, c(yearzero) :=0]
    t2[, fy2009 :=1]
+   t2[, c(quotaprice_zero) :=0]
    } else if (yearly_savename=="full_targeting"){
      t2[, c(yearzero) :=0]
      t2[, fy2015 :=1]
@@ -168,10 +171,10 @@ troubleshoot<-working_targeting[, lapply(.SD, max, na.rm=TRUE), by=c("spstock2",
 setorder(troubleshoot, -deltar)
 # Gillnets seems to be fine.  Sea scallops are the worst -- so ?
 
-working_targeting[, lapply(.SD, mean, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=("deltar") ] 
+working_targeting[, lapply(.SD, mean, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=("absdeltar") ] 
 
-working_targeting[, lapply(.SD, max, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=("deltar") ] 
-working_targeting[, lapply(.SD, min, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=("deltar") ] 
+working_targeting[, lapply(.SD, max, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=("absdeltar") ] 
+working_targeting[, lapply(.SD, min, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=("absdeltar") ] 
 
 # 
 
