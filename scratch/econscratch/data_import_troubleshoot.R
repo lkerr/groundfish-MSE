@@ -58,8 +58,8 @@ production_vars<-c(production_vars_post, "constant")
 useful_vars=c("gearcat","post","h_hat","choice", "xb_hat", "log_h_hat")
 #useful_vars=c("gearcat","post","h_hat","xb_post","choice")
 
-#yearly_savename<-"full_targeting"
-yearly_savename<-"counterfactual"
+yearly_savename<-"full_targeting"
+#yearly_savename<-"counterfactual"
 #yearly_savename<-"validation"
 wy<-2015
 
