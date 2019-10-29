@@ -10,9 +10,8 @@
 
 
 # NEEDS: 
-  # zero out quota prices for the counterfactual.
   # check/verify that closing fisheries for jointness is coded properly.
-
+  # 
 
 #### Set up environment ####
     rm(list=ls())
@@ -23,7 +22,7 @@
     
     #setupEcon_extra.R makes modfications for the "Econ_only" run.  
     
-    source('processes/setupEcon_extra.R')
+    #source('processes/setupEcon_extra.R')
     if(!require(readstata13)) {  
       install.packages("readstata13")
       require(readstata13)}
@@ -40,7 +39,7 @@
     ####################These are temporary changes for testing ####################
     econ_timer<-0
     mproc_bak<-mproc
-    mproc<-mproc_bak[c(3,4),]
+    #mproc<-mproc_bak[c(3,4),]
     #mproc<-mproc_bak[c(4),]
     firstrepno<-1
     ####################End Temporary changes for testing ####################
@@ -96,13 +95,14 @@
         #.Random.seed<-oldseed1
        .Random.seed<-oldseed2
         
-        #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached.
+        #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached, which sets of coefficients to use, and which prices to use
         econtype<-mproc[m,]
-        source('processes/setupEconType.R')
-        
+        if(econtype$ImplementationClass=="Economic"){
+         source('processes/setupEconType.R')
+        }
         #### Top year loop ####
         for(y in fyear:nyear){
-          #Construct the year-replicate index and use those to look up their values from random_sim_draw
+          #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
           eyear_idx<-eyear_idx+1
           econ_year_draw<-random_sim_draw[[eyear_idx,2]]
           econ_idx_draw<-random_sim_draw[[eyear_idx,3]]
@@ -114,7 +114,7 @@
          
              # ---- Run the economic model here ----
            
-                source('processes/loadEcon2.R')
+              source('processes/loadEcon2.R')
               bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline)
       
               start_time<-proc.time() 

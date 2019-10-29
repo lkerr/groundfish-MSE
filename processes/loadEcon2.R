@@ -3,7 +3,6 @@
 econdatafile<-paste0(econ_data_stub,econ_year_draw,".Rds")
 targeting_dataset<-readRDS(file.path(econdatapath,econdatafile))
 
-#Counterfactual only uses 
 wm<-multipliers[[econ_idx_draw]]
 wm[, gffishingyear:=NULL]
 

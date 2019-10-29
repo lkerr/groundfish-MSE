@@ -103,23 +103,30 @@ econdatapath <- 'data/data_processed/econ'
 
 
 #multiplier_loc<-"sim_multipliers_pre.Rds"
-multiplier_loc<-"sim_multipliers_post_MSE.Rds"
-output_price_loc<-"output_prices_post_MSE.Rds"
-input_price_loc<-"output_prices_post_MSE.Rds"
+# multiplier_loc<-"sim_multipliers_post_MSE.Rds"
+# output_price_loc<-"output_prices_post_MSE.Rds"
+# input_price_loc<-"output_prices_post_MSE.Rds"
+
 
 
 ##############Stocks in the Economic Model #############################
 spstock2s<-c("americanlobster","americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","monkfish", "other","pollock","redsilveroffshorehake","redfish","seascallop","skates","spinydogfish","squidmackerelbutterfishherring","summerflounder","whitehake","winterflounderGB","winterflounderGOM","witchflounder","yellowtailflounderCCGOM", "yellowtailflounderGB","yellowtailflounderSNEMA")
 
 ##############Independent variables in the targeting equation ##########################
-spstock_equation=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
-#choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len", "das_price_mean", "das_price_mean_len")
-#choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len", "constant")
-choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
+spstock_equation_pre=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
+choice_equation_pre=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
+
+spstock_equation_post<-spstock_equation_pre
+choice_equation_post<-choice_equation_pre
 
 ##############Independent variables in the Production equation ##########################
-production_vars=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","constant")
-############################## END ECON SECTION ##################################
+production_vars_pre=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","constant")
+production_vars_post=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","log_sector_acl", "constant")
+
+
+production_vars<-NULL
+choice_equation<-NULL
+spstock_equation<-NULL
 
 
 
