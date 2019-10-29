@@ -44,7 +44,7 @@ Refers to the parameters necessary for developing the F<sub>MSY</sub> proxy. The
 
 * **YPR**: The value that represents *x* percent of the slope at the origin. Definitely the most common entry here will be 0.1 (for 10%), which will give the reference point F<sub>0.1</sub>. You have thought pretty hard about this if you are using something other than 0.1 here.
 
-* **SPR**: The value representing the desired quotient of spawning biomass-per-recruit at the reference point to spawning biomass-per-recruit at zero fishing. A value of 0.4 (corresponding to F<sub>40%</sub>) would indicate that F should be set at a level that represents 40% survival relative to F=0. Note that **0.4** is what you write in the file (i.e., the proportion rather than percentage).
+* **SPR**: The value representing the desired quotient of spawning biomass-per-recruit at the reference point to spawning biomass-per-recruit at zero fishing. A value of 0.4 (corresponding to F<sub>40%</sub>) would indicate that F should be set at a level that represents 40% survival relative to F=0. Note that **0.4** is what you write in the file for F<sub>40%</sub> (i.e., the proportion rather than percentage).
 
 * **Fmed**: Fmed does not require additional parameters so FREF_PAR0 should be set to NA.
 
