@@ -42,7 +42,7 @@ Refers to the method for developing the F reference point (i.e., a proxy for F<s
 ## FREF_PAR0
 Refers to the parameters necessary for developing the F<sub>MSY</sub> proxy. These are presented here as linked to the reference point types above.
 
-* **YPR**: The value that represents *x* percent of the slope at the origin. Definitely the most common entry here will be 0.1 (for 10%), which will give the reference point F<sub>0.1</sub>. You have thought pretty hard about this if you are using something other than 0.1 here).
+* **YPR**: The value that represents *x* percent of the slope at the origin. Definitely the most common entry here will be 0.1 (for 10%), which will give the reference point F<sub>0.1</sub>. You have thought pretty hard about this if you are using something other than 0.1 here.
 
 * **SPR**: The value representing the desired quotient of spawning biomass-per-recruit at the reference point to spawning biomass-per-recruit at zero fishing. A value of 0.4 (corresponding to F<sub>40%</sub>) would indicate that F should be set at a level that represents 40% survival relative to F=0.
 
