@@ -74,7 +74,7 @@ trawl_targeting_post<-"asclogit_trawl_post_coefs.txt"
 trawl_targeting_pre<-"asclogit_trawl_pre_coefs.txt" 
 
 gillnet_targeting_post<-"asclogit_gillnet_post_coefs.txt"
-gillnet_targeting_pre<-"asclogit_trawl_pre_coefs.txt" 
+gillnet_targeting_pre<-"asclogit_gillnet_pre_coefs.txt" 
 
 target_pre_out<-"targeting_coefs_pre.Rds"
 target_post_out<-"targeting_coefs_post.Rds"
