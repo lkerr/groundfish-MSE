@@ -8,14 +8,14 @@ If you are new to GitHub and are using RStudio, this is a pretty good tutorial: 
 
 ## Branches
 
-* **Master**: The master branch. Ideally this branch will always be able to run with the available options in **mproc.txt**. Before other branches are merged into **Master** they have been reviewed by one or more people other than the author and thoroughly tested both on a local machine and on the HPCC. Merges to **Master** should come from the **Dev** branch rather than directly from feature branches.
+* **Master**: The master branch. Ideally this branch will always be able to run with the available options in **mproc.csv**. Before other branches are merged into **Master** they have been reviewed by one or more people other than the author and thoroughly tested both on a local machine and on the HPCC. Merges to **Master** should come from the **Dev** branch rather than directly from feature branches.
 
   * *exception*: Small edits to the documentation are less critical -- it seems reasonable that these can be committed to the Master branch directly. Large changes to the documentation, like new files, could benefit from review however.
 
 
 * **Dev**: The primary development branch. This is the "working" branch which represents code that has been vetted and tested. Whether changes should be committed directly to the **Dev** branch depends on the type of change.
 
-  * Small changes can be committed directly without requesting reviews. These represent changes that have to do with testing the Dev branch and in general should be limited to (1) the set_om_parameters.R file, or (2) the mproc.txt file. Examples include:
+  * Small changes can be committed directly without requesting reviews. These represent changes that have to do with testing the Dev branch and in general should be limited to (1) the set_om_parameters.R file, or (2) the mproc.csv file. Examples include:
 
     * Changing the number of simulations in the **set_om_parameters.R** file
 

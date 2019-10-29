@@ -13,14 +13,14 @@ This document describes the methodology for determining F<sub>MSY</sub> based on
   * natural mortality-at-age
   * weight-at-age
 * Initial numbers-at-age
-* Recruitment function (from mproc.txt)
+* Recruitment function (from mproc.csv)
 * Number of years to run the simulation (*n*)
 * Temperature information (if necessary)
 * Candidate values for *F* (a vector running from 0 to 2.0)
 
 #### Operation
 The function operates following these steps:
-1. Starting with the initial numbers-at-age, run a simple age-structured projection for *n* years [SEE NOTE AT END OF DOC] and use the life history information and the first potential value for F. Recruitment will depend on the entries in mproc.txt for *RFUN_NM* and *FREF_PAR0*. When operating under the *FREF_TYP* FmsySim, which we are here, *FREF_PAR0* refers to a number of years in the forecast or hindcast function. Recruitment options are
+1. Starting with the initial numbers-at-age, run a simple age-structured projection for *n* years [SEE NOTE AT END OF DOC] and use the life history information and the first potential value for F. Recruitment will depend on the entries in mproc.csv for *RFUN_NM* and *FREF_PAR0*. When operating under the *FREF_TYP* FmsySim, which we are here, *FREF_PAR0* refers to a number of years in the forecast or hindcast function. Recruitment options are
   * **hindcastMean**: Recruitment in each year will be an average over a number of recent years. The number is specified by *FREF_PAR0*. For example, if *FREF_PAR0* is 10, recruitment in each year of the projection will be average recruitment over the ten previous years estimated by the stock assessment model (note that recruitment does not change -- the assessment model is not run during this projection).
   * **forecast**: Recruitment is calculated in each year of the projection using the Beverton-Holt stock assessment model, potentially with a temperature effect if that switch is turned on.  For example, in year *y* the recruitment will be<br/>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R<sub>y</sub> = BH(SSB<sub>y</sub>,T<sub>y</sub>)<br/>

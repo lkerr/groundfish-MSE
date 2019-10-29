@@ -21,7 +21,7 @@ The overall approach to the MSE is to attempt to have the code be as compartment
 
 * **functions**: All the functions that are used by the MSE. Folder further divided into functions related to the assessment process, management procedures, plotting and population dynamics. These subdivisions are only for organization.
 
-* **modelParameters**: All files that deal with paramaterization of the current model run are found in this folder.  the file set_om_parameters_global.R contains the super-stock level operating model parameters (e.g., things like time-frames and temperature information to use). mproc.txt governs the management procedues that will be compared during the run and mprocTest.txt is a version of this file used for testing. The sub-folder **stockParameters** contains the stock-level information for each stock.  All stocks that are contained in this folder will be included in the run.
+* **modelParameters**: All files that deal with paramaterization of the current model run are found in this folder.  the file set_om_parameters_global.R contains the super-stock level operating model parameters (e.g., things like time-frames and temperature information to use). mproc.csv governs the management procedues that will be compared during the run and mprocTest.csv is a version of this file used for testing. The sub-folder **stockParameters** contains the stock-level information for each stock.  All stocks that are contained in this folder will be included in the run.
 
 * **preprocessing**: Processing some of the raw data into .Rdata files to be used in some preliminary/exploratory analyses. Files in this folder are mostly unused.
 

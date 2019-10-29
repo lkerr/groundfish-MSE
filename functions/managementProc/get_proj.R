@@ -69,7 +69,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     # length of recruitment time series
     nR <- length(parpop$R)
     
-    # historical R estimates over the time window specified in mproc.txt
+    # historical R estimates over the time window specified in mproc.csv
     Rest <- get_dwindow(parpop$R, 
                         start = unlist(nR- (-startHCM) + 1), 
                         end = unlist(nR - (-endHCM) + 1))
