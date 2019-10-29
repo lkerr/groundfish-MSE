@@ -90,7 +90,7 @@
     #now testing to see if this runs
     #for(m in 1:nrow(mproc)){
     
-    for(m in 4:4){
+    for(m in 3:3){
       
        eyear_idx<-0
       
