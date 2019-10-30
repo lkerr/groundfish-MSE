@@ -1,7 +1,7 @@
 # this small file controls some economic options that may vary with the mproc lines.  For example:
   # in the "validation" model runs, we use the "post" production regression, the  "pre" choice equations, post multipliers, prices.  
   # in the counterfactual model runs, we use the "pre" production regression, the  "pre" choice equations, post multipliers, prices.   
-  # I've set up a 3rd placeholder option, but  I haven't figured out what to do with it yet.
+  # LandZero is unused
 
 myvars<-c("LandZero", "CatchZero","EconType","EconName","EconData","MultiplierFile","OutputPriceFile","InputPriceFile","ProdEqn","ChoiceEqn")
 econtype<-econtype[myvars]
