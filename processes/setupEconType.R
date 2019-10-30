@@ -13,10 +13,9 @@ input_price_loc<-econtype$InputPriceFile
 
 
 # you need to fix this so it flexibly reads in the vectors
-production_vars<-production_vars_post
-spstock_equation<-spstock_equation_pre
-choice_equation<-choice_equation_pre
-
+production_vars<-get(paste0("production_vars_",econtype$ProdEqn))
+spstock_equation<-get(paste0("spstock_equation_",econtype$ChoiceEqn))
+choice_equation<-get(paste0("choice_equation_",econtype$ChoiceEqn))
 
 multipliers<-readRDS(file.path(econdatapath,multiplier_loc))
 outputprices<-readRDS(file.path(econdatapath,output_price_loc))
