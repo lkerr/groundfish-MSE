@@ -35,10 +35,10 @@ for (wy in 2010:2015) {
   
   targeting <- read.dta13(file.path(rawpath, targeting_source))
   
-  # Not quite right. I
-  if (yearly_savename =="counterfactual"){
+  # the counterfactual only: Compute multipliers, averaged over the the pre or post time  
+    if (yearly_savename =="counterfactual"){
     wm<-rbindlist(multipliers)
-    mygroup<-c("hullnum", "MONTH", "spstock2")
+   mygroup<-c("hullnum", "MONTH", "spstock2")
     wm<-wm[, lapply(.SD,mean), by=mygroup]
   }else {
   wm<-multipliers[[idx]]
