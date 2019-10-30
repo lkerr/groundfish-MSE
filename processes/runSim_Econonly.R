@@ -26,7 +26,7 @@
       install.packages("readstata13")
       require(readstata13)}
     #set up directories.  Create directories.
-    proj_dir<- "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE"
+    #proj_dir<- "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE"
     
     dir.create('results', showWarnings = FALSE)
     dir.create('results/econ', showWarnings = FALSE)

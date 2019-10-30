@@ -23,16 +23,16 @@ savepath <- './data/data_processed/econ'
 
 econsavepath <- 'scratch/econscratch'
 load(file.path(econsavepath,"temp_biop.RData"))
-m<-2
 
 mproc_bak<-mproc
-mproc<-mproc_bak[c(m),]
+mproc<-mproc_bak
 
-
+m<-2
 
 econtype<-mproc_bak[m,]
-myvars<-c("LandZero","CatchZero","EconType")
+myvars<-c("LandZero", "CatchZero","EconType","EconName","EconData","MultiplierFile","OutputPriceFile","InputPriceFile","ProdEqn","ChoiceEqn")
 econtype<-econtype[myvars]
+
 
 fishery_holder<-bio_params_for_econ[,c("stocklist_index","stockName","spstock2","sectorACL","nonsector_catch_mt","bio_model","SSB", "mults_allocated", "stockarea","non_mult")]
 fishery_holder$underACL<-as.logical("TRUE")
@@ -53,16 +53,16 @@ choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
 
 targeting_vars=c(spstock_equation, choice_equation)
 #these are the postRHS variables
-production_vars_pre=c("log_crew","log_trip_days","log_trawl_survey_weight","primary", "secondary")
+production_vars_pre=c("log_crew","log_trip_days","log_trawl_survey_weight","primary", "secondary", "constant")
 #these are the post RHS variables
-production_vars_post=c("log_crew","log_trip_days","log_trawl_survey_weight","log_sector_acl","primary", "secondary")
-production_vars<-c(production_vars_post, "constant")
+production_vars_post=c("log_crew","log_trip_days","log_trawl_survey_weight","log_sector_acl","primary", "secondary", "constant")
+production_vars<-production_vars_post
 
 useful_vars=c("gearcat","post","h_hat","choice", "xb_hat", "log_h_hat")
 #useful_vars=c("gearcat","post","h_hat","xb_post","choice")
 
-yearly_savename<-"full_targeting"
-#yearly_savename<-"counterfactual"
+#yearly_savename<-"full_targeting"
+yearly_savename<-"counterfactual"
 #yearly_savename<-"validation"
 wy<-2015
 
@@ -84,17 +84,18 @@ is.data.table(t2)
 # Adjust the fishing year dummies (to 2009)
 # You could probably pass this in through the control file (what do you want to set the fy to?)
  yearzero<-grep("^fy",colnames(t2) , value=TRUE)
- quotaprice_zero<-c("q_americanplaiceflounder","q_codGB","q_codGOM","q_haddockGB","q_haddockGOM","q_pollock","q_redfish","q_whitehake","q_winterflounderGB","q_winterfounderGOM","q_witchflounder","q_yellowtailflounderCCGOM","q_yellowtailflounderGB", "q_yellowtailflounderSNEMA")
  
  
  if (yearly_savename=="counterfactual"){
    t2[, c(yearzero) :=0]
    t2[, fy2009 :=1]
-   t2[, c(quotaprice_zero) :=0]
+#   t2[, c(quotaprice_zero) :=0]
    } else if (yearly_savename=="full_targeting"){
      t2[, c(yearzero) :=0]
      t2[, fy2015 :=1]
    } else if (yearly_savename=="validation"){
+     t2[, choice_prev_fish :=0]
+    
    }
  
 
@@ -104,13 +105,12 @@ betavars<-grep("^beta",colnames(t2) , value=TRUE)
 setcolorder(t2, c(alphavars,betavars))
 setorderv(t2,c("gearcat","spstock2"))
 
-# 
- t2[, lapply(.SD, mean, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=(alphavars) ] 
+#  t2[, lapply(.SD, mean, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=(alphavars) ] 
 
 # The merge seems to have worked properly
 #View(head(t2,20))
 
-working_targeting<-t2
+working_targeting<-copy(t2)
 working_targeting<-get_predict_eproduction(working_targeting)
 working_targeting[spstock2=="nofish", harvest_sim:=0L]
 
@@ -122,7 +122,7 @@ summary(working_targeting$delta)
 #View(head(working_targeting,50))
 #setorderv(working_targeting,c("gearcat","spstock2"))
 
-working_targeting[, lapply(.SD, mean, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=("delta") ] 
+#working_targeting[, lapply(.SD, mean, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=("delta") ] 
 #vessel<-working_targeting[, lapply(.SD, mean, na.rm=TRUE), by=c("spstock2","hullnum"), .SDcols=("delta") ] 
 #setorder(vessel,-delta)
 
@@ -134,23 +134,23 @@ working_targeting[, exp_rev_bak :=exp_rev_total]
 # landings multipliers
 
 
-q_mult<-grep("^q_",colnames(working_targeting) , value=TRUE)
-r_mult<-grep("^r_",colnames(working_targeting) , value=TRUE)
+#q_mult<-grep("^q_",colnames(working_targeting) , value=TRUE)
+#r_mult<-grep("^r_",colnames(working_targeting) , value=TRUE)
 
-c_mult<-grep("^c_",colnames(working_targeting) , value=TRUE)
+# c_mult<-grep("^c_",colnames(working_targeting) , value=TRUE)
 
 #setcolorder(targeting,c("spstock2","doffy",q_mult))
-setcolorder(working_targeting,c("hullnum","spstock2","doffy",q_mult))
-setorderv(working_targeting,c("hullnum","spstock2","doffy",q_mult))
+#setcolorder(working_targeting,c("hullnum","spstock2","doffy",q_mult))
+#setorderv(working_targeting,c("hullnum","spstock2","doffy",q_mult))
 
 
-setcolorder(working_targeting,c("hullnum","spstock2","doffy",c_mult))
-setorderv(working_targeting,c("hullnum","spstock2","doffy",c_mult))
+#setcolorder(working_targeting,c("hullnum","spstock2","doffy",c_mult))
+#setorderv(working_targeting,c("hullnum","spstock2","doffy",c_mult))
 
-View(head(working_targeting,10))
+#View(head(working_targeting,10))
 
-setcolorder(working_targeting,c("hullnum","spstock2","doffy",q_mult))
-View(working_targeting[working_targeting$doffy==40],)
+#setcolorder(working_targeting,c("hullnum","spstock2","doffy",q_mult))
+#View(working_targeting[working_targeting$doffy==40],)
 
 
 
@@ -166,24 +166,63 @@ working_targeting[, absdeltar:=abs(deltar)]
 summary(working_targeting$deltar)
 summary(working_targeting$absdeltar)
 
-setorder(working_targeting, -absdeltar)
-setcolorder(working_targeting, c("spstock2","gearcat","deltar", "absdeltar","exp_rev_total","exp_rev_bak","quota_cost",production_vars))
+#setorder(working_targeting, -absdeltar)
+#setcolorder(working_targeting, c("spstock2","gearcat","deltar", "absdeltar","exp_rev_total","exp_rev_bak","quota_cost",production_vars))
 
 
-troubleshoot<-working_targeting[, lapply(.SD, max, na.rm=TRUE), by=c("spstock2","gearcat","MONTH"), .SDcols=("deltar") ] 
-setorder(troubleshoot, -deltar)
+#troubleshoot<-working_targeting[, lapply(.SD, max, na.rm=TRUE), by=c("spstock2","gearcat","MONTH"), .SDcols=("deltar") ] 
+#setorder(troubleshoot, -deltar)
 # Gillnets seems to be fine.  Sea scallops are the worst -- so ?
 
-working_targeting[, lapply(.SD, mean, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=("absdeltar") ] 
-
-working_targeting[, lapply(.SD, max, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=("absdeltar") ] 
-working_targeting[, lapply(.SD, min, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=("absdeltar") ] 
+# working_targeting[, lapply(.SD, mean, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=("absdeltar") ] 
+# 
+# working_targeting[, lapply(.SD, max, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=("absdeltar") ] 
+# working_targeting[, lapply(.SD, min, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=("absdeltar") ] 
 
 # 
+trips<-get_predict_etargeting(working_targeting)
+
+trips[, deltaxbh:=xb-xb_hat]
+summary(trips$deltaxbh)
+setcolorder(trips, c("spstock2","gearcat", "xb","xb_hat", betavars))
+setorder(trips, deltaxbh)
+View(head(trips,100))
 
 
-# This takes quite a while 
-#source('preprocessing/economic/targeting_data_import.R')
+# 
+# # running by hand doesn't help
+# tds<-copy(working_targeting)
+# datavars=c(spstock_equation, choice_equation)
+# betavars=paste0("beta_",datavars)
+# 
+# 
+# X<-as.matrix(tds[, ..datavars])
+# B<-as.matrix(tds[, ..betavars])
+# 
+# 
+# 
+# tds[, xb:=rowSums(X*B)]
+# tds[, expu:=exp(xb)]
+# tds[, totexpu := sum(expu), by = id]
+# tds[, prhat := expu/totexpu]
+
+
+
+setorderv(trips, c("gearcat","spstock2"))
+
+# mcoefs<-trips[, lapply(.SD, max, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=(betavars) ] 
+# maxcoefs<-trips[, lapply(.SD, max, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=(betavars) ] 
+# mincoefs<-trips[, lapply(.SD, max, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=(betavars) ] 
+# 
+# trips[, lapply(.SD, mean, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=c("xb","xb_hat", "deltaxbh") ] 
+# trips[, lapply(.SD, max, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=c("xb","xb_hat","deltaxbh") ] 
+# trips[, lapply(.SD, min, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=c("xb","xb_hat","deltaxbh") ] 
+# 
+# 
+# data<-trips[, lapply(.SD, mean, na.rm=TRUE), by=c("spstock2","gearcat"), .SDcols=(targeting_vars) ] 
+
+
+
 
 
 # Lets take a look at wm, wo, wi
