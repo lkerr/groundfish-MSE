@@ -27,7 +27,7 @@ outputprices<-readRDS(file.path(savepath, output_working))
 
 
 
-for (wy in 2015:2015) {
+for (wy in 2010:2015) {
     idx<-wy-2009
     
   yrsavefile<-paste0(yearly_savename,wy,".Rds")
