@@ -20,8 +20,7 @@
     #runSetup.R loads things and sets them up. This is used by the integrated simulation, so be careful making changes with it. Instead, overwrite them using the setupEcon_extra.R file.
     source('processes/runSetup.R')
     
-    #setupEcon_extra.R makes modfications for the "Econ_only" run.  
-    
+   
     #source('processes/setupEcon_extra.R')
     if(!require(readstata13)) {  
       install.packages("readstata13")
@@ -39,8 +38,7 @@
     ####################These are temporary changes for testing ####################
     econ_timer<-0
     mproc_bak<-mproc
-    #mproc<-mproc_bak[c(3,4),]
-    #mproc<-mproc_bak[c(4),]
+    mproc<-mproc_bak[2:4,]
     firstrepno<-1
     ####################End Temporary changes for testing ####################
     
@@ -54,9 +52,9 @@
     
 
     lastrepno<-replicates+firstrepno-1
-    fyear<-2015
+    fyear<-2010
     nyear<-2015
-    fmyearIdx<-2015
+    fmyearIdx<-2010
     #set the rng state.  Store the random state.  
     set.seed(3)
     oldseed1 <- .Random.seed
@@ -88,9 +86,9 @@
     
   #### Top MP loop ####
     #now testing to see if this runs
-    #for(m in 1:nrow(mproc)){
+    for(m in 1:nrow(mproc)){
     
-    for(m in 3:3){
+   # for(m in 3:3){
       
        eyear_idx<-0
       

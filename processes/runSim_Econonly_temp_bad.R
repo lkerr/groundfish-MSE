@@ -54,9 +54,9 @@
     
 
     lastrepno<-replicates+firstrepno-1
-    fyear<-2015
+    fyear<-2010
     nyear<-2015
-    fmyearIdx<-2015
+    fmyearIdx<-2010
     #set the rng state.  Store the random state.  
     set.seed(3)
     oldseed1 <- .Random.seed
@@ -90,7 +90,7 @@
     #now testing to see if this runs
     #for(m in 1:nrow(mproc)){
     
-    for(m in 3:3){
+    for(m in 3:4){
       
        eyear_idx<-0
       
