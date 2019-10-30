@@ -50,7 +50,12 @@ There's a pile of code.
 
 * **runEcon_module.R :**  is a *working* economic module. The last part is kinda janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop.  This used to be in the scratch folder with a different name.
 
-* **runEcon_module_counterfactual.R :**  is a *working* economic module.  It has been revised a bit in preparation to run the counterfactual simulations (2010-2015 as-if Days-at-Sea).  But a few details need to be ironed out, because it has only been prototyped using post-as-post ( 2010-2015 as-if catch shares) data.
+* **runEcon_module_counterfactual.R :**  is a *working* economic module.  It has been revised a bit in preparation to run the counterfactual simulations (2010-2015 as-if Days-at-Sea).  But a few details need to be ironed out, because it has only been prototyped using post-as-post (2010-2015 as-if catch shares) data.
+  
+ #. POSTasPRE is the counterfactual.  It uses pre-multipliers, pre-production, but post-prices
+ #. POSTasPOST is the validation.  It uses pst-multipliers, post-production, post prices. It uses Pre coefficients. 
+
+
 
 * **runSim_Econ_counterfactual.R :**  is a modified version of runSim.R. This should only need minor changes (setting parameters) before it is finalized.
 
@@ -119,14 +124,21 @@ There are a few files in "/preprocessing/economic/"  These primarily deal with c
 A bunch of pre-processing is needed to go from the stata econometric output to R data.tables.  Some of this is written in Stata .do files.  The rest is written as R batch files.  
 
 
-* **wrapper.do** This is a wrapper to run all the stata .do files. You'll need to change the projectdir global. You may need to change the file names themselves.
+* **wrapper.do** This is a wrapper to run all the stata .do files. You'll need to change the projectdir global. You may need to change the file names themselves.  There are versions of this for settin counterfactual data (wrapper_CF.do) and validation data (wrapper_validation.do).  All of the wrappers run the stata code --you may want to change a few global macros that define which files are which. 
+
 
 * **asclogit_coef_export.do** This exports the stata estimates to csv.
 * **stocks_in_model.do** This makes a 1 column dataset of spstock2.  
 * **recode_catch_limits.do** A little cleanup and conforming of the catch limit csv.
-* **price_prep.do** : Construct output prices at the spstock2-date level and input prices at the hullnum-spstock2-date level.
+* **price_prep.do** : Construct output prices at the spstock2-date level and input prices at the hullnum-spstock2-date level.  Note -- right now, we are only have Post period prices ready. All simulations are currently using 2010-2015 prices.  This may break things
 
-* **pre_process_econ.R:** This is a wrapper to  run *all* of the R and stata code. You will need to change paths to directories, you may need to change some filenames.  We set all the input and output filenames here.  This has been tested to work on a post-as-post scenario. It will need minor modifications to do pre-as-pre. 
+* **pre_process_econ.R:** This is a wrapper to  run *all* of the R and stata code. You will need to change paths to directories, you may need to change some filenames.  We set all the input and output filenames here.  This has been tested to work on a "data_for_mse" dataset.
+
+* **pre_process_AB_counterfactual.R:** This is a wrapper to  run *all* of the R and stata code to set data up for "counterfactual simulations".  You will need to change paths to directories, you may need to change some filenames.  We set all the input and output filenames here.  This has been tested to work on a "POSTasPRE" dataset.  
+
+* **pre_process_AB_validation.R:** This is a wrapper to  run *all* of the R and stata code to set data up for "counterfactual simulations".  You will need to change paths to directories, you may need to change some filenames.  We set all the input and output filenames here.  This has been tested to work on a "POSTasPOST" dataset.
+
+
 
 
 * **targeting_coeff_import.R** converts the results of asclogit_coef_export to an R data.table
@@ -134,7 +146,7 @@ A bunch of pre-processing is needed to go from the stata econometric output to R
 * **price_import.R** imports and save sdata.tables containing  prices
 * **multiplier_import.R** constructs vessel 
 * **vessel_specific_prices.R** imports and saves data.tables containing vessel level prices
-* **targeting_data_import.R** constructs the simulation datasets.  There are the "data" is joined to coefficients, prices, and multipliers using various combinations of "hullnum", "MONTH" , "spstock2", "gffishingyear", "post", "doffy" (day of groundfish fishing year), "gearcat".  We'll need to do some medium size modifications to the joins to do post-as-pre here. (the joins use gffishingyear and post) 
+* **targeting_data_import.R** constructs the simulation datasets.  There are the "data" is joined to coefficients, prices, and multipliers using various combinations of "hullnum", "MONTH" , "spstock2", "doffy" (day of groundfish fishing year), "gearcat".  Note that because the data loops through "gffishingyears", we we do not join on gffishingyear. This piece of code also computes average multipliers in the pre-period for the counterfactual sims.
 
 
 

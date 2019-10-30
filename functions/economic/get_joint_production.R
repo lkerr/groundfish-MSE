@@ -60,9 +60,16 @@ get_joint_production <- function(wt,spstock_names){
   my.erformula<-paste0(my.erformula,"-quota_cost")
   my.arformula<-paste0(my.arformula,"-quota_cost")
   
-  my.erformula<-str2lang(my.erformula)
-  my.arformula<-str2lang(my.arformula)
-  my.qformula<-str2lang(my.qformula)
+  # parse(text=my.erformula, keep.source=FALSE)
+  #this might not work
+   my.erformula<-parse(text=my.erformula, keep.source=FALSE)
+   my.arformula<-parse(text=my.arformula, keep.source=FALSE)
+   my.qformula<-parse(text=my.qformula, keep.source=FALSE)
+  
+    
+  # my.erformula<-parse(text=my.erformula, keep.source=FALSE)
+  # my.arformula<-str2lang(my.arformula)
+  # my.qformula<-str2lang(my.qformula)
   
   wt[, quota_cost:=eval(my.qformula)]
   wt[, exp_rev_total:=eval(my.erformula)]

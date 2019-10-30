@@ -1,3 +1,4 @@
+version 15.1
 
 cd $inputdir
 est use $post_input_ster, number(1)
