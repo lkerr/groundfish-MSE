@@ -102,31 +102,34 @@ last_econ_yr<-2015
 econdatapath <- 'data/data_processed/econ'
 
 
-#multiplier_loc<-"sim_multipliers_pre.Rds"
-# multiplier_loc<-"sim_multipliers_post_MSE.Rds"
-# output_price_loc<-"output_prices_post_MSE.Rds"
-# input_price_loc<-"output_prices_post_MSE.Rds"
-
-
-
 ##############Stocks in the Economic Model #############################
 spstock2s<-c("americanlobster","americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","monkfish", "other","pollock","redsilveroffshorehake","redfish","seascallop","skates","spinydogfish","squidmackerelbutterfishherring","summerflounder","whitehake","winterflounderGB","winterflounderGOM","witchflounder","yellowtailflounderCCGOM", "yellowtailflounderGB","yellowtailflounderSNEMA")
 
 ##############Independent variables in the targeting equation ##########################
+### If there are different targeting equations, you can set there up here, then use their suffix in the mproc file to use these new targeting equations
+### example, using ChoicEqn=small in the mproc file and uncommenting the next two lines will be appropriate for a logit with just 3 RHS variables.
+
+##spstock_equation_small=c("exp_rev_total", "fuelprice_distance")
+##choice_equation_small=c("fuelprice_len")
 spstock_equation_pre=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
 choice_equation_pre=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
 
 spstock_equation_post<-spstock_equation_pre
 choice_equation_post<-choice_equation_pre
+############## End Independent variables in the targeting equation ##########################
+
+
+
 
 ##############Independent variables in the Production equation ##########################
+### If there are different the equations, you can set there up here, then use their suffix in the mproc file to use these new targeting equations
+### example, using ProdEqn=tiny in the mproc file and uncommenting the next  line will be regression with 2 RHS variables and no constant.
+# production_vars_tiny=c("log_crew","log_trip_days")
+
 production_vars_pre=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","constant")
 production_vars_post=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","log_sector_acl", "constant")
+############## End Independent variables in the Production equation ##########################
 
-
-production_vars<-NULL
-choice_equation<-NULL
-spstock_equation<-NULL
 
 
 
