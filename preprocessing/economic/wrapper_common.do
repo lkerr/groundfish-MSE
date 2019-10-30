@@ -3,8 +3,8 @@ This set of data processing is the same for all of the different scenarios.
 So we only need to run this once. And run this before you run the other wrappers
 
 */
-global projectdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE"
-
+global projectdir $MSEprojdir 
+*global projectdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE"
 *global projectdir "C:/Users/abirken/Documents/GitHub/groundfish-MSE"
 
 global inputdir "$projectdir/data/data_raw/econ"
