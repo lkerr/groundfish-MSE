@@ -10,40 +10,16 @@ global codedir "$projectdir/preprocessing/economic"
 global bio_data "$projectdir/data/data_processed/catchHistory"
 
 
-
-
-/* filenames for sters  and outputs*/
-global post_input_ster "postCSasclogitnc2.ster"
-global post_gillnet_out "asclogit_gillnet_post_coefs.txt"
-global post_trawl_out "asclogit_trawl_post_coefs.txt"
-
-
-global pre_input_ster "preCSasclogitnc2.ster"
-global pre_gillnet_out "asclogit_gillnet_pre_coefs.txt"
-global pre_trawl_out "asclogit_trawl_pre_coefs.txt"
-
-
 /*name of main data file */
 global datafilename "data_for_simulations_POSTasPOST.dta"
 global datafile_split_prefix "POSTasPOST"
 
-/*construct prices, reshape multipliers, and bring both into the targeting dataset */
-global catch_hist_file "catchHist.csv"
-
-/*name of multiplier file*/
-
-global multiplier_file "multipliers.dta"
-global multiplier_out "reshape_multipliers.dta"
-global quota_price_out "reshape_quota_prices_valid.dta"
-
-
-/*filenames for input prices and output prices */
+/*filenames for input prices,quota prices, and output prices */
 global output_prices "output_price_series_valid.dta"
 global input_prices "input_price_series_valid.dta"
+global quota_price_out "reshape_quota_prices_valid.dta"
 
 
 do "$codedir/price_prep.do"
 do "$codedir/econ_data_split.do"
 
-/*obsolete 
-do "$codedir/nlogit_coef_export.do" */
