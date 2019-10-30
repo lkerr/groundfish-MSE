@@ -5,6 +5,13 @@
 mults <- read.dta13(file.path(rawpath, input_price_loc))
 mults<-as.data.table(mults)
 
+
+if (yearly_savename=="counterfactual"){
+  mults[, c(quotaprice_zero_cf) :=0]
+} 
+ 
+
+
 multipre<-mults[post==0]
 multipre[, post:= NULL]
 
