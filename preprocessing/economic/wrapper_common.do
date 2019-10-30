@@ -1,6 +1,13 @@
-/* Order of doing stuff. */
-/* Run this file to load/prep the economic data */
-global projectdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE"
+version 15.1
+
+/* Run this file to load/prep the economic data that is common for all scenarios.
+This set of data processing is the same for all of the different scenarios.
+So we only need to run this once. And run this before you run the other wrappers
+
+*/
+global projectdir $MSEprojdir 
+*global projectdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE"
+*global projectdir "C:/Users/abirken/Documents/GitHub/groundfish-MSE"
 
 global inputdir "$projectdir/data/data_raw/econ"
 global outdir "$projectdir/data/data_processed/econ"
@@ -21,9 +28,6 @@ global pre_gillnet_out "asclogit_gillnet_pre_coefs.txt"
 global pre_trawl_out "asclogit_trawl_pre_coefs.txt"
 
 
-/*name of main data file */
-global datafilename "data_for_simulations_mse.dta"
-global datafile_split_prefix "econ_data"
 
 /*construct prices, reshape multipliers, and bring both into the targeting dataset */
 global catch_hist_file "catchHist.csv"
@@ -33,21 +37,13 @@ global catch_hist_file "catchHist.csv"
 global multiplier_file "multipliers.dta"
 global multiplier_out "reshape_multipliers.dta"
 
-/* done */
+global datafilename "data_for_simulations_POSTasPRE.dta"
+
+
+
 do "$codedir/asclogit_coef_export.do"
 do "$codedir/stocks_in_model.do"
+
 do "$codedir/recode_catch_limits.do"
-do "$codedir/price_prep.do" 
 do "$codedir/multiplier_prep.do"
-do "$codedir/econ_data_split.do"
 
-/* to do 
-
-
-do "$codedir/price_mult_join.do"*/
-
-
-
-
-/*obsolete 
-do "$codedir/nlogit_coef_export.do" */

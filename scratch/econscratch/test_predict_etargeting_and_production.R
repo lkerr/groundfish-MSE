@@ -76,7 +76,7 @@ myyear<-2015
 mydraw<-myyear-2009
 
 
-econdatafile<-paste0("full_targeting_",myyear,".Rds")
+econdatafile<-paste0(econ_data_stub,myyear,".Rds")
 
 targeting_dataset<-readRDS(file.path(econdatapath,econdatafile))
 
@@ -102,7 +102,7 @@ colnames(trips)[3]<-"targeted"
 
 
 set.seed(2)
-day<-1
+day<-100
 
 start<-Sys.time()
 working_targeting<-copy(targeting_dataset[[day]])

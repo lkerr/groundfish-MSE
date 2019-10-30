@@ -2,11 +2,10 @@
 *cd $inputdir
 use "$inputdir/$multiplier_file", clear
 
-cap drop sppname gearcat calyear
+foreach var in sppname gearcat calyear ifq ladas access_area aceprice{
 
-/*Anna will send a fixed version to me 
-replace aceprice=0 if ifq==0 & spstock2=="SeaScallop"*/
-cap drop ifq ladas access_area
+	cap drop `var'
+}
 
 
 replace spstock2=lower(spstock2)
@@ -20,13 +19,12 @@ replace spstock2=subinstr(spstock2,"gb","GB",.)
 /*using l_ c_ and q_ as landings multiplier, catch multiplier, and quotaprice prefixes respectively */
 rename landing_m l_
 rename catch_m c_
-rename aceprice q_
 
 
-reshape wide l_ c_ q_, i(hullnum month gffishingyear spstock2_prim) j(spstock2) string
+reshape wide l_ c_, i(hullnum month gffishingyear spstock2_prim) j(spstock2) string
 /*fill in missing l, c, and q variables that arise from the reshape */
 
-qui foreach var of varlist l_* c_* q_* {
+qui foreach var of varlist l_* c_* {
 replace `var'=0 if `var'==.
 label variable `var' ""
 }

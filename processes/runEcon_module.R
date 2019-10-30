@@ -68,7 +68,7 @@ for (day in 1:365){
   # Subset for the day.  Add in production coeffients and construct some extra data.
 working_targeting<-copy(targeting_dataset[[day]])
 working_targeting<-get_predict_eproduction(working_targeting)
-working_targeting[.("nofish"), on=c("spstock2"), harvest_sim:=0]
+working_targeting[spstock2=="nofish", harvest_sim:=0L]
 
 
     # Keep or update choice_prev_fish
@@ -92,7 +92,7 @@ working_targeting[.("nofish"), on=c("spstock2"), harvest_sim:=0]
     working_targeting<-get_joint_production(working_targeting,spstock2s) 
     working_targeting[, exp_rev_total:=exp_rev_total/1000]
     working_targeting[, actual_rev_total:=actual_rev_total/1000]
-    working_targeting[.("nofish"), on=c("spstock2"), exp_rev_total:=0]
+    working_targeting[spstock2=="nofish", exp_rev_total:=0L]
     
     
     # Predict targeting

@@ -10,29 +10,47 @@ target_coefs<-target_coef_outfile
 production_coefs<-production_outfile
 
 targeting_coefs<-readRDS(file.path(savepath,target_coefs))
-production_coefs<-readRDS(file.path(savepath, production_coefs))
 
-multipliers<-readRDS(file.path(savepath, multiplier_loc))
-outputprices<-readRDS(file.path(savepath, output_price_loc))
-inputprices<-readRDS(file.path(savepath, input_price_loc))
+production_coefs<-readRDS(file.path(savepath, production_coefs))
+production_coefs[, post:=NULL]
+
+
+
+inputprices<-readRDS(file.path(savepath, input_working))
+multipliers<-readRDS(file.path(savepath, multiplier_working))
+outputprices<-readRDS(file.path(savepath, output_working))
+
+
+#for the counterfactual, we do something else -- we need average multipliers by hullnum, MONTH, spstock2.
+
 
 
 
 
 for (wy in 2010:2015) {
     idx<-wy-2009
-  
-  yrsavefile<-paste0("full_targeting_",wy,".Rds")
+    
+  yrsavefile<-paste0(yearly_savename,wy,".Rds")
   targeting_source<-paste0(yrstub,"_",wy,".dta")
   
   targeting <- read.dta13(file.path(rawpath, targeting_source))
   
-  
-  
-  
+  # the counterfactual only: Compute multipliers, averaged over the the pre or post time  
+    if (yearly_savename =="counterfactual"){
+    wm<-rbindlist(multipliers)
+   mygroup<-c("hullnum", "MONTH", "spstock2")
+    wm<-wm[, lapply(.SD,mean), by=mygroup]
+  }else {
   wm<-multipliers[[idx]]
+  }
+  wm[, gffishingyear:=NULL]
+  
   wo<-outputprices[[idx]]
+  wo[, gffishingyear:=NULL]
+  
   wi<-inputprices[[idx]]
+  wi[, gffishingyear:=NULL]
+  
   
   
   
@@ -107,8 +125,8 @@ targeting<- targeting   %>%
 targeting<-as.data.table(targeting)
 gc()
 # pull in coefficients
-targeting<-production_coefs[targeting, on=c("spstock2","gearcat","post")]
-targeting<-targeting_coefs[targeting, on=c("gearcat","spstock2")]
+targeting<-production_coefs[targeting, on=c("spstock2","gearcat")]
+targeting<-targeting_coefs[targeting, on=c("spstock2","gearcat")]
 
 
 
@@ -117,17 +135,17 @@ setorderv(targeting, keycols)
 
 td_cols<-colnames(targeting)
 
-##################################  JOINS START HERE ###############
+##################################  JOINS START HERE. We're processing over years, so no need to join on GFFISHINGYEAR or POST ###############
 # Bring in multipliers
 colnames(targeting)[colnames(targeting)=="month"] <- "MONTH"
 
-targeting<-wm[targeting, on=c("hullnum","MONTH","spstock2","gffishingyear","post")]
+targeting<-wm[targeting, on=c("hullnum","MONTH","spstock2")]
 
 # Pull in output prices (day) -- could add this to the wi dataset
-targeting<-wo[targeting, on=c("doffy","gffishingyear", "post", "gearcat")]
+targeting<-wo[targeting, on=c("doffy", "gearcat")]
 
 # Pull in input prices (hullnum-day-spstock2)
-targeting<-wi[targeting, on=c("hullnum","doffy","spstock2","gffishingyear","post")]
+targeting<-wi[targeting, on=c("hullnum","doffy","spstock2")]
 ##################################  JOINS END HERE ###############
 
 targeting[, fuelprice_len:=fuelprice*len]
@@ -152,10 +170,9 @@ monthvars<-grep("^month",colnames(targeting) , value=TRUE)
 
 idvars=c("id", "hullnum","spstock2", "doffy")
 necessary=c("q", "gffishingyear", "emean","nchoices", "MONTH")
-useful=c("gearcat","post","h_hat","xb_post","choice")
-#useful=c("gearcat","post","h_hat","choice")
+useful_vars=c("gearcat","post","h_hat","choice", "xb_hat", "log_h_hat","pr_hat")
 
-mysubs=c(idvars,necessary,useful, targeting_vars, production_vars, fyvars, monthvars, betavars, alphavars, cmultipliers, lmultipliers, quota_prices, lag_output_prices, output_prices)
+mysubs=c(idvars,necessary,useful_vars, targeting_vars, production_vars, fyvars, monthvars, betavars, alphavars, cmultipliers, lmultipliers, quota_prices, lag_output_prices, output_prices)
 
 targeting<-targeting[, ..mysubs]
 

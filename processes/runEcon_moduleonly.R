@@ -1,7 +1,6 @@
-# This code is just the counterfactual economic module.  There are a few differences from the standard "runEcon_module"
+# This code is for running a standalone economic module.  There are a few differences from the standard "runEcon_module"
     #.  This does not produce an F.
     #.  We do not zero-out the "multipliers" for the closed stocks.
-    #.  We do not 
 
 # It takes in 
 #   Values from the stock dynamics models 
@@ -42,10 +41,12 @@ for (day in 1:365){
   
   
   
-  # Subset for the day.  Add in production coeffients and construct some extra data.
+# Subset for the day.  Add in production coeffients and construct some extra data.
 working_targeting<-copy(targeting_dataset[[day]])
-working_targeting<-get_predict_eproduction(working_targeting)
-working_targeting[.("nofish"), on=c("spstock2"), harvest_sim:=0]
+# this might not be necessary, if the hhats are coming in from AB.
+working_targeting<-get_predict_eproduction(working_targeting) 
+#working_targeting[,harvest_sim :=h_hat]
+working_targeting[spstock2=="nofish", harvest_sim:=0L]
 
 
     # Keep or update choice_prev_fish
@@ -63,15 +64,14 @@ working_targeting[.("nofish"), on=c("spstock2"), harvest_sim:=0]
      
     #zero_out_targets will set the catch and landings multipliers to zero depending on the value of underACL, stockarea_open, and mproc$EconType
 
-
     #working_targeting<-joint_adjust_allocated_mults(working_targeting,fishery_holder, econtype)
     #working_targeting<-joint_adjust_others(working_targeting,fishery_holder, econtype)
     working_targeting<-get_joint_production(working_targeting,spstock2s) 
     working_targeting[, exp_rev_total:=exp_rev_total/1000]
     working_targeting[, actual_rev_total:=actual_rev_total/1000]
+    working_targeting[spstock2=="nofish", exp_rev_total:=0L]
     
-    working_targeting[.("nofish"), on=c("spstock2"), exp_rev_total:=0]
-    
+
     
     # Predict targeting
   trips<-get_predict_etargeting(working_targeting)
