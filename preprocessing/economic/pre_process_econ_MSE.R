@@ -84,11 +84,6 @@ output_working<-output_postoutfile
 
 ####prefix  (see datafile_split_prefix in wrapper.do)
 yrstub<-"econ_data"
-
-
-
-useful_vars=c("gearcat","post","h_hat","choice", "xb_hat", "log_h_hat")
-
 yearly_savename<-"full_targeting"
 
 

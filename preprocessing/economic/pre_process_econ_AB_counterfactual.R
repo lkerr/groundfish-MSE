@@ -84,16 +84,16 @@ output_working<-output_postoutfile
 
 ####################END Locations of files. You shouldn't have to change these unless you're adding new datasets (like a pre-as-pre or pre-as-pre), new coefficients, new multipliers, etc) 
 
-
-
-
 ####prefix  (see datafile_split_prefix in wrapper.do)
 yrstub<-"POSTasPRE"
 
-useful_vars=c("gearcat","post","h_hat","choice", "xb_hat", "log_h_hat")
-
-
 yearly_savename<-"counterfactual"
+
+#these are the groundfish quota prices that need to be zeroed out in the counterfactual.
+
+quotaprice_zero_cf<-c("q_americanplaiceflounder","q_codGB","q_codGOM","q_haddockGB","q_haddockGOM","q_pollock","q_redfish","q_whitehake","q_winterflounderGB","q_winterflounderGOM","q_witchflounder","q_yellowtailflounderCCGOM","q_yellowtailflounderGB", "q_yellowtailflounderSNEMA")
+
+
 
 
 source('preprocessing/economic/targeting_coeff_import.R')

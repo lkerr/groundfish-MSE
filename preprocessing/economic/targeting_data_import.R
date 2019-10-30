@@ -170,6 +170,7 @@ monthvars<-grep("^month",colnames(targeting) , value=TRUE)
 
 idvars=c("id", "hullnum","spstock2", "doffy")
 necessary=c("q", "gffishingyear", "emean","nchoices", "MONTH")
+useful_vars=c("gearcat","post","h_hat","choice", "xb_hat", "log_h_hat","pr_hat")
 
 mysubs=c(idvars,necessary,useful_vars, targeting_vars, production_vars, fyvars, monthvars, betavars, alphavars, cmultipliers, lmultipliers, quota_prices, lag_output_prices, output_prices)
 

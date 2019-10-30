@@ -85,9 +85,6 @@ output_working<-output_postoutfile
 ####prefix  (see datafile_split_prefix in wrapper.do)
 yrstub<-"POSTasPOST"
 
-
-useful_vars=c("gearcat","post","h_hat","choice", "xb_hat", "log_h_hat")
-
 yearly_savename<-"validation"
 
 source('preprocessing/economic/targeting_coeff_import.R')
