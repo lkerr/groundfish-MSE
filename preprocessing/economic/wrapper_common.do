@@ -1,5 +1,4 @@
-/* Order of doing stuff. */
-/* Run this file to load/prep the economic data 
+/* Run this file to load/prep the economic data that is common for all scenarios.
 This set of data processing is the same for all of the different scenarios.
 So we only need to run this once. And run this before you run the other wrappers
 
@@ -46,21 +45,3 @@ do "$codedir/stocks_in_model.do"
 do "$codedir/recode_catch_limits.do"
 do "$codedir/multiplier_prep.do"
 
-
-
-/*
-/*filenames for input prices and output prices */
-global output_prices "output_price_series_post.dta"
-global input_prices "input_price_series_post.dta"
-global quota_price_out "reshape_quota_prices.dta"
-
-name of main data file 
-
-global datafilename "data_for_simulations_POSTasPRE.dta"
-global datafile_split_prefix "POSTasPRE"
-do "$codedir/price_prep.do"
-
-do "$codedir/econ_data_split.do"*/
-
-/*obsolete 
-do "$codedir/nlogit_coef_export.do" */
