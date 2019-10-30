@@ -44,8 +44,8 @@ for (day in 1:365){
 # Subset for the day.  Add in production coeffients and construct some extra data.
 working_targeting<-copy(targeting_dataset[[day]])
 # this might not be necessary, if the hhats are coming in from AB.
-#working_targeting<-get_predict_eproduction(working_targeting) 
-working_targeting[,harvest_sim :=h_hat]
+working_targeting<-get_predict_eproduction(working_targeting) 
+#working_targeting[,harvest_sim :=h_hat]
 working_targeting[spstock2=="nofish", harvest_sim:=0L]
 
 
