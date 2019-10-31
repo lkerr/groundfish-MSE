@@ -64,6 +64,7 @@ working_targeting[spstock2=="nofish", harvest_sim:=0L]
      
     #zero_out_targets will set the catch and landings multipliers to zero depending on the value of underACL, stockarea_open, and mproc$EconType
 
+
     #working_targeting<-joint_adjust_allocated_mults(working_targeting,fishery_holder, econtype)
     #working_targeting<-joint_adjust_others(working_targeting,fishery_holder, econtype)
     working_targeting<-get_joint_production(working_targeting,spstock2s) 
@@ -96,11 +97,13 @@ working_targeting[spstock2=="nofish", harvest_sim:=0L]
   
   # update the fishery holder dataframe
   
+  
+  # left join landings into fishery_holder.  Replace fishery holder's cumul_catch_pounds=cumul_catch_pounds+daily_catch  remove daily_catch?  
+  
   fishery_holder<-fishery_holder[catches, on="spstock2"]
   fishery_holder[, cumul_catch_pounds:= cumul_catch_pounds+daily_pounds_caught]
   fishery_holder[, daily_pounds_caught :=NULL]
 
-  #This could probably be commented out, but we can leave it in for now.
   fishery_holder<-get_fishery_next_period_areaclose(fishery_holder)
 
   savelist<-c("id","hullnum","spstock2","doffy","exp_rev_total","actual_rev_total", "gearcat")
@@ -122,7 +125,8 @@ working_targeting[spstock2=="nofish", harvest_sim:=0L]
   annual_revenue_holder$r<-r
   annual_revenue_holder$m<-m
   annual_revenue_holder$y<-y
-  revenue_holder[[eyear_idx]]<-annual_revenue_holder
+  annual_revenue_holder$year<-calyear
+  revenue_holder[[yearcounter]]<-annual_revenue_holder
   
   rm(annual_revenue_holder)
 # We probably want to contract this down further to a data.table of "hullnum","spstock2","exp_rev_total","targeted"
