@@ -29,7 +29,7 @@ top_loop_start<-Sys.time()
 ####################These are temporary changes for testing ####################
 econ_timer<-0
 mproc_bak<-mproc
-    mproc<-mproc_bak[2:4,]
+mproc<-mproc_bak[2:4,]
     ####################End Temporary changes for testing ####################
     
     
@@ -49,11 +49,9 @@ mproc_bak<-mproc
     
     #set the rng state.  Store the random state.  
     set.seed(rnorm(1))
-    
     oldseed_ALL <- .Random.seed
     
     revenue_holder<-list()
-    
     #these two lists will hold a vectors that concatenates (r, m, y, calyear, .Random.seed). They should be r*m*y in length.
     begin_rng_holder<-list()
     end_rng_holder<-list()
@@ -73,7 +71,9 @@ mproc_bak<-mproc
      
      max_eyear<-nrow(random_sim_draw)
      eyear_idx<-0
-    
+
+     maxyc<-nrep*nrow(mproc)*(nyear-fyear+1)
+         
 
   #### Top rep Loop ####
 for(r in 1:nrep){
@@ -104,7 +104,7 @@ for(r in 1:nrep){
           
           #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
 
-          chunk_flag<-eyear_idx %% chunksize
+          chunk_flag<-yearcounter %% chunksize
   
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
          
@@ -123,7 +123,7 @@ for(r in 1:nrep){
           
            
           #Save economic results once in a while to a csv file. 
-        if(mproc$ImplementationClass[m]=="Economic" & (chunk_flag==0 | eyear_idx==max_eyear)) {
+        if(mproc$ImplementationClass[m]=="Economic" & (chunk_flag==0 | yearcounter==maxyc)) {
             revenue_holder<-rbindlist(revenue_holder) 
             tda <- as.character(Sys.time())
             tda <- gsub(':', '', tda)
@@ -135,7 +135,7 @@ for(r in 1:nrep){
            
           } #End year loop
   
-        } #End mproc loop
+        } #End mproc loop 
       } #End rep loop
       
     top_loop_end<-Sys.time()

@@ -22,7 +22,7 @@ fishery_holder$cumul_catch_pounds<-0
 fishery_holder$targeted<-0
 
 #set up a list to hold the expected revenue by date, hullnum, and target spstock2
-annual_revenue_holder<-as.list(NULL)
+annual_revenue_holder<-list()
 
 #Initialize the trips data.table. 
   if(y == fmyearIdx){
@@ -126,15 +126,15 @@ working_targeting[spstock2=="nofish", harvest_sim:=0L]
   fishery_holder[, daily_pounds_caught :=NULL]
 
   fishery_holder<-get_fishery_next_period_areaclose(fishery_holder)
-  # Expand from harvest of the target to harvest of all using the catch multiplier matrices
-  # Not written yet.  Not sure if we need revenue by stock to be saved for each vessel? Or just catch? 
-  
+
   savelist<-c("id","hullnum","spstock2","doffy","exp_rev_total","actual_rev_total", "gearcat")
   savelist<-c("id","hullnum","spstock2","doffy","exp_rev_total","actual_rev_total", "gearcat","choice_prev_fish")
   mm<-c(grep("^c_",colnames(trips), value=TRUE),grep("^l_",colnames(trips), value=TRUE),grep("^r_",colnames(trips), value=TRUE))
   savelist=c(savelist,mm)
-  annual_revenue_holder[[day]]<-trips[, ..savelist]
+  # Drop trips corresponding to nofish. It's just alot of zeros.
   trips<-trips[spstock2!="nofish"]
+  annual_revenue_holder[[day]]<-trips[, ..savelist]
+  # prepare the trips data.table for the next iteration
   trips<-trips[, c("spstock2","hullnum", "targeted")]
   
 }
@@ -146,6 +146,7 @@ working_targeting[spstock2=="nofish", harvest_sim:=0L]
   annual_revenue_holder$r<-r
   annual_revenue_holder$m<-m
   annual_revenue_holder$y<-y
+  annual_revenue_holder$year<-calyear
   revenue_holder[[eyear_idx]]<-annual_revenue_holder
   
   rm(annual_revenue_holder)
