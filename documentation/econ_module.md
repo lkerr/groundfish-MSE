@@ -104,6 +104,8 @@ There are few files in "scratch/econscratch" that may be useful
 
 * **test_econ_module.R :**  is a test economic module. The last part is incredibly janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop. I'm just waiting to have runSim.R reordered before I can use it to write out F_full to stock[[i]] for the modeled stocks.  Pieces of this will be put into fragments that are called by "runSetup.R" (perhaps with an if cut-out for EconomicModel) because they only need to be run once.  Other parts should be converted into a function or many functions.
 
+
+
 Obsolete
 These are obsolete and have been moved to /scratch/econscratch/obsolete
 * **get_at_age_stats, get_catch_at_age, get_e_smear, test_get_at_age_stats, test_get_catch_at_age, test_predict_eproduction:** all probably are obsolete and have been moved to /scratch/econscratch/obsolete.
@@ -123,18 +125,24 @@ There are a few files in "/preprocessing/economic/"  These primarily deal with c
 ## Pre-processing
 A bunch of pre-processing is needed to go from the stata econometric output to R data.tables.  Some of this is written in Stata .do files.  The rest is written as R batch files.  
 
-
-* **wrapper.do** This is a wrapper to run all the stata .do files. You'll need to change the projectdir global. You may need to change the file names themselves.  There are versions of this for settin counterfactual data (wrapper_CF.do) and validation data (wrapper_validation.do).  All of the wrappers run the stata code --you may want to change a few global macros that define which files are which. 
+* **wrapper_common.do** This is a wrapper to process some inputs that is common to all economic scenarios.  Many global macros are set here to control what other files subsequently do.
+* **wrapper_CF.do, wrapper_MSE.do, wrapper_validation.do ** Versions of data processing for the counterfactual data, MSE, and validation data.  All of the wrappers run the stata code --you may want to change a few global macros that define which files are which. Many global macros are set here to control what other files subsequently do.
 
 
 * **asclogit_coef_export.do** This exports the stata estimates to csv.
+* **econ_data_split.do** splits and renames multi-year datasets into single year datasets.
+
 * **stocks_in_model.do** This makes a 1 column dataset of spstock2.  
 * **recode_catch_limits.do** A little cleanup and conforming of the catch limit csv.
-* **price_prep.do** : Construct output prices at the spstock2-date level and input prices at the hullnum-spstock2-date level.  Note -- right now, we are only have Post period prices ready. All simulations are currently using 2010-2015 prices.  This may break things
+* **price_prep.do** : Construct output prices at the spstock2-date-post level and input prices at the hullnum-spstock2-date-post level.  Quota prices are at the hullnum-spstock2-month-post level, but stored with the other input prices.  Quota prices may vary by hullnum because some vessels are DAS scallopers and others are IFQ scallopers.  Note -- right now, we are only have Post period prices ready. All simulations are currently using 2010-2015 prices.
+* **multiplier_prep.do** : Construct multipliers at the hullnum-spstock2-month-post level.  
 
-* **pre_process_econ.R:** This is a wrapper to  run *all* of the R and stata code. You will need to change paths to directories, you may need to change some filenames.  We set all the input and output filenames here.  This has been tested to work on a "data_for_mse" dataset.
 
-* **pre_process_AB_counterfactual.R:** This is a wrapper to  run *all* of the R and stata code to set data up for "counterfactual simulations".  You will need to change paths to directories, you may need to change some filenames.  We set all the input and output filenames here.  This has been tested to work on a "POSTasPRE" dataset.  
+
+
+* **pre_process_econ_MSE.R:** This is a wrapper to finish processing data for the MSE type simulation.  This has been tested to work on a "data_for_mse" dataset.
+
+* **pre_process_AB_counterfactual.R:** This is a wrapper to finish processing data for the Counterfactual type simulation.  This has been tested to work on a "data_for_mse" dataset.  Notably, quota prices are zeroed out for the Groundfish stocks.
 
 * **pre_process_AB_validation.R:** This is a wrapper to  run *all* of the R and stata code to set data up for "counterfactual simulations".  You will need to change paths to directories, you may need to change some filenames.  We set all the input and output filenames here.  This has been tested to work on a "POSTasPOST" dataset.
 
@@ -143,30 +151,25 @@ A bunch of pre-processing is needed to go from the stata econometric output to R
 
 * **targeting_coeff_import.R** converts the results of asclogit_coef_export to an R data.table
 * **production_coefs.R** imports the targeting regression coefficients to an R data.table
-* **price_import.R** imports and save sdata.tables containing  prices
+* **input_price_import.R** imports and saves data.tables containing input prices
+* **output_price_import.R** imports and saves data.tables containing output prices
 * **multiplier_import.R** constructs vessel 
-* **vessel_specific_prices.R** imports and saves data.tables containing vessel level prices
-* **targeting_data_import.R** constructs the simulation datasets.  There are the "data" is joined to coefficients, prices, and multipliers using various combinations of "hullnum", "MONTH" , "spstock2", "doffy" (day of groundfish fishing year), "gearcat".  Note that because the data loops through "gffishingyears", we we do not join on gffishingyear. This piece of code also computes average multipliers in the pre-period for the counterfactual sims.
-
-
+* **targeting_data_import.R** constructs the simulation datasets.  There are the "data" is joined to coefficients, prices, and multipliers using various combinations of "hullnum", "MONTH" , "spstock2", "doffy" (day of groundfish fishing year), "gearcat".  Note that because the data loops through "gffishingyears", we do not join on gffishingyear. This piece of code also computes average multipliers in the pre-period for the counterfactual sims.
 
 ## Input Data
 There are a few input datasets needed to run. 
 * **full_targeting_YYYY.Rds** - contains "independant variables" associated with the production and targeting models, estimated coefficients. Each row corresponds a vessel-day-targeting choice.  I tried to optimize for less memory usage, but it makes the model run extremely slowly.  
 
-* **sim_post_vessel_stock_prices.Rds** vessel-day level input prices. fuelprice and crew wages vary by vessel.  This variability is partially due to their locations (prices of fuel vary by state; so do prices of labor). Also varies based on the size and composition of the boat's crew.
+* **input_prices_POST_STUB.Rds** vessel-day level input prices. fuelprice and crew wages vary by vessel.  This variability is partially due to their locations (prices of fuel vary by state; so do prices of labor). Also varies based on the size and composition of the boat's crew.  POST can be "pre" or "post" and STUB can be "CF", "MSE", or "valid" 
 
-* **sim_prices_post.Rds**  day-level output prices that are gearcat specific. They are gearcat specific because the mix  of "other" varies by gearcat.
+* **output_prices_POST_STUB.Rds**  day-level output prices that are gearcat specific. They are gearcat specific because the mix  of "other" varies by gearcat.  POST can be "pre" or "post" and STUB can be "CF", "MSE", or "valid" 
 
-* **sim_multipliers_pre.Rds**  These are vessel specific coefficients that scale landings of a target species to catch/landings of other (non-target) species that are used for simulating the pre catch-share period.
-
-* **sim_multipliers_post.Rds**  These are vessel specific coefficients that scale landings of a target species to catch/landings of other (non-target) species that are used for simulating the post catch-share period.
+* **sim_multipliers_POST_STUB.Rds**  These are vessel specific coefficients that scale landings of a target species to catch/landings of other (non-target) species that are used for simulating the pre catch-share period. POST can be "pre" or "post" and STUB can be "CF", "MSE", or "valid" 
 
 I've been making small changes to mproc_test.txt and the "set_om_parameters_global.R" file.  The set_om_parameters_global.R contains things like file/folder locations, stocks that are in the model, and the RHS variables for the simulations.
 
 ### Outputs
-Model outputs are TBD
-
+We're retaining catch, landings, value, and quota_charges at the "hullnum-day-spstock2" level.  We are not retaining "hullnum_day" where the vessel chooses "no fish".
 
 ### To do and known bugs
 * needs to do state dependence properly.
