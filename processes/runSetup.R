@@ -76,12 +76,6 @@ source('processes/Rfun_BmsySim.R')
 # Load default ACLs and fractions of the ACL that are allocated to the catch share fishery
 source('processes/genBaselineACLs.R')
 
-#if there are any econ models, we need to load up the economic data.  This is a little slow or memory consuming, so we'll skip it if unnecessary.
-# if(sum(mproc$ImplementationClass=="Economic")>=1){ #Load in Economic Data if there's at least 1 Economic model in mproc
-#   source('processes/loadEcon.R')
-# }
-
-
 
 
 # If running on a local machine, more than one repetition should be
