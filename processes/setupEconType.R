@@ -4,6 +4,8 @@
   # LandZero is unused
 
 myvars<-c("LandZero", "CatchZero","EconType","EconName","EconData","MultiplierFile","OutputPriceFile","InputPriceFile","ProdEqn","ChoiceEqn")
+econtype<-mproc[m,]
+
 econtype<-econtype[myvars]
 econ_data_stub<-econtype$EconData
 
