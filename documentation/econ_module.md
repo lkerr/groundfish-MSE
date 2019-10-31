@@ -71,14 +71,11 @@ There's a pile of code.
 
 * **runEcon_module.R :**  is a *working* economic module. The last part is kinda janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop.  This used to be in the scratch folder with a different name.
 
-* **runEcon_module_counterfactual.R :**  is a *working* economic module.  It has been revised a bit in preparation to run the counterfactual simulations (2010-2015 as-if Days-at-Sea).  But a few details need to be ironed out, because it has only been prototyped using post-as-post (2010-2015 as-if catch shares) data.
-  
- #. POSTasPRE is the counterfactual.  It uses pre-multipliers, pre-production, but post-prices
- #. POSTasPOST is the validation.  It uses pst-multipliers, post-production, post prices. It uses Pre coefficients. 
+* **runEcon_moduleonly.R :**  is a *working* economic module.  It leaves out the biological parts loop part and should be used for doing simulations of the economic model.
 
 
 
-* **runSim_Econ_counterfactual.R :**  is a modified version of runSim.R. This should only need minor changes (setting parameters) before it is finalized.
+* **runSim_Econonly.R :**  is a modified version of runSim.R that only does the economic simulations.
 
 * **loadsetRNG.R :**  code to load/reset the RNG state based on a list.
 
@@ -89,9 +86,11 @@ There are  "processes" files that run one time per simulation run:
 
 * **genEcon_Containers.R:** Gets called in the runSetup.R file. It sets up a few placeholders for Fleet level economic outputs.
 
-* **loadEcon.R:** Gets called in the runSetup.R file. Loads in some of the smaller data.tables that will remain in memory every time runSim.R is called.
+* **loadEcon.R:** Gets called in the runSetup.R file. Loads in some of the smaller data.tables that will remain in memory every time runSim.R is called. (NOT NEEDED ANYMORE)
 
-* **loadEcon2.R:** Gets called in the runSim.R file.  Loads in a single large data.table that remains in memory for one simulated year.  These files are too big to load and hold in memory for the entire simulation.  
+* **loadEcon2.R:** Gets called in the runSim.R file.  Loads in a single large data.table that remains in memory for one simulated year.  These files are too big to load and hold in memory for the entire simulation.  Also loads in input prices, output prices, and multipliers
+
+* **setupEconType.R:** Parses the mproc file for economic options (multipliers, output prices, input prices, production equation, choice equation).
 
 Functions - these run many times per simulation:
 * **get_bio_for_econ:** passes *things* from the biological model (in stock[[i]]) to the economic model.
