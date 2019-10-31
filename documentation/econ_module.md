@@ -16,7 +16,7 @@ The runSim.R file has been modified to allow for an economic model of harvesting
 ## Statistics Behind the Economic simulation module
 The population of vessels in the statistical model is: "Vessels that landed groundfish in the 2004-2015 time period, primarily used gillnet or trawl to catch groundfish, elected to fish in the sector program in 2010-2015, and were not falsifying their catch or sales records."  $i$ indexes individuals, $n$ indexes target, and $t$ indexes time (days).
 
-The statistical economic module has two stages. In the first stage, we estimate a Schaefer's harvest equation   
+The statistical economic module has two stages. In the first stage, we estimate this harvest equation   
 	\begin{equation}
 	H_{nit}=h(q_{ni},E_{nit},{X_{it})
 	\end{equation}
@@ -46,6 +46,27 @@ The statistical estimation of the model takes place externally to the MSE model 
 
 
 ## The R code
+
+### Options
+We can set some options using the mproc.txt/csv file. Notably:
+* **EconType :** Multi or Single.  
+   Multi --> a closure in a stockarea closes everything in that stockarea (no landings of GB Cod if GB haddock is closed)
+   Single --> a closure in a stockarea does not close everything in that stockarea ( landings of GB Cod allowed if GB haddock is closed)
+   
+* **CatchZero :**
+  TRUE --> no catch of GB Cod if GB cod is closed.
+  FALSE --> catch of GB Cod happens even if GB cod is closed (but all catch would be discarded).
+* **EconName :** A short name for the scenario.
+* **EconData :** stub for which dataset to use (see data processing steps)
+* **MultiplierFile :** Multiplier file to use  
+* **OutputPriceFile :** Output prices to use
+* **InputPriceFile :** Input prices to use, including quota prices.
+* **ProdEqn :** suffix for the production equation (see set_om_parameters_global.R for some examples)
+* **ChoiceEqn :** suffix for the choice equation (see set_om_parameters_global.R for some examples)
+
+This needs to eventually get over the the mproc documentation.
+
+
 There's a pile of code.
 
 * **runEcon_module.R :**  is a *working* economic module. The last part is kinda janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop.  This used to be in the scratch folder with a different name.
