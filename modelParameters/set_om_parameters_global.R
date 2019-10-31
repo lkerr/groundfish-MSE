@@ -29,7 +29,7 @@ stockExclude <- c()
 nrep <- 1
 
 # First year to begin actual management
-fmyear <- 2000
+fmyear <- 2010
 
 # first year after the initial condition period. The initial condition period
 # simply fills up the arrays as necessary even before the burn-in period
@@ -38,12 +38,12 @@ fmyear <- 2000
 fyear <- 35
 
 # maximum year predicted into the future
-mxyear <- 2050
+mxyear <- 2060
 
 
 #### Burn-in parameters ####
 
-# number of burn-in years (before the pre-2000 non-assessment period)
+# number of burn-in years (before the pre-fmyear non-assessment period)
 nburn <- 50
 
 
@@ -99,7 +99,6 @@ kg_per_mt<-1000
 first_econ_yr<-2010
 last_econ_yr<-2015
 
-econdatapath <- 'data/data_processed/econ'
 
 
 ##############Stocks in the Economic Model #############################
