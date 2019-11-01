@@ -63,12 +63,12 @@ mproc <- subset(mproc, HCR =='slide')
 # Temporarily use the imported version until I figure out a good
 # way to make this work building it in the code. May as well not
 # do this until it's done.
-mproc <- read.table('modelParameters/mproc.txt', header=TRUE,
+mproc <- read.csv('modelParameters/mproc.csv', header=TRUE,
                     stringsAsFactors=FALSE)
 
 if(mprocTest){
   
-  mproc <- read.table('modelParameters/mprocTest.txt', header=TRUE,
+  mproc <- read.csv('modelParameters/mprocTest.csv', header=TRUE,
                       stringsAsFactors=FALSE)
   cat('***mprocTest == TRUE (in set_om_parameters.R): testing run***\n') 
 
