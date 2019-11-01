@@ -43,12 +43,10 @@ for (day in 1:365){
   
 # Subset for the day.  Add in production coeffients and construct some extra data.
 working_targeting<-copy(targeting_dataset[[day]])
-# this might not be necessary, if the hhats are coming in from AB.
-working_targeting<-get_predict_eproduction(working_targeting) 
-#working_targeting[,harvest_sim :=h_hat]
+working_targeting<-get_predict_eproduction(working_targeting)
 working_targeting[spstock2=="nofish", harvest_sim:=0L]
-
-
+# Uncomment this to use AB's existing h_hats
+#  working_targeting[,harvest_sim :=h_hat]
     # Keep or update choice_prev_fish
      working_targeting[trips, `:=` (tx2=targeted, tx=targeted) , on=c("hullnum","spstock2")]
      
@@ -109,13 +107,11 @@ working_targeting[spstock2=="nofish", harvest_sim:=0L]
   savelist<-c("id","hullnum","spstock2","doffy","exp_rev_total","actual_rev_total", "gearcat")
   mm<-c(grep("^c_",colnames(trips), value=TRUE),grep("^l_",colnames(trips), value=TRUE),grep("^r_",colnames(trips), value=TRUE))
   savelist=c(savelist,mm)
-  
   # Drop trips corresponding to nofish. It's just alot of zeros.
   trips<-trips[spstock2!="nofish"]
   annual_revenue_holder[[day]]<-trips[, ..savelist]
   # prepare the trips data.table for the next iteration
   trips<-trips[, c("spstock2","hullnum", "targeted")]
-    
 }
 
   fishery_holder[, removals_mt:=cumul_catch_pounds/(pounds_per_kg*kg_per_mt)+nonsector_catch_mt]

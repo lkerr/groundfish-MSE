@@ -94,6 +94,7 @@ working_targeting[spstock2=="nofish", harvest_sim:=0L]
     working_targeting[, actual_rev_total:=actual_rev_total/1000]
     working_targeting[spstock2=="nofish", exp_rev_total:=0L]
     
+
     
     # Predict targeting
   trips<-get_predict_etargeting(working_targeting)
@@ -107,7 +108,7 @@ working_targeting[spstock2=="nofish", harvest_sim:=0L]
   # The probability of selection is equal to prhat
     trips<-get_random_draw_tripsDT(trips)
   #drop out trip that did not fish (they have no landings or catch). 
-  
+
     catches<-get_reshape_catches(trips)
     landings<-get_reshape_landings(trips)
     
@@ -127,7 +128,6 @@ working_targeting[spstock2=="nofish", harvest_sim:=0L]
 
   fishery_holder<-get_fishery_next_period_areaclose(fishery_holder)
 
-  savelist<-c("id","hullnum","spstock2","doffy","exp_rev_total","actual_rev_total", "gearcat")
   savelist<-c("id","hullnum","spstock2","doffy","exp_rev_total","actual_rev_total", "gearcat","choice_prev_fish")
   mm<-c(grep("^c_",colnames(trips), value=TRUE),grep("^l_",colnames(trips), value=TRUE),grep("^r_",colnames(trips), value=TRUE))
   savelist=c(savelist,mm)
@@ -147,7 +147,7 @@ working_targeting[spstock2=="nofish", harvest_sim:=0L]
   annual_revenue_holder$m<-m
   annual_revenue_holder$y<-y
   annual_revenue_holder$year<-calyear
-  revenue_holder[[eyear_idx]]<-annual_revenue_holder
+  revenue_holder[[yearcounter]]<-annual_revenue_holder
   
   rm(annual_revenue_holder)
 # We probably want to contract this down further to a data.table of "hullnum","spstock2","exp_rev_total","targeted"
