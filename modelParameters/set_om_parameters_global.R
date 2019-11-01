@@ -42,7 +42,7 @@ fmyear <- 2019
 # simply fills up the arrays as necessary even before the burn-in period
 # begins. This is rather arbitrary but should be larger than the number of
 # years in the assessment model and greater than the first age in the model.
-fyear <- 35
+fyear <- 38
 
 # maximum year predicted into the future
 mxyear <- 2050

@@ -15,7 +15,7 @@ get_J1Updates <- function(stock){
     
     # calculate weight-at-age in year y
     waa[y,] <- get_weightAtAge(type=waa_typ, par=waa_par, 
-                               laa=laa[y,], inputUnit='mt') #AEW 
+                               laa=laa[y,], inputUnit='kg')  
     
     # calculate maturity in year y
     mat[y,] <- get_maturity(type=mat_typ, par=mat_par, laa=laa[y,])
