@@ -7,7 +7,7 @@
 
 ***
 ### Status
-The code runs, but is missing a few features.  When mproc.txt contains a row with ImplementationClass=="Economic", the economic model will run.
+The code runs, but is missing a few features.  When mproc.csv contains a row with ImplementationClass=="Economic", the economic model will run.
 
 ## Overview
 The runSim.R file has been modified to allow for an economic model of harvesting to substitute for a standardFisheries model of implementation error.  The economic module can be viewed as an alternative to the get_implementationF() function in a the standard fisheries model.  It takes inputs from the stock dynamics models and outputs an F_full.  It also constructs some economic metrics, but I haven't coded where to save them yet.

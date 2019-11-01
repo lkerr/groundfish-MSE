@@ -9,8 +9,8 @@
 # Debug using simple temperature trend that reduces variance? (T/F)
 simpleTemperature <- FALSE
 
-# Testing run which uses mprocTest.txt instead of mproc.txt? (T/F)
-mprocTest <- TRUE
+# Testing run which uses mprocTest.txt instead of mproc.csv? (T/F)
+mprocTest <- FALSE #TRUE #AEW
 
 
 #### Stock parameters ####

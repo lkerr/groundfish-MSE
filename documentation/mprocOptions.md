@@ -4,7 +4,7 @@
 # Options for management procedures
 ### Sam Truesdell (struesdell@gmri.org)
 
-What to write in the mproc.txt file and what it means.
+What to write in the mproc.csv file and what it means.
 
 
 ## ASSESSCLASS
@@ -95,7 +95,7 @@ Refers to the parameters necessary for developing the B<sub>MSY</sub> proxy. The
 ## RFUN_NM
 The type of recruitment function to be used. Currently all options involve Beverton-Holt curves but this is easily expanded if desired.
 
-* **forecast**: Recruitment in any simulations for the development of F<sub>MSY</sub> or B<sub>MSY</sub> reference points will be calculated based on a forecast. In each year of the simulation, expected recruitment will be calculated (with a temperature effect if that switch is turned on). At the end of the *n*-year projection period (where *n* is specified under FREF_PAR0 or BREF_PAR0) the value for the F or B reference points is calculated according to the specifications given under those columns in *mproc.txt*.
+* **forecast**: Recruitment in any simulations for the development of F<sub>MSY</sub> or B<sub>MSY</sub> reference points will be calculated based on a forecast. In each year of the simulation, expected recruitment will be calculated (with a temperature effect if that switch is turned on). At the end of the *n*-year projection period (where *n* is specified under FREF_PAR0 or BREF_PAR0) the value for the F or B reference points is calculated according to the specifications given under those columns in *mproc.csv*.
 
 * **hindcastMean**: Recruitment in each year of a simulation is based on a set of previous recruitments (recruitment values are outputs from assessment models). The function simply returns the mean recruitment over the number of years specified under the parameterization in FREF_PAR0 or BREF_PAR0.
 

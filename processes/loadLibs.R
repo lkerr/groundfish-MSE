@@ -40,13 +40,15 @@ if(runClass == 'HPCC'){
     sapply(pkg, require, character.only = TRUE)
   }
 
-  pkg<-c("msm", "tmvtnorm", "TMB", "abind", "tidyverse","dplyr","data.table")
+  pkg<-c("msm", "tmvtnorm", "TMB", "abind", "glue", "tidyverse", "dplyr",
+         "data.table")
   check.packages(pkg)
 
   require(msm)
   require(tmvtnorm)
   require(TMB)
   require(abind)
+  require(glue)
   require(tidyverse)
   require(dplyr)
   require(data.table)
