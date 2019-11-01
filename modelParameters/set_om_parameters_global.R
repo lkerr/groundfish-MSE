@@ -101,6 +101,7 @@ last_econ_yr<-2015
 last_econ_index<-last_econ_yr-first_econ_yr+1
 
 econ_data_start<-2010
+econ_data_end<-2015
 
 
 ##############Stocks in the Economic Model #############################

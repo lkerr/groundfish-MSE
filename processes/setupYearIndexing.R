@@ -3,14 +3,21 @@
 
 
 eyears<-nyear-fyear+1
-random_sim_draw <-as.data.table(cbind(rep(1:nrep,each=eyears), rep(1:last_econ_index,nrep))) 
+
+
+econ_replicate<-rep(1:nrep,each=eyears)
+sim_year_idx<-rep(fyear:nyear, times=nrep)
+
+random_sim_draw <-as.data.table(cbind(econ_replicate, sim_year_idx)) 
+
 colnames(random_sim_draw)<-c("econ_replicate","sim_year_idx")
 random_sim_draw[, cal_year:=yrs[sim_year_idx]]
 random_sim_draw[, manage_year_idx:=cal_year-fmyear+1]
 
 #  We use the join_econ_yr, join_econ_idx, join_outputprice, join_inputpprice, join_mult columns to pull in economic data. Right now, it's identical to the calendar year and manage_year_idx, but it may be advantageous to "cross" or "randomly" cross data.   
 
-random_sim_draw[, join_econbase_yr:= cal_year]
+random_sim_draw[,join_econbase_yr :=rep(econ_data_start:econ_data_end, length.out=nrow(random_sim_draw))]
+
 random_sim_draw[, join_econbase_idx:= join_econbase_yr-econ_data_start+1]
 random_sim_draw[, join_outputprice_idx:= join_econbase_idx]
 random_sim_draw[, join_inputprice_idx:= join_econbase_idx]
@@ -20,16 +27,8 @@ max_eyear<-nrow(random_sim_draw)
 maxyc<-nrep*nrow(mproc)*(nyear-fyear+1)
 
 
-# Set up a small table that is useful for variablity across years in the economic model.
-eyears<-nrep*nyear
-random_sim_draw <-as.data.table(cbind(1:eyears, sample(first_econ_yr:last_econ_yr, eyears, replace=TRUE),sample(first_econ_yr:last_econ_yr, eyears, replace=TRUE)))
-
 # Am I using all of these columns?
 # colnames(random_sim_draw)<-c("econrd","price_gfy","other_gfy")
-
-
-
-
 
 
 
