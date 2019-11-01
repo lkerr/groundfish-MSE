@@ -81,6 +81,17 @@ if(sum(mproc$ImplementationClass=="Economic")>=1){ #Load in Economic Data if the
   source('processes/loadEcon.R')
 }
 
+#Input data location for economic models
+econdatapath <- 'data/data_processed/econ'
+
+# Reults folders for economic models. Create them if necessary
+econ_results_location<-"results/econ/raw"
+dir.create('results', showWarnings = FALSE)
+dir.create('results/econ', showWarnings = FALSE)
+
+dir.create('results/econ/raw', showWarnings = FALSE)
+dir.create('results/sim', showWarnings = FALSE)
+dir.create('results/fig', showWarnings = FALSE)
 
 
 
