@@ -73,7 +73,11 @@ There's a pile of code.
 
 * **runEcon_moduleonly.R :**  is a *working* economic module.  It leaves out the biological parts loop part and should be used for doing simulations of the economic model.
 
+* **setupYearIndexing.R:** sets up a small data.table that keeps track of year indices. 
 
+* **setupYearIndexing_Econ.R:** sets up a small data.table that keeps track of year indices. Specific for economic simulations.
+
+* **withinYearAdmin.R:** Operates on that datatable every year.
 
 * **runSim_Econonly.R :**  is a modified version of runSim.R that only does the economic simulations.
 
