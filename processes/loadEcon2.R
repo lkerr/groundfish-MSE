@@ -1,15 +1,15 @@
 # Read in Economic Production Data. "full_targeting" is large, so it makes sense to read in each econ_year as needed.
 
-econdatafile<-paste0(econ_data_stub,econ_year_draw,".Rds")
+econdatafile<-paste0(econ_data_stub,econ_base_draw,".Rds")
 targeting_dataset<-readRDS(file.path(econdatapath,econdatafile))
 
-wm<-multipliers[[econ_idx_draw]]
+wm<-multipliers[[econ_mult_idx_draw]]
 wm[, gffishingyear:=NULL]
 
-wo<-outputprices[[econ_idx_draw]]
+wo<-outputprices[[econ_outputprice_idx_draw]]
 wo[, gffishingyear:=NULL]
 
-wi<-inputprices[[econ_idx_draw]]
+wi<-inputprices[[econ_inputprice_idx_draw]]
 wi[, gffishingyear:=NULL]
 
 #temp for debugging

@@ -19,63 +19,37 @@ rm(list=ls())
     #runSetup.R loads things and sets them up. This is used by the integrated simulation, so be careful making changes with it. Instead, overwrite them using the setupEcon_extra.R file.
 source('processes/runSetup.R')
     
-
-
-
 top_loop_start<-Sys.time()
 
 
 
 ####################These are temporary changes for testing ####################
-econ_timer<-0
 mproc_bak<-mproc
 mproc<-mproc_bak[2:4,]
-    ####################End Temporary changes for testing ####################
-    
-    
-    ####################BEGIN Parameter and storage Setup ####################
-    #dont change these
-    yearcounter<-0
-    #how many years before writing out the results to csv? 6 corresponds to 1 simulation
-    chunksize<-6
-    
-    # yrs contains the calendar years.  we want to go 'indexwise' through the year loop.
-    # calyear is yrs[y]
-    # I want to start the economic model at fmyear=2010 and temporarily end it in 2011
-    fyear<-which(yrs == fmyear)
-    nyear<-fyear+1
+nrep<-2
+# yrs contains the calendar years.  we want to go 'indexwise' through the year loop.
+# calyear is yrs[y]
+# I want to start the economic model at fmyear=2010 and temporarily end it in 2011
+start_sim<-2010
+end_sim<-2011
 
-    
-    
-    #set the rng state.  Store the random state.  
-    set.seed(rnorm(1))
-    oldseed_ALL <- .Random.seed
-    
-    revenue_holder<-list()
-    #these two lists will hold a vectors that concatenates (r, m, y, calyear, .Random.seed). They should be r*m*y in length.
-    begin_rng_holder<-list()
-    end_rng_holder<-list()
-    
-    #dont change these
-    ####################End Parameter and storage Setup ####################
-    
-    
-    
-    
-     # Set up a small table that is useful for variablity across years in the economic model.
-     eyears<-nyear-fyear+1
-     random_sim_draw <-as.data.table(cbind(rep(1:nrep,each=eyears), rep(fyear:nyear,nrep))) 
-     colnames(random_sim_draw)<-c("econ_replicate","sim_year_idx")
-     random_sim_draw[, econ_year:=yrs[sim_year_idx]]
-     random_sim_draw[, econ_year_idx:=econ_year-fmyear+1]
-     
-     max_eyear<-nrow(random_sim_draw)
-     eyear_idx<-0
+fyear<-which(yrs == start_sim)
+nyear<-which(yrs == end_sim)
 
-     maxyc<-nrep*nrow(mproc)*(nyear-fyear+1)
-         
-
-  #### Top rep Loop ####
+####################End Temporary changes for testing ####################
+    
+    
+#set the rng state.  Store the random state.  
+set.seed(rnorm(1))
+oldseed_ALL <- .Random.seed
+    
+####################End Parameter and storage Setup ####################
+  #This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
+    
+      
+source('processes/setupYearIndexing_Econ.R')
+ 
+#### Top rep Loop ####
 for(r in 1:nrep){
     oldseed_mproc <- .Random.seed
     
@@ -83,7 +57,7 @@ for(r in 1:nrep){
     #now testing to see if this runs
     for(m in 1:nrow(mproc)){
     
-       eyear_idx<-0
+       manage_counter<-0
       
        #Restore the rng state.  Depending on whether you use oldseed1 or oldseed2, you'll get different behavior.  oldseed_ALL will force all the replicates to start from the same RNG state.  oldseed_mproc will force all the management procedures to have the same RNG state.  You probably want oldseed_mproc 
        #.Random.seed<-oldseed_ALL
@@ -93,18 +67,17 @@ for(r in 1:nrep){
         if(mproc$ImplementationClass[m]=="Economic"){
          source('processes/setupEconType.R')
         }
-        #### Top year loop ####
-        for(y in fyear:nyear){
-          eyear_idx<-eyear_idx+1
-          yearcounter<-yearcounter+1
-          calyear<-yrs[y]
-          begin_rng_holder[[yearcounter]]<- c(r,m,y,calyear,.Random.seed)     
-          econ_year_draw<-random_sim_draw[eyear_idx,econ_year]
-          econ_idx_draw<-random_sim_draw[eyear_idx,econ_year_idx]
+
+    #### Top year loop ####
+    for(y in fyear:nyear){
+          if(y>=fmyearIdx){
+            manage_counter<-manage_counter+1 #this only gets incremented when y>=fmyearIdx
+          }
+          source('processes/withinYearAdmin.R')
           
           #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
-
-          chunk_flag<-yearcounter %% chunksize
+          begin_rng_holder[[yearcounter]]<- c(r,m,y,calyear,.Random.seed)     
+          
   
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
          
@@ -114,9 +87,7 @@ for(r in 1:nrep){
           
           bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline)
 
-          start_time<-proc.time() 
               source('processes/runEcon_moduleonly.R')
-              econ_timer<-econ_timer+proc.time()[3]-start_time[3]
               end_rng_holder[[yearcounter]]<-c(r,m,y,calyear,.Random.seed)    
               
             } #End Run Economic model if statement.
@@ -132,27 +103,29 @@ for(r in 1:nrep){
             write.table(revenue_holder, file.path(econ_results_location, paste0("econ_",tda2, ".csv")), sep=",", row.names=FALSE)
             revenue_holder<-list()
             } #End save economic results if statement
-           
-          } #End year loop
+      } #End of year loop
+
   
         } #End mproc loop 
       } #End rep loop
       
     top_loop_end<-Sys.time()
     big_loop<-top_loop_end-top_loop_start
-    
-    td <- as.character(Sys.time())
-    td <- gsub(':', '', td)
-    td<-gsub(' ', '_', td)
-    td2 <- paste0(td,"_", round(runif(1, 0, 10000)))
-    
+      # Output run time / date information and OM inputs. The random number is
+  # just ensuring that no simulations will be overwritten because the hpcc
+  # might finish some in the same second. td is used for uniquely naming the
+  # output file as well as for listing in the output results.
+  td <- as.character(Sys.time())
+  td2 <- gsub(':', '', td)
+  td2 <- paste(gsub(' ', '_', td2), round(runif(1, 0, 10000)), sep='_')
+  
     
     saveRDS(begin_rng_holder, file.path(econ_results_location,  paste0("begin_rng_",td2, ".Rds")), compress=FALSE)
     saveRDS(end_rng_holder, file.path(econ_results_location,  paste0("end_rng_",td2, ".Rds")), compress=FALSE)
     
     
-     econ_timer
      big_loop
      
-      
-      cat('\n ---- Successfully Completed ----\n')
+  print(unique(warnings()))
+  
+  cat('\n ---- Successfully Completed ----\n')

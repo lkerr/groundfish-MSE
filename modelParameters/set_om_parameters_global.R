@@ -98,7 +98,9 @@ kg_per_mt<-1000
 
 first_econ_yr<-2010
 last_econ_yr<-2015
+last_econ_index<-last_econ_yr-first_econ_yr+1
 
+econ_data_start<-2010
 
 
 ##############Stocks in the Economic Model #############################
@@ -156,5 +158,17 @@ plotTrajBox <- FALSE     # boxplots of trajectories
 plotTrajSummary <- TRUE  # summary statistics
 
 
+
+#how many years before writing out the results to csv? 6 corresponds to 1 "econ" simulation (2010-2015).  Larger will go faster (less overhead) but you lose work if something crashes, 
+savechunksize<-10
+
+#Set up a counter for every year that has been simulated
+yearcounter<-0
+
+#Set up a list to hold the economic results
+revenue_holder<-list()
+#these two lists will hold a vectors that concatenates (r, m, y, calyear, .Random.seed). They should be r*m*y in length.
+begin_rng_holder<-list()
+end_rng_holder<-list()
 
 
