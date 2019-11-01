@@ -19,7 +19,7 @@ laa_par <- c(Linf = 150.93, K = 0.11, t0 = 0.13, beta1=0) #SAW 55
 laa_typ <- 'vonB'
 
 # weight-length parameters
-waa_par <- c(exp(-12.18002), 3.1625) #SAW 55
+waa_par <- c(exp(-12.18002), 3.1625) #SAW 55 #kg
 waa_typ <- 'aLb'
 
 # maturity-length parameters
@@ -68,7 +68,7 @@ timeI <- 0.5 # when is the survey (as a proportion of the year)
 #### Stock assessment model parameters ####
 
 # number of years in assessment model
-ncaayear <- 30
+ncaayear <- 37
 
 # Expansion range for setting limits on parameter bounds
 boundRgLev <- 1.5
@@ -101,10 +101,10 @@ pe_R <- .5839408
 # implementation error of fishing mortality
 ie_F <- 0
 ie_typ <- 'lognorm'
-ie_bias <- 1  # % bias in implementation error
+ie_bias <- 0 # % bias in implementation error (F_Full + F_Full*ie_bias)
 
 
-# Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
+# Observation bias (1 is no bias, 0.9 is a -10% bias, etc.) (sumCW*ob_sumCW) (range 0.01-1)
 ob_sumCW <- 1
 ob_sumIN <- 1
 
