@@ -3,7 +3,7 @@
 # Economic module documentation
 ### Min-Yang Lee; Anna Birkenbach (Min-Yang.Lee@noaa.gov; abirken@udel.edu)
 
-<br> Describes the code that implements the "Economic Simulation Module" in the management strategy evaluation
+<br> Describes the code that implements the "Economic Simulation Module" in the management strategy evaluation.  Also describes a sub-model (runSim_econonly.R and runEcon_moduleonly.R) that have been modified to only simulate the economic component of the model.
 
 ***
 ### Status
@@ -14,7 +14,7 @@ The runSim.R file has been modified to allow for an economic model of harvesting
 
 
 ## Statistics Behind the Economic simulation module
-The population of vessels in the statistical model is: "Vessels that landed groundfish in the 2004-2015 time period, primarily used gillnet or trawl to catch groundfish, elected to fish in the sector program in 2010-2015, and were not falsifying their catch or sales records."  $i$ indexes individuals, $n$ indexes target, and $t$ indexes time (days).
+The population of vessels in the statistical model is: "Vessels that landed groundfish in the 2004-2015 time period, primarily used gillnet or trawl to catch groundfish, elected to fish in the sector program in 2010-2015, and were not falsifying their catch or sales records."  *i* indexes individuals, *n* indexes target, and *t* indexes time (days).
 
 The statistical economic module has two stages. In the first stage, we estimate this harvest equation   
 	\begin{equation}
@@ -26,7 +26,7 @@ This is estimated equation-by-equation with ordinary least squares, using a log-
 	\end{equation}
 although there are more than just these 3 explanatory variables.
 
-Catchability $q$ varies by vessel-target.  The results are used to predict expected harvest of target $n$. These are then adjusted to account for the jointness in catching fish. For example, a trip that is targeting GB cod and that lands 1000 lbs of GB cod is also likely to land 500 lb of GB haddock, 200 lb of pollock, and 80 lb of skates.  We track all these individually and multiply by expected prices to construct expected revenue for vessel $i$'s trip that targets GB cod on day $t$. We repeat for all $i$,$n$, $t$ to construct expected revenue for all feasible choices.  Some of these things also have quota costs -- we subtract quota costs from the expected revenue.
+Catchability *q* varies by vessel-target.  The results are used to predict expected harvest of target $n$. These are then adjusted to account for the jointness in catching fish. For example, a trip that is targeting GB cod and that lands 1000 lbs of GB cod is also likely to land 500 lb of GB haddock, 200 lb of pollock, and 80 lb of skates.  We track all these individually and multiply by expected prices to construct expected revenue for vessel *i*'s trip that targets GB cod on day *t*. We repeat for all *i*,*n*, *t* to construct expected revenue for all feasible choices.  Some of these things also have quota costs -- we subtract quota costs from the expected revenue.
 
 In the second stage, we estimate the probability that a vessel will target "thing" t: 
 \begin{equation}
@@ -47,7 +47,7 @@ The statistical estimation of the model takes place externally to the MSE model 
 ## The R code
 
 ### Options
-We can set some options using the mproc.txt/csv file. Notably:
+We can set some options using the mproc.csv file. Notably:
 * **EconType :** Multi or Single.  
    Multi --> a closure in a stockarea closes everything in that stockarea (no landings of GB Cod if GB haddock is closed)
    Single --> a closure in a stockarea does not close everything in that stockarea ( landings of GB Cod allowed if GB haddock is closed)
@@ -60,15 +60,15 @@ We can set some options using the mproc.txt/csv file. Notably:
 * **MultiplierFile :** Multiplier file to use  
 * **OutputPriceFile :** Output prices to use
 * **InputPriceFile :** Input prices to use, including quota prices.
-* **ProdEqn :** suffix for the production equation (see set_om_parameters_global.R for some examples)
-* **ChoiceEqn :** suffix for the choice equation (see set_om_parameters_global.R for some examples)
+* **ProdEqn :** suffix for the production equation (see set_om_parameters_global.R for some examples).  Currently, the choices are just pre and post.
+* **ChoiceEqn :** suffix for the choice equation (see set_om_parameters_global.R for some examples). Currently, the choices are just pre and post.  But options for noconstant or something else could be set up.
 
-This needs to eventually get over the the mproc documentation.
+This is also in the mproc documentation.
 
 
 There's a pile of code.
 
-* **runEcon_module.R :**  is a *working* economic module. The last part is kinda janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop.  This used to be in the scratch folder with a different name.
+* **runEcon_module.R :**  is a *working* economic module. The last part is kinda janky, but closes the bio$\rightarrow$ econ $\rightarrow$ bio loop.  This used to be in the scratch folder with a different name.
 
 * **runEcon_moduleonly.R :**  is a *working* economic module.  It leaves out the biological parts loop part and should be used for doing simulations of the economic model.
 
@@ -152,6 +152,7 @@ There are a few files in "/preprocessing/economic/"  These primarily deal with c
 A bunch of pre-processing is needed to go from the stata econometric output to R data.tables.  Some of this is written in Stata .do files.  The rest is written as R batch files.  
 
 * **wrapper_common.do** This is a wrapper to process some inputs that is common to all economic scenarios.  Many global macros are set here to control what other files subsequently do.
+
 * **wrapper_CF.do, wrapper_MSE.do, wrapper_validation.do ** Versions of data processing for the counterfactual data, MSE, and validation data.  All of the wrappers run the stata code --you may want to change a few global macros that define which files are which. Many global macros are set here to control what other files subsequently do.
 
 
