@@ -25,7 +25,7 @@ top_loop_start<-Sys.time()
 
 ####################These are temporary changes for testing ####################
 mproc_bak<-mproc
-mproc<-mproc_bak[2:4,]
+mproc<-mproc_bak[5:6,]
 nrep<-2
 # yrs contains the calendar years.  we want to go 'indexwise' through the year loop.
 # calyear is yrs[y]
