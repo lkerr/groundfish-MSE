@@ -105,4 +105,45 @@ The frequency with which reference points are re-calculated.
 
 * The value represents the frequency. For example, if the value is 3, reference points are recalculated every 3 years. In the years when the reference points are not updated the advice may change based on an updated assessment model but the reference points (and thus the shape of any associated harvest control rule) remains the same.
 
+## ImplementationClass
+This sets harvesting to be determined by a "StandardFisheries" or "Economic" submodel. 
+
+# Economic Options
+The following are only relevant if *ImplementationClass*=='Economic.'
+
+## EconName
+A short name for the scenario.  This column is not used by any of the simulation code.  It is mostly as a convenience.
+
+## EconType
+The broad type of fisheres management.  
+   Multi: a closure in a stockarea closes everything in that stockarea (no landings of GB Cod if GB haddock is closed).  This resembles how the catch share fisheries is managed.
+   Single: a closure in a stockarea does not close everything in that stockarea ( landings of GB Cod allowed if GB haddock is closed)  This does not really resemble how the catch share fishery is managed.
+   
+## CatchZero
+Governs catch if a stock is closed. 
+  TRUE: no catch of GB Cod if GB cod is closed.  This implies perfect targeting/avoidance.
+  FALSE catch of GB Cod occurs when GB cod is closed.  All catch would be discarded.  This implies no change in joint targeting behavior occurs if a stock is closed.
+The truth is somewhere in between.  
+  
+## EconData
+  A stub that determines which base economic dataset to use (see data processing steps)
+
+## MultiplierFile
+  The full name of the multiplier file to use.  Must  include the .Rds extension.  
+
+## OutputPriceFile 
+  The full name of the output price  file to use.  Must include the .Rds extension.  
+## InputPriceFile 
+  The full name of the input price  file to use.  Must include the .Rds extension.  
+  
+## ProdEqn
+  Suffix for the production equation (see set_om_parameters_global.R for some examples).  Currently, the choices are just pre and post.
+  
+## ChoiceEqn
+  Suffix for the choice equation (see set_om_parameters_global.R for some examples). Currently, the choices are just pre and post.  But options for noconstant or something else could be set up.
+
+This is also in the economic model documentation.
+
+
+
 [Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
