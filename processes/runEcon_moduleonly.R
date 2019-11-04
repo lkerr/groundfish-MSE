@@ -121,8 +121,8 @@ working_targeting[spstock2=="nofish", harvest_sim:=0L]
   annual_revenue_holder$r<-r
   annual_revenue_holder$m<-m
   annual_revenue_holder$y<-y
-  annual_revenue_holder$year<-calyear
-  revenue_holder[[yearcounter]]<-annual_revenue_holder
+  annual_revenue_holder$year<-yrs[y]
+  revenue_holder[[yearitercounter]]<-annual_revenue_holder
   
   rm(annual_revenue_holder)
 # We probably want to contract this down further to a data.table of "hullnum","spstock2","exp_rev_total","targeted"

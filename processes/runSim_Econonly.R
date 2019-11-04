@@ -27,8 +27,7 @@ top_loop_start<-Sys.time()
 mproc_bak<-mproc
 mproc<-mproc_bak[5:6,]
 nrep<-2
-# yrs contains the calendar years.  we want to go 'indexwise' through the year loop.
-# calyear is yrs[y]
+# yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
 # I want to start the economic model at fmyear=2010 and temporarily end it in 2011
 start_sim<-2010
 end_sim<-2011
@@ -39,7 +38,7 @@ nyear<-which(yrs == end_sim)
 ####################End Temporary changes for testing ####################
     
     
-#set the rng state.  Store the random state.  
+#set the rng state.  Store the random state.  Option for a progress bar.
 set.seed(rnorm(1))
 oldseed_ALL <- .Random.seed
 showProgBar<-TRUE    
@@ -74,12 +73,9 @@ for(r in 1:nrep){
             manage_counter<-manage_counter+1 #this only gets incremented when y>=fmyearIdx
           }
           source('processes/withinYearAdmin.R')
-      if(showProgBar==TRUE){
-        setTxtProgressBar(iterpb, yearcounter)
-      }
       
       #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
-          begin_rng_holder[[yearcounter]]<- c(r,m,y,calyear,.Random.seed)     
+          begin_rng_holder[[yearitercounter]]<- c(r,m,y,yrs[y],.Random.seed)     
           
   
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
@@ -91,13 +87,13 @@ for(r in 1:nrep){
           bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline)
 
               source('processes/runEcon_moduleonly.R')
-              end_rng_holder[[yearcounter]]<-c(r,m,y,calyear,.Random.seed)    
+              end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)    
               
             } #End Run Economic model if statement.
           
            
           #Save economic results once in a while to a csv file. 
-        if(mproc$ImplementationClass[m]=="Economic" & (chunk_flag==0 | yearcounter==maxyc)) {
+        if(mproc$ImplementationClass[m]=="Economic" & (chunk_flag==0 | yearitercounter==maxyc)) {
             revenue_holder<-rbindlist(revenue_holder) 
             tda <- as.character(Sys.time())
             tda <- gsub(':', '', tda)
@@ -106,6 +102,12 @@ for(r in 1:nrep){
             write.table(revenue_holder, file.path(econ_results_location, paste0("econ_",tda2, ".csv")), sep=",", row.names=FALSE)
             revenue_holder<-list()
             } #End save economic results if statement
+          
+        #Show progress bar  
+          if(showProgBar==TRUE){
+            setTxtProgressBar(iterpb, yearitercounter)
+          }
+          
       } #End of year loop
 
   

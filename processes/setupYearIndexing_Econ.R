@@ -18,7 +18,7 @@ random_sim_draw[, join_mult_idx:= join_econbase_idx]
 
 #maximum 'years' (this is total times through innermost loop), a counter, and a progress bar.
 maxyc<-nrep*nrow(mproc)*(nyear-fyear+1)
-yearcounter<-0
+yearitercounter<-0
 iterpb <- txtProgressBar(min = 1, max = maxyc, style = 3)
 
 
