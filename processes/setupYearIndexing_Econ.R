@@ -17,9 +17,10 @@ random_sim_draw[, join_inputprice_idx:= join_econbase_idx]
 random_sim_draw[, join_mult_idx:= join_econbase_idx]
 
 #maximum 'years' (this is total times through innermost loop), a counter, and a progress bar.
-maxyc<-nrep*nrow(mproc)*(nyear-fyear+1)
+max_yiter<-nrep*nrow(mproc)*(nyear-fyear+1)
 yearitercounter<-0
-iterpb <- txtProgressBar(min = 1, max = maxyc, style = 3)
+
+iterpb <- txtProgressBar(min = 1, max = max_yiter, style = 3)
 
 
 #We have prepared 6 years of economic data (2010-2015), so we need to throw an error if we are out of range for any economic data that we want to import. 

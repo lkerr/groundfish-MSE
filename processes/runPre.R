@@ -29,7 +29,7 @@ if(platform != 'Linux'){
 
 if(runClass == 'Local'){
   # Remove any files in the results directories
-  unlink('results/*', recursive=TRUE)
+  # unlink('results/*', recursive=TRUE)
 }
 
 

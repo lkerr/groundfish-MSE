@@ -23,10 +23,11 @@ random_sim_draw[, join_outputprice_idx:= join_econbase_idx]
 random_sim_draw[, join_inputprice_idx:= join_econbase_idx]
 random_sim_draw[, join_mult_idx:= join_econbase_idx]
 
-max_eyear<-nrow(random_sim_draw)
-maxyc<-nrep*nrow(mproc)*(nyear-fyear+1)
 yearitercounter<-0
-iterpb <- txtProgressBar(min = 1, max = maxyc, style = 3)
+max_yiter<-nrep*nrow(mproc)*(nyear-fyear+1)
+
+
+iterpb <- txtProgressBar(min = 1, max = max_yiter, style = 3)
 # Am I using all of these columns?
 # colnames(random_sim_draw)<-c("econrd","price_gfy","other_gfy")
 

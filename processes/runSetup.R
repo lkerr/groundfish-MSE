@@ -81,12 +81,9 @@ econdatapath <- 'data/data_processed/econ'
 
 # Reults folders for economic models. Create them if necessary
 econ_results_location<-"results/econ/raw"
-dir.create('results', showWarnings = FALSE)
-dir.create('results/econ', showWarnings = FALSE)
-
-dir.create('results/econ/raw', showWarnings = FALSE)
-dir.create('results/sim', showWarnings = FALSE)
-dir.create('results/fig', showWarnings = FALSE)
+dir.create('results/econ/raw', showWarnings = FALSE, recursive=TRUE)
+dir.create('results/sim', showWarnings = FALSE, recursive=TRUE)
+dir.create('results/fig', showWarnings = FALSE, recursive=TRUE)
 
 # If running on a local machine, more than one repetition should be
 # used otherwise some plotting functions (e.g., boxplots) will fail

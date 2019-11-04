@@ -19,6 +19,16 @@ rm(list=ls())
     #runSetup.R loads things and sets them up. This is used by the integrated simulation, so be careful making changes with it. Instead, overwrite them using the setupEcon_extra.R file.
 source('processes/runSetup.R')
     
+
+# if on local machine (i.e., not hpcc) must compile the tmb code
+# (HPCC runs have a separate cal  l to compile this code). Keep out of
+# runSetup.R because it is really a separate process on the HPCC.
+if(runClass != 'HPCC'){
+  source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
+}
+
+
+
 top_loop_start<-Sys.time()
 
 
@@ -69,10 +79,11 @@ for(r in 1:nrep){
 
     #### Top year loop ####
     for(y in fyear:nyear){
-          if(y>=fmyearIdx){
+      
+      source('processes/withinYearAdmin.R')
+        if(y>=fmyearIdx){
             manage_counter<-manage_counter+1 #this only gets incremented when y>=fmyearIdx
           }
-          source('processes/withinYearAdmin.R')
       
       #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
           begin_rng_holder[[yearitercounter]]<- c(r,m,y,yrs[y],.Random.seed)     
@@ -93,7 +104,7 @@ for(r in 1:nrep){
           
            
           #Save economic results once in a while to a csv file. 
-        if(mproc$ImplementationClass[m]=="Economic" & (chunk_flag==0 | yearitercounter==maxyc)) {
+        if(mproc$ImplementationClass[m]=="Economic" & (chunk_flag==0 | yearitercounter==max_yiter)) {
             revenue_holder<-rbindlist(revenue_holder) 
             tda <- as.character(Sys.time())
             tda <- gsub(':', '', tda)
