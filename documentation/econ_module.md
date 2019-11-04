@@ -14,7 +14,7 @@ The runSim.R file has been modified to allow for an economic model of harvesting
 
 
 ## Statistics Behind the Economic simulation module
-The population of vessels in the statistical model is: "Vessels that landed groundfish in the 2004-2015 time period, primarily used gillnet or trawl to catch groundfish, elected to fish in the sector program in 2010-2015, and were not falsifying their catch or sales records."  $i$ indexes individuals, $n$ indexes target, and $t$ indexes time (days).
+The population of vessels in the statistical model is: "Vessels that landed groundfish in the 2004-2015 time period, primarily used gillnet or trawl to catch groundfish, elected to fish in the sector program in 2010-2015, and were not falsifying their catch or sales records."  *i* indexes individuals, *n* indexes target, and *t* indexes time (days).
 
 The statistical economic module has two stages. In the first stage, we estimate this harvest equation   
 	\begin{equation}
@@ -26,7 +26,7 @@ This is estimated equation-by-equation with ordinary least squares, using a log-
 	\end{equation}
 although there are more than just these 3 explanatory variables.
 
-Catchability $q$ varies by vessel-target.  The results are used to predict expected harvest of target $n$. These are then adjusted to account for the jointness in catching fish. For example, a trip that is targeting GB cod and that lands 1000 lbs of GB cod is also likely to land 500 lb of GB haddock, 200 lb of pollock, and 80 lb of skates.  We track all these individually and multiply by expected prices to construct expected revenue for vessel $i$'s trip that targets GB cod on day $t$. We repeat for all $i$,$n$, $t$ to construct expected revenue for all feasible choices.  Some of these things also have quota costs -- we subtract quota costs from the expected revenue.
+Catchability *q* varies by vessel-target.  The results are used to predict expected harvest of target $n$. These are then adjusted to account for the jointness in catching fish. For example, a trip that is targeting GB cod and that lands 1000 lbs of GB cod is also likely to land 500 lb of GB haddock, 200 lb of pollock, and 80 lb of skates.  We track all these individually and multiply by expected prices to construct expected revenue for vessel *i*'s trip that targets GB cod on day *t*. We repeat for all *i*,*n*, *t* to construct expected revenue for all feasible choices.  Some of these things also have quota costs -- we subtract quota costs from the expected revenue.
 
 In the second stage, we estimate the probability that a vessel will target "thing" t: 
 \begin{equation}
