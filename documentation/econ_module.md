@@ -152,6 +152,7 @@ There are a few files in "/preprocessing/economic/"  These primarily deal with c
 A bunch of pre-processing is needed to go from the stata econometric output to R data.tables.  Some of this is written in Stata .do files.  The rest is written as R batch files.  
 
 * **wrapper_common.do** This is a wrapper to process some inputs that is common to all economic scenarios.  Many global macros are set here to control what other files subsequently do.
+
 * **wrapper_CF.do, wrapper_MSE.do, wrapper_validation.do ** Versions of data processing for the counterfactual data, MSE, and validation data.  All of the wrappers run the stata code --you may want to change a few global macros that define which files are which. Many global macros are set here to control what other files subsequently do.
 
 
