@@ -47,7 +47,7 @@ The statistical estimation of the model takes place externally to the MSE model 
 ## The R code
 
 ### Options
-We can set some options using the mproc.txt/csv file. Notably:
+We can set some options using the mproc.csv file. Notably:
 * **EconType :** Multi or Single.  
    Multi --> a closure in a stockarea closes everything in that stockarea (no landings of GB Cod if GB haddock is closed)
    Single --> a closure in a stockarea does not close everything in that stockarea ( landings of GB Cod allowed if GB haddock is closed)
@@ -60,15 +60,15 @@ We can set some options using the mproc.txt/csv file. Notably:
 * **MultiplierFile :** Multiplier file to use  
 * **OutputPriceFile :** Output prices to use
 * **InputPriceFile :** Input prices to use, including quota prices.
-* **ProdEqn :** suffix for the production equation (see set_om_parameters_global.R for some examples)
-* **ChoiceEqn :** suffix for the choice equation (see set_om_parameters_global.R for some examples)
+* **ProdEqn :** suffix for the production equation (see set_om_parameters_global.R for some examples).  Currently, the choices are just pre and post.
+* **ChoiceEqn :** suffix for the choice equation (see set_om_parameters_global.R for some examples). Currently, the choices are just pre and post.  But options for noconstant or something else could be set up.
 
-This needs to eventually get over the the mproc documentation.
+This is also in the mproc documentation.
 
 
 There's a pile of code.
 
-* **runEcon_module.R :**  is a *working* economic module. The last part is kinda janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop.  This used to be in the scratch folder with a different name.
+* **runEcon_module.R :**  is a *working* economic module. The last part is kinda janky, but closes the bio$\rightarrow$ econ $\rightarrow$ bio loop.  This used to be in the scratch folder with a different name.
 
 * **runEcon_moduleonly.R :**  is a *working* economic module.  It leaves out the biological parts loop part and should be used for doing simulations of the economic model.
 
