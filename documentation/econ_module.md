@@ -3,7 +3,7 @@
 # Economic module documentation
 ### Min-Yang Lee; Anna Birkenbach (Min-Yang.Lee@noaa.gov; abirken@udel.edu)
 
-<br> Describes the code that implements the "Economic Simulation Module" in the management strategy evaluation
+<br> Describes the code that implements the "Economic Simulation Module" in the management strategy evaluation.  Also describes a sub-model (runSim_econonly.R and runEcon_moduleonly.R) that have been modified to only simulate the economic component of the model.
 
 ***
 ### Status
