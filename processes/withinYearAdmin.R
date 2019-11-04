@@ -1,4 +1,4 @@
-#This takes care of within-year counters and indexing. These are needed/useful for
+#This takes care of within-year counters and indexing. These are needed/useful for the economic model.
 
 yearcounter<-yearcounter+1
 calyear<-yrs[y]

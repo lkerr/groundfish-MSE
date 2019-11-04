@@ -42,7 +42,7 @@ nyear<-which(yrs == end_sim)
 #set the rng state.  Store the random state.  
 set.seed(rnorm(1))
 oldseed_ALL <- .Random.seed
-    
+showProgBar<-TRUE    
 ####################End Parameter and storage Setup ####################
   #This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
     
@@ -74,8 +74,11 @@ for(r in 1:nrep){
             manage_counter<-manage_counter+1 #this only gets incremented when y>=fmyearIdx
           }
           source('processes/withinYearAdmin.R')
-          
-          #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
+      if(showProgBar==TRUE){
+        setTxtProgressBar(iterpb, yearcounter)
+      }
+      
+      #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
           begin_rng_holder[[yearcounter]]<- c(r,m,y,calyear,.Random.seed)     
           
   
