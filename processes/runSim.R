@@ -115,10 +115,6 @@ econ_timer
   td2 <- paste(gsub(' ', '_', td2), round(runif(1, 0, 10000)), sep='_')
   
   
-  # create a results & sim directories
-  dir.create('results', showWarnings = FALSE)
-  dir.create('results/sim', showWarnings = FALSE)
-  dir.create('results/fig', showWarnings = FALSE)
   for(i in 1:nstock){
     pth <- paste0('results/fig/', sapply(stock, '[[', 'stockName')[i])
     dir.create(pth, showWarnings = FALSE)
