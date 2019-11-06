@@ -11,23 +11,17 @@ get_random_draw_tripsDT <- function(tds){
   #tds<-tdsDT[order(tdsDT$id,tdsDT$prhat),]
   
    tds<-tds[, csum := cumsum(prhat), by = id]
-
+    
     #make one draw per id, then replicate it nchoices time and place it into tds$draw
    tdss<-unique(tds[,c("id","nchoices")])
    td<-runif(nrow(tdss), min = 0, max = 1)
-
    tds$draw<-rep(td,tdss$nchoices)
 
-   keeper<-0
-   
     #Foreach id, keep the row for which draw is the smallest value that is greater than csum
-   
-
+    
     tds<-tds[tds$draw<tds$csum,]
     tds<-tds[tds[, .I[1], by = id]$V1] 
-    #tds[i, targeted := as.integer(1)]
-    tds$targeted<-as.integer(1)
-
+    tds$targeted<-1
     #Could I subtract and keep the first positive difference?
     #tds$choose<-tds$draw-tds$csum
     

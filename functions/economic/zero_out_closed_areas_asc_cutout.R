@@ -12,23 +12,16 @@ zero_out_closed_areas_asc_cutout <- function(tds,open_hold){
   if (num_closed==0){
     # If nothing is closed, just return tds
   } else{
+  tds<-left_join(tds,open_hold, by=c("spstock2"="spstock2"))
+  tds$stockarea_open[which(tds$spstock2=="nofish")]<-TRUE
+  #tds<-merge(tds,open_hold, by=c("spstock2"))
+  tds$prhat[tds$stockarea_open==FALSE]<-0
+  tds<-as.data.table(tds)
+  # 
+  tds<-tds[, prsum := sum(prhat), by = id]
   
-  #tds<-left_join(tds,open_hold, by=c("spstock2"="spstock2"))
-  #A data table left join
-    
-  tds<-open_hold[tds, on="spstock2"]
-  tds[, targeted := NULL]
-  
-  tds[spstock2=="nofish", stockarea_open :=TRUE]
-  tds[stockarea_open==FALSE, prhat :=0]
-  
-  #tds$stockarea_open[which(tds$spstock2=="nofish")]<-TRUE
-  #tds$prhat[tds$stockarea_open==FALSE]<-0
-  tds[, prsum := sum(prhat), by = id]
-  tds[, prhat:=prhat/prsum]
-  #tds$prhat<- tds$prhat/tds$prsum
+  tds$prhat<- tds$prhat/tds$prsum
   }
-  return(tds)
-  
+    return(tds)
 }
 

@@ -1,53 +1,38 @@
-version 15.1
+global inputdir "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_raw/econ"
+global outdir"/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_raw/econ"
+
+
 
 cd $inputdir
-est use $post_input_ster, number(1)
-est store postgillnetasc
+est use preCSasclogit.ster, number(1)
+est store gillnetasc
 
-est use $post_input_ster, number(2)
-est store posttrawlasc
+est use preCSasclogit.ster, number(2)
+est store trawlasc
+/*
+putexcel set nlogit_gillnet_pre_coefs.xls, replace
+mat b=e(b)
+mat b=b'
+putexcel A2=matrix(b), rownames
+putexcel A1="equation"
+putexcel B1="variable"
+putexcel C1="coefficient"
 
-
-est use $pre_input_ster, number(1)
-est store pregillnetasc
-
-est use $pre_input_ster, number(2)
-est store pretrawlasc
-
-
-est restore postgillnetasc
+putexcel close
+putexcel clear
+*/
+est restore gillnetasc
 mat b=e(b)
 mat b=b'
 
 mat colnames b="coefficient"
-mat2txt, matrix(b) saving($post_gillnet_out) replace
+mat2txt, matrix(b) saving(asclogit_gillnet_pre_coefs.txt) replace
 
 
 
-est restore posttrawlasc
+est restore trawlasc
 mat b=e(b)
 mat b=b'
 
 mat colnames b="coefficient"
-mat2txt, matrix(b) saving($post_trawl_out) replace
-
-
-
-est restore pregillnetasc
-mat b=e(b)
-mat b=b'
-
-mat colnames b="coefficient"
-mat2txt, matrix(b) saving($pre_gillnet_out) replace
-
-
-
-est restore pretrawlasc
-mat b=e(b)
-mat b=b'
-
-mat colnames b="coefficient"
-mat2txt, matrix(b) saving($pre_trawl_out) replace
-
-
-
+mat2txt, matrix(b) saving(asclogit_trawl_pre_coefs.txt) replace

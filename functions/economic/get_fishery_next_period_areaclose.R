@@ -6,18 +6,13 @@
 # Returns the updated version of that matrix.
 
 
-#get_fishery_next_period_areaclose <- function(dc,fh){
+
+get_fishery_next_period_areaclose <- function(dc,fh){
+  fh$cumul_catch_pounds<-dc$cumul_catch_pounds
+  fh$targeted<-dc$targeted
   
-get_fishery_next_period_areaclose <- function(fh){
-  #fh$cumul_catch_pounds<-dc$cumul_catch_pounds
-  #fh$targeted<-dc$targeted
-  
-  fh[,sectorACL_pounds:=sectorACL*pounds_per_kg*kg_per_mt]
-  fh[,underACL:=cumul_catch_pounds<sectorACL_pounds]
-  
-  
-  #fh$sectorACL_pounds<-fh$sectorACL*pounds_per_kg*kg_per_mt
-  #fh$underACL<-fh$cumul_catch<fh$sectorACL_pounds
+  fh$sectorACL_pounds<-fh$sectorACL*pounds_per_kg*kg_per_mt
+  fh$underACL<-fh$cumul_catch<fh$sectorACL_pounds
   
   #split into allocated and non-allocated
   z0<-fh[which(fh$mults_allocated==0)]
@@ -35,7 +30,7 @@ get_fishery_next_period_areaclose <- function(fh){
   } else{
     
     #it's easer to check if "any" stock in an area is closed than it is to check that ALL stocks are open.
-    # so we'll do that, then "negate" it over to a new open variable.
+    # so we'll do that, then "flip" it over to a new open variable.
     
     #by mults_allocated and stock area, sum up the number of overACLs, and set to TRUE if>0 and FALSE if ==0
     fh<-fh[,stockarea_closed :=(sum(underACL==FALSE))>0, by=list(mults_allocated,stockarea)]
@@ -50,21 +45,20 @@ get_fishery_next_period_areaclose <- function(fh){
     
     if (unit_check>=1){
       fh$stockarea_closed=TRUE 
-    } 
-    
-    
-    if (gb_check>=1 & gom_check>=1){
+    } else{
+      
+      if (gb_check>=1 & gom_check>=1){
         fh$stockarea_closed[which(fh$stockarea=="CCGOM")]=TRUE 
         snema_check<-length(which(fh$stockarea_closed==TRUE & fh$stockarea=="SNEMA"))
       }
     }
+  }  
   
-  
-  #reassemble, negate stockarea_closed to form stockarea_open, and drop stockarea_closed
+  #reassemble
   fh<-rbind(fh,z0)
   fh$stockarea_open=!fh$stockarea_closed
   fh[,stockarea_closed:=NULL]
-  setorder(fh,"spstock2")
-  return(fh)
+  
   #fh<-as.data.table(fh)
+  return(fh)
 }

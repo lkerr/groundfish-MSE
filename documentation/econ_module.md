@@ -3,7 +3,7 @@
 # Economic module documentation
 ### Min-Yang Lee; Anna Birkenbach (Min-Yang.Lee@noaa.gov; abirken@udel.edu)
 
-<br> Describes the code that implements the "Economic Simulation Module" in the management strategy evaluation.  Also describes a sub-model (runSim_econonly.R and runEcon_moduleonly.R) that have been modified to only simulate the economic component of the model.
+<br> Describes the code that implements the "Economic Simulation Module" in the management strategy evaluation
 
 ***
 ### Status
@@ -14,9 +14,9 @@ The runSim.R file has been modified to allow for an economic model of harvesting
 
 
 ## Statistics Behind the Economic simulation module
-The population of vessels in the statistical model is: "Vessels that landed groundfish in the 2004-2015 time period, primarily used gillnet or trawl to catch groundfish, elected to fish in the sector program in 2010-2015, and were not falsifying their catch or sales records."  *i* indexes individuals, *n* indexes target, and *t* indexes time (days).
+The population of vessels in the statistical model is: "Vessels that landed groundfish in the 2004-2015 time period, primarily used gillnet or trawl to catch groundfish, elected to fish in the sector program in 2010-2015, and were not falsifying their catch or sales records."  $i$ indexes individuals, $n$ indexes target, and $t$ indexes time (days).
 
-The statistical economic module has two stages. In the first stage, we estimate this harvest equation   
+The statistical economic module has two stages. In the first stage, we estimate a Schaefer's harvest equation   
 	\begin{equation}
 	H_{nit}=h(q_{ni},E_{nit},{X_{it})
 	\end{equation}
@@ -26,7 +26,7 @@ This is estimated equation-by-equation with ordinary least squares, using a log-
 	\end{equation}
 although there are more than just these 3 explanatory variables.
 
-Catchability *q* varies by vessel-target.  The results are used to predict expected harvest of target $n$. These are then adjusted to account for the jointness in catching fish. For example, a trip that is targeting GB cod and that lands 1000 lbs of GB cod is also likely to land 500 lb of GB haddock, 200 lb of pollock, and 80 lb of skates.  We track all these individually and multiply by expected prices to construct expected revenue for vessel *i*'s trip that targets GB cod on day *t*. We repeat for all *i*,*n*, *t* to construct expected revenue for all feasible choices.  Some of these things also have quota costs -- we subtract quota costs from the expected revenue.
+Catchability $q$ varies by vessel-target.  The results are used to predict expected harvest of target $n$. These are then adjusted to account for the jointness in catching fish. For example, a trip that is targeting GB cod and that lands 1000 lbs of GB cod is also likely to land 500 lb of GB haddock, 200 lb of pollock, and 80 lb of skates.  We track all these and multiply by expected prices to construct expected revenue for vessel $i$'s trip that targets GB cod on day $t$. We repeat for all $i$,$n$, $t$ to construct expected revenue for all feasible choices.
 
 In the second stage, we estimate the probability that a vessel will target "thing" t: 
 \begin{equation}
@@ -40,95 +40,50 @@ We can also simulate what happens when a fishery (GOM Cod, Pollock, Skates) are 
 
 McFadden,  D.  L.  1974.  Conditional  logit  analysis  of  qualitative  choice  behavior.  In Frontiers  in  Econometrics,  ed.P.  Zarembka,  105–142.  New  York:  Academic  Press
 
-For both the production and targeting models, the unit of observation is a hullnum-day.
+For both the production and targeting models, the unit of observation is a permit-day.
 
 The statistical estimation of the model takes place externally to the MSE model -- there isn't a need to have this occur simultaneously (yet).
 
 ## The R code
-
-### Options
-We can set some options using the mproc.csv file. Notably:
-* **EconType :** Multi or Single.  
-   Multi --> a closure in a stockarea closes everything in that stockarea (no landings of GB Cod if GB haddock is closed)
-   Single --> a closure in a stockarea does not close everything in that stockarea ( landings of GB Cod allowed if GB haddock is closed)
-   
-* **CatchZero :**
-  TRUE --> no catch of GB Cod if GB cod is closed.
-  FALSE --> catch of GB Cod happens even if GB cod is closed (but all catch would be discarded).
-* **EconName :** A short name for the scenario.
-* **EconData :** stub for which dataset to use (see data processing steps)
-* **MultiplierFile :** Multiplier file to use  
-* **OutputPriceFile :** Output prices to use
-* **InputPriceFile :** Input prices to use, including quota prices.
-* **ProdEqn :** suffix for the production equation (see set_om_parameters_global.R for some examples).  Currently, the choices are just pre and post.
-* **ChoiceEqn :** suffix for the choice equation (see set_om_parameters_global.R for some examples). Currently, the choices are just pre and post.  But options for noconstant or something else could be set up.
-
-This is also in the mproc documentation.
+There's a pile of code. It's quite janky.
+* **runEcon_module.R :**  is a *working* economic module. The last part is kinda janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop.  Currently does not do the catch multipliers. This used to be in the scratch folder with a different name.
 
 
-There's a pile of code.
 
-* **runEcon_module.R :**  is a *working* economic module. The last part is kinda janky, but closes the bio$\rightarrow$ econ $\rightarrow$ bio loop.  This used to be in the scratch folder with a different name.
+There are few files in "scratch/econscratch" that may be useful
+* **test_predict_etargeting_and_production.R :** was used to verify that the predict_etargeting.R and predict_eproduction.R functions works properly. It runs as a standalone and might be fun to explore. 
 
-* **runEcon_moduleonly.R :**  is a *working* economic module.  It leaves out the biological parts loop part and should be used for doing simulations of the economic model.
 
-* **setupYearIndexing.R:** sets up a small data.table that keeps track of year indices. 
 
-* **setupYearIndexing_Econ.R:** sets up a small data.table that keeps track of year indices. Specific for economic simulations.
-
-* **withinYearAdmin.R:** Operates on that datatable every year.
-
-* **runSim_Econonly.R :**  is a modified version of runSim.R that only does the economic simulations.
-
-* **loadsetRNG.R :**  code to load/reset the RNG state based on a list.
+* **test_econ_module.R :**  is a test economic module. The last part is incredibly janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop. I'm just waiting to have runSim.R reordered before I can use it to write out F_full to stock[[i]] for the modeled stocks.  Pieces of this will be put into fragments that are called by "runSetup.R" (perhaps with an if cut-out for EconomicModel) because they only need to be run once.  Other parts should be converted into a function or many functions.
 
 * **speedups_econ_module2.R :**  code for benchmarking the economic model.
  
-There are  "processes" files that run one time per simulation run: 
+There are  "processes" files: 
 * **genBaselineACLs.R:** This is used to construct "baseline" ACLs for the non-modeled stocks. That includes Groundfish *and* non-groundfish stocks like lobster or skate that either caught with groundfish or altenatives to taking a groundfish trip.
 
 * **genEcon_Containers.R:** Gets called in the runSetup.R file. It sets up a few placeholders for Fleet level economic outputs.
 
-* **loadEcon.R:** Gets called in the runSetup.R file. Loads in some of the smaller data.tables that will remain in memory every time runSim.R is called. (NOT NEEDED ANYMORE)
-
-* **loadEcon2.R:** Gets called in the runSim.R file.  Loads in a single large data.table that remains in memory for one simulated year.  These files are too big to load and hold in memory for the entire simulation.  Also loads in input prices, output prices, and multipliers
-
-* **setupEconType.R:** Parses the mproc file for economic options (multipliers, output prices, input prices, production equation, choice equation).
-
-Functions - these run many times per simulation:
-* **get_bio_for_econ:** passes *things* from the biological model (in stock[[i]]) to the economic model.
-
-* **get_fishery_next_period:** adds up catch from individual vessels to the daily level and then aggregates with prior catch.  Checks if the sector sub-ACL is reached and closes the fishery if so.
-* **get_fishery_next_period_areaclose:** adds up catch from individual vessels to the daily level and then aggregates with prior catch.  Checks if the sector sub-ACL is reached and closes the fishery if so.  For the allocated multispecie stocks, this creates and extrac column that indicates if that stockarea is closed.
-
-* **get_joint_production:** Replaces the catch multiplier, landings multiplier, quota prices, lag prices, and prices with catch (lbs), landings(lbs), quota prices, lag prices, and prices.  This accounts for the jointness in production. These variables are now a little misleading in names.  However, I chose to replace instead of create new columns to save on space.
-
+Functions:
 * **predict_eproduction:** Predicts harvest of the target species, returns a data.table
 
 * **predict_etargeting:** predicts targeting, returns a data.table.
 
+* **get_bio_for_econ:** passes *things* from the biological model (in stock[[i]]) to the economic model.
 
 * **get_best_trip:** for each vessel-day (id) selects the choice (spstock2) with the highest prhat
 
 * **get_random_draw_tripsDT:** for each vessel-day (id) randomly selects a choice (spstock2) based on prhat. Reworked to  data.table
 
-* **get_reshape_catches:** Aggregates the catch from the day's trips to the fleet level.
+* **get_fishery_next_period:** adds up catch from individual vessels to the daily level and then aggregates with prior catch.  Checks if the sector sub-ACL is reached and closes the fishery if so.
 
-* **get_reshape_landings:** Aggregates the landings from the day's trips to the fleet level.
+* **get_fishery_next_period:** adds up catch from individual vessels to the daily level and then aggregates with prior catch.  Checks if the sector sub-ACL is reached and closes the fishery if so.  For the allocated multispecie stocks, this creates and extrac column that indicates if that stockarea is closed.
 
-* **joint_adjust_allocated_mults:** Adjusts the joint production multipliers for the allocated multispecies stocks
-* **joint_adjust_others:** Adjusts the joint production multipliers for other stocks
 
+* **zero_out_closed_asc_cutout:** Closes a fishery and redistributes the probability associated with that stock to the other options. This is based on the "underACL" logical column.   Skips math if all stocks are open.
 
 * **zero_out_closed_areas_asc_cutout:** Closes a fishery and redistributes the probability associated with that stock to the other options.  This is based on the "stockarea_open" logical column.   Skips math if all stocks are open
 
-
-* **get_reshape_targets_revenues:** A small "helper" function to reshape targets and revenues.
-
-There are few files in "scratch/econscratch" that may be useful
-* **test_predict_etargeting_and_production.R :** was used to verify that the predict_etargeting.R and predict_eproduction.R functions works properly. It runs as a standalone and might be fun to explore. 
-
-* **test_econ_module.R :**  is a test economic module. The last part is incredibly janky, but should just about close the bio$\rightarrow$ econ $\rightarrow$ bio loop. I'm just waiting to have runSim.R reordered before I can use it to write out F_full to stock[[i]] for the modeled stocks.  Pieces of this will be put into fragments that are called by "runSetup.R" (perhaps with an if cut-out for EconomicModel) because they only need to be run once.  Other parts should be converted into a function or many functions.
 
 
 
@@ -144,78 +99,41 @@ There are a few files in "/preprocessing/economic/"  These primarily deal with c
 
 * **predict_etargetingCpp:** A version that uses RCpp sugar. This wasn't faster than base R.  Predicts targeting, returns a data.table.
 
-* **get_best_trip:** for each vessel-day (id) selects the choice (spstock2) with the highest prhat. Obsolete and should be removed.
 
-* **zero_out_closed_asc_cutout:** Closes a fishery and redistributes the probability associated with that stock to the other options. This is based on the "underACL" logical column.   Skips math if all stocks are open.  This is obsolete because the underACL logical is always equal to the stockarea_open, regardless of how we are modeling closures.
+## Inputs,
+Data, starting values and parameter bounds.
 
-## Pre-processing
-A bunch of pre-processing is needed to go from the stata econometric output to R data.tables.  Some of this is written in Stata .do files.  The rest is written as R batch files.  
+Running the model requires
+/data/data_processed/econ/full_production.RData, /data/data_processed/econ/full_targeting.RData, and /data/data_processed/econ/catch_limits_2010_2017.csv
 
-* **wrapper_common.do** This is a wrapper to process some inputs that is common to all economic scenarios.  Many global macros are set here to control what other files subsequently do.
+I should probably write up a small control file or set of parameters.
+  * which gffishingyear
 
-* **wrapper_CF.do, wrapper_MSE.do, wrapper_validation.do ** Versions of data processing for the counterfactual data, MSE, and validation data.  All of the wrappers run the stata code --you may want to change a few global macros that define which files are which. Many global macros are set here to control what other files subsequently do.
-
-
-* **asclogit_coef_export.do** This exports the stata estimates to csv.
-* **econ_data_split.do** splits and renames multi-year datasets into single year datasets.
-
-* **stocks_in_model.do** This makes a 1 column dataset of spstock2.  
-* **recode_catch_limits.do** A little cleanup and conforming of the catch limit csv.
-* **price_prep.do** : Construct output prices at the spstock2-date-post level and input prices at the hullnum-spstock2-date-post level.  Quota prices are at the hullnum-spstock2-month-post level, but stored with the other input prices.  Quota prices may vary by hullnum because some vessels are DAS scallopers and others are IFQ scallopers.  Note -- right now, we are only have Post period prices ready. All simulations are currently using 2010-2015 prices.
-* **multiplier_prep.do** : Construct multipliers at the hullnum-spstock2-month-post level.  
-
-
-
-
-* **pre_process_econ_MSE.R:** This is a wrapper to finish processing data for the MSE type simulation.  This has been tested to work on a "data_for_mse" dataset.
-
-* **pre_process_AB_counterfactual.R:** This is a wrapper to finish processing data for the Counterfactual type simulation.  This has been tested to work on a "data_for_mse" dataset.  Notably, quota prices are zeroed out for the Groundfish stocks.
-
-* **pre_process_AB_validation.R:** This is a wrapper to  run *all* of the R and stata code to set data up for "counterfactual simulations".  You will need to change paths to directories, you may need to change some filenames.  We set all the input and output filenames here.  This has been tested to work on a "POSTasPOST" dataset.
-
-
-
-
-* **targeting_coeff_import.R** converts the results of asclogit_coef_export to an R data.table
-* **production_coefs.R** imports the targeting regression coefficients to an R data.table
-* **input_price_import.R** imports and saves data.tables containing input prices
-* **output_price_import.R** imports and saves data.tables containing output prices
-* **multiplier_import.R** constructs vessel 
-* **targeting_data_import.R** constructs the simulation datasets.  There are the "data" is joined to coefficients, prices, and multipliers using various combinations of "hullnum", "MONTH" , "spstock2", "doffy" (day of groundfish fishing year), "gearcat".  Note that because the data loops through "gffishingyears", we do not join on gffishingyear. This piece of code also computes average multipliers in the pre-period for the counterfactual sims.
-
-## Input Data
-There are a few input datasets needed to run. 
-* **full_targeting_YYYY.Rds** - contains "independant variables" associated with the production and targeting models, estimated coefficients. Each row corresponds a vessel-day-targeting choice.  I tried to optimize for less memory usage, but it makes the model run extremely slowly.  
-
-* **input_prices_POST_STUB.Rds** vessel-day level input prices. fuelprice and crew wages vary by vessel.  This variability is partially due to their locations (prices of fuel vary by state; so do prices of labor). Also varies based on the size and composition of the boat's crew.  POST can be "pre" or "post" and STUB can be "CF", "MSE", or "valid" 
-
-* **output_prices_POST_STUB.Rds**  day-level output prices that are gearcat specific. They are gearcat specific because the mix  of "other" varies by gearcat.  POST can be "pre" or "post" and STUB can be "CF", "MSE", or "valid" 
-
-* **sim_multipliers_POST_STUB.Rds**  These are vessel specific coefficients that scale landings of a target species to catch/landings of other (non-target) species that are used for simulating the pre catch-share period. POST can be "pre" or "post" and STUB can be "CF", "MSE", or "valid" 
-
-I've been making small changes to mproc_test.txt and the "set_om_parameters_global.R" file.  The set_om_parameters_global.R contains things like file/folder locations, stocks that are in the model, and the RHS variables for the simulations.
 
 ### Outputs
-We're retaining catch, landings, value, and quota_charges at the "hullnum-day-spstock2" level.  We are not retaining "hullnum_day" where the vessel chooses "no fish".
+Model outputs are TBD
+
 
 ### To do and known bugs
-* needs to do state dependence properly.
+
 
 * **runEcon_module.R :** 
-  * Needs to be cleaned up.  Uses about 7-8gb.
+  * Needs to be cleaned up.  Uses about 4-6gb of memory.
   * Needs to be sped up.
     * The tidyverse version took approx 48sec/yr.
     * The revised data.table version takes 19 seconds/yr (depending on how often fisheries are closed). I should probably profile the code to speed it up.
-    * I tried rewriting the model to economize on memory by only loading "small" data.tables and then mergeing them. That actually takes a large amount of time (>2-3 minutes). 
+  * Does not yet incorporate catch/landings multipliers. So that's a big problem.  Will need to add the multiplier data, code to integrate, test, and adjust.
   * Doesn't read/use IJ1 trawl survey index(biomass index computed on Jan 1).
   * does not store fishery revenue anywhere, just overwrites it.
-  * slowest parts are joint_production, zero-ing out the closed stocks, and the randomdraw.
+  * slowest parts are eproduction, etargeting, and randomdraw.
   
 ### Notes
 * packages are gmm, mvtnorm, tmvtnorm, expm, msm, Matrix, TMB, forcats, readr, tidyverse, dplyr, data.table
 * the targeting and production datasets now conform. Production dataset is not necessary.
 
- * The Econ module is mostly written using data.table. 
- 
+ * The Econ module is a little bit fragile.  A few datasets need to be merged *during* the simulation. I initially used "base::merge."   That was slow, so I used "dplyr::left_join," which was faster.  Now, I'm ensuring that the merged datasets are the same length and order and using "cbind."
+    * There is a left_join in zero_out_closed_asc_cutout.R. I don't think I can avoid this.
+* I've verified that the functions are working, but I *think* there is an underlying data error.
+
 
 [Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)

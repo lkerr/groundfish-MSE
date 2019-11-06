@@ -1,6 +1,31 @@
 # Read in Production and Targeting coefficients to RDS  
 # Tested working. Make a small change if we want to get different regression results (there are 4 sets of models for each gear, we haven't picked a "best " model yet).
 
+rm(list=ls())
+if(!require(readstata13)) {  
+  install.packages("readstata13")
+  require(readstata13)}
+if(!require(tidyr)) {  
+  install.packages("tidyr")
+  require(tidyr)}
+if(!require(dplyr)) {  
+  install.packages("dplyr")
+  require(dplyr)}
+if(!require(data.table)) {  
+  install.packages("data.table")
+  require(data.table)}
+
+# file paths for the raw and final directories
+# windows is kind of stupid, so you'll have to deal with it in some way.
+rawpath <- './data/data_raw/econ'
+savepath <- './data/data_processed/econ'
+
+#rawpath <- 'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE/data/data_raw/econ'
+#savepath <- 'C:/Users/Min-Yang.Lee/Documents/groundfish-MSE/data/data_processed/econ'
+
+
+production_coef_pre<-"production_regs_actual_pre_forR.txt"
+production_coef_post<-"production_regs_actual_post_forR.txt"
 
 
 
@@ -35,30 +60,30 @@ droppval<-function(working_coefs){
   }
   working_coefs
 }
-# 
-# # read in the estimated coefficients from txt files
-# production_coefs <- read.csv(file.path(rawpath,production_coef_pre), sep="\t", header=TRUE,stringsAsFactors=FALSE)
-# 
-# production_coefs<-zero_out(production_coefs,thresh)
-# production_coefs<-droppval(production_coefs)
-# 
-# 
-# # Drop out the p-values since we don't need them anymore. these are the odd columns 3:nc. Super ugly code, but works.
-# ## End zeroing out coefficients ##
-# 
-# 
-# 
-# #push the first column into the row names and drop that column
-# rownames(production_coefs)<-production_coefs[,1]
-# production_coefs<-production_coefs[,-1]
-# 
-# #transpose and send to dataframe, fix naming, and characters
-# production_coefs<-as.data.frame(t(production_coefs))
+
+# read in the estimated coefficients from txt files
+production_coefs <- read.csv(file.path(rawpath,production_coef_pre), sep="\t", header=TRUE,stringsAsFactors=FALSE)
+
+production_coefs<-zero_out(production_coefs,thresh)
+production_coefs<-droppval(production_coefs)
+
+
+# Drop out the p-values since we don't need them anymore. these are the odd columns 3:nc. Super ugly code, but works.
+## End zeroing out coefficients ##
+
+
+
+#push the first column into the row names and drop that column
+rownames(production_coefs)<-production_coefs[,1]
+production_coefs<-production_coefs[,-1]
+
+#transpose and send to dataframe, fix naming, and characters
+production_coefs<-as.data.frame(t(production_coefs))
 
 
 ### Repeat for the post coefs 
 
-production_coefs_post <- read.csv(file.path(rawpath,production_coef_in), sep="\t", header=TRUE,stringsAsFactors=FALSE)
+production_coefs_post <- read.csv(file.path(rawpath,production_coef_post), sep="\t", header=TRUE,stringsAsFactors=FALSE)
 
 production_coefs_post<-zero_out(production_coefs_post,thresh)
 production_coefs_post<-droppval(production_coefs_post)
@@ -68,13 +93,11 @@ rownames(production_coefs_post)<-production_coefs_post[,1]
 production_coefs_post<-production_coefs_post[,-1]
 #transpose and send to dataframe, fix naming, and characters
 production_coefs_post<-as.data.frame(t(production_coefs_post))
-# 
-# ### Bring together 
-# production_coefs[setdiff(names(production_coefs_post), names(production_coefs))] <- NA
-# production_coefs_post[setdiff(names(production_coefs), names(production_coefs_post))] <- NA
-production_coefs<-production_coefs_post
-#production_coefs<-rbind(production_coefs,production_coefs_post)
 
+### Bring together 
+production_coefs[setdiff(names(production_coefs_post), names(production_coefs))] <- NA
+production_coefs_post[setdiff(names(production_coefs), names(production_coefs_post))] <- NA
+production_coefs<-rbind(production_coefs,production_coefs_post)
 rm(production_coefs_post)
 #take the rownames, push them into a column, and make sure they are characters. un-name the rows
 model <- rownames(production_coefs)
@@ -94,8 +117,6 @@ colnames(production_coefs)[colnames(production_coefs)=="Cumulative Harvest (Log)
 colnames(production_coefs)[colnames(production_coefs)=="Primary Target"] <- "primary"
 colnames(production_coefs)[colnames(production_coefs)=="Secondary Target"] <- "secondary"
 colnames(production_coefs)[colnames(production_coefs)=="Trawl Survey Biomass (Log)"]<- "log_trawl_survey_weight"
-colnames(production_coefs)[colnames(production_coefs)=="Sector ACL (Log)"]<- "log_sector_acl"
-
 colnames(production_coefs)<- tolower(gsub("=","",colnames(production_coefs)))
 
 
@@ -114,59 +135,8 @@ production_coefs[is.na(production_coefs)] <- 0
 
 production_coefs<-as.data.table(production_coefs)
 
-pc_colnames<-colnames(production_coefs)
-if (!('alpha_fy2004' %in% pc_colnames)){
-  production_coefs$alpha_fy2004<-0
-}
 
-if (!('alpha_fy2005' %in% pc_colnames)){
-  production_coefs$alpha_fy2005<-0
-}
-if (!('alpha_fy2006' %in% pc_colnames)){
-  production_coefs$alpha_fy2006<-0
-}
-if (!('alpha_fy2007' %in% pc_colnames)){
-  production_coefs$alpha_fy2007<-0
-}
-if (!('alpha_fy2008' %in% pc_colnames)){
-  production_coefs$alpha_fy2008<-0
-}
-if (!('alpha_fy2009' %in% pc_colnames)){
-  production_coefs$alpha_fy2009<-0
-}
-
-if (!('alpha_fy2010' %in% pc_colnames)){
-  production_coefs$alpha_fy2010<-0
-}
-if (!('alpha_fy2011' %in% pc_colnames)){
-  production_coefs$alpha_fy2011<-0
-}
-if (!('alpha_fy2012' %in% pc_colnames)){
-  production_coefs$alpha_fy2012<-0
-}
-if (!('alpha_fy2013' %in% pc_colnames)){
-  production_coefs$alpha_fy2013<-0
-}
-if (!('alpha_fy2013' %in% pc_colnames)){
-  production_coefs$alpha_fy2013<-0
-}
-if (!('alpha_fy2014' %in% pc_colnames)){
-  production_coefs$alpha_fy2014<-0
-}
-if (!('alpha_fy2015' %in% pc_colnames)){
-  production_coefs$alpha_fy2015<-0
-}
-
-
-
-
-
-production_coefs$spstock2<- gsub("gb","GB",production_coefs$spstock2)
-production_coefs$spstock2<- gsub("ccgom","CCGOM",production_coefs$spstock2)
-production_coefs$spstock2<- gsub("gom","GOM",production_coefs$spstock2)
-production_coefs$spstock2<- gsub("snema","SNEMA",production_coefs$spstock2)
-
-saveRDS(production_coefs, file=file.path(savepath, production_outfile), compress=FALSE)
+saveRDS(production_coefs, file=file.path(savepath, "production_coefs.Rds"))
 
 
 
