@@ -4,31 +4,68 @@
 
 # empty the environment
 rm(list=ls())
- 
 source('processes/runSetup.R')
 
 # if on local machine (i.e., not hpcc) must compile the tmb code
-# (HPCC runs have a separate call to compile this code). Keep out of
+# (HPCC runs have a separate cal  l to compile this code). Keep out of
 # runSetup.R because it is really a separate process on the HPCC.
 if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
+
+
 top_loop_start<-Sys.time()
+
+
+
+####################These are temporary changes for testing ####################
 econ_timer<-0
-# set.seed(2)
+mproc_bak<-mproc
+
+#mproc<-mproc_bak[2,]
+nrep<-1
+#day<-1
+nyear<-155
+## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
+####################End Temporary changes for testing ####################
+# should go somewhere else
+revenue_holder<-list()
+
+
+# Set up a small table that is useful for variablity across years in the economic model.
+eyears<-nrep*nyear
+random_sim_draw <-as.data.table(cbind(1:eyears, sample(first_econ_yr:last_econ_yr, eyears, replace=TRUE),sample(first_econ_yr:last_econ_yr, eyears, replace=TRUE)))
+colnames(random_sim_draw)<-c("econrd","price_gfy","other_gfy")
+random_sim_draw[, price_gfy_idx:=price_gfy-first_econ_yr+1]
+random_sim_draw[, other_gfy_idx:=other_gfy-first_econ_yr+1]
+eyear_idx<-0
+
+econ_year_draw<-random_sim_draw[1,2]
+econ_idx_draw<-random_sim_draw[1,4]
+
+
 #### Top rep Loop ####
 for(r in 1:nrep){
 
+  #### Top MP loop ####
+  for(m in 1:nrow(mproc)){
+    
   # Use the same random numbers for each of the management strategies
   # set.seed(NULL)
   # rsd <- rnorm()
+  # set.seed(rsd)
   
-  #### Top MP loop ####
-  for(m in 1:nrow(mproc)){
-
+  eyear_idx<-0
+  #### Top rep Loop ####
+    for(r in 1:nrep){
+      
+    #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached.
+    econtype<-mproc[m,]
+    myvars<-c("LandZero","CatchZero","EconType","EconData")
+    econtype<-econtype[myvars]
+    econ_data_stub<-econtype["EconData"]
     # set.seed(rsd)
-    
     
     # Initialize stocks and determine burn-in F
     for(i in 1:nstock){
@@ -38,6 +75,13 @@ for(r in 1:nrep){
     
     #### Top year loop ####
     for(y in fyear:nyear){
+      
+      #Construct the year-replicate index and use those to look up their values from random_sim_draw
+      eyear_idx<-eyear_idx+1
+      econ_year_draw<-random_sim_draw[[eyear_idx,2]]
+      econ_idx_draw<-random_sim_draw[[eyear_idx,4]]
+      
+      
       for(i in 1:nstock){
         stock[[i]] <- get_J1Updates(stock = stock[[i]])
       }
@@ -52,7 +96,7 @@ for(r in 1:nrep){
         }
         
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
-
+          
           for(i in 1:nstock){
             # Specific "survey" meant to track the population on Jan1
             # for use in the economic submodel. timeI=0 implies Jan1.
@@ -64,6 +108,9 @@ for(r in 1:nrep){
 
           
           # ---- Run the economic model here ----
+          source('processes/loadEcon2.R')
+       
+          
           bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline)
 
           start_time<-proc.time() 
@@ -92,13 +139,13 @@ for(r in 1:nrep){
         stock[[i]] <- get_mortality(stock = stock[[i]])
         stock[[i]] <- get_indexData(stock = stock[[i]])
       }
-        
+        gc()
       }
 
         
     }
   }
-  
+}
 top_loop_end<-Sys.time()
 big_loop<-top_loop_end-top_loop_start
 big_loop
