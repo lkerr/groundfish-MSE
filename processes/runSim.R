@@ -157,14 +157,11 @@ for(r in 1:nrep){
   td2 <- gsub(':', '', td)
   td2 <- paste(gsub(' ', '_', td2), round(runif(1, 0, 10000)), sep='_')
   
-    
+
     saveRDS(begin_rng_holder, file.path(econ_results_location,  paste0("begin_rng_",td2, ".Rds")), compress=FALSE)
     saveRDS(end_rng_holder, file.path(econ_results_location,  paste0("end_rng_",td2, ".Rds")), compress=FALSE)
     
-  # # create a results & sim directories
-  # dir.create('results', showWarnings = FALSE)
-  # dir.create('results/sim', showWarnings = FALSE)
-  # dir.create('results/fig', showWarnings = FALSE)
+
   for(i in 1:nstock){
     pth <- paste0('results/fig/', sapply(stock, '[[', 'stockName')[i])
     dir.create(pth, showWarnings = FALSE)
