@@ -116,7 +116,7 @@ econ_timer
   
   
   for(i in 1:nstock){
-    pth <- paste0('results/fig/', sapply(stock, '[[', 'stockName')[i])
+    pth <- paste0(ResultDirectory,'/fig/', sapply(stock, '[[', 'stockName')[i])
     dir.create(pth, showWarnings = FALSE)
   }
   
@@ -124,21 +124,21 @@ econ_timer
   #### save results ####
   omvalGlobal <- sapply(1:nstock, function(x) stock[[x]]['omval'])
   names(omvalGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
-  save(omvalGlobal, file=paste0('results/sim/omvalGlobal', td2, '.Rdata'))
+  save(omvalGlobal, file=paste0(ResultDirectory,'/sim/omvalGlobal', td2, '.Rdata'))
   
   if(runClass != 'HPCC'){
     omparGlobal <- readLines('modelParameters/set_om_parameters_global.R')
     cat('\n\nSuccess.\n\n',
         'Completion at: ',
         td,
-        file='results/runInfo.txt', sep='')
+        file=paste0(ResultDirectory,'/runInfo.txt', sep='')
     cat('\n\n\n\n\n\n\n\n  ##### Global OM Parameters ##### \n\n',
         omparGlobal,
-        file='results/runInfo.txt', sep='\n', append=TRUE)
+        file=paste0(ResultDirectory,'/runInfo.txt', sep='\n', append=TRUE)
     for(i in 1:nstock){
       cat('\n\n\n\n\n\n\n\n  ##### Stock OM Parameters ##### \n\n',
           readLines(fileList[i]), 
-          file='results/runInfo.txt', sep='\n', append=TRUE)
+          file=paste0(ResultDirectory,'/runInfo.txt', sep='\n', append=TRUE)
     }
   }
   
