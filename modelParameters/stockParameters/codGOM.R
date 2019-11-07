@@ -44,13 +44,11 @@ selC_typ <- 'Logistic'
 
 # Recruitment #AEW from GOM COD 2019 Update M0.2 .rep
   Rpar <- c(h = 1,
-            R0 = 4456.87,
-            SSBRF0 = 0.168992) # this value is wrong
+            R0 = 4456870,
+            SSBRF0 = 0.01822) # calculated as S0/R0 (81202.9/4456870) (arbitrary because h = 1)
   R_typ <- 'BHSteep'
 
-  # Rpar <- c(a = 4456.87, # values from assessment
-#           b = 0)
-# R_typ <- 'BH'
+
 
  
 
