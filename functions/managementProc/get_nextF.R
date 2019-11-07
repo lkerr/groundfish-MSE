@@ -74,6 +74,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     overfished <- ifelse(tail(parpop$SSBhat,1) < BThresh, 1, 0)
     
+    overfishing <- ifelse(tail(parpop$Fhat,1) > FThresh, 1, 0) #AEW
+    
     if(tolower(parmgt$HCR) == 'slide'){
      
       F <- get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)['Fadvice']
@@ -95,7 +97,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     }
   
     out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue), 
-                ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished)
+                ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
+                OFgStatus = overfishing) #AEW
     
   }else if(parmgt$ASSESSCLASS == 'PLANB'){
     
@@ -117,7 +120,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                   M = parpop$Mtrue_y, 
                   waav = parpop$waatrue_y)
     
-    out <- list(F = trueF, RPs = c(NA, NA), OFdStatus=NA)
+    out <- list(F = trueF, RPs = c(NA, NA), OFdStatus=NA,
+                OFgStatus = NA) #AEW
     
   }else{
     

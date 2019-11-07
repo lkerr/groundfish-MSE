@@ -136,6 +136,9 @@ get_fillRepArrays <- function(stock){
     omval$sumCW[r,m,] <- sumCW
     omval$OFdStatus[r,m,] <- OFdStatus
     omval$mxGradCAA[r,m,] <- mxGradCAA
+    omval$F_fullAdvice[r,m,] <- F_fullAdvice #AEW
+    omval$ACL[r,m,] <- ACL #AEW
+    omval$OFgStatus[r,m,] <- OFgStatus #AEW
     
     # annPercentChange not true vector -- just repeated values. This needs
     # to be calculated after the run so that the appropriate time windows
@@ -177,6 +180,8 @@ get_fillRepArrays <- function(stock){
     omval$relE_SSB[r,m,] <- relE_SSB
     omval$relE_CW[r,m,] <- relE_CW
     omval$relE_IN[r,m,] <- relE_IN
+    omval$relE_R[r,m,] <- relE_R #AEW
+    omval$relE_F[r,m,] <- relE_F #AEW
   })
 
   return(out)
