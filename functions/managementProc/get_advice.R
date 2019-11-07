@@ -100,6 +100,9 @@ get_advice <- function(stock){
     tempStock <- within(tempStock, {
       OFdStatus[y-1] <- gnF$OFdStatus
       
+      # Report overfishing status AEW
+      OFgStatus[y-1] <- gnF$OFgStatus
+      
       # Report maximum gradient component for CAA model
       mxGradCAA[y-1] <- ifelse(mproc[m,'ASSESSCLASS'] == 'CAA',
                              yes = rep$maxGrad,
