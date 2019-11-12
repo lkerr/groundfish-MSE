@@ -4,14 +4,17 @@ econdatafile<-paste0(econ_data_stub,econ_base_draw,".Rds")
 targeting_dataset<-readRDS(file.path(econdatapath,econdatafile))
 
 wm<-multipliers[[econ_mult_idx_draw]]
-wm[, gffishingyear:=NULL]
-
+if ('gffishingyear' %in% colnames(wm)){
+  wm[, gffishingyear:=NULL]
+}
 wo<-outputprices[[econ_outputprice_idx_draw]]
-wo[, gffishingyear:=NULL]
-
+if ('gffishingyear' %in% colnames(wo)){
+  wo[, gffishingyear:=NULL]
+}
 wi<-inputprices[[econ_inputprice_idx_draw]]
-wi[, gffishingyear:=NULL]
-
+if ('gffishingyear' %in% colnames(wi)){
+  wi[, gffishingyear:=NULL]
+}
 #temp for debugging
 #targeting_dataset$prhat<-targeting_dataset$pr
 
