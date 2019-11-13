@@ -11,7 +11,9 @@ cap mkdir $process_results
 
 cd $raw_results
 
-local imports: dir "." files "econ_2019-10-23*.csv"
+local date "2019-11-13"
+
+local imports: dir "." files "econ_`date'*.csv"
 
 *local imports: dir "." files "*.csv"
 
@@ -26,7 +28,7 @@ foreach l of local imports{
 dsconcat `files'
 gen caldate=mdy(5,1,y)+doffy-1
 
-save "$process_results/results.dta", replace
+save "$process_results/results_`date'.dta", replace
 
 
 /* targets by day, across replicates */
@@ -44,7 +46,7 @@ xtline target
 
 
 
-use "$process_results/results.dta", replace
+use "$process_results/results_`date'.dta", replace
 gen month=mofd(caldate)
 format month %tm
 
