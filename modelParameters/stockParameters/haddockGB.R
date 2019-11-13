@@ -19,7 +19,7 @@ laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=5)  #AEW
 laa_typ <- 'vonB'
 
 # weight-length parameters
-waa_par <- c(0.00803, 3.059) #AEW
+waa_par <- c(exp(-11.73233), 3.059) #AEW
 waa_typ <- 'aLb'
 
 # maturity-length parameters
