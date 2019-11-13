@@ -13,13 +13,17 @@ get_advice <- function(stock){
   # Run the PlanB assessment
   tempStock <- get_planB(stock = tempStock)
   
+  # Run ASAP assessment
+  tempStock <- get_ASAP(stock = tempStock)
 
   # was the assessment successful?
   tempStock <- within(tempStock, {
     conv <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' & 
                    class(opt) != 'try-error') ||
                    (mproc[m,'ASSESSCLASS'] == 'PLANB' & 
-                   class(planBest) != 'try-error'),
+                   class(planBest) != 'try-error') ||
+                   (mproc[m, 'ASSESSCLASS'] == 'ASAP' &
+                   class(asapEst) != 'try-error'),
                    yes = 1, no = 0)
   })
   
@@ -47,8 +51,9 @@ get_advice <- function(stock){
                      Rpar = Rpar,
                      Fhat = tail(rep$F_full, 1))
       })
+    }
      
-    }else if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
+    if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
       tempStock <- within(tempStock, {
         parpop <- list(obs_sumCW = tmb_dat$obs_sumCW,
                        mult = planBest$multiplier,
@@ -58,6 +63,21 @@ get_advice <- function(stock){
                        slxCtrue_y = slxC[y-1,])
         })
     }
+    
+    if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
+      tempStock <- within(tempStock, {
+        parpop <- list(waa = tail(res$WAA.mats$WAA.catch.fleet1, 1),           ### AEW which WAA matrix to use?
+                       sel = tail(res$fleet.sel.mats, 1),                      ### AEW fleet or survey selex
+                       M = tail(res$M.age, 1), 
+                       mat = res$maturity[y-1,],                               ### why y-1?
+                       R = tail(res$SR.resids$recruits, 1),
+                       SSBhat = res$SSB,
+                       J1N = tail(res$N.age,1),                                        ### or use J1B reported in biomass
+                       Rpar = Rpar,
+                       Fhat = tail(res$F.report, 1))
+      })
+    }
+    
     
     # Environmental parameters
     parenv <- list(tempY = temp,

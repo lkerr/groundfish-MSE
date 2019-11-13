@@ -9,54 +9,68 @@
 get_ASAP <- function(stock){
 
   out <- within(stock, {
-    
+
 # read in assessment .dat file and modify accordingly
     dat_file <- ReadASAP3DatFile(paste('assessment/ASAP/', stock[[i]]$stockName, ".dat", sep = ''))
 
-    
-### modify for each simulation
-    
+
+### modify for each simulation/year
+
     #start year
     dat_file$dat$year1 <- y - ncaayear
-    
+    styear <- y - ncaayear
+    #end year moving window
+    endyear <- y - 1
+
     #maturity ogive? WAA matrix?
-    
+
     #catch proportions and sum
     dat_file$dat$CAA_mats <- cbind(get_dwindow(obs_paaCN, styear, endyear), get_dwindow(obs_sumCW, styear, endyear))
-    
+
     #index data
     dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), get_dwindow(obs_paaIN, styear, endyear), oe_paaIN) #year, value, CV, by-age, sample size
-    
+
     #catch CV
     dat_file$dat$catch_cv <- matrix(oe_sumCW, nrow = ncaayear, 1)
-    
+
     #end year
     dat_file$dat$nfinalyear <- styear + ncaayear + 1
     dat_file$dat$proj_ini <- c((styear + ncaayear + 1), -1, 3, -99, 1)
+
+    # save copy of .dat file by stock name, nrep, and sim year
+    WriteASAP3DatFile(fname = paste('assessment/ASAP/', stock[[i]]$stockName, '_', r, '_', y,'.dat', sep = ''),
+                      dat.object = dat_file,
+                      header.text = paste(stock[[i]]$stockName, 'Simulation', r, 'Year', y, sep = '_'))
     
+    # write .dat file needs to have same name as exe file
+    WriteASAP3DatFile(fname = paste('assessment/ASAP/ASAP', sep = ''),
+                      dat.object = dat_file,
+                      header.text = paste(stock[[i]]$stockName, 'Simulation', r, 'Year', y, sep = '_'))
+
     
-    # will need a new .dat for each sim
-    WriteASAP3DatFile(fname = 'assessment/ASAP/ASAP.dat',
-                      dat.object = datFileObj,
-                      header.text = 'GOM Cod sim')
-    
-    # Run the assessment model
-    system('assessment/ASAP/ASAP.exe')
-    
+    # Run the ASAP assessment model
+    asapEst <- try(system('assessment/ASAP/ASAP.exe'))
+
     # Read in the results
     res <- dget('assessment/ASAP/ASAP.rdat')
+
+    # save .Rdata results from each run
+    saveRDS(res, file = paste('assessment/ASAP/', stock[[i]]$stockName, '_', r, '_', y,'.rdat', sep = ''))
     
-    
+
   })
-  
+
   return(out)
-  
+
 }
-    
-    
-    
-    
-### create file from scratch
+
+
+
+
+
+
+
+### scratch code to create new ASAP .dat file 
     # #start year of moving window
     # styear <- y - ncaayear
     # #end year moving window
@@ -95,7 +109,7 @@ get_ASAP <- function(stock){
     #                   0, 0, 0, 0,
     #                   0, 0, 0, 0,
     #                   0, 0, 0, 0), nrow = 15, ncol = 4, byrow = TRUE)
-    # 
+    #
     # #index selectivity (need matrix for each index)
     # ind_sel_blk <- matrix(data =
     #                         #by-age
@@ -116,12 +130,12 @@ get_ASAP <- function(stock){
     #                   0, 0, 0, 0,
     #                   0, 0, 0, 0,
     #                   0, 0, 0, 0), nrow = 15, ncol = 4, byrow = TRUE)
-    # 
+    #
     # Icv <- 0.45 #AEW find CV for index sumIN
     # #initial numbers
     # initN <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
-    # 
-    # 
+    #
+    #
     # dat <- list(
     #   n_year <- ncaayear,
     #   year1 <- styear,
@@ -215,9 +229,9 @@ get_ASAP <- function(stock){
     #   make_R_file = 1,
     #   testval = -23456
     # )
-    # 
-    # 
-    # 
+    #
+    #
+    #
     # #comments
     # comm <- c(
     # "# Number of Years",
@@ -312,26 +326,16 @@ get_ASAP <- function(stock){
     # "# Export R Flag",
     # "# Test Value",
     # "#")
-    # 
-    # 
-    # 
+    #
+    #
+    #
     # # Create a .dat file object
     # datFileObj <- list(dat = dat,
     #                    comments = comm,
     #                    fleet.names = c('Fleet1'),
     #                    survey.names = c('Index1'))
-
-
-
-
-    ### what is the best way to organize file structure here?
+    #
     # Write out the .dat file
     # WriteASAP3DatFile(fname = 'assessment/ASAP/ASAP.dat',
     #                   dat.object = datFileObj,
     #                   header.text = 'GOM Cod sim')
-    # 
-    # # Run the assessment model
-    # system('assessment/ASAP/ASAP.exe')
-    # 
-    # # Read in the results
-    # res <- dget('assessment/ASAP/ASAP.rdat')

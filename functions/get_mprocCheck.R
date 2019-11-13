@@ -13,7 +13,7 @@ get_mprocCheck <- function(mproc){
   # text input (i.e., everything but the parameter columns)
   
   
-  assessclass <- c('CAA', 'PLANB')
+  assessclass <- c('CAA', 'PLANB', 'ASAP')
   hcr <- c('slide', 'simplethresh', 'constF', NA)
   fref_typ <- c('YPR', 'SPR', 'SSBR', 'Fmed', 'FmsySim', NA)
   bref_typ <- c('RSSBR', 'SIM', NA)

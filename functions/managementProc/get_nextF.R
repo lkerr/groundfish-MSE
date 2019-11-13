@@ -38,7 +38,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
   # are different ways to grab the F reference point and the B reference
   # point and those will be implemented in get_FBRP
   
-  if(parmgt$ASSESSCLASS == 'CAA'){
+  if(parmgt$ASSESSCLASS == 'CAA' || parmgt$ASSESSCLASS == 'ASAP'){
    
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpop, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
