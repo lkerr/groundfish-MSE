@@ -30,7 +30,7 @@ nrep <- 1
 
 # First year to begin actual management
 fmyear <- 2010
-
+#test
 # first year after the initial condition period. The initial condition period
 # simply fills up the arrays as necessary even before the burn-in period
 # begins. This is rather arbitrary but should be larger than the number of
