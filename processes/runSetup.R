@@ -76,24 +76,14 @@ source('processes/Rfun_BmsySim.R')
 # Load default ACLs and fractions of the ACL that are allocated to the catch share fishery
 source('processes/genBaselineACLs.R')
 
-#if there are any 
-if(sum(mproc$ImplementationClass=="Economic")>=1){ #Load in Economic Data if there's at least 1 Economic model in mproc
-  source('processes/loadEcon.R')
-}
-
 #Input data location for economic models
 econdatapath <- 'data/data_processed/econ'
 
-# Reults folders for economic models. Create them if necessary
+                            # Reults folders for economic models. Create them if necessary
 econ_results_location<-"results/econ/raw"
-dir.create('results', showWarnings = FALSE)
-dir.create('results/econ', showWarnings = FALSE)
-
-dir.create('results/econ/raw', showWarnings = FALSE)
-dir.create('results/sim', showWarnings = FALSE)
-dir.create('results/fig', showWarnings = FALSE)
-
-
+dir.create('results/econ/raw', showWarnings = FALSE, recursive=TRUE)
+dir.create('results/sim', showWarnings = FALSE, recursive=TRUE)
+dir.create('results/fig', showWarnings = FALSE, recursive=TRUE)
 
 # If running on a local machine, more than one repetition should be
 # used otherwise some plotting functions (e.g., boxplots) will fail

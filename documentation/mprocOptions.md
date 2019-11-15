@@ -105,4 +105,46 @@ The frequency with which reference points are re-calculated.
 
 * The value represents the frequency. For example, if the value is 3, reference points are recalculated every 3 years. In the years when the reference points are not updated the advice may change based on an updated assessment model but the reference points (and thus the shape of any associated harvest control rule) remains the same.
 
+## ImplementationClass
+This sets harvesting to be determined by a "StandardFisheries" or "Economic" submodel. This column is only used in (variations of) the runSim.R file.
+
+# Economic Options
+The following are only relevant if *ImplementationClass*=='Economic.'
+
+## EconName
+A short name for the scenario.  This column is not used by any of the simulation code.  It is mostly as a convenience.
+
+## EconType
+The broad type of fisheres management.  This column is only used in the "joint_adjust_allocated_mults.R" function.  
+   Multi: a closure in a stockarea closes everything in that stockarea (no landings of GB Cod if GB haddock is closed).  This resembles how the catch share fisheries is managed.
+   Single: a closure in a stockarea does not close everything in that stockarea ( landings of GB Cod allowed if GB haddock is closed)  This does not really resemble how the catch share fishery is managed.
+   
+## CatchZero
+Governs catch if a stock is closed. This column is only used in the "joint_adjust_allocated_mults.R" function.
+  TRUE: no catch of GB Cod if GB cod is closed.  This implies perfect targeting/avoidance.
+  FALSE catch of GB Cod occurs when GB cod is closed.  All catch would be discarded.  This implies no change in joint targeting behavior occurs if a stock is closed.
+The truth is somewhere in between.  
+  
+## EconData
+  A stub that determines which base economic dataset to use (see data processing steps).   This column is used to load data in /processes/loadEcon2.R 
+
+## MultiplierFile
+  The full name of the multiplier file to use.  Must  include the .Rds extension.  This column is used to load data in /processes/setupEconType.R 
+
+## OutputPriceFile 
+  The full name of the output price  file to use.  Must include the .Rds extension.  This column is used to load data in /processes/setupEconType.R 
+  
+## InputPriceFile 
+  The full name of the input price  file to use.  Must include the .Rds extension.  This column is used to load data in /processes/setupEconType.R 
+  
+## ProdEqn
+  Suffix for the production equation. The valid production equations are described in set_om_parameters_global.R.  Currently, the choices are just pre and post.  This column is used to declare the production equation in /processes/setupEconType.R 
+  
+## ChoiceEqn
+  Suffix for the choice equation. The valid choice equations are described in set_om_parameters_global.R. Currently, the choices are just pre and post.  But options for noconstant or something else could be set up. This column is used to declare the choice equation in /processes/setupEconType.R 
+
+This is also in the economic model documentation.
+
+
+
 [Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)

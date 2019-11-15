@@ -28,8 +28,8 @@ if(platform != 'Linux'){
 # determine whether or not to delete all the files in the results directory.
 
 if(runClass == 'Local'){
-  # Remove any files in the results directories
- # unlink('results/*', recursive=TRUE)
+  # Don't remove the files in the results directories
+  # unlink('results/*', recursive=TRUE)
 }
 
 
