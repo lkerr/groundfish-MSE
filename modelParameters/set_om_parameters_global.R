@@ -29,8 +29,7 @@ stockExclude <- c()
 nrep <- 1
 
 # First year to begin actual management
-fmyear <- 2000
-
+fmyear <- 2010
 # first year after the initial condition period. The initial condition period
 # simply fills up the arrays as necessary even before the burn-in period
 # begins. This is rather arbitrary but should be larger than the number of
@@ -38,7 +37,7 @@ fmyear <- 2000
 fyear <- 35
 
 # maximum year predicted into the future
-mxyear <- 2050
+mxyear <- 2060
 
 
 #### Burn-in parameters ####
@@ -94,9 +93,44 @@ FrefScalar <- 0.75
 # Scalars to convert things
 pounds_per_kg<-2.20462
 kg_per_mt<-1000
-# Set the economic years that we'll use for simulation.  Right now, we'll pass  in 1 year.
-#baseEconYrs<-c(2009,2010)
-baseEconYrs<-c(2009)
+# Set the economic years that we'll use for simulation. 
+
+first_econ_yr<-2010
+last_econ_yr<-2015
+last_econ_index<-last_econ_yr-first_econ_yr+1
+
+econ_data_start<-2010
+econ_data_end<-2015
+
+
+##############Stocks in the Economic Model #############################
+spstock2s<-c("americanlobster","americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","monkfish", "other","pollock","redsilveroffshorehake","redfish","seascallop","skates","spinydogfish","squidmackerelbutterfishherring","summerflounder","whitehake","winterflounderGB","winterflounderGOM","witchflounder","yellowtailflounderCCGOM", "yellowtailflounderGB","yellowtailflounderSNEMA")
+
+##############Independent variables in the targeting equation ##########################
+### If there are different targeting equations, you can set there up here, then use their suffix in the mproc file to use these new targeting equations
+### example, using ChoicEqn=small in the mproc file and uncommenting the next two lines will be appropriate for a logit with just 3 RHS variables.
+
+##spstock_equation_small=c("exp_rev_total", "fuelprice_distance")
+##choice_equation_small=c("fuelprice_len")
+spstock_equation_pre=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
+choice_equation_pre=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
+
+spstock_equation_post<-spstock_equation_pre
+choice_equation_post<-choice_equation_pre
+############## End Independent variables in the targeting equation ##########################
+
+
+
+
+##############Independent variables in the Production equation ##########################
+### If there are different the equations, you can set there up here, then use their suffix in the mproc file to use these new targeting equations
+### example, using ProdEqn=tiny in the mproc file and uncommenting the next  line will be regression with 2 RHS variables and no constant.
+# production_vars_tiny=c("log_crew","log_trip_days")
+
+production_vars_pre=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","constant")
+production_vars_post=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","log_sector_acl", "constant")
+############## End Independent variables in the Production equation ##########################
+
 
 
 #### Output ####
@@ -124,4 +158,15 @@ plotTrajSummary <- TRUE  # summary statistics
 
 
 
+#how many years before writing out the results to csv? 6 corresponds to 1 "econ" simulation (2010-2015).  Larger will go faster (less overhead) but you lose work if something crashes, 
+savechunksize<-10
+
+#Set up a counter for every year that has been simulated
+yearcounter<-0
+
+#Set up a list to hold the economic results
+revenue_holder<-list()
+#these two lists will hold a vectors that concatenates (r, m, y, calyear, .Random.seed). They should be r*m*y in length.
+begin_rng_holder<-list()
+end_rng_holder<-list()
 
