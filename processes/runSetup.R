@@ -86,23 +86,6 @@ if(sum(mproc$ImplementationClass=="Economic")>=1){ #Load in Economic Data if the
 #Input data location for economic models
 econdatapath <- 'data/data_processed/econ'
 
-                            
-# Create new results directory tagged with date/time
-# get and format the system time
-time <- Sys.time()
-timeString <- format(x = time, 
-                   format = "%Y-%m-%d-%H-%M-%S")
-# define a directory name
-ResultDirectory <- paste('results', timeString, sep='_')
-dir.create(ResultDirectory, showWarnings = FALSE, recursive=TRUE))
-# Reults folders for economic models. Create them if necessary
-                            
-econ_results_location<-file.path(ResultDirectory,"econ","raw")
-                     
-dir.create(econ_results_location, showWarnings = FALSE, recursive=TRUE)
-dir.create(file.path(ResultDirectory,"sim"), showWarnings = FALSE, recursive=TRUE)
-dir.create(file.path(ResultDirectory,"fig"), showWarnings = FALSE, recursive=TRUE)
-
 
 
 # If running on a local machine, more than one repetition should be
