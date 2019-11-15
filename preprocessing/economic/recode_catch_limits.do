@@ -86,10 +86,13 @@ replace nsnr=0 if nsnr==.
 replace rec_frac=0 if rec_frac==.
 rename nsnr_util nonsector_nonrec_fraction
 rename rec_frac rec_fraction
-gen mults_allocated=inlist(spstock2,"AmericanPlaiceFlounder","CodGB","CodGOM","HaddockGB","HaddockGOM","Pollock","Redfish","WhiteHake")
-replace mults_allocated=1 if inlist(spstock2,`"WinterFlounderGB"', `"YellowtailFlounderCCGOM"',`"YellowtailFlounderGB"',`"YellowtailFlounderSNEMA"',`"WinterFlounderGOM"',`"WinterFlounderSNEMA"',`"WitchFlounder"')
-gen mults_nonalloc=inlist(spstock2,`"WindowpaneN"',`"WindowpaneS"',`"Wolffish"',`"Halibut"',`"OceanPout"')
-gen non_mult=inlist(spstock2, `"AmericanLobster"',`"Monkfish"',`"Other"',`"RedSilverOffshoreHake"',`"SeaScallop"',`"Skates"',`"SpinyDogfish"',`"SquidMackerelButterfishHerring"',`"SummerFlounder"')
+
+
+gen mults_allocated=inlist(spstock2,"americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","pollock","redfish","whitehake")
+replace mults_allocated=1 if inlist(spstock2,`"winterflounderGB"', `"yellowtailflounderCCGOM"',`"yellowtailflounderGB"',`"yellowtailflounderSNEMA"',`"winterflounderGOM"',`"winterflounderSNEMA"',`"witchflounder"')
+gen mults_nonalloc=inlist(spstock2,`"windowpanen"',`"windowpanes"',`"wolffish"',`"halibut"',`"oceanpout"')
+gen non_mult=inlist(spstock2, `"americanLobster"',`"monkfish"',`"other"',`"redsilveroffshorehake"',`"seascallop"',`"skates"',`"spinydogfish"',`"squidmackerelbutterfishherring"',`"summerflounder"')
+
 gen stockarea="Unit"
 replace stockarea="GB" if inlist(spstock2,"CodGB", "HaddockGB", "WinterFlounderGB", "YellowtailFlounderGB")
 replace stockarea="GOM" if inlist(spstock2,"CodGOM", "HaddockGOM", "WinterFlounderGOM")
@@ -184,10 +187,13 @@ replace nsnr=0 if nsnr==.
 replace rec_frac=0 if rec_frac==.
 rename nsnr_util nonsector_nonrec_fraction
 rename rec_frac rec_fraction
-gen mults_allocated=inlist(spstock2,"AmericanPlaiceFlounder","CodGB","CodGOM","HaddockGB","HaddockGOM","Pollock","Redfish","WhiteHake")
-replace mults_allocated=1 if inlist(spstock2,`"WinterFlounderGB"', `"YellowtailFlounderCCGOM"',`"YellowtailFlounderGB"',`"YellowtailFlounderSNEMA"',`"WinterFlounderGOM"',`"WinterFlounderSNEMA"',`"WitchFlounder"')
-gen mults_nonalloc=inlist(spstock2,`"WindowpaneN"',`"WindowpaneS"',`"Wolffish"',`"Halibut"',`"OceanPout"')
-gen non_mult=inlist(spstock2, `"AmericanLobster"',`"Monkfish"',`"Other"',`"RedSilverOffshoreHake"',`"SeaScallop"',`"Skates"',`"SpinyDogfish"',`"SquidMackerelButterfishHerring"',`"SummerFlounder"')
+
+
+gen mults_allocated=inlist(spstock2,"americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","pollock","redfish","whitehake")
+replace mults_allocated=1 if inlist(spstock2,`"winterflounderGB"', `"yellowtailflounderCCGOM"',`"yellowtailflounderGB"',`"yellowtailflounderSNEMA"',`"winterflounderGOM"',`"winterflounderSNEMA"',`"witchflounder"')
+gen mults_nonalloc=inlist(spstock2,`"windowpanen"',`"windowpanes"',`"wolffish"',`"halibut"',`"oceanpout"')
+gen non_mult=inlist(spstock2, `"americanLobster"',`"monkfish"',`"other"',`"redsilveroffshorehake"',`"seascallop"',`"skates"',`"spinydogfish"',`"squidmackerelbutterfishherring"',`"summerflounder"')
+
 gen stockarea="Unit"
 replace stockarea="GB" if inlist(spstock2,"CodGB", "HaddockGB", "WinterFlounderGB", "YellowtailFlounderGB")
 replace stockarea="GOM" if inlist(spstock2,"CodGOM", "HaddockGOM", "WinterFlounderGOM")

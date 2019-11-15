@@ -124,10 +124,16 @@ for (day in 1:365){
 fishery_holder$removals_mt<-fishery_holder$cumul_catch_pounds/(pounds_per_kg*kg_per_mt)+fishery_holder$nonsector_catch_mt
  
 #contract that list down to a single data.table
-  revenue_holder<-rbindlist(revenue_holder) 
-  revenue_holder$r<-r
-  revenue_holder$m<-m
-  revenue_holder$y<-y
+
+  annual_revenue_holder<-rbindlist(annual_revenue_holder) 
+  annual_revenue_holder$r<-r
+  annual_revenue_holder$m<-m
+  annual_revenue_holder$y<-y
+  annual_revenue_holder$year<-yrs[y]
+  revenue_holder[[yearitercounter]]<-annual_revenue_holder
+  
+  rm(annual_revenue_holder)
+
 # We probably want to contract this down further to a data.table of "hullnum","spstock2","exp_rev_total","targeted"
   
   

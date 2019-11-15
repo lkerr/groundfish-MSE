@@ -14,43 +14,81 @@ if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
-top_loop_start<-Sys.time()
-econ_timer<-0
-# set.seed(2)
+
+
+
+
+
+
+####################These are temporary changes for testing ####################
+# econ_timer<-0
+# mproc_bak<-mproc
+# 
+# mproc<-mproc_bak[5:5,]
+# nrep<-1
+# nyear<-200
+## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
+####################End Temporary changes for testing ####################
+    
+    
+#set the rng state.  Store the random state.  
+#set.seed(rnorm(1))
+set.seed(1)
+oldseed_ALL <- .Random.seed
+showProgBar<-TRUE    
+####################End Parameter and storage Setup ####################
+  #This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
+    
+      
+source('processes/setupYearIndexing.R')
+
+
+
 #### Top rep Loop ####
 for(r in 1:nrep){
+    oldseed_mproc <- .Random.seed
 
-  # Use the same random numbers for each of the management strategies
-  # set.seed(NULL)
-  # rsd <- rnorm()
-  
   #### Top MP loop ####
   for(m in 1:nrow(mproc)){
+    
+       manage_counter<-0
+      
+       #Restore the rng state.  Depending on whether you use oldseed1 or oldseed2, you'll get different behavior.  oldseed_ALL will force all the replicates to start from the same RNG state.  oldseed_mproc will force all the management procedures to have the same RNG state.  You probably want oldseed_mproc 
+       #.Random.seed<-oldseed_ALL
+       .Random.seed<-oldseed_mproc
+       
+        #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached, which sets of coefficients to use, and which prices to use
+        if(mproc$ImplementationClass[m]=="Economic"){
+         source('processes/setupEconType.R')
+        }
 
-    # set.seed(rsd)
-    
-    
     # Initialize stocks and determine burn-in F
     for(i in 1:nstock){
       stock[[i]] <- get_popInit(stock[[i]])
     }
 
-    
     #### Top year loop ####
     for(y in fyear:nyear){
+
+      
       for(i in 1:nstock){
         stock[[i]] <- get_J1Updates(stock = stock[[i]])
       }
       
-
+      source('processes/withinYearAdmin.R')
+      begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)    
+      
       # if burn-in period is over...
       if(y >= fmyearIdx){
-
+            manage_counter<-manage_counter+1 #this only gets incremented when y>=fmyearIdx
         for(i in 1:nstock){
           stock[[i]] <- get_advice(stock = stock[[i]])
           stock[[i]] <- get_relError(stock = stock[[i]])
         }
-        
+
+          #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
+          
+  
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
 
           for(i in 1:nstock){
@@ -60,23 +98,20 @@ for(r in 1:nrep){
               IJ1[y,] <- get_survey(F_full=0, M=0, N=J1N[y,], slxC[y,], 
                                 slxI=selI, timeI=0, qI=qI)
             })
-          }
+          } # End survey loop
 
           
           # ---- Run the economic model here ----
           bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline)
 
-          start_time<-proc.time() 
-          # progress(y,progress.bar=TRUE)
           source('processes/runEcon_module.R')
-          econ_timer<-econ_timer+proc.time()[3]-start_time[3]
-          
+
         }else if(mproc$ImplementationClass[m] == "StandardFisheries"){
           
           for(i in 1:nstock){
             stock[[i]] <- get_implementationF(type = 'adviceWithError', 
                                               stock = stock[[i]])
-          }
+          } # End implementation error in standard fisheries
           
           }else{
             #Add a warning about invalid ImplementationClass
@@ -86,27 +121,38 @@ for(r in 1:nrep){
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         }
           
-      }
+      } #End of burn-in loop
 
       for(i in 1:nstock){
         stock[[i]] <- get_mortality(stock = stock[[i]])
         stock[[i]] <- get_indexData(stock = stock[[i]])
-      }
-        
-      }
 
-        
-    }
-  }
-  
-top_loop_end<-Sys.time()
-big_loop<-top_loop_end-top_loop_start
-big_loop
-econ_timer
+      } #End killing fish loop.
+              end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)    
+          #Save economic results once in a while to a csv file.
+        if(mproc$ImplementationClass[m]=="Economic" &(y >= fmyearIdx) & (chunk_flag==0 | yearitercounter==max_yiter)) {
+            revenue_holder<-rbindlist(revenue_holder) 
+            tda <- as.character(Sys.time())
+            tda <- gsub(':', '', tda)
+            tda<-gsub(' ', '_', tda)
+            tda2 <- paste0(tda,"_", round(runif(1, 0, 10000)))
+            write.table(revenue_holder, file.path(econ_results_location, paste0("econ_",tda2, ".csv")), sep=",", row.names=FALSE)
+            revenue_holder<-list()
+        } #End save economic results if statement
 
+        if(showProgBar==TRUE){
+          setTxtProgressBar(iterpb, yearitercounter)
+        }
+      } #End of year loop
+    } #End of mproc loop
+       
   
+      } #End rep loop
   
-  # Output run time / date information and OM inputs. The random number is
+    top_loop_end<-Sys.time()
+    big_loop<-top_loop_end-top_loop_start
+     big_loop
+      # Output run time / date information and OM inputs. The random number is
   # just ensuring that no simulations will be overwritten because the hpcc
   # might finish some in the same second. td is used for uniquely naming the
   # output file as well as for listing in the output results.
@@ -114,7 +160,11 @@ econ_timer
   td2 <- gsub(':', '', td)
   td2 <- paste(gsub(' ', '_', td2), round(runif(1, 0, 10000)), sep='_')
   
-  
+
+    saveRDS(begin_rng_holder, file.path(econ_results_location,  paste0("begin_rng_",td2, ".Rds")), compress=FALSE)
+    saveRDS(end_rng_holder, file.path(econ_results_location,  paste0("end_rng_",td2, ".Rds")), compress=FALSE)
+    
+
   for(i in 1:nstock){
     pth <- paste0('results/fig/', sapply(stock, '[[', 'stockName')[i])
     dir.create(pth, showWarnings = FALSE)
