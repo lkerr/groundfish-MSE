@@ -4,4 +4,14 @@ keep spstock2
 dups, drop terse
 drop _expand
 
+
+
+replace spstock2=lower(spstock2)
+replace spstock2=subinstr(spstock2,"ccgom","CCGOM",.)
+replace spstock2=subinstr(spstock2,"snema","SNEMA",.)
+replace spstock2=subinstr(spstock2,"gom","GOM",.)
+
+replace spstock2=subinstr(spstock2,"gb","GB",.)
+
+
 save "$outdir/stocks_in_choiceset.dta", replace
