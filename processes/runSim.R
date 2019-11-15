@@ -19,18 +19,19 @@ if(runClass != 'HPCC'){
 
 
 ####################These are temporary changes for testing ####################
-econ_timer<-0
-mproc_bak<-mproc
-
-mproc<-mproc_bak[c(3:4),]
-#nrep<-1
-#day<-1
+# econ_timer<-0
+# mproc_bak<-mproc
+# 
+# mproc<-mproc_bak[5:5,]
+# nrep<-1
+# nyear<-200
 ## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
 ####################End Temporary changes for testing ####################
     
     
 #set the rng state.  Store the random state.  
-set.seed(rnorm(1))
+#set.seed(rnorm(1))
+set.seed(1)
 oldseed_ALL <- .Random.seed
 showProgBar<-TRUE    
 ####################End Parameter and storage Setup ####################
@@ -39,7 +40,6 @@ showProgBar<-TRUE
       
 source('processes/setupYearIndexing.R')
 top_loop_start<-Sys.time()
-
 
 #### Top rep Loop ####
 for(r in 1:nrep){
@@ -126,8 +126,8 @@ for(r in 1:nrep){
         stock[[i]] <- get_indexData(stock = stock[[i]])
       } #End killing fish loop.
               end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)    
-          #Save economic results once in a while to a csv file. 
-        if(mproc$ImplementationClass[m]=="Economic" & (chunk_flag==0 | yearitercounter==max_yiter)) {
+          #Save economic results once in a while to a csv file.
+        if(mproc$ImplementationClass[m]=="Economic" &(y >= fmyearIdx) & (chunk_flag==0 | yearitercounter==max_yiter)) {
             revenue_holder<-rbindlist(revenue_holder) 
             tda <- as.character(Sys.time())
             tda <- gsub(':', '', tda)
