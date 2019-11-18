@@ -19,6 +19,8 @@ global bio_data "$projectdir/data/data_processed/catchHistory"
 
 /* filenames for sters  and outputs*/
 global post_input_ster "postCSasclogitnc2.ster"
+
+
 global post_gillnet_out "asclogit_gillnet_post_coefs.txt"
 global post_trawl_out "asclogit_trawl_post_coefs.txt"
 
@@ -37,7 +39,7 @@ global catch_hist_file "catchHist.csv"
 global multiplier_file "multipliers.dta"
 global multiplier_out "reshape_multipliers.dta"
 
-global datafilename "data_for_simulations_POSTasPRE.dta"
+global datafilename "data_for_simulations_mse.dta"
 
 
 
