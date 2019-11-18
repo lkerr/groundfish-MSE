@@ -131,14 +131,14 @@ econ_timer
     cat('\n\nSuccess.\n\n',
         'Completion at: ',
         td,
-        file=paste0(ResultDirectory,'/runInfo.txt', sep='')
+        file=paste0(ResultDirectory,'/runInfo.txt'))
     cat('\n\n\n\n\n\n\n\n  ##### Global OM Parameters ##### \n\n',
         omparGlobal,
-        file=paste0(ResultDirectory,'/runInfo.txt', sep='\n', append=TRUE)
+        file=paste0(ResultDirectory,'/runInfo.txt'), sep='\n', append=TRUE)
     for(i in 1:nstock){
       cat('\n\n\n\n\n\n\n\n  ##### Stock OM Parameters ##### \n\n',
           readLines(fileList[i]), 
-          file=paste0(ResultDirectory,'/runInfo.txt', sep='\n', append=TRUE)
+          file=paste0(ResultDirectory,'/runInfo.txt'), sep='\n', append=TRUE)
     }
   }
   
