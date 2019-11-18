@@ -19,7 +19,7 @@
 *.o
 *.out
 *.so
-/results/*
+/results*
 *.pptx
 *.docx
 .Rproj.user
