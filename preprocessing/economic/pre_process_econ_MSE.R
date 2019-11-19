@@ -37,7 +37,7 @@ savepath <- './data/data_processed/econ'
 #savepath <- 'C:/Users/abirken/Documents/GitHub/groundfish-MSE/data/data_processed/econ'
 
 
-
+            
 ###########################Make sure you have the correct set of RHS variables.
 spstock_equation=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
 choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
