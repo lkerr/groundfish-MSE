@@ -4,14 +4,14 @@
 # fh: data frame containing stock name, logical for open/closed, catch limit, and cumulative catch
 # Returns the updated version of that matrix.
 
-
-
-get_fishery_next_period <- function(dc,fh){
-  fh$cumul_catch_pounds<-dc$cumul_catch_pounds
-  fh$targeted<-dc$targeted
+get_fishery_next_period2 <- function(fh){
+  #fh$cumul_catch_pounds<-dc$cumul_catch_pounds
+  #fh$targeted<-dc$targeted
   
-  fh$sectorACL_pounds<-fh$sectorACL*pounds_per_kg*kg_per_mt
-  fh$underACL<-fh$cumul_catch<fh$sectorACL_pounds
+  fh[,sectorACL_pounds:=sectorACL*pounds_per_kg*kg_per_mt]
+  fh[,underACL:=cumul_catch_pounds<sectorACL_pounds]
+  
+  
   
   num_closed<-sum(fh$underACL==FALSE)
   if (num_closed==0){
