@@ -1,10 +1,7 @@
+version 15.1
 clear
-global bio_data "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_processed/catchHistory"
 
-global econ_data "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_processed/econ"
-
-global output_data "/home/mlee/Documents/projects/GroundfishCOCA/groundfish-MSE/data/data_processed/econ"
-import delimited "$bio_data/catchHist.csv"
+import delimited "$bio_data/$catch_hist_file"
 
 foreach var of varlist commercial sector smallmesh commonpool herringfishery recreational scallopfishery statewater other{
 replace `var'="0" if strmatch(`var',"NA")
@@ -77,8 +74,14 @@ gen sectorCL=sector_frac*sectorACL
 */
 order *ACL, after(spstock2)
 keep spstock2 totalACL sector_frac nsnr_util rec_frac
-merge 1:1 spstock2 using "$outdir/stocks_in_choiceset.dta"
 
+
+
+
+
+
+
+merge 1:1 spstock2 using "$outdir/stocks_in_choiceset.dta"
 drop _merge
 rename totalACL totalACL_mt
 sort spstock2
@@ -93,19 +96,23 @@ gen mults_allocated=inlist(spstock2,"americanplaiceflounder","codGB","codGOM","h
 replace mults_allocated=1 if inlist(spstock2,`"winterflounderGB"', `"yellowtailflounderCCGOM"',`"yellowtailflounderGB"',`"yellowtailflounderSNEMA"',`"winterflounderGOM"',`"winterflounderSNEMA"',`"witchflounder"')
 gen mults_nonalloc=inlist(spstock2,`"windowpanen"',`"windowpanes"',`"wolffish"',`"halibut"',`"oceanpout"')
 gen non_mult=inlist(spstock2, `"americanLobster"',`"monkfish"',`"other"',`"redsilveroffshorehake"',`"seascallop"',`"skates"',`"spinydogfish"',`"squidmackerelbutterfishherring"',`"summerflounder"')
-
 gen stockarea="Unit"
-replace stockarea="GB" if inlist(spstock2,"CodGB", "HaddockGB", "WinterFlounderGB", "YellowtailFlounderGB")
-replace stockarea="GOM" if inlist(spstock2,"CodGOM", "HaddockGOM", "WinterFlounderGOM")
-replace stockarea="SNEMA" if inlist(spstock2, "WinterFlounderSNEMA", "YellowtailFlounderSNEMA")
-replace stockarea="CCGOM" if inlist(spstock2,"YellowtailFlounderCCGOM")
+replace stockarea="GB" if inlist(spstock2,"codGB", "haddockGB", "winterflounderGB", "yellowtailflounderGB")
+replace stockarea="GOM" if inlist(spstock2,"codGOM", "haddockGOM", "winterflounderGOM")
+replace stockarea="SNEMA" if inlist(spstock2, "winterflounderSNEMA", "yellowtailflounderSNEMA")
+
+replace stockarea="CCGOM" if inlist(spstock2,"yellowtailflounderCCGOM")
 
 
-export delimited using "$output_data/catch_limits_2010_2017.csv", replace
+export delimited using "$outdir/catch_limits_2010_2017.csv", replace
 clear
 
 
+
+
+
 import delimited "$bio_data/$catch_hist_file"
+
 
 
 foreach var of varlist commercial sector smallmesh commonpool herringfishery recreational scallopfishery statewater other{
@@ -180,8 +187,13 @@ gen sectorCL=sector_frac*sectorACL
 order *ACL, after(spstock2)
 keep spstock2 totalACL sector_frac nsnr_util rec_frac
 
-merge 1:1 spstock2 using "$outdir/stocks_in_choiceset.dta"
 
+
+
+
+
+
+merge 1:1 spstock2 using "$outdir/stocks_in_choiceset.dta"
 drop _merge
 rename totalACL totalACL_mt
 sort spstock2
@@ -196,16 +208,15 @@ gen mults_allocated=inlist(spstock2,"americanplaiceflounder","codGB","codGOM","h
 replace mults_allocated=1 if inlist(spstock2,`"winterflounderGB"', `"yellowtailflounderCCGOM"',`"yellowtailflounderGB"',`"yellowtailflounderSNEMA"',`"winterflounderGOM"',`"winterflounderSNEMA"',`"witchflounder"')
 gen mults_nonalloc=inlist(spstock2,`"windowpanen"',`"windowpanes"',`"wolffish"',`"halibut"',`"oceanpout"')
 gen non_mult=inlist(spstock2, `"americanLobster"',`"monkfish"',`"other"',`"redsilveroffshorehake"',`"seascallop"',`"skates"',`"spinydogfish"',`"squidmackerelbutterfishherring"',`"summerflounder"')
-
 gen stockarea="Unit"
-replace stockarea="GB" if inlist(spstock2,"CodGB", "HaddockGB", "WinterFlounderGB", "YellowtailFlounderGB")
-replace stockarea="GOM" if inlist(spstock2,"CodGOM", "HaddockGOM", "WinterFlounderGOM")
-replace stockarea="SNEMA" if inlist(spstock2, "WinterFlounderSNEMA", "YellowtailFlounderSNEMA")
+replace stockarea="GB" if inlist(spstock2,"codGB", "haddockGB", "winterflounderGB", "yellowtailflounderGB")
+replace stockarea="GOM" if inlist(spstock2,"codGOM", "haddockGOM", "winterflounderGOM")
+replace stockarea="SNEMA" if inlist(spstock2, "winterflounderSNEMA", "yellowtailflounderSNEMA")
+
 replace stockarea="CCGOM" if inlist(spstock2,"yellowtailflounderCCGOM")
 
 
 export delimited using "$outdir/catch_limits_2017.csv", replace
-
 
 
 
