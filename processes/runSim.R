@@ -4,11 +4,10 @@
 
 # empty the environment
 rm(list=ls())
- 
 source('processes/runSetup.R')
 
 # if on local machine (i.e., not hpcc) must compile the tmb code
-# (HPCC runs have a separate call to compile this code). Keep out of
+# (HPCC runs have a separate cal  l to compile this code). Keep out of
 # runSetup.R because it is really a separate process on the HPCC.
 if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
@@ -19,14 +18,13 @@ if(runClass != 'HPCC'){
 
 
 
-
 ####################These are temporary changes for testing ####################
- econ_timer<-0
- mproc_bak<-mproc
- 
- mproc<-mproc_bak[5:5,]
- nrep<-1
- nyear<-200
+# econ_timer<-0
+# mproc_bak<-mproc
+# 
+# mproc<-mproc_bak[5:5,]
+# nrep<-1
+# nyear<-200
 ## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
 ####################End Temporary changes for testing ####################
     
@@ -41,8 +39,7 @@ showProgBar<-TRUE
     
       
 source('processes/setupYearIndexing.R')
-
-
+top_loop_start<-Sys.time()
 
 #### Top rep Loop ####
 for(r in 1:nrep){
@@ -61,7 +58,6 @@ for(r in 1:nrep){
         if(mproc$ImplementationClass[m]=="Economic"){
          source('processes/setupEconType.R')
         }
-
     # Initialize stocks and determine burn-in F
     for(i in 1:nstock){
       stock[[i]] <- get_popInit(stock[[i]])
@@ -69,7 +65,6 @@ for(r in 1:nrep){
 
     #### Top year loop ####
     for(y in fyear:nyear){
-
       
       for(i in 1:nstock){
         stock[[i]] <- get_J1Updates(stock = stock[[i]])
@@ -90,7 +85,7 @@ for(r in 1:nrep){
           
   
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
-
+          
           for(i in 1:nstock){
             # Specific "survey" meant to track the population on Jan1
             # for use in the economic submodel. timeI=0 implies Jan1.
@@ -102,6 +97,9 @@ for(r in 1:nrep){
 
           
           # ---- Run the economic model here ----
+          source('processes/loadEcon2.R')
+       
+          
           bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline)
 
           source('processes/runEcon_module.R')
@@ -126,7 +124,6 @@ for(r in 1:nrep){
       for(i in 1:nstock){
         stock[[i]] <- get_mortality(stock = stock[[i]])
         stock[[i]] <- get_indexData(stock = stock[[i]])
-
       } #End killing fish loop.
               end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)    
           #Save economic results once in a while to a csv file.
