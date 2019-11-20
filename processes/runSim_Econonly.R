@@ -47,11 +47,16 @@ nyear<-which(yrs == end_sim)
 
 ####################End Temporary changes for testing ####################
     
-    
-#set the rng state.  Store the random state.  Option for a progress bar.
-set.seed(rnorm(1))
+
+#set the rng state based on system time.  Store the random state.  
+
+start<-Sys.time()
+start<-as.double(start)*100
+set.seed(start)
+
 oldseed_ALL <- .Random.seed
 showProgBar<-TRUE    
+
 ####################End Parameter and storage Setup ####################
   #This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
     
