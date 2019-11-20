@@ -19,7 +19,7 @@ laa_par <- c(Linf=50, K=0.335, t0=0.26, beta1=5)
 laa_typ <- 'vonB'
 
 # weight-length parameters
-waa_par <- c(exp(-6.003), 3.38) 
+waa_par <- c(exp(-12.91075), 3.38) 
 waa_typ <- 'aLb'
 
 # maturity-length parameters

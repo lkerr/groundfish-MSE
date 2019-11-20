@@ -27,7 +27,6 @@ if(platform != 'Linux'){
 # one variable that was only available after (active_idx) ... used that to
 # determine whether or not to delete all the files in the results directory.
 
-
 # Create new results directory tagged with date/time
 # get and format the system time
 time <- Sys.time()
