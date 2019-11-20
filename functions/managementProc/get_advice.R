@@ -14,7 +14,9 @@ get_advice <- function(stock){
   tempStock <- get_planB(stock = tempStock)
   
   # Run ASAP assessment
+  if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
   tempStock <- get_ASAP(stock = tempStock)
+  }
 
   # was the assessment successful?
   tempStock <- within(tempStock, {
@@ -66,13 +68,13 @@ get_advice <- function(stock){
     
     if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
       tempStock <- within(tempStock, {
-        parpop <- list(waa = tail(res$WAA.mats$WAA.catch.fleet1, 1),           ### AEW which WAA matrix to use?
-                       sel = tail(res$fleet.sel.mats, 1),                      ### AEW fleet or survey selex
+        parpop <- list(waa = tail(res$WAA.mats$WAA.catch.fleet1, 1),           
+                       sel = tail(res$fleet.sel.mats$sel.m.fleet1, 1),                      
                        M = tail(res$M.age, 1), 
-                       mat = res$maturity[y-1,],                               ### why y-1?
+                       mat = res$maturity[1,],                               
                        R = tail(res$SR.resids$recruits, 1),
                        SSBhat = res$SSB,
-                       J1N = tail(res$N.age,1),                                        ### or use J1B reported in biomass
+                       J1N = tail(res$N.age,1),                 ### or use J1B reported in biomass 
                        Rpar = Rpar,
                        Fhat = tail(res$F.report, 1))
       })

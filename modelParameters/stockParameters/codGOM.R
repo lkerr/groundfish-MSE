@@ -39,7 +39,7 @@ qI <- 0.0001
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
-selC <- c(s0=5, s1=0.08)
+selC <- c(s0 = 3, s1 = 0.5)
 selC_typ <- 'Logistic'
 
 # Recruitment #AEW from GOM COD 2019 Update M0.2 .rep
@@ -86,7 +86,7 @@ oe_sumCW <- 0.05
 oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 80
 oe_paaCN_typ <- 'multinomial'
-oe_sumIN <- 0.2
+oe_sumIN <- 0.5 
 oe_sumIN_typ <- 'lognorm'
 oe_paaIN <- 15
 oe_paaIN_typ <- 'multinomial'

@@ -1,7 +1,5 @@
 ##################################################################################
 ### function to modify ASAP .dat file, run executable, and produce results object
-### code modified from ST getASAP
-### specific for GOM cod for now; make more general
 ###
 
 
@@ -11,7 +9,7 @@ get_ASAP <- function(stock){
   out <- within(stock, {
 
 # read in assessment .dat file and modify accordingly
-    dat_file <- ReadASAP3DatFile(paste('assessment/ASAP/', stock[[i]]$stockName, ".dat", sep = ''))
+    dat_file <- ReadASAP3DatFile(paste('assessment/ASAP/Results/', stockName, ".dat", sep = ''))
 
 
 ### modify for each simulation/year
@@ -20,42 +18,53 @@ get_ASAP <- function(stock){
     dat_file$dat$year1 <- y - ncaayear
     styear <- y - ncaayear
     #end year moving window
-    endyear <- y - 1
+    endyear <- y-1
 
-    #maturity ogive? WAA matrix?
+    #maturity-at-age
+    dat_file$dat$maturity <- matrix(get_dwindow(mat, styear, endyear), nrow = ncaayear)
+    
+    #WAA matrix
+    dat_file$dat$WAA_mats <-matrix(get_dwindow(waa, styear, endyear), nrow = ncaayear)
 
     #catch proportions and sum
     dat_file$dat$CAA_mats <- cbind(get_dwindow(obs_paaCN, styear, endyear), get_dwindow(obs_sumCW, styear, endyear))
 
-    #index data
-    dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), get_dwindow(obs_paaIN, styear, endyear), oe_paaIN) #year, value, CV, by-age, sample size
-
-    #catch CV
-    dat_file$dat$catch_cv <- matrix(oe_sumCW, nrow = ncaayear, 1)
-
-    #end year
-    dat_file$dat$nfinalyear <- styear + ncaayear + 1
-    dat_file$dat$proj_ini <- c((styear + ncaayear + 1), -1, 3, -99, 1)
-
+    # #index data
+    dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, ncaayear), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN,ncaayear)) #year, value, CV, by-age, sample size
+    # 
+    # #catch CV
+     dat_file$dat$catch_cv <- matrix(oe_sumCW, nrow = ncaayear, 1)
+    # 
+    # #end year
+     dat_file$dat$nfinalyear <- y
+     dat_file$dat$proj_ini <- c((y), -1, 3, -99, 1)
+    # 
+     dat_file$dat$R_avg_start <- styear
+     dat_file$dat$R_avg_end <- styear + 26
+    # 
+    # 
     # save copy of .dat file by stock name, nrep, and sim year
-    WriteASAP3DatFile(fname = paste('assessment/ASAP/', stock[[i]]$stockName, '_', r, '_', y,'.dat', sep = ''),
+    WriteASAP3DatFile(fname = paste('assessment/ASAP/Results/', stockName, '_', r, '_', y,'.dat', sep = ''),
                       dat.object = dat_file,
-                      header.text = paste(stock[[i]]$stockName, 'Simulation', r, 'Year', y, sep = '_'))
+                      header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
     
     # write .dat file needs to have same name as exe file
-    WriteASAP3DatFile(fname = paste('assessment/ASAP/ASAP', sep = ''),
+    WriteASAP3DatFile(fname = paste('assessment/ASAP/ASAP3.dat', sep = ''),
                       dat.object = dat_file,
-                      header.text = paste(stock[[i]]$stockName, 'Simulation', r, 'Year', y, sep = '_'))
+                      header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
 
     
+    
     # Run the ASAP assessment model
-    asapEst <- try(system('assessment/ASAP/ASAP.exe'))
+   
+    asapEst <- try(system('assessment/ASAP/ASAP3.exe', show.output.on.console = FALSE))
+
 
     # Read in the results
-    res <- dget('assessment/ASAP/ASAP.rdat')
+    res <- dget('assessment/ASAP/ASAP3.rdat')
 
     # save .Rdata results from each run
-    saveRDS(res, file = paste('assessment/ASAP/', stock[[i]]$stockName, '_', r, '_', y,'.rdat', sep = ''))
+    saveRDS(res, file = paste('assessment/ASAP/Results/', stockName, '_', r, '_', y,'.rdat', sep = ''))
     
 
   })
