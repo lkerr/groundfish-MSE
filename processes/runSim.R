@@ -20,7 +20,7 @@ if(runClass != 'HPCC'){
 
 ####################These are temporary changes for testing ####################
 # econ_timer<-0
-# mproc_bak<-mproc
+#  mproc_bak<-mproc
 # 
 # mproc<-mproc_bak[5:5,]
 # nrep<-1
@@ -29,10 +29,13 @@ if(runClass != 'HPCC'){
 ####################End Temporary changes for testing ####################
     
     
-#set the rng state.  Store the random state.  
-#set.seed(rnorm(1))
-set.seed(1)
-oldseed_ALL <- .Random.seed
+#set the rng state based on system time.  Store the random state.  
+ 
+ start<-Sys.time()
+ start<-as.double(start)*100
+ set.seed(start)
+ 
+ oldseed_ALL <- .Random.seed
 showProgBar<-TRUE    
 ####################End Parameter and storage Setup ####################
   #This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
