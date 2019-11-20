@@ -7,6 +7,8 @@
 ffiles <- list.files(path='functions/', pattern="^.*\\.R$",full.names=TRUE, recursive=TRUE)
 invisible(sapply(ffiles, source))
 
+# Get the result directory path
+source('processes/identifyResultDirectory.R')
 
 # Load the overall operating model parameters
 source('modelParameters/set_om_parameters_global.R')

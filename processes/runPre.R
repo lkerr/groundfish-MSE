@@ -27,11 +27,21 @@ if(platform != 'Linux'){
 # one variable that was only available after (active_idx) ... used that to
 # determine whether or not to delete all the files in the results directory.
 
-if(runClass == 'Local'){
-  # Don't remove the files in the results directories
-  # unlink('results/*', recursive=TRUE)
-}
+# Create new results directory tagged with date/time
+# get and format the system time
+time <- Sys.time()
+timeString <- format(x = time, 
+                     format = "%Y-%m-%d-%H-%M-%S")
+# define a directory name
+ResultDirectory <- paste('results', timeString, sep='_')
+dir.create(ResultDirectory, showWarnings = FALSE, recursive=TRUE)
+# Reults folders for economic models. Create them if necessary
 
+econ_results_location<-file.path(ResultDirectory,"econ","raw")
+
+dir.create(econ_results_location, showWarnings = FALSE, recursive=TRUE)
+dir.create(file.path(ResultDirectory,"sim"), showWarnings = FALSE, recursive=TRUE)
+dir.create(file.path(ResultDirectory,"fig"), showWarnings = FALSE, recursive=TRUE)
 
 # load the required libraries
 source('processes/loadLibs.R')
