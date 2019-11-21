@@ -56,9 +56,16 @@ get_ASAP <- function(stock){
     
     
     # Run the ASAP assessment model
-   
+    if (Sys.info()['sysname'] == "Windows") {
     asapEst <- try(system('assessment/ASAP/ASAP3.exe', show.output.on.console = FALSE))
-
+    }
+    
+    if (Sys.info()['sysname'] == "Linux") { 
+    tempwd <- getwd() 
+    setwd('assessment/ASAP')
+    system(paste("singularity exec $WINEIMG wine ASAP3.exe", ctrl, sep = ' '))
+    setwd(tempwd)
+    }
 
     # Read in the results
     res <- dget('assessment/ASAP/ASAP3.rdat')
