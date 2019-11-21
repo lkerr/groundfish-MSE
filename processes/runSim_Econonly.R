@@ -50,7 +50,10 @@ nyear<-which(yrs == end_sim)
 
 #set the rng state based on system time.  Store the random state.  
 
-start<-Sys.time()
+#set the rng state based on system time.  Store the random state.  
+# if we use a plain old date (seconds since Jan 1, 1970), the number is actually too large, but we can just rebase to seconds since Jan 1, 2018.
+
+start<-Sys.time()-as.POSIXct("2018-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
 start<-as.double(start)*100
 set.seed(start)
 
