@@ -44,7 +44,7 @@ get_ASAP <- function(stock){
     # 
     # 
     # save copy of .dat file by stock name, nrep, and sim year
-    WriteASAP3DatFile(fname = paste('assessment/ASAP', stockName, '_', r, '_', y,'.dat', sep = ''),
+    WriteASAP3DatFile(fname = paste('assessment/ASAP/', stockName, '_', r, '_', y,'.dat', sep = ''),
                       dat.object = dat_file,
                       header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
     
@@ -62,7 +62,7 @@ get_ASAP <- function(stock){
     
     if (Sys.info()['sysname'] == "Linux") { 
     tempwd <- getwd() 
-    setwd('assessment/ASAP')
+    setwd('assessment/ASAP/')
     system(paste("singularity exec $WINEIMG wine ASAP3.exe", sep = ' '))
     setwd(tempwd)
     }
