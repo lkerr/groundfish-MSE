@@ -44,7 +44,7 @@ get_ASAP <- function(stock){
     # 
     # 
     # save copy of .dat file by stock name, nrep, and sim year
-    WriteASAP3DatFile(fname = paste('assessment/ASAP/Results/', stockName, '_', r, '_', y,'.dat', sep = ''),
+    WriteASAP3DatFile(fname = paste('assessment/ASAP', stockName, '_', r, '_', y,'.dat', sep = ''),
                       dat.object = dat_file,
                       header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
     
