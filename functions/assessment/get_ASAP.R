@@ -9,7 +9,7 @@ get_ASAP <- function(stock){
   out <- within(stock, {
 
 # read in assessment .dat file and modify accordingly
-    dat_file <- ReadASAP3DatFile(paste('assessment/ASAP/Results/', stockName, ".dat", sep = ''))
+    dat_file <- ReadASAP3DatFile(paste('assessment/ASAP/', stockName, ".dat", sep = ''))
 
 
 ### modify for each simulation/year
