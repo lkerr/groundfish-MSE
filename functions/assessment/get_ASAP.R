@@ -58,20 +58,30 @@ get_ASAP <- function(stock){
     # Run the ASAP assessment model
     if (Sys.info()['sysname'] == "Windows") {
     asapEst <- try(system('assessment/ASAP/ASAP3.exe', show.output.on.console = FALSE))
+    
+    # Read in results
+    res <- dget('assessment/ASAP/ASAP3.rdat')
+    
+    # save .Rdata results from each run
+    saveRDS(res, file = paste('assessment/ASAP/Results/', stockName, '_', r, '_', y,'.rdat', sep = ''))
     }
+    
     
     if (Sys.info()['sysname'] == "Linux") { 
     tempwd <- getwd() 
     setwd('assessment/ASAP/')
     system("bsub singularity exec $WINEIMG wine ASAP3.exe")
     setwd(tempwd)
+    
+    # Read in results
+    res <- dget('assessment/ASAP/asap3.rdat')
+    
+    # save .Rdata results from each run
+    rand <- sample(1:10000, 1)
+    
+    saveRDS(res, file = paste('assessment/ASAP/Results/', stockName, '_', r, '_', y,'_', rand, '.rdat', sep = ''))
     }
 
-    # Read in the results
-    res <- dget('assessment/ASAP/ASAP3.rdat')
-
-    # save .Rdata results from each run
-    saveRDS(res, file = paste('assessment/ASAP/Results/', stockName, '_', r, '_', y,'.rdat', sep = ''))
     
 
   })
