@@ -46,7 +46,7 @@ for(i in 1:length(flLst[[1]])){
 }
 
 # Output the management procedures text file in the figure directory
-get_catdf(df = mproc, file = 'results/fig/mproc.csv')
+get_catdf(df = mproc, file = paste0('results/fig/',mprocfile)
 
 # Output the memory usage
 get_memUsage(runClass = runClass)
