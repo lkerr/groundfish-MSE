@@ -3,5 +3,5 @@ CAA,simplethresh,FmsySim,-30,-1,SIM,-30,-1,hindcastMean,1,StandardFisheries,NA,N
 CAA,simplethresh,FmsySim,-30,-1,SIM,-30,-1,hindcastMean,1,Economic,TRUE,TRUE,Multi,MSE,full_targeting,sim_multipliers_post_MSE.Rds,output_prices_post_MSE.Rds,input_prices_post_MSE.Rds,post,post
 CAA,simplethresh,FmsySim,-30,-1,SIM,-30,-1,hindcastMean,1,Economic,TRUE,TRUE,Multi,Validation,validation,sim_multipliers_post_valid.Rds,output_prices_post_valid.Rds,input_prices_post_valid.Rds,post,pre
 CAA,simplethresh,FmsySim,-30,-1,SIM,-30,-1,hindcastMean,1,Economic,TRUE,TRUE,Multi,CF,counterfactual,sim_multipliers_pre_CF.Rds,output_prices_post_CF.Rds,input_prices_post_CF.Rds,pre,pre
-CAA,simplethresh,FmsySim,-30,-1,SIM,-30,-1,hindcastMean,1,Economic,TRUE,FALSE,Multi,CF,counterfactual,sim_multipliers_pre_CF.Rds,output_prices_post_CF.Rds,input_prices_post_CF.Rds,pre,pre
-CAA,simplethresh,FmsySim,-30,-1,SIM,-30,-1,hindcastMean,1,Economic,TRUE,FALSE,Single,CF,counterfactual,sim_multipliers_pre_CF.Rds,output_prices_post_CF.Rds,input_prices_post_CF.Rds,pre,pre
+CAA,simplethresh,FmsySim,-30,-1,SIM,-30,-1,hindcastMean,1,Economic,TRUE,FALSE,Multi,Cfnocatch,counterfactual,sim_multipliers_pre_CF.Rds,output_prices_post_CF.Rds,input_prices_post_CF.Rds,pre,pre
+CAA,simplethresh,FmsySim,-30,-1,SIM,-30,-1,hindcastMean,1,Economic,TRUE,FALSE,Single,Cfsinglsp,counterfactual,sim_multipliers_pre_CF.Rds,output_prices_post_CF.Rds,input_prices_post_CF.Rds,pre,pre
