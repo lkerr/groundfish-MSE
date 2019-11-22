@@ -18,7 +18,11 @@ rm(list=ls())
     
     #runSetup.R loads things and sets them up. This is used by the integrated simulation, so be careful making changes with it. Instead, overwrite them using the setupEcon_extra.R file.
 source('processes/runSetup.R')
-    
+
+#the base runSetup.R runs source('processes/genBaselineACLs.R') to set up ACLs in the data.table econ_baseline.
+# rather than change that file, we'll just overwrite with the econ-only version in the next step.
+
+source('processes/genBaselineACLs_Econonly.R')
 
 # if on local machine (i.e., not hpcc) must compile the tmb code
 # (HPCC runs have a separate cal  l to compile this code). Keep out of
@@ -35,12 +39,12 @@ top_loop_start<-Sys.time()
 
 ####################These are temporary changes for testing ####################
 mproc_bak<-mproc
-mproc<-mproc_bak[5:6,]
+mproc<-mproc_bak[5:5,]
 nrep<-2
 # yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
 # I want to start the economic model at fmyear=2010 and temporarily end it in 2011
 start_sim<-2010
-end_sim<-2011
+end_sim<-2015
 
 fyear<-which(yrs == start_sim)
 nyear<-which(yrs == end_sim)
@@ -101,9 +105,10 @@ for(r in 1:nrep){
          
           # ---- Run the economic model here ----
           source('processes/loadEcon2.R')
-       
           
-          bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline)
+          # subset just the current year of regulations
+          econ_baseline_yearly<-econ_baseline[gffishingyear==yrs[y]]
+          bio_params_for_econ <- get_bio_for_econ_only(stock,econ_baseline_yearly)
 
               source('processes/runEcon_moduleonly.R')
               end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)    

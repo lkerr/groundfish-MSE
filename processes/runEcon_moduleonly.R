@@ -63,8 +63,8 @@ working_targeting[spstock2=="nofish", harvest_sim:=0L]
     #zero_out_targets will set the catch and landings multipliers to zero depending on the value of underACL, stockarea_open, and mproc$EconType
 
 
-    #working_targeting<-joint_adjust_allocated_mults(working_targeting,fishery_holder, econtype)
-    #working_targeting<-joint_adjust_others(working_targeting,fishery_holder, econtype)
+    working_targeting<-joint_adjust_allocated_mults(working_targeting,fishery_holder, econtype)
+    working_targeting<-joint_adjust_others(working_targeting,fishery_holder, econtype)
     working_targeting<-get_joint_production(working_targeting,spstock2s) 
     working_targeting[, exp_rev_total:=exp_rev_total/1000]
     working_targeting[, actual_rev_total:=actual_rev_total/1000]
@@ -78,7 +78,7 @@ working_targeting[spstock2=="nofish", harvest_sim:=0L]
     # Predict targeting
     # this is where infeasible trips should be eliminated.
     
-    # trips<-zero_out_closed_areas_asc_cutout(trips,fishery_holder)
+     trips<-zero_out_closed_areas_asc_cutout(trips,fishery_holder)
   
   # draw trips probabilistically.  A trip is selected randomly from the choice set. 
   # The probability of selection is equal to prhat
