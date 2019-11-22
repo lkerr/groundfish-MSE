@@ -63,7 +63,7 @@ get_ASAP <- function(stock){
     if (Sys.info()['sysname'] == "Linux") { 
     tempwd <- getwd() 
     setwd('assessment/ASAP/')
-    system(paste("singularity exec $WINEIMG wine ASAP3.exe", sep = ' '))
+    system("bsub singularity exec $WINEIMG wine ASAP3.exe")
     setwd(tempwd)
     }
 
