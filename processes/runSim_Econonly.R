@@ -39,12 +39,12 @@ top_loop_start<-Sys.time()
 
 ####################These are temporary changes for testing ####################
 mproc_bak<-mproc
-mproc<-mproc_bak[5:7,]
+mproc<-mproc_bak[5:5,]
 nrep<-2
 # yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
 # I want to start the economic model at fmyear=2010 and temporarily end it in 2011
 start_sim<-2010
-end_sim<-2011
+end_sim<-2015
 
 fyear<-which(yrs == start_sim)
 nyear<-which(yrs == end_sim)
@@ -105,9 +105,10 @@ for(r in 1:nrep){
          
           # ---- Run the economic model here ----
           source('processes/loadEcon2.R')
-          econ_baselineW<-econ_baseline[gffishingyear==yrs[y]]
           
-          bio_params_for_econ <- get_bio_for_econ(stock,econ_baselineW)
+          # subset just the current year of regulations
+          econ_baseline_yearly<-econ_baseline[gffishingyear==yrs[y]]
+          bio_params_for_econ <- get_bio_for_econ_only(stock,econ_baseline_yearly)
 
               source('processes/runEcon_moduleonly.R')
               end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)    
