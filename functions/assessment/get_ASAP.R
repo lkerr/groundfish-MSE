@@ -8,6 +8,8 @@ get_ASAP <- function(stock){
 
   out <- within(stock, {
 
+    if (Sys.info()['sysname'] == "Windows") {
+      
 # read in assessment .dat file and modify accordingly
     dat_file <- ReadASAP3DatFile(paste('assessment/ASAP/', stockName, ".dat", sep = ''))
 
@@ -56,30 +58,81 @@ get_ASAP <- function(stock){
     
     
     # Run the ASAP assessment model
-    if (Sys.info()['sysname'] == "Windows") {
     asapEst <- try(system('assessment/ASAP/ASAP3.exe', show.output.on.console = FALSE))
     
     # Read in results
     res <- dget('assessment/ASAP/ASAP3.rdat')
     
     # save .Rdata results from each run
-    saveRDS(res, file = paste('assessment/ASAP/Results/', stockName, '_', r, '_', y,'.rdat', sep = ''))
+    saveRDS(res, file = paste('assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))
     }
     
     
+    
     if (Sys.info()['sysname'] == "Linux") { 
+    
+      
+       # read in assessment .dat file and modify accordingly
+      
+      dat_file <- ReadASAP3DatFile(paste('assessment/ASAP/', stockName, ".dat", sep = ''))
+      
+      
+      ### modify for each simulation/year
+      
+      #start year
+      dat_file$dat$year1 <- y - ncaayear
+      styear <- y - ncaayear
+      #end year moving window
+      endyear <- y-1
+      
+      #maturity-at-age
+      dat_file$dat$maturity <- matrix(get_dwindow(mat, styear, endyear), nrow = ncaayear)
+      
+      #WAA matrix
+      dat_file$dat$WAA_mats <-matrix(get_dwindow(waa, styear, endyear), nrow = ncaayear)
+      
+      #catch proportions and sum
+      dat_file$dat$CAA_mats <- cbind(get_dwindow(obs_paaCN, styear, endyear), get_dwindow(obs_sumCW, styear, endyear))
+      
+      # #index data
+      dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, ncaayear), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN,ncaayear)) #year, value, CV, by-age, sample size
+      # 
+      # #catch CV
+      dat_file$dat$catch_cv <- matrix(oe_sumCW, nrow = ncaayear, 1)
+      # 
+      # #end year
+      dat_file$dat$nfinalyear <- y
+      dat_file$dat$proj_ini <- c((y), -1, 3, -99, 1)
+      # 
+      dat_file$dat$R_avg_start <- styear
+      dat_file$dat$R_avg_end <- styear + 26
+      # 
+      # 
+      
+      
+      #tempwd <- getwd() 
+      #rundir <- dir.create(path = paste(tempwd, "/Run", r, '_', rand, sep = ""))
+      
+      # save copy of .dat file by stock name, nrep, and sim year
+      WriteASAP3DatFile(fname = paste(rundir, '/', stockName, '_', r, '_', y,'.dat', sep = ''),
+                         dat.object = dat_file,
+                         header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
+      
+      # write .dat file needs to have same name as exe file
+      WriteASAP3DatFile(fname = paste(rundir, '/ASAP3.dat', sep = ''),
+                        dat.object = dat_file,
+                        header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
+      
     tempwd <- getwd() 
-    setwd('assessment/ASAP/')
+    setwd(rundir)
     system("bsub singularity exec $WINEIMG wine ASAP3.exe")
     setwd(tempwd)
     
     # Read in results
-    res <- dget('assessment/ASAP/asap3.rdat')
+    res <- dget(paste0(rundir,'/asap3.rdat'))
     
     # save .Rdata results from each run
-    rand <- sample(1:10000, 1)
-    
-    saveRDS(res, file = paste('assessment/ASAP/Results/', stockName, '_', r, '_', y,'_', rand, '.rdat', sep = ''))
+    saveRDS(res, file = paste(rundir, '/', stockName, '_', r, '_', y,'.rdat', sep = ''))
     }
 
     

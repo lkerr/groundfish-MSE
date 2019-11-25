@@ -18,6 +18,14 @@ if(platform != 'Linux'){
   path_new <- paste0('c:\\Rtools\\bin;c:\\Rtools\\mingw_32\\bin;',
                      path_current)
   Sys.setenv(PATH=path_new)
+  
+  rand <- sample(1:10000, 1)
+  rundir <- paste(tempwd, "/assessment/ASAP/Run", r, '_', rand, sep = "")
+  dir.create(path = rundir)
+  from.path <- paste("assessment/ASAP/ASAP3.exe", sep = "")
+  to.path   <- paste(rundir, sep= "")
+  file.copy(from = from.path, to = to.path)
+  
 }
 
 
