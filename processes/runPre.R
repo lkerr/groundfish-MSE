@@ -18,7 +18,9 @@ if(platform != 'Linux'){
   path_new <- paste0('c:\\Rtools\\bin;c:\\Rtools\\mingw_32\\bin;',
                      path_current)
   Sys.setenv(PATH=path_new)
-  
+}
+
+if (platform == 'Linux'){
   rand <- sample(1:10000, 1)
   tempwd <- getwd()
   rundir <- paste(tempwd, "/assessment/ASAP/Run", r, '_', rand, sep = "")
