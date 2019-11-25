@@ -20,6 +20,7 @@ if(platform != 'Linux'){
   Sys.setenv(PATH=path_new)
   
   rand <- sample(1:10000, 1)
+  tempwd <- getwd()
   rundir <- paste(tempwd, "/assessment/ASAP/Run", r, '_', rand, sep = "")
   dir.create(path = rundir)
   from.path <- paste("assessment/ASAP/ASAP3.exe", sep = "")
