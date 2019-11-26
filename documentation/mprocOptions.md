@@ -3,6 +3,7 @@
 
 # Options for management procedures
 ### Sam Truesdell (struesdell@gmri.org)
+Management procedures are specificed in a csv located in the folder "modelParameters."  The filename is passed in using the object "mprocfile" which is defined in set_om_parameters_global.R
 
 What to write in the mproc.csv file and what it means.
 
