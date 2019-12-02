@@ -154,5 +154,14 @@ if(fyear < mxModYrs){
              'each stock'))
 }
 
-
+if (platform == 'Linux'){
+  rand <- sample(1:10000, 1)
+  tempwd <- getwd()
+  rundir <- paste(tempwd, "/assessment/ASAP/Run", '_', rand, sep = "")
+  dir.create(path = rundir)
+  from.path <- paste("assessment/ASAP/ASAP3.exe", sep = "")
+  to.path   <- paste(rundir, sep= "")
+  file.copy(from = from.path, to = to.path)
+  
+}
 

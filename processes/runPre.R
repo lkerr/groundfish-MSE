@@ -20,16 +20,6 @@ if(platform != 'Linux'){
   Sys.setenv(PATH=path_new)
 }
 
-if (platform == 'Linux'){
-  rand <- sample(1:10000, 1)
-  tempwd <- getwd()
-  rundir <- paste(tempwd, "/assessment/ASAP/Run", '_', rand, sep = "")
-  dir.create(path = rundir)
-  from.path <- paste("assessment/ASAP/ASAP3.exe", sep = "")
-  to.path   <- paste(rundir, sep= "")
-  file.copy(from = from.path, to = to.path)
-  
-}
 
 
 # Remove all files (as long as not running runSetup later within the plotting
