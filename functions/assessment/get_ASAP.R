@@ -30,7 +30,7 @@ get_ASAP <- function(stock){
 
     #catch proportions and sum
     dat_file$dat$CAA_mats <- cbind(get_dwindow(obs_paaCN, styear, endyear), get_dwindow(obs_sumCW, styear, endyear))
-
+    
     # #index data
     dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, ncaayear), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN,ncaayear)) #year, value, CV, by-age, sample size
     # 
@@ -125,14 +125,21 @@ get_ASAP <- function(stock){
       
     tempwd <- getwd() 
     setwd(rundir)
-    system("bsub singularity exec $WINEIMG wine ASAP3.exe")
-    setwd(tempwd)
+    system("singularity exec $WINEIMG wine ASAP3.EXE", wait = TRUE)
+
+    while (!file.exists('asap3.rdat')) {
+      Sys.sleep(1)
+    }
     
     # Read in results
-    res <- dget(paste0(rundir,'/asap3.rdat'))
+    res <- dget('asap3.rdat')
+    
+    asapEst <- try(res)
     
     # save .Rdata results from each run
     saveRDS(res, file = paste(rundir, '/', stockName, '_', r, '_', y,'.rdat', sep = ''))
+    setwd(tempwd)
+    
     }
 
     
