@@ -10,6 +10,8 @@
 #        1 / (1 + exp(par[1] + par[2] * laa))
 #       *'const'
 #        par[1]
+#       *'input'
+#        par[1:length(par)]
 #       
 # par: vector of parameters to use in the function. See function
 #      definitions in "type" for the length of the vector and
@@ -36,6 +38,14 @@ get_slx <- function(type, par, laa=NULL){
     
     slx <- par[1]
     
+  }
+  
+  if(tolower(type) == 'input'){
+    if(par < 0 || par > 1){
+      stop('constant selectivity parameters need to be between zero and 1')
+    }
+    
+    slx <- par[1:length(par)]
   }
   
   return(slx)
