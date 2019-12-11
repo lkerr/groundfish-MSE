@@ -29,6 +29,9 @@ mat_typ <- 'logistic'
 # natural mortality
 M <- 0.2
 
+# initial numbers at-age parameters
+initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = M)
+initN_type <- 'expDecline'
 
 
 #### Fishery parameters ####

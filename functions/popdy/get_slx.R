@@ -41,7 +41,7 @@ get_slx <- function(type, par, laa=NULL){
   }
   
   if(tolower(type) == 'input'){
-    if(par < 0 || par > 1){
+    if(par < 0 | par > 1){
       stop('constant selectivity parameters need to be between zero and 1')
     }
     

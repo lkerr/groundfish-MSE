@@ -55,7 +55,7 @@ for(r in 1:nrep){
       if (histAssess == TRUE) {
         for(i in 1:nstock){
           if(y %in% assess_vals$assessdat$MSEyr){
-          rep_assess <- get_AssessVals(stock = stock[[i]])
+          rep_assess <- get_AssessVals()
           stock[[i]]$F_full[y] <- rep_assess$fish_mort
           stock[[i]]$R[y] <- rep_assess$rec
        }

@@ -17,8 +17,8 @@ get_popInit <- function(stock){
 
     # in the first n (fyear-1) years.
    
-    #initN <- get_init(nage=nage, N0= 2e7, F_full=F_full[1], M=M)      
-    initN <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)  
+    initN <- get_init(type = initN_type, par = initN_par)
+
     
     J1N[1:fyear,] <- rep(initN, each=fyear)
     

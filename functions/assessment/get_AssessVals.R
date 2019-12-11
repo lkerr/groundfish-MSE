@@ -5,7 +5,7 @@
 # replace calculated values 
 # just fishing mortality for now - could add more if desired
 
-get_AssessVals <- function(stock){
+get_AssessVals <- function(){
   replacement <- assess_vals$assessdat[assess_vals$assessdat$MSEyr == y,]
 fish_mort <- replacement$F
 rec <- replacement$R

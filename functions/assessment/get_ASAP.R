@@ -8,7 +8,6 @@ get_ASAP <- function(stock){
 
   out <- within(stock, {
 
-    if (Sys.info()['sysname'] == "Windows") {
       
 # read in assessment .dat file and modify accordingly
     dat_file <- ReadASAP3DatFile(paste('assessment/ASAP/', stockName, ".dat", sep = ''))
@@ -45,6 +44,9 @@ get_ASAP <- function(stock){
      dat_file$dat$R_avg_end <- styear + 26
     # 
     # 
+     
+     if (Sys.info()['sysname'] == "Windows") {
+       
     # save copy of .dat file by stock name, nrep, and sim year
     WriteASAP3DatFile(fname = paste('assessment/ASAP/', stockName, '_', r, '_', y,'.dat', sep = ''),
                       dat.object = dat_file,
@@ -55,7 +57,6 @@ get_ASAP <- function(stock){
                       dat.object = dat_file,
                       header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
 
-    
     
     # Run the ASAP assessment model
     asapEst <- try(system('assessment/ASAP/ASAP3.exe', show.output.on.console = FALSE))
@@ -70,48 +71,6 @@ get_ASAP <- function(stock){
     
     
     if (Sys.info()['sysname'] == "Linux") { 
-    
-      
-       # read in assessment .dat file and modify accordingly
-      
-      dat_file <- ReadASAP3DatFile(paste('assessment/ASAP/', stockName, ".dat", sep = ''))
-      
-      
-      ### modify for each simulation/year
-      
-      #start year
-      dat_file$dat$year1 <- y - ncaayear
-      styear <- y - ncaayear
-      #end year moving window
-      endyear <- y-1
-      
-      #maturity-at-age
-      dat_file$dat$maturity <- matrix(get_dwindow(mat, styear, endyear), nrow = ncaayear)
-      
-      #WAA matrix
-      dat_file$dat$WAA_mats <-matrix(get_dwindow(waa, styear, endyear), nrow = ncaayear)
-      
-      #catch proportions and sum
-      dat_file$dat$CAA_mats <- cbind(get_dwindow(obs_paaCN, styear, endyear), get_dwindow(obs_sumCW, styear, endyear))
-      
-      # #index data
-      dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, ncaayear), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN,ncaayear)) #year, value, CV, by-age, sample size
-      # 
-      # #catch CV
-      dat_file$dat$catch_cv <- matrix(oe_sumCW, nrow = ncaayear, 1)
-      # 
-      # #end year
-      dat_file$dat$nfinalyear <- y
-      dat_file$dat$proj_ini <- c((y), -1, 3, -99, 1)
-      # 
-      dat_file$dat$R_avg_start <- styear
-      dat_file$dat$R_avg_end <- styear + 26
-      # 
-      # 
-      
-      
-      #tempwd <- getwd() 
-      #rundir <- dir.create(path = paste(tempwd, "/Run", r, '_', rand, sep = ""))
       
       # save copy of .dat file by stock name, nrep, and sim year
       WriteASAP3DatFile(fname = paste(rundir, '/', stockName, '_', r, '_', y,'.dat', sep = ''),
