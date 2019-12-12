@@ -19,27 +19,27 @@ laa_par <- c(Linf = 150.93, K = 0.11, t0 = 0.13, beta1=0) #SAW 55
 laa_typ <- 'vonB'
 
 # weight-length parameters
-waa_par <- c(exp(-12.18002), 3.1625) #SAW 55 #kg
-waa_typ <- 'aLb'
-#waa_par <- c(0.057, 0.365, 0.908, 1.662, 2.426, 3.307, 4.09, 5.928, 10.375) #GOM cod ADAP projection Jan1 M=0.2
-#waa_typ <- 'input'
+#waa_par <- c(exp(-12.18002), 3.1625) #SAW 55 #kg
+#waa_typ <- 'aLb'
+waa_par <- c(0.057, 0.365, 0.908, 1.662, 2.426, 3.307, 4.09, 5.928, 10.375) #GOM cod ADAPT projection Jan1 M=0.2
+waa_typ <- 'input'
 
 
 # maturity-length parameters
-mat_par <- c(0.171, 32.1) # O'brien GOM cod female
-mat_typ <- 'logistic'
-#mat_par <- c(0.087, 0.318, 0.697, 0.919, 0.982, 0.996, 0.999, 1, 1) # GOM cod ADAPT projection M=0.2
-#mat_typ <- 'input'
+#mat_par <- c(0.171, 32.1) # O'brien GOM cod female
+#mat_typ <- 'logistic'
+mat_par <- c(0.087, 0.318, 0.697, 0.919, 0.982, 0.996, 0.999, 1, 1) # GOM cod ADAPT projection M=0.2
+mat_typ <- 'input'
 
 
 # natural mortality
 M <- 0.2
 
 # initial numbers at-age parameters
-#initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
-#initN_type <- 'input'
-initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = M)
-initN_type <- 'expDecline'
+initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
+initN_type <- 'input'
+#initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = M)
+#initN_type <- 'expDecline'
 
 
 
@@ -51,8 +51,11 @@ qI <- 0.0001
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
-selC <- c(s0 = 3, s1 = 0.5)
-selC_typ <- 'Logistic'
+#selC <- c(s0 = 3, s1 = 0.5)
+#selC_typ <- 'Logistic'
+selC <- c(0.013, 0.066, 0.271, 0.663, 0.912, 0.982, 0.997, 1, 1) #terminal selectivity block GOM cod ADAPT proj M=0.2
+selC_typ <- 'input'
+
 
 # Recruitment #AEW from GOM COD 2019 Update M0.2 .rep
   Rpar <- c(h = 1,
@@ -69,11 +72,10 @@ selC_typ <- 'Logistic'
 #### Survey parameters ####
 
 ## Survey information
-selI <- c(1)
-selI_typ <- 'const'
-#selI <- c(1, 0.717042, 0.742593, 0.768438, 0.747, 0.560427, 0, 0, 0)
-#selI <- c(1, 1, 1, 1, 1, 1, 1, 1, 1)
-#selI_typ <- 'input'
+#selI <- c(1)
+#selI_typ <- 'const'
+selI <- c(0.0384337, 0.13369, 0.288846, 0.531086, 0.778406, 1, 1, 1, 1) #Spring survey fit from 2019 assessment .rep
+selI_typ <- 'input'
 timeI <- 0.5 # when is the survey (as a proportion of the year)
 
 
