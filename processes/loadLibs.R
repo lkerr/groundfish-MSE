@@ -27,6 +27,7 @@ if(runClass == 'HPCC'){
   require(dplyr, lib.loc='../Rlib/')
   require(data.table, lib.loc='../Rlib/')
   require(ASAPplots, lib.loc = '../Rlib')
+  require(fishmethods, lib.loc = '../Rlib')
 
 }else{
 
@@ -52,6 +53,7 @@ if(runClass == 'HPCC'){
   require(dplyr)
   require(data.table)
   require(ASAPplots)
+  require(fishmethods)
 
 
 }

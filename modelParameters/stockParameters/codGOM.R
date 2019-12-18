@@ -58,11 +58,13 @@ selC_typ <- 'input'
 
 
 # Recruitment #AEW from GOM COD 2019 Update M0.2 .rep
-  Rpar <- c(h = 1,
-            R0 = 4456870,
-            SSBRF0 = 0.01822) # calculated as S0/R0 (81202.9/4456870) (arbitrary because h = 1)
-  R_typ <- 'BHSteep'
-
+# Rpar <- c(h = 1,
+#           R0 = 4456870,
+#           SSBRF0 = 0.01822) # calculated as S0/R0 (81202.9/4456870) (arbitrary because h = 1)
+# R_typ <- 'BHSteep'
+Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
+          cR = 1) # dont need to convert
+R_typ <- 'HS'
 
 
  
