@@ -159,7 +159,7 @@ if (platform == 'Linux'){
   tempwd <- getwd()
   rundir <- paste(tempwd, "/assessment/ASAP/Run", '_', rand, sep = "")
   dir.create(path = rundir)
-  from.path <- paste("HPCC/EXE/ASAP3.EXE", sep = "")
+  from.path <- paste('../EXE/ASAP3.EXE', sep = "")
   to.path   <- paste(rundir, sep= "")
   file.copy(from = from.path, to = to.path)
   
