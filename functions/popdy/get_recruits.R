@@ -26,6 +26,7 @@
 #       distribution function with linear decline to zero; Recruitment model 21
 #       need to have input of historic recruitment in .csv file 
 #       in /data/data_raw/AssessmentHistory/ must have same name as stockName
+#       use only terminal 20 historic years
 #       if SSB >= SSB_star
 #       R = cR * remp(1, as.numeric(assess_vals$assessdat$R))
 #       if SSB < SSB_star
@@ -143,15 +144,16 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R,
   
   }
     
-  else if (type == 'HS'){
+  else if (type == 'HS'){ 
     assess_vals <- get_HistAssess(stock = stock[[i]])
     
     Rhat <- with(as.list(par),{
     if (SSB >= SSB_star) {
-       pred <- cR * remp(1, as.numeric(assess_vals$assessdat$R))
+       pred <- cR * remp(1, tail(as.numeric(assess_vals$assessdat$R), 20))    
     
     } else if (SSB < SSB_star){
-      pred <-  cR * (SSB/SSB_star) * remp(1, as.numeric(assess_vals$assessdat$R))
+      pred <-  cR * (SSB/SSB_star) * remp(1, tail(as.numeric(assess_vals$assessdat$R), 20))    
+
     }
     return(pred)
        })
@@ -173,7 +175,6 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R,
   
   })
 }
-
 
 
 
@@ -234,5 +235,8 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R,
 # num2 <- 4 * Rpar2['h'] * ( SSB / (Rpar2['SSBRF0']) )
 # den2 <- ( (1 - Rpar2['h']) + (5*Rpar2['h'] - 1) * ( SSB / (Rpar2['R0'] * Rpar2['SSBRF0']) ) )
 # q2 <- num2/den2
+
+
+
 
 

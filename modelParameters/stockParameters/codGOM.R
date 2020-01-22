@@ -112,7 +112,7 @@ oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- .50
+pe_R <- 0.01
 
 # implementation error of fishing mortality
 ie_F <- 0
