@@ -71,7 +71,7 @@ for(r in 1:nrep){
         
         for(i in 1:nstock){
           stock[[i]] <- get_advice(stock = stock[[i]])
-          stock[[i]] <- get_relError(stock = stock[[i]])
+          #stock[[i]] <- get_relError(stock = stock[[i]])
         }
         
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
@@ -106,6 +106,7 @@ for(r in 1:nrep){
           }
         
         for(i in 1:nstock){
+          stock[[i]] <- get_relError(stock = stock[[i]])
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         }
           
