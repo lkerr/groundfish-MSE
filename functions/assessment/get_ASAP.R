@@ -27,15 +27,26 @@ get_ASAP <- function(stock){
     #WAA matrix
     dat_file$dat$WAA_mats <-matrix(get_dwindow(waa, styear, endyear), nrow = ncaayear)
 
-    #catch proportions and sum
-    dat_file$dat$CAA_mats <- cbind(get_dwindow(obs_paaCN, styear, endyear), get_dwindow(obs_sumCW, styear, endyear))
+    #catch-at-age proportions and sum catch weight
+    dat_file$dat$CAA_mats <- cbind(get_dwindow(paaCN, styear, endyear), get_dwindow(sumCW, styear, endyear))
     
-    # #index data
-    dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, ncaayear), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN,ncaayear)) #year, value, CV, by-age, sample size
+    # #index data; sum index value, observation error, proportions-at-age, sample size
+    dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(sumIN, styear, endyear), rep(oe_sumIN, ncaayear), get_dwindow(IN, styear, endyear), rep(oe_paaIN,ncaayear)) #year, value, CV, by-age, sample size
     # 
+    # Recruitment CV
+    dat_file$dat$recruit_cv <- matrix(pe_R, nrow = ncaayear, 1)
+      
     # #catch CV
      dat_file$dat$catch_cv <- matrix(oe_sumCW, nrow = ncaayear, 1)
     # 
+     
+    # catch effective sample size
+     dat_file$dat$catch_Neff <- matrix(oe_paaCN, nrow = ncaayear, 1)
+     
+     
+    ## catchability
+    dat_file$dat$q_ini <- qI
+     
     # #end year
      dat_file$dat$nfinalyear <- y
      dat_file$dat$proj_ini <- c((y), -1, 3, -99, 1)

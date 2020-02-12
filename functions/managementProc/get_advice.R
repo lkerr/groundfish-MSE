@@ -72,7 +72,7 @@ get_advice <- function(stock){
                        sel = tail(res$fleet.sel.mats$sel.m.fleet1, 1),                      
                        M = tail(res$M.age, 1), 
                        mat = res$maturity[1,],                               
-                       R = tail(res$SR.resids$recruits, 1),
+                       R = res$SR.resids$recruits,
                        SSBhat = res$SSB,
                        J1N = tail(res$N.age,1),                 ### or use J1B reported in biomass 
                        Rpar = Rpar,
