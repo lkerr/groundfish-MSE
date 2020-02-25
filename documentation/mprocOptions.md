@@ -3,8 +3,9 @@
 
 # Options for management procedures
 ### Sam Truesdell (struesdell@gmri.org)
+Management procedures are specificed in a csv located in the folder "modelParameters."  The filename is passed in using the object "mprocfile" which is defined in set_om_parameters_global.R
 
-What to write in the mproc.txt file and what it means.
+What to write in the mproc.csv file and what it means.
 
 
 ## ASSESSCLASS
@@ -95,7 +96,7 @@ Refers to the parameters necessary for developing the B<sub>MSY</sub> proxy. The
 ## RFUN_NM
 The type of recruitment function to be used. Currently all options involve Beverton-Holt curves but this is easily expanded if desired.
 
-* **forecast**: Recruitment in any simulations for the development of F<sub>MSY</sub> or B<sub>MSY</sub> reference points will be calculated based on a forecast. In each year of the simulation, expected recruitment will be calculated (with a temperature effect if that switch is turned on). At the end of the *n*-year projection period (where *n* is specified under FREF_PAR0 or BREF_PAR0) the value for the F or B reference points is calculated according to the specifications given under those columns in *mproc.txt*.
+* **forecast**: Recruitment in any simulations for the development of F<sub>MSY</sub> or B<sub>MSY</sub> reference points will be calculated based on a forecast. In each year of the simulation, expected recruitment will be calculated (with a temperature effect if that switch is turned on). At the end of the *n*-year projection period (where *n* is specified under FREF_PAR0 or BREF_PAR0) the value for the F or B reference points is calculated according to the specifications given under those columns in *mproc.csv*.
 
 * **hindcastMean**: Recruitment in each year of a simulation is based on a set of previous recruitments (recruitment values are outputs from assessment models). The function simply returns the mean recruitment over the number of years specified under the parameterization in FREF_PAR0 or BREF_PAR0.
 
@@ -104,5 +105,47 @@ The type of recruitment function to be used. Currently all options involve Bever
 The frequency with which reference points are re-calculated.
 
 * The value represents the frequency. For example, if the value is 3, reference points are recalculated every 3 years. In the years when the reference points are not updated the advice may change based on an updated assessment model but the reference points (and thus the shape of any associated harvest control rule) remains the same.
+
+## ImplementationClass
+This sets harvesting to be determined by a "StandardFisheries" or "Economic" submodel. This column is only used in (variations of) the runSim.R file.
+
+# Economic Options
+The following are only relevant if *ImplementationClass*=='Economic.'
+
+## EconName
+A short name for the scenario.  This column is not used by any of the simulation code.  It is mostly as a convenience.
+
+## EconType
+The broad type of fisheres management.  This column is only used in the "joint_adjust_allocated_mults.R" function.  
+   Multi: a closure in a stockarea closes everything in that stockarea (no landings of GB Cod if GB haddock is closed).  This resembles how the catch share fisheries is managed.
+   Single: a closure in a stockarea does not close everything in that stockarea ( landings of GB Cod allowed if GB haddock is closed)  This does not really resemble how the catch share fishery is managed.
+   
+## CatchZero
+Governs catch if a stock is closed. This column is only used in the "joint_adjust_allocated_mults.R" function.
+  TRUE: no catch of GB Cod if GB cod is closed.  This implies perfect targeting/avoidance.
+  FALSE catch of GB Cod occurs when GB cod is closed.  All catch would be discarded.  This implies no change in joint targeting behavior occurs if a stock is closed.
+The truth is somewhere in between.  
+  
+## EconData
+  A stub that determines which base economic dataset to use (see data processing steps).   This column is used to load data in /processes/loadEcon2.R 
+
+## MultiplierFile
+  The full name of the multiplier file to use.  Must  include the .Rds extension.  This column is used to load data in /processes/setupEconType.R 
+
+## OutputPriceFile 
+  The full name of the output price  file to use.  Must include the .Rds extension.  This column is used to load data in /processes/setupEconType.R 
+  
+## InputPriceFile 
+  The full name of the input price  file to use.  Must include the .Rds extension.  This column is used to load data in /processes/setupEconType.R 
+  
+## ProdEqn
+  Suffix for the production equation. The valid production equations are described in set_om_parameters_global.R.  Currently, the choices are just pre and post.  This column is used to declare the production equation in /processes/setupEconType.R 
+  
+## ChoiceEqn
+  Suffix for the choice equation. The valid choice equations are described in set_om_parameters_global.R. Currently, the choices are just pre and post.  But options for noconstant or something else could be set up. This column is used to declare the choice equation in /processes/setupEconType.R 
+
+This is also in the economic model documentation.
+
+
 
 [Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)

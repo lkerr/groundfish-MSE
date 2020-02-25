@@ -19,7 +19,7 @@
 *.o
 *.out
 *.so
-/results*/
+/results*
 *.pptx
 *.docx
 .Rproj.user
@@ -45,3 +45,18 @@ data/data_raw/recruitment/POL_S_R.csv
 data/data_raw/recruitment/HAD_S_R.csv
 data/data_raw/recruitment/2017_POK_UNIT_MOD_BaseASAPOutput.rep
 *.exe
+assessment/ASAP*
+admb2r.log
+admodel.cov
+admodel.dep
+admodel.hes
+admodel.tmp
+asap3.bsn
+asap3input.log
+cmpdiff.tmp
+eigv.rpt
+fmin.log
+gradfil1.tmp
+gradfil2.tmp
+variance
+varssave.tmp

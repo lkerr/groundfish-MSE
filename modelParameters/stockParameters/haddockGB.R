@@ -2,7 +2,7 @@
 
 
 # Average and sd F before the management period begins. Mean on real scale
-# but distribution is lognormal. SD is lognormal SD.                                              
+# but distribution is lognormal. SD is lognormal SD.
 burnFmsyScalar <- 1.5
 burnFsd <- 0.5
 
@@ -19,7 +19,7 @@ laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=5)  #AEW
 laa_typ <- 'vonB'
 
 # weight-length parameters
-waa_par <- c(exp(-11.73233), 3.059) #AEW
+waa_par <- c(exp(-11.73233), 3.059) 
 waa_typ <- 'aLb'
 
 # maturity-length parameters
@@ -80,7 +80,7 @@ startCV <- 1.5
 
 # scalar to bring pop numbers closer to zero (necessary
 # for model fitting)
-caaInScalar <- 1000  
+caaInScalar <- 1000
 
 
 #### Error parameters ####
@@ -103,6 +103,7 @@ pe_R <- 0.5
 # implementation error of fishing mortality
 ie_F <- 0
 ie_typ <- 'lognorm'
+ie_bias <- 0 # % bias in implementation error
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
 ob_sumCW <- 1
@@ -116,12 +117,12 @@ ob_sumIN <- 1
 # fbrpTyp <- c('YPR')
 # # Bmsy proxy type
 # bbrpTyp <- c('RSSBR')
-# 
+#
 # # Fmsy proxy level
 # fbrpLevel <- c(0.1)
 # # Bmsy proxy level
 # bbrpLevel <- c(1)
-# 
+#
 # # Fmsy proxy types and levels
 # fbrp <- rbind(
 #   list('YPR', 0.1),
@@ -133,22 +134,22 @@ ob_sumIN <- 1
 #   BmsyT = c('RSSBR' ,   'dummy'      ),
 #   hcrT  = c('slide'  ,  'simpleThresh')
 # )
-# 
-# 
+#
+#
 # FmsyT <- list('YPR', 'SPR')
 # FmsyV <- list(c(0.1, 0.15),
 #               c(0.3, 0.4))
 # # i1 <- lapply(1:length(a1), function(x) expand.grid(a1[[x]], a2[[x]]))
-# 
+#
 # BmsyT <- list('RSSBR', 'BmsySim')
 # BmsyV <- list(c(1, 0.8),
 #               c(NA, NA))
 # i2 <- lapply(1:length(BmsyT), function(x) expand.grid(BmsyT[[x]], BmsyV[[x]]))
-# 
+#
 # # Harvest control rule types
 # i3 <- list('slide', 'simpleThresh')
-# 
-# 
+#
+#
 # hrcTyp <- list('slide', 'simpleThresh')
 
 
@@ -159,6 +160,3 @@ if(1.0 %in% c(qI, qC)){
   stop('catchability (qI and qC) must not be exactly one (you can make it
         however close you want though')
 }
-
-
-

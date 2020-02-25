@@ -15,7 +15,7 @@ get_implementationF <- function(type, stock){
         F_full[y] <- get_error_idx(type = ie_typ, 
                                    idx = Fimpl, 
                                    par = ie_F)
-      
+
     }else{
       
       stop('get_implementationF: type not recognized')

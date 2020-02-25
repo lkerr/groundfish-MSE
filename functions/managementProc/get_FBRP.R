@@ -32,7 +32,7 @@
 
 
 get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
- 
+  
 
   # Load in the recruitment function (recruitment function index is
   # found in the parmgt data frame but the actual functions are from
@@ -149,8 +149,9 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
 
     # Warn if maximum yield did not occur within the range
     if(Fmsy %in% range(candF)){
-      warning(paste('get_FBRP: maximum yield occurs at endpoint of',
-                    'candidate F values'))
+      warning(paste0('get_FBRP: maximum yield occurs at endpoint of ',
+                     'candidate F values ', '(stock = ',
+                     stockEnv$stockName, ')'))
     }
     
     # Equilibrium starting conditions at MSY (used in BMSY calculations)

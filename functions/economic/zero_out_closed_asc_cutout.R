@@ -7,15 +7,14 @@
 
 
 zero_out_closed_asc_cutout <- function(tds,open_hold){
-  num_closed<-sum(open_hold$open==FALSE)
+  num_closed<-sum(open_hold$underACL==FALSE)
   if (num_closed==0){
     # If nothing is closed, just return tds
-  }
-  else{
+  } else{
   tds<-left_join(tds,open_hold, by=c("spstock2"="spstock2"))
-  tds$open[which(tds$spstock2=="nofish")]<-"TRUE"
+  tds$underACL[which(tds$spstock2=="nofish")]<-TRUE
   #tds<-merge(tds,open_hold, by=c("spstock2"))
-  tds$prhat[tds$open=="FALSE"]<-0
+  tds$prhat[tds$underACL==FALSE]<-0
   tds<-as.data.table(tds)
   # 
   tds<-tds[, prsum := sum(prhat), by = id]

@@ -1,18 +1,26 @@
 # A function to deal with the end of the day. 
 # set the fishery to open if the catch is less than the ACL.  Set it to closed if it's greater than the ACL.
-# accumulated_catch: catch for that day of all stocks by the fleet
-# fish_stats: data frame containing stock name, logical for open/closed, catch limit, and cumulative catch
+# dc: catch for that day of all stocks by the fleet
+# fh: data frame containing stock name, logical for open/closed, catch limit, and cumulative catch
 # Returns the updated version of that matrix.
 
-
-get_fishery_next_period <- function(accumulated_catch,fish_stats){
-  fish_stats$cumul_catch_pounds<-accumulated_catch$cumul_catch_pounds
-  fish_stats$targeted<-accumulated_catch$targeted
+get_fishery_next_period2 <- function(fh){
+  #fh$cumul_catch_pounds<-dc$cumul_catch_pounds
+  #fh$targeted<-dc$targeted
   
-  fish_stats$sectorACL_pounds<-fish_stats$sectorACL*pounds_per_kg*kg_per_mt
-  fish_stats$open<-fish_stats$cumul_catch<fish_stats$sectorACL_pounds
-  #fish_stats<-as.data.table(fish_stats)
-  return(fish_stats)
+  fh[,sectorACL_pounds:=sectorACL*pounds_per_kg*kg_per_mt]
+  fh[,underACL:=cumul_catch_pounds<sectorACL_pounds]
+  
+  
+  
+  num_closed<-sum(fh$underACL==FALSE)
+  if (num_closed==0){
+    # If nothing is closed, just return fh
+  }  else{
+    
+  }  
+  #fh<-as.data.table(fh)
+  return(fh)
 }
 
 
