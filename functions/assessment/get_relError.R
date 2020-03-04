@@ -18,7 +18,7 @@ get_relError <- function(stock){
       relE_ipop_mean[y-1] = get_relE(rep$log_ipop_mean, log_ipop_mean)
       relE_ipop_dev[y-1] = mean(get_relE(rep$ipop_dev, ipop_dev))
       relE_R_dev[y-1] = mean(get_relE(rep$R_dev, R_dev))
-      relE_R[y-1] <- mean(get_relE(rep$R, get_dwindow(R, sty, y-1))) #AEW
+      relE_R[y-1] <- mean(get_relE(rep$R, get_dwindow(R/caaInScalar, sty, y-1)))  #AEW
       relE_F[y-1] <- mean(get_relE(rep$F_full, get_dwindow(F_full, sty, y-1))) #AEW
     } 
     
