@@ -32,9 +32,23 @@ get_J1Updates <- function(stock){
     Rhat[y] <- Rout[['Rhat']]
     R[y] <- ifelse(R[y] < 0, 0, R[y])
     
+    
     # calculate the selectivity in year y (changes if the laa changes)
     slxC[y,] <- get_slx(type=selC_typ, par=selC, laa=laa[y,])
     slxI[y,] <- get_slx(type=selI_typ, par=selI, laa=NULL)
+    
+    
+    # option to overwrite calcualted values with historic assessment input values for each year #AEW
+    # just fishing mortality for now
+    if (histAssess == TRUE) {
+      for(i in 1:nstock){
+        if(y %in% assess_vals$assessdat$MSEyr){
+          rep_assess <- get_AssessVals()
+          F_full[y] <- rep_assess$fish_mort
+          R[y] <- rep_assess$rec
+        }
+      }
+    }
     
   
     # calculate what the Jan 1 population numbers are for year y, which
