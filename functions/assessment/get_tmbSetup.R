@@ -19,7 +19,7 @@ get_tmbSetup <- function(stock){
     lyr <- y - 1
     
     # get the random walk deviations
-    R_dev <- get_RWdevs(get_dwindow(R, sty, lyr))
+    R_dev <- get_RWdevs(get_dwindow(R / caaInScalar, sty, lyr))
     
     # get the initial population mean and deviations
     ipopInfo <- get_LMdevs(J1N[sty,] / caaInScalar)
