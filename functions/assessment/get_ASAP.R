@@ -31,10 +31,10 @@ get_ASAP <- function(stock){
     dat_file$dat$CAA_mats <- cbind(get_dwindow(obs_paaCN, styear, endyear), get_dwindow(obs_sumCW, styear, endyear))
     
     # #index data; sum index value, observation error, proportions-at-age, sample size
-    dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, ncaayear), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN,ncaayear)) #year, value, CV, by-age, sample size
+    dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, ncaayear), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN, ncaayear)) #year, value, CV, by-age, sample size
     # 
     # Recruitment CV
-    dat_file$dat$recruit_cv <- matrix(pe_R, nrow = ncaayear, 1)
+    #dat_file$dat$recruit_cv <- matrix(pe_R, nrow = ncaayear, 1)
       
     # #catch CV
      dat_file$dat$catch_cv <- matrix(oe_sumCW, nrow = ncaayear, 1)
@@ -45,7 +45,7 @@ get_ASAP <- function(stock){
      
      
     ## catchability
-    dat_file$dat$q_ini <- qI
+    #dat_file$dat$q_ini <- qI
      
     # #end year
      dat_file$dat$nfinalyear <- y

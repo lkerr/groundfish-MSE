@@ -52,16 +52,16 @@ for(r in 1:nrep){
       
       # option to overwrite calcualted values with historic assessment input values for each year #AEW 
       # just fishing mortality for now
-      if (histAssess == TRUE) {
-        for(i in 1:nstock){
-          if(y %in% assess_vals$assessdat$MSEyr){
-          rep_assess <- get_AssessVals()
-          stock[[i]]$F_full[y] <- rep_assess$fish_mort
-          stock[[i]]$R[y] <- rep_assess$rec
-       }
-      
-      }
-      }
+      # if (histAssess == TRUE) {
+      #   for(i in 1:nstock){
+      #     if(y %in% assess_vals$assessdat$MSEyr){
+      #     rep_assess <- get_AssessVals()
+      #     stock[[i]]$F_full[y] <- rep_assess$fish_mort
+      #     stock[[i]]$R[y] <- rep_assess$rec
+      #  }
+      # 
+      # }
+      # }
         
       
     

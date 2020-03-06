@@ -94,7 +94,7 @@ anomFun <- median
 # threshold values. Typically this will be 1/2 for Bmsy and 0.75 for F but
 # these can be changed to examine sensitivity.
 BrefScalar <- 0.5
-FrefScalar <- 1 #0.75
+FrefScalar <- 0.75
 
 
 #### Helpful parameters ####
