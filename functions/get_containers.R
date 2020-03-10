@@ -86,6 +86,7 @@ get_containers <- function(stockPar){
     relE_IN = yx0,
     relE_R = yx0, #AEW
     relE_F = yx0, #AEW
+    SSB_cur = yx0, #AEW
     
     
     # Econ model containers
@@ -261,7 +262,8 @@ get_containers <- function(stockPar){
       relE_IN = save_vector_ann,
       relE_R = save_vector_ann, #AEW
       relE_F = save_vector_ann, #AEW
-      OFgStatus = save_vector_ann #AEW
+      OFgStatus = save_vector_ann, #AEW
+      SSB_cur = save_vector_ann #AEW
     )
     
   )

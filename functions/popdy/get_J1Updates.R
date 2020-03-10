@@ -63,6 +63,11 @@ get_J1Updates <- function(stock){
     # get Z for the current year
     Z[y,] <- F_full[y]*slxC[y,] + M
     
+    # calculate SSB for the current year AEW
+    
+    SSB_cur[y] <- sum(J1N[y,] * mat[y,] * waa[y,])  
+    
+    
   })
   
   return(out)
