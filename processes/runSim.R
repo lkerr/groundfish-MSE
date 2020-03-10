@@ -16,7 +16,7 @@ if(runClass != 'HPCC'){
 
 top_loop_start<-Sys.time()
 econ_timer<-0
-set.seed(2)
+#set.seed(2)
 #### Top rep Loop ####
 for(r in 1:nrep){
 
