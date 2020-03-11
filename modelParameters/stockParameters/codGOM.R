@@ -100,19 +100,19 @@ caaInScalar <- 1
 #### Error parameters ####
 
 # observation error levels
-oe_sumCW <- 0.0001 #0.05
+oe_sumCW <- 0.05
 oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 80
 oe_paaCN_typ <- 'multinomial'
-oe_sumIN <- 0.0001 #0.5
+oe_sumIN <- 0.05
 oe_sumIN_typ <- 'lognorm'
 oe_paaIN <- 100 #15
 oe_paaIN_typ <- 'multinomial'
-oe_effort <- 0.0001 #0.01
+oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 0.0001 #0.05 # cannot be zero so make very small
+pe_R <- 0.01 # cannot be zero 
 
 # implementation error of fishing mortality
 ie_F <- 0
