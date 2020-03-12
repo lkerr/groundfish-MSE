@@ -1,2 +1,2 @@
 ASSESSCLASS          HCR FREF_TYP FREF_PAR0 FREF_PAR1 BREF_TYP BREF_PAR0 BREF_PAR1      RFUN_NM RPInt ImplementationClass
-ASAP slide SPR .40 NA SIM -10 -1 hindcastMean 2 StandardFisheries
+ASAP slide SPR .40 NA SIM -20 -1 hindcastMean 2 StandardFisheries
