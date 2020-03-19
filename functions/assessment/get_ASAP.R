@@ -20,6 +20,9 @@ get_ASAP <- function(stock){
     styear <- y - ncaayear
     #end year moving window
     endyear <- y-1
+    
+    #natural mortality
+    dat_file$dat$M <- matrix(M, nrow = ncaayear, ncol = page)
 
     #maturity-at-age
     dat_file$dat$maturity <- matrix(get_dwindow(mat, styear, endyear), nrow = ncaayear)
@@ -34,7 +37,7 @@ get_ASAP <- function(stock){
     dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(0.5, ncaayear), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN, ncaayear)) #year, value, CV, by-age, sample size
     # 
     # Recruitment CV
-    #dat_file$dat$recruit_cv <- matrix(pe_R, nrow = ncaayear, 1)
+    dat_file$dat$recruit_cv <- matrix(0.5, nrow = ncaayear, 1)
       
     # #catch CV
      dat_file$dat$catch_cv <- matrix(0.05, nrow = ncaayear, 1)
