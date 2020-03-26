@@ -231,12 +231,12 @@ get_ASAP <- function(stock){
       
       # save copy of .dat file by stock name, nrep, and sim year
       WriteASAP3DatFile(fname = paste(rundir, '/', stockName, '_', r, '_', y,'.dat', sep = ''),
-                         dat.object = dat_file,
+                         dat.object = datFileObj,
                          header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
       
       # write .dat file needs to have same name as exe file
       WriteASAP3DatFile(fname = paste(rundir, '/ASAP3.dat', sep = ''),
-                        dat.object = dat_file,
+                        dat.object = datFileObj,
                         header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
       
     tempwd <- getwd() 
