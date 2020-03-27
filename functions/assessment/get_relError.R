@@ -39,8 +39,7 @@ get_relError <- function(stock){
       relE_qI[y-1] <- get_relE(log(res$q.indices), log(qI))
       relE_R[y-1] <- mean(get_relE(res$N.age[,1], get_dwindow(R, sty, y-1)))
       relE_F[y-1] <- mean(get_relE(res$F.report, get_dwindow(F_full, sty, y-1)))
-cat(relE_SSB[y-1], '\n', file = 'C:/Users/struesdell/OneDrive - Gulf of Maine Research Institute/test.txt', append = TRUE)
-      
+
     }
     # browser()
   })
