@@ -240,4 +240,6 @@ and you wait for it to complete.  You can check the status using the command ```
 ```bsub -Is -q interactive -n5 -R "span[hosts=1]" /bin/bash```
 to move to a different node where you can work interactively.
 
+* When debugging it might be useful to run the **runPre.sh**, **runSim.sh** and **runPost.sh** scripts interactively (not on the "head node" though ... see above note). You can run a **.sh** file by using the command ```sh```; for example, ```sh runPre.sh``` will run the **runPre.sh** file (as long as you are in the correct directory).
+
 [Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
