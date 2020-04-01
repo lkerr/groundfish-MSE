@@ -242,4 +242,6 @@ to move to a different node where you can work interactively.
 
 * When debugging it might be useful to run the **runPre.sh**, **runSim.sh** and **runPost.sh** scripts interactively (not on the "head node" though ... see above note). You can run a **.sh** file by using the command ```sh```; for example, ```sh runPre.sh``` will run the **runPre.sh** file (as long as you are in the correct directory).
 
+* The version of ASAP used here is the Windows compilation. This is useful because it is exactly the same implementation that is run on local Windows machines. The command ```module load wine``` in **runSim.sh** loads the wine module so that the ASAP Windows executable can be run on the HPCC Linux system. The ASAP model is executed in the function ```get_ASAP()``` using the command ```system("singularity exec $WINEIMG wine ASAP3.EXE", wait = TRUE)```
+
 [Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
