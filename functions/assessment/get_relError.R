@@ -41,7 +41,7 @@ get_relError <- function(stock){
       relE_F[y-1] <- mean(get_relE(res$F.report, get_dwindow(F_full, sty, y-1)))
 
     }
-    # browser()
+
   })
 
   return(out)
