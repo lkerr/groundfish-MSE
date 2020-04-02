@@ -85,11 +85,11 @@ caaInScalar <- 1000
 # observation error levels
 oe_sumCW <- 0.05
 oe_sumCW_typ <- 'lognorm'
-oe_paaCN <- 1000
+oe_paaCN <- 100
 oe_paaCN_typ <- 'multinomial'
 oe_sumIN <- 0.2
 oe_sumIN_typ <- 'lognorm'
-oe_paaIN <- 1000
+oe_paaIN <- 100
 oe_paaIN_typ <- 'multinomial'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
