@@ -33,7 +33,7 @@ get_ASAP <- function(stock){
       fleet_sel_end_age = nage,
       Frep_ages = c(nage, nage),
       Frep_type = 1,
-      use_like_const = 1,
+      use_like_const = 0,
       release_mort = 1,
       CAA_mats = cbind(get_dwindow(obs_paaCN, styear, endyear), 
                        get_dwindow(obs_sumCW, styear, endyear)),
@@ -42,7 +42,7 @@ get_ASAP <- function(stock){
       index_units = rep(2, 1),         # 1 biomass, 2 numbers
       index_acomp_units = rep(2, 1),   # 1 biomass, 2 numbers
       index_WAA_pointers = rep(1, 1),
-      index_month = rep(1, 1),        # rep(x, 1) ... 1 is number of indices
+      index_month = rep(6, 1),        # rep(x, 1) ... 1 is number of indices
       index_sel_choice = rep(-1, 1),  # ... could change later
       index_sel_option = rep(2, 1),
       index_sel_start_age = rep(1, 1),
@@ -62,7 +62,7 @@ get_ASAP <- function(stock){
       phase_q = 1,
       phase_q_devs = -1,
       phase_SR_scalar = 1,
-      phase_steepness = 2,
+      phase_steepness = -1,
       recruit_cv = rep(pe_R * 1.5, ncaayear),
       lambda_index = rep(1, 1),
       lambda_catch = rep(1, 1),
@@ -93,10 +93,10 @@ get_ASAP <- function(stock){
                            lb = 0, ub = 1),
       q_ini = get_svNoise(qI, cv = startCV,
                           lb = 0, ub = 1), #rep(jitter(qI), nI),
-      SR_scalar_type = 1,
+      SR_scalar_type = 0,
       SR_scalar_ini = mean(apply(J1N, 1, sum)) * 2,
       steepness_ini = 0.7,
-      Fmax = 5,
+      Fmax = 3,
       ignore_guesses = 0,
       do_proj = 0,
       dir_fleet = 1,
@@ -220,7 +220,7 @@ get_ASAP <- function(stock){
 
     # Read in results
     res <- dget('assessment/ASAP/ASAP3.rdat')
-# browser()    
+
     # save .Rdata results from each run
     saveRDS(res, file = paste('assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))
     }
