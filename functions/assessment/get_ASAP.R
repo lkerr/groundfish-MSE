@@ -8,73 +8,219 @@ get_ASAP <- function(stock){
 
   out <- within(stock, {
 
-      
-# read in assessment .dat file and modify accordingly
-    dat_file <- ReadASAP3DatFile(paste('assessment/ASAP/', stockName, ".dat", sep = ''))
-
-
-### modify for each simulation/year
-
-    #start year
-    dat_file$dat$year1 <- y - ncaayear
     styear <- y - ncaayear
-    #end year moving window
-    endyear <- y-1
-
-    #maturity-at-age
-    dat_file$dat$maturity <- matrix(get_dwindow(mat, styear, endyear), nrow = ncaayear)
+    endyear <- y - 1
     
-    #WAA matrix
-    dat_file$dat$WAA_mats <-matrix(get_dwindow(waa, styear, endyear), nrow = ncaayear)
-
-    #catch-at-age proportions and sum catch weight
-    dat_file$dat$CAA_mats <- cbind(get_dwindow(obs_paaCN, styear, endyear), get_dwindow(obs_sumCW, styear, endyear))
+    # Information for the new .dat file
+    dat_file <- list(
+      n_year = ncaayear,
+      year1 = y - ncaayear,
+      n_ages = nage,
+      n_fleets = 1,
+      n_fleet_sel_blocks = 1,
+      n_indices = 1,
+      M = matrix(M, nrow = ncaayear, ncol = nage),
+      fec_opt = 0,
+      frac_yr_spawn = 0,
+      maturity = get_dwindow(mat, y-ncaayear, y-1),
+      n_WAA_mats = 1,
+      WAA_mats = get_dwindow(waa*1000, y-ncaayear, y-1),
+      WAA_pointers = get_WAA_pointers(nfleet = 1),
+      sel_block_assign = get_sel_block_assign(nfleet = 1, nyear = ncaayear),
+      sel_block_option = 2,
+      sel_ini = get_sel_ini(nage = nage, nfleet = 1),
+      fleet_sel_start_age = 1,
+      fleet_sel_end_age = nage,
+      Frep_ages = c(nage, nage),
+      Frep_type = 1,
+      use_like_const = 0,
+      release_mort = 1,
+      CAA_mats = cbind(get_dwindow(obs_paaCN, styear, endyear), 
+                       get_dwindow(obs_sumCW, styear, endyear)),
+      DAA_mats = matrix(0, nrow = ncaayear, ncol = nage+1),
+      prop_rel_mats = get_prop_rel_mats(1, nage, ncaayear),
+      index_units = rep(2, 1),         # 1 biomass, 2 numbers
+      index_acomp_units = rep(2, 1),   # 1 biomass, 2 numbers
+      index_WAA_pointers = rep(1, 1),
+      index_month = rep(6, 1),        # rep(x, 1) ... 1 is number of indices
+      index_sel_choice = rep(-1, 1),  # ... could change later
+      index_sel_option = rep(2, 1),
+      index_sel_start_age = rep(1, 1),
+      index_sel_end_age = rep(nage, 1),
+      use_index_acomp = rep(1, 1),
+      use_index = rep(1, 1),
+      index_sel_ini = get_sel_ini(nage, nfleet = 1),
+      IAA_mats = cbind(seq(styear,endyear), 
+                       get_dwindow(obs_sumIN, styear, endyear), 
+                       rep(oe_sumIN, ncaayear), 
+                       get_dwindow(obs_paaIN, styear, endyear), 
+                       rep(oe_paaIN,ncaayear)), #yr, val, CV, by-age, samp size,
+      phase_F1 = 1,
+      phase_F_devs = 2,
+      phase_rec_devs = 2,
+      phase_N1_devs = 2,
+      phase_q = 1,
+      phase_q_devs = -1,
+      phase_SR_scalar = 1,
+      phase_steepness = -1,
+      recruit_cv = rep(pe_R * 1.5, ncaayear),
+      lambda_index = rep(1, 1),
+      lambda_catch = rep(1, 1),
+      lambda_discard = rep(0, 1),
+      catch_cv = matrix(oe_sumCW, nrow = ncaayear, ncol = 1),
+      discard_cv = matrix(0, nrow = ncaayear, ncol = 1),
+      catch_Neff = matrix(oe_paaCN, nrow = ncaayear, ncol = 1),
+      discard_Neff = matrix(0, nrow = ncaayear, ncol = 1),
+      lambda_F1 = rep(0, 1),
+      cv_F1 = rep(0.9, 1),
+      lambda_F_devs = rep(0, 1),
+      cv_F_devs = rep(0.9, 1),
+      lambda_N1_devs = 0,
+      cv_N1_devs = 0.9,
+      lambda_rec_devs = 1,
+      lambda_q = rep(0, 1),
+      cv_q = rep(0.9, 1),
+      lambda_q_devs = rep(0, 1),
+      cv_q_devs = rep(0.9, 1),
+      lambda_steepness = 0,
+      cv_steepness = 0.9,
+      lambda_SR_scalar = 0,
+      cv_SR_scalar = 0.9,
+      N1_flag = 1,
+      N1_ini = sapply(J1N[(y-ncaayear),], get_svNoise, cv = startCV, 
+                      lb = 0, ub = max(J1N[(y-ncaayear),])*2),
+      F1_ini = get_svNoise(F_full[(y-ncaayear)], cv = startCV,
+                           lb = 0, ub = 1),
+      q_ini = get_svNoise(qI, cv = startCV,
+                          lb = 0, ub = 1), #rep(jitter(qI), nI),
+      SR_scalar_type = 0,
+      SR_scalar_ini = mean(apply(J1N, 1, sum)) * 2,
+      steepness_ini = 0.7,
+      Fmax = 3,
+      ignore_guesses = 0,
+      do_proj = 0,
+      dir_fleet = 1,
+      nfinalyear = y + 1,
+      proj_ini = cbind((y-1+1):(y+1), -1, 3, 0, 0),
+      doMCMC = 0,
+      MCMC_nyear_opt = 1,
+      MCMC_nboot = 1000,
+      MCMC_nthin = 100,
+      MCMC_nseed = 350,
+      fill_R_opt = 2,
+      R_avg_start = 20,
+      R_avg_end = 23,
+      make_R_file = 1,
+      testval = -350
+    )
     
-    # #index data; sum index value, observation error, proportions-at-age, sample size
-    dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, ncaayear), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN,ncaayear)) #year, value, CV, by-age, sample size
-    # 
-    # Recruitment CV
-    dat_file$dat$recruit_cv <- matrix(pe_R, nrow = ncaayear, 1)
-      
-    # #catch CV
-     dat_file$dat$catch_cv <- matrix(oe_sumCW, nrow = ncaayear, 1)
-    # 
-     
-    # catch effective sample size
-     dat_file$dat$catch_Neff <- matrix(oe_paaCN, nrow = ncaayear, 1)
-     
-     
-    ## catchability
-    dat_file$dat$q_ini <- qI
-     
-    # #end year
-     dat_file$dat$nfinalyear <- y
-     dat_file$dat$proj_ini <- c((y), -1, 3, -99, 1)
-    # 
-     dat_file$dat$R_avg_start <- styear
-     dat_file$dat$R_avg_end <- styear + 26
-    # 
-    # 
+    
+    # Read in a template .dat file with tags. Purpose is to strip out the
+    # comments and add them to the new .dat file so it is readable.
+    tpl <- ReadASAP3DatFile('assessment/ASAP/ASAP3Tags.DAT')
+    
+    # Edit the comments where necessary (e.g., if there is one index in the
+    # template but three in the new .dat file, make that change to the
+    # comments).
+    com <- tpl$comments
+    com <- editComments(com, '<tag-waa>', 1)
+    com <- editComments(com, '<tag-selBlock>', 1)
+    com <- editComments(com, '<tag-selBlockDat>', 1)
+    com <- editComments(com, '<tag-catchData>', 1)
+    com <- editComments(com, '<tag-discardsData>', 1)
+    com <- editComments(com, '<tag-releaseData>', 1)
+    com <- editComments(com, '<tag-indexSelData>', 1)
+    com <- editComments(com, '<tag-indexData>', 1)
+    
+    
+    # Create a .dat file object
+    datFileObj <- list(dat = dat_file,
+                       comments = com,
+                       fleet.names = c('Fleet1'),
+                       survey.names = c('Index1'))
+    
+    # Write out the .dat file
+    # WriteASAP3DatFile(fname = 'assessment/ASAP/ASAP3.dat',
+    #                   dat.object = datFileObj,
+    #                   header.text = 'A test')
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+# # read in assessment .dat file and modify accordingly
+#     dat_file <- ReadASAP3DatFile(paste('assessment/ASAP/', stockName, ".dat", sep = ''))
+# 
+# 
+# ### modify for each simulation/year
+# 
+#     #start year
+#     dat_file$dat$year1 <- y - ncaayear
+#     styear <- y - ncaayear
+#     #end year moving window
+#     endyear <- y-1
+# 
+#     #maturity-at-age
+#     dat_file$dat$maturity <- matrix(get_dwindow(mat, styear, endyear), nrow = ncaayear)
+#     
+#     #WAA matrix
+#     dat_file$dat$WAA_mats <-matrix(get_dwindow(waa, styear, endyear), nrow = ncaayear)
+# 
+#     #catch-at-age proportions and sum catch weight
+#     dat_file$dat$CAA_mats <- cbind(get_dwindow(obs_paaCN, styear, endyear), get_dwindow(obs_sumCW, styear, endyear))
+#     
+#     # #index data; sum index value, observation error, proportions-at-age, sample size
+#     dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, ncaayear), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN,ncaayear)) #year, value, CV, by-age, sample size
+#     # 
+#     # Recruitment CV
+#     dat_file$dat$recruit_cv <- matrix(pe_R, nrow = ncaayear, 1)
+#       
+#     # #catch CV
+#      dat_file$dat$catch_cv <- matrix(oe_sumCW, nrow = ncaayear, 1)
+#     # 
+#      
+#     # catch effective sample size
+#      dat_file$dat$catch_Neff <- matrix(oe_paaCN, nrow = ncaayear, 1)
+#      
+#      
+#     ## catchability
+#     dat_file$dat$q_ini <- qI
+#      
+#     # #end year
+#      dat_file$dat$nfinalyear <- y
+#      dat_file$dat$proj_ini <- c((y), -1, 3, -99, 1)
+#     # 
+#      dat_file$dat$R_avg_start <- styear
+#      dat_file$dat$R_avg_end <- styear + 26
+#     # 
+#     # 
      
      if (Sys.info()['sysname'] == "Windows") {
        
     # save copy of .dat file by stock name, nrep, and sim year
     WriteASAP3DatFile(fname = paste('assessment/ASAP/', stockName, '_', r, '_', y,'.dat', sep = ''),
-                      dat.object = dat_file,
+                      dat.object = datFileObj,
                       header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
     
     # write .dat file needs to have same name as exe file
     WriteASAP3DatFile(fname = paste('assessment/ASAP/ASAP3.dat', sep = ''),
-                      dat.object = dat_file,
+                      dat.object = datFileObj,
                       header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
 
     
     # Run the ASAP assessment model
-    asapEst <- try(system('assessment/ASAP/ASAP3.exe', show.output.on.console = FALSE))
-    
+    asapEst <- try(system('assessment/ASAP/ASAP3.exe', show.output.on.console = TRUE))
+
     # Read in results
     res <- dget('assessment/ASAP/ASAP3.rdat')
-    
+
     # save .Rdata results from each run
     saveRDS(res, file = paste('assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))
     }
@@ -85,12 +231,12 @@ get_ASAP <- function(stock){
       
       # save copy of .dat file by stock name, nrep, and sim year
       WriteASAP3DatFile(fname = paste(rundir, '/', stockName, '_', r, '_', y,'.dat', sep = ''),
-                         dat.object = dat_file,
+                         dat.object = datFileObj,
                          header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
       
       # write .dat file needs to have same name as exe file
       WriteASAP3DatFile(fname = paste(rundir, '/ASAP3.dat', sep = ''),
-                        dat.object = dat_file,
+                        dat.object = datFileObj,
                         header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
       
     tempwd <- getwd() 

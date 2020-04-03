@@ -45,7 +45,8 @@ data/data_raw/recruitment/POL_S_R.csv
 data/data_raw/recruitment/HAD_S_R.csv
 data/data_raw/recruitment/2017_POK_UNIT_MOD_BaseASAPOutput.rep
 *.exe
-assessment/ASAP*
+assessment/ASAP/*
+!*ASAP3Tags.DAT
 admb2r.log
 admodel.cov
 admodel.dep
