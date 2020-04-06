@@ -15,47 +15,67 @@ get_ASAP <- function(stock){
 
 ### modify for each simulation/year
 
-    #start year
-    dat_file$dat$year1 <- y - ncaayear
-    styear <- y - ncaayear
-    #end year moving window
+    #start year; adding years (need to add 4 years if using changepoint adjustment for codGOM)
+    dat_file$dat$year1 <- fmyearIdx - ncaayear #+ 4
+    styear <- fmyearIdx - ncaayear #+ 4
+    
+    #Change start years below to use moving window
+    #dat_file$dat$year1 <- y - ncaayear
+    #styear <- y - ncaayear
+    
+    #end year 
     endyear <- y-1
     
+    #number of years in assessment
+    N_rows <- length(styear:endyear)
+    dat_file$dat$n_years <- N_rows
+    
     #natural mortality
-    dat_file$dat$M <- matrix(M, nrow = ncaayear, ncol = page)
-
+    dat_file$dat$M <- matrix(M, nrow = N_rows, ncol = page)
+    
+    
     #maturity-at-age
-    dat_file$dat$maturity <- matrix(get_dwindow(mat, styear, endyear), nrow = ncaayear)
+    dat_file$dat$maturity <- matrix(get_dwindow(mat, styear, endyear), nrow = N_rows)
     
     #WAA matrix
-    dat_file$dat$WAA_mats <-matrix(get_dwindow(waa, styear, endyear), nrow = ncaayear)
+    dat_file$dat$WAA_mats <-matrix(get_dwindow(waa, styear, endyear), nrow = N_rows)
+    
+    #selectivity block (single block setup)
+    dat_file$dat$sel_block_assign <- matrix(1, nrow = N_rows, 1)
 
     #catch-at-age proportions and sum catch weight
     dat_file$dat$CAA_mats <- cbind(get_dwindow(obs_paaCN, styear, endyear), get_dwindow(obs_sumCW, styear, endyear))
     
+    # discards - need additional rows even if not using
+    dat_file$dat$DAA_mats <- matrix(0, nrow = N_rows, ncol = page + 1)
+    
+    # release - also need additional rows if not using
+    dat_file$dat$prop_rel_mats <- matrix(0, nrow = N_rows, ncol = page)
+    
     # #index data; sum index value, observation error, proportions-at-age, sample size
-    dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(0.5, ncaayear), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN, ncaayear)) #year, value, CV, by-age, sample size
-    # 
+    dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(0.5, N_rows), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN, N_rows)) #year, value, CV, by-age, sample size
+    
     # Recruitment CV
-    dat_file$dat$recruit_cv <- matrix(0.5, nrow = ncaayear, 1)
-      
-    # #catch CV
-     dat_file$dat$catch_cv <- matrix(0.05, nrow = ncaayear, 1)
-    # 
+    dat_file$dat$recruit_cv <- matrix(0.5, nrow = N_rows, 1)
+    
+    #catch CV
+     dat_file$dat$catch_cv <- matrix(0.05, nrow = N_rows, 1)
      
-    # catch effective sample size
-     dat_file$dat$catch_Neff <- matrix(oe_paaCN, nrow = ncaayear, 1)
+    #discard CV - need additional years even if not using
+     dat_file$dat$discard_cv <- matrix(0, nrow = N_rows, 1)
      
+    #catch effective sample size
+     dat_file$dat$catch_Neff <- matrix(oe_paaCN, nrow = N_rows, 1)
      
-    ## catchability
-    #dat_file$dat$q_ini <- qI
+     #discard ESS (even if not using)
+     dat_file$dat$discard_Neff <- matrix(0, nrow = N_rows, 1)
      
-    # #end year
+    #end year
      dat_file$dat$nfinalyear <- y
      dat_file$dat$proj_ini <- c((y), -1, 3, -99, 1)
     # 
      dat_file$dat$R_avg_start <- styear
-     dat_file$dat$R_avg_end <- styear + 26
+     dat_file$dat$R_avg_end <- endyear - 10
     # 
     # 
      
