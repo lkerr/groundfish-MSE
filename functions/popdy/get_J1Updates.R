@@ -36,7 +36,8 @@ get_J1Updates <- function(stock){
     slxC[y,] <- get_slx(type=selC_typ, par=selC, laa=laa[y,])
     slxI[y,] <- get_slx(type=selI_typ, par=selI, laa=NULL)
    
-  
+    natM[y] <- M
+      
       # option to overwrite calculated values with historic assessment input values for each year 
     if (histAssess == TRUE) {
       for(i in 1:nstock){
@@ -44,6 +45,7 @@ get_J1Updates <- function(stock){
         rep_assess <- get_AssessVals()
         F_full[y] <- rep_assess$fish_mort
         R[y] <- rep_assess$rec
+        natM[y] <- rep_assess$nat_mort
       }
     }
   }
@@ -56,12 +58,12 @@ get_J1Updates <- function(stock){
     
     # calculate the predicted catch in year y, the catch weight and the
     # proportions of catch numbers-at-age. Add small number in case F=0
-    CN[y,] <- get_catch(F_full=F_full[y], M=M, 
+    CN[y,] <- get_catch(F_full=F_full[y], M=natM[y], 
                         N=J1N[y,], selC=slxC[y,]) + 1e-3
     
     
     # get Z for the current year
-    Z[y,] <- F_full[y]*slxC[y,] + M
+    Z[y,] <- F_full[y]*slxC[y,] + natM[y]
     
     # calculate SSB for the current year AEW
     

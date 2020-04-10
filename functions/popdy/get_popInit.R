@@ -22,6 +22,8 @@ get_popInit <- function(stock){
     
     J1N[1:fyear,] <- rep(initN, each=fyear)
     
+    natM[1:fyear] <- rep(M, each = fyear) #AEW
+    
     laa[1:(fyear-1),] <- rep(get_lengthAtAge(type='vonB', par=laa_par, 
                                              ages=fage:page, Tanom=0),
                              each=(fyear-1))

@@ -33,7 +33,7 @@ mat_typ <- 'input'
 
 
 # natural mortality
-M <- 0.2
+M <- 0.2 #0.4
 
 # initial numbers at-age parameters
 initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
@@ -64,6 +64,8 @@ selC_typ <- 'input'
 # R_typ <- 'BHSteep'
 Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
           cR = 1) # dont need to convert
+#Rpar <- c(SSB_star = 7900, #mt  #from GOM COD 2019 MRAMP 
+#          cR = 1) # dont need to convert
 R_typ <- 'HS'
 
 
@@ -84,7 +86,7 @@ timeI <- 0.5 # when is the survey (as a proportion of the year)
 #### Stock assessment model parameters ####
 
 # number of years in assessment model
-ncaayear <- 37
+ncaayear <- 33
 
 # Expansion range for setting limits on parameter bounds
 boundRgLev <- 1.5

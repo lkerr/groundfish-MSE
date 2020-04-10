@@ -15,9 +15,9 @@ get_ASAP <- function(stock){
 
 ### modify for each simulation/year
 
-    #start year; adding years (need to add 4 years if using changepoint adjustment for codGOM)
-    dat_file$dat$year1 <- fmyearIdx - ncaayear #+ 4
-    styear <- fmyearIdx - ncaayear #+ 4
+    #start year; (adding years with changepoint adjustment for codGOM)
+    dat_file$dat$year1 <- fmyearIdx - ncaayear
+    styear <- fmyearIdx - ncaayear
     
     #Change start years below to use moving window
     #dat_file$dat$year1 <- y - ncaayear
@@ -31,7 +31,7 @@ get_ASAP <- function(stock){
     dat_file$dat$n_years <- N_rows
     
     #natural mortality
-    dat_file$dat$M <- matrix(M, nrow = N_rows, ncol = page)
+    dat_file$dat$M <- matrix(get_dwindow(natM, styear, endyear), nrow = N_rows, ncol = page)
     
     
     #maturity-at-age

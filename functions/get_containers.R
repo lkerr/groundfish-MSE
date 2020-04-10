@@ -42,6 +42,7 @@ get_containers <- function(stockPar){
     OFdStatus = yx0,
     mxGradCAA = yx0,
     OFgStatus = yx0,
+    natM = yx0,
     
     
     # Containers that have corresponding outputs for the
@@ -263,7 +264,8 @@ get_containers <- function(stockPar){
       relE_R = save_vector_ann, #AEW
       relE_F = save_vector_ann, #AEW
       OFgStatus = save_vector_ann, #AEW
-      SSB_cur = save_vector_ann #AEW
+      SSB_cur = save_vector_ann, #AEW
+      natM = save_vector_ann #AEW
     )
     
   )

@@ -9,9 +9,11 @@ get_AssessVals <- function(){
   replacement <- assess_vals$assessdat[assess_vals$assessdat$MSEyr == y,]
 fish_mort <- replacement$F
 rec <- replacement$R
+nat_mort <- replacement$M
 
 return(list(
  fish_mort = fish_mort,
- rec = rec))
+ rec = rec,
+ nat_mort = nat_mort))
 
 }
