@@ -126,6 +126,8 @@ ie_bias <- 0 # % bias in implementation error (F_Full + F_Full*ie_bias)
 ob_sumCW <- 1
 ob_sumIN <- 1
 
+# catch observation bias (codCW + codCW*C_mult)
+C_mult <- 0
 
 #### BRPs and HCRs ####
 
