@@ -22,6 +22,8 @@ get_containers <- function(stockPar){
     J1N = yxage,
     CN = yxage,
     CN_temp = yxage,
+    codCW = yxage,
+    codCW2 = yxage,
     CW = yxage,
     IN = yxage,
     IJ1= yxage,

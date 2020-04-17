@@ -11,7 +11,7 @@ get_mortality <- function(stock, hotW = FALSE){
     # proportions of catch numbers-at-age. Add small number in case F=0
     
     if(hotW){
-      CN_temp[y,] <- get_catch(F_full=F_full[y], M=M, 
+      CN_temp[y,] <- get_catch(F_full=F_full[y], M=natM[y], 
                                N=J1N[y,], selC=slxC[y,]) + 1e-3
     }else{
       

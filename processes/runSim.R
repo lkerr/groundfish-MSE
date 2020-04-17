@@ -110,42 +110,6 @@ for(r in 1:nrep){
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         }
       
-      
-      # get catch in numbers using the Baranov catch equation from advised F    
-      for (i in 1:nstock){
-          stock[[i]] <- get_mortality(stock = stock[[i]], hotW = TRUE)
-      }  
-      
-        for(i in 1:nstock){
-          if(stock[[i]]$stockName == 'codGOM'){
-            
-            # Figure out the advised catch weight
-            codCW <- with(stock$codGOM, CN_temp[y,] %*%  waa[y,])
-
-            # add bias to catch weight
-            codCW2 <- codCW + (codCW * stock$codGOM$C_mult)
-            
-            # Determine what the fishing mortality would have to be to get
-            # that biased catch level (convert biased catch back to F).
-            # Update codGOM fully selected fishing mortality to that value.
-             stock$codGOM$F_full[y] <- get_PopesF(yield = c(codCW2),
-                                                  naa = stock$codGOM$J1N[y,],
-                                                  waa = stock$codGOM$waa[y,],
-                                                  saa = stock$codGOM$slxC[y,],
-                                                  M = stock$codGOM$M,
-                                                  ra = c(8))
-            
-            
-            # either way works;
-            # stock$codGOM$F_full[y] <- get_F(x = c(codCW2), 
-            #                                    Nv = stock$codGOM$J1N[y,], 
-            #                                    slxCv = stock$codGOM$slxC[y,], 
-            #                                    M = stock$codGOM$M, 
-            #                                    waav = stock$codGOM$waa[y,])
-            }    
-        
-        }  
-        
         
       } #end management period
       
@@ -165,8 +129,7 @@ big_loop<-top_loop_end-top_loop_start
 big_loop
 econ_timer
 
-  
-  
+
   # Output run time / date information and OM inputs. The random number is
   # just ensuring that no simulations will be overwritten because the hpcc
   # might finish some in the same second. td is used for uniquely naming the
