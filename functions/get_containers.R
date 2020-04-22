@@ -23,7 +23,7 @@ get_containers <- function(stockPar){
     CN = yxage,
     CN_temp = yxage,
     codCW = yxage,
-    codCW2 = yxage,
+    codCW2 = yx0,
     CW = yxage,
     IN = yxage,
     IJ1= yxage,
