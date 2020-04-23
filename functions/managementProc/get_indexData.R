@@ -27,12 +27,12 @@ get_indexData <- function(stock){
     # Get observation error data for the assessment model
     # change point where bias in catch is applied in 2015 before the start of
     # the projection period
-     if (y < c(fmyearIdx-4)){
+     if (y < c(fmyearIdx)){
      obs_sumCW[y] <- get_error_idx(type=oe_sumCW_typ, 
                                      idx=sumCW[y], 
                                      par=oe_sumCW)
      }
-     if (y >= (fmyearIdx-4)){
+     if (y >= (fmyearIdx)){
     obs_sumCW[y] <- get_error_idx(type=oe_sumCW_typ, 
                                     idx=sumCW[y] * ob_sumCW, 
                                     par=oe_sumCW)
