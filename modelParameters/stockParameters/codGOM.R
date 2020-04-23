@@ -33,7 +33,10 @@ mat_typ <- 'input'
 
 
 # natural mortality
-M <- 0.2 #0.4
+M <- 0.2
+M_typ <- 'const'
+#M <- 0.4
+#M_typ <- 'ramp'
 
 # initial numbers at-age parameters
 initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)

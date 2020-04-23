@@ -39,6 +39,32 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
   # point and those will be implemented in get_FBRP
   
   if(parmgt$ASSESSCLASS == 'CAA' || parmgt$ASSESSCLASS == 'ASAP'){
+    
+    # for GOM cod, Mramp model uses M = 0.2 for status determination
+    if(stock$codGOM$M_typ == 'ramp'){
+      
+      #insert new M's
+      parpop$M[1,] <- rep(0.2, 9) 
+
+      #recalculate reference points
+      Fref <- get_FBRP(parmgt = parmgt, parpop = parpop, 
+                              parenv = parenv, Rfun_lst = Rfun_BmsySim, 
+                              stockEnv = stockEnv)
+      
+      # if using forecast start the BMSY initial population at the equilibrium
+      # FMSY level (before any temperature projections). This is consistent
+      # with how the Fmsy is calculated.
+      parpopUpdate <- parpop
+      if(parmgt$RFUN_NM == 'forecast'){
+        parpopUpdate$J1N <- Fref$equiJ1N_MSY
+      }
+
+      Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
+                              parenv = parenv, Rfun_lst = Rfun_BmsySim,
+                              FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
+      
+ 
+    } else { 
    
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpop, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
@@ -57,7 +83,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
-
+    
+    }
     if(evalRP){
       FrefRPvalue <- Fref[['RPvalue']]
       BrefRPvalue <- Bref[['RPvalue']]
@@ -68,9 +95,13 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     # Determine whether the population is overfished and whether 
     # overfishing is occurring
+    
 
+
+    # otherwise just use same reference points values    
     BThresh <- BrefScalar * BrefRPvalue
     FThresh <- FrefScalar * FrefRPvalue
+  
     
     overfished <- ifelse(tail(parpop$SSBhat,1) < BThresh, 1, 0)
     
@@ -79,8 +110,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     if(tolower(parmgt$HCR) == 'slide'){
      
       F <- get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)['Fadvice']
-  
-  
+
     }else if(tolower(parmgt$HCR) == 'simplethresh'){
      
       # added small value to F because F = 0 causes some estimation errors
