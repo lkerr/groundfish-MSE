@@ -36,7 +36,12 @@ get_J1Updates <- function(stock){
     slxC[y,] <- get_slx(type=selC_typ, par=selC, laa=laa[y,])
     slxI[y,] <- get_slx(type=selI_typ, par=selI, laa=NULL)
    
-    natM[y] <- M
+    if (y < fmyearIdx){
+    natM[y] <- init_M
+    }
+    if(y >= fmyearIdx) {
+      natM[y] <- M
+    }
       
       # option to overwrite calculated values with historic assessment input values for each year 
     if (histAssess == TRUE) {

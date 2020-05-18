@@ -35,14 +35,15 @@ mat_typ <- 'input'
 # natural mortality
 M <- 0.2
 M_typ <- 'const'
+init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
 #M <- 0.4
 #M_typ <- 'ramp'
 
 # initial numbers at-age parameters
-initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
-initN_type <- 'input'
-#initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = M)
-#initN_type <- 'expDecline'
+#initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
+#initN_type <- 'input'
+initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = 0.2)
+initN_type <- 'expDecline'
 
 
 

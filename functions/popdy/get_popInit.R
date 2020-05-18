@@ -22,21 +22,21 @@ get_popInit <- function(stock){
     
     J1N[1:fyear,] <- rep(initN, each=fyear)
     
-    natM[1:fyear] <- rep(M, each = fyear) #AEW
+    natM[1:fyear] <- rep(init_M, each = fyear) #AEW
     
     laa[1:(fyear-1),] <- rep(get_lengthAtAge(type='vonB', par=laa_par, 
                                              ages=fage:page, Tanom=0),
                              each=(fyear-1))
     slxC[1:(fyear-1),] <- get_slx(type = selC_typ, par = selC, 
                                   laa = laa[1:(fyear-1),])
-    CN[1:(fyear-1),] <- get_catch(F_full = F_full[1:(fyear-1)], M = M,
+    CN[1:(fyear-1),] <- get_catch(F_full = F_full[1:(fyear-1)], M = init_M,
                                   N = J1N[1:(fyear-1),],
                                   selC = slxC[1:(fyear-1),])
     waa[1:(fyear-1),] <- get_weightAtAge(type='aLb', par=waa_par, 
                                          laa=laa[1:(fyear-1),],
                                          inputUnit='kg') 
     paaCN[1:(fyear-1),] <- (CN[1:(fyear-1),]) / sum(CN[1:(fyear-1),])
-    IN[1:(fyear-1),] <- get_survey(F_full=F_full[1:(fyear-1)], M=M, 
+    IN[1:(fyear-1),] <- get_survey(F_full=F_full[1:(fyear-1)], M=init_M, 
                                    N=J1N[1:(fyear-1),], slxC[1:(fyear-1),], 
                                    slxI=selI, timeI=timeI, qI=qI)
     sumIN[1:(fyear-1)] <- sum(IN[1:(fyear-1),])
@@ -46,7 +46,7 @@ get_popInit <- function(stock){
     effort[1:(fyear-1)] <- F_full[1:(fyear-1)] / qC
     
     
-    Z[1:(fyear-1),] <- rep(F_full[1]+M, each=(fyear-1))
+    Z[1:(fyear-1),] <- rep(F_full[1]+init_M, each=(fyear-1))
     
     
     # calculate length-at-age
@@ -73,7 +73,7 @@ get_popInit <- function(stock){
     SSB[1:fyear] <- sum(J1N[1:fyear,] * 
                             mat[1:fyear,] * waa[1:fyear,])
     
-    CN[1:fyear,] <- get_catch(F_full=F_full[1:fyear], M=M, 
+    CN[1:fyear,] <- get_catch(F_full=F_full[1:fyear], M=init_M, 
                                 N=J1N[1:fyear,], selC=slxC[1:fyear,]) + 1e-3
 
   })
