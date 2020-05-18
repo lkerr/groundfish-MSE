@@ -16,12 +16,12 @@ get_ASAP <- function(stock){
 ### modify for each simulation/year
 
     #start year; (adding years with changepoint adjustment for codGOM)
-    #dat_file$dat$year1 <- fmyearIdx - ncaayear
-    #styear <- fmyearIdx - ncaayear
+    dat_file$dat$year1 <- fmyearIdx - ncaayear
+    styear <- fmyearIdx - ncaayear
     
     #Change start years below to use moving window
-    dat_file$dat$year1 <- y - ncaayear
-    styear <- y - ncaayear
+    #dat_file$dat$year1 <- y - ncaayear
+    #styear <- y - ncaayear
     
     #end year 
     endyear <- y-1
