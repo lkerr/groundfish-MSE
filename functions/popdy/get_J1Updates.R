@@ -23,11 +23,17 @@ get_J1Updates <- function(stock){
     # calculate recruits in year y based on the SSB in years previous
     # (depending on the lag) and temperature
     SSB[y] <- sum(J1N[y-fage,] * mat[y,] * waa[y-fage,])  
-
-    Rout <- get_recruits(type=R_typ, par=Rpar, S=SSB[y],
+    
+    if (y < fmyearIdx){
+    Rout <- get_recruits(type=R_typ, par=Rpar, S=SSB[y], block = 'early',
                          TAnom=Tanom[y], pe_R = pe_R, R_ym1 = R[y-1], 
                          Rhat_ym1 = Rhat[y-1])
-    
+    }
+    if (y >= fmyearIdx){
+      Rout <- get_recruits(type=R_typ, par=Rpar, S=SSB[y], block = 'late',
+                           TAnom=Tanom[y], pe_R = pe_R, R_ym1 = R[y-1], 
+                           Rhat_ym1 = Rhat[y-1])
+    }
     R[y] <- Rout[['R']]
     Rhat[y] <- Rout[['Rhat']]
     R[y] <- ifelse(R[y] < 0, 0, R[y])

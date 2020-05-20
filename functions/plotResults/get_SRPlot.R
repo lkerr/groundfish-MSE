@@ -21,7 +21,7 @@ get_SRPlot <- function(type, par, Tanom, ptyrs, stockEnv){
              length.out=100)
   
   R <- sapply(1:length(Tanom), function(x)
-    get_recruits(type=type, par=par, SSBx, TAnom_y=Tanom[x], 
+    get_recruits(type=type, par=par, SSBx, TAnom_y=Tanom[x], block = 'late',
                  stockEnv = stockEnv)$Rhat)
   
   y1 <- rev(cumsum(rep(1/ncol(avgSSB), ncol(avgSSB))))
