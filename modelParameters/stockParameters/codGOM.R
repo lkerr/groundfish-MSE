@@ -57,7 +57,8 @@ qI <- 0.0001
 # ### change select to L50 paramaterization like maturity
 #selC <- c(s0 = 3, s1 = 0.5)
 #selC_typ <- 'Logistic'
-selC <- c(0.013, 0.066, 0.271, 0.663, 0.912, 0.982, 0.997, 1, 1) #terminal selectivity block GOM cod ADAPT proj M=0.2
+selC <- c(0.013, 0.066, 0.271, 0.663, 0.912, 0.982, 0.997, 1, 1) #GOM cod AGEPRO M=0.2
+#selC <- c(0.009, 0.051, 0.241, 0.651, 0.917, 0.985, 0.997, 1, 1) #GOM cod AGEPRO M-ramp
 selC_typ <- 'input'
 
 
