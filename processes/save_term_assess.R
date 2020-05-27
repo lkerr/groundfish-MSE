@@ -3,14 +3,19 @@
 ##
 
 # create new folder to put assessment results in
-dir.create('./groundfish-MSE/results/term_assessment')
+tempwd <- getwd()
+new.dir <- paste(tempwd, "/results/term_assessment", sep = '')
+dir.create(new.dir)
 
 
 # find results folders
-folders <- list.files('./groundfish-MSE/assessment/ASAP')
+folders <- list.files('./assessment/ASAP')
 folders <- folders[-1]
 
 # extract terminal assessment year
 for(i in 1:length(folders)){
-file.copy(from = paste('./groundfish-MSE/assessment/ASAP/', folders[i], '/codGOM_1_200.rdat', sep = ''), to = './groundfish-MSE/results/term_assessment')
+  rand.num <- sample(1:10000, 1)
+  from_path <- paste("./assessment/ASAP/", folders[i], "/codGOM_1_200.rdat", sep = "")
+  to_path <- paste(new.dir, '/', rand.num, '.rdat', sep = '')
+  file.copy(from = from_path, to = to_path)
 }
