@@ -39,7 +39,7 @@ top_loop_start<-Sys.time()
 
 ####################These are temporary changes for testing ####################
 mproc_bak<-mproc
-mproc<-mproc_bak[5:5,]
+mproc<-mproc_bak[2:2,]
 nrep<-2
 # yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
 # I want to start the economic model at fmyear=2010 and temporarily end it in 2011
@@ -57,7 +57,7 @@ nyear<-which(yrs == end_sim)
 #set the rng state based on system time.  Store the random state.  
 # if we use a plain old date (seconds since Jan 1, 1970), the number is actually too large, but we can just rebase to seconds since Jan 1, 2018.
 
-start<-Sys.time()-as.POSIXct("2018-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
+start<-Sys.time()-as.POSIXct("2018-01-01 00:00:00",tz="","%Y-%m-%d %H:%M:%S")
 start<-as.double(start)*100
 set.seed(start)
 
