@@ -10,7 +10,7 @@
 #BSUB -o "./%J.o"
 #BSUB -e "./%J.e"
 
-#BSUB -w 'done(runSim[1-25])'  # DEPENDENCIES: wait until down with simulation job.
+#BSUB -w 'done(runSim[1-100])'  # DEPENDENCIES: wait until down with simulation job.
 
 
 
