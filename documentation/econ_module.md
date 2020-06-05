@@ -44,7 +44,7 @@ For both the production and targeting models, the unit of observation is a hulln
 
 The statistical estimation of the model takes place externally to the MSE model -- there isn't a need to have this occur simultaneously (yet).
 
-## The R code
+## The Main Simulation code
 
 ### Options
 We can set some options using the mproc.csv file. Notably:
@@ -148,8 +148,19 @@ There are a few files in "/preprocessing/economic/"  These primarily deal with c
 
 * **zero_out_closed_asc_cutout:** Closes a fishery and redistributes the probability associated with that stock to the other options. This is based on the "underACL" logical column.   Skips math if all stocks are open.  This is obsolete because the underACL logical is always equal to the stockarea_open, regardless of how we are modeling closures.
 
-## Pre-processing
-A bunch of pre-processing is needed to go from the stata econometric output to R data.tables.  Some of this is written in Stata .do files.  The rest is written as R batch files.  
+## Pre-processing Code
+A bunch of pre-processing is needed to go from the stata econometric output and data to R data.tables.  Part 1  is written in Stata .do files.  The rest is written as R scripts files. Sorry 
+
+### Stata preprocessing code
+To run, you'll need to set the global MSEprojdir to the location of the project. Min-Yang's (on windows) is:
+
+```
+global MSEprojdir "C:\Users\Min-Yang.Lee\Documents\groundfish-MSE\"
+```
+
+You'll also need to put your data files into \${MSEprojdir}\\data\\data_raw\\econ. If you don't make any changes, some intermediate outputs will stay in this folder and any "final" outputs will go into: \${MSEprojdir}\\data\\data_processed\\econ
+
+
 
 * **wrapper_common.do** This is a wrapper to process some inputs that is common to all economic scenarios.  Many global macros are set here to control what other files subsequently do.
 
@@ -164,15 +175,31 @@ A bunch of pre-processing is needed to go from the stata econometric output to R
 * **price_prep.do** : Construct output prices at the spstock2-date-post level and input prices at the hullnum-spstock2-date-post level.  Quota prices are at the hullnum-spstock2-month-post level, but stored with the other input prices.  Quota prices may vary by hullnum because some vessels are DAS scallopers and others are IFQ scallopers.  Note -- right now, we are only have Post period prices ready. All simulations are currently using 2010-2015 prices.
 * **multiplier_prep.do** : Construct multipliers at the hullnum-spstock2-month-post level.  
 
+Outputs of these are:
 
+1. Four files containing asc logit coefficients corresponding to each gear and time period.
+
+    a.  asclogit_gillnet_post_coefs.txt
+    a.  asclogit_trawl_post_coefs.txt
+    a.  asclogit_gillnet_pre_coefs.txt
+    a.  asclogit_trawl_pre_coefs.txt
+
+2.  Files containing catch limits.  We might want to simulate at the actual catch limits or a particular year.  
+    a.  catch_limits_2010_2017.csv - the catch limits for 2010-2017
+    a.  catch_limits_2017.csv - just the 2017 catch limits
+    a.  annual_sector_catch_limits.csv - the catch limits averaged over 2010-2017
+
+3.  A small dataset of spstock2 names: stocks_in_choiceset.dta.  I'm not sure what this is used for. 
+
+
+### R preprocessing code
 
 
 * **pre_process_econ_MSE.R:** This is a wrapper to finish processing data for the MSE type simulation.  This has been tested to work on a "data_for_mse" dataset.
 
+* **pre_process_AB_validation.R:** This is a wrapper to finish processing data for the "validation simulations".  You will may need to change paths to directories.  We set all the input and output filenames here.  This has been tested to work on a "POSTasPOST" dataset.
+
 * **pre_process_AB_counterfactual.R:** This is a wrapper to finish processing data for the Counterfactual type simulation.  This has been tested to work on a "data_for_mse" dataset.  Notably, quota prices are zeroed out for the Groundfish stocks.
-
-* **pre_process_AB_validation.R:** This is a wrapper to  run *all* of the R and stata code to set data up for "counterfactual simulations".  You will need to change paths to directories, you may need to change some filenames.  We set all the input and output filenames here.  This has been tested to work on a "POSTasPOST" dataset.
-
 
 
 
@@ -199,7 +226,6 @@ I've been making small changes to mproc_test.txt and the "set_om_parameters_glob
 We're retaining catch, landings, value, and quota_charges at the "hullnum-day-spstock2" level.  We are not retaining "hullnum_day" where the vessel chooses "no fish".
 
 ### To do and known bugs
-* needs to do state dependence properly.
 
 * **runEcon_module.R :** 
   * Needs to be cleaned up.  Uses about 7-8gb.
@@ -208,7 +234,6 @@ We're retaining catch, landings, value, and quota_charges at the "hullnum-day-sp
     * The revised data.table version takes 19 seconds/yr (depending on how often fisheries are closed). I should probably profile the code to speed it up.
     * I tried rewriting the model to economize on memory by only loading "small" data.tables and then mergeing them. That actually takes a large amount of time (>2-3 minutes). 
   * Doesn't read/use IJ1 trawl survey index(biomass index computed on Jan 1).
-  * does not store fishery revenue anywhere, just overwrites it.
   * slowest parts are joint_production, zero-ing out the closed stocks, and the randomdraw.
   
 ### Notes
