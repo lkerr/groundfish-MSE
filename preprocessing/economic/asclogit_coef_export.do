@@ -48,6 +48,6 @@ mat b=b'
 
 mat colnames b="coefficient"
 mat2txt, matrix(b) saving($pre_trawl_out) replace
-
+estimates clear
 
 
