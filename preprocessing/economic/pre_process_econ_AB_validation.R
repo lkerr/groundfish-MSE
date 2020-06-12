@@ -49,8 +49,8 @@ production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","log_sect
 
 ####################Locations of files. 
 # Validation uses pre-targeting coefficients
-trawl_targeting_coef_source<-"asclogit_trawl_pre_coefs.txt" 
-gillnet_targeting_coef_source<-"asclogit_gillnet_pre_coefs.txt" 
+trawl_targeting_coef_source<-"asclogit_trawl_pre_coefsnc2.txt" 
+gillnet_targeting_coef_source<-"asclogit_gillnet_pre_coefsnc2.txt" 
 
 target_coef_outfile<-"targeting_coefs_pre.Rds"
 #Validation uses post-production coefficients

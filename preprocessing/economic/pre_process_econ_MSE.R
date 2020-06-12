@@ -49,8 +49,8 @@ production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","log_sect
 
 
 # MSE uses post-targeting coefficients
-trawl_targeting_coef_source<-"asclogit_trawl_post_coefs.txt" 
-gillnet_targeting_coef_source<-"asclogit_gillnet_post_coefs.txt" 
+trawl_targeting_coef_source<-"asclogit_trawl_post_coefsnc2.txt" 
+gillnet_targeting_coef_source<-"asclogit_gillnet_post_coefsnc2.txt" 
 
 target_coef_outfile<-"targeting_coefs_post.Rds"
 #MSE uses post-production coefficients
