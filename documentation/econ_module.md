@@ -223,7 +223,16 @@ There are a few input datasets needed to run.
 I've been making small changes to mproc_test.txt and the "set_om_parameters_global.R" file.  The set_om_parameters_global.R contains things like file/folder locations, stocks that are in the model, and the RHS variables for the simulations.
 
 ### Outputs
-We're retaining catch, landings, value, and quota_charges at the "hullnum-day-spstock2" level.  We are not retaining "hullnum_day" where the vessel chooses "no fish".
+We're retaining catch, landings, value, and quota_charges at the "hullnum-day-spstock2" level for the chosen primary target.  We are *not* retaining "hullnum_day" where the vessel chooses "no fish".  This saves space.
+
+* **c_<spstock2>**: catch of spstock2
+* **l_<spstock2>**: landings of spstock2
+* **r_<spstock2>**: revenue (prices*landings) derived from spstock2
+
+We also have identifiers for replicate (r), month (m), simulation year (y), and "year" (year).  year is the fishing year.
+
+These can be pulled into stata with "postprocessing/economic/import_econ.do"
+
 
 ### To do and known bugs
 
