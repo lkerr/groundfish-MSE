@@ -41,7 +41,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
   if(parmgt$ASSESSCLASS == 'CAA' || parmgt$ASSESSCLASS == 'ASAP'){
     
     # for GOM cod, Mramp model uses M = 0.2 for status determination
-    if(stock$codGOM$M_typ == 'ramp'){
+    # browser()
+    if(names(stock) == 'codGOM' && stock$codGOM$M_typ == 'ramp'){
       
       #insert new M's
       parpop$M[1,] <- rep(0.2, 9) 

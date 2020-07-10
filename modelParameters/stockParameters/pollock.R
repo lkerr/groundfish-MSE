@@ -28,6 +28,8 @@ mat_typ <- 'logistic'
 
 # natural mortality
 M <- 0.2
+M_typ <- 'const'
+init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
 
 
 
