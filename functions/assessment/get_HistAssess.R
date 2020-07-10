@@ -6,8 +6,8 @@
 get_HistAssess <- function(stock) {
   # read file for the stock with historic assessment information
   assessdat <- read.csv(paste('./data/data_raw/AssessmentHistory/',stockNames[i], '.csv', sep = ''))
-  assess_st_yr <-   fmyearIdx-length(assessdat$Year)+1
-  assessdat$MSEyr <- seq(assess_st_yr, fmyearIdx)
+  assess_st_yr <-   fmyearIdx-length(assessdat$Year)
+  assessdat$MSEyr <- seq(assess_st_yr, (fmyearIdx-1))
   
   return(list(
     assessdat = assessdat,

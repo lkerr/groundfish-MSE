@@ -139,6 +139,8 @@ get_fillRepArrays <- function(stock){
     omval$F_fullAdvice[r,m,] <- F_fullAdvice #AEW
     omval$ACL[r,m,] <- ACL #AEW
     omval$OFgStatus[r,m,] <- OFgStatus #AEW
+    omval$SSB_cur[r,m,] <- SSB_cur #AEW
+    omval$natM[r,m,] <- natM #AEW
     
     # annPercentChange not true vector -- just repeated values. This needs
     # to be calculated after the run so that the appropriate time windows

@@ -1,12 +1,12 @@
 
 
 get_relError <- function(stock){
-  
-  
+
+
   out <- within(stock, {
-  
+
     #### Calculate rel errors ####
-    CN[y,] %*% waa[y,]     
+    CN[y,] %*% waa[y,]
     if(mproc[m,'ASSESSCLASS'] == 'CAA' & y > fmyearIdx-1){
       relE_SSB[y-1] <- mean(get_relE(SSBhat, get_dwindow(SSB, sty, y-1)))
       relE_CW[y-1] <- mean(get_relE(rep$sumCW, get_dwindow(sumCW, sty, y-1)))
@@ -20,8 +20,8 @@ get_relError <- function(stock){
       relE_R_dev[y-1] = mean(get_relE(rep$R_dev, R_dev))
       relE_R[y-1] <- mean(get_relE(rep$R, get_dwindow(R/caaInScalar, sty, y-1)))  #AEW
       relE_F[y-1] <- mean(get_relE(rep$F_full, get_dwindow(F_full, sty, y-1))) #AEW
-    } 
-    
+    }
+
     if(mproc[m,'ASSESSCLASS'] == 'ASAP' & y > fmyearIdx-1){
       # terminal year
       # relE_SSB[y-1] <- get_relE(tail(res$SSB,1), SSB[y])
@@ -45,10 +45,5 @@ get_relError <- function(stock){
   })
 
   return(out)
-  
+
 }
-
-
-
-
-

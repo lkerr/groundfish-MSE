@@ -24,7 +24,7 @@ Rfun_BmsySim <- list(
                  SSB = SSB,
                  TAnom = TAnom,
                  pe_R = sdR,
-                 R_ym1 = 1,
+                 R_ym1 = 1, block = 'late',
                  Rhat_ym1 = 1)
     return(gr[['Rhat']])
     },

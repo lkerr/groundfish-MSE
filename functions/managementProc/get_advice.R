@@ -80,7 +80,7 @@ get_advice <- function(stock){
       })
     }
     
-    
+  
     # Environmental parameters
     parenv <- list(tempY = temp,
                    Tanom = Tanom,
@@ -145,7 +145,7 @@ get_advice <- function(stock){
         # Absolute Catch advice, inherits units of waa
       }
       
-      quota <- get_catch(F_full = adviceF, M = M, N = J1N[y,], selC = slxC[y,])
+      quota <- get_catch(F_full = adviceF, M = natM[y], N = J1N[y,], selC = slxC[y,])
       quota <- quota %*% waa[y,]
       
       F_fullAdvice[y] <- adviceF

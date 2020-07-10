@@ -3,7 +3,7 @@
 
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.                                              
-burnFmsyScalar <- 1
+burnFmsyScalar <- 4
 burnFsd <- 0.3
 
 
@@ -34,12 +34,16 @@ mat_typ <- 'input'
 
 # natural mortality
 M <- 0.2
+M_typ <- 'const'
+init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
+#M <- 0.4
+#M_typ <- 'ramp'
 
 # initial numbers at-age parameters
-initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
-initN_type <- 'input'
-#initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = M)
-#initN_type <- 'expDecline'
+#initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
+#initN_type <- 'input'
+initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = 0.2)
+initN_type <- 'expDecline'
 
 
 
@@ -53,7 +57,8 @@ qI <- 0.0001
 # ### change select to L50 paramaterization like maturity
 #selC <- c(s0 = 3, s1 = 0.5)
 #selC_typ <- 'Logistic'
-selC <- c(0.013, 0.066, 0.271, 0.663, 0.912, 0.982, 0.997, 1, 1) #terminal selectivity block GOM cod ADAPT proj M=0.2
+selC <- c(0.013, 0.066, 0.271, 0.663, 0.912, 0.982, 0.997, 1, 1) #GOM cod AGEPRO M=0.2
+#selC <- c(0.009, 0.051, 0.241, 0.651, 0.917, 0.985, 0.997, 1, 1) #GOM cod AGEPRO M-ramp
 selC_typ <- 'input'
 
 
@@ -64,6 +69,8 @@ selC_typ <- 'input'
 # R_typ <- 'BHSteep'
 Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
           cR = 1) # dont need to convert
+#Rpar <- c(SSB_star = 7900, #mt  #from GOM COD 2019 MRAMP 
+#          cR = 1) # dont need to convert
 R_typ <- 'HS'
 
 
@@ -84,7 +91,7 @@ timeI <- 0.5 # when is the survey (as a proportion of the year)
 #### Stock assessment model parameters ####
 
 # number of years in assessment model
-ncaayear <- 37
+ncaayear <- 33
 
 # Expansion range for setting limits on parameter bounds
 boundRgLev <- 1.5
@@ -94,7 +101,7 @@ startCV <- 1.5
 
 # scalar to bring pop numbers closer to zero (necessary
 # for model fitting)
-caaInScalar <- 1000  
+caaInScalar <- 1 
 
 
 #### Error parameters ####
@@ -104,15 +111,15 @@ oe_sumCW <- 0.05
 oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 80
 oe_paaCN_typ <- 'multinomial'
-oe_sumIN <- 0.5 
+oe_sumIN <- 0.05
 oe_sumIN_typ <- 'lognorm'
-oe_paaIN <- 15
+oe_paaIN <- 100 #15
 oe_paaIN_typ <- 'multinomial'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 0.05 # cannot be zero so make very small
+pe_R <- 0.01 # cannot be zero 
 
 # implementation error of fishing mortality
 ie_F <- 0
@@ -124,6 +131,8 @@ ie_bias <- 0 # % bias in implementation error (F_Full + F_Full*ie_bias)
 ob_sumCW <- 1
 ob_sumIN <- 1
 
+# catch observation bias (codCW + codCW*C_mult)
+C_mult <- 0
 
 #### BRPs and HCRs ####
 
