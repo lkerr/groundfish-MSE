@@ -24,9 +24,9 @@ get_caa <- function(stock){
     # inactive parameter so the starting value will be used.
     map_par <- list(
       log_M = factor(NA),
-      R_dev = factor(rep(NA, ncaayear-1)),
-      log_ipop_mean = factor(NA),
-      ipop_dev = factor(rep(NA, nage)),
+      #R_dev = factor(rep(NA, ncaayear-1)),
+      #log_ipop_mean = factor(NA),
+      #ipop_dev = factor(rep(NA, nage)),
       # log_qC = factor(NA),
       # log_qI = factor(NA),
       # log_selC = factor(rep(NA, length(selC))),
