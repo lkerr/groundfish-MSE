@@ -24,7 +24,8 @@ get_tmbSetup <- function(stock){
     # get the initial population mean and deviations (and add in small
     # constant in case abundance in an age class is zero (important to deal
     # with log(0) issue)
-    ipopInfo <- get_LMdevs((J1N[sty,] + 1e-3) / caaInScalar)
+
+    ipopInfo <- get_LMdevs(J1N[sty,]/ caaInScalar)
     log_ipop_mean <- ipopInfo$lmean
     ipop_dev <- ipopInfo$lLMdevs
     
