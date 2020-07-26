@@ -1,6 +1,6 @@
 ---
 title: 'Implementation Error'
-author:  Lee, Birkenbach, Truesdell, Cummings(t), Kerr,
+author:  Lee, Birkenbach, Truesdell, Cummings, Kerr, TBD
 csl: canadian-journal-of-fisheries-and-aquatic-sciences.csl
 output:
   pdf_document:
@@ -10,7 +10,7 @@ output:
     pandoc_args: --pdf-engine=xelatex
   html_document: null
   word_document: null
-bibliography: minyang_bib.bib
+bibliography: library.bib
 ---
 <!---Don't read, or touch this part -->
 
@@ -128,6 +128,7 @@ Funding acknowledgements:
 
 Intended Outlet: ICES-JMS, CJFAS, Frontiers in Marine Science
 
+This is in the github repository in the documentation/economics folder
 \newpage
 
 # Executive Summary 
