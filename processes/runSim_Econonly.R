@@ -11,12 +11,11 @@
 
 # NEEDS: 
   # check/verify that closing fisheries for jointness is coded properly.
-  # 
 
 #### Set up environment ####
 rm(list=ls())
     
-    #runSetup.R loads things and sets them up. This is used by the integrated simulation, so be careful making changes with it. Instead, overwrite them using the setupEcon_extra.R file.
+#runSetup.R loads things and sets them up. This is used by the integrated simulation, so be careful making changes with it. Instead, overwrite them using the setupEcon_extra.R file.
 source('processes/runSetup.R')
 
 #the base runSetup.R runs source('processes/genBaselineACLs.R') to set up ACLs in the data.table econ_baseline.
@@ -39,7 +38,7 @@ top_loop_start<-Sys.time()
 
 ####################These are temporary changes for testing ####################
 mproc_bak<-mproc
-mproc<-mproc_bak[2:2,]
+mproc<-mproc_bak[4,] #counterfactuals 
 nrep<-2
 # yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
 # I want to start the economic model at fmyear=2010 and temporarily end it in 2011
@@ -67,7 +66,6 @@ showProgBar<-TRUE
 ####################End Parameter and storage Setup ####################
   #This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
     
-      
 source('processes/setupYearIndexing_Econ.R')
  
 #### Top rep Loop ####
@@ -76,9 +74,10 @@ for(r in 1:nrep){
     
   #### Top MP loop ####
     #now testing to see if this runs
+
     for(m in 1:nrow(mproc)){
-    
-       manage_counter<-0
+      model = mproc$EconData[m] 
+      manage_counter<-0
       
        #Restore the rng state.  Depending on whether you use oldseed1 or oldseed2, you'll get different behavior.  oldseed_ALL will force all the replicates to start from the same RNG state.  oldseed_mproc will force all the management procedures to have the same RNG state.  You probably want oldseed_mproc 
        #.Random.seed<-oldseed_ALL
@@ -98,7 +97,7 @@ for(r in 1:nrep){
           }
       
       #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
-          begin_rng_holder[[yearitercounter]]<- c(r,m,y,yrs[y],.Random.seed)     
+          begin_rng_holder[[yearitercounter]]<- c(r,model,y,yrs[y],.Random.seed)     
           
   
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
@@ -111,7 +110,7 @@ for(r in 1:nrep){
           bio_params_for_econ <- get_bio_for_econ_only(stock,econ_baseline_yearly)
 
               source('processes/runEcon_moduleonly.R')
-              end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)    
+              end_rng_holder[[yearitercounter]]<-c(r,model,y,yrs[y],.Random.seed)    
               
             } #End Run Economic model if statement.
           
@@ -133,9 +132,10 @@ for(r in 1:nrep){
           }
           
       } #End of year loop
-
+       #stopImplicitCluster()
   
         } #End mproc loop 
+    
       } #End rep loop
       
     top_loop_end<-Sys.time()

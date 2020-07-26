@@ -14,12 +14,11 @@
 # actual_rev_total is updated as sum price*landings minus sum quota_price*catch
 
 
-
 get_joint_production <- function(wt,spstock_names){
 
   catches<-paste0("c_",spstock_names)
   landings<-paste0("l_",spstock_names)
-  
+  daylimits <-paste0("dl_",spstock_names)
   quotaprices<-paste0("q_",spstock_names)
   lagp<-paste0("p_",spstock_names)
   prices<-paste0("r_",spstock_names)
@@ -32,14 +31,14 @@ get_joint_production <- function(wt,spstock_names){
     set(wt, i = NULL, j = catches[idx], value = wt[[catches[idx]]]*wt[['harvest_sim']])
     set(wt, i = NULL, j = landings[idx], value = wt[[landings[idx]]]*wt[['harvest_sim']])
     
+    #set(wt, i = NULL, j = landings[idx], value = ifelse(is.na(wt[[daylimits[idx]]]), wt[[landings[idx]]], ifelse(wt[[landings[idx]]]>= wt[[daylimits[idx]]], wt[[daylimits[idx]]], wt[[landings[idx]]])))
+    wt [, landings[idx]:= ifelse(is.na(wt[[daylimits[idx]]]), wt[[landings[idx]]], ifelse(wt[[landings[idx]]] >= wt[[daylimits[idx]]], wt[[daylimits[idx]]], wt[[landings[idx]]]))]
+    
     set(wt, i = NULL, j = quotaprices[idx], value = wt[[quotaprices[idx]]]*wt[[catches[idx]]])
     set(wt, i = NULL, j = lagp[idx], value = wt[[lagp[idx]]]*wt[[landings[idx]]])
     set(wt, i = NULL, j = prices[idx], value = wt[[prices[idx]]]*wt[[landings[idx]]])
   }
   
-  
-
-
   ##compute quota costs, actual revenue, and expected revenue   
   ##Assemble formulas for
   

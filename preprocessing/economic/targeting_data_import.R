@@ -5,15 +5,10 @@
 # A little stupid to join the coefficients to the data, because it make a big dataset with lots of replicated data, instead of making a pair of matrices (one for data and one for coefficients). But whatever.
 # need to update this file with variable changes and equation changes. Anna is sending over a stata .ster. for coefficients
 
-
-target_coefs<-target_coef_outfile
 production_coefs<-production_outfile
-
-targeting_coefs<-readRDS(file.path(savepath,target_coefs))
-
 production_coefs<-readRDS(file.path(savepath, production_coefs))
 production_coefs[, post:=NULL]
-
+source('preprocessing/economic/import_day_limits.R')
 
 
 inputprices<-readRDS(file.path(savepath, input_working))
@@ -21,28 +16,33 @@ multipliers<-readRDS(file.path(savepath, multiplier_working))
 outputprices<-readRDS(file.path(savepath, output_working))
 
 
+#For loop to create targetting data set for other models 
+for (coef in 1:length(models)) {
+  require(readstata13)
+  require(data.table)
+target_coefs<-target_coef_outfile[coef]
+targeting_coefs<-readRDS(file.path(savepath,target_coefs))
+
+
 #for the counterfactual, we do something else -- we need average multipliers by hullnum, MONTH, spstock2.
-
-
-
-
-
 for (wy in 2010:2015) {
     idx<-wy-2009
+  
     
-  yrsavefile<-paste0(yearly_savename,wy,".Rds")
+  yrsavefile<-paste0(yearly_savename[coef],wy,".Rds")
   targeting_source<-paste0(yrstub,"_",wy,".dta")
   
   targeting <- read.dta13(file.path(rawpath, targeting_source))
   
   # the counterfactual only: Compute multipliers, averaged over the the pre or post time  
-    if (yearly_savename =="counterfactual"){
+    if (yrstub == "POSTasPRE"){
     wm<-rbindlist(multipliers)
    mygroup<-c("hullnum", "MONTH", "spstock2")
     wm<-wm[, lapply(.SD,mean), by=mygroup]
   }else {
   wm<-multipliers[[idx]]
   }
+  
   wm[, gffishingyear:=NULL]
   
   wo<-outputprices[[idx]]
@@ -190,6 +190,9 @@ sum(is.na(targeting))==0
 
 #the id is the distinct "hullnum-date" combination.  date encompasses gffishingyear and doffy.
 # so I really only need 2 key columns (id and spstock2)
+
+targeting = merge (targeting, day_limits, by=c("spstock2", "doffy", "gffishingyear"), all.x=TRUE)
+
 setkeyv(targeting, c("id","spstock2"))
 targeting<-split(targeting, targeting$doffy)
 
@@ -201,7 +204,7 @@ gc()
 }
 #rm(list=ls())
 
-
+}
 
 
 

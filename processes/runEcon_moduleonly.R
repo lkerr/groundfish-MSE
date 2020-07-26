@@ -39,12 +39,12 @@ annual_revenue_holder<-list()
 
 for (day in 1:365){
   
-  
-  
 # Subset for the day.  Add in production coeffients and construct some extra data.
 working_targeting<-copy(targeting_dataset[[day]])
 working_targeting<-get_predict_eproduction(working_targeting)
 working_targeting[spstock2=="nofish", harvest_sim:=0L]
+working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse(harvest_sim >= dl_primary, dl_primary, harvest_sim))]
+
 # Uncomment this to use AB's existing h_hats
 #  working_targeting[,harvest_sim :=h_hat]
     # Keep or update choice_prev_fish

@@ -1,7 +1,7 @@
-# Preliminary data processing for the MSE model  
-# MSE model is "post-as-post" uses
-#       Post- production, post multipliers, post prices
-#       Post-choice coefficients, 
+# Preliminary data processing for the counterfactual model  
+# MSE model is "post-as-pre" uses
+#       Pre-production, pre-multipliers, post output prices.  
+#       pre-choice coefficients, 
 #       slightly adjusted data. 
 # 
 rm(list=ls())
@@ -36,32 +36,29 @@ savepath <- './data/data_processed/econ'
 #rawpath <- 'C:/Users/abirken/Documents/GitHub/groundfish-MSE/data/data_raw/econ'
 #savepath <- 'C:/Users/abirken/Documents/GitHub/groundfish-MSE/data/data_processed/econ'
 
-
             
 ###########################Make sure you have the correct set of RHS variables.
 spstock_equation=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
 choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
 targeting_vars=c(spstock_equation, choice_equation)
 
-production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","log_sector_acl","primary", "secondary","constant")
+production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","primary", "secondary","constant")
 
-models = c("coefsnc2", "coefs")
-
+models = c("coefsnc1", "coefsnc2", "coefs1", "coefs2")
 ####################Locations of files. 
 
+#Validation uses pre-targeting coefficients
+trawl_targeting_coef_source<- paste0("asclogit_trawl_pre_", models ,".txt")
+gillnet_targeting_coef_source<- paste0("asclogit_gillnet_pre_", models ,".txt")
+target_coef_outfile<-paste0("targeting_coefs_pre_", models, ".Rds")
 
-# MSE uses post-targeting coefficients
-trawl_targeting_coef_source<-c("asclogit_trawl_post_coefsnc2.txt", "asclogit_trawl_post_coefs.txt")
-gillnet_targeting_coef_source<-c("asclogit_gillnet_post_coefsnc2.txt", "asclogit_gillnet_post_coefs.txt")
-
-target_coef_outfile<-c("targeting_coefs_post_coefsnc2.Rds", "targeting_coefs_post_coefs.Rds")
-#MSE uses post-production coefficients
-production_coef_in<-"production_regs_actual_post_forR.txt"
-production_outfile<-"production_coefs_post.Rds"
+#Validation uses pre-production coefficients
+production_coef_in<-"production_regs_actual_pre_forR.txt"
+production_outfile<-"production_coefs_pre.Rds"
 
 
 # bits for input_price_import.R 
-file_suffix<-"_MSE"
+file_suffix<-"_CF"
 
 input_price_loc<-paste0("input_price_series",file_suffix,".dta")
 input_preoutfile<-paste0("input_prices_pre",file_suffix,".Rds")
@@ -72,7 +69,7 @@ input_working<-input_postoutfile
 multip_location<-"reshape_multipliers.dta"
 multi_postoutfile<-paste0("sim_multipliers_post",file_suffix,".Rds")
 multi_preoutfile<-paste0("sim_multipliers_pre",file_suffix,".Rds")
-multiplier_working<-multi_postoutfile
+multiplier_working<-multi_preoutfile
 
 # bits for output_price_import.R 
 output_price_loc<-paste0("output_price_series",file_suffix,".dta")
@@ -86,9 +83,11 @@ day_limits <- "trip_limits_forsim.dta"
 ####################END Locations of files. You shouldn't have to change these unless you're adding new datasets (like a pre-as-pre or pre-as-pre), new coefficients, new multipliers, etc) 
 
 ####prefix  (see datafile_split_prefix in wrapper.do)
-yrstub<-"econ_data"
-yearly_savename<-c("full_targeting_coefsnc2", "full_targeting_coefs")
+yrstub<-"POSTasPRE"
+yearly_savename<-paste0("counterfactual", models) 
 
+#these are the groundfish quota prices that need to be zeroed out in the counterfactual.
+quotaprice_zero_cf<-c("q_americanplaiceflounder","q_codGB","q_codGOM","q_haddockGB","q_haddockGOM","q_pollock","q_redfish","q_whitehake","q_winterflounderGB","q_winterflounderGOM","q_witchflounder","q_yellowtailflounderCCGOM","q_yellowtailflounderGB", "q_yellowtailflounderSNEMA")
 
 source('preprocessing/economic/targeting_coeff_import.R')
 source('preprocessing/economic/production_coefs.R')

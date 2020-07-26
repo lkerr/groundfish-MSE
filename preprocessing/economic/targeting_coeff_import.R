@@ -32,10 +32,10 @@ droppval<-function(working_coefs){
   working_coefs
 }
 
- 
+for (coef in 1:length(models)){
 
 # This is code to pull out ASC logit coefficients for trawl
-asc_coefs <- read.csv(file.path(rawpath,trawl_targeting_coef_source), sep="\t", header=TRUE,stringsAsFactors=FALSE)
+asc_coefs <- read.csv(file.path(rawpath,trawl_targeting_coef_source[coef]), sep="\t", header=TRUE,stringsAsFactors=FALSE)
 asc_coefs<-asc_coefs[,-3]
 
 #Separate on the ":" and tidy up white space a bit
@@ -48,7 +48,7 @@ asc_coefs$gearcat<-"TRAWL"
 
 
 #Repeat for gillnet and then stack together.
-gn_coefs <- read.csv(file.path(rawpath,gillnet_targeting_coef_source), sep="\t", header=TRUE,stringsAsFactors=FALSE)
+gn_coefs <- read.csv(file.path(rawpath,gillnet_targeting_coef_source[coef]), sep="\t", header=TRUE,stringsAsFactors=FALSE)
 gn_coefs<-gn_coefs[,-3]
 
 
@@ -64,8 +64,6 @@ asc_coefs<-rbind(asc_coefs,gn_coefs)
 asc_coefs$variable[asc_coefs$variable=="_cons"] <-"constant"
 
 rm(gn_coefs)
-
-
 
 # Split asc_coefs into two dataframes. One where equation=="spstock2" and the other where equation~="spstock2" 
 asc_coefs$variable<-paste0("beta_",asc_coefs$variable)
@@ -123,7 +121,7 @@ targeting_coefs$spstock2<- gsub("gom","GOM",targeting_coefs$spstock2)
 targeting_coefs$spstock2<- gsub("snema","SNEMA",targeting_coefs$spstock2)
 
 
-saveRDS(targeting_coefs, file=file.path(savepath, target_coef_outfile), compress=FALSE)
+saveRDS(targeting_coefs, file=file.path(savepath, target_coef_outfile[coef]), compress=FALSE)
 rm(list=c("all_coefs","asc_coefs","asc_coefs2","extra"))
-
+}
 
