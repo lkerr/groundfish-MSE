@@ -167,6 +167,8 @@ yearcounter<-0
 
 #Set up a list to hold the economic results
 revenue_holder<-list()
+fishery_output_holder<-list()
+
 #these two lists will hold a vectors that concatenates (r, m, y, calyear, .Random.seed). They should be r*m*y in length.
 begin_rng_holder<-list()
 end_rng_holder<-list()

@@ -26,6 +26,10 @@ fishery_holder$targeted<-0
 #set up a list to hold the expected revenue by date, hullnum, and target spstock2
 annual_revenue_holder<-list()
 
+#set up a list to hold the date, spstock2, and aggregate metrics, like open/closed status and cumulative catch
+annual_fishery_status_holder<-list()
+
+
 #Initialize the trips data.table. 
   if(y == fmyearIdx){
   keepcols<-c("hullnum","spstock2","choice_prev_fish")
@@ -108,7 +112,15 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
   mm<-c(grep("^c_",colnames(trips), value=TRUE),grep("^l_",colnames(trips), value=TRUE),grep("^r_",colnames(trips), value=TRUE))
   savelist=c(savelist,mm)
   
+  # Save the trip-level and fishery level metrics to the appropriate places
   annual_revenue_holder[[day]]<-trips[, ..savelist]
+  
+  
+  savelist2<-c("spstock2","sectorACL","bio_model","SSB","mults_allocated", "stockarea","underACL", "stockarea_open","cumul_catch_pounds", "sectorACL_pounds")
+  
+  #annual_fishery_status_holder[[day]]<-copy(fishery_holder)
+  annual_fishery_status_holder[[day]]<-fishery_holder[,..savelist2]
+  annual_fishery_status_holder[[day]]$doffy<-day
   
   # prepare the trips data.table for the next iteration
   trips<-trips[spstock2!="nofish"]
@@ -117,7 +129,7 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
 
   fishery_holder[, removals_mt:=cumul_catch_pounds/(pounds_per_kg*kg_per_mt)+nonsector_catch_mt]
  
-#contract that list down to a single data.table
+#contract the trip-level list down to a single data.table
   annual_revenue_holder<-rbindlist(annual_revenue_holder) 
   annual_revenue_holder$r<-r
   annual_revenue_holder$m<-m
@@ -126,7 +138,19 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
   revenue_holder[[yearitercounter]]<-annual_revenue_holder
   
   rm(annual_revenue_holder)
-# We probably want to contract this down further to a data.table of "hullnum","spstock2","exp_rev_total","targeted"
+
+  #contract the fishery-level list down to a single data.table
+  annual_fishery_status_holder<- rbindlist(annual_fishery_status_holder) 
+  annual_fishery_status_holder$r<-r
+  annual_fishery_status_holder$r<-m
+  annual_fishery_status_holder$r<-y
+  annual_fishery_status_holder$year<-yrs[y]
+  fishery_output_holder[[yearitercounter]]<-annual_fishery_status_holder
+  rm(annual_fishery_status_holder)
+  
+  
+  
+  # We probably want to contract this down further to a data.table of "hullnum","spstock2","exp_rev_total","targeted"
   
   
 #   

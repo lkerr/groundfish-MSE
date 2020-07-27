@@ -117,12 +117,17 @@ for(r in 1:nrep){
            
           #Save economic results once in a while to a csv file. 
         if(mproc$ImplementationClass[m]=="Economic" & (chunk_flag==0 | yearitercounter==max_yiter)) {
+
             revenue_holder<-rbindlist(revenue_holder) 
+            fishery_output_holder<-rbindlist(fishery_output_holder) 
+            
             tda <- as.character(Sys.time())
             tda <- gsub(':', '', tda)
             tda<-gsub(' ', '_', tda)
             tda2 <- paste0(tda,"_", round(runif(1, 0, 10000)))
             write.table(revenue_holder, file.path(econ_results_location, paste0("econ_",tda2, ".csv")), sep=",", row.names=FALSE)
+            write.table(fishery_output_holder, file.path(econ_results_location, paste0("econ_stock_status_",tda2, ".csv")), sep=",", row.names=FALSE)
+            fishery_output_holder<-list()
             revenue_holder<-list()
             } #End save economic results if statement
           
