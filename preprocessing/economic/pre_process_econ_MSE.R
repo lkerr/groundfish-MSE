@@ -45,7 +45,8 @@ targeting_vars=c(spstock_equation, choice_equation)
 
 production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","log_sector_acl","primary", "secondary","constant")
 
-models = c("coefsnc2", "coefs")
+# models = c("coefsnc2", "coefs")
+models = c("coefsnc2")
 
 ####################Locations of files. 
 
@@ -87,7 +88,8 @@ day_limits <- "trip_limits_forsim.dta"
 
 ####prefix  (see datafile_split_prefix in wrapper.do)
 yrstub<-"econ_data"
-yearly_savename<-c("full_targeting_coefsnc2", "full_targeting_coefs")
+# yearly_savename<-c("full_targeting_coefsnc2", "full_targeting_coefs")
+yearly_savename<-c("full_targeting_coefsnc2")
 
 
 source('preprocessing/economic/targeting_coeff_import.R')
