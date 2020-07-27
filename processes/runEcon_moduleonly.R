@@ -45,7 +45,11 @@ for (day in 1:365){
   
 # Subset for the day.  Add in production coeffients and construct some extra data.
 working_targeting<-copy(targeting_dataset[[day]])
+working_targeting$OG_choice_prev_fish<-working_targeting$choice_prev_fish
+
 working_targeting<-get_predict_eproduction(working_targeting)
+
+
 working_targeting[spstock2=="nofish", harvest_sim:=0L]
 working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse(harvest_sim >= dl_primary, dl_primary, harvest_sim))]
 
@@ -107,18 +111,18 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
   fishery_holder[, daily_pounds_caught :=NULL]
 
   fishery_holder<-get_fishery_next_period_areaclose(fishery_holder)
-
   savelist<-c("id","hullnum","spstock2","doffy","exp_rev_total","actual_rev_total", "gearcat")
+  
+  savelist<-c("id","hullnum","spstock2","doffy","exp_rev_total","actual_rev_total", "gearcat","choice_prev_fish","OG_choice_prev_fish")
   mm<-c(grep("^c_",colnames(trips), value=TRUE),grep("^l_",colnames(trips), value=TRUE),grep("^r_",colnames(trips), value=TRUE))
   savelist=c(savelist,mm)
-  
+
   # Save the trip-level and fishery level metrics to the appropriate places
   annual_revenue_holder[[day]]<-trips[, ..savelist]
   
   
   savelist2<-c("spstock2","sectorACL","bio_model","SSB","mults_allocated", "stockarea","underACL", "stockarea_open","cumul_catch_pounds", "sectorACL_pounds")
   
-  #annual_fishery_status_holder[[day]]<-copy(fishery_holder)
   annual_fishery_status_holder[[day]]<-fishery_holder[,..savelist2]
   annual_fishery_status_holder[[day]]$doffy<-day
   
@@ -128,9 +132,9 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
 }
 
   fishery_holder[, removals_mt:=cumul_catch_pounds/(pounds_per_kg*kg_per_mt)+nonsector_catch_mt]
- 
-#contract the trip-level list down to a single data.table
+#contract the trip-level list down to a single data.table 
   annual_revenue_holder<-rbindlist(annual_revenue_holder) 
+
   annual_revenue_holder$r<-r
   annual_revenue_holder$m<-m
   annual_revenue_holder$y<-y
