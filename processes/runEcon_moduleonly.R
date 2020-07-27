@@ -107,10 +107,11 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
   savelist<-c("id","hullnum","spstock2","doffy","exp_rev_total","actual_rev_total", "gearcat")
   mm<-c(grep("^c_",colnames(trips), value=TRUE),grep("^l_",colnames(trips), value=TRUE),grep("^r_",colnames(trips), value=TRUE))
   savelist=c(savelist,mm)
-  # Drop trips corresponding to nofish. It's just alot of zeros.
-  trips<-trips[spstock2!="nofish"]
+  
   annual_revenue_holder[[day]]<-trips[, ..savelist]
+  
   # prepare the trips data.table for the next iteration
+  trips<-trips[spstock2!="nofish"]
   trips<-trips[, c("spstock2","hullnum", "targeted")]
 }
 
