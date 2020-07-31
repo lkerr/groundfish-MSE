@@ -74,6 +74,13 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
     working_targeting<-joint_adjust_allocated_mults(working_targeting,fishery_holder, econtype)
     working_targeting<-joint_adjust_others(working_targeting,fishery_holder, econtype)
     working_targeting<-get_joint_production(working_targeting,spstock2s) 
+    
+    # if modelno=2, then we need to subtract das costs from exp_rev_total right here.
+    if (modelno=="2"){
+    working_targeting[, exp_rev_total:=exp_rev_total-das_cost]
+    working_targeting[, actual_rev_total:=actual_rev_total-das_cost]
+    }
+    
     working_targeting[, exp_rev_total:=exp_rev_total/1000]
     working_targeting[, actual_rev_total:=actual_rev_total/1000]
     working_targeting[spstock2=="nofish", exp_rev_total:=0L]
