@@ -24,6 +24,8 @@ target_coefs<-target_coef_outfile[coef]
 targeting_coefs<-readRDS(file.path(savepath,target_coefs))
 
 
+
+
 #for the counterfactual, we do something else -- we need average multipliers by hullnum, MONTH, spstock2.
 for (wy in 2010:2015) {
     idx<-wy-2009
@@ -33,6 +35,25 @@ for (wy in 2010:2015) {
   targeting_source<-paste0(yrstub,"_",wy,".dta")
   
   targeting <- read.dta13(file.path(rawpath, targeting_source))
+  
+  
+  # exp_rev_total variable switches based on model number
+  tchars<-nchar(target_coefs)
+  modelno<-substr(target_coefs,tchars-4,tchars)
+  modelno<-substr(modelno,1,1)
+  
+  if(modelno=="2"){
+    targeting$exp_rev_total<-targeting$exp_rev_total_das
+  } else if(modelno=="1"){
+# do nothing, we will match exp_rev_total automatically
+    }
+  # the validation or MSE only, change das_price_hat to das_price_mean   
+  if (yrstub == "POSTasPOST"){
+    targeting$das_price_mean<-targeting$das_price_hat
+    }else {
+  }
+
+  targeting$das_cost<-targeting$das_price_mean*targeting$das_charge
   
   # the counterfactual only: Compute multipliers, averaged over the the pre or post time  
     if (yrstub == "POSTasPRE"){
@@ -169,7 +190,7 @@ fyvars<-grep("^fy",colnames(targeting) , value=TRUE)
 monthvars<-grep("^month",colnames(targeting) , value=TRUE)
 
 idvars=c("id", "hullnum","spstock2", "doffy")
-necessary=c("q", "gffishingyear", "emean","nchoices", "MONTH")
+necessary=c("q", "gffishingyear", "emean","nchoices", "MONTH","das_cost")
 useful_vars=c("gearcat","post","h_hat","choice", "xb_hat", "log_h_hat","pr_hat")
 
 mysubs=c(idvars,necessary,useful_vars, targeting_vars, production_vars, fyvars, monthvars, betavars, alphavars, cmultipliers, lmultipliers, quota_prices, lag_output_prices, output_prices)
