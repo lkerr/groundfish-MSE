@@ -41,6 +41,10 @@ savepath <- './data/data_processed/econ'
 ###########################Make sure you have the correct set of RHS variables.
 spstock_equation=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
 
+# Model 2 has a slightly different exp_rev_total variable, however, to avoid mucking with the formulas later, we will simply replace exp_rev_total with exp_rev_total_das in the data import step. It doesn't matter much, because this variable is determined endogenously. 
+# We also rename the exp_rev_total_das coefficient to exp_rev_total in the coefficient import step.
+#spstock_equation2=c("exp_rev_total_das", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
+
 choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
 
 targeting_vars=c(spstock_equation, choice_equation)
