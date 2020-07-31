@@ -81,7 +81,12 @@ for(r in 1:nrep){
     #now testing to see if this runs
 
     for(m in 1:nrow(mproc)){
-      model = mproc$EconData[m] 
+      model = mproc$EconData[m]
+      
+      
+      tchars<-nchar(model)
+      modelno<-substr(model,tchars,tchars)
+
       manage_counter<-0
       
        #Restore the rng state.  Depending on whether you use oldseed1 or oldseed2, you'll get different behavior.  oldseed_ALL will force all the replicates to start from the same RNG state.  oldseed_mproc will force all the management procedures to have the same RNG state.  You probably want oldseed_mproc 
