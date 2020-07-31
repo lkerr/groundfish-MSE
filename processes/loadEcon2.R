@@ -1,4 +1,4 @@
-# Read in Economic Production Data. "full_targeting" is large, so it makes sense to read in each econ_year as needed.
+# Read in Economic Production Data. "full_targeting...", "counterfactual..." or "validation..."  is large, so it makes sense to read in each econ_year as needed.
 
 econdatafile<-paste0(econ_data_stub,econ_base_draw,".Rds")
 targeting_dataset<-readRDS(file.path(econdatapath,econdatafile))

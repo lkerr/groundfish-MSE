@@ -55,8 +55,8 @@ We can set some options using the mproc.csv file. Notably:
 * **CatchZero :**
   TRUE --> no catch of GB Cod if GB cod is closed.
   FALSE --> catch of GB Cod happens even if GB cod is closed (but all catch would be discarded).
-* **EconName :** A short name for the scenario.
-* **EconData :** stub for which dataset to use (see data processing steps)
+* **EconName :** A short name for the scenario. "pre" or "post" in the naming conventions refers to the coefficients used ie (coefs1, coefs2, coefsnc1 and coefsnc2)
+* **EconData :** stub for which dataset to use (see data processing steps). 
 * **MultiplierFile :** Multiplier file to use  
 * **OutputPriceFile :** Output prices to use
 * **InputPriceFile :** Input prices to use, including quota prices.
@@ -202,7 +202,7 @@ Outputs of these are:
 * **pre_process_AB_counterfactual.R:** This is a wrapper to finish processing data for the Counterfactual type simulation.  This has been tested to work on a "data_for_mse" dataset.  Notably, quota prices are zeroed out for the Groundfish stocks.
 
 
-
+* **import_day_limits.R** Imports day limits data, which is added to the simulation datasets 
 * **targeting_coeff_import.R** converts the results of asclogit_coef_export to an R data.table
 * **production_coefs.R** imports the targeting regression coefficients to an R data.table
 * **input_price_import.R** imports and saves data.tables containing input prices
@@ -220,7 +220,11 @@ There are a few input datasets needed to run.
 
 * **sim_multipliers_POST_STUB.Rds**  These are vessel specific coefficients that scale landings of a target species to catch/landings of other (non-target) species that are used for simulating the pre catch-share period. POST can be "pre" or "post" and STUB can be "CF", "MSE", or "valid" 
 
+
+
 I've been making small changes to mproc_test.txt and the "set_om_parameters_global.R" file.  The set_om_parameters_global.R contains things like file/folder locations, stocks that are in the model, and the RHS variables for the simulations.
+
+
 
 ### Outputs
 We're retaining catch, landings, value, and quota_charges at the "hullnum-day-spstock2" level for the chosen primary target.  We are *not* retaining "hullnum_day" where the vessel chooses "no fish".  This saves space.

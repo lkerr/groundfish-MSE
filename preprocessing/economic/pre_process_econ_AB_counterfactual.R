@@ -50,10 +50,10 @@ production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","primary"
 
 ####################Locations of files. 
 # Counterfactual uses pre-targeting coefficients
-trawl_targeting_coef_source<-"asclogit_trawl_pre_coefsnc2.txt" 
-gillnet_targeting_coef_source<-"asclogit_gillnet_pre_coefsnc2.txt" 
-
-target_coef_outfile<-"targeting_coefs_pre.Rds"
+models = paste0("pre_", c("coefsnc1", "coefsnc2", "coefs1", "coefs2"))
+trawl_targeting_coef_source<- paste0("asclogit_trawl_", models ,".txt")
+gillnet_targeting_coef_source<- paste0("asclogit_gillnet_", models ,".txt")
+target_coef_outfile<-paste0("targeting_coefs_", models, ".Rds")
 
 # Counterfactual uses pre-production coefficients
 #Validation uses post-production coefficients
@@ -87,14 +87,11 @@ output_working<-output_postoutfile
 ####prefix  (see datafile_split_prefix in wrapper.do)
 yrstub<-"POSTasPRE"
 
-yearly_savename<-"counterfactual"
+yearly_savename<-paste0("counterfactual_", models) 
 
 #these are the groundfish quota prices that need to be zeroed out in the counterfactual.
 
 quotaprice_zero_cf<-c("q_americanplaiceflounder","q_codGB","q_codGOM","q_haddockGB","q_haddockGOM","q_pollock","q_redfish","q_whitehake","q_winterflounderGB","q_winterflounderGOM","q_witchflounder","q_yellowtailflounderCCGOM","q_yellowtailflounderGB", "q_yellowtailflounderSNEMA")
-
-
-
 
 source('preprocessing/economic/targeting_coeff_import.R')
 source('preprocessing/economic/production_coefs.R')

@@ -49,10 +49,11 @@ production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","log_sect
 
 ####################Locations of files. 
 # Validation uses pre-targeting coefficients
-trawl_targeting_coef_source<-"asclogit_trawl_pre_coefsnc2.txt" 
-gillnet_targeting_coef_source<-"asclogit_gillnet_pre_coefsnc2.txt" 
+models = paste0("pre_", c("coefsnc1", "coefsnc2", "coefs1", "coefs2"))
+trawl_targeting_coef_source<- paste0("asclogit_trawl_", models ,".txt")
+gillnet_targeting_coef_source<- paste0("asclogit_gillnet_", models ,".txt")
+target_coef_outfile<-paste0("targeting_coefs_", models, ".Rds")
 
-target_coef_outfile<-"targeting_coefs_pre.Rds"
 #Validation uses post-production coefficients
 production_coef_in<-"production_regs_actual_post_forR.txt"
 production_outfile<-"production_coefs_post.Rds"
@@ -78,14 +79,15 @@ output_preoutfile<-paste0("output_prices_pre",file_suffix,".Rds")
 output_postoutfile<-paste0("output_prices_post",file_suffix,".Rds")
 output_working<-output_postoutfile
 
-
+# bits for day limits dataset 
+day_limits <- "trip_limits_forsim.dta"
 
 ####################END Locations of files. You shouldn't have to change these unless you're adding new datasets (like a pre-as-pre or pre-as-pre), new coefficients, new multipliers, etc) 
 
 ####prefix  (see datafile_split_prefix in wrapper.do)
 yrstub<-"POSTasPOST"
 
-yearly_savename<-"validation"
+yearly_savename<-paste0("validation_", models) 
 
 source('preprocessing/economic/targeting_coeff_import.R')
 source('preprocessing/economic/production_coefs.R')

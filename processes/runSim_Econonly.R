@@ -12,6 +12,11 @@
 # NEEDS: 
   # check/verify that closing fisheries for jointness is coded properly.
 
+#added pre-processing code here for vaidation and counterfatual scenarios 
+source("preprocessing/economic/pre_process_econ_AB_validation.R")
+source("preprocessing/economic/pre_process_econ_AB_counterfactual.R")
+
+
 #### Set up environment ####
 rm(list=ls())
     
@@ -38,7 +43,7 @@ top_loop_start<-Sys.time()
 
 ####################These are temporary changes for testing ####################
 mproc_bak<-mproc
-mproc<-mproc_bak[4,] #counterfactuals 
+mproc<-mproc_bak[2:13,] #selects validation, counterfactual and counterfactual_single 
 nrep<-2
 # yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
 # I want to start the economic model at fmyear=2010 and temporarily end it in 2011
