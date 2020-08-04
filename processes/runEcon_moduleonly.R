@@ -153,8 +153,8 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
   #contract the fishery-level list down to a single data.table
   annual_fishery_status_holder<- rbindlist(annual_fishery_status_holder) 
   annual_fishery_status_holder$r<-r
-  annual_fishery_status_holder$r<-model
-  annual_fishery_status_holder$r<-y
+  annual_fishery_status_holder$m<-model
+  annual_fishery_status_holder$y<-y
   annual_fishery_status_holder$year<-yrs[y]
   fishery_output_holder[[yearitercounter]]<-annual_fishery_status_holder
   rm(annual_fishery_status_holder)
