@@ -3,14 +3,15 @@
 library(data.table)
 
 #selects most recent file path in groundfish_MSE folder, which should be resuls_2020-... if the runsim_Econonly.R has just been run 
+
 file_path = file.info(list.files(full.names = T))
 file_path= rownames(file_path)[which.max(file_path$mtime)]
 
 #if that does not work then the file path needs to be copied in 
-file_path = "./results_2020-07-29-19-17-27/"
+file_path = "./results_2020-07-31-19-06-26/"
 
 #selects just the econ_2020 datasets
-file_names = list.files(path=paste0(file_path, "econ/raw/"), pattern = "econ_2020", full.names = TRUE)
+file_names = list.files(path=file.path(file_path, "econ","raw"), pattern = "econ_2020", full.names = TRUE)
 
 #binding into a data.table
 simulations = (lapply(file_names, fread, stringsAsFactors = FALSE))
