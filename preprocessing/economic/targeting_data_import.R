@@ -20,6 +20,8 @@ outputprices<-readRDS(file.path(savepath, output_working))
 for (coef in 1:length(models)) {
   require(readstata13)
   require(data.table)
+  
+  modelname<-models[coef]
 target_coefs<-target_coef_outfile[coef]
 targeting_coefs<-readRDS(file.path(savepath,target_coefs))
 
@@ -38,10 +40,9 @@ for (wy in 2010:2015) {
   
   
   # exp_rev_total variable switches based on model number
-  tchars<-nchar(target_coefs)
-  modelno<-substr(target_coefs,tchars-4,tchars)
-  modelno<-substr(modelno,1,1)
-  
+  tchars<-nchar(modelname)
+  modelno<-substr(modelname,tchars,tchars)
+
   if(modelno=="2"){
     targeting$exp_rev_total<-targeting$exp_rev_total_das
   } else if(modelno=="1"){
@@ -53,6 +54,19 @@ for (wy in 2010:2015) {
     }else {
   }
 
+  if (modelname=="pre_coefsnc1"){
+    targeting_vars<-c(spstock_equation_prenc1,choice_equation_prenc1)
+    } else   if (modelname=="pre_coefs1"){
+      targeting_vars<-c(spstock_equation_pre1,choice_equation_pre1)
+    } else   if (modelname=="pre_coefsnc2"){
+      targeting_vars<-c(spstock_equation_prenc2,choice_equation_prenc2)
+    } else   if (modelname=="pre_coefs2"){
+      targeting_vars<-c(spstock_equation_pre2,choice_equation_pre2)
+    }
+  
+  
+  
+  
   targeting$das_cost<-targeting$das_price_mean*targeting$das_charge
   
   # the counterfactual only: Compute multipliers, averaged over the the pre or post time  
@@ -194,7 +208,8 @@ necessary=c("q", "gffishingyear", "emean","nchoices", "MONTH","das_cost")
 useful_vars=c("gearcat","post","h_hat","choice", "xb_hat", "log_h_hat","pr_hat")
 
 mysubs=c(idvars,necessary,useful_vars, targeting_vars, production_vars, fyvars, monthvars, betavars, alphavars, cmultipliers, lmultipliers, quota_prices, lag_output_prices, output_prices)
-
+#this sometimes is needed if there are the same columns in the production and targeting equation, like "constant"
+mysubs<-unique(mysubs)
 targeting<-targeting[, ..mysubs]
 
 
