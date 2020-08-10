@@ -21,13 +21,13 @@ global bio_data "$projectdir/data/data_processed/catchHistory"
 /* filenames for sters and outputs*/
 
 /* NC2 models */
-
+/*
 global post_input_ster "postCSasclogitnc2.ster"
 
 
 global post_gillnet_out "asclogit_gillnet_post_coefsnc2.txt"
 global post_trawl_out "asclogit_trawl_post_coefsnc2.txt"
-
+*/
 
 global pre_input_ster "preCSasclogitnc2.ster"
 global pre_gillnet_out "asclogit_gillnet_pre_coefsnc2.txt"
