@@ -72,6 +72,15 @@ do "$codedir/asclogit_coef_export.do"
 
 
 
+/* post nc2 models */
+global pre_input_ster "postCSasclogitnc2.ster"
+global pre_gillnet_out "asclogit_gillnet_post_coefsnc2.txt"
+global pre_trawl_out "asclogit_trawl_post_coefsnc2.txt"
+
+
+
+
+
 /*construct prices, reshape multipliers, and bring both into the targeting dataset */
 global catch_hist_file "catchHist.csv"
 
