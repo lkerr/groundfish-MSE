@@ -76,6 +76,7 @@ do "$codedir/asclogit_coef_export.do"
 global pre_input_ster "postCSasclogitnc2.ster"
 global pre_gillnet_out "asclogit_gillnet_post_coefsnc2.txt"
 global pre_trawl_out "asclogit_trawl_post_coefsnc2.txt"
+do "$codedir/asclogit_coef_export.do"
 
 
 
