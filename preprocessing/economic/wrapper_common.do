@@ -80,7 +80,7 @@ global catch_hist_file "catchHist.csv"
 global multiplier_file "multipliers.dta"
 global multiplier_out "reshape_multipliers.dta"
 
-global datafilename "data_for_simulations_mse.dta"
+global datafilename "data_for_simulations_POSTasPOST.dta"
 
 
 
