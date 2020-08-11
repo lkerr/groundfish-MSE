@@ -62,6 +62,14 @@ for (wy in 2010:2015) {
       targeting_vars<-c(spstock_equation_prenc2,choice_equation_prenc2)
     } else   if (modelname=="pre_coefs2"){
       targeting_vars<-c(spstock_equation_pre2,choice_equation_pre2)
+    } else   if (modelname=="post_coefsnc2"){
+      targeting_vars<-c(spstock_equation_postnc2,choice_equation_postnc2)
+    } else   if (modelname=="post_coefsnc1"){
+      targeting_vars<-c(spstock_equation_postnc1,choice_equation_postnc1)
+    } else   if (modelname=="post_coefs1"){
+      targeting_vars<-c(spstock_equation_post1,choice_equation_post1)
+    } else   if (modelname=="post_coefs2"){
+      targeting_vars<-c(spstock_equation_post2,choice_equation_post2)
     }
   
   
