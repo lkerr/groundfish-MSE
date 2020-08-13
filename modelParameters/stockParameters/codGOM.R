@@ -67,16 +67,14 @@ selC_typ <- 'input'
 #           R0 = 4456870,
 #           SSBRF0 = 0.01822) # calculated as S0/R0 (81202.9/4456870) (arbitrary because h = 1)
 # R_typ <- 'BHSteep'
-Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
-          cR = 1) # dont need to convert
+#Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
+          #cR = 1) # dont need to convert
 #Rpar <- c(SSB_star = 7900, #mt  #from GOM COD 2019 MRAMP 
 #          cR = 1) # dont need to convert
-R_typ <- 'HS'
-
-
- 
-
-
+#R_typ <- 'HS'
+###For Change in Productivity (Low)###
+Rpar<-c(SSB_star = 6300, cR = 1,a=0.5,b=0.00022429,g=-0.6)#M=0.2
+R_typ<-'ChangeProd_Low'
 
 #### Survey parameters ####
 
