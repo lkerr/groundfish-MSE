@@ -68,6 +68,8 @@ get_advice <- function(stock){
     
     if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
       tempStock <- within(tempStock, {
+        SSBaa <- res$N.age * get_dwindow(waa, sty, y-1) * get_dwindow(mat, sty, y-1)
+        SSBhat <- apply(SSBaa, 1, sum)
         parpop <- list(waa = tail(res$WAA.mats$WAA.catch.fleet1, 1),           
                        sel = tail(res$fleet.sel.mats$sel.m.fleet1, 1),                      
                        M = tail(res$M.age, 1), 
