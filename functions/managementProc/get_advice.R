@@ -2,31 +2,32 @@
 
 
 get_advice <- function(stock){
-
+  
   # prepare data
   tempStock <- get_tmbSetup(stock = stock)
   
   #### Run assessment model ####
   # Run the CAA assessment
   if(mproc[m,'ASSESSCLASS'] == 'CAA'){
-  tempStock <- get_caa(stock = tempStock)}
+  tempStock <- get_caa(stock = tempStock)
+  }
   
   # Run the PlanB assessment
   tempStock <- get_planB(stock = tempStock)
   
   # Run ASAP assessment
   if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
-  tempStock <- get_ASAP(stock = tempStock)
+    tempStock <- get_ASAP(stock = tempStock)
   }
-
+  
   # was the assessment successful?
   tempStock <- within(tempStock, {
     conv <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' & 
-                   class(opt) != 'try-error') ||
-                   (mproc[m,'ASSESSCLASS'] == 'PLANB' & 
-                   class(planBest) != 'try-error') ||
-                   (mproc[m, 'ASSESSCLASS'] == 'ASAP' &
-                   class(asapEst) != 'try-error'),
+                      class(opt) != 'try-error') ||
+                     (mproc[m,'ASSESSCLASS'] == 'PLANB' & 
+                        class(planBest) != 'try-error') ||
+                     (mproc[m, 'ASSESSCLASS'] == 'ASAP' &
+                        class(asapEst) != 'try-error'),
                    yes = 1, no = 0)
   })
   
@@ -36,25 +37,26 @@ get_advice <- function(stock){
     tempStock <- within(tempStock, {
       SSBaa <- rep$J1N * get_dwindow(waa, sty, y-1) * get_dwindow(mat, sty, y-1)
       SSBhat <- apply(SSBaa, 1, sum)
-    }
+    })
+    
     
     # Vary the parpop depending on the type of assessment model
     # (can't have just one because one of the models might not
     # converge.
     if(mproc[m,'ASSESSCLASS'] == 'CAA'){
       tempStock <- within(tempStock, {
-      parpop <- list(waa = tail(rep$waa, 1) / caaInScalar, 
-                     sel = tail(rep$slxC, 1), 
-                     M = tail(rep$M, 1), 
-                     mat = mat[y-1,],
-                     R = rep$R * caaInScalar,
-                     SSBhat = SSBhat * caaInScalar,
-                     J1N = rep$J1N * caaInScalar,
-                     Rpar = Rpar,
-                     Fhat = tail(rep$F_full, 1))
+        parpop <- list(waa = tail(rep$waa, 1) / caaInScalar, 
+                       sel = tail(rep$slxC, 1), 
+                       M = tail(rep$M, 1), 
+                       mat = mat[y-1,],
+                       R = rep$R * caaInScalar,
+                       SSBhat = SSBhat * caaInScalar,
+                       J1N = rep$J1N * caaInScalar,
+                       Rpar = Rpar,
+                       Fhat = tail(rep$F_full, 1))
       })
     }
-     
+    
     if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
       tempStock <- within(tempStock, {
         parpop <- list(obs_sumCW = tmb_dat$obs_sumCW,
@@ -63,7 +65,7 @@ get_advice <- function(stock){
                        Ntrue_y = J1N[y-1,],
                        Mtrue_y = M,
                        slxCtrue_y = slxC[y-1,])
-        })
+      })
     }
     
     if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
@@ -80,34 +82,14 @@ get_advice <- function(stock){
       })
     }
     
-    if(mproc[m,'rhoadjust'] == 'TRUE'){
-      dSSB<-as.data.frame(tempStock$SSBhat)
-      dSSB$Year<-(y-(stock$ncaayear-1)):y
-      colnames(dSSB)<-c('SSB','Year')
-      tempStock<-within(tempStock,{
-        assign(paste('SSB',y,sep=''),dSSB)
-        if(y > 167){
-          peels<-y-167
-          if(peels>7){peels<-7}
-          for (p in (y-peels):(y-1)){
-            SSBold<-get(paste('SSB',p,sep=''))$SSB[get(paste('SSB',p,sep=''))$Year==p]
-            SSBnew<-get(paste('SSB',y,sep=''))$SSB[get(paste('SSB',p,sep=''))$Year==p]
-            assign(paste('rho',p,sep=''),(SSBold-SSBnew)/SSBnew)
-          }
-          plist <- mget(paste('rho',(y-peels):(y-1),sep=''))
-          pcols <- do.call('cbind', plist)
-          MohnsRho <- rowSums(pcols) / peels
-          SSBhat[length(SSBhat)]<-SSBhat[length(SSBhat)]/(MohnsRho+1)
-        }
-      })
-    })
+    
     # Environmental parameters
     parenv <- list(tempY = temp,
                    Tanom = Tanom,
                    yrs = yrs, # management years
                    yrs_temp = yrs_temp, # temperature years
                    y = y-1)
-
+    
     
     #### Get ref points & assign F ####
     
@@ -121,11 +103,11 @@ get_advice <- function(stock){
           (y-fyear) > 0 & 
           (y-fyear-1) %% mproc[m,'RPInt'] == 0 ) ){
       
-        gnF <- get_nextF(parmgt = mproc[m,], parpop = tempStock$parpop,
+      gnF <- get_nextF(parmgt = mproc[m,], parpop = tempStock$parpop,
                        parenv = parenv,
                        RPlast = NULL, evalRP = TRUE,
                        stock = tempStock)
-        tempStock$RPmat[y,] <- gnF$RPs
+      tempStock$RPmat[y,] <- gnF$RPs
       
     }else{
       # Otherwise use old reference points to calculate stock
@@ -147,12 +129,12 @@ get_advice <- function(stock){
       
       # Report maximum gradient component for CAA model
       mxGradCAA[y-1] <- ifelse(mproc[m,'ASSESSCLASS'] == 'CAA',
-                             yes = rep$maxGrad,
-                             no = NA)
+                               yes = rep$maxGrad,
+                               no = NA)
       
       # Tabulate advice (plus small constant)
       adviceF <- gnF$F + 1e-5 
-
+      
       # Calculate expected J1N using parameters from last year's assessment
       # model (i.e., this is Dec 31 of the previous year). Recruitment is
       # just recruitment from the previous year. This could be important
@@ -172,7 +154,7 @@ get_advice <- function(stock){
       ACL[y] <- quota
       
     })
-      
+    
   }else{
     
     # if the assessment model didn't work then fill the
@@ -188,12 +170,12 @@ get_advice <- function(stock){
         eval(parse(text=paste0('oacomp[[i]][', commas, '] <- NA')))
       }
     })
-  
+    
     # After filling the arrays with NA values, break out of
     # the loop and move on to the next management strategy
     break
   }
-
+  
   return(tempStock)
   
 }
