@@ -35,18 +35,14 @@ get_advice <- function(stock){
   
   if(tempStock$conv){
     
-    # Retrieve the estimated spawner biomass (necessary for advice)
-    tempStock <- within(tempStock, {
-      SSBaa <- rep$J1N * get_dwindow(waa, sty, y-1) * get_dwindow(mat, sty, y-1)
-      SSBhat <- apply(SSBaa, 1, sum)
-    })
-    
-    
+    # Retrieve the estimated spawner biomass (necessary for advice) &
     # Vary the parpop depending on the type of assessment model
     # (can't have just one because one of the models might not
     # converge.
     if(mproc[m,'ASSESSCLASS'] == 'CAA'){
       tempStock <- within(tempStock, {
+        SSBaa <- rep$J1N * get_dwindow(waa, sty, y-1) * get_dwindow(mat, sty, y-1)
+        SSBhat <- apply(SSBaa, 1, sum)
         parpop <- list(waa = tail(rep$waa, 1) / caaInScalar, 
                        sel = tail(rep$slxC, 1), 
                        M = tail(rep$M, 1), 
