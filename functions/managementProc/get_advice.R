@@ -13,7 +13,9 @@ get_advice <- function(stock){
   }
   
   # Run the PlanB assessment
+  if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
   tempStock <- get_planB(stock = tempStock)
+  }
   
   # Run ASAP assessment
   if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
@@ -22,11 +24,11 @@ get_advice <- function(stock){
   
   # was the assessment successful?
   tempStock <- within(tempStock, {
-    conv <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' & 
+    conv <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' && 
                       class(opt) != 'try-error') ||
-                     (mproc[m,'ASSESSCLASS'] == 'PLANB' & 
+                     (mproc[m,'ASSESSCLASS'] == 'PLANB' && 
                         class(planBest) != 'try-error') ||
-                     (mproc[m, 'ASSESSCLASS'] == 'ASAP' &
+                     (mproc[m, 'ASSESSCLASS'] == 'ASAP' &&
                         class(asapEst) != 'try-error'),
                    yes = 1, no = 0)
   })
