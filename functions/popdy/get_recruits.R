@@ -59,7 +59,7 @@
 get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
                          R_ym1=NULL, Rhat_ym1=NULL, stockEnv = stock){
 
-  if(!type %in% c('BH', 'BHSteep', 'HS')){
+  if(!type %in% c('BH', 'BHSteep', 'HS','ChangeProd_Low')){
     stop(paste('get_recruits: check spelling of R_typ in individual stock 
                parameter file for', stockNames[i]))
   }
@@ -170,8 +170,27 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
     return(pred)
        })
   }
-    
-    
+  else if (type == 'ChangeProd_Low'){ 
+      assess_vals <- get_HistAssess(stock = stock[[i]])
+      
+      Rhat <- with(as.list(par),{
+        
+        if (block == 'early'){  # how to calculate historic recruitment, use first 10 assessment years
+          if (SSB >= SSB_star) {
+            pred <- cR * remp(1, head(as.numeric(assess_vals$assessdat$R), 10))    
+            
+          } else if (SSB < SSB_star){
+            pred <-  cR * (SSB/SSB_star) * remp(1, head(as.numeric(assess_vals$assessdat$R), 10))    
+            
+          }
+          
+        } else if (block == 'late'){  # how to calculate projected recruitment using last 20 assessment years
+          pred <-  (par['a']*SSB)/(1+(par['b']*SSB))*exp(par['g']*TAnom_y)*1000
+        }
+        
+        return(pred)
+      })
+    }  
  
   # Autocorrelation component
   ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
