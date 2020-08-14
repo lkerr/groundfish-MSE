@@ -100,6 +100,7 @@ get_advice <- function(stock){
           pcols <- do.call('cbind', plist)
           MohnsRho <- rowSums(pcols) / peels
           SSBhat[length(SSBhat)]<-SSBhat[length(SSBhat)]/(MohnsRho+1)
+          parpop$SSBhat<-SSBhat
         }
       })
     }
