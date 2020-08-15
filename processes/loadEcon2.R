@@ -21,6 +21,10 @@ if ('gffishingyear' %in% colnames(wi)){
 #This would be a good place to adjust any indep variables in the targeting_dataset. (like forcing the fy dummy to a different value 
 
 
+#Initialize the state_dependence table  targeting
+#state_dependence_file<-paste0(econ_data_stub,econ_base_draw,".Rds")
+
+#most_recent_target<-readRDS(file.path(econdatapath,econdatafile))
 
 
 
