@@ -81,12 +81,11 @@ get_advice <- function(stock){
                        Fhat = tail(res$F.report, 1))
       })
     }
-    
     if(mproc[m,'rhoadjust'] == 'TRUE'){
-      dSSB<-as.data.frame(tempStock$SSBhat)
-      dSSB$Year<-(y-(stock$ncaayear-1)):y
-      colnames(dSSB)<-c('SSB','Year')
       tempStock<-within(tempStock,{
+        dSSB<-as.data.frame(tempStock$SSBhat)
+        dSSB$Year<-(y-(stock$ncaayear-1)):y
+        colnames(dSSB)<-c('SSB','Year')
         assign(paste('SSB',y,sep=''),dSSB)
         if(y > 167){
           peels<-y-167
