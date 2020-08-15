@@ -86,13 +86,13 @@ for (wy in 2010:2015) {
   wm<-multipliers[[idx]]
   }
   
-  wm[, gffishingyear:=NULL]
+  #wm[, gffishingyear:=NULL]
   
   wo<-outputprices[[idx]]
-  wo[, gffishingyear:=NULL]
+  #wo[, gffishingyear:=NULL]
   
   wi<-inputprices[[idx]]
-  wi[, gffishingyear:=NULL]
+  #wi[, gffishingyear:=NULL]
   
   
   
