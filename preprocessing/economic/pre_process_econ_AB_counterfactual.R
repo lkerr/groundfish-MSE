@@ -44,17 +44,19 @@ savepath <- './data/data_processed/econ'
 # We also rename the exp_rev_total_das coefficient to exp_rev_total in the coefficient import step.
 
 
-spstock_equation_prenc1=c("das_price_mean", "das_price_mean_len","exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
-choice_equation_prenc1=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
+spstock_equation_prenc1=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
+choice_equation_prenc1=c("das_price_mean", "das_price_mean_len","wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
 
 spstock_equation_pre1<-c(spstock_equation_prenc1,"constant")
-choice_equation_pre1=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
+choice_equation_pre1<-choice_equation_prenc1
 
-spstock_equation_prenc2<-c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
+
+spstock_equation_prenc2<-c("exp_rev_total_das", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
 choice_equation_prenc2<-c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
 
 spstock_equation_pre2<-c(spstock_equation_prenc2,"constant")
-choice_equation_pre2<-c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
+choice_equation_pre2<-choice_equation_prenc2
+
 
 
 #These are mostly placeholders
