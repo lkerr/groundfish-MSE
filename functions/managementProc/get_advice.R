@@ -83,21 +83,22 @@ get_advice <- function(stock){
     }
     if(mproc[m,'rhoadjust'] == 'TRUE'){
       tempStock<-within(tempStock,{
-        dSSB<-as.data.frame(tempStock$SSBhat)
+        dSSB<-as.data.frame(SSBhat)
         dSSB$Year<-(y-(stock$ncaayear-1)):y
         colnames(dSSB)<-c('SSB','Year')
         assign(paste('SSB',y,sep=''),dSSB)
-        if(y > 167){
-          peels<-y-167
+        if(y > fmyearIdx){
+          peels<-y-fmyearIdx
           if(peels>7){peels<-7}
-          for (p in (y-peels):(y-1)){
+          for (p in (y-peels):y){
             SSBold<-get(paste('SSB',p,sep=''))$SSB[get(paste('SSB',p,sep=''))$Year==p]
             SSBnew<-get(paste('SSB',y,sep=''))$SSB[get(paste('SSB',p,sep=''))$Year==p]
             assign(paste('rho',p,sep=''),(SSBold-SSBnew)/SSBnew)
           }
-          plist <- mget(paste('rho',(y-peels):(y-1),sep=''))
+          plist <- mget(paste('rho',(y-peels):y,sep=''))
           pcols <- do.call('cbind', plist)
           MohnsRho <- rowSums(pcols) / peels
+          cat('Rho calculated.')
           SSBhat[length(SSBhat)]<-SSBhat[length(SSBhat)]/(MohnsRho+1)
           parpop$SSBhat<-SSBhat
         }
