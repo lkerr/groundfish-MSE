@@ -82,6 +82,7 @@ get_advice <- function(stock){
       })
     }
     if(mproc[m,'rhoadjust'] == 'TRUE'){
+      browser()
       tempStock<-within(tempStock,{
         dSSB<-as.data.frame(SSBhat)
         dSSB$Year<-(y-(stock$ncaayear-1)):y
