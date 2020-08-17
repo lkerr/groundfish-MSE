@@ -46,8 +46,12 @@ for (wy in 2010:2015) {
   if(modelno=="2"){
     targeting$exp_rev_total<-targeting$exp_rev_total_das
   } else if(modelno=="1"){
-# do nothing, we will match exp_rev_total automatically
-    }
+      # do nothing, we will match exp_rev_total automatically
+  } else {
+    stop("Unrecognized model number ")
+  }
+
+  
   # the validation or MSE only, change das_price_hat to das_price_mean
   #I don't think we want to do this!  In the post as post, we should have DAS costs=0
   # if (yrstub == "POSTasPOST"){
@@ -70,6 +74,8 @@ for (wy in 2010:2015) {
       targeting_vars<-c(spstock_equation_post1,choice_equation_post1)
     } else   if (modelname=="post_coefs2"){
       targeting_vars<-c(spstock_equation_post2,choice_equation_post2)
+    }else {
+      stop("Unrecognized model name")
     }
   
   
@@ -100,7 +106,7 @@ for (wy in 2010:2015) {
 
 # My current 
 if("emean" %in% colnames(targeting)){
-  print("Yep, it's in there!")
+  print("Yep, emean is there!")
 } else {
   warning('emean hack, production predictions will be wrong')
   targeting$emean<-1
@@ -194,6 +200,10 @@ targeting<-wi[targeting, on=c("hullnum","doffy","spstock2")]
 targeting[, fuelprice_len:=fuelprice*len]
 targeting[, fuelprice_distance:=fuelprice*distance]
 
+#Archive choice_prev_fish to OG_choice_prev_fish and set choice_prev_fish=0
+setnames(targeting,"choice_prev_fish","OG_choice_prev_fish")
+targeting[, choice_prev_fish:=0]
+
 
 td_cols<-colnames(targeting)
 
@@ -219,7 +229,7 @@ necessary=c("q", "gffishingyear", "emean","nchoices", "MONTH","das_cost")
 xbcols<-grep("^xb_",colnames(targeting) , value=TRUE)
 prhatcols<-grep("^pr_hat_",colnames(targeting) , value=TRUE)
 
-useful_vars=c("gearcat","post","h_hat","choice", "log_h_hat")
+useful_vars=c("gearcat","post","h_hat","choice", "log_h_hat","OG_choice_prev_fish")
 
 mysubs=c(idvars,necessary,useful_vars, targeting_vars, production_vars, fyvars, monthvars, betavars, alphavars, cmultipliers, lmultipliers, quota_prices, lag_output_prices, output_prices, xbcols, prhatcols)
 #this sometimes is needed if there are the same columns in the production and targeting equation, like "constant"

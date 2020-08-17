@@ -43,7 +43,7 @@ top_loop_start<-Sys.time()
 
 ####################These are temporary changes for testing ####################
 mproc_bak<-mproc
-mproc<-mproc_bak[1:4,] #selects validation, counterfactual and counterfactual_single 
+mproc<-mproc_bak[2:5,] #selects validation of four models
 
 #mproc<-mproc_bak[17:20,] #selects "validation single"  
 
@@ -151,7 +151,12 @@ for(r in 1:nrep){
           
       } #End of year loop
        #stopImplicitCluster()
-  
+       
+       # Clean up mprocs 
+        if(mproc$ImplementationClass[m]=="Economic"){
+         source('processes/Econ_mproc_reset.R')
+        }
+       
         } #End mproc loop 
     
       } #End rep loop
