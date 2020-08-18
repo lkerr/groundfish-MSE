@@ -68,14 +68,15 @@ get_advice <- function(stock){
     
     if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
       tempStock <- within(tempStock, {
-        SSBaa <- res$N.age * get_dwindow(waa, sty, y-1) * get_dwindow(mat, sty, y-1)
-        SSBhat <- apply(SSBaa, 1, sum)
+        browser()
+        SSBaa <- res$N.age * get_dwindow(waa, sty, y-1)*1000 * get_dwindow(mat, sty, y-1)
+        SSBhat<-apply(SSBaa, 1, sum)
         parpop <- list(waa = tail(res$WAA.mats$WAA.catch.fleet1, 1),           
                        sel = tail(res$fleet.sel.mats$sel.m.fleet1, 1),                      
                        M = tail(res$M.age, 1), 
                        mat = res$maturity[1,],                               
                        R = res$SR.resids$recruits,
-                       SSBhat = res$SSB,
+                       SSBhat = SSBhat,
                        J1N = tail(res$N.age,1),                 ### or use J1B reported in biomass 
                        Rpar = Rpar,
                        Fhat = tail(res$F.report, 1))
@@ -83,16 +84,15 @@ get_advice <- function(stock){
     }
     if(mproc[m,'rhoadjust'] == 'TRUE'){
       tempStock<-within(tempStock,{
-        dSSB<-as.data.frame(SSBhat)
-        dSSB$Year<-(y-(stock$ncaayear-1)):y
-        colnames(dSSB)<-c('SSB','Year')
-        assign(paste('SSB',y,sep=''),dSSB)
         if(y > fmyearIdx){
           peels<-y-fmyearIdx
           if(peels>7){peels<-7}
+          tempwd<-getwd()
           for (p in (y-peels):y){
-            SSBold<-get(paste('SSB',p,sep=''))$SSB[get(paste('SSB',p,sep=''))$Year==p]
-            SSBnew<-get(paste('SSB',y,sep=''))$SSB[get(paste('SSB',p,sep=''))$Year==p]
+            idx<-ncaayear-peels
+            SSBold<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', p,'.rdat', sep = ''))$SSB[idx]
+            SSBnew<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB[idx]
+
             assign(paste('rho',p,sep=''),(SSBold-SSBnew)/SSBnew)
           }
           plist <- mget(paste('rho',(y-peels):y,sep=''))

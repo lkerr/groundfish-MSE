@@ -7,7 +7,6 @@
 get_ASAP <- function(stock){
 
   out <- within(stock, {
-
     styear <- y - ncaayear
     endyear <- y - 1
 
@@ -255,7 +254,6 @@ get_ASAP <- function(stock){
     res <- dget('asap3.rdat')
 
     asapEst <- try(res)
-
     # save .Rdata results from each run
     saveRDS(res, file = paste(rundir, '/', stockName, '_', r, '_', y,'.rdat', sep = ''))
     #save .par file
