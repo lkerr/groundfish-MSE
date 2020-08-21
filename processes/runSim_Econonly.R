@@ -46,6 +46,7 @@ mproc_bak<-mproc
 #mproc<-mproc_bak[2:5,] #selects validation of four models
 
 #mproc<-mproc_bak[17:20,] #selects "validation single"  
+write.csv(mproc,file=file.path(ResultDirectory,"simulated_mproc.csv"))
 
 nrep<-100
 # yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
