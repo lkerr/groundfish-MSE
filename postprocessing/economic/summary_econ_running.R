@@ -5,6 +5,13 @@
 # The result csv's may or may not contain an entire replicate; but they will contain entire fishing years.
 library(data.table)
 
+
+
+#filenames for results
+econ_out_csv<-"monthly_summary_part2.csv"
+stock_status_out_csv<-"stock_status_stacked_part2.csv"
+
+
 #selects most recent file path in groundfish_MSE folder, which should be resuls_2020-... if the runsim_Econonly.R has just been run 
 
 file_path = file.info(list.files(full.names = T))
@@ -15,6 +22,9 @@ file_path = "./results_2020-08-11-10-41-12/"
 
 #selects just the econ_2020 datasets
 file_names = list.files(path=file.path(file_path, "econ","raw"), pattern = "econ_2020", full.names = TRUE)
+
+
+
 
 #binding into a data.table
 simulations<-list()
@@ -50,8 +60,7 @@ simulations[[r]]<-monthly_summary
 
 monthly_summary <- rbindlist(simulations)
 
-write.csv(monthly_summary, file.path(file_path, "monthly_summary.csv"))
-
+write.csv(monthly_summary, file.path(file_path, econ_out_csv))
 
 
 
@@ -83,7 +92,8 @@ for(r in 1:length(file_names)){
 
 stock_status_stacked <- rbindlist(stock_status)
 
-write.csv(stock_status_stacked, file.path(file_path, "stock_status_stacked_troubleshoot.csv"))
+
+write.csv(stock_status_stacked, file.path(file_path, stock_status_out_csv))
 
 
 
