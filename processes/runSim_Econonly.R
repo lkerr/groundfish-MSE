@@ -43,7 +43,7 @@ top_loop_start<-Sys.time()
 
 ####################These are temporary changes for testing ####################
 mproc_bak<-mproc
-mproc<-mproc_bak[2:5,] #selects validation of four models
+#mproc<-mproc_bak[2:5,] #selects validation of four models
 
 #mproc<-mproc_bak[17:20,] #selects "validation single"  
 write.csv(mproc,file=file.path(ResultDirectory,"simulated_mproc.csv"))
