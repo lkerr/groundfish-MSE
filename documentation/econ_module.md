@@ -212,6 +212,41 @@ Outputs of these are:
 
 ## Input Data
 There are a few input datasets needed to run. 
+Anna generates these:
+
+data_processed/econ
+
+annual_sector_catch_limits.csv
+
+catch_limits_2010_2017.csv
+
+catch_limits_2017.csv
+
+stocks_in_choiceset.dta
+
+
+
+data_raw/econ
+
+trip_limits_forsim.dta 
+
+reshape_multipliers.dta
+
+production_regs_actual_pre_forR.txt
+
+production_regs_actual_post_forR.txt
+
+*.ster 
+
+output_price_series*.dta
+
+input_price_series*.dta
+
+asclogit*.txt
+
+POSTasPOST*.dta
+
+
 * **full_targeting_YYYY.Rds** - contains "independant variables" associated with the production and targeting models, estimated coefficients. Each row corresponds a vessel-day-targeting choice.  I tried to optimize for less memory usage, but it makes the model run extremely slowly.  
 
 * **input_prices_POST_STUB.Rds** vessel-day level input prices. fuelprice and crew wages vary by vessel.  This variability is partially due to their locations (prices of fuel vary by state; so do prices of labor). Also varies based on the size and composition of the boat's crew.  POST can be "pre" or "post" and STUB can be "CF", "MSE", or "valid" 

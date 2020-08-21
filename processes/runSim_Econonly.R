@@ -13,8 +13,8 @@
   # check/verify that closing fisheries for jointness is coded properly.
 
 #added pre-processing code here for vaidation and counterfatual scenarios 
-source("preprocessing/economic/pre_process_econ_AB_validation.R")
-source("preprocessing/economic/pre_process_econ_AB_counterfactual.R")
+#source("preprocessing/economic/pre_process_econ_AB_validation.R")
+#source("preprocessing/economic/pre_process_econ_AB_counterfactual.R")
 
 
 #### Set up environment ####
@@ -43,8 +43,12 @@ top_loop_start<-Sys.time()
 
 ####################These are temporary changes for testing ####################
 mproc_bak<-mproc
-mproc<-mproc_bak[2:13,] #selects validation, counterfactual and counterfactual_single 
-nrep<-2
+#mproc<-mproc_bak[2:5,] #selects validation of four models
+
+#mproc<-mproc_bak[17:20,] #selects "validation single"  
+write.csv(mproc,file=file.path(ResultDirectory,"simulated_mproc.csv"))
+
+nrep<-100
 # yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
 # I want to start the economic model at fmyear=2010 and temporarily end it in 2011
 start_sim<-2010
@@ -72,7 +76,7 @@ showProgBar<-TRUE
   #This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
     
 source('processes/setupYearIndexing_Econ.R')
- 
+
 #### Top rep Loop ####
 for(r in 1:nrep){
     oldseed_mproc <- .Random.seed
@@ -81,7 +85,12 @@ for(r in 1:nrep){
     #now testing to see if this runs
 
     for(m in 1:nrow(mproc)){
-      model = mproc$EconData[m] 
+      model = mproc$EconData[m]
+      
+      
+      tchars<-nchar(model)
+      modelno<-substr(model,tchars,tchars)
+
       manage_counter<-0
       
        #Restore the rng state.  Depending on whether you use oldseed1 or oldseed2, you'll get different behavior.  oldseed_ALL will force all the replicates to start from the same RNG state.  oldseed_mproc will force all the management procedures to have the same RNG state.  You probably want oldseed_mproc 
@@ -116,7 +125,7 @@ for(r in 1:nrep){
 
               source('processes/runEcon_moduleonly.R')
               end_rng_holder[[yearitercounter]]<-c(r,model,y,yrs[y],.Random.seed)    
-              
+
             } #End Run Economic model if statement.
           
            
@@ -143,7 +152,12 @@ for(r in 1:nrep){
           
       } #End of year loop
        #stopImplicitCluster()
-  
+       
+       # Clean up mprocs 
+        if(mproc$ImplementationClass[m]=="Economic"){
+         source('processes/Econ_mproc_reset.R')
+        }
+       
         } #End mproc loop 
     
       } #End rep loop

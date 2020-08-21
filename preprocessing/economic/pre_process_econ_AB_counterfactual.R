@@ -40,13 +40,65 @@ savepath <- './data/data_processed/econ'
 
 
 ###########################Make sure you have the correct set of RHS variables.
-spstock_equation=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
+# Model 2 has a slightly different exp_rev_total variable, however, to avoid mucking with the formulas later, we will simply replace exp_rev_total with exp_rev_total_das in the data import step. It doesn't matter much, because this variable is determined endogenously. 
+# We also rename the exp_rev_total_das coefficient to exp_rev_total in the coefficient import step.
 
-choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
 
-targeting_vars=c(spstock_equation, choice_equation)
+spstock_equation_prenc1=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
+choice_equation_prenc1=c("das_price_mean", "das_price_mean_len","wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
 
-production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","primary", "secondary","constant")
+spstock_equation_pre1<-c(spstock_equation_prenc1,"constant")
+choice_equation_pre1<-choice_equation_prenc1
+
+
+spstock_equation_prenc2<-c("exp_rev_total_das", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
+choice_equation_prenc2<-c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
+
+spstock_equation_pre2<-c(spstock_equation_prenc2,"constant")
+choice_equation_pre2<-choice_equation_prenc2
+
+
+
+#These are mostly placeholders
+spstock_equation_postnc1<-spstock_equation_prenc1
+choice_equation_postnc1<-choice_equation_prenc1
+
+spstock_equation_post1<-spstock_equation_pre1
+choice_equation_post1<-choice_equation_pre1
+
+spstock_equation_postnc2<-spstock_equation_prenc2
+choice_equation_postnc2<-choice_equation_prenc2
+
+spstock_equation_post2<-spstock_equation_pre2
+choice_equation_post2<-choice_equation_pre2
+############## End Independent variables in the targeting equation ##########################
+
+
+
+# 
+# ##############Independent variables in the Production equation ##########################
+# ### If there are different the equations, you can set there up here, then use their suffix in the mproc file to use these new targeting equations
+# ### example, using ProdEqn=tiny in the mproc file and uncommenting the next  line will be regression with 2 RHS variables and no constant.
+# # production_vars_tiny=c("log_crew","log_trip_days")
+# 
+ production_vars_pre=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","constant")
+ production_vars_post=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","log_sector_acl", "constant")
+
+ 
+ #the counterfactual  dataset always uses pre production.
+ production_vars<- production_vars_pre
+ # ############## End Independent variables in the Production equation ##########################
+# 
+# 
+# 
+# 
+# #spstock_equation2=c("exp_rev_total_das", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
+# 
+# choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
+# 
+# targeting_vars=c(spstock_equation, choice_equation)
+# 
+# production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","log_sector_acl","primary", "secondary","constant")
 
 ####################Locations of files. 
 # Counterfactual uses pre-targeting coefficients

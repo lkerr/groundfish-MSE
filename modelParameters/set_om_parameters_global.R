@@ -9,10 +9,13 @@
 # Debug using simple temperature trend that reduces variance? (T/F)
 simpleTemperature <- FALSE
 
+
 # Which management procedures csv do you want to read:
 #mprocfile<-"mproc.csv"
 #mprocfile<-"mprocTest.csv"
-mprocfile<-"mprocEcon.csv"
+mprocfile<-"mprocEcon_counterfactual_single.csv"
+
+#mprocfile<-"mprocEcon_counterfactual.csv
 
 #### Stock parameters ####
 
@@ -107,17 +110,41 @@ econ_data_end<-2015
 ##############Stocks in the Economic Model #############################
 spstock2s<-c("americanlobster","americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","monkfish", "other","pollock","redsilveroffshorehake","redfish","seascallop","skates","spinydogfish","squidmackerelbutterfishherring","summerflounder","whitehake","winterflounderGB","winterflounderGOM","witchflounder","yellowtailflounderCCGOM", "yellowtailflounderGB","yellowtailflounderSNEMA")
 
+
+
 ##############Independent variables in the targeting equation ##########################
 ### If there are different targeting equations, you can set there up here, then use their suffix in the mproc file to use these new targeting equations
 ### example, using ChoicEqn=small in the mproc file and uncommenting the next two lines will be appropriate for a logit with just 3 RHS variables.
 
-##spstock_equation_small=c("exp_rev_total", "fuelprice_distance")
-##choice_equation_small=c("fuelprice_len")
-spstock_equation_pre=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
-choice_equation_pre=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
+###########################Make sure you have the correct set of RHS variables.
+# Model 2 has a slightly different exp_rev_total variable.
 
-spstock_equation_post<-spstock_equation_pre
-choice_equation_post<-choice_equation_pre
+spstock_equation_prenc1=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
+choice_equation_prenc1=c("das_price_mean", "das_price_mean_len","wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
+
+spstock_equation_pre1<-c(spstock_equation_prenc1,"constant")
+choice_equation_pre1<-choice_equation_prenc1
+
+
+spstock_equation_prenc2<-c("exp_rev_total_das", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
+choice_equation_prenc2<-c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
+
+spstock_equation_pre2<-c(spstock_equation_prenc2,"constant")
+choice_equation_pre2<-choice_equation_prenc2
+
+
+#These are mostly placeholders
+spstock_equation_postnc1<-spstock_equation_prenc1
+choice_equation_postnc1<-choice_equation_prenc1
+
+spstock_equation_post1<-spstock_equation_pre1
+choice_equation_post1<-choice_equation_pre1
+
+spstock_equation_postnc2<-spstock_equation_prenc2
+choice_equation_postnc2<-choice_equation_prenc2
+
+spstock_equation_post2<-spstock_equation_pre2
+choice_equation_post2<-choice_equation_pre2
 ############## End Independent variables in the targeting equation ##########################
 
 

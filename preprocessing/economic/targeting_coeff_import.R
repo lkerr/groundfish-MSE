@@ -98,7 +98,7 @@ targeting_coefs$beta_start_of_season.x[is.na(targeting_coefs$beta_start_of_seaso
 targeting_coefs<-within(targeting_coefs, rm(beta_start_of_season.y))
 
 colnames(targeting_coefs)[colnames(targeting_coefs)=="beta_start_of_season.x"] <- "beta_start_of_season"
-colnames(targeting_coefs)[colnames(targeting_coefs)=="beta_exp_rev_total_das"] <- "beta_exp_rev_total"
+#colnames(targeting_coefs)[colnames(targeting_coefs)=="beta_exp_rev_total_das"] <- "beta_exp_rev_total"
 
 #Force NAs to zero. This is legit. I promise.
 targeting_coefs[is.na(targeting_coefs)]<-0
