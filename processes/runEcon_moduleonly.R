@@ -34,24 +34,23 @@ annual_fishery_status_holder<-list()
 #This could move to preprocessing; I'll need to set one up for the entire simulation dataset (all 6 years)
 # You need to save it as a .RDS and then read.  And you need to figure out what to do with your merge statements In order to keep *all*
 # most_recent_target<-readRDS()
-  if(y == fmyearIdx){
-  keepcols<-c("hullnum","spstock2","choice_prev_fish")
+if(y == fmyearIdx){
+  keepcols<-c("hullnum","spstock2","OG_choice_prev_fish")
   most_recent_target<-copy(targeting_dataset[[1]])
   most_recent_target<-most_recent_target[, ..keepcols]
   most_recent_target<-most_recent_target[spstock2!="nofish"]
-  colnames(most_recent_target)[3]<-"targeted"
-  most_recent_target<-most_recent_target[targeted==1]
-  
-  }
+  most_recent_target<-most_recent_target[OG_choice_prev_fish==1]
+  setnames(most_recent_target,"OG_choice_prev_fish","targeted")
+  #You should write an assert type statment that most_recent_target has >=1 rows.
+}
 
 for (day in 1:365){
   
-# Subset for the day.  Add in production coeffients and construct some extra data.
-working_targeting<-copy(targeting_dataset[[day]])
-working_targeting$OG_choice_prev_fish<-working_targeting$choice_prev_fish
-
-working_targeting<-get_predict_eproduction(working_targeting)
-
+  # Subset for the day.  Add in production coeffients and construct some extra data.
+  working_targeting<-copy(targeting_dataset[[day]])
+  
+  
+  working_targeting<-get_predict_eproduction(working_targeting)
 
 working_targeting[spstock2=="nofish", harvest_sim:=0L]
 working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse(harvest_sim >= dl_primary, dl_primary, harvest_sim))]
