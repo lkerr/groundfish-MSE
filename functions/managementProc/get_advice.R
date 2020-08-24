@@ -13,9 +13,8 @@ get_advice <- function(stock){
   }
   
   # Run the PlanB assessment
-  if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
   tempStock <- get_planB(stock = tempStock)
-  }
+
   
   # Run ASAP assessment
   if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
@@ -68,15 +67,12 @@ get_advice <- function(stock){
     
     if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
       tempStock <- within(tempStock, {
-        browser()
-        SSBaa <- res$N.age * get_dwindow(waa, sty, y-1)*1000 * get_dwindow(mat, sty, y-1)
-        SSBhat<-apply(SSBaa, 1, sum)
         parpop <- list(waa = tail(res$WAA.mats$WAA.catch.fleet1, 1),           
                        sel = tail(res$fleet.sel.mats$sel.m.fleet1, 1),                      
                        M = tail(res$M.age, 1), 
                        mat = res$maturity[1,],                               
                        R = res$SR.resids$recruits,
-                       SSBhat = SSBhat,
+                       SSBhat = res$SSB,
                        J1N = tail(res$N.age,1),                 ### or use J1B reported in biomass 
                        Rpar = Rpar,
                        Fhat = tail(res$F.report, 1))
@@ -92,7 +88,6 @@ get_advice <- function(stock){
             idx<-ncaayear-peels
             SSBold<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', p,'.rdat', sep = ''))$SSB[idx]
             SSBnew<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB[idx]
-
             assign(paste('rho',p,sep=''),(SSBold-SSBnew)/SSBnew)
           }
           plist <- mget(paste('rho',(y-peels):y,sep=''))
