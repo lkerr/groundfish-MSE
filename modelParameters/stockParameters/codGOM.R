@@ -38,6 +38,8 @@ M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
 #M <- 0.4
 #M_typ <- 'ramp'
+M_mis<-TRUE
+M_mis_val<-0.4
 
 # initial numbers at-age parameters
 #initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
@@ -70,7 +72,7 @@ selC_typ <- 'input'
 #Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
           #cR = 1) # dont need to convert
 #Rpar <- c(SSB_star = 7900, #mt  #from GOM COD 2019 MRAMP 
-#          cR = 1) # dont need to convert
+     #     cR = 1) # dont need to convert
 #R_typ <- 'HS'
 ###For Change in Productivity (Low)###
 Rpar<-c(SSB_star = 6300, cR = 1,a=0.5,b=0.00022429,g=-0.6)#M=0.2
