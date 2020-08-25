@@ -94,8 +94,7 @@ get_advice <- function(stock){
           pcols <- do.call('cbind', plist)
           MohnsRho <- rowSums(pcols) / peels
           cat('Rho calculated.')
-          SSBhat[length(SSBhat)]<-SSBhat[length(SSBhat)]/(MohnsRho+1)
-          parpop$SSBhat<-SSBhat
+          parpop$SSBhat[length(parpop$SSBhat)]<-parpop$SSBhat[length(parpop$SSBhat)]/(MohnsRho+1)
         }
       })
     }
