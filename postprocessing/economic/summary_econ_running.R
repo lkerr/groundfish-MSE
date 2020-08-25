@@ -8,17 +8,16 @@ library(data.table)
 
 
 #filenames for results
-econ_out_csv<-"monthly_summary_part2.csv"
-stock_status_out_csv<-"stock_status_stacked_part2.csv"
+econ_out_csv<-"monthly_summary_counterfactual_closeown.csv"
+stock_status_out_csv<-"stock_status_counterfactual_closeown.csv"
 
 
-#selects most recent file path in groundfish_MSE folder, which should be resuls_2020-... if the runsim_Econonly.R has just been run 
-
-file_path = file.info(list.files(full.names = T))
+#selects most recent file path in groundfish_MSE folder that starts with "results_" 
+file_path = file.info(list.files(path=".",pattern="results_*",include.dirs=TRUE,full.names = T,recursive=TRUE))
 file_path= rownames(file_path)[which.max(file_path$mtime)]
 
 #if that does not work then the file path needs to be copied in 
-file_path = "./results_2020-08-11-10-41-12/"
+#file_path = "./results_2020-08-11-10-41-12/"
 
 #selects just the econ_2020 datasets
 file_names = list.files(path=file.path(file_path, "econ","raw"), pattern = "econ_2020", full.names = TRUE)
