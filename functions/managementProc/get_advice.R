@@ -83,13 +83,21 @@ get_advice <- function(stock){
         if(y > fmyearIdx){
           peels<-y-fmyearIdx
           if(peels>7){peels<-7}
+          if (Sys.info()['sysname'] == "Windows"){
           tempwd<-getwd()
           for (p in (y-peels):y){
             idx<-ncaayear-peels
             SSBold<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', p,'.rdat', sep = ''))$SSB[idx]
             SSBnew<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB[idx]
             assign(paste('rho',p,sep=''),(SSBold-SSBnew)/SSBnew)
-          }
+          }}
+          if (Sys.info()['sysname'] == "Linux"){
+            for (p in (y-peels):y){
+              idx<-ncaayear-peels
+              SSBold<-readRDS(paste(rundir,'/', stockName, '_', r, '_', p,'.rdat', sep = ''))$SSB[idx]
+              SSBnew<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB[idx]
+              assign(paste('rho',p,sep=''),(SSBold-SSBnew)/SSBnew)
+            }}
           plist <- mget(paste('rho',(y-peels):y,sep=''))
           pcols <- do.call('cbind', plist)
           MohnsRho <- rowSums(pcols) / peels
