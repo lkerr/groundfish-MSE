@@ -18,11 +18,16 @@
 
 
 get_error_idx <- function(type, idx, par){
-                  
+         
   if(tolower(type) == 'lognorm'){
 
     idxE <- rlnorm(1, meanlog = log(idx), # - par^2/2
                       sdlog = par)
+  }
+  
+  if(tolower(type) == 'posbias'){
+
+    idxE<- exp(rsnorm(1, mean = log(idx), sd = par, xi = 0.5))
   }
   
   return(idxE)

@@ -40,6 +40,7 @@ get_indexData <- function(stock){
     
     obs_paaCN[y,] <- get_error_paa(type=oe_paaCN_typ, paa=paaCN[y,], 
                                      par=oe_paaCN)
+    
     obs_sumIN[y] <- get_error_idx(type=oe_sumIN_typ, 
                                     idx=sumIN[y] * ob_sumIN, 
                                     par=oe_sumIN)

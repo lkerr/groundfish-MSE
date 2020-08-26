@@ -46,9 +46,11 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     # Load in the recruitment function (recruitment function index is
     # found in the parmgt data frame but the actual functions are from
     # the list Rfun_BmsySim which is created in the processes folder.
+
     Rfun <- Rfun_lst[[parmgt$RFUN_NM]]
 
     funR <- Rfun(parpop = parpop, 
+                 parmgt= parmgt,
                  ny = parmgt$BREF_PAR0)
    
     B <- ssbrFmax$SSBvalue * funR

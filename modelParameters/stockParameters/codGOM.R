@@ -112,13 +112,15 @@ oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 80
 oe_paaCN_typ <- 'multinomial'
 oe_sumIN <- 0.05
-oe_sumIN_typ <- 'lognorm'
+#oe_sumIN_typ <- 'lognorm'
+oe_sumIN_typ <- 'posbias'
 oe_paaIN <- 100 #15
-oe_paaIN_typ <- 'multinomial'
+#oe_paaIN_typ <- 'multinomial'
+oe_paaIN_typ <- 'posbias'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
-# process error levels  ###################################  !!!!!!!!!!!!!!
+# process error levels  #####o##############################  !!!!!!!!!!!!!!
 pe_R <- 0.01 # cannot be zero 
 
 # implementation error of fishing mortality

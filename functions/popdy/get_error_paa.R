@@ -20,6 +20,11 @@ get_error_paa <- function(type, paa, par){
     paaE <- c(rmultinom(n=1, size=par, prob=paa)) / par
   
   }
+  if(tolower(type) == 'posbias'){
+    paaE <- c(rmultinom(n=1, size=par, prob=paa)) / par
+    paaE[1]<-paaE[1]+paaE[1]*.1
+    paaE<-paaE/sum(paaE)
+  }
 
   return(paaE)
   

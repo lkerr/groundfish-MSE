@@ -38,6 +38,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
   # found in the parmgt data frame but the actual functions are from
   # the list Rfun_BmsySim which is created in the processes folder.
   # Necessary for any forecast simulation-based approaches.
+
   Rfun <- Rfun_lst[[parmgt$RFUN_NM]]
   
   if(parmgt$FREF_TYP == 'YPR' | parmgt$FREF_TYP == 'SPR'){
