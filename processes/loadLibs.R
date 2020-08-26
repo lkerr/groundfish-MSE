@@ -28,8 +28,8 @@ if(runClass == 'HPCC'){
   require(data.table, lib.loc='../Rlib/')
   require(ASAPplots, lib.loc = '../Rlib')
   require(fishmethods, lib.loc = '../Rlib')
-  require(fGarch, lib.loc = '../Rlib')
   require(timeSeries, lib.loc = '../Rlib')
+  require(fGarch, lib.loc = '../Rlib')
 
 }else{
 
@@ -44,7 +44,7 @@ if(runClass == 'HPCC'){
     sapply(pkg, require, character.only = TRUE)
   }
 
-  pkg<-c("msm", "tmvtnorm", "TMB", "abind", "glue", "tidyverse", "dplyr", "data.table", "ASAPplots","fGarch","timeSeries")
+  pkg<-c("msm", "tmvtnorm", "TMB", "abind", "glue", "tidyverse", "dplyr", "data.table", "ASAPplots","timeSeries","fGarch")
   check.packages(pkg)
 
   require(msm)
@@ -57,8 +57,7 @@ if(runClass == 'HPCC'){
   require(data.table)
   require(ASAPplots)
   require(fishmethods)
-  require(fGarch)
   require(timeSeries)
-
+  require(fGarch)
 
 }
