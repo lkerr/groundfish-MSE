@@ -172,6 +172,17 @@ get_advice <- function(stock){
       
       quota <- get_catch(F_full = adviceF, M = natM[y], N = J1N[y,], selC = slxC[y,])
       quota <- quota %*% waa[y,]
+      if(mproc$varlimit == TRUE){
+        if(((quota-stock$sumCW[y-1])/quota)*100<(-20)){
+          quota<- stock$sumCW[y-1]-(stock$sumCW[y-1]*.2)}
+        if(((quota-stock$sumCW[y-1])/quota)*100>20){
+          quota<- stock$sumCW[y-1]+(stock$sumCW[y-1]*.2)}
+          adviceF<-get_F(x = quota,
+                Nv = J1N[y,], 
+                slxCv = slxC[y,], 
+                M = natM[y], 
+                waav = waa[y,])
+        }
       
       F_fullAdvice[y] <- adviceF
       ACL[y] <- quota
