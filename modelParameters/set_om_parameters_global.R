@@ -13,9 +13,9 @@ simpleTemperature <- FALSE
 # Which management procedures csv do you want to read:
 #mprocfile<-"mproc.csv"
 #mprocfile<-"mprocTest.csv"
-mprocfile<-"mprocEcon_counterfactual_single.csv"
+#mprocfile<-"mprocEcon_counterfactual_single.csv"
 
-#mprocfile<-"mprocEcon_counterfactual.csv
+mprocfile<-"mprocEcon_validate.csv"
 
 #### Stock parameters ####
 

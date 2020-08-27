@@ -19,21 +19,15 @@ stock_status_out_csv<-"stock_status_counterfactual_closeown.csv"
 file_path = file.info(list.files(path=".",pattern="results_*",include.dirs=TRUE,full.names = T,recursive=TRUE))
 file_path= rownames(file_path)[which.max(file_path$mtime)]
 
-#if that does not work then the file path needs to be copied in 
-#file_path = "./results_2020-08-11-10-41-12/"
-
 #selects just the econ_2020 datasets
 file_names = list.files(path=file.path(file_path, "econ","raw"), pattern = "econ_2020", full.names = TRUE)
-
-
-
 
 #binding into a data.table
 simulations<-list()
 
-for(r in 1:length(file_names)){
+for(file in 1:length(file_names)){
 
-sim<-fread(file_names[r], stringsAsFactors = FALSE)
+sim<-fread(file_names[file], stringsAsFactors = FALSE)
 sim[, trips := 1]
 
 setnames(sim, old="r", new="replicate")
@@ -56,11 +50,17 @@ sim[ ,c("id","hullnum", "doffy", "y") := NULL]
 
 monthly_summary = sim[, lapply(.SD, sum, na.rm=TRUE), by=list(year, month, spstock2, gearcat, replicate, model)]
 
-simulations[[r]]<-monthly_summary
+simulations[[file]]<-monthly_summary
 }
 
 
 monthly_summary <- rbindlist(simulations)
+
+#Verifying econ results before saving
+source("postprocessing/economic/verify_econ_result.R")
+verify_econ_results(monthly_summary = monthly_summary)
+
+
 
 write.csv(monthly_summary, file.path(file_path, econ_out_csv))
 
@@ -81,14 +81,14 @@ file_names = list.files(path=file.path(file_path, "econ","raw"), pattern = "econ
 #binding into a data.table
 stock_status<-list()
 
-for(r in 1:length(file_names)){
+for(file in 1:length(file_names)){
 
-  sim<-fread(file_names[r], stringsAsFactors = FALSE)
+  sim<-fread(file_names[file], stringsAsFactors = FALSE)
 
   setnames(sim, old="r", new="replicate")
  # setnames(sim, old="m", new="model")
   
-  stock_status[[r]]<-sim
+  stock_status[[file]]<-sim
 }
 
 

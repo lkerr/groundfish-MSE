@@ -43,12 +43,12 @@ top_loop_start<-Sys.time()
 
 ####################These are temporary changes for testing ####################
 mproc_bak<-mproc
-#mproc<-mproc_bak[2:5,] #selects validation of four models
+mproc<-mproc_bak[1:2,] #selects validation of four models
 
 #mproc<-mproc_bak[17:20,] #selects "validation single"  
-write.csv(mproc,file=file.path(ResultDirectory,"simulated_mproc.csv"))
+#write.csv(mproc,file=file.path(ResultDirectory,"simulated_mproc.csv"))
 
-nrep<-100
+nrep<-5
 # yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
 # I want to start the economic model at fmyear=2010 and temporarily end it in 2011
 start_sim<-2010
@@ -77,10 +77,20 @@ showProgBar<-TRUE
     
 source('processes/setupYearIndexing_Econ.R')
 
+start_rep = 1
+
+## Restoring to the last complete replicate of models
+# uncomment if models runs is terminated unexpectedly
+# Set up to be re-run from line 85; not the whole script 
+
+source('processes/restore_RNG_state.R')
+
 #### Top rep Loop ####
-for(r in 1:nrep){
-    oldseed_mproc <- .Random.seed
-    
+for(r in start_rep:nrep){
+
+  oldseed_mproc <- .Random.seed
+ 
+  
   #### Top MP loop ####
     #now testing to see if this runs
 
@@ -175,7 +185,7 @@ for(r in 1:nrep){
     
     saveRDS(begin_rng_holder, file.path(econ_results_location,  paste0("begin_rng_",td2, ".Rds")), compress=FALSE)
     saveRDS(end_rng_holder, file.path(econ_results_location,  paste0("end_rng_",td2, ".Rds")), compress=FALSE)
-    
+  
     
      big_loop
      
