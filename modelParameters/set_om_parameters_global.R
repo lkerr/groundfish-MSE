@@ -30,7 +30,7 @@ stockExclude <- c()
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 1
+nrep <- 100
 
 # First year to begin actual management
 fmyear <- 2010
