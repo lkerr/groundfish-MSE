@@ -6,6 +6,9 @@
 library(data.table)
 
 
+#Follow this naming pattern
+#monthly_summary_validation_modelstuffhere.csv
+#stock_status_validation_modelstuffhere.csv
 
 #filenames for results
 econ_out_csv<-"monthly_summary_counterfactual_closeown.csv"
