@@ -25,7 +25,7 @@ rm(list=ls())
 #mprocfile<-"mproc.csv"
 #mprocfile<-"mprocTest.csv"
 #mproc_manual<-"mprocEcon_validate.csv"
-mproc_manual<-"mprocEcon_counterfactual.csv"
+mproc_manual<-"mprocEcon_counterfactual_closemult.csv"
 #mproc_manual<-"mprocEcon_counterfactual_single.csv"
 
 #runSetup.R loads things and sets them up. This is used by the integrated simulation, so be careful making changes with it. Instead, overwrite them using the setupEcon_extra.R file.
