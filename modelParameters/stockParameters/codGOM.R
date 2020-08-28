@@ -38,8 +38,8 @@ M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
 #M <- 0.4
 #M_typ <- 'ramp'
-M_mis<-TRUE
-M_mis_val<-0.4
+M_mis<-FALSE
+#M_mis_val<-0.4
 
 # initial numbers at-age parameters
 #initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
@@ -69,14 +69,14 @@ selC_typ <- 'input'
 #           R0 = 4456870,
 #           SSBRF0 = 0.01822) # calculated as S0/R0 (81202.9/4456870) (arbitrary because h = 1)
 # R_typ <- 'BHSteep'
-#Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
-          #cR = 1) # dont need to convert
+Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
+          cR = 1) # dont need to convert
 #Rpar <- c(SSB_star = 7900, #mt  #from GOM COD 2019 MRAMP 
      #     cR = 1) # dont need to convert
-#R_typ <- 'HS'
+R_typ <- 'HS'
 ###For Change in Productivity (Low)###
-Rpar<-c(SSB_star = 6300, cR = 1,a=0.5,b=0.00022429,g=-0.6)#M=0.2
-R_typ<-'ChangeProd_Low'
+#Rpar<-c(SSB_star = 6300, cR = 1,a=0.5,b=0.00022429,g=-0.6)#M=0.2
+#R_typ<-'ChangeProd_Low'
 
 #### Survey parameters ####
 
@@ -112,11 +112,11 @@ oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 80
 oe_paaCN_typ <- 'multinomial'
 oe_sumIN <- 0.05
-#oe_sumIN_typ <- 'lognorm'
-oe_sumIN_typ <- 'posbias'
+oe_sumIN_typ <- 'lognorm'
+#oe_sumIN_typ <- 'posbias'
 oe_paaIN <- 100 #15
-#oe_paaIN_typ <- 'multinomial'
-oe_paaIN_typ <- 'posbias'
+oe_paaIN_typ <- 'multinomial'
+#oe_paaIN_typ <- 'posbias'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 

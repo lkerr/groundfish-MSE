@@ -13,7 +13,9 @@ get_advice <- function(stock){
   }
   
   # Run the PlanB assessment
+  if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
   tempStock <- get_planB(stock = tempStock)
+  }
 
   
   # Run ASAP assessment
@@ -23,17 +25,14 @@ get_advice <- function(stock){
   
   # was the assessment successful?
   tempStock <- within(tempStock, {
-    conv <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' && 
+    conv_rate[y] <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' && 
                       class(opt) != 'try-error') ||
                      (mproc[m,'ASSESSCLASS'] == 'PLANB' && 
                         class(planBest) != 'try-error') ||
                      (mproc[m, 'ASSESSCLASS'] == 'ASAP' &&
-                        class(asapEst) != 'try-error'),
-                   yes = 1, no = 0)
+                        asapEst == 0), 1, 0)
   })
-  
-  if(tempStock$conv){
-    
+
     # Retrieve the estimated spawner biomass (necessary for advice) &
     # Vary the parpop depending on the type of assessment model
     # (can't have just one because one of the models might not
@@ -188,27 +187,6 @@ get_advice <- function(stock){
       ACL[y] <- quota
       
     })
-    
-  }else{
-    
-    # if the assessment model didn't work then fill the
-    # array with NAs
-    tempStock <- within(tempStock, {
-      for(i in 2:length(oacomp)){
-        # Determine the dimensionality of each oacomp list component
-        # and create a character object with the appropriate
-        # number of commas and then evaluate to fill arrays
-        # with NAs
-        d <- dim(oacomp[[i]])
-        commas <- paste0(rep(',', length(d)-1), collapse='')
-        eval(parse(text=paste0('oacomp[[i]][', commas, '] <- NA')))
-      }
-    })
-    
-    # After filling the arrays with NA values, break out of
-    # the loop and move on to the next management strategy
-    break
-  }
   
   return(tempStock)
   

@@ -91,7 +91,7 @@ get_containers <- function(stockPar){
     relE_R = yx0, #AEW
     relE_F = yx0, #AEW
     SSB_cur = yx0, #AEW
-    
+    conv_rate = yx0, #MDM
     
     # Econ model containers
     # Total Weight of catch
@@ -268,7 +268,8 @@ get_containers <- function(stockPar){
       relE_F = save_vector_ann, #AEW
       OFgStatus = save_vector_ann, #AEW
       SSB_cur = save_vector_ann, #AEW
-      natM = save_vector_ann #AEW
+      natM = save_vector_ann, #AEW
+      conv_rate= save_vector_ann
     )
     
   )
