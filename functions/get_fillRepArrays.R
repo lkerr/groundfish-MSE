@@ -185,6 +185,7 @@ get_fillRepArrays <- function(stock){
     omval$relE_R[r,m,] <- relE_R #AEW
     omval$relE_F[r,m,] <- relE_F #AEW
     omval$conv_rate[r,m,]<-conv_rate #MDM
+    omval$Mohns_Rho[r,m,]<-Mohns_Rho #MDM
   })
 
   return(out)

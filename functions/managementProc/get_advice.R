@@ -77,34 +77,34 @@ get_advice <- function(stock){
                        Fhat = tail(res$F.report, 1))
       })
     }
+  
+  if(y > fmyearIdx){
+      tempStock<-within(tempStock,{
+      peels<-y-fmyearIdx
+      if(peels>7){peels<-7}
+      if (Sys.info()['sysname'] == "Windows"){
+        tempwd<-getwd()
+        for (p in (y-peels):y){
+          idx<-ncaayear-peels
+          SSBold<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', p,'.rdat', sep = ''))$SSB[idx]
+          SSBnew<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB[idx]
+          assign(paste('rho',p,sep=''),(SSBold-SSBnew)/SSBnew)
+        }}
+      if (Sys.info()['sysname'] == "Linux"){
+        for (p in (y-peels):y){
+          idx<-ncaayear-peels
+          SSBold<-readRDS(paste(rundir,'/', stockName, '_', r, '_', p,'.rdat', sep = ''))$SSB[idx]
+          SSBnew<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB[idx]
+          assign(paste('rho',p,sep=''),(SSBold-SSBnew)/SSBnew)
+        }}
+      plist <- mget(paste('rho',(y-peels):y,sep=''))
+      pcols <- do.call('cbind', plist)
+      Mohns_Rho[y] <- rowSums(pcols) / peels
+      cat('Rho calculated.')})}
     if(mproc[m,'rhoadjust'] == 'TRUE'){
       tempStock<-within(tempStock,{
-        if(y > fmyearIdx){
-          peels<-y-fmyearIdx
-          if(peels>7){peels<-7}
-          if (Sys.info()['sysname'] == "Windows"){
-          tempwd<-getwd()
-          for (p in (y-peels):y){
-            idx<-ncaayear-peels
-            SSBold<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', p,'.rdat', sep = ''))$SSB[idx]
-            SSBnew<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB[idx]
-            assign(paste('rho',p,sep=''),(SSBold-SSBnew)/SSBnew)
-          }}
-          if (Sys.info()['sysname'] == "Linux"){
-            for (p in (y-peels):y){
-              idx<-ncaayear-peels
-              SSBold<-readRDS(paste(rundir,'/', stockName, '_', r, '_', p,'.rdat', sep = ''))$SSB[idx]
-              SSBnew<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB[idx]
-              assign(paste('rho',p,sep=''),(SSBold-SSBnew)/SSBnew)
-            }}
-          plist <- mget(paste('rho',(y-peels):y,sep=''))
-          pcols <- do.call('cbind', plist)
-          MohnsRho <- rowSums(pcols) / peels
-          cat('Rho calculated.')
-          parpop$SSBhat[length(parpop$SSBhat)]<-parpop$SSBhat[length(parpop$SSBhat)]/(MohnsRho+1)
-        }
-      })
-    }
+          parpop$SSBhat[length(parpop$SSBhat)]<-parpop$SSBhat[length(parpop$SSBhat)]/(Mohns_Rho[y]+1)
+        })}
     # Environmental parameters
     parenv <- list(tempY = temp,
                    Tanom = Tanom,

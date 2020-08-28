@@ -59,7 +59,7 @@
 get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
                          R_ym1=NULL, Rhat_ym1=NULL, stockEnv = stock){
 
-  if(!type %in% c('BH', 'BHSteep', 'HS','ChangeProd_Low')){
+  if(!type %in% c('BH', 'BHSteep', 'HS','ChangeProd_Low','Ricker')){
     stop(paste('get_recruits: check spelling of R_typ in individual stock 
                parameter file for', stockNames[i]))
   }
@@ -160,10 +160,10 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
         
     } else if (block == 'late'){  # how to calculate projected recruitment using last 20 assessment years
     if (SSB >= SSB_star) {
-       pred <- cR * remp(1, tail(as.numeric(assess_vals$assessdat$R), 20))
+       pred <- cR * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
 
     } else if (SSB < SSB_star){
-      pred <-  cR * (SSB/SSB_star) * remp(1, tail(as.numeric(assess_vals$assessdat$R), 20))
+      pred <-  cR * (SSB/SSB_star) * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
 
     }
     }
@@ -190,7 +190,11 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
         
         return(pred)
       })
-    }  
+  }
+  else if (type == 'Ricker'){
+    Rhat <- par['a'] * SSB * exp(par['b'] * SSB) * 
+      exp(TAnom_y * par['g'])
+  }
  
   # Autocorrelation component
   ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
