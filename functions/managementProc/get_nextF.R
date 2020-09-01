@@ -70,7 +70,15 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpop, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
                      stockEnv = stockEnv)
-    Fref_true<- get_FBRP_true(stock=stockEnv,parenv=parenv)$Fmsytrue
+
+    if (useTemp==FALSE){
+      if (y==fmyearIdx){ 
+      Fref_true<- get_FBRP_true(stock=stockEnv,parenv=parenv)$Fmsytrue}
+    }
+    if (useTemp==TRUE){
+      Fref_true<- get_FBRP_true(stock=stockEnv,parenv=parenv)$Fmsytrue
+    }
+
     # if using forecast start the BMSY initial population at the equilibrium
     # FMSY level (before any temperature projections). This is consistent
     # with how the Fmsy is calculated.

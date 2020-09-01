@@ -158,7 +158,13 @@ for(r in 1:nrep){
         if(showProgBar==TRUE){
           setTxtProgressBar(iterpb, yearitercounter)
         }
-    } #End of year loop
+    }
+       
+    #Calculate terminal year relative error
+    for(i in 1:nstock){
+         stock[[i]] <- get_TermrelError(stock = stock[[i]])
+       }
+       #End of year loop
   } #End of mproc loop
 
 
