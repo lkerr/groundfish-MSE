@@ -5,26 +5,25 @@
 get_FBRP_true <- function(stock,parenv){
   
   within(stock,{
-
   #range of F to simulate over
-    candF <- seq(from=0, to=1.2, by=0.01)
+    candF <- seq(from=0.05, to=1, by=0.01)
     yields<- matrix(NA, nrow=50,ncol=length(candF))
     
-    for (k in 1:50){
-    for (i in 1:121){
-    for (j in y:50){
-
     # calculate length-at-age in year 
     laa <- get_lengthAtAge(type=laa_typ, par=laa_par,
-                               ages=fage:page, Tanom=Tanom[y])
+                           ages=fage:page, Tanom=Tanom[y])
     
     # calculate weight-at-age in year y
     waa <- get_weightAtAge(type=waa_typ, par=waa_par,
-                               laa=laa, inputUnit='kg')
+                           laa=laa, inputUnit='kg')
     
     # calculate maturity in year y
     mat <- get_maturity(type=mat_typ, par=mat_par, laa=laa)
     
+    for (k in 1:50){
+    for (i in 1:96){
+    for (j in y:30){
+
     # calculate recruits in year y based on the SSB in years previous
     # (depending on the lag) and temperature
     SSB[j] <- sum(J1N[j-fage,] * mat * waa)
@@ -57,7 +56,7 @@ get_FBRP_true <- function(stock,parenv){
     # get Z for the current year
     Z[j,] <- candF[i]*slxC + natM
     }
-    yields[k,i]<-sum(CN[210,]*waa)
+    yields[k,i]<-sum(CN[50,]*waa)
     }}
     meanccatches<-colMeans(yields)
     Fmsytrue<-candF[which.max(meanccatches)]

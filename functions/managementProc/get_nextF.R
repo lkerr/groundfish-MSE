@@ -73,7 +73,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
 
     if (useTemp==FALSE){
       if (y==fmyearIdx){ 
-      Fref_true<- get_FBRP_true(stock=stockEnv,parenv=parenv)$Fmsytrue}
+      Fref_true<- get_FBRP_true(stock=stockEnv,parenv=parenv)$Fmsytrue
+      }
     }
     if (useTemp==TRUE){
       Fref_true<- get_FBRP_true(stock=stockEnv,parenv=parenv)$Fmsytrue

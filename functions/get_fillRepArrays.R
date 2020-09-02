@@ -186,6 +186,14 @@ get_fillRepArrays <- function(stock){
     omval$relE_F[r,m,] <- relE_F #AEW
     omval$conv_rate[r,m,]<-conv_rate #MDM
     omval$Mohns_Rho[r,m,]<-Mohns_Rho #MDM
+    if (y == nyear){
+    omval$relTermE_SSB[r,m,] <- relTermE_SSB #MDM
+    omval$relTermE_CW[r,m,] <- relTermE_CW #MDM
+    omval$relTermE_IN[r,m,] <- relTermE_IN #MDM
+    omval$relTermE_qI[r,m,] <- relTermE_qI #MDM
+    omval$relTermE_R[r,m,] <- relTermE_R #MDM
+    omval$relTermE_F[r,m,] <- relTermE_F #MDM
+    }
   })
 
   return(out)

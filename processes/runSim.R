@@ -131,6 +131,10 @@ for(r in 1:nrep){
 
         for(i in 1:nstock){
           stock[[i]] <- get_relError(stock = stock[[i]])
+          #Calculate terminal year relative error
+          if (y == nyear){
+            stock[[i]] <- get_TermrelError(stock = stock[[i]])
+          }
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         }
 
@@ -159,11 +163,6 @@ for(r in 1:nrep){
           setTxtProgressBar(iterpb, yearitercounter)
         }
     }
-       
-    #Calculate terminal year relative error
-    for(i in 1:nstock){
-         stock[[i]] <- get_TermrelError(stock = stock[[i]])
-       }
        #End of year loop
   } #End of mproc loop
 
