@@ -30,6 +30,7 @@ mat_typ <- 'logistic'
 M <- 0.2
 M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
+M_mis<-FALSE
 
 # initial numbers at-age parameters
 initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = M)
@@ -48,17 +49,18 @@ selC <- c(s0=5, s1=0.08)
 selC_typ <- 'Logistic'
 
 # Recruitment (parameters need updating!!!)
+##BHSteep###
+#Rpar <- c(h = 6.286813e-01,
+         # R0 = 8.062700e+07,
+        #  c = -0.540,
+        #  SSBRF0 = 0.01972,
+        #  sigR = 0.56,
+         # beta3 = -2.501400e-01)
+#R_typ <- 'BHSteep'
 
-Rpar <- c(h = 6.286813e-01,
-          R0 = 8.062700e+07,
-          c = -0.540,
-          SSBRF0 = 0.01972,
-          sigR = 0.56,
-          beta3 = -2.501400e-01)
-
-R_typ <- 'BHSteep'
-
-
+##Ricker##
+Rpar<- c(a=0.3591554,b=0.0000006275757,g=0)
+R_typ<-'Ricker'
 
 #### Survey parameters ####
 

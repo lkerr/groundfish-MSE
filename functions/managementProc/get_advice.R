@@ -2,7 +2,7 @@
 
 
 get_advice <- function(stock){
-  
+
   # prepare data
   tempStock <- get_tmbSetup(stock = stock)
   
@@ -17,7 +17,6 @@ get_advice <- function(stock){
   tempStock <- get_planB(stock = tempStock)
   }
 
-  
   # Run ASAP assessment
   if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
     tempStock <- get_ASAP(stock = tempStock)
