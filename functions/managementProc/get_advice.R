@@ -7,20 +7,27 @@ get_advice <- function(stock){
   tempStock <- get_tmbSetup(stock = stock)
   
   #### Run assessment model#### 
-  if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){ 
+ 
   # Run the CAA assessment
   if(mproc[m,'ASSESSCLASS'] == 'CAA'){
-  tempStock <- get_caa(stock = tempStock)
+  if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
+  tempStock <- get_caa(stock = tempStock)}
+  else {get_caa(stock = tempStock)}
   }
   
   # Run the PlanB assessment
   if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
-  tempStock <- get_planB(stock = tempStock)
+  if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){  
+  tempStock <- get_planB(stock = tempStock)}
+  else{get_planB(stock = tempStock)}
   }
 
   # Run ASAP assessment
   if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
-    tempStock <- get_ASAP(stock = tempStock)
+    if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
+    tempStock <- get_ASAP(stock = tempStock)}
+    else{
+      get_ASAP(stock = tempStock)}
   }
   # was the assessment successful?
   tempStock <- within(tempStock, {
@@ -112,7 +119,7 @@ get_advice <- function(stock){
                    y = y-1)
     
     
-  }
+  
     #### Get ref points & assign F ####
     
     # If in the first year or a subsequent year on the reference
