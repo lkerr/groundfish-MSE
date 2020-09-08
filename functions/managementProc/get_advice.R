@@ -6,7 +6,8 @@ get_advice <- function(stock){
   # prepare data
   tempStock <- get_tmbSetup(stock = stock)
   
-  #### Run assessment model ####
+  #### Run assessment model#### 
+  if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){ 
   # Run the CAA assessment
   if(mproc[m,'ASSESSCLASS'] == 'CAA'){
   tempStock <- get_caa(stock = tempStock)
@@ -21,7 +22,6 @@ get_advice <- function(stock){
   if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
     tempStock <- get_ASAP(stock = tempStock)
   }
-  
   # was the assessment successful?
   tempStock <- within(tempStock, {
     conv_rate[y] <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' && 
@@ -112,6 +112,7 @@ get_advice <- function(stock){
                    y = y-1)
     
     
+  }
     #### Get ref points & assign F ####
     
     # If in the first year or a subsequent year on the reference
@@ -120,10 +121,8 @@ get_advice <- function(stock){
     # mproc[m,'RPInt'] under planB (it will be NA).
     if( y == fmyearIdx ||
         mproc[m,'ASSESSCLASS'] == 'PLANB' ||
-        ( y > fmyearIdx & 
-          (y-fyear) > 0 & 
-          (y-fyear-1) %% mproc[m,'RPInt'] == 0 ) ){
-      
+        (y > fmyearIdx & 
+          (y-fmyearIdx) %% mproc[m,'RPInt'] == 0 ) ){
       gnF <- get_nextF(parmgt = mproc[m,], parpop = tempStock$parpop,
                        parenv = parenv,
                        RPlast = NULL, evalRP = TRUE,

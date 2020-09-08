@@ -100,6 +100,8 @@ anomFun <- median
 BrefScalar <- 0.5
 FrefScalar <- 0.75
 
+##Do you want to calculate the true Fmsy?##
+calcfmsytrue<-FALSE
 
 #### Helpful parameters ####
 # Scalars to convert things

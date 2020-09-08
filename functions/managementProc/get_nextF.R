@@ -71,12 +71,12 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
                      stockEnv = stockEnv)
 
-    if (useTemp==FALSE){
+    if (useTemp==FALSE & calcfmsytrue==TRUE){
       if (y==fmyearIdx){ 
       Fref_true<- get_FBRP_true(stock=stockEnv,parenv=parenv)$Fmsytrue
       }
     }
-    if (useTemp==TRUE){
+    if (useTemp==TRUE & calcfmsytrue==TRUE){
       Fref_true<- get_FBRP_true(stock=stockEnv,parenv=parenv)$Fmsytrue
     }
 
@@ -130,7 +130,21 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
  
       F <- FThresh
       
-    }else{
+    }
+    
+    else if(tolower(parmgt$HCR) == 'xyrconstc'){
+      if ((y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) == 0){
+        F <- FThresh
+      }
+      else{
+        F <- get_F(x = stock$codGOM$quota,
+                         Nv = stock$codGOM$J1N[y,], 
+                         slxCv = stock$codGOM$slxC[y,], 
+                         M = stock$codGOM$natM[y], 
+                         waav = stock$codGOM$waa[y,])
+      }
+      }
+    else{
       
       stop('get_nextF: type not recognized')
       
