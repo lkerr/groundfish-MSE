@@ -59,8 +59,13 @@ selC_typ <- 'Logistic'
 #R_typ <- 'BHSteep'
 
 ##Ricker##
-Rpar<- c(a=0.3591554,b=0.0000006275757,g=0)
-R_typ<-'Ricker'
+#Rpar<- c(a=0.3591554,b=0.0000006275757,g=0)
+#R_typ<-'Ricker'
+
+##GammaDist## (for Georges Bank haddock, randomly drawn from a gamma distribution.
+#There are two different distributions that depend on temperature.)
+R_typ<-'GammaDist'
+Rpar<- NA
 
 #### Survey parameters ####
 
@@ -86,7 +91,6 @@ startCV <- 1.5
 # for model fitting)
 caaInScalar <- 1000
 
-
 #### Error parameters ####
 
 # observation error levels
@@ -109,9 +113,12 @@ ie_F <- 0
 ie_typ <- 'lognorm'
 ie_bias <- 0 # % bias in implementation error
 
-# Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
-ob_sumCW <- 1
+# Observation bias (1 is no bias, 0.9 is a -10% bias, etc.) (sumCW*ob_sumCW) (range 0.01-1)
+ob_sumCW <- 0.44
 ob_sumIN <- 1
+
+# catch observation bias (codCW + codCW*C_mult)
+C_mult <- 1.25
 
 
 #### BRPs and HCRs ####

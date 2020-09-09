@@ -59,7 +59,7 @@
 get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
                          R_ym1=NULL, Rhat_ym1=NULL, stockEnv = stock){
 
-  if(!type %in% c('BH', 'BHSteep', 'HS','ChangeProd_Low','Ricker')){
+  if(!type %in% c('BH', 'BHSteep', 'HS','ChangeProd_Low','Ricker','GammaDist')){
     stop(paste('get_recruits: check spelling of R_typ in individual stock 
                parameter file for', stockNames[i]))
   }
@@ -192,10 +192,27 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
       })
   }
   else if (type == 'Ricker'){
-    Rhat <- par['a'] * SSB * exp(par['b'] * SSB) * 
-      exp(TAnom_y * par['g'])
+    Rhat <- (par['a'] * SSB * exp(par['b'] * SSB) * 
+      exp(TAnom_y * par['g']))*1000
   }
- 
+  else if (type == 'GammaDist'){
+    gamma.mom<-function(mu,sd){
+      v<-sd**2
+      c<-v/mu
+      b<-(mu/sd)**2
+      c(b,c)
+    }
+    if (TAnom_y<0.42){
+      gampar<-gamma.mom(37696.63,83962.95)
+      Rhat<-rgamma(1,gampar[1],(1/gampar[2]))*1000
+      if (Rhat<267000){Rhat<-267000}
+      }
+    if (TAnom_y>0.42){
+      gampar<-gamma.mom(126980.7,389720.9)
+      Rhat<-rgamma(1,gampar[1],(1/gampar[2]))*1000
+      if (Rhat<267000){Rhat<-267000}
+  }
+  }
   # Autocorrelation component
   ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
   
