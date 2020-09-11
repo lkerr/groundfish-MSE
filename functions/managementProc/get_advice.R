@@ -92,7 +92,6 @@ get_advice <- function(stock){
         tempwd<-getwd()
         for (p in (y-peels):(y-1)){
           idx<-ncaayear-peels
-          browser()
           SSBold<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', p,'.rdat', sep = ''))$SSB[idx]
           SSBnew<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB[idx]
           assign(paste('rho',p,sep=''),(SSBold-SSBnew)/SSBnew)
@@ -104,7 +103,7 @@ get_advice <- function(stock){
           SSBnew<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB[idx]
           assign(paste('rho',p,sep=''),(SSBold-SSBnew)/SSBnew)
         }}
-      plist <- mget(paste('rho',(y-peels):y,sep=''))
+      plist <- mget(paste('rho',(y-peels):(y-1),sep=''))
       pcols <- do.call('cbind', plist)
       Mohns_Rho[y] <- rowSums(pcols) / peels
       cat('Rho calculated.')})}
