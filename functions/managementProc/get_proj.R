@@ -51,7 +51,6 @@
 get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                      F_val, stReportYr, ny=NULL, stockEnv, ...){
 
-   
   if(parmgt$RFUN_NM == 'hindcastMean'){
     if(type == 'FREF'){
       startHCM <- parmgt$FREF_PAR0
@@ -168,7 +167,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                    Rest = Rest)
 
   }
- 
+
   # Get weight-at-age
   Waa <- sweep(N, MARGIN=2, STATS=parpop$waa, FUN='*')
   
