@@ -144,6 +144,19 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                          waav = stock$codGOM$waa[y,])
       }
       }
+    else if(tolower(parmgt$HCR) == 'proj'){
+      parmgtproj<-parmgt
+      parmgtproj$RFUN_NM<-"forecast"
+      test<-get_proj(type = 'proj',
+               parmgt = parmgtproj, 
+               parpop = parpop, 
+               parenv = parenv, 
+               Rfun = Rfun_BmsySim$forecast,
+               F_val = FThresh,
+               ny = 200,
+               stReportYr = 2,
+               stockEnv = stockEnv)
+    }
     else{
       
       stop('get_nextF: type not recognized')

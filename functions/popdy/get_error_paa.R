@@ -13,14 +13,13 @@
 #      multinomial: rmultinom(n=1, size=ess, prob=paa) / par
 
 
-get_error_paa <- function(type, paa, par){
-
-  if(tolower(type) == 'multinomial'){
+get_error_paa <- function(type, paa, par,switch){
    
-    paaE <- c(rmultinom(n=1, size=par, prob=paa)) / par
-  
+  if(switch == FALSE){
+  paaE <- c(rmultinom(n=1, size=par, prob=paa)) / par
   }
-  if(tolower(type) == 'posbias'){
+
+  if(switch == TRUE){
     paaE <- c(rmultinom(n=1, size=par, prob=paa)) / par
     paaE[1]<-paaE[1]+paaE[1]*.1
     paaE<-paaE/sum(paaE)

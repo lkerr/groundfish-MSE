@@ -59,7 +59,7 @@
 get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
                          R_ym1=NULL, Rhat_ym1=NULL, stockEnv = stock){
 
-  if(!type %in% c('BH', 'BHSteep', 'HS','ChangeProd_Low','Ricker','GammaDist')){
+  if(!type %in% c('BH', 'BHSteep', 'HS','HSLow','ChangeProd_Low','Ricker','GammaDist1','GammaDist2')){
     stop(paste('get_recruits: check spelling of R_typ in individual stock 
                parameter file for', stockNames[i]))
   }
@@ -170,6 +170,32 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
     return(pred)
        })
   }
+  else if (type == 'HSLow'){ 
+      assess_vals <- get_HistAssess(stock = stock[[i]])
+      
+      Rhat <- with(as.list(par),{
+        
+        if (block == 'early'){  # how to calculate historic recruitment, use first 10 assessment years
+          if (SSB >= SSB_star) {
+            pred <- cR * remp(1, head(as.numeric(assess_vals$assessdat$R), 10))    
+            
+          } else if (SSB < SSB_star){
+            pred <-  cR * (SSB/SSB_star) * remp(1, head(as.numeric(assess_vals$assessdat$R), 10))    
+            
+          }
+          
+        } else if (block == 'late'){  # how to calculate projected recruitment using last 20 assessment years
+          if (SSB >= SSB_star) {
+            pred <- cR * remp(1, tail(as.numeric(assess_vals$assessdat$R), 10))
+            
+          } else if (SSB < SSB_star){
+            pred <-  cR * (SSB/SSB_star) * remp(1, tail(as.numeric(assess_vals$assessdat$R), 10))
+            
+          }
+        }
+        return(pred)
+      })
+    }  
   else if (type == 'ChangeProd_Low'){ 
       assess_vals <- get_HistAssess(stock = stock[[i]])
       
@@ -195,7 +221,7 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
     Rhat <- (par['a'] * SSB * exp(par['b'] * SSB) * 
       exp(TAnom_y * par['g']))*1000
   }
-  else if (type == 'GammaDist'){
+  else if (type == 'GammaDist1'){
     gamma.mom<-function(mu,sd){
       v<-sd**2
       c<-v/mu
@@ -213,6 +239,18 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
       if (Rhat<267000){Rhat<-267000}
   }
   }
+  else if (type == 'GammaDist2'){
+      gamma.mom<-function(mu,sd){
+        v<-sd**2
+        c<-v/mu
+        b<-(mu/sd)**2
+        c(b,c)
+      }
+      gampar<-gamma.mom(71262.71,253497.6)
+      dist<-rgamma(1000,gampar[1],(1/gampar[2]))*1000
+      dist<-dist[dist>267000]
+      Rhat<-sample(dist,1)
+    }
   # Autocorrelation component
   ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
   

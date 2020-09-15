@@ -83,6 +83,10 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       startFCST <- parenv$y
       endFCST <- parenv$y + parmgt$BREF_PAR0
     }
+    else if(type=='proj'){
+      startFCST <- parenv$y
+      endFCST <- parenv$y + 3
+    }
     
     if(is.na(parenv$Tanom[endFCST])){
       stop(paste('get_proj: end projection year out of temperature anomaly',
@@ -102,8 +106,12 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   # meanR <- mean(parpop$R)
   # init <- meanR * exp(-ages * F_val*parpop$sel - as.numeric(parpop$M))
    
-  # The initial population is the estimates in the last year
+  # The initial population is the estimates in the last year with uncertainty applied
   init <- tail(parpop$J1N, 1)
+  initsum<-sum(init)
+  initsumwitherror <- rlnorm(1, meanlog = log(initsum), sdlog = 0.05)
+  initpaawitherror<-c(rmultinom(n=1, size=1000, prob=init/sum(init))) /1000
+  init<-initsumwitherror*initpaawitherror
 
   # Ensure that all vectors are the same length
   if(!all(length(parpop$sel) == length(init),

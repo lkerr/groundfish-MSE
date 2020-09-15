@@ -62,9 +62,14 @@ selC_typ <- 'Logistic'
 #Rpar<- c(a=0.3591554,b=0.0000006275757,g=0)
 #R_typ<-'Ricker'
 
-##GammaDist## (for Georges Bank haddock, randomly drawn from a gamma distribution.
+##GammaDist1## (for Georges Bank haddock, randomly drawn from a gamma distribution.
 #There are two different distributions that depend on temperature.)
-R_typ<-'GammaDist'
+#R_typ<-'GammaDist1'
+#Rpar<- NA
+
+##GammaDist2## (for Georges Bank haddock, randomly drawn from a gamma distribution.
+#Only one distribution (not dependent upon temperature).)
+R_typ<-'GammaDist2'
 Rpar<- NA
 
 #### Survey parameters ####
@@ -105,6 +110,8 @@ oe_paaIN_typ <- 'multinomial'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
+obsbias<-TRUE
+
 # process error levels  ###################################  !!!!!!!!!!!!!!
 pe_R <- 0.5
 
@@ -114,11 +121,11 @@ ie_typ <- 'lognorm'
 ie_bias <- 0 # % bias in implementation error
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.) (sumCW*ob_sumCW) (range 0.01-1)
-ob_sumCW <- 0.44
+ob_sumCW <- 1
 ob_sumIN <- 1
 
 # catch observation bias (codCW + codCW*C_mult)
-C_mult <- 1.25
+C_mult <- 0
 
 
 #### BRPs and HCRs ####

@@ -38,8 +38,8 @@ M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
 #M <- 0.4
 #M_typ <- 'ramp'
-M_mis<-TRUE
-M_mis_val<-0.4
+M_mis<-FALSE
+#M_mis_val<-0.4
 
 # initial numbers at-age parameters
 #initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
@@ -64,23 +64,25 @@ selC <- c(0.013, 0.066, 0.271, 0.663, 0.912, 0.982, 0.997, 1, 1) #GOM cod AGEPRO
 selC_typ <- 'input'
 
 
-# Recruitment #AEW from GOM COD 2019 Update M0.2 .rep
+#### Recruitment Options ####
+##For BH Steepness Option##
 # Rpar <- c(h = 1,
 #           R0 = 4456870,
 #           SSBRF0 = 0.01822) # calculated as S0/R0 (81202.9/4456870) (arbitrary because h = 1)
 # R_typ <- 'BHSteep'
-Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
-          cR = 1,# dont need to convert
-          Rnyr= 20)#recruitment is drawn from the recruitment distribution of the last X years (x=Rnyr)
+#Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
+         # cR = 1,# dont need to convert
+         # Rnyr= 20)#recruitment is drawn from the recruitment distribution of the last X years (x=Rnyr)
 #Rpar <- c(SSB_star = 7900, #mt  #from GOM COD 2019 MRAMP 
      #     cR = 1) # dont need to convert
-R_typ <- 'HS'
+#R_typ <- 'HS'
+#R_typ<- 'HSLow'
 ###For Change in Productivity (Low)###
 #Rpar<-c(SSB_star = 6300, cR = 1,a=0.5,b=0.00022429,g=-0.6)#M=0.2
 #R_typ<-'ChangeProd_Low'
 ###For Ricker SR with relationship with temperature###
-#Rpar<-c(a=0.6619481,b=0.000000001,g=-0.3836958)
-#R_typ <- 'Ricker'
+Rpar<-c(a=0.6619481,b=0.000000001,g=-0.3836958)
+R_typ <- 'Ricker'
 
 #### Survey parameters ####
 

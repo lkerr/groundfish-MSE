@@ -17,15 +17,14 @@
 #                 the -par^2/2 is the bias correction
 
 
-get_error_idx <- function(type, idx, par){
-         
-  if(tolower(type) == 'lognorm'){
-
+get_error_idx <- function(type, idx, par,switch){
+     
+if (switch==FALSE){
     idxE <- rlnorm(1, meanlog = log(idx), # - par^2/2
                       sdlog = par)
-  }
+}
   
-  if(tolower(type) == 'posbias'){
+if (switch==TRUE){
 
     idxE<- exp(rsnorm(1, mean = log(idx), sd = par, xi = 0.5))
   }
