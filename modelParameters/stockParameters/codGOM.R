@@ -70,19 +70,19 @@ selC_typ <- 'input'
 #           R0 = 4456870,
 #           SSBRF0 = 0.01822) # calculated as S0/R0 (81202.9/4456870) (arbitrary because h = 1)
 # R_typ <- 'BHSteep'
-#Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
-         # cR = 1,# dont need to convert
-         # Rnyr= 20)#recruitment is drawn from the recruitment distribution of the last X years (x=Rnyr)
+Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
+          cR = 1,# dont need to convert
+          Rnyr= 20)#recruitment is drawn from the recruitment distribution of the last X years (x=Rnyr)
 #Rpar <- c(SSB_star = 7900, #mt  #from GOM COD 2019 MRAMP 
      #     cR = 1) # dont need to convert
-#R_typ <- 'HS'
+R_typ <- 'HS'
 #R_typ<- 'HSLow'
 ###For Change in Productivity (Low)###
 #Rpar<-c(SSB_star = 6300, cR = 1,a=0.5,b=0.00022429,g=-0.6)#M=0.2
 #R_typ<-'ChangeProd_Low'
 ###For Ricker SR with relationship with temperature###
-Rpar<-c(a=0.6619481,b=0.000000001,g=-0.3836958)
-R_typ <- 'Ricker'
+#Rpar<-c(a=0.6619481,b=0.000000001,g=-0.3836958)
+#R_typ <- 'Ricker'
 
 #### Survey parameters ####
 
@@ -126,6 +126,8 @@ oe_paaIN_typ <- 'multinomial'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
+obsbias<-FALSE
+
 # process error levels  #####o##############################  !!!!!!!!!!!!!!
 pe_R <- 0.01 # cannot be zero 
 
@@ -136,11 +138,11 @@ ie_bias <- 0 # % bias in implementation error (F_Full + F_Full*ie_bias)
 
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.) (sumCW*ob_sumCW) (range 0.01-1)
-ob_sumCW <- 1
+ob_sumCW <- 0.44
 ob_sumIN <- 1
 
 # catch observation bias (codCW + codCW*C_mult)
-C_mult <- 0
+C_mult <- 1.25
 
 #### BRPs and HCRs ####
 

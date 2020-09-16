@@ -111,7 +111,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     # otherwise just use same reference points values    
     BThresh <- BrefScalar * BrefRPvalue
     FThresh <- FrefScalar * FrefRPvalue
-  
     
     overfished <- ifelse(tail(parpop$SSBhat,1) < BThresh, 1, 0)
     
@@ -144,10 +143,13 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                          waav = stock$codGOM$waa[y,])
       }
       }
-    else if(tolower(parmgt$HCR) == 'proj'){
+    else if(tolower(parmgt$HCR) == 'current'){
       parmgtproj<-parmgt
       parmgtproj$RFUN_NM<-"forecast"
-      test<-get_proj(type = 'proj',
+      catchproj<-matrix(ncol=2,nrow=100)
+      if (overfished==0){
+      for (i in 1:100){
+      catchproj[i,]<-get_proj(type = 'current',
                parmgt = parmgtproj, 
                parpop = parpop, 
                parenv = parenv, 
@@ -155,7 +157,35 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                F_val = FThresh,
                ny = 200,
                stReportYr = 2,
-               stockEnv = stockEnv)
+               stockEnv = stockEnv)$sumCW}
+      catchproj<-colMeans(catchproj)
+      catchproj<-min(catchproj)
+      F <- get_F(x = catchproj,
+                 Nv = stock$codGOM$J1N[y,], 
+                 slxCv = stock$codGOM$slxC[y,], 
+                 M = stock$codGOM$natM[y], 
+                 waav = stock$codGOM$waa[y,])
+      }
+      if (overfished==1){
+        Frebuild<-get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)
+        for (i in 1:100){
+          catchproj[i,]<-get_proj(type = 'current',
+                                  parmgt = parmgtproj, 
+                                  parpop = parpop, 
+                                  parenv = parenv, 
+                                  Rfun = Rfun_BmsySim$forecast,
+                                  F_val = Frebuild,
+                                  ny = 200,
+                                  stReportYr = 2,
+                                  stockEnv = stockEnv)$sumCW}
+        catchproj<-colMeans(catchproj)
+        catchproj<-min(catchproj)
+        F <- get_F(x = catchproj,
+                   Nv = stock$codGOM$J1N[y,], 
+                   slxCv = stock$codGOM$slxC[y,], 
+                   M = stock$codGOM$natM[y], 
+                   waav = stock$codGOM$waa[y,])
+      }
     }
     else{
       

@@ -109,7 +109,8 @@ get_advice <- function(stock){
       cat('Rho calculated.')})}
     if(mproc[m,'rhoadjust'] == 'TRUE'){
       tempStock<-within(tempStock,{
-          parpop$SSBhat[length(parpop$SSBhat)]<-parpop$SSBhat[length(parpop$SSBhat)]/(Mohns_Rho[y]+1)
+        if(y > fmyearIdx){
+          parpop$SSBhat[length(parpop$SSBhat)]<-parpop$SSBhat[length(parpop$SSBhat)]/(Mohns_Rho[y]+1)}
         })}
     # Environmental parameters
     parenv <- list(tempY = temp,

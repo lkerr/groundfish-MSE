@@ -59,6 +59,10 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       startHCM <- parmgt$BREF_PAR0
       endHCM <- parmgt$BREF_PAR1
     }
+    else if(type=='current'){
+      startFCST <- parenv$y
+      endFCST <- parenv$y + 2
+    }
     
     # Tanom is unnecessary for hindcasts. Loop below is based on the length
     # of Tanom (relevant to "forecast") so adapt this variable to be the
@@ -83,9 +87,9 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       startFCST <- parenv$y
       endFCST <- parenv$y + parmgt$BREF_PAR0
     }
-    else if(type=='proj'){
+    else if(type=='current'){
       startFCST <- parenv$y
-      endFCST <- parenv$y + 3
+      endFCST <- parenv$y + 2
     }
     
     if(is.na(parenv$Tanom[endFCST])){
@@ -106,12 +110,8 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   # meanR <- mean(parpop$R)
   # init <- meanR * exp(-ages * F_val*parpop$sel - as.numeric(parpop$M))
    
-  # The initial population is the estimates in the last year with uncertainty applied
+  # The initial population is the estimates in the last year
   init <- tail(parpop$J1N, 1)
-  initsum<-sum(init)
-  initsumwitherror <- rlnorm(1, meanlog = log(initsum), sdlog = 0.05)
-  initpaawitherror<-c(rmultinom(n=1, size=1000, prob=init/sum(init))) /1000
-  init<-initsumwitherror*initpaawitherror
 
   # Ensure that all vectors are the same length
   if(!all(length(parpop$sel) == length(init),
