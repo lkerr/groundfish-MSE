@@ -121,15 +121,15 @@ annual_fishery_status_holder<-list()
 
 #Initialize the most_recent_target data.table. 
   if(y == fmyearIdx){
-  keepcols<-c("hullnum","spstock2","choice_prev_fish")
-  most_recent_target<-copy(targeting_dataset[[1]])
-  most_recent_target<-most_recent_target[, ..keepcols]
-  most_recent_target<-most_recent_target[spstock2!="nofish"]
-  colnames(most_recent_target)[3]<-"targeted"
-  most_recent_target<-most_recent_target[targeted==1]
-  
+    keepcols<-c("hullnum","spstock2","OG_choice_prev_fish")
+    most_recent_target<-copy(targeting_dataset[[1]])
+    most_recent_target<-most_recent_target[, ..keepcols]
+    most_recent_target<-most_recent_target[spstock2!="nofish"]
+    most_recent_target<-most_recent_target[OG_choice_prev_fish==1]
+    setnames(most_recent_target,"OG_choice_prev_fish","targeted")
+    
   }
-mrt_bak<-most_recent_target
+mrt_bak<-copy(most_recent_target)
 
 for (day in 1:3){
   
@@ -137,8 +137,8 @@ set.seed(2)
 #day<-100
 
 working_targeting<-copy(targeting_dataset[[day]])
-working_targeting<-working_targeting[hullnum!="1031278"]
-working_targeting<-working_targeting[hullnum!="1040383"]
+#working_targeting<-working_targeting[hullnum!="1031278"]
+#working_targeting<-working_targeting[hullnum!="1040383"]
 
 working_targeting$OG_choice_prev_fish<-working_targeting$choice_prev_fish
 
@@ -153,7 +153,7 @@ working_targeting[, delta:=harvest_sim-h_hat]
 
   summary(working_targeting$delta)
   setcolorder(working_targeting, c("delta", "harvest_sim","h_hat"))
-  setorder(working_targeting, -delta)
+  #setorder(working_targeting, -delta)
   
   #alphass<-grep("^alpha",colnames(working_targeting) , value=TRUE)
 
@@ -181,8 +181,8 @@ working_targeting[, delta:=harvest_sim-h_hat]
   # In testing, we have to zero out the dl_ variables
     
     
-  # dl_vars<-grep("^dl_",colnames(working_targeting) , value=TRUE)
-  # working_targeting[,(dl_vars):=NA]
+   dl_vars<-grep("^dl_",colnames(working_targeting) , value=TRUE)
+   working_targeting[,(dl_vars):=NA]
     working_targeting<-get_joint_production(working_targeting,spstock2s) 
     
     # adjust for DAS costs.
@@ -284,12 +284,22 @@ working_targeting[, delta:=harvest_sim-h_hat]
   #overwrite with the previous the target stock is no_fish
   most_recent_target<-copy(trips)
   
+  # when you get here, you have partially updated most_recent_target data.table. 
+  # hullnum, targeted,
+  # "spstock2T" is what theyfished today.
+  # choice_prev_fish is the 0/1 indicator whether they fished spstock2T yesterday
+  # OG is the initial in the input dataset, this is actually all zeros by construction
+  # spstock2MRT is the spstock2 was most recently targeted. spstock2MRT cannot be "nofish"
   
+  # rename spstock2T to spstock2
   setnames(most_recent_target,"spstock2T","spstock2", skip_absent=TRUE)
+  
+  # replace any no fish with MRT
   most_recent_target[spstock2=="nofish", spstock2 :=spstock2MRT]
+  # if there are any na's replace them with MRT. Not sure how nas would occur.
   most_recent_target[is.na(spstock2), spstock2 :=spstock2MRT]
   
-  
+  #drop extra columns.
   keepcols<-c("hullnum","spstock2","targeted")
   most_recent_target<-most_recent_target[, ..keepcols]
 
