@@ -11,9 +11,12 @@ library(data.table)
 #stock_status_validation_modelstuffhere.csv
 
 #filenames for results
+#econ_out_csv<-"monthly_summary_counterfactual_closeown.csv"
+#stock_status_out_csv<-"stock_status_counterfactual_closeown.csv"
+#econ_out_csv<-"monthly_summary_counterfactual_closemult.csv"
+#stock_status_out_csv<-"stock_status_counterfactual_closemult.csv"
 econ_out_csv<-"monthly_summary_validation1.csv"
 stock_status_out_csv<-"stock_status_validation1.csv"
-
 
 #selects most recent file path in groundfish_MSE folder that starts with "results_" 
 file_path = file.info(list.files(path=".",pattern="^results_*",include.dirs=TRUE,full.names = T,recursive=TRUE))
