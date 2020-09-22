@@ -102,6 +102,14 @@ for(file in 1:file_nums){
 stock_status <- rbindlist(stock_status)
 stock_status <- stock_status[replicate>90]
 
+stock_status[,c("bio_model","SSB","mults_allocated","sectorACL"):=NULL]
+# 1 row per  per year, spstock2, replicate, model,
+# Either the last day of the year OR the first day where the stock_area was closed or the acl was reached
+
+stock_status<-stock_status[(underACL==FALSE | doffy==365 | stockarea_open==FALSE)]
+
+stock_status<-stock_status[, head(.SD, 1), by = c("year","spstock2","replicate","m")]
+
 write.csv(stock_status, file.path(file_path, stock_status_out_csv))
 
 
