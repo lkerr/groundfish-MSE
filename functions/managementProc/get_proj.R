@@ -184,7 +184,6 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
 
 
   # Calculate the catch in weight
-  
   sumCW <- sapply(1:nrow(N), function(i){
     CN <- (parpop$sel * F_val) / (parpop$sel * F_val + parpop$M) * 
       N[i,] * (1 - exp(-F_val * parpop$sel - parpop$M))

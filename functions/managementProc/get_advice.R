@@ -105,6 +105,7 @@ get_advice <- function(stock){
         }}
       plist <- mget(paste('rho',(y-peels):(y-1),sep=''))
       pcols <- do.call('cbind', plist)
+      browser()
       Mohns_Rho[y] <- rowSums(pcols) / peels
       cat('Rho calculated.')})}
     if(mproc[m,'rhoadjust'] == 'TRUE'){

@@ -24,8 +24,13 @@ if (switch==FALSE){
                       sdlog = par)
 }
   
-if (switch==TRUE){
+if (switch=='Pos'){
 
+    idxE<- exp(rsnorm(1, mean = log(idx), sd = par, xi = 0.5))
+}
+  
+if (switch=='Neg'){
+    browser()
     idxE<- exp(rsnorm(1, mean = log(idx), sd = par, xi = 0.5))
   }
   

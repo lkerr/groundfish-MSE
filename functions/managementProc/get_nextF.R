@@ -147,29 +147,9 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parmgtproj<-parmgt
       parmgtproj$RFUN_NM<-"forecast"
       catchproj<-matrix(ncol=2,nrow=100)
-      if (overfished==0){
+      Frebuild<-get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)
       for (i in 1:100){
-      catchproj[i,]<-get_proj(type = 'current',
-               parmgt = parmgtproj, 
-               parpop = parpop, 
-               parenv = parenv, 
-               Rfun = Rfun_BmsySim$forecast,
-               F_val = FThresh,
-               ny = 200,
-               stReportYr = 2,
-               stockEnv = stockEnv)$sumCW}
-      catchproj<-colMeans(catchproj)
-      catchproj<-min(catchproj)
-      F <- get_F(x = catchproj,
-                 Nv = stock$codGOM$J1N[y,], 
-                 slxCv = stock$codGOM$slxC[y,], 
-                 M = stock$codGOM$natM[y], 
-                 waav = stock$codGOM$waa[y,])
-      }
-      if (overfished==1){
-        Frebuild<-get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)
-        for (i in 1:100){
-          catchproj[i,]<-get_proj(type = 'current',
+        catchproj[i,]<-get_proj(type = 'current',
                                   parmgt = parmgtproj, 
                                   parpop = parpop, 
                                   parenv = parenv, 
@@ -180,13 +160,13 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   stockEnv = stockEnv)$sumCW}
         catchproj<-colMeans(catchproj)
         catchproj<-min(catchproj)
+        if (catchproj< min(stockEnv$obs_sumCW[(y-10):(y-1)])){catchproj<-min(stockEnv$obs_sumCW[(y-10):(y-1)])}
         F <- get_F(x = catchproj,
                    Nv = stock$codGOM$J1N[y,], 
                    slxCv = stock$codGOM$slxC[y,], 
                    M = stock$codGOM$natM[y], 
                    waav = stock$codGOM$waa[y,])
       }
-    }
     else{
       
       stop('get_nextF: type not recognized')

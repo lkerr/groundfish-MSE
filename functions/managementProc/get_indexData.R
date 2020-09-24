@@ -3,7 +3,7 @@
 get_indexData <- function(stock){
 
   within(stock, {
-   
+
     sumCW[y] <- CN[y,] %*% waa[y,]    # (dot product)
     
     paaCN[y,] <- (CN[y,]) / sum(CN[y,])
@@ -43,11 +43,15 @@ get_indexData <- function(stock){
     obs_paaCN[y,] <- get_error_paa(type=oe_paaCN_typ, paa=paaCN[y,], 
                                      par=oe_paaCN,switch=FALSE)
     
-    if (obsbias==TRUE & R[y]>400000000){
+    if (posobsbias==TRUE & R[y]>400000000){
     obs_sumIN[y] <- get_error_idx(type=oe_sumIN_typ, 
                                     idx=sumIN[y] * ob_sumIN, 
-                                    par=oe_sumIN,switch=TRUE)}
-    else{obs_sumIN[y] <- get_error_idx(type=oe_sumIN_typ, 
+                                    par=oe_sumIN,switch='Pos')}
+    if (negobsbias==TRUE & R[y]<5000000){
+      obs_sumIN[y] <- get_error_idx(type=oe_sumIN_typ, 
+                                    idx=sumIN[y] * ob_sumIN, 
+                                    par=oe_sumIN,switch='Neg')}
+    if(posobsbias==FALSE & negobsbias==FALSE){obs_sumIN[y] <- get_error_idx(type=oe_sumIN_typ, 
                                           idx=sumIN[y] * ob_sumIN, 
                                           par=oe_sumIN,switch=FALSE)}
     
@@ -56,9 +60,9 @@ get_indexData <- function(stock){
     # lognormal numbers-at-age are separate processes (which is consistent with
     # most assessment models)
     obs_sumIW[y] <- (obs_sumIN[y] * paaIN[y,]) %*% waa[y,]
-    if (obsbias==TRUE & R[y]>400000000){
+    if (posobsbias==TRUE & R[y]>400000000){
     obs_paaIN[y,] <- get_error_paa(type=oe_paaIN_typ, paa=paaIN[y,], 
-                                     par=oe_paaIN,switch=TRUE)}
+                                     par=oe_paaIN,switch='Pos')}
     else{obs_paaIN[y,] <- get_error_paa(type=oe_paaIN_typ, paa=paaIN[y,], 
                                      par=oe_paaIN,switch=FALSE)}
 
