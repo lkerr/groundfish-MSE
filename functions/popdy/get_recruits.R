@@ -169,6 +169,7 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
     }
     return(pred)
        })
+
   }
   else if (type == 'HSLow'){ 
       assess_vals <- get_HistAssess(stock = stock[[i]])

@@ -172,7 +172,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       stop('get_nextF: type not recognized')
       
     }
-  
     out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue), 
                 ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
                 OFgStatus = overfishing) #AEW

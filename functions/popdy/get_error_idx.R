@@ -30,7 +30,6 @@ if (switch=='Pos'){
 }
   
 if (switch=='Neg'){
-    browser()
     idxE<- exp(rsnorm(1, mean = log(idx), sd = par, xi = 0.5))
   }
   

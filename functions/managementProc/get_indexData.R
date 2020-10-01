@@ -47,11 +47,12 @@ get_indexData <- function(stock){
     obs_sumIN[y] <- get_error_idx(type=oe_sumIN_typ, 
                                     idx=sumIN[y] * ob_sumIN, 
                                     par=oe_sumIN,switch='Pos')}
-    if (negobsbias==TRUE & R[y]<5000000){
-      obs_sumIN[y] <- get_error_idx(type=oe_sumIN_typ, 
+    else if (negobsbias==TRUE & R[y]<5000000){
+      obs_sumIN[y] <- get_error_idx(type=oe_sumIN_typ,
                                     idx=sumIN[y] * ob_sumIN, 
                                     par=oe_sumIN,switch='Neg')}
-    if(posobsbias==FALSE & negobsbias==FALSE){obs_sumIN[y] <- get_error_idx(type=oe_sumIN_typ, 
+    else{
+      obs_sumIN[y] <- get_error_idx(type=oe_sumIN_typ, 
                                           idx=sumIN[y] * ob_sumIN, 
                                           par=oe_sumIN,switch=FALSE)}
     
@@ -63,7 +64,8 @@ get_indexData <- function(stock){
     if (posobsbias==TRUE & R[y]>400000000){
     obs_paaIN[y,] <- get_error_paa(type=oe_paaIN_typ, paa=paaIN[y,], 
                                      par=oe_paaIN,switch='Pos')}
-    else{obs_paaIN[y,] <- get_error_paa(type=oe_paaIN_typ, paa=paaIN[y,], 
+    else{
+      obs_paaIN[y,] <- get_error_paa(type=oe_paaIN_typ, paa=paaIN[y,], 
                                      par=oe_paaIN,switch=FALSE)}
 
   })

@@ -72,10 +72,10 @@ selC_typ <- 'input'
 # R_typ <- 'BHSteep'
 ##For Hockey-stick (Default) Option##
 Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
-          cR = 1,# dont need to convert
-          Rnyr= 20)#recruitment is drawn from the recruitment distribution of the last X years (x=Rnyr)
+         cR = 1,# dont need to convert
+        Rnyr= 20)#recruitment is drawn from the recruitment distribution of the last X years (x=Rnyr)
 #Rpar <- c(SSB_star = 7900, #mt  #from GOM COD 2019 MRAMP 
-     #     cR = 1) # dont need to convert
+#          cR = 1) # dont need to convert
 R_typ <- 'HS'
 ##For Decreased Productivity Option##
 #R_typ<- 'HSLow'
@@ -118,10 +118,8 @@ oe_paaCN <- 80
 oe_paaCN_typ <- 'multinomial'
 oe_sumIN <- 0.05
 oe_sumIN_typ <- 'lognorm'
-#oe_sumIN_typ <- 'posbias'
 oe_paaIN <- 100 #15
 oe_paaIN_typ <- 'multinomial'
-#oe_paaIN_typ <- 'posbias'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
@@ -138,11 +136,11 @@ ie_bias <- 0 # % bias in implementation error (F_Full + F_Full*ie_bias)
 
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.) (sumCW*ob_sumCW) (range 0.01-1)
-ob_sumCW <- 0.44 #0.44 for bias
+ob_sumCW <- 1 #0.44 for bias
 ob_sumIN <- 1
 
 # catch observation bias (codCW + codCW*C_mult)
-C_mult <- 1.25 #1.25 for bias
+C_mult <- 0 #1.25 for bias, 0 for no bias
 
 #### BRPs and HCRs ####
 

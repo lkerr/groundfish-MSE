@@ -177,6 +177,7 @@ big_loop
   # just ensuring that no simulations will be overwritten because the hpcc
   # might finish some in the same second. td is used for uniquely naming the
   # output file as well as for listing in the output results.
+
   td <- as.character(Sys.time())
   td2 <- gsub(':', '', td)
   td2 <- paste(gsub(' ', '_', td2), round(runif(1, 0, 10000)), sep='_')
