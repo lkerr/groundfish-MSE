@@ -21,7 +21,6 @@ get_implementationF <- function(type, stock){
         # add implimentation bias to catch, need to convert from F to catch, back to F
         # get catch in numbers using the Baranov catch equation from advised F
 
-        if(stockName == 'codGOM'){
         CN_temp[y,] <- get_catch(F_full=F_full[y], M=natM[y],
                                  N=J1N[y,], selC=slxC[y,]) + 1e-3
 
@@ -29,7 +28,12 @@ get_implementationF <- function(type, stock){
         codCW[y,] <- CN_temp[y,] *  waa[y,]
 
         # add bias to sum catch weight
+
         codCW2[y] <- sum(codCW[y,]) + (sum(codCW[y,]) * C_mult)
+        
+        if(Change_point2==TRUE & yrs[y]>=Change_point_yr){
+          codCW2[y] <- sum(codCW[y,])
+        }
 
         # Determine what the fishing mortality would have to be to get
         # that biased catch level (convert biased catch back to F).
@@ -52,7 +56,6 @@ get_implementationF <- function(type, stock){
          #                                      saa = slxC[y,],
          #                                      M = natM[y],
          #                                      ra = c(8))
-    }
 
     }else{
 

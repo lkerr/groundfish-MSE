@@ -40,7 +40,7 @@ histAssess <- TRUE
 nrep <- 1
 
 # First year to begin actual management
-fmyear <- 2010
+fmyear <- 2015
 
 # first year after the initial condition period. The initial condition period
 # simply fills up the arrays as necessary even before the burn-in period
