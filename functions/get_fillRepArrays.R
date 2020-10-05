@@ -129,7 +129,7 @@ get_fillRepArrays <- function(stock){
 
   
   out <- within(stock, {
-      
+    
     omval$SSB[r,m,] <- SSB
     omval$R[r,m,] <- R
     omval$F_full[r,m,] <- F_full

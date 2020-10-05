@@ -37,7 +37,7 @@ get_indexData <- function(stock){
     obs_sumCW[y] <- get_error_idx(type=oe_sumCW_typ, 
                                     idx=sumCW[y] * ob_sumCW, 
                                     par=oe_sumCW,switch=FALSE)
-     if(Change_point2==TRUE & yrs[y]>=Change_point_yr){
+     if(Change_point2==TRUE & yrs[y]>=(Change_point_yr)){
     obs_sumCW[y] <- get_error_idx(type=oe_sumCW_typ,
                                      idx=sumCW[y],
                                      par=oe_sumCW,switch=FALSE)

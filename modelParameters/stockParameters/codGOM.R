@@ -142,7 +142,7 @@ ob_sumIN <- 1
 # catch observation bias (codCW + codCW*C_mult)
 C_mult <- 1.25 #1.25 for bias, 0 for no bias
 
-Change_point2<-'FALSE'
+Change_point2<-'TRUE'
 Change_point_yr<-2025
 
 #### BRPs and HCRs ####

@@ -30,9 +30,9 @@ get_implementationF <- function(type, stock){
         # add bias to sum catch weight
 
         codCW2[y] <- sum(codCW[y,]) + (sum(codCW[y,]) * C_mult)
-        
+
         if(Change_point2==TRUE & yrs[y]>=Change_point_yr){
-          codCW2[y] <- sum(codCW[y,])
+        codCW2[y] <- sum(codCW[y,])
         }
 
         # Determine what the fishing mortality would have to be to get
