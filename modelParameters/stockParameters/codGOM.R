@@ -77,8 +77,6 @@ Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
 #Rpar <- c(SSB_star = 7900, #mt  #from GOM COD 2019 MRAMP 
 #          cR = 1) # dont need to convert
 R_typ <- 'HS'
-##For Decreased Productivity Option##
-#R_typ<- 'HSLow'
 ###For Ricker SR with relationship with temperature###
 #Rpar<-c(a=0.6619481,b=0.000000001,g=-0.3836958)
 #R_typ <- 'Ricker'
