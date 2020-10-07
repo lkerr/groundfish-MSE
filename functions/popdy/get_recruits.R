@@ -172,7 +172,7 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
 
   }
   else if (type == 'Ricker'){
-    Rhat <- (par['a'] * SSB * exp(par['b'] * SSB) * 
+    Rhat <- (par['a'] * SSB * exp(-par['b'] * SSB) * 
       exp(TAnom_y * par['g']))*1000
   }
   else if (type == 'GammaDist1'){
