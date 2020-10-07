@@ -160,7 +160,15 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   stockEnv = stockEnv)$sumCW}
         catchproj<-colMeans(catchproj)
         catchproj<-min(catchproj)
-        if (catchproj< min(stockEnv$obs_sumCW[(y-10):(y-1)])){catchproj<-min(stockEnv$obs_sumCW[(y-10):(y-1)])}
+        discard<-tail(read.csv('data/data_raw/AssessmentHistory/codGOM_Discard.csv'),10)
+        colnames(discard)<-c('Year','Discards')
+        discard$Year<-155:164
+        if (y>fmyearIdx){
+          for (i in fmyearIdx:(y-1)){
+          catchadd<-c(i,stockEnv$obs_sumCW[i])
+          discard<-rbind(discard,catchadd)
+          }
+        }
         F <- get_F(x = catchproj,
                    Nv = stock$codGOM$J1N[y,], 
                    slxCv = stock$codGOM$slxC[y,], 
