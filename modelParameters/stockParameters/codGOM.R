@@ -33,13 +33,13 @@ mat_typ <- 'input'
 
 
 # natural mortality
-M <- 0.2
-M_typ <- 'const'
+#M <- 0.2
+#M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
-#M <- 0.4
-#M_typ <- 'ramp'
+M <- 0.4
+M_typ <- 'ramp'
 M_mis<-TRUE
-M_mis_val<-0.4
+M_mis_val<-0.2
 
 # initial numbers at-age parameters
 #initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
@@ -72,15 +72,15 @@ selC_typ <- 'input'
 # R_typ <- 'BHSteep'
 ##For Hockey-stick (Default) Option##
 #Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
- #       cR = 1,# dont need to convert
- #       Rnyr= 20)#recruitment is drawn from the recruitment distribution of the last X years (x=Rnyr)
-#Rpar <- c(SSB_star = 7900, #mt  #from GOM COD 2019 MRAMP 
-#          cR = 1,
-#          Rnyr=20) # dont need to convert
-#R_typ <- 'HS'
+#        cR = 1,# dont need to convert
+#        Rnyr= 20)#recruitment is drawn from the recruitment distribution of the last X years (x=Rnyr)
+Rpar <- c(SSB_star = 7900, #mt  #from GOM COD 2019 MRAMP 
+          cR = 1,
+          Rnyr=20) # dont need to convert
+R_typ <- 'HS'
 ###For Ricker SR with relationship with temperature###
-Rpar<-c(a=3.6080315,b=0.00009354,g=-0.9870862)
-R_typ <- 'Ricker'
+#Rpar<-c(a=3.6080315,b=0.00009354,g=-0.9870862)
+#R_typ <- 'Ricker'
 
 #### Survey parameters ####
 
@@ -135,11 +135,11 @@ ie_bias <- 0 # % bias in implementation error (F_Full + F_Full*ie_bias)
 
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.) (sumCW*ob_sumCW) (range 0.01-1)
-ob_sumCW <- 0.44 #0.44 for bias
+ob_sumCW <- 1 #0.44 for bias
 ob_sumIN <- 1
 
 # catch observation bias (codCW + codCW*C_mult)
-C_mult <- 1.25 #1.25 for bias, 0 for no bias
+C_mult <- 0 #1.25 for bias, 0 for no bias
 
 Change_point2<-'FALSE'
 Change_point_yr<-2025
