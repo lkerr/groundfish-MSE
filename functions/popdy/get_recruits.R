@@ -59,7 +59,7 @@
 get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
                          R_ym1=NULL, Rhat_ym1=NULL, stockEnv = stock){
 
-  if(!type %in% c('BH', 'BHSteep', 'HS','HSLow','ChangeProd_Low','Ricker','GammaDist1','GammaDist2')){
+  if(!type %in% c('BH', 'BHSteep', 'HS','HSDec','Ricker')){
     stop(paste('get_recruits: check spelling of R_typ in individual stock 
                parameter file for', stockNames[i]))
   }
@@ -171,40 +171,25 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
        })
 
   }
+  else if (type == 'HSDec'){ 
+    cdf<-read.csv('data/data_raw/AssessmentHistory/haddockGB.csv')$R
+    addcdf<-as.vector(stock$haddockGB$R)
+    addcdf<-na.omit(addcdf)
+    cdf<-c(cdf,addcdf)
+    limit<-176562*TAnom_y+1030091
+    cdf<-cdf[cdf<limit]
+    cdf<-as.numeric(cdf)
+          if (SSB >= par[1]) {
+            Rhat <- par[2] * remp(1, cdf)
+            
+          } else if (SSB < par[1]){
+           Rhat <-  par[2] * (SSB/par[1]) * remp(1, cdf)
+          }
+    }
   else if (type == 'Ricker'){
     Rhat <- (par['a'] * SSB * exp(-par['b'] * SSB) * 
       exp(TAnom_y * par['g']))*1000
   }
-  else if (type == 'GammaDist1'){
-    gamma.mom<-function(mu,sd){
-      v<-sd**2
-      c<-v/mu
-      b<-(mu/sd)**2
-      c(b,c)
-    }
-    if (TAnom_y<0.42){
-      gampar<-gamma.mom(37696.63,83962.95)
-      Rhat<-rgamma(1,gampar[1],(1/gampar[2]))*1000
-      if (Rhat<267000){Rhat<-267000}
-      }
-    if (TAnom_y>0.42){
-      gampar<-gamma.mom(126980.7,389720.9)
-      Rhat<-rgamma(1,gampar[1],(1/gampar[2]))*1000
-      if (Rhat<267000){Rhat<-267000}
-  }
-  }
-  else if (type == 'GammaDist2'){
-      gamma.mom<-function(mu,sd){
-        v<-sd**2
-        c<-v/mu
-        b<-(mu/sd)**2
-        c(b,c)
-      }
-      gampar<-gamma.mom(71262.71,253497.6)
-      dist<-rgamma(1000,gampar[1],(1/gampar[2]))*1000
-      dist<-dist[dist>267000]
-      Rhat<-sample(dist,1)
-    }
   # Autocorrelation component
   ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
   

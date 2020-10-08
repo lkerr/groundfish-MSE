@@ -33,13 +33,13 @@ mat_typ <- 'input'
 
 
 # natural mortality
-#M <- 0.2
-#M_typ <- 'const'
+M <- 0.2
+M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
-M <- 0.4
-M_typ <- 'ramp'
-M_mis<-TRUE
-M_mis_val<-0.2
+#M <- 0.4
+#M_typ <- 'ramp'
+M_mis<-FALSE
+#M_mis_val<-0.2
 
 # initial numbers at-age parameters
 #initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
@@ -71,12 +71,12 @@ selC_typ <- 'input'
 #           SSBRF0 = 0.01822) # calculated as S0/R0 (81202.9/4456870) (arbitrary because h = 1)
 # R_typ <- 'BHSteep'
 ##For Hockey-stick (Default) Option##
-#Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
-#        cR = 1,# dont need to convert
-#        Rnyr= 20)#recruitment is drawn from the recruitment distribution of the last X years (x=Rnyr)
-Rpar <- c(SSB_star = 7900, #mt  #from GOM COD 2019 MRAMP 
-          cR = 1,
-          Rnyr=20) # dont need to convert
+Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
+      cR = 1,# dont need to convert
+      Rnyr= 20)#recruitment is drawn from the recruitment distribution of the last X years (x=Rnyr)
+#Rpar <- c(SSB_star = 7900, #mt  #from GOM COD 2019 MRAMP 
+          #cR = 1,
+          #Rnyr=20) # dont need to convert
 R_typ <- 'HS'
 ###For Ricker SR with relationship with temperature###
 #Rpar<-c(a=3.6080315,b=0.00009354,g=-0.9870862)
