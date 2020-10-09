@@ -79,7 +79,7 @@ selC_typ <- 'input'
           #Rnyr=20) # dont need to convert
 #R_typ <- 'HS'
 ###For Ricker SR with relationship with temperature###
-Rpar<-c(a=3.6080315,b=0.00009354,g=-0.9870862)
+Rpar<-c(a=2.8323225,b=0.00008556,g=-0.7844215)
 R_typ <- 'Ricker'
 
 #### Survey parameters ####
