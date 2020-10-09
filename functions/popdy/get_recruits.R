@@ -107,8 +107,8 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
   if(type == 'BH'){
  
     # Expected value
-    Rhat <- (par['a'] * SSB) / (1+(par['b'] + SSB)) * 
-      exp(TAnom_y * par['g'])*1000
+    Rhat <- (par['a']*SSB)/(1+(par['b']*SSB))*exp(par['g']*TAnom_y)
+    Rhat <- Rhat*1000
 
   }else if(type == 'BHSteep'){
   
