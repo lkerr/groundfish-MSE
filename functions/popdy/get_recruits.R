@@ -107,9 +107,9 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
   if(type == 'BH'){
  
     # Expected value
-    Rhat <- par['a'] * SSB / (par['b'] + SSB) * 
-      exp(TAnom_y * par['c'])
-    
+    Rhat <- (par['a'] * SSB) / (1+(par['b'] + SSB)) * 
+      exp(TAnom_y * par['g'])
+
   }else if(type == 'BHSteep'){
   
     # Note that the steepness version of the stock-recruit model requires SSBR
