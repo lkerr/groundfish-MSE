@@ -71,16 +71,16 @@ selC_typ <- 'input'
 #           SSBRF0 = 0.01822) # calculated as S0/R0 (81202.9/4456870) (arbitrary because h = 1)
 # R_typ <- 'BHSteep'
 ##For Hockey-stick (Default) Option##
-Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
-      cR = 1,# dont need to convert
-      Rnyr= 20)#recruitment is drawn from the recruitment distribution of the last X years (x=Rnyr)
+#Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
+#      cR = 1,# dont need to convert
+#      Rnyr= 20)#recruitment is drawn from the recruitment distribution of the last X years (x=Rnyr)
 #Rpar <- c(SSB_star = 7900, #mt  #from GOM COD 2019 MRAMP 
           #cR = 1,
           #Rnyr=20) # dont need to convert
-R_typ <- 'HS'
+#R_typ <- 'HS'
 ###For Ricker SR with relationship with temperature###
-#Rpar<-c(a=3.6080315,b=0.00009354,g=-0.9870862)
-#R_typ <- 'Ricker'
+Rpar<-c(a=3.6080315,b=0.00009354,g=-0.9870862)
+R_typ <- 'Ricker'
 
 #### Survey parameters ####
 
