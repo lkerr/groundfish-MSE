@@ -197,6 +197,7 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
   rc <- rnorm(1, mean = 0, sd = pe_R)
   
   R <- Rhat * exp(ac + rc)
+  
   out <- list(Rhat = unname(Rhat), R = unname(R))
 
   return(out)

@@ -10,10 +10,12 @@ get_AssessVals <- function(){
 fish_mort <- replacement$F
 rec <- replacement$R
 nat_mort <- replacement$M
+SSB <- replacement$SSB
 
 return(list(
  fish_mort = fish_mort,
  rec = rec,
- nat_mort = nat_mort))
+ nat_mort = nat_mort,
+ SSB = SSB))
 
 }

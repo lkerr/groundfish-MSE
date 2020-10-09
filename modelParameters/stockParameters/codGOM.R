@@ -81,8 +81,9 @@ selC_typ <- 'input'
 ###For Ricker SR with relationship with temperature###
 #Rpar<-c(a=2.8323225,b=0.00008556,g=-0.7844215)
 #R_typ <- 'Ricker'
+#R_typ <- 'Ricker'
 ###For BH SR with relationship with temperature###
-Rpar<-c(a= 2.0403055,b=0.00008556,g=-0.7878415)
+Rpar<-c(a= 1.9394275,b=0.00006673249,g=-1.9861221)
 R_typ <- 'BH'
 
 #### Survey parameters ####

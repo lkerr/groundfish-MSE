@@ -58,6 +58,7 @@ get_J1Updates <- function(stock){
         F_full[y] <- rep_assess$fish_mort
         R[y] <- rep_assess$rec
         natM[y] <- rep_assess$nat_mort
+        SSB[y]<-rep_assess$SSB
       }
     }
   }
@@ -71,6 +72,7 @@ get_J1Updates <- function(stock){
           rep_assess <- get_AssessVals()
           F_full[y] <- rep_assess$fish_mort
           R[y] <- rep_assess$rec
+          SSB[y]<-rep_assess$SSB
         }
       }
     }

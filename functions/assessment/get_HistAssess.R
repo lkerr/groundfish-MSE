@@ -9,10 +9,10 @@ get_HistAssess <- function(stock) {
  if(stock$M_typ== 'ramp' && stock$stockName=='codGOM'){
    assessdat<- read.csv('./data/data_raw/AssessmentHistory/codGOM_highM.csv')
  }
-  if(ncol(assessdat) != 4){
+  if(ncol(assessdat) != 5){
     stop('Check that Assessment History file contains appropriate data.')
   }
-  colnames(assessdat)<-c('Year','F','R','M')
+  colnames(assessdat)<-c('Year','F','R','M','SSB')
   assess_st_yr <-   fmyearIdx-length(assessdat$Year)
   assessdat$MSEyr <- seq(assess_st_yr, (fmyearIdx-1))
   
