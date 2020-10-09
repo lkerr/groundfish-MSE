@@ -108,7 +108,7 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
  
     # Expected value
     Rhat <- (par['a'] * SSB) / (1+(par['b'] + SSB)) * 
-      exp(TAnom_y * par['g'])
+      exp(TAnom_y * par['g'])*1000
 
   }else if(type == 'BHSteep'){
   
@@ -197,7 +197,6 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
   rc <- rnorm(1, mean = 0, sd = pe_R)
   
   R <- Rhat * exp(ac + rc)
- 
   out <- list(Rhat = unname(Rhat), R = unname(R))
 
   return(out)
