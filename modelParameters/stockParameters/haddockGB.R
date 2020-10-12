@@ -30,8 +30,8 @@ mat_typ <- 'logistic'
 M <- 0.2
 M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
-M_mis<-TRUE
-M_mis_val<-0.4
+M_mis<-FALSE
+#M_mis_val<-0.4
 
 # initial numbers at-age parameters
 initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = M)
@@ -66,7 +66,7 @@ selC_typ <- 'Logistic'
 ##HS with less high values in cdf over time## (for Georges Bank haddock)
 Rpar <- c(SSB_star = 75000, #mt  #from GOM COD 2019 MRAMP 
           cR = 1) # dont need to convert
-R_typ <- 'HSDec'
+R_typ <- 'HSInc'
 #### Survey parameters ####
 
 ## Survey information
@@ -105,8 +105,6 @@ oe_paaIN_typ <- 'multinomial'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
-obsbias<-TRUE
-
 # process error levels  ###################################  !!!!!!!!!!!!!!
 pe_R <- 0.5
 
@@ -116,12 +114,14 @@ ie_typ <- 'lognorm'
 ie_bias <- 0 # % bias in implementation error
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.) (sumCW*ob_sumCW) (range 0.01-1)
-ob_sumCW <- 0.44 #0.44 is bias
+ob_sumCW <- 1 #0.44 is bias
 ob_sumIN <- 1
 
 # catch observation bias (codCW + codCW*C_mult)
-C_mult <- 1.25 #0 is no bias
+C_mult <- 0 #0 is no bias
 
+Change_point2<-'FALSE'
+Change_point_yr<-2025
 
 #### BRPs and HCRs ####
 

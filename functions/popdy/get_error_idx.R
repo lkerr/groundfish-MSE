@@ -19,19 +19,8 @@
 
 get_error_idx <- function(type, idx, par,switch){
      
-if (switch==FALSE){
     idxE <- rlnorm(1, meanlog = log(idx), # - par^2/2
                       sdlog = par)
-}
-  
-if (switch=='Pos'){
-
-    idxE<- exp(rsnorm(1, mean = log(idx), sd = par, xi = 0.5))
-}
-  
-if (switch=='Neg'){
-    idxE<- exp(rsnorm(1, mean = log(idx), sd = par, xi = 0.5))
-  }
   
   return(idxE)
   

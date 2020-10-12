@@ -59,7 +59,7 @@
 get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
                          R_ym1=NULL, Rhat_ym1=NULL, stockEnv = stock){
 
-  if(!type %in% c('BH', 'BHSteep', 'HS','HSDec','Ricker')){
+  if(!type %in% c('BH', 'BHSteep', 'HS','HSInc','Ricker')){
     stop(paste('get_recruits: check spelling of R_typ in individual stock 
                parameter file for', stockNames[i]))
   }
@@ -171,14 +171,39 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
        })
 
   }
-  else if (type == 'HSDec'){ 
+  else if (type == 'HSInc'){ 
     cdf<-read.csv('data/data_raw/AssessmentHistory/haddockGB.csv')$R
-    addcdf<-as.vector(stock$haddockGB$R)
-    addcdf<-na.omit(addcdf)
-    cdf<-c(cdf,addcdf)
-    limit<-176562*TAnom_y+1030091
-    cdf<-cdf[cdf<limit]
+    cdf<-cdf[cdf<200000000]
     cdf<-as.numeric(cdf)
+    
+    if (TAnom_y < 0.5){
+      newcdf<-remp(29,cdf)
+      add<-rsnorm(100, mean = 706882500, sd = 760716100, xi = 1.5)
+      add<-add[add>200000000]
+      add<-sample(add,1)
+      cdf<-c(newcdf,add)
+    }
+    else if (TAnom_y > 0.5 & TAnom_y < 0.8){
+      newcdf<-remp(9,cdf)
+      add<-rsnorm(100, mean = 706882500, sd = 760716100, xi = 0.8)
+      add<-add[add>200000000]
+      add<-sample(add,1)
+      cdf<-c(newcdf,add)
+    }
+    else if (TAnom_y > 0.8 & TAnom_y < 1.1){
+      newcdf<-remp(8,cdf)
+      add<-rsnorm(100, mean = 706882500, sd = 760716100, xi = 1.1)
+      add<-add[add>200000000]
+      add<-sample(add,2)
+      cdf<-c(newcdf,add)
+    }
+    else if (TAnom_y > 1.1){
+      newcdf<-remp(7,cdf)
+      add<-rsnorm(100, mean = 706882500, sd = 760716100, xi = 1.4)
+      add<-add[add>200000000]
+      add<-sample(add,3)
+      cdf<-c(newcdf,add)
+    }
           if (SSB >= par[1]) {
             Rhat <- par[2] * remp(1, cdf)
             

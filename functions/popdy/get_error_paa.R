@@ -15,15 +15,7 @@
 
 get_error_paa <- function(type, paa, par,switch){
    
-  if(switch == FALSE | switch == 'Neg'){
   paaE <- c(rmultinom(n=1, size=par, prob=paa)) / par
-  }
-
-  if(switch == 'Pos'){
-    paaE <- c(rmultinom(n=1, size=par, prob=paa)) / par
-    paaE[1]<-paaE[1]+paaE[1]*.1
-    paaE<-paaE/sum(paaE)
-  }
   
   return(paaE)
   
