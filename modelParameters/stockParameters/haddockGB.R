@@ -44,6 +44,8 @@ initN_type <- 'expDecline'
 qC <- 0.0001
 qI <- 0.0001
 
+DecCatch<-TRUE
+
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
 selC <- c(s0=5, s1=0.08)

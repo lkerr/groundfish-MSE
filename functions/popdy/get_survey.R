@@ -19,7 +19,7 @@
 
 
 
-get_survey <- function(F_full, M, N, slxF, slxI, timeI, qI){
+get_survey <- function(F_full, M, N, slxF, slxI, timeI, qI, DecCatch, Tanom, y){
   
   if(length(N) != length(slxF)){
     stop('length N must be == length selF')
@@ -29,6 +29,10 @@ get_survey <- function(F_full, M, N, slxF, slxI, timeI, qI){
   Z <- slxF * F_full + M
   
   # Get the index
+  if (DecCatch==TRUE & y>fmyearIdx){
+  qI<-0.0001-(0.000025*Tanom)
+  if(qI==0){qI<-0.00001}
+  }
   I <- slxI * qI * N * exp(-Z * timeI)
   
   return(I)

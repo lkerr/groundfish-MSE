@@ -10,9 +10,9 @@ get_indexData <- function(stock){
    
     # calculate the predicted survey index in year y and the predicted
     # survey proportions-at-age
-
     IN[y,] <- get_survey(F_full=F_full[y], M=natM[y], N=J1N[y,], slxC[y,], 
-                           slxI=selI, timeI=timeI, qI=qI)
+                           slxI=selI, timeI=timeI, qI=qI, 
+                         DecCatch=DecCatch, Tanom=Tanom[y],y=y)
     sumIN[y] <- sum(IN[y,])
     sumIW[y] <- IN[y,] %*% waa[y,]
     
