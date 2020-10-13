@@ -178,28 +178,28 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
     
     if (TAnom_y < 0.5){
       newcdf<-remp(29,cdf)
-      add<-rsnorm(100, mean = 329419000, sd = 114722813, xi = 1.5)
+      add<-rsnorm(100, mean = 508116500, sd = 114722813, xi = 1.5)
       add<-add[add>200000000]
       add<-sample(add,1)
       cdf<-c(newcdf,add)
     }
     else if (TAnom_y > 0.5 & TAnom_y < 0.8){
       newcdf<-remp(9,cdf)
-      add<-rsnorm(100, mean = 329419000, sd = 114722813, xi = 0.8)
+      add<-rsnorm(100, mean = 508116500, sd = 114722813, xi = 0.8)
       add<-add[add>200000000]
       add<-sample(add,1)
       cdf<-c(newcdf,add)
     }
     else if (TAnom_y > 0.8 & TAnom_y < 1.1){
       newcdf<-remp(8,cdf)
-      add<-rsnorm(100, mean = 329419000, sd = 114722813, xi = 1.1)
+      add<-rsnorm(100, mean = 508116500, sd = 114722813, xi = 1.1)
       add<-add[add>200000000]
       add<-sample(add,2)
       cdf<-c(newcdf,add)
     }
     else if (TAnom_y > 1.1){
       newcdf<-remp(7,cdf)
-      add<-rsnorm(100, mean = 329419000, sd = 114722813, xi = 1.4)
+      add<-rsnorm(100, mean = 508116500, sd = 114722813, xi = 1.4)
       add<-add[add>200000000]
       add<-sample(add,3)
       cdf<-c(newcdf,add)
