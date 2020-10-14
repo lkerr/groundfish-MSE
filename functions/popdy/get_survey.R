@@ -30,8 +30,8 @@ get_survey <- function(F_full, M, N, slxF, slxI, timeI, qI, DecCatch, Tanom, y){
   
   # Get the index
   if (DecCatch==TRUE & y>fmyearIdx){
-  qI<-0.0001-(0.0000125*Tanom)
-  if(qI<0.00005){qI<-0.00005}
+  qI<-0.0001-(0.00000625*Tanom)
+  if(qI<0.000075){qI<-0.000075}
   }
   I <- slxI * qI * N * exp(-Z * timeI)
   
