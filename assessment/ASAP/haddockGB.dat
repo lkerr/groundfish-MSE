@@ -413,7 +413,7 @@
 # Phase for Catchability in 1st Year
 1
 # Phase for Catchability Deviations
--3
+2
 # Phase for Stock Recruitment Relationship
 1
 # Phase for Steepness
@@ -633,7 +633,7 @@
 # CV for Catchability in First year by Index
 0.9
 # Lambda for Catchability Deviations by Index
-0
+1
 # CV for Catchability Deviations by Index
 0.9
 # Lambda for Deviation from Initial Steepness
