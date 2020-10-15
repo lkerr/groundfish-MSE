@@ -80,10 +80,6 @@ Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
           #cR = 1,
           #Rnyr=20) # dont need to convert
 R_typ <- 'HS'
-###For Ricker SR with relationship with temperature###
-#Rpar<-c(a=2.8323225,b=0.00008556,g=-0.7844215)
-#R_typ <- 'Ricker'
-#R_typ <- 'Ricker'
 ###For BH SR with relationship with temperature###
 #Rpar<-c(a= 1.9394275,b=0.00006673249,g=-1.9861221)
 #R_typ <- 'BH'
@@ -128,9 +124,6 @@ oe_paaIN_typ <- 'multinomial'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
-posobsbias<-FALSE
-negobsbias<-FALSE
-
 # process error levels  #####o##############################  !!!!!!!!!!!!!!
 pe_R <- 0.01 # cannot be zero 
 
@@ -147,7 +140,7 @@ ob_sumIN <- 1
 # catch observation bias (codCW + codCW*C_mult)
 C_mult <- 1.25 #1.25 for bias, 0 for no bias
 
-Change_point2<-FALSE
+Change_point2<-TRUE
 Change_point_yr<-2025
 
 #### BRPs and HCRs ####
