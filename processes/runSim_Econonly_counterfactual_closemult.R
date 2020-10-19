@@ -38,6 +38,9 @@ source('processes/runSetup_Econonly.R')
 # rather than change that file, we'll just overwrite with the econ-only version in the next step.
 
 source('processes/genBaselineACLs_Econonly.R')
+#Want to set the sector fishing to be 'unconstrained'?  Uncomment these two lines to set an ACL of 1M mt.
+#econ_baseline$sectorACL_mt <- 1e6
+#econ_baseline$totalACL_mt<-1e6
 
 # if on local machine (i.e., not hpcc) must compile the tmb code
 # (HPCC runs have a separate cal  l to compile this code). Keep out of

@@ -16,7 +16,7 @@ acls<-"annual_sector_catch_limits.csv"
 # read in the estimated coefficients from txt files
 econ_baseline <- read.csv(file.path(sourcepath,acls), sep=",", header=TRUE,stringsAsFactors=FALSE)
 
-#set anything na to 100,000,000 mt
+#set anything na to 1,000,000 mt
 econ_baseline$totalACL_mt[is.na(econ_baseline$totalACL_mt)] <- 1e6
 econ_baseline$sectorACL_mt[is.na(econ_baseline$sectorACL_mt)] <- 1e6
 
