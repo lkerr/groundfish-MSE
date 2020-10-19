@@ -6,7 +6,7 @@ day_limits = read.dta13("data/data_raw/econ/trip_limits_forsim.dta")
 spstock2s<-c("americanlobster","americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","monkfish", "other","pollock","redsilveroffshorehake","redfish","seascallop","skates","spinydogfish","squidmackerelbutterfishherring","summerflounder","whitehake","winterflounderGB","winterflounderGOM","witchflounder","yellowtailflounderCCGOM", "yellowtailflounderGB","yellowtailflounderSNEMA")
 
 daylimits <-paste0("dl_",spstock2s)
-
+#https://stackoverflow.com/questions/37376398/how-to-create-an-empty-datatable-with-columns-names-and-then-append-datatables-t
 dl <- setNames(data.table(matrix(nrow = 0, ncol = length(daylimits))), c(daylimits))
 
 #dl = data.table ()
