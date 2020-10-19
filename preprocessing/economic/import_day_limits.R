@@ -7,8 +7,10 @@ spstock2s<-c("americanlobster","americanplaiceflounder","codGB","codGOM","haddoc
 
 daylimits <-paste0("dl_",spstock2s)
 
-dl = data.table ()
-dl [,(daylimits):=NA]
+dl <- setNames(data.table(matrix(nrow = 0, ncol = length(daylimits))), c(daylimits))
+
+#dl = data.table ()
+#dl [,(daylimits):=NA]
 
 fishing_yr <- function(dates, start_month=5) {
   # Convert dates into POSIXlt
