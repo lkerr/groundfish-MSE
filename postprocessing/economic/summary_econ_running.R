@@ -13,15 +13,15 @@ library(data.table)
 #filenames for results
 #econ_out_csv<-"monthly_summary_counterfactual_closeown.csv"
 #stock_status_out_csv<-"stock_status_counterfactual_closeown.csv"
-#econ_out_csv<-"monthly_summary_counterfactual_closemult.csv"
-#stock_status_out_csv<-"stock_status_counterfactual_closemult.csv"
-econ_out_csv<-"monthly_summary_validation1.csv"
-stock_status_out_csv<-"stock_status_validation1.csv"
+econ_out_csv<-"monthly_summary_counterfactual_closemult.csv"
+stock_status_out_csv<-"stock_status_counterfactual_closemult.csv"
+#econ_out_csv<-"monthly_summary_validation1.csv"
+#stock_status_out_csv<-"stock_status_validation1.csv"
 
 #selects most recent file path in groundfish_MSE folder that starts with "results_" 
 file_path = file.info(list.files(path=".",pattern="^results_*",include.dirs=TRUE,full.names = T,recursive=TRUE))
 file_path= rownames(file_path)[which.max(file_path$mtime)]
-file_path="./results_2020-08-31-11-34-44"
+file_path="./results_2020-10-20-10-45-24"
 
 #selects just the econ_2020 datasets
 file_names = list.files(path=file.path(file_path, "econ","raw"), pattern = "econ_2020", full.names = TRUE)
@@ -60,7 +60,7 @@ simulations[[file]]<-monthly_summary
 
 monthly_summary <- rbindlist(simulations)
 table(monthly_summary$replicate, monthly_summary$model)
-monthly_summary <- monthly_summary[replicate>90]
+#monthly_summary <- monthly_summary[replicate>90]
 
 #Verifying econ results before saving
 #source("postprocessing/economic/verify_econ_result.R")
@@ -103,7 +103,7 @@ for(file in 1:file_nums){
 
 
 stock_status <- rbindlist(stock_status)
-stock_status <- stock_status[replicate>90]
+#stock_status <- stock_status[replicate>90]
 
 stock_status[,c("bio_model","SSB","mults_allocated","sectorACL"):=NULL]
 # 1 row per  per year, spstock2, replicate, model,
