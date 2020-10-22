@@ -144,7 +144,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       }
       }
     else if(tolower(parmgt$HCR) == 'current'){
-      browser()
       parmgtproj<-parmgt
       parmgtproj$RFUN_NM<-"forecast"
       catchproj<-matrix(ncol=2,nrow=100)
