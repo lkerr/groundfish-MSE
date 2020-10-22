@@ -144,6 +144,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       }
       }
     else if(tolower(parmgt$HCR) == 'current'){
+      browser()
       parmgtproj<-parmgt
       parmgtproj$RFUN_NM<-"forecast"
       catchproj<-matrix(ncol=2,nrow=100)
@@ -160,20 +161,27 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   stockEnv = stockEnv)$sumCW}
         catchproj<-colMeans(catchproj)
         catchproj<-min(catchproj)
-        discard<-tail(read.csv('data/data_raw/AssessmentHistory/codGOM_Discard.csv'),10)
-        colnames(discard)<-c('Year','Discards')
-        discard$Year<-155:164
+        if (stockNames == 'codGOM'){
+        mincatchv<-tail(read.csv('data/data_raw/AssessmentHistory/codGOM_Discard.csv'),10)
+        colnames(mincatchv)<-c('Year','Catch')
+        mincatchv$Year<-155:164
+        }
+        if (stockNames == 'haddockGB'){
+        mincatchv<-as.data.frame(cbind(155:164,stock$haddockGB$sumCW[(y-10):(y-1)]))
+        colnames(mincatchv)<-c('Year','Catch')
+        }
         if (y>fmyearIdx){
           for (i in fmyearIdx:(y-1)){
           catchadd<-c(i,stockEnv$obs_sumCW[i])
-          discard<-rbind(discard,catchadd)
+          mincatchv<-rbind(mincatchv,catchadd)
           }
         }
+        if (catchproj<min(mincatchv$Catch)){catchproj<-min(mincatchv$Catch)}
         F <- get_F(x = catchproj,
-                   Nv = stock$codGOM$J1N[y,], 
-                   slxCv = stock$codGOM$slxC[y,], 
-                   M = stock$codGOM$natM[y], 
-                   waav = stock$codGOM$waa[y,])
+                   Nv = stockEnv$J1N[y,], 
+                   slxCv = stockEnv$slxC[y,], 
+                   M = stockEnv$natM[y], 
+                   waav = stockEnv$waa[y,])
       }
     else{
       

@@ -1,6 +1,3 @@
-
-
-
 ## ---- SIMULATION PARAMETERS ---- ##
 
 

@@ -44,31 +44,23 @@ initN_type <- 'expDecline'
 qC <- 0.0001
 qI <- 0.0001
 
-DecCatch<-TRUE
+DecCatch<-FALSE
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
 selC <- c(s0=5, s1=0.08)
 selC_typ <- 'Logistic'
 
-# Recruitment (parameters need updating!!!)
-##BHSteep###
-#Rpar <- c(h = 6.286813e-01,
-         # R0 = 8.062700e+07,
-        #  c = -0.540,
-        #  SSBRF0 = 0.01972,
-        #  sigR = 0.56,
-         # beta3 = -2.501400e-01)
-#R_typ <- 'BHSteep'
-
-##Ricker##
-#Rpar<- c(a=0.3591554,b=0.0000006275757,g=0)
-#R_typ<-'Ricker'
+# Recruitment
+##HS with all recruitment values (what is used in stock assessment projections)##
+Rpar <- c(SSB_star = 75000, 
+          cR = 1) # dont need to convert
+R_typ <- 'HS'
 
 ##HS with less high values in cdf over time## (for Georges Bank haddock)
-Rpar <- c(SSB_star = 75000, #mt  #from GOM COD 2019 MRAMP 
-          cR = 1) # dont need to convert
-R_typ <- 'HSInc'
+#Rpar <- c(SSB_star = 75000, 
+#         cR = 1) # dont need to convert
+#R_typ <- 'HSInc'
 #### Survey parameters ####
 
 ## Survey information
