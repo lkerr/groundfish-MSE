@@ -58,25 +58,9 @@ get_J1Updates <- function(stock){
         F_full[y] <- rep_assess$fish_mort
         R[y] <- rep_assess$rec
         natM[y] <- rep_assess$nat_mort
-        SSB[y]<-rep_assess$SSB
       }
     }
   }
-
-
-    # option to overwrite calculated values with historic assessment input values for each year #AEW
-    # just fishing mortality for now
-    if (histAssess == TRUE) {
-      for(i in 1:nstock){
-        if(y %in% assess_vals$assessdat$MSEyr){
-          rep_assess <- get_AssessVals()
-          F_full[y] <- rep_assess$fish_mort
-          R[y] <- rep_assess$rec
-          SSB[y]<-rep_assess$SSB
-        }
-      }
-    }
-
 
     # calculate what the Jan 1 population numbers are for year y, which
     # depend on the numbers and mortality rate in the previous year and
