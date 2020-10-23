@@ -30,7 +30,6 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
     
     # Index for years that will be plotted for trajectories and such
     pyidx <- (fmyearIdx-py0+1):length(yrs)
-    
     nm <- names(x)
     # ny <- dim(x[[i]])[3]
     bxidx <- which(nm %in% c("SSB", "R", "F_full", "sumCW", "annPercentChange", 
@@ -243,7 +242,6 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
                     size=min(1, dim(x[[trajidx[1]]])[1]))
   
     for(i in trajidx){
-  
       tempPM <- x[[i]]
       PMname <- nm[i]
       
@@ -341,6 +339,22 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
                         fmyear=yrs[fmyearIdx])
           
         dev.off()
+        if(nrow(mpMean)== 1 & runClass == 'HPCC' & nm[i]=='SSB'|nrow(mpMean)== 1 & runClass == 'HPCC' & nm[i]=='R'|nrow(mpMean)== 1 & runClass == 'HPCC' & nm[i]=='F_full'){
+        
+        jpeg(paste0(dirOut, 'Traj/', PMname, '/MPMeanTrajwithEst.jpg.'),
+             width=480*1.75, height=480, pointsize=12*1.5)
+        par(mar=c(4,4,1,1))
+        
+        # Jitter the overfished status if necessary so you can see the 
+        # trajectory
+        if(nm[i] == 'OFdStatus'){
+          mpMean <- jitter(mpMean, amount=0.01)
+        }
+        get_mpMeanTrajwithEst(mpMeanMat = mpMean, x=yrs[pyidx], nm=nm, 
+                       fmyear=yrs[fmyearIdx])
+        
+        dev.off()
+        }
       }
       
     }

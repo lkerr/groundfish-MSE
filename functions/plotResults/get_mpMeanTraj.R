@@ -13,7 +13,6 @@
 
 
 get_mpMeanTraj <- function(mpMeanMat, x, ylab, fmyear=NULL){
-  
   # Get y limits and extend them a little bit so that the legend does not
   # interfere
   yl <- range(mpMeanMat)
@@ -24,7 +23,7 @@ get_mpMeanTraj <- function(mpMeanMat, x, ylab, fmyear=NULL){
   
   # Get the colors
   cols <- rainbow(nmp)
-  
+
   matplot(x, t(mpMeanMat), lty=1, pch=16, type='o', cex=1, col=cols,
           xlab = 'Year', ylab=ylab, lwd=2)
   

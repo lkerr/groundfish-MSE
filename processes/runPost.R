@@ -42,7 +42,6 @@ for(i in 1:length(flLst[[1]])){
 
   get_plots(x=omval, stockEnv = stockPar[[i]], 
             dirIn=paste0(ResultDirectory, '/sim/'), dirOut=dirOut)
-
 }
 
 # Output the management procedures text file in the figure directory
