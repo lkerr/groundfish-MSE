@@ -344,12 +344,6 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
         jpeg(paste0(dirOut, 'Traj/', PMname, '/MPMeanTrajwithEst.jpg.'),
              width=480*1.75, height=480, pointsize=12*1.5)
         par(mar=c(4,4,1,1))
-        
-        # Jitter the overfished status if necessary so you can see the 
-        # trajectory
-        if(nm[i] == 'OFdStatus'){
-          mpMean <- jitter(mpMean, amount=0.01)
-        }
         get_mpMeanTrajwithEst(mpMeanMat = mpMean, x=yrs[pyidx], nm=nm, 
                        fmyear=yrs[fmyearIdx])
         
