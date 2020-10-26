@@ -21,7 +21,7 @@ mprocfile<-"mproc.csv"
 # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
 # Available stocks: haddockGB, codGOM, codGB_Error, pollock, yellowtailflounderGB
-stockExclude <- c('codGOM', 'codGB_Error', 'pollock', 'yellowtailflounderGB')
+stockExclude <- c('haddockGB', 'codGB_Error', 'pollock', 'yellowtailflounderGB')
 
 
 #### historic assessment values #### AEW
@@ -57,7 +57,7 @@ nburn <- 50
 #### Temperature information ####
 
 ## Do you want to include temperature projections (in S-R, growth, etc.)
-useTemp <- TRUE
+useTemp <- FALSE
 
 ## Do you want to use particular models from the cmip data series? If so
 ## tmods should be a vector of column names (see
