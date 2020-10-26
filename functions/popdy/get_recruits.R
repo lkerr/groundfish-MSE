@@ -59,7 +59,7 @@
 get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
                          R_ym1=NULL, Rhat_ym1=NULL, stockEnv = stock){
 
-  if(!type %in% c('BH', 'BHSteep', 'HS','HSInc','Ricker')){
+  if(!type %in% c('BH', 'BHSteep', 'HS','IncFreq','Ricker')){
     stop(paste('get_recruits: check spelling of R_typ in individual stock 
                parameter file for', stockNames[i]))
   }
@@ -182,45 +182,8 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
       return(pred)
       })}
   }
-  else if (type == 'HSInc'){ 
-    cdf<-read.csv('data/data_raw/AssessmentHistory/haddockGB.csv')$R
-    cdf<-cdf[cdf<200000000]
-    cdf<-as.numeric(cdf)
-    
-    if (TAnom_y < 0.5){
-      newcdf<-remp(29,cdf)
-      add<-rsnorm(100, mean = 508116500, sd = 114722813, xi = 1.5)
-      add<-add[add>200000000]
-      add<-sample(add,1)
-      cdf<-c(newcdf,add)
-    }
-    else if (TAnom_y > 0.5 & TAnom_y < 0.8){
-      newcdf<-remp(9,cdf)
-      add<-rsnorm(100, mean = 508116500, sd = 114722813, xi = 0.8)
-      add<-add[add>200000000]
-      add<-sample(add,1)
-      cdf<-c(newcdf,add)
-    }
-    else if (TAnom_y > 0.8 & TAnom_y < 1.1){
-      newcdf<-remp(8,cdf)
-      add<-rsnorm(100, mean = 508116500, sd = 114722813, xi = 1.1)
-      add<-add[add>200000000]
-      add<-sample(add,2)
-      cdf<-c(newcdf,add)
-    }
-    else if (TAnom_y > 1.1){
-      newcdf<-remp(7,cdf)
-      add<-rsnorm(100, mean = 508116500, sd = 114722813, xi = 1.4)
-      add<-add[add>200000000]
-      add<-sample(add,3)
-      cdf<-c(newcdf,add)
-    }
-          if (SSB >= par[1]) {
-            Rhat <- par[2] * remp(1, cdf)
-            
-          } else if (SSB < par[1]){
-           Rhat <-  par[2] * (SSB/par[1]) * remp(1, cdf)
-          }
+  else if (type == 'IncFreq'){ 
+    Rhat <- par['a'] * SSB * exp(-par['b'] * SSB)*1000
     }
   else if (type == 'Ricker'){
     Rhat <- (par['a'] * SSB * exp(-par['b'] * SSB) * 
@@ -230,10 +193,14 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
   ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
   
   # Random error component
+  if (type != 'IncFreq'){
   rc <- rnorm(1, mean = 0, sd = pe_R)
-  
+  }
+  else{
+  pe_R<-pe_R+(1.5*TAnom_y)
+  xi<-1-(0.1*TAnom_y)
+  rc<-rsnorm(1,mean=0,sd=pe_R,xi=xi)}
   R <- Rhat * exp(ac + rc)
-  
   out <- list(Rhat = unname(Rhat), R = unname(R))
 
   return(out)

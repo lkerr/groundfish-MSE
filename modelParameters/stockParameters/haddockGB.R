@@ -53,15 +53,15 @@ selC_typ <- 'Logistic'
 
 # Recruitment
 ##HS with all recruitment values (what is used in stock assessment projections)##
-Rpar <- c(SSB_star = 75000, 
-          cR = 1) # dont need to convert
-R_typ <- 'HS'
-
-##HS with less high values in cdf over time## (for Georges Bank haddock)
 #Rpar <- c(SSB_star = 75000, 
-#         cR = 1) # dont need to convert
-#R_typ <- 'HSInc'
-#### Survey parameters ####
+#          cR = 1) # dont need to convert
+#R_typ <- 'HS'
+
+##Ricker with increased frequency of high events with temp.
+Rpar <- c(a = 0.5540445, 
+         b = 0.0000174067) 
+R_typ <- 'IncFreq'
+#### Survey parameters ####F
 
 ## Survey information
 # slxI <- matrix(1, nrow=nyear, ncol=nage)
