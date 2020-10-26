@@ -9,6 +9,7 @@ get_mpMeanTrajwithEst <- function(mpMeanMat, x, nm, fmyear=NULL){
   
   # Get the colors
   cols <- rainbow(2)
+  files<-list.files(path='./assessment/ASAP')
   Est<-matrix(NA, ncol = length(files), nrow = (length(mpMeanMat)-4))
   files<-list.files()
   if (nm[i]=="SSB"){
