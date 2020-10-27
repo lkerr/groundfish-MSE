@@ -339,16 +339,16 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
                         fmyear=yrs[fmyearIdx])
           
         dev.off()
-        if(nrow(mpMean)== 1 & runClass == 'HPCC' & nm[i]=='SSB'|nrow(mpMean)== 1 & runClass == 'HPCC' & nm[i]=='R'|nrow(mpMean)== 1 & runClass == 'HPCC' & nm[i]=='F_full'){
+       # if(nrow(mpMean)== 1 & runClass == 'HPCC' & nm[i]=='SSB'|nrow(mpMean)== 1 & runClass == 'HPCC' & nm[i]=='R'|nrow(mpMean)== 1 & runClass == 'HPCC' & nm[i]=='F_full'){
         
-        jpeg(paste0(dirOut, 'Traj/', PMname, '/MPMeanTrajwithEst.jpg.'),
-             width=480*1.75, height=480, pointsize=12*1.5)
-        par(mar=c(4,4,1,1))
-        get_mpMeanTrajwithEst(mpMeanMat = mpMean, x=yrs[pyidx], nm=nm, 
-                       fmyear=yrs[fmyearIdx])
+      #  jpeg(paste0(dirOut, 'Traj/', PMname, '/MPMeanTrajwithEst.jpg.'),
+      #       width=480*1.75, height=480, pointsize=12*1.5)
+      #  par(mar=c(4,4,1,1))
+      #  get_mpMeanTrajwithEst(mpMeanMat = mpMean, x=yrs[pyidx], nm=nm, 
+      #                 fmyear=yrs[fmyearIdx])
         
-        dev.off()
-        }
+      #  dev.off()
+      #  }
       }
       
     }
