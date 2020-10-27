@@ -87,7 +87,6 @@ for(r in 1:nrep){
 
       # if burn-in period is over...
       if(y >= fmyearIdx){
-
         manage_counter<-manage_counter+1 #this only gets incremented when y>=fmyearIdx
 
         for(i in 1:nstock){

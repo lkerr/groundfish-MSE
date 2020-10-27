@@ -5,3 +5,4 @@ CAA,slide,YPR,0.1,NA,SIM,10,NA,forecast,5,StandardFisheries
 CAA,constF,SPR,0.5,NA,SIM,-15,-3,hindcastMean,3,StandardFisheries
 CAA,constF,SPR,0.1,NA,SIM,12,NA,forecast,2,StandardFisheries
 PLANB,NA,NA,NA,NA,NA,NA,NA,NA,NA,StandardFisheries
+ASAP,constF,SPR,0.1,NA,SIM,12,NA,forecast,2,StandardFisheries

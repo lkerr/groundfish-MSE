@@ -2,16 +2,19 @@
 
 
 get_advice <- function(stock){
-
   # prepare data
   tempStock <- get_tmbSetup(stock = stock)
   
   #### Run assessment model ####
   # Run the CAA assessment
+  if(mproc[m,'ASSESSCLASS'] == 'CAA'){
   tempStock <- get_caa(stock = tempStock)
+  }
   
   # Run the PlanB assessment
+  if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
   tempStock <- get_planB(stock = tempStock)
+  }
   
   # Run ASAP assessment
   if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
