@@ -30,6 +30,11 @@ annual_revenue_holder<-list()
 annual_fishery_status_holder<-list()
 
 
+#set up a list to hold the prhat by date, hullnum, and target spstock2
+# This will be a pretty big list
+annual_prhat_holder<-list()
+
+
 #Initialize the most_recent_target data.table. 
 #This could move to preprocessing; I'll need to set one up for the entire simulation dataset (all 6 years)
 # You need to save it as a .RDS and then read.  And you need to figure out what to do with your merge statements In order to keep *all*
@@ -99,11 +104,21 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
     
      trips<-zero_out_closed_areas_asc_cutout(trips,fishery_holder)
   
+
+     pr_savelist<-c("hullnum","spstock2","doffy","prhat")
+     
+    # This takes a subset of the trips data.table and reshapes it wide 
+     annual_prhat_holder[[day]]<-dcast(trips[,..pr_savelist],hullnum + doffy ~ spstock2, value.var="prhat")
+     
+     
+     
   # draw trips probabilistically.  A trip is selected randomly from the choice set. 
   # The probability of selection is equal to prhat
     trips<-get_random_draw_tripsDT(trips)
   #drop out trip that did not fish (they have no landings or catch). 
     #trips<-trips[spstock2!="nofish"]
+    
+    
     
     catches<-get_reshape_catches(trips)
     landings<-get_reshape_landings(trips)
@@ -182,6 +197,22 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
   # annual_fishery_status_holder<-c(annual_fishery_status_holder,econtype)
   fishery_output_holder[[yearitercounter]]<-annual_fishery_status_holder
   rm(annual_fishery_status_holder)
+  
+  
+  
+  
+  
+  #contract the fishery-level list down to a single data.table
+  annual_prhat_holder<- rbindlist(annual_prhat_holder,use.names=TRUE,fill=TRUE) 
+  annual_prhat_holder$r<-r
+  annual_prhat_holder$m<-model
+  annual_prhat_holder$y<-y
+  annual_prhat_holder$year<-yrs[y]
+  
+  #perhaps
+  # annual_fishery_status_holder<-c(annual_fishery_status_holder,econtype)
+  fishery_prhat_holder[[yearitercounter]]<-annual_prhat_holder
+  rm(annual_prhat_holder)
   
   
   
