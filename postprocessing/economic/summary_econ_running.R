@@ -11,21 +11,33 @@ library(data.table)
 #stock_status_validation_modelstuffhere.csv
 
 #filenames for results
-#econ_out_csv<-"monthly_summary_counterfactual_closeown.csv"
-#stock_status_out_csv<-"stock_status_counterfactual_closeown.csv"
-econ_out_csv<-"monthly_summary_counterfactual_closemult.csv"
-stock_status_out_csv<-"stock_status_counterfactual_closemult.csv"
+econ_out_csv<-"monthly_summary_counterfactual_closeown1.csv"
+stock_status_out_csv<-"stock_status_counterfactual_closeown1.csv"
+pr_hat_out_csv<-"pr_hat_counterfactual_closeown1.csv"
+
+#econ_out_csv<-"monthly_summary_counterfactual_closemult1.csv"
+#stock_status_out_csv<-"stock_status_counterfactual_closemult1.csv"
+#pr_hat_out_csv<-"pr_hat_counterfactual_closemult1.csv"
+#only first 48 replicates off the first closemult model run.
+
+
 #econ_out_csv<-"monthly_summary_validation1.csv"
 #stock_status_out_csv<-"stock_status_validation1.csv"
+#pr_hat_out_csv<-"pr_hat_counterfactual_validation1.csv"
 
 #selects most recent file path in groundfish_MSE folder that starts with "results_" 
 file_path = file.info(list.files(path=".",pattern="^results_*",include.dirs=TRUE,full.names = T,recursive=TRUE))
 file_path= rownames(file_path)[which.max(file_path$mtime)]
-file_path="./results_2020-10-20-10-45-24"
+file_path="./results_2020-10-26-14-40-06"
 
 #selects just the econ_2020 datasets
 file_names = list.files(path=file.path(file_path, "econ","raw"), pattern = "econ_2020", full.names = TRUE)
+cutout<-100
 
+cutout<-71
+
+
+# need to write code for lines 32-73 that works on the pr_hat data
 #binding into a data.table
 simulations<-list()
 file_nums<-length(file_names)
@@ -58,9 +70,10 @@ simulations[[file]]<-monthly_summary
 }
 
 
-monthly_summary <- rbindlist(simulations)
-table(monthly_summary$replicate, monthly_summary$model)
-#monthly_summary <- monthly_summary[replicate>90]
+monthly_summary <- rbindlist(simulations,use.names=TRUE,fill=TRUE) 
+
+table(monthly_summary$replicate)
+monthly_summary <- monthly_summary[replicate<=cutout]
 
 #Verifying econ results before saving
 #source("postprocessing/economic/verify_econ_result.R")
@@ -102,8 +115,8 @@ for(file in 1:file_nums){
 
 
 
-stock_status <- rbindlist(stock_status)
-#stock_status <- stock_status[replicate>90]
+stock_status <- rbindlist(stock_status,use.names=TRUE,fill=TRUE) 
+stock_status <- stock_status[replicate<=cutout]
 
 stock_status[,c("bio_model","SSB","mults_allocated","sectorACL"):=NULL]
 # 1 row per  per year, spstock2, replicate, model,
@@ -117,6 +130,59 @@ write.csv(stock_status, file.path(file_path, stock_status_out_csv))
 
 
 
+
+
+
+
+
+
+
+#read in stock status
+
+
+
+
+file_names = list.files(path=file.path(file_path, "econ","raw"), pattern = "prhat_", full.names = TRUE)
+
+
+#binding into a data.table
+prhat<-list()
+
+
+#don't read the last file name
+file_nums<-length(file_names)
+
+for(file in 1:file_nums){
+  
+  
+  sim<-fread(file_names[file], stringsAsFactors = FALSE)
+  
+  setnames(sim, old="r", new="replicate")
+  setnames(sim, old="m", new="model")
+  
+  
+  
+  
+  
+  #generate date from doffy and extract month only 
+  sim[, month := month(as.Date(doffy, origin=paste0(year, "-04-30"))), by=year]
+  #start fishing year May = 1 
+  sim[, month := ifelse(month < 5, month+8, month-4)]
+  sim[ ,c("doffy", "y") := NULL]
+  
+  sim = sim[, lapply(.SD, sum, na.rm=TRUE), by=list(year, month, replicate, model,hullnum)]
+  
+  prhat[[file]]<-sim
+}
+
+
+
+
+prhat<-rbindlist(prhat,use.names=TRUE,fill=TRUE) 
+
+prhat <- prhat[replicate<=cutout]
+
+write.csv(prhat, file.path(file_path, pr_hat_out_csv))
 
 
 
