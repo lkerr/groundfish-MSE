@@ -89,57 +89,6 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
       }
     }
 
-    
-    # # Performance measures: medium term years 10-20
-    # for(i in bxidx){
-    #   jpeg(paste0(dirOut, nm[i], 'yrb10-20.jpg.'))
-    # 
-    #     # If you just have a bunch of NAs for some reason make an
-    #     # empty plot as a place-holder
-    #     if(all(is.na(x[[i]][,,(fmyearIdx+10-1):(fmyearIdx+20),drop=FALSE]))){
-    #       plot(0)
-    #     }else{
-    #       get_box(x=x[[i]][,,(fmyearIdx+10-1):(fmyearIdx+20),drop=FALSE])
-    #     }
-    #   
-    #   dev.off()
-    #     
-    # }
-    # 
-    # # Performance measures using first 5 years
-    # for(i in bxidx){
-    #   
-    #   jpeg(paste0(dirOut, nm[i], 'yra1-5.jpg.'))
-    #   # If you just have a bunch of NAs for some reason make an
-    #   # empty plot as a place-holder
-    #   if(all(is.na(x[[i]][,,fmyearIdx:(fmyearIdx+5-1),drop=FALSE]))){
-    #     plot(0)
-    #   }else{
-    #     get_box(x=x[[i]][,,fmyearIdx:(fmyearIdx+5-1),drop=FALSE])
-    #   }
-    #   
-    #   dev.off()
-    #   
-    # }
-    # 
-    # # Performance measures: long term 20-50 years
-    # for(i in bxidx){
-    #   
-    #   jpeg(paste0(dirOut, nm[i], 'yrc20-end.jpg.'))
-    #   
-    #   # If you just have a bunch of NAs for some reason make an
-    #   # empty plot as a place-holder
-    #   if(all(is.na(x[[i]][,,(nyear-20+1):nyear,drop=FALSE]))){
-    #     plot(0)
-    #   }else{
-    #     get_box(x=x[[i]][,,(nyear-20+1):nyear,drop=FALSE])
-    #   }
-    #   
-    #   dev.off()
-    #   
-    # }
-     
-  
     if(plotRP){
       #### Proxy Reference Point plots ####
       
@@ -348,7 +297,7 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
       #                 fmyear=yrs[fmyearIdx])
         
       #  dev.off()
-      #  }
+      # }
       }
       
     }
