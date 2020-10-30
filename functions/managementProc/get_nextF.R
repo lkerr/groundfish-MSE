@@ -148,10 +148,14 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parmgtproj$RFUN_NM<-"forecast"
       catchproj<-matrix(ncol=2,nrow=100)
       Frebuild<-get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)
+      parpopproj<-parpop
+      parpopproj$SSBhat<-stockEnv$res$SSB
+      parpopproj$R<-stockEnv$res$N.age[,1]
+      parpopproj$J1N<-tail(stockEnv$res$N.age,1)
       for (i in 1:100){
         catchproj[i,]<-get_proj(type = 'current',
                                   parmgt = parmgtproj, 
-                                  parpop = parpop, 
+                                  parpop = parpopproj, 
                                   parenv = parenv, 
                                   Rfun = Rfun_BmsySim$forecast,
                                   F_val = Frebuild,

@@ -138,6 +138,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   
   
   # number of ages in the model
+  
   nage <- length(parpop$sel)
   
   # if M is not given as a vector, make it one
