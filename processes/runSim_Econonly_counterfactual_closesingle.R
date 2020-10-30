@@ -25,7 +25,7 @@ rm(list=ls())
 #mprocfile<-"mproc.csv"
 #mprocfile<-"mprocTest.csv"
 #mproc_manual<-"mprocEcon_validate.csv"
-#mproc_manual<-"mprocEcon_counterfactual.csv"
+#mproc_manual<-"mprocEcon_counterfactual_closemult.csv"
 mproc_manual<-"mprocEcon_counterfactual_single.csv"
 
 #runSetup.R loads things and sets them up. This is used by the integrated simulation, so be careful making changes with it. Instead, overwrite them using the setupEcon_extra.R file.
@@ -38,6 +38,9 @@ source('processes/runSetup_Econonly.R')
 # rather than change that file, we'll just overwrite with the econ-only version in the next step.
 
 source('processes/genBaselineACLs_Econonly.R')
+#Want to set the sector fishing to be 'unconstrained'?  Uncomment these two lines to set an ACL of 1M mt.
+#econ_baseline$sectorACL_mt <- 1e6
+#econ_baseline$totalACL_mt<-1e6
 
 # if on local machine (i.e., not hpcc) must compile the tmb code
 # (HPCC runs have a separate cal  l to compile this code). Keep out of
@@ -91,6 +94,7 @@ source('processes/setupYearIndexing_Econ.R')
 
 #### Top rep Loop ####
 for(r in 1:nrep){
+
     oldseed_mproc <- .Random.seed
     
   #### Top MP loop ####
@@ -146,6 +150,9 @@ for(r in 1:nrep){
 
             revenue_holder<-rbindlist(revenue_holder) 
             fishery_output_holder<-rbindlist(fishery_output_holder) 
+            fishery_prhat_holder<-rbindlist(fishery_prhat_holder,use.names=TRUE,fill=TRUE) 
+            fishery_prhat_holder[is.na(fishery_prhat_holder)]<-0
+            
             
             tda <- as.character(Sys.time())
             tda <- gsub(':', '', tda)
@@ -153,6 +160,9 @@ for(r in 1:nrep){
             tda2 <- paste0(tda,"_", round(runif(1, 0, 10000)))
             write.table(revenue_holder, file.path(econ_results_location, paste0("econ_",tda2, ".csv")), sep=",", row.names=FALSE)
             write.table(fishery_output_holder, file.path(econ_results_location, paste0("econ_stock_status_",tda2, ".csv")), sep=",", row.names=FALSE)
+            write.table(fishery_prhat_holder, file.path(econ_results_location, paste0("prhat_",tda2, ".csv")), sep=",", row.names=FALSE)
+            
+            fishery_prhat_holder<-list()
             fishery_output_holder<-list()
             revenue_holder<-list()
             } #End save economic results if statement
