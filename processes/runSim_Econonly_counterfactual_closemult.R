@@ -56,6 +56,7 @@ top_loop_start<-Sys.time()
 
 
 ####################These are temporary changes for testing ####################
+#nrep<-1
 
 mproc_bak<-mproc
 #mproc<-mproc_bak[2:5,] #selects validation of four models
@@ -92,7 +93,8 @@ showProgBar<-TRUE
 source('processes/setupYearIndexing_Econ.R')
 
 #### Top rep Loop ####
-for(r in 1:nrep){
+#for(r in 1:nrep){
+  for(r in 49:nrep){
     oldseed_mproc <- .Random.seed
     
   #### Top MP loop ####
@@ -148,6 +150,8 @@ for(r in 1:nrep){
 
             revenue_holder<-rbindlist(revenue_holder) 
             fishery_output_holder<-rbindlist(fishery_output_holder) 
+            fishery_prhat_holder<-rbindlist(fishery_prhat_holder,use.names=TRUE,fill=TRUE) 
+            fishery_prhat_holder[is.na(fishery_prhat_holder)]<-0
             
             tda <- as.character(Sys.time())
             tda <- gsub(':', '', tda)
@@ -155,6 +159,9 @@ for(r in 1:nrep){
             tda2 <- paste0(tda,"_", round(runif(1, 0, 10000)))
             write.table(revenue_holder, file.path(econ_results_location, paste0("econ_",tda2, ".csv")), sep=",", row.names=FALSE)
             write.table(fishery_output_holder, file.path(econ_results_location, paste0("econ_stock_status_",tda2, ".csv")), sep=",", row.names=FALSE)
+            write.table(fishery_prhat_holder, file.path(econ_results_location, paste0("prhat_",tda2, ".csv")), sep=",", row.names=FALSE)
+            
+            fishery_prhat_holder<-list()
             fishery_output_holder<-list()
             revenue_holder<-list()
             } #End save economic results if statement
