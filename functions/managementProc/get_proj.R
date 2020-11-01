@@ -89,7 +89,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     }
     else if(type=='current'){
       startFCST <- parenv$y
-      endFCST <- parenv$y + 2
+      endFCST <- parenv$y + 1
     }
     
     if(is.na(parenv$Tanom[endFCST])){
@@ -183,7 +183,6 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   # Get mature biomass-at-age
   SSBaa <- sweep(Waa, MARGIN=2, STATS=parpop$mat, FUN='*')
 
-
   # Calculate the catch in weight
   sumCW <- sapply(1:nrow(N), function(i){
     CN <- (parpop$sel * F_val) / (parpop$sel * F_val + parpop$M) * 
@@ -192,14 +191,14 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     return(tempSumCW)
   })
   
-  J1Npj <- N[2:ny,]
+  J1Npj <- N
 
-  SSBaa <- SSBaa[2:ny,]
+  SSBaa <- SSBaa
   SSBpj <- apply(SSBaa, 1, sum)
-  sumCWpj <- sumCW[2:ny]
+  sumCWpj <- sumCW
   
   out <- list(J1N = J1Npj,
-              SSBaa <- SSBaa,
+              SSBaa = SSBaa,
               SSB = SSBpj,
               sumCW = sumCWpj)
   
