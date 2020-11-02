@@ -39,7 +39,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     }
     else if(type=='current'){
       startFCST <- parenv$y
-      endFCST <- parenv$y + 1
+      endFCST <- parenv$y + 2
     }
     
     if(is.na(parenv$Tanom[endFCST])){
@@ -107,7 +107,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     N[y,1] <- Rfun(type = stockEnv$R_typ,
                    parpop = parpop, 
                    parenv = parenv, 
-                   SSB = c(N[y-1,]) %*% c(parpop$waa),
+                   SSB = c(N[y-1,]) %*% c(parpop$waa* parpop$mat),
                    sdR = stockEnv$pe_R,
                    TAnom = Tanom[y],
                    Rest = Rest)
@@ -121,13 +121,13 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   SSBaa <- sweep(Waa, MARGIN=2, STATS=parpop$mat, FUN='*')
 
   # Calculate the catch in weight
-  sumCW <- sapply(1:nrow(N), function(i){
-    CN <- (parpop$sel * F_val) / (parpop$sel * F_val + parpop$M) * 
-      N[i,] * (1 - exp(-F_val * parpop$sel - parpop$M))
+  sumCW <- sapply(2:nrow(N), function(i){
+    CN <- get_catch(F_full=F_val, M=parpop$M,
+                    N=N[(i-1),], selC=parpop$sel) + 1e-3
     tempSumCW <- CN %*% c(parpop$waa)
     return(tempSumCW)
   })
-
+  
   J1Npj <- N
 
   SSBaa <- SSBaa

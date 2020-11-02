@@ -138,6 +138,7 @@ get_advice <- function(stock){
                        RPlast = NULL, evalRP = TRUE,
                        stock = tempStock)
       tempStock$RPmat[y,] <- gnF$RPs
+      tempStock$catchproj <- gnF$catchproj
       
     }else{
       # Otherwise use old reference points to calculate stock

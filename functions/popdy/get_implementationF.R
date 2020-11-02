@@ -17,7 +17,6 @@ get_implementationF <- function(type, stock){
                                    par = ie_F,
                                    switch=FALSE)
 
-
         # add implimentation bias to catch, need to convert from F to catch, back to F
         # get catch in numbers using the Baranov catch equation from advised F
 

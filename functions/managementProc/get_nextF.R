@@ -144,6 +144,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       }
       }
     else if(tolower(parmgt$HCR) == 'current'){
+      if ((y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) == 0){
       parmgtproj<-parmgt
       parmgtproj$RFUN_NM<-"forecast"
       catchproj<-matrix(ncol=2,nrow=100)
@@ -163,7 +164,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   stReportYr = 2,
                                   stockEnv = stockEnv)$sumCW}
         catchproj<-colMeans(catchproj)
-        catchproj<-min(catchproj)
         #if (stockNames == 'codGOM'){
        # mincatchv<-tail(read.csv('data/data_raw/AssessmentHistory/codGOM_Discard.csv'),10)
       #  colnames(mincatchv)<-c('Year','Catch')
@@ -180,11 +180,20 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     #      }
     #    }
         #if (catchproj<min(mincatchv$Catch)){catchproj<-min(mincatchv$Catch)}
-        F <- get_F(x = catchproj,
+        F <- get_F(x = catchproj[1],
                    Nv = stockEnv$J1N[y,], 
                    slxCv = stockEnv$slxC[y,], 
                    M = stockEnv$natM[y], 
                    waav = stockEnv$waa[y,])
+      }
+      else{
+        F <- get_F(x = stockEnv$catchproj[2],
+                   Nv = stockEnv$J1N[y,], 
+                   slxCv = stockEnv$slxC[y,], 
+                   M = stockEnv$natM[y], 
+                   waav = stockEnv$waa[y,])
+        catchproj<-stockEnv$catchproj
+      }
       }
     else{
       
@@ -193,7 +202,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     }
     out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue), 
                 ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
-                OFgStatus = overfishing) #AEW
+                OFgStatus = overfishing, catchproj=catchproj) #AEW
     
   }else if(parmgt$ASSESSCLASS == 'PLANB'){
     
