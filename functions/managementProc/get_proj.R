@@ -89,22 +89,19 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   # set up initial conditions
   N[1,] <- init 
   if (type=='current'){
-    for(a in 2:(nage-1)){
       # exponential survival to the next year/age
-      N[1,a] <- N[1, a-1] * exp(-parpop$sel[a-1]*parpop$Fhat - 
-                                    parpop$M[a-1])
-    }
-    
-    # Deal with the plus group
-    N[1,nage] <- init[nage-1] * exp(-parpop$sel[nage-1] * parpop$Fhat - 
-                                       parpop$M[nage-1]) + 
-      init[nage] * exp(-parpop$sel[nage] * parpop$Fhat - 
-                          parpop$M[nage])
-    
-    ## Recruitment
-    N[1,1] <-prod(tail(parpop$R,5))^(1/5)
+      init[,1]<- prod(tail(parpop$R,5))^(1/5)
+      N[1,] <- init * exp(-parpop$sel*parpop$Fhat - 
+                                    parpop$M)
   }
   for(y in 2:length(Tanom)){
+    N[y,1] <- Rfun(type = stockEnv$R_typ,
+                   parpop = parpop, 
+                   parenv = parenv, 
+                   SSB = c(N[y-1,]) %*% c(parpop$waa* parpop$mat),
+                   sdR = stockEnv$pe_R,
+                   TAnom = Tanom[y],
+                   Rest = Rest)
     for(a in 2:(nage-1)){
       # exponential survival to the next year/age
       N[y,a] <- N[y-1, a-1] * exp(-parpop$sel[a-1]*F_val - 
@@ -119,15 +116,6 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     
     ## Recruitment
     # sd of historical R estimates
-
-    N[y,1] <- Rfun(type = stockEnv$R_typ,
-                   parpop = parpop, 
-                   parenv = parenv, 
-                   SSB = c(N[y-1,]) %*% c(parpop$waa* parpop$mat),
-                   sdR = stockEnv$pe_R,
-                   TAnom = Tanom[y],
-                   Rest = Rest)
-
   }
 
   # Get weight-at-age
@@ -139,7 +127,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   # Calculate the catch in weight
   sumCW <- sapply(2:nrow(N), function(i){
     CN <- get_catch(F_full=F_val, M=parpop$M,
-                    N=N[i,], selC=parpop$sel) + 1e-3
+                    N=N[i,], selC=parpop$sel)
     tempSumCW <- CN %*% c(parpop$waa)
     return(tempSumCW)
   })

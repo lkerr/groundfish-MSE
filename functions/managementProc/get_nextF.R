@@ -153,6 +153,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parpopproj$SSBhat<-stockEnv$res$SSB
       parpopproj$R<-stockEnv$res$N.age[,1]
       parpopproj$J1N<-tail(stockEnv$res$N.age,1)
+      browser()
       for (i in 1:100){
         catchproj[i,]<-get_proj(type = 'current',
                                   parmgt = parmgtproj, 
@@ -185,6 +186,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                    slxCv = stockEnv$slxC[y,], 
                    M = stockEnv$natM[y], 
                    waav = stockEnv$waa[y,])
+        browser()
       }
       else{
         F <- get_F(x = stockEnv$catchproj[2],
