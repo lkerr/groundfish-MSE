@@ -87,7 +87,23 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   N <- matrix(0, nrow=ny, ncol=nage)
 
   # set up initial conditions
-  N[1,] <- init
+  N[1,] <- init 
+  if (type=='current'){
+    for(a in 2:(nage-1)){
+      # exponential survival to the next year/age
+      N[1,a] <- N[1, a-1] * exp(-parpop$sel[a-1]*parpop$Fhat - 
+                                    parpop$M[a-1])
+    }
+    
+    # Deal with the plus group
+    N[1,nage] <- init[nage-1] * exp(-parpop$sel[nage-1] * parpop$Fhat - 
+                                       parpop$M[nage-1]) + 
+      init[nage] * exp(-parpop$sel[nage] * parpop$Fhat - 
+                          parpop$M[nage])
+    
+    ## Recruitment
+    N[1,1] <-prod(tail(parpop$R,5))^(1/5)
+  }
   for(y in 2:length(Tanom)){
     for(a in 2:(nage-1)){
       # exponential survival to the next year/age
@@ -123,7 +139,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   # Calculate the catch in weight
   sumCW <- sapply(2:nrow(N), function(i){
     CN <- get_catch(F_full=F_val, M=parpop$M,
-                    N=N[(i-1),], selC=parpop$sel) + 1e-3
+                    N=N[i,], selC=parpop$sel) + 1e-3
     tempSumCW <- CN %*% c(parpop$waa)
     return(tempSumCW)
   })
