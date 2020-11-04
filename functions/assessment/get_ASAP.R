@@ -55,7 +55,7 @@ get_ASAP <- function(stock){
     dat_file$dat$prop_rel_mats <- matrix(0, nrow = N_rows, ncol = page)
     
     # #index data; sum index value, observation error, proportions-at-age, sample size
-    dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(0.5, N_rows), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN, N_rows)) #year, value, CV, by-age, sample size
+    dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, N_rows), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN, N_rows)) #year, value, CV, by-age, sample size
     
     # Recruitment CV
     dat_file$dat$recruit_cv <- matrix(0.5, nrow = N_rows, 1)

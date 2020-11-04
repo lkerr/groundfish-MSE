@@ -44,7 +44,7 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
                                "mxGradCAA",
                                "relE_qI", "relE_qC", "relE_selCs0", "relE_selCs1",
                                "relE_ipop_mean", "relE_ipop_dev",
-                               "relE_R_dev", "relE_SSB", "relE_CW", "relE_IN",
+                               "relE_R_dev", "relE_SSB", "relE_N","relE_CW", "relE_IN",
                                "relE_R", "relE_F", "OFgStatus",   #AEW
                                "FPROXY", "SSBPROXY"))
     

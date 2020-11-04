@@ -88,36 +88,46 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
 
   # set up initial conditions
   N[1,] <- init 
+  #Get beginning of year population in year t+1
   if (type=='current'){
-      # exponential survival to the next year/age
-      init[,1]<- prod(tail(parpop$R,5))^(1/5)
-      N[1,] <- init * exp(-parpop$sel*parpop$Fhat - 
-                                    parpop$M)
+
+    for(a in 2:(nage-1)){
+      #init= population at the beginning of the year in t-1  
+      #exponential survival to the next year/age (t)
+      N[1,a] <- init[a-1] * exp(-parpop$sel[a-1]*parpop$Fhat - 
+                                    parpop$M[a-1])
+    }
+
+    # Deal with the plus group
+    N[1,nage] <- init[nage-1] * exp(-parpop$sel[nage-1] * parpop$Fhat - 
+                                       parpop$M[nage-1]) + 
+      init[nage] * exp(-parpop$sel[nage] * parpop$Fhat - 
+                          parpop$M[nage])
+    N[1,1] <- prod(tail(parpop$R,5))^(1/5)
   }
   for(y in 2:length(Tanom)){
-    N[y,1] <- Rfun(type = stockEnv$R_typ,
-                   parpop = parpop, 
-                   parenv = parenv, 
-                   SSB = c(N[y-1,]) %*% c(parpop$waa* parpop$mat),
-                   sdR = stockEnv$pe_R,
-                   TAnom = Tanom[y],
-                   Rest = Rest)
     for(a in 2:(nage-1)){
-      # exponential survival to the next year/age
+      #N[y-1] is the population at the beginning of the previous year 
+      #exponential survival to the next year/age
       N[y,a] <- N[y-1, a-1] * exp(-parpop$sel[a-1]*F_val - 
                                     parpop$M[a-1])
     }
    
     # Deal with the plus group
-    N[y,nage] <- N[y-1,nage-1] * exp(-parpop$sel[nage-1] * F_val - 
+      N[y,nage] <- N[y-1,nage-1] * exp(-parpop$sel[nage-1] * F_val - 
                                        parpop$M[nage-1]) + 
                  N[y-1,nage] * exp(-parpop$sel[nage] * F_val - 
                                      parpop$M[nage])
-    
     ## Recruitment
     # sd of historical R estimates
+      N[y,1] <- Rfun(type = stockEnv$R_typ,
+                     parpop = parpop, 
+                     parenv = parenv, 
+                     SSB = c(N[y-1,]) %*% c(parpop$waa* parpop$mat),
+                     sdR = stockEnv$pe_R,
+                     TAnom = Tanom[y],
+                     Rest = Rest)
   }
-
   # Get weight-at-age
   Waa <- sweep(N, MARGIN=2, STATS=parpop$waa, FUN='*')
   
@@ -125,9 +135,9 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   SSBaa <- sweep(Waa, MARGIN=2, STATS=parpop$mat, FUN='*')
 
   # Calculate the catch in weight
-  sumCW <- sapply(2:nrow(N), function(i){
-    CN <- get_catch(F_full=F_val, M=parpop$M,
-                    N=N[i,], selC=parpop$sel)
+  sumCW <- sapply(1:(nrow(N)-1), function(i){
+    CN <- (parpop$sel * F_val) / (parpop$sel * F_val + parpop$M) * 
+      N[i,] * (1 - exp(-F_val * parpop$sel - parpop$M))
     tempSumCW <- CN %*% c(parpop$waa)
     return(tempSumCW)
   })

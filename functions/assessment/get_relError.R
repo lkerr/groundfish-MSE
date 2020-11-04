@@ -33,6 +33,7 @@ get_relError <- function(stock){
       # average over each assessment time series
       if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
       relE_SSB[y-1] <- mean(get_relE(res$SSB, SSB[132:(y-1)]))
+      relE_N[y-1] <- mean(get_relE(rowSums(res$N.age),rowSums(J1N[132:(y-1),])))
       relE_CW[y-1] <- mean(get_relE(res$catch.pred, sumCW[132:(y-1)]))
       relE_IN[y-1] <- mean(get_relE(res$index.pred$ind01, sumIN[132:(y-1)]))
       #relE_qI[y-1] <- get_relE(log(res$q.indices), log(qI))
