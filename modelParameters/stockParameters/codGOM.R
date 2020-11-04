@@ -36,6 +36,7 @@ mat_typ <- 'input'
 M <- 0.2
 M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
+M_mis<- 'FALSE'
 #M <- 0.4
 #M_typ <- 'ramp'
 

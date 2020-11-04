@@ -87,6 +87,7 @@ for(r in 1:nrep){
 
       # if burn-in period is over...
       if(y >= fmyearIdx){
+
         manage_counter<-manage_counter+1 #this only gets incremented when y>=fmyearIdx
 
         for(i in 1:nstock){
@@ -140,9 +141,7 @@ for(r in 1:nrep){
         stock[[i]] <- get_indexData(stock = stock[[i]])
       } #End killing fish loop
 
-
-
-              end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
+        end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
           #Save economic results once in a while to a csv file.
         if(mproc$ImplementationClass[m]=="Economic" &(y >= fmyearIdx) & (chunk_flag==0 | yearitercounter==max_yiter)) {
             revenue_holder<-rbindlist(revenue_holder)
