@@ -137,7 +137,7 @@ write.csv(stock_status, file.path(file_path, stock_status_out_csv))
 
 
 
-#read in stock status
+#read in prhats
 
 
 
@@ -170,7 +170,7 @@ for(file in 1:file_nums){
   sim[, month := ifelse(month < 5, month+8, month-4)]
   sim[ ,c("doffy", "y") := NULL]
   
-  sim = sim[, lapply(.SD, sum, na.rm=TRUE), by=list(year, month, replicate, model,hullnum)]
+  sim = sim[, lapply(.SD, sum, na.rm=TRUE), by=list(year, month, replicate, model,gearcat,hullnum)]
   
   prhat[[file]]<-sim
 }
