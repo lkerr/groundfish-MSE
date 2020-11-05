@@ -117,7 +117,7 @@ oe_sumCW <- 0.05
 oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 80
 oe_paaCN_typ <- 'multinomial'
-oe_sumIN <- 0.5
+oe_sumIN <- 0.05
 oe_sumIN_typ <- 'lognorm'
 oe_paaIN <- 100 #15
 oe_paaIN_typ <- 'multinomial'
@@ -134,11 +134,11 @@ ie_bias <- 0 # % bias in implementation error (F_Full + F_Full*ie_bias)
 
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.) (sumCW*ob_sumCW) (range 0.01-1)
-ob_sumCW <- 0.44 #0.44 for bias
+ob_sumCW <- 1 #0.44 for bias
 ob_sumIN <- 1
 
 # catch observation bias (codCW + codCW*C_mult)
-C_mult <- 1.25 #1.25 for bias, 0 for no bias
+C_mult <- 0 #1.25 for bias, 0 for no bias
 
 Change_point2<-FALSE
 Change_point_yr<-2025
