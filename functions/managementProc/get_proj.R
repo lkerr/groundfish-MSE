@@ -62,6 +62,11 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
    
   # The initial population is the estimates in the last year
   init <- tail(parpop$J1N, 1)
+  
+  if(type=='current'){
+    suminit<-sum(init)
+    init<-rlnorm(1, meanlog = log(init), sdlog = stockEnv$pe_IA)
+  }
 
   # Ensure that all vectors are the same length
   if(!all(length(parpop$sel) == length(init),
