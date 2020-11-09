@@ -12,9 +12,14 @@
 
 #### Set up environment ####
 rm(list=ls())
+# Which management procedures csv do you want to read:
+#mprocfile<-"mproc.csv"
+#mprocfile<-"mprocTest.csv"
+mproc_manual<-"mprocEcon_validate.csv"
+mproc_manual<-"mprocEcon_counterfactual_closemult.csv"
 
 #runSetup.R loads things and sets them up. This is used by the integrated simulation, so be careful making changes with it. Instead, overwrite them using the setupEcon_extra.R file.
-source('processes/runSetup.R')
+source('processes/runSetup_Econonly.R')
 
 #the base runSetup.R runs source('processes/genBaselineACLs.R') to set up ACLs in the data.table econ_baseline.
 # rather than change that file, we'll just overwrite with the econ-only version in the next step.
@@ -26,6 +31,10 @@ source('processes/genBaselineACLs_Econonly.R')
 mproc_bak<-mproc
 mproc<-mproc_bak[1:4,] #selects validation, counterfactual and counterfactual_single 
 #mproc<-mproc_bak[17:20,] #selects "validation single"  
+
+mproc$EconType<-"Multi"
+mproc$CatchZero<-"FALSE"
+mproc$LandZero<-"FALSE"
 
 nrep<-1
 # yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
@@ -131,7 +140,7 @@ annual_fishery_status_holder<-list()
   }
 mrt_bak<-copy(most_recent_target)
 
-for (day in 1:3){
+for (day in 1:365){
   
 set.seed(2)
 #day<-100
