@@ -44,7 +44,7 @@ joint_adjust_allocated_mults <- function(wt,fh, ec_type){
     } else if  (ec_type$CatchZero=="FALSE" & ec_type$LandZero=="FALSE"){
       #This has not been tested in combination with the wt[,(closed):=0] line
       #closed<-NULL
-    } else if  (ec_type$CatchZero=="FALSE" & ec_type$LandZero=="TRUE"){
+    } else if  (ec_type$CatchZero=="TRUE" & ec_type$LandZero=="FALSE"){
       stop("Imposssible combination of Catch and Landings Multipliers. Check input parameters mproc.")
     }
     
