@@ -65,7 +65,9 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   
   if(type=='current'){
     suminit<-sum(init)
-    init<-rlnorm(1, meanlog = log(init), sdlog = stockEnv$pe_IA)
+    suminit<-get_error_idx(type=oe_sumIN_typ, idx=suminit, par=stockEnv$pe_IA)
+    initpaa<-get_error_paa(type=oe_paaIN_typ, paa=init, par=10000)
+    init<-suminit*initpaa
   }
 
   # Ensure that all vectors are the same length
