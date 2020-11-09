@@ -56,7 +56,7 @@ top_loop_start<-Sys.time()
 
 
 ####################These are temporary changes for testing ####################
-#nrep<-2
+nrep<-2
 
 mproc_bak<-mproc
 #mproc<-mproc_bak[2:5,] #selects validation of four models
@@ -93,8 +93,8 @@ showProgBar<-TRUE
 source('processes/setupYearIndexing_Econ.R')
 
 #### Top rep Loop ####
-#for(r in 1:nrep){
-for(r in 78:nrep){
+for(r in 1:nrep){
+#for(r in 78:nrep){
   
     oldseed_mproc <- .Random.seed
     

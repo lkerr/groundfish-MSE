@@ -105,7 +105,7 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
      trips<-zero_out_closed_areas_asc_cutout(trips,fishery_holder)
   
 
-     pr_savelist<-c("hullnum","spstock2","doffy","prhat")
+     pr_savelist<-c("hullnum","spstock2","doffy","gearcat","prhat")
      
     # This takes a subset of the trips data.table and reshapes it wide 
      annual_prhat_holder[[day]]<-dcast(trips[,..pr_savelist],hullnum + doffy ~ spstock2, value.var="prhat")
