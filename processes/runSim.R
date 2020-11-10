@@ -66,7 +66,6 @@ for(r in 1:nrep){
     for(i in 1:nstock){
       stock[[i]] <- get_popInit(stock[[i]])
     }
-
     #### get historic assessment info if there is any
     if (histAssess == TRUE) {
       for (i in 1:nstock){

@@ -165,22 +165,23 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   stReportYr = 2,
                                   stockEnv = stockEnv)$sumCW}
         catchproj<-colMeans(catchproj)
-      #  if (stockNames == 'codGOM'){
-      #   mincatchv<-tail(read.csv('data/data_raw/AssessmentHistory/codGOM_Discard.csv'),10)
-      #   colnames(mincatchv)<-c('Year','Catch')
-      #   mincatchv$Year<-155:164
-      #   }
-      #  if (stockNames == 'haddockGB'){
-      #   mincatchv<-as.data.frame(cbind(155:164,stock$haddockGB$sumCW[(y-10):(y-1)]))
-      #   colnames(mincatchv)<-c('Year','Catch')
-      #   }
-      #  if (y>fmyearIdx){
-      #    for (i in fmyearIdx:(y-1)){
-      #    catchadd<-c(i,stockEnv$obs_sumCW[i])
-      #    mincatchv<-rbind(mincatchv,catchadd)
-      #    }
-      #  }
-      #if (catchproj<min(mincatchv$Catch)){catchproj<-min(mincatchv$Catch)}
+       if (stockNames == 'codGOM'){
+         mincatchv<-tail(read.csv('data/data_raw/AssessmentHistory/codGOM_Discard.csv'),10)
+         colnames(mincatchv)<-c('Year','Catch')
+         mincatchv$Catch<-mincatchv$Catch
+         mincatchv$Year<-155:164
+         }
+       if (stockNames == 'haddockGB'){
+         mincatchv<-as.data.frame(cbind(155:164,stock$haddockGB$sumCW[(y-10):(y-1)]))
+         colnames(mincatchv)<-c('Year','Catch')
+         }
+      if (y>fmyearIdx){
+          for (i in fmyearIdx:(y-1)){
+          catchadd<-c(i,stockEnv$obs_sumCW[i])
+          mincatchv<-rbind(mincatchv,catchadd)
+          }
+      }
+      if (catchproj[1]<min(mincatchv$Catch)){catchproj[1]<-min(mincatchv$Catch)}
         F <- get_F(x = catchproj[1],
                    Nv = stockEnv$J1N[y,], 
                    slxCv = stockEnv$slxC[y,], 
@@ -188,6 +189,23 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                    waav = stockEnv$waa[y,])
       }
       else{
+        if (stockNames == 'codGOM'){
+          mincatchv<-tail(read.csv('data/data_raw/AssessmentHistory/codGOM_Discard.csv'),10)
+          colnames(mincatchv)<-c('Year','Catch')
+          mincatchv$Catch<-mincatchv$Catch
+          mincatchv$Year<-155:164
+        }
+        if (stockNames == 'haddockGB'){
+          mincatchv<-as.data.frame(cbind(155:164,stock$haddockGB$sumCW[(y-10):(y-1)]))
+          colnames(mincatchv)<-c('Year','Catch')
+        }
+        if (y>fmyearIdx){
+          for (i in fmyearIdx:(y-1)){
+            catchadd<-c(i,stockEnv$obs_sumCW[i])
+            mincatchv<-rbind(mincatchv,catchadd)
+          }
+        }
+        if (stockEnv$catchproj[2]<min(mincatchv$Catch)){stockEnv$catchproj[2]<-min(mincatchv$Catch)}
         F <- get_F(x = stockEnv$catchproj[2],
                    Nv = stockEnv$J1N[y,], 
                    slxCv = stockEnv$slxC[y,], 
