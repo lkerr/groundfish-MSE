@@ -181,7 +181,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
           mincatchv<-rbind(mincatchv,catchadd)
           }
       }
-      if (catchproj[1]<min(mincatchv$Catch)){catchproj[1]<-min(mincatchv$Catch)}
+      if (catchproj[1]<min(tail(mincatchv$Catch,10))){catchproj[1]<-min(tail(mincatchv$Catch,10))}
         F <- get_F(x = catchproj[1],
                    Nv = stockEnv$J1N[y,], 
                    slxCv = stockEnv$slxC[y,], 
@@ -205,7 +205,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
             mincatchv<-rbind(mincatchv,catchadd)
           }
         }
-        if (stockEnv$catchproj[2]<min(mincatchv$Catch)){stockEnv$catchproj[2]<-min(mincatchv$Catch)}
+        if (catchproj[2]<min(tail(mincatchv$Catch,10))){catchproj[2]<-min(tail(mincatchv$Catch,10))}
         F <- get_F(x = stockEnv$catchproj[2],
                    Nv = stockEnv$J1N[y,], 
                    slxCv = stockEnv$slxC[y,], 
