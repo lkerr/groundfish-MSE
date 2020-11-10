@@ -95,7 +95,15 @@ get_advice <- function(stock){
         SSBnew<-SSBnew[idx]
         for (p in (y-peels):(y-1)){
           SSBold<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', p,'.rdat', sep = ''))$SSB[idx]         
-          assign(paste('rho',p,sep=''),(SSBold-SSBnew)/SSBnew)
+          assign(paste('rhoSSB',p,sep=''),(SSBold-SSBnew)/SSBnew)
+        }
+        tempwd<-getwd()
+        Nnew<-rowSums(readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$N.age)
+        idx<-length(Nnew)-peels
+        Nnew<-Nnew[idx]
+        for (p in (y-peels):(y-1)){
+          Nold<-sum(readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', p,'.rdat', sep = ''))$N.age[idx,])         
+          assign(paste('rhoN',p,sep=''),(Nold-Nnew)/Nnew)
         }}
       if (Sys.info()['sysname'] == "Linux"){
         SSBnew<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB
@@ -103,16 +111,26 @@ get_advice <- function(stock){
         SSBnew<-SSBnew[idx]
         for (p in (y-peels):(y-1)){
           SSBold<-readRDS(paste(rundir,'/', stockName, '_', r, '_', p,'.rdat', sep = ''))$SSB[idx]
-          assign(paste('rho',p,sep=''),(SSBold-SSBnew)/SSBnew)
+          assign(paste('rhoSSB',p,sep=''),(SSBold-SSBnew)/SSBnew)
+        }
+        Nnew<-rowSums(readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$N.age)
+        idx<-length(Nnew)-peels
+        Nnew<-Nnew[idx]
+        for (p in (y-peels):(y-1)){
+          Nold<-sum(readRDS(paste(rundir,'/', stockName, '_', r, '_', p,'.rdat', sep = ''))$N.age[idx,])
+          assign(paste('rhoN',p,sep=''),(Nold-Nnew)/Nnew)
         }}
-      plist <- mget(paste('rho',(y-peels):(y-1),sep=''))
+      plist <- mget(paste('rhoSSB',(y-peels):(y-1),sep=''))
       pcols <- do.call('cbind', plist)
-      Mohns_Rho[y] <- rowSums(pcols) / peels
+      Mohns_Rho_SSB[y] <- rowSums(pcols) / peels
+      plist <- mget(paste('rhoN',(y-peels):(y-1),sep=''))
+      pcols <- do.call('cbind', plist)
+      Mohns_Rho_N[y] <- rowSums(pcols) / peels
       cat('Rho calculated.')})}
     if(mproc[m,'rhoadjust'] == 'TRUE'){
       tempStock<-within(tempStock,{
         if(y > fmyearIdx){
-          parpop$SSBhat[length(parpop$SSBhat)]<-parpop$SSBhat[length(parpop$SSBhat)]/(Mohns_Rho[y]+1)}
+          parpop$SSBhat[length(parpop$SSBhat)]<-parpop$SSBhat[length(parpop$SSBhat)]/(Mohns_Rho_SSB[y]+1)}
         })}
     # Environmental parameters
     parenv <- list(tempY = temp,

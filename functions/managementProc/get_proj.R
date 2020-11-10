@@ -65,7 +65,11 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   
   if(type=='current'){
     suminit<-sum(init)
-    suminit<-get_error_idx(type=oe_sumIN_typ, idx=suminit, par=stockEnv$pe_IA)
+    if (mproc$rhoadjust==TRUE & y>165){
+      suminit<-suminit/(1+stockEnv$Mohns_Rho_N[y])
+      suminit<-get_error_idx(type=oe_sumIN_typ, idx=suminit, par=stockEnv$pe_IA)
+    }
+    else {suminit<-get_error_idx(type=oe_sumIN_typ, idx=suminit, par=stockEnv$pe_IA)}
     initpaa<-get_error_paa(type=oe_paaIN_typ, paa=init, par=10000)
     init<-suminit*initpaa
   }

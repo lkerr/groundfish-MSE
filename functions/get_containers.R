@@ -93,7 +93,8 @@ get_containers <- function(stockPar){
     relE_F = yx0, #AEW
     SSB_cur = yx0, #AEW
     conv_rate = yx0,#MDM
-    Mohns_Rho = yx0,#MDM
+    Mohns_Rho_SSB = yx0,
+    Mohns_Rho_N = yx0,#MDM
     relTermE_SSB = NA,#MDM
     relTermE_CW = NA,#MDM
     relTermE_IN = NA,#MDM
@@ -279,7 +280,8 @@ get_containers <- function(stockPar){
       SSB_cur = save_vector_ann, #AEW
       natM = save_vector_ann, #AEW
       conv_rate = save_vector_ann, #MDM
-      Mohns_Rho = save_vector_ann, #MDM
+      Mohns_Rho_SSB = save_vector_ann,
+      Mohns_Rho_N = save_vector_ann,#MDM
       relTermE_SSB = save_vector_ann,#MDM
       relTermE_CW = save_vector_ann,#MDM
       relTermE_IN = save_vector_ann,#MDM
