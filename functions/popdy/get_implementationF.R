@@ -32,6 +32,14 @@ get_implementationF <- function(type, stock){
         if(Change_point2==TRUE & yrs[y]>=Change_point_yr){
         codCW2[y] <- sum(codCW[y,])
         }
+        
+        if(Change_point3==TRUE & yrs[y]>=Change_point_yr1){
+          codCW2[y] <- sum(codCW[y,]) + (sum(codCW[y,]) * 0.5)
+        }
+        
+        if(Change_point3==TRUE & yrs[y]>=Change_point_yr2){
+          codCW2[y] <-sum(codCW[y,])
+        }
 
         # Determine what the fishing mortality would have to be to get
         # that biased catch level (convert biased catch back to F).
