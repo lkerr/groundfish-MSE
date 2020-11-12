@@ -99,7 +99,7 @@ oe_paaIN_typ <- 'multinomial'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
-highobserrec<-TRUE
+highobserrec<-FALSE
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
 pe_R <- 0.5
