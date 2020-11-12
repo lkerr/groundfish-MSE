@@ -53,14 +53,14 @@ selC_typ <- 'Logistic'
 
 # Recruitment
 ##HS with all recruitment values (what is used in stock assessment projections)##
-#Rpar <- c(SSB_star = 75000, 
-#          cR = 1) # dont need to convert
-#R_typ <- 'HS'
+Rpar <- c(SSB_star = 75000, 
+          cR = 1) # dont need to convert
+R_typ <- 'HS'
 
 ##Ricker with increased frequency of high events with temp.
-Rpar <- c(a = 0.5540445, 
-         b = 0.0000174067) 
-R_typ <- 'IncFreq'
+#Rpar <- c(a = 0.5540445, 
+#         b = 0.0000174067) 
+#R_typ <- 'IncFreq'
 #### Survey parameters ####F
 
 ## Survey information
@@ -73,7 +73,7 @@ timeI <- 0.5 # when is the survey (as a proportion of the year)
 #### Stock assessment model parameters ####
 
 # number of years in assessment model
-ncaayear <- 30
+ncaayear <- 33
 
 # Expansion range for setting limits on parameter bounds
 boundRgLev <- 1.5
@@ -92,15 +92,18 @@ oe_sumCW <- 0.05
 oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 1000
 oe_paaCN_typ <- 'multinomial'
-oe_sumIN <- 0.2
+oe_sumIN <- 0.05
 oe_sumIN_typ <- 'lognorm'
 oe_paaIN <- 1000
 oe_paaIN_typ <- 'multinomial'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
+highobserrec<-TRUE
+
 # process error levels  ###################################  !!!!!!!!!!!!!!
 pe_R <- 0.5
+pe_IA<-0.18
 
 # implementation error of fishing mortality
 ie_F <- 0
@@ -116,6 +119,7 @@ C_mult <- 0 #0 is no bias
 
 Change_point2<-'FALSE'
 Change_point_yr<-2025
+Change_point3<-FALSE
 
 #### BRPs and HCRs ####
 

@@ -17,11 +17,15 @@
 #                 the -par^2/2 is the bias correction
 
 
-get_error_idx <- function(type, idx, par){
+get_error_idx <- function(type, idx, par, switch){
      
-    idxE <- rlnorm(1, meanlog = log(idx), # - par^2/2
-                      sdlog = par)
-  
+    if (switch==TRUE && stock$haddockGB$R[y]>200000000){
+    idxE <- rsnorm(1, mean = idx, sd = exp(par), xi=0.5)
+    }
+    else {
+      idxE <- rlnorm(1, meanlog = log(idx), # - par^2/2
+                          sdlog = par)
+      }
   return(idxE)
   
 }

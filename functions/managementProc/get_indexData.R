@@ -24,43 +24,46 @@ get_indexData <- function(stock){
 
     effort[y] <- F_full[y] / qC
     obs_effort[y] <- get_error_idx(type=oe_effort_typ, idx=effort[y], 
-                                     par=oe_effort)
+                                     par=oe_effort, switch=FALSE)
     # Get observation error data for the assessment model
     # change point where bias in catch is applied in 2015 before the start of
     # the projection period
      if (y < c(fmyearIdx)){
      obs_sumCW[y] <- get_error_idx(type=oe_sumCW_typ,
                                      idx=sumCW[y],
-                                     par=oe_sumCW)
+                                     par=oe_sumCW, switch=FALSE)
      }
      if (y >= (fmyearIdx)){
     obs_sumCW[y] <- get_error_idx(type=oe_sumCW_typ, 
                                     idx=sumCW[y] * ob_sumCW, 
-                                    par=oe_sumCW)
+                                    par=oe_sumCW, switch=FALSE)
      if(Change_point2==TRUE & yrs[y]>=(Change_point_yr)){
     obs_sumCW[y] <- get_error_idx(type=oe_sumCW_typ,
                                      idx=sumCW[y],
-                                     par=oe_sumCW)
+                                     par=oe_sumCW, switch=FALSE)
      }
-     if(Change_point3==TRUE & yrs[y]>=(Change_point_yr1)){
+     if(Change_point3==TRUE && yrs[y]>=(Change_point_yr1)){
       obs_sumCW[y] <- get_error_idx(type=oe_sumCW_typ,
                                     idx=sumCW[y] * 0.67 ,
-                                    par=oe_sumCW)
+                                    par=oe_sumCW, switch=FALSE)
      }
-     if(Change_point3==TRUE & yrs[y]>=(Change_point_yr2)){
+     if(Change_point3==TRUE && yrs[y]>=(Change_point_yr2)){
       obs_sumCW[y] <- get_error_idx(type=oe_sumCW_typ,
                                     idx=sumCW[y],
-                                    par=oe_sumCW)
+                                    par=oe_sumCW, switch=FALSE)
      }
      }
     
     
     obs_paaCN[y,] <- get_error_paa(type=oe_paaCN_typ, paa=paaCN[y,], 
-                                     par=oe_paaCN)
+                                     par=oe_paaCN, switch=FALSE)
+    
+    if (highobserrec==TRUE){switch<-TRUE}
+    else (switch<-FALSE)
     
     obs_sumIN[y] <- get_error_idx(type=oe_sumIN_typ, 
                                           idx=sumIN[y] * ob_sumIN, 
-                                          par=oe_sumIN)
+                                          par=oe_sumIN, switch=switch)
     
     # Observed index by weight is a function of the observed index and the
     # true paa. This preserves the fact that the multinomial paa and the
@@ -68,7 +71,7 @@ get_indexData <- function(stock){
     # most assessment models)
     obs_sumIW[y] <- (obs_sumIN[y] * paaIN[y,]) %*% waa[y,]
     obs_paaIN[y,] <- get_error_paa(type=oe_paaIN_typ, paa=paaIN[y,], 
-                                     par=oe_paaIN)
+                                     par=oe_paaIN, switch=switch)
     })
 
   

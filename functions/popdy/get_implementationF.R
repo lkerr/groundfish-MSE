@@ -14,7 +14,7 @@ get_implementationF <- function(type, stock){
         Fimpl <- F_fullAdvice[y] + F_fullAdvice[y]*ie_bias
         F_full[y] <- get_error_idx(type = ie_typ,
                                    idx = Fimpl,
-                                   par = ie_F)
+                                   par = ie_F, switch=FALSE)
 
         # add implimentation bias to catch, need to convert from F to catch, back to F
         # get catch in numbers using the Baranov catch equation from advised F
@@ -29,15 +29,15 @@ get_implementationF <- function(type, stock){
 
         codCW2[y] <- sum(codCW[y,]) + (sum(codCW[y,]) * C_mult)
 
-        if(Change_point2==TRUE & yrs[y]>=Change_point_yr){
+        if(Change_point2==TRUE && yrs[y]>=Change_point_yr){
         codCW2[y] <- sum(codCW[y,])
         }
         
-        if(Change_point3==TRUE & yrs[y]>=Change_point_yr1){
+        if(Change_point3==TRUE && yrs[y]>=Change_point_yr1){
           codCW2[y] <- sum(codCW[y,]) + (sum(codCW[y,]) * 0.5)
         }
         
-        if(Change_point3==TRUE & yrs[y]>=Change_point_yr2){
+        if(Change_point3==TRUE && yrs[y]>=Change_point_yr2){
           codCW2[y] <-sum(codCW[y,])
         }
 
