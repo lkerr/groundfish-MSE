@@ -188,6 +188,8 @@ get_fillRepArrays <- function(stock){
     omval$conv_rate[r,m,]<-conv_rate #MDM
     omval$Mohns_Rho_SSB[r,m,]<-Mohns_Rho_SSB 
     omval$Mohns_Rho_N[r,m,]<-Mohns_Rho_N#MDM
+    omval$Mohns_Rho_F[r,m,]<-Mohns_Rho_F#MDM
+    omval$Mohns_Rho_R[r,m,]<-Mohns_Rho_R#MDM
     if (y == nyear){
     omval$relTermE_SSB[r,m,] <- relTermE_SSB #MDM
     omval$relTermE_CW[r,m,] <- relTermE_CW #MDM
