@@ -5,10 +5,12 @@
 # The result csv's may or may not contain an entire replicate; but they will contain entire fishing years.
 library(data.table)
 
-remote_location <- "/net/ftp/pub/dropoff/mlee/anna/summary/"
+# Naming outputs 
+
+remote_location <- "/net/ftp/pub/dropoff/mlee/anna/summary"
 stub<-"counterfactual_closeown"
 stub<-"validation"
-stub<-"counterfactual_closemult"
+#stub<-"counterfactual_closemult"
 
 econ_out_csv<-paste0("monthly_summary_",stub,".csv")
 stock_status_out_csv<-paste0("stock_status_",stub,".csv")
@@ -18,13 +20,13 @@ pr_hat_out_csv<-paste0("pr_hat_",stub,".csv")
 #selects most recent file path in groundfish_MSE folder that starts with "results_" 
 file_path = file.info(list.files(path=".",pattern="^results_*",include.dirs=TRUE,full.names = T,recursive=TRUE))
 file_path= rownames(file_path)[which.max(file_path$mtime)]
-file_path="./results_2020-11-09-14-12-15"
+#file_path="./results_2020-11-10-18-46-11"
 
 #selects just the econ_2020 datasets
 file_names = list.files(path=file.path(file_path, "econ","raw"), pattern = "econ_2020", full.names = TRUE)
 cutout<-100
 
-#cutout<-71
+cutout<-67
 
 
 # need to write code for lines 32-73 that works on the pr_hat data
@@ -176,14 +178,21 @@ write.csv(stock_status, file.path(file_path, stock_status_out_csv))
 # 
 
 
-# YOU SHOULD WRITE A little bit of code here that zips up the output csvs and saves to the network ftp.
-# and a little code that runs an sha1sum
- 
+# Zip up the outputs and save them somewhere.
+# zipping straight to the ftp doesn't work on my workstation. Instead, zip right into your file path and then copy it over
 
- zipcommand <-paste0("zip ",remote_location,stub,"_summary.zip ", file_path,"/*.csv" )
- sha1command <-paste0("sha1sum ",remote_location,stub,"_summary.zip > ", remote_location,stub,"_summary.zip.sha1")
+# uncomment this on the mlee_workstation
+remote_location<-file_path
+
+zipcommand <-paste0("zip ",remote_location,"/",stub,"_summary.zip ", file_path,"/*.csv" )
+sha1command <-paste0("sha1sum ",remote_location,"/",stub,"_summary.zip > ", remote_location,"/",stub,"_summary.zip.sha1")
 
 system(zipcommand)
 system(sha1command)
 
 
+fullzipcommand <-paste0("zip -r ",remote_location,"/",stub,"_full.zip ", file_path,"/econ/raw/econ_*.csv" )
+fullsha1command <-paste0("sha1sum ",remote_location,"/",stub,"_full.zip > ", remote_location,"/",stub,"_full.zip.sha1")
+
+system(fullzipcommand)
+system(fullsha1command)
