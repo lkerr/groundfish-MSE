@@ -11,7 +11,6 @@ fish_mort <- replacement$F
 rec <- replacement$R
 nat_mort <- replacement$M
 
-
 return(list(
  fish_mort = fish_mort,
  rec = rec,

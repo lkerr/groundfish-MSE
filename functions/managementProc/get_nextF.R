@@ -186,6 +186,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                    slxCv = stockEnv$slxC[y,], 
                    M = stockEnv$natM[y], 
                    waav = stockEnv$waa[y,])
+        if (F>5){browser()}
       }
       else{
         if (stockNames == 'codGOM'){
