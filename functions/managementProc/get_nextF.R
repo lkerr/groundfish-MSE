@@ -70,15 +70,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
                      stockEnv = stockEnv)
 
-    if (useTemp==FALSE & calcfmsytrue==TRUE){
-      if (y==fmyearIdx){ 
-      Fref_true<- get_FBRP_true(stock=stockEnv,parenv=parenv)$Fmsytrue
-      }
-    }
-    if (useTemp==TRUE & calcfmsytrue==TRUE){
-      Fref_true<- get_FBRP_true(stock=stockEnv,parenv=parenv)$Fmsytrue
-    }
-
     # if using forecast start the BMSY initial population at the equilibrium
     # FMSY level (before any temperature projections). This is consistent
     # with how the Fmsy is calculated.
@@ -143,12 +134,24 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                          waav = stock$codGOM$waa[y,])
       }
       }
-    else if(tolower(parmgt$HCR) == 'current'){
+    else if(tolower(parmgt$HCR) == 'step'){
+      if (y==fmyearIdx & overfished== 1){F<-FrefRPvalue*0.7}
+      else if (y==fmyearIdx & overfished== 0){F<-FThresh}
+      else if (y>fmyearIdx & overfished== 1){F<-FrefRPvalue*0.7}
+      else if (y>fmyearIdx & overfished== 0){
+        if(any(stockEnv$OFdStatus==1)& tail(stockEnv$res$SSB,1)<BrefRPvalue){F<-FrefRPvalue*0.7}
+        else{F<-FThresh}}
+    }
+    else{
+      
+      stop('get_nextF: type not recognized')
+      
+    }
+    if(tolower(parmgt$projections) == 'true'){
       if ((y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) == 0){
       parmgtproj<-parmgt
       parmgtproj$RFUN_NM<-"forecast"
       catchproj<-matrix(ncol=2,nrow=100)
-      Frebuild<-get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)
       parpopproj<-parpop
       parpopproj$SSBhat<-stockEnv$res$SSB
       parpopproj$R<-stockEnv$res$N.age[,1]
@@ -159,7 +162,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   parpop = parpopproj, 
                                   parenv = parenv, 
                                   Rfun = Rfun_BmsySim$forecast,
-                                  F_val = Frebuild,
+                                  F_val = F,
                                   ny = 200,
                                   stReportYr = 2,
                                   stockEnv = stockEnv)$sumCW}
@@ -186,7 +189,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                    slxCv = stockEnv$slxC[y,], 
                    M = stockEnv$natM[y], 
                    waav = stockEnv$waa[y,])
-        if (F>5){browser()}
       }
       else{
         if (stockNames == 'codGOM'){
@@ -213,12 +215,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                    waav = stockEnv$waa[y,])
         catchproj<-stockEnv$catchproj
       }
-      }
-    else{
-      
-      stop('get_nextF: type not recognized')
-      
     }
+    
     out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue), 
                 ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
                 OFgStatus = overfishing, catchproj=catchproj) #AEW
