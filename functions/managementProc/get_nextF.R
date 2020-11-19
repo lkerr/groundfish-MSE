@@ -142,6 +142,16 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
         if(any(stockEnv$OFdStatus==1)& tail(stockEnv$res$SSB,1)<BrefRPvalue){F<-FrefRPvalue*0.7}
         else{F<-FThresh}}
     }
+    else if(tolower(parmgt$HCR) == 'pstar'){
+      parmgtproj<-parmgt
+      parmgtproj$RFUN_NM<-"forecast"
+      parpopproj<-parpop
+      parpopproj$SSBhat<-stockEnv$res$SSB
+      parpopproj$R<-stockEnv$res$N.age[,1]
+      parpopproj$J1N<-tail(stockEnv$res$N.age,1)
+      Rfun<-Rfun_BmsySim$forecast
+      F<-pstar(OFL=FrefRPvalue,parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv,level=0.3)
+      }
     else{
       
       stop('get_nextF: type not recognized')
@@ -157,7 +167,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parpopproj$R<-stockEnv$res$N.age[,1]
       parpopproj$J1N<-tail(stockEnv$res$N.age,1)
       for (i in 1:100){
-        catchproj[i,]<-get_proj(type = 'current',
+          catchproj[i,]<-get_proj(type = 'current',
                                   parmgt = parmgtproj, 
                                   parpop = parpopproj, 
                                   parenv = parenv, 
@@ -166,14 +176,14 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   ny = 200,
                                   stReportYr = 2,
                                   stockEnv = stockEnv)$sumCW}
-        catchproj<-colMeans(catchproj)
-       if (stockNames == 'codGOM'){
+      catchproj<-colMeans(catchproj)
+      if (stockNames == 'codGOM'){
          mincatchv<-tail(read.csv('data/data_raw/AssessmentHistory/codGOM_Discard.csv'),10)
          colnames(mincatchv)<-c('Year','Catch')
          mincatchv$Catch<-mincatchv$Catch
          mincatchv$Year<-155:164
          }
-       if (stockNames == 'haddockGB'){
+      if (stockNames == 'haddockGB'){
          mincatchv<-as.data.frame(cbind(155:164,stock$haddockGB$sumCW[(y-10):(y-1)]))
          colnames(mincatchv)<-c('Year','Catch')
          }
