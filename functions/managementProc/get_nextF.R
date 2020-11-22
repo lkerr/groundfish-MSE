@@ -109,7 +109,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     if(tolower(parmgt$HCR) == 'slide'){
      
       F <- get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)['Fadvice']
-      catchproj<-NA
 
     }else if(tolower(parmgt$HCR) == 'simplethresh'){
      

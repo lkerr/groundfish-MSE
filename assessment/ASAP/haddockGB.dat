@@ -419,43 +419,43 @@
 # Phase for Steepness
 -1
 # Recruitment CV by Year
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
 # Lambdas by Index
 1
 # Lambda for Total Catch in Weight by Fleet
@@ -619,7 +619,7 @@
 # CV for F Mult in First year by Fleet
 0.9
 # Lambda for F Mult Deviations by Fleet
-0
+1
 # CV for F Mult Deviations by Fleet
 0.9
 # Lambda for N in 1st Year Deviations
@@ -639,7 +639,7 @@
 # Lambda for Deviation from Initial Steepness
 0
 # CV for Deviation from Initial Steepness
-0.9
+1.1
 # Lambda for Deviation from Unexploited Stock Size
 0
 # CV for Deviation from Unexploited Stock Size
