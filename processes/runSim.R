@@ -96,7 +96,6 @@ for(r in 1:nrep){
 
           #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
 
-
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
 
           for(i in 1:nstock){

@@ -1,5 +1,3 @@
-
-
 # The application of harvest control rules
 #
 # parmgt: a 1-row data frame of management parameters. The operational
@@ -11,8 +9,10 @@
 #               then reaches an asymptote at [Bmsy,Fmsy]
 #        
 #           * "simpleThresh": a simple threshold model where fishing is entirely
-#                        cut off when the population is overfished 
-#                        (i.e., B<Bmsy)
+#               cut off when the population is overfished (i.e., B<Bmsy)
+#
+#           * "constF": fishing mortlality is constant at the fishing mortality target
+#               regardless of population size
 #                        
 # parpop: named ist of population parameters (vectors) needed for the 
 #         simulation including selectivity (sel), weight-at-age (waa),
@@ -120,7 +120,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       F <- FThresh
       
     }
-    
     else if(tolower(parmgt$HCR) == 'xyrconstc'){
       if ((y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) == 0){
         F <- FThresh
@@ -185,7 +184,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       if (stockNames == 'haddockGB'){
          mincatchv<-as.data.frame(cbind(155:164,stock$haddockGB$sumCW[(y-10):(y-1)]))
          colnames(mincatchv)<-c('Year','Catch')
-         }
+      }
       if (y>fmyearIdx){
           for (i in fmyearIdx:(y-1)){
           catchadd<-c(i,stockEnv$obs_sumCW[i])
@@ -198,6 +197,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                    slxCv = stockEnv$slxC[y,], 
                    M = stockEnv$natM[y], 
                    waav = stockEnv$waa[y,])
+        if (F>1){browser()}
       }
       else{
         if (stockNames == 'codGOM'){

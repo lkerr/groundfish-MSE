@@ -111,7 +111,6 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       N[1,a] <- init[a-1] * exp(-parpop$sel[a-1]*Fhat - 
                                     parpop$M[a-1])
     }
-
     # Deal with the plus group
     N[1,nage] <- init[nage-1] * exp(-parpop$sel[nage-1] * Fhat - 
                                        parpop$M[nage-1]) + 
@@ -133,7 +132,6 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       N[y,a] <- N[y-1, a-1] * exp(-parpop$sel[a-1]*F_val - 
                                     parpop$M[a-1])
     }
-   
     # Deal with the plus group
       N[y,nage] <- N[y-1,nage-1] * exp(-parpop$sel[nage-1] * F_val - 
                                        parpop$M[nage-1]) + 
