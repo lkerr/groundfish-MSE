@@ -175,6 +175,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   stReportYr = 2,
                                   stockEnv = stockEnv)$sumCW}
       catchproj<-colMeans(catchproj)
+      if(tolower(parmgt$mincatch) == 'true'){
       if (stockNames == 'codGOM'){
          mincatchv<-tail(read.csv('data/data_raw/AssessmentHistory/codGOM_Discard.csv'),10)
          colnames(mincatchv)<-c('Year','Catch')
@@ -192,14 +193,30 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
           }
       }
       if (catchproj[1]<min(tail(mincatchv$Catch,10))){catchproj[1]<-min(tail(mincatchv$Catch,10))}
-        F <- get_F(x = catchproj[1],
+      }
+      Fest<-get_estF(catchproj=catchproj[1],parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv)
+      if (Fest>FrefRPvalue){
+        catchproj2<-matrix(ncol=2,nrow=100)
+        for (i in 1:100){
+            catchproj2[i,]<-get_proj(type = 'current',
+                                    parmgt = parmgtproj, 
+                                    parpop = parpopproj, 
+                                    parenv = parenv, 
+                                    Rfun = Rfun_BmsySim$forecast,
+                                    F_val = FrefRPvalue,
+                                    ny = 200,
+                                    stReportYr = 2,
+                                    stockEnv = stockEnv)$sumCW}
+        catchproj<-colMeans(catchproj2)
+      }
+      F <- get_F(x = catchproj[1],
                    Nv = stockEnv$J1N[y,], 
                    slxCv = stockEnv$slxC[y,], 
                    M = stockEnv$natM[y], 
                    waav = stockEnv$waa[y,])
-        if (F>1){browser()}
       }
       else{
+      if(tolower(parmgt$mincatch) == 'true'){
         if (stockNames == 'codGOM'){
           mincatchv<-tail(read.csv('data/data_raw/AssessmentHistory/codGOM_Discard.csv'),10)
           colnames(mincatchv)<-c('Year','Catch')
@@ -217,12 +234,13 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
           }
         }
         if (stockEnv$catchproj[2]<min(tail(mincatchv$Catch,10))){stockEnv$catchproj[2]<-min(tail(mincatchv$Catch,10))}
-        F <- get_F(x = stockEnv$catchproj[2],
-                   Nv = stockEnv$J1N[y,], 
-                   slxCv = stockEnv$slxC[y,], 
-                   M = stockEnv$natM[y], 
-                   waav = stockEnv$waa[y,])
-        catchproj<-stockEnv$catchproj
+      }
+      F <- get_F(x = stockEnv$catchproj[2],
+                 Nv = stockEnv$J1N[y,], 
+                 slxCv = stockEnv$slxC[y,], 
+                 M = stockEnv$natM[y], 
+                 waav = stockEnv$waa[y,])
+      catchproj<-stockEnv$catchproj
       }
     }
     
