@@ -148,8 +148,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parpopproj$R<-stockEnv$res$N.age[,1]
       parpopproj$J1N<-tail(stockEnv$res$N.age,1)
       Rfun<-Rfun_BmsySim$forecast
-      F<-pstar(OFL=FrefRPvalue,parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv,level=0.3)
-      }
+      F<-pstar(maxp=0.4,relB=tail(stockEnv$res$SSB,1)/BThresh,parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv,FrefRPvalue=FrefRPvalue)
+       }
     else{
       
       stop('get_nextF: type not recognized')
@@ -174,7 +174,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   ny = 200,
                                   stReportYr = 2,
                                   stockEnv = stockEnv)$sumCW}
-      catchproj<-colMeans(catchproj)
+      catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
       if(tolower(parmgt$mincatch) == 'true'){
       if (stockNames == 'codGOM'){
          mincatchv<-tail(read.csv('data/data_raw/AssessmentHistory/codGOM_Discard.csv'),10)
@@ -207,7 +207,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                     ny = 200,
                                     stReportYr = 2,
                                     stockEnv = stockEnv)$sumCW}
-        catchproj<-colMeans(catchproj2)
+        catchproj<-c(median(catchproj2[,1]),median(catchproj2[,2]))
       }
       F <- get_F(x = catchproj[1],
                    Nv = stockEnv$J1N[y,], 
