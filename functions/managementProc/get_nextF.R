@@ -149,7 +149,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parpopproj$J1N<-tail(stockEnv$res$N.age,1)
       Rfun<-Rfun_BmsySim$forecast
       F<-pstar(maxp=0.4,relB=tail(stockEnv$res$SSB,1)/BThresh,parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv,FrefRPvalue=FrefRPvalue)
-       }
+    }
     else{
       
       stop('get_nextF: type not recognized')
