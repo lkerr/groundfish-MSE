@@ -193,12 +193,23 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
           }
       }
       if (catchproj[1]<min(tail(mincatchv$Catch,10))){catchproj[1]<-min(tail(mincatchv$Catch,10))}
+      if (catchproj[2]<min(c(tail(mincatchv$Catch,9),catchproj[1]))){catchproj[2]<-min(c(tail(mincatchv$Catch,9),catchproj[1]))}
+      }
+      if(tolower(mproc$varlimit) == 'true'){
+        if(((catchproj[1]-(stockEnv$sumCW[y-1]*stockEnv$ob_sumCW))/catchproj[1])*100<(-20)){
+          catchproj[1]<-(stockEnv$sumCW[y-1]*stockEnv$ob_sumCW)-((stockEnv$sumCW[y-1]*stockEnv$ob_sumCW)*.2)}
+        if(((catchproj[1]-(stockEnv$sumCW[y-1]*stockEnv$ob_sumCW))/catchproj[1])*100>20){
+          catchproj[1]<- (stockEnv$sumCW[y-1]*stockEnv$ob_sumCW)+((stockEnv$sumCW[y-1]*stockEnv$ob_sumCW)*.2)}
+        if(((catchproj[2]-catchproj[1])/catchproj[2])*100<(-20)){
+          catchproj[2]<- catchproj[1]-(catchproj[1]*.2)}
+        if(((catchproj[2]-catchproj[1])/catchproj[2])*100>20){
+          catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
       }
       Fest<-get_estF(catchproj=catchproj[1],parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv)
       if (Fest>FrefRPvalue){
-        catchproj2<-matrix(ncol=2,nrow=100)
+        catchproj<-matrix(ncol=2,nrow=100)
         for (i in 1:100){
-            catchproj2[i,]<-get_proj(type = 'current',
+            catchproj[i,]<-get_proj(type = 'current',
                                     parmgt = parmgtproj, 
                                     parpop = parpopproj, 
                                     parenv = parenv, 
@@ -207,7 +218,11 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                     ny = 200,
                                     stReportYr = 2,
                                     stockEnv = stockEnv)$sumCW}
-        catchproj<-c(median(catchproj2[,1]),median(catchproj2[,2]))
+        catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
+        if(tolower(mproc$varlimit) == 'true'){
+          if(((catchproj[2]-catchproj[1])/catchproj[2])*100>20){
+            catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
+        }
       }
       F <- get_F(x = catchproj[1],
                    Nv = stockEnv$J1N[y,], 
@@ -216,25 +231,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                    waav = stockEnv$waa[y,])
       }
       else{
-      if(tolower(parmgt$mincatch) == 'true'){
-        if (stockNames == 'codGOM'){
-          mincatchv<-tail(read.csv('data/data_raw/AssessmentHistory/codGOM_Discard.csv'),10)
-          colnames(mincatchv)<-c('Year','Catch')
-          mincatchv$Catch<-mincatchv$Catch
-          mincatchv$Year<-155:164
-        }
-        if (stockNames == 'haddockGB'){
-          mincatchv<-as.data.frame(cbind(155:164,stock$haddockGB$sumCW[(y-10):(y-1)]))
-          colnames(mincatchv)<-c('Year','Catch')
-        }
-        if (y>fmyearIdx){
-          for (i in fmyearIdx:(y-1)){
-            catchadd<-c(i,stockEnv$obs_sumCW[i])
-            mincatchv<-rbind(mincatchv,catchadd)
-          }
-        }
-        if (stockEnv$catchproj[2]<min(tail(mincatchv$Catch,10))){stockEnv$catchproj[2]<-min(tail(mincatchv$Catch,10))}
-      }
       F <- get_F(x = stockEnv$catchproj[2],
                  Nv = stockEnv$J1N[y,], 
                  slxCv = stockEnv$slxC[y,], 
@@ -243,7 +239,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       catchproj<-stockEnv$catchproj
       }
     }
-    
+  
     out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue), 
                 ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
                 OFgStatus = overfishing, catchproj=catchproj) #AEW
