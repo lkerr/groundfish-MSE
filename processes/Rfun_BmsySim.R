@@ -29,8 +29,8 @@ Rfun_BmsySim <- list(
     return(gr[['Rhat']])
     },
   
-  hindcastMean = function(parpop,parmgt, ...){
-    mean(tail(parpop$R,parmgt$BREF_PAR0))
+  hindcastMean = function(Rest, ...){
+    mean(Rest)
   },
   
   hindcastSample = function(Rest,...){
