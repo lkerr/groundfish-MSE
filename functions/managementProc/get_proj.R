@@ -163,12 +163,12 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                    parpop = parpop, 
                    parenv = parenv, 
                    SSB = c(N[y-1,]) %*% c(parpop$waa),
-                   sdR = stockEnv$pe_R,
+                   sdR = 0,#stockEnv$pe_R,
                    TAnom = Tanom[y],
                    Rest = Rest)
 
   }
- 
+
   # Get weight-at-age
   Waa <- sweep(N, MARGIN=2, STATS=parpop$waa, FUN='*')
   

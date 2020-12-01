@@ -3,7 +3,7 @@
 
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.
-burnFmsyScalar <- 2 #4
+burnFmsyScalar <- 1 #4
 burnFsd <- 0.3
 
 
@@ -30,6 +30,7 @@ mat_typ <- 'logistic'
 M <- 0.2
 M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
+M_mis<- FALSE
 
 # initial numbers at-age parameters
 initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = M)
