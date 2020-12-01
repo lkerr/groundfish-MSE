@@ -69,8 +69,29 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     # Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop, 
                       # parenv = parenv, Rfun_lst = Rfun_lst)
 
+    # Edit the environmental parameters such that temperature anomaly is set to
+    # zero if the temperature reference point flag in the management procedure
+    # file is turned off.
+    parenvTemp <- parenv
+    
+    if(parmgt$TRPFlag == 1){
+      
+      parenvTemp$Tanom <- rep(parenv$Tanom[parenv$y],
+                              times = length(parenv$Tanom))
+      
+    }else if(parmgt$TRPFlag == 0){
+      
+      parenvTemp$Tanom <- rep(0, times = length(parenv$Tanom))
+      
+    }else{
+      
+      stop('mproc: tempRPFlag must be either 0 or 1')
+      
+    }
+    
+    
     SSB <- get_proj(type = 'BREF', parmgt = parmgt, parpop = parpop, 
-                    parenv = parenv, 
+                    parenv = parenvTemp, 
                     Rfun = Rfun, F_val = FBRP,
                     ny = 200, # only will be relevant for hindcast version
                     stReportYear = 2,

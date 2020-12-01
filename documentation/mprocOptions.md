@@ -106,6 +106,9 @@ The frequency with which reference points are re-calculated.
 
 * The value represents the frequency. For example, if the value is 3, reference points are recalculated every 3 years. In the years when the reference points are not updated the advice may change based on an updated assessment model but the reference points (and thus the shape of any associated harvest control rule) remains the same.
 
+## TRPFlag
+Temperature flag for reference point development. Applies to simulation versions of developing both Fmsy and Bmsy reference points. If the flag is set to 0 then all temperature anomalies are set to 0 *for reference point development* (i.e., temperature can still be turned on for the model run). If the flag is set to 1 then temperature anomalies will be included in reference point development (as long as *useTemp* in *set_om_parameters_global.R* is TRUE.
+
 ## ImplementationClass
 This sets harvesting to be determined by a "StandardFisheries" or "Economic" submodel. This column is only used in (variations of) the runSim.R file.
 

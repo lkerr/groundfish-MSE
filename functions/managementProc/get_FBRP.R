@@ -83,14 +83,25 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
    
     candF <- seq(from=0, to=1.25, by=0.01)
 
-    # Edit the environmental parameters for the initial run so that
-    # the temperature is always the current temperature. Important for
-    # temperature-based BRP projections but will not make a difference
-    # for hindcast projections. Temperature is length 1 -- the length
-    # of the temperature anomaly is tested in get_proj.
+    # Edit the environmental parameters such that temperature anomaly is set to
+    # zero if the temperature reference point flag in the management procedure
+    # file is turned off.
     parenvTemp <- parenv
-    parenvTemp$Tanom <- rep(parenv$Tanom[parenv$y],
-                            times = length(parenv$Tanom))
+   
+    if(parmgt$TRPFlag == 1){
+    
+      parenvTemp$Tanom <- rep(parenv$Tanom[parenv$y],
+                              times = length(parenv$Tanom))
+      
+    }else if(parmgt$TRPFlag == 0){
+      
+      parenvTemp$Tanom <- rep(0, times = length(parenv$Tanom))
+      
+    }else{
+      
+      stop('mproc: tempRPFlag must be either 0 or 1')
+      
+    }
     
     simAtF <- lapply(1:length(candF), function(x){
                      get_proj(type = 'FREF',
@@ -107,7 +118,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     
     meanSumCW <- apply(sumCW, 2, mean)
     Fmsy <- candF[which.max(meanSumCW)]
-    
+   
     # Extract the equilibrium population (at each level of F) for use in 
     # forecasts for Fmsy forecast calculations and for output for Bmsy 
     # forecast calculations

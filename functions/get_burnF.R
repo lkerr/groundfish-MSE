@@ -8,7 +8,8 @@ get_burnF <- function(stock){
   Rfun_lst <- Rfun_BmsySim
   parmgt <- list(RFUN_NM = 'forecast',
                  FREF_TYP = 'FmsySim',
-                 FREF_PAR0 = length(yrs)-1)
+                 FREF_PAR0 = length(yrs)-1,
+                 TRPFlag = 0)
  
   parenv <- list(tempY = temp,
                  Tanom = rep(0,length(yrs)),
