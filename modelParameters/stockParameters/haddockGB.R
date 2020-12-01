@@ -30,12 +30,8 @@ mat_typ <- 'logistic'
 M <- 0.2
 M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
-<<<<<<< HEAD
-M_mis<-FALSE
-#M_mis_val<-0.4
-=======
 M_mis<- FALSE
->>>>>>> e9a3d2f2fa79d84ee453e82b0d541e597a9738e0
+
 
 # initial numbers at-age parameters
 initN_par <- c(nage = page, N0 = 2e5, F_full = 0.05, M = M)
