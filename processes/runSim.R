@@ -94,9 +94,8 @@ for(r in 1:nrep){
           stock[[i]] <- get_advice(stock = stock[[i]])
           #stock[[i]] <- get_relError(stock = stock[[i]])
         }
-
+        browser()
           #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
-
 
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
 
@@ -119,7 +118,6 @@ for(r in 1:nrep){
           source('processes/runEcon_module.R')
 
         }else if(mproc$ImplementationClass[m] == "StandardFisheries"){
-
           for(i in 1:nstock){
             stock[[i]] <- get_implementationF(type = 'adviceWithError',
                                               stock = stock[[i]])

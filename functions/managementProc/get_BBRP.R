@@ -27,8 +27,6 @@
 
 get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
                      distillBmsy=mean, stockEnv){
-
-   
   if(parmgt$BREF_TYP == 'RSSBR'){
     
     # There cannot be any forward projections associated with RSSBR. They
@@ -49,6 +47,7 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     Rfun <- Rfun_lst[[parmgt$RFUN_NM]]
 
     funR <- Rfun(parpop = parpop, 
+                 parmgt= parmgt,
                  ny = parmgt$BREF_PAR0)
    
     B <- ssbrFmax$SSBvalue * funR
