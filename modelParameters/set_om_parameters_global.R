@@ -60,7 +60,7 @@ nburn <- 50
 #### Temperature information ####
 
 ## Do you want to include temperature projections (in S-R, growth, etc.)
-useTemp <- FALSE
+useTemp <- TRUE
 
 ## Do you want to use particular models from the cmip data series? If so
 ## tmods should be a vector of column names (see
