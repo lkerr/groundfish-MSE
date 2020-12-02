@@ -15,23 +15,26 @@ page <- 9
 #### Life history parameters ####
 
 # length-at-age parameters -- see get_lengthAtAge for including covariates
-laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=5) #udpate
+laa_par <- c(Linf=108, K=0.16, t0=-0.44, beta1=0)
 laa_typ <- 'vonB'
 
 # weight-length parameters
-waa_par <- c(exp(-11.9), 3.1024) 
+waa_par <- c(0.00000743, 3.09) 
 waa_typ <- 'aLb'
 
 # maturity-length parameters
-mat_par <- c(0.154, 39.1) 
+mat_par <- c(0.1636, 50.9967) 
 mat_typ <- 'logistic'
 
 # natural mortality
 M <- 0.2
 M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
+M_mis<- 'FALSE'
 
-
+# initial numbers at-age parameters
+initN_par <- c(nage = page, N0 = 2e5, F_full = 0.05, M = M)
+initN_type <- 'expDecline'
 
 #### Fishery parameters ####
 

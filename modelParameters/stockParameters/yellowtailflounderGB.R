@@ -31,7 +31,9 @@ M <- 0.2
 M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
 
-
+# initial numbers at-age parameters
+initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = 0.2)
+initN_type <- 'expDecline'
 
 #### Fishery parameters ####
 

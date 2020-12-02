@@ -11,8 +11,8 @@ simpleTemperature <- FALSE
 
 
 # Which management procedures csv do you want to read:
-#mprocfile<-"mproc.csv"
-mprocfile<-"mprocTest.csv"
+mprocfile<-"mproc.csv"
+#mprocfile<-"mprocTest.csv"
 #mprocfile<-"mprocEcon.csv"
 
 
@@ -23,8 +23,8 @@ mprocfile<-"mprocTest.csv"
 # stockExclude variable. Do not include the extension.R. For example,
 # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
-# Stocks: codGB_Error, codGOM, haddockGB, pollock, yellotailflounder
-stockExclude <- c('codGB_Error','yellowtailflounderGB', 'codGOM', 'haddockGB')
+# Stocks: codGB_Error, codGOM, haddockGB, pollock, yellowtailflounderGB
+stockExclude <- c()
 
 
 #### historic assessment values #### AEW

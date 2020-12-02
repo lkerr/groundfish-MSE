@@ -49,11 +49,15 @@ selC <- c(s0=5, s1=0.08)
 selC_typ <- 'Logistic'
 
 # Recruitment
-Rpar <- c(h = 6.630977e-01,
-          R0 = 6.087769e+07,
-          beta3 = -2.501400e-01,
-          SSBRF0 = 0.01972)
-R_typ <- 'BHSteep'
+##HS with all recruitment values (what is used in stock assessment projections)##
+Rpar <- c(SSB_star = 50000, 
+          cR = 1) # dont need to convert
+R_typ <- 'HS'
+#Rpar <- c(h = 6.630977e-01,
+#          R0 = 6.087769e+07,
+#          beta3 = -2.501400e-01,
+#          SSBRF0 = 0.01972)
+#R_typ <- 'BHSteep'
 
 
 
