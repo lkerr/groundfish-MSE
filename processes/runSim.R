@@ -97,7 +97,6 @@ for(r in 1:nrep){
 
           #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
 
-
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
 
           for(i in 1:nstock){
@@ -119,12 +118,10 @@ for(r in 1:nrep){
           source('processes/runEcon_module.R')
 
         }else if(mproc$ImplementationClass[m] == "StandardFisheries"){
-
           for(i in 1:nstock){
             stock[[i]] <- get_implementationF(type = 'adviceWithError',
                                               stock = stock[[i]])
           } # End implementation error in standard fisheries
-
         }else{
           #Add a warning about invalid ImplementationClass
         }
@@ -133,7 +130,6 @@ for(r in 1:nrep){
           stock[[i]] <- get_relError(stock = stock[[i]])
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         }
-
       } #End of burn-in loop
 
       for(i in 1:nstock){

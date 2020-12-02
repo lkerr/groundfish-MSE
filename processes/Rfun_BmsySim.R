@@ -32,7 +32,7 @@ Rfun_BmsySim <- list(
   hindcastMean = function(Rest, ...){
     mean(Rest)
   },
-
+  
   hindcastSample = function(Rest,...){
     sample(Rest, 1)
   }
