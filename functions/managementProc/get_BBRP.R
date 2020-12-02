@@ -46,9 +46,7 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     # the list Rfun_BmsySim which is created in the processes folder.
     Rfun <- Rfun_lst[[parmgt$RFUN_NM]]
 
-    funR <- Rfun(parpop = parpop, 
-                 parmgt= parmgt,
-                 ny = parmgt$BREF_PAR0)
+    funR <- Rfun(Rest=tail(parpop$R,parmgt$BREF_PAR0))
    
     B <- ssbrFmax$SSBvalue * funR
 
