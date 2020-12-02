@@ -44,16 +44,21 @@ qI <- 0.0001
 selC <- c(s0=5, s1=0.08)
 selC_typ <- 'Logistic'
 
-# Recruitment (parameters need updating!!!) #AEW 
+# Recruitment 
+##HS with all recruitment values (what is used in stock assessment projections)##
+##Could not find a SSB hinge point in the assessment report materials##
+Rpar <- c(SSB_star = 0, 
+          cR = 1) # dont need to convert
+R_typ <- 'HS'
 
-Rpar <- c(h = 0.94,
-          R0 = 24198,
-          c = -0.540,            #update
-          SSBRF0 = 0.01972,      #update
-          sigR = 0.4,
-          beta3 = -2.501400e-01) #update
+#Rpar <- c(h = 0.94,
+#          R0 = 24198,
+#          c = -0.540,            #update
+#          SSBRF0 = 0.01972,      #update
+#          sigR = 0.4,
+#          beta3 = -2.501400e-01) #update
 
-R_typ <- 'BHSteep'
+#R_typ <- 'BHSteep'
 
 
 
