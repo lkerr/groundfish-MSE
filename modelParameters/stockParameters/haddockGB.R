@@ -9,13 +9,13 @@ burnFsd <- 0.6
 
 # first age and plus age
 fage <- 1
-page <- 8
+page <- 9
 
 
 #### Life history parameters ####
 
 # length-at-age parameters -- see get_lengthAtAge for including covariates
-laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=5)  #AEW
+laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=0)  #AEW
 laa_typ <- 'vonB'
 
 # weight-length parameters
