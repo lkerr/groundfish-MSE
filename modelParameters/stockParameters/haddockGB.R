@@ -3,13 +3,13 @@
 
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.
-burnFmsyScalar <- 1.5
-burnFsd <- 0.5
+burnFmsyScalar <- 4
+burnFsd <- 0.6
 
 
 # first age and plus age
 fage <- 1
-page <- 9
+page <- 8
 
 
 #### Life history parameters ####
@@ -32,8 +32,9 @@ M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
 M_mis<- FALSE
 
+
 # initial numbers at-age parameters
-initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = M)
+initN_par <- c(nage = page, N0 = 2e5, F_full = 0.05, M = M)
 initN_type <- 'expDecline'
 
 
@@ -43,25 +44,24 @@ initN_type <- 'expDecline'
 qC <- 0.0001
 qI <- 0.0001
 
+DecCatch<-FALSE
+
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
 selC <- c(s0=5, s1=0.08)
 selC_typ <- 'Logistic'
 
-# Recruitment (parameters need updating!!!)
+# Recruitment
+##HS with all recruitment values (what is used in stock assessment projections)##
+Rpar <- c(SSB_star = 75000, 
+          cR = 1) # dont need to convert
+R_typ <- 'HS'
 
-Rpar <- c(h = 6.286813e-01,
-          R0 = 8.062700e+07,
-          c = -0.540,
-          SSBRF0 = 0.01972,
-          sigR = 0.56,
-          beta3 = -2.501400e-01)
-
-R_typ <- 'BHSteep'
-
-
-
-#### Survey parameters ####
+##Ricker with increased frequency of high events with temp.
+#Rpar <- c(a = 0.5540445, 
+#         b = 0.0000174067) 
+#R_typ <- 'IncFreq'
+#### Survey parameters ####F
 
 ## Survey information
 # slxI <- matrix(1, nrow=nyear, ncol=nage)
@@ -73,7 +73,7 @@ timeI <- 0.5 # when is the survey (as a proportion of the year)
 #### Stock assessment model parameters ####
 
 # number of years in assessment model
-ncaayear <- 30
+ncaayear <- 33
 
 # Expansion range for setting limits on parameter bounds
 boundRgLev <- 1.5
@@ -85,7 +85,6 @@ startCV <- 1.5
 # for model fitting)
 caaInScalar <- 1000
 
-
 #### Error parameters ####
 
 # observation error levels
@@ -93,25 +92,34 @@ oe_sumCW <- 0.05
 oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 1000
 oe_paaCN_typ <- 'multinomial'
-oe_sumIN <- 0.2
+oe_sumIN <- 0.05
 oe_sumIN_typ <- 'lognorm'
 oe_paaIN <- 1000
 oe_paaIN_typ <- 'multinomial'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
+highobserrec<-FALSE
+
 # process error levels  ###################################  !!!!!!!!!!!!!!
 pe_R <- 0.5
+pe_IA<-0.18
 
 # implementation error of fishing mortality
 ie_F <- 0
 ie_typ <- 'lognorm'
 ie_bias <- 0 # % bias in implementation error
 
-# Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
-ob_sumCW <- 1
+# Observation bias (1 is no bias, 0.9 is a -10% bias, etc.) (sumCW*ob_sumCW) (range 0.01-1)
+ob_sumCW <- 1 #0.44 is bias
 ob_sumIN <- 1
 
+# catch observation bias (codCW + codCW*C_mult)
+C_mult <- 0 #0 is no bias
+
+Change_point2<-'FALSE'
+Change_point_yr<-2025
+Change_point3<-FALSE
 
 #### BRPs and HCRs ####
 
