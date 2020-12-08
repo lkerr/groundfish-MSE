@@ -4,7 +4,7 @@
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.
 burnFmsyScalar <- 4
-burnFsd <- 0.6
+burnFsd <- 0.4
 
 
 # first age and plus age
@@ -19,8 +19,10 @@ laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=0)  #AEW
 laa_typ <- 'vonB'
 
 # weight-length parameters
-waa_par <- c(exp(-11.73233), 3.059) 
-waa_typ <- 'aLb'
+#waa_par <- c(exp(-11.73233), 3.059) 
+#waa_typ <- 'aLb'
+waa_par <- c(0.177, 0.429, 0.694, 0.889, 1.089, 1.247, 1.396, 1.577, 1.784) #GOM cod ADAPT projection Jan1 M=0.2
+waa_typ <- 'input'
 
 # maturity-length parameters
 mat_par <- c(0.21, 29.7) #AEW
