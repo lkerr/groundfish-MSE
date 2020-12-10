@@ -18,7 +18,7 @@ get_FBRP_true <- function(stock,parenv){
                            laa=laa, inputUnit='kg',y=y)
     
     # calculate maturity in year y
-    mat <- get_maturity(type=mat_typ, par=mat_par, laa=laa)
+    mat <- get_maturity(type=mat_typ, par=mat_par, laa=laa,y=y,fmyearIdx=fmyearIdx)
     
     for (k in 1:50){
     for (i in 1:96){

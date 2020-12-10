@@ -63,7 +63,7 @@ get_popInit <- function(stock){
     waa[1:fyear,] <- rep(waaTemp, each = fyear)
     
     # calculate maturity in year y
-    matTemp <- get_maturity(type=mat_typ, par=mat_par, laa=laaTemp)
+    matTemp <- get_maturity(type=mat_typ, par=mat_par, laa=laaTemp,y=1,fmyearIdx=fmyearIdx)
     mat[1:fyear,] <- rep(matTemp, each = fyear)
     
     slxTemp <- get_slx(type=selC_typ, par=selC, laa=laaTemp)

@@ -23,7 +23,7 @@
 # tempY: value for temperature in year y
 
 
-get_maturity <- function(type, par, laa, tempY=NULL){
+get_maturity <- function(type, par, laa, tempY=NULL,y,fmyearIdx){
   
   if(is.null(tempY)){
     tempY <- 0
@@ -55,6 +55,15 @@ get_maturity <- function(type, par, laa, tempY=NULL){
   
   if(tolower(type) == 'input'){
     mat <- par[1:length(par)]
+  }
+  
+  if(tolower(type) == 'change'){
+    if(y<fmyearIdx){
+    mat <- par[1:9]
+    }
+    else{
+   mat <- par[10:18]
+    }
   }
   
   return(mat)

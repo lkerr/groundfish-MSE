@@ -18,7 +18,7 @@ get_J1Updates <- function(stock){
                                laa=laa[y,], inputUnit='kg',y=y,fmyearIdx=fmyearIdx)
 
     # calculate maturity in year y
-    mat[y,] <- get_maturity(type=mat_typ, par=mat_par, laa=laa[y,])
+    mat[y,] <- get_maturity(type=mat_typ, par=mat_par, laa=laa[y,],y=y,fmyearIdx=fmyearIdx)
 
     # calculate recruits in year y based on the SSB in years previous
     # (depending on the lag) and temperature

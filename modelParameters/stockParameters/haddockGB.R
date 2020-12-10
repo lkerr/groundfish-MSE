@@ -4,7 +4,7 @@
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.
 burnFmsyScalar <- 3
-burnFsd <- 0.5
+burnFsd <- 0.7
 
 
 # first age and plus age
@@ -25,8 +25,8 @@ waa_par <- c(0.374,0.94,1.374,1.894,2.336,2.7,3.05,3.544,3.972,0.177, 0.429, 0.6
 waa_typ <- 'change'
 
 # maturity-length parameters
-mat_par <- c(0.034, 0.259, 0.746, 0.953, 0.993, 0.999, 1, 1, 1) # GOM cod ADAPT projection M=0.2
-mat_typ <- 'input'
+mat_par <- c(0.063,0.469,0.92,0.993,0.999,1,1,1,1,0.034, 0.259, 0.746, 0.953, 0.993, 0.999, 1, 1, 1) # GOM cod ADAPT projection M=0.2
+mat_typ <- 'change'
 
 # natural mortality
 M <- 0.2
@@ -36,7 +36,7 @@ M_mis<-FALSE
 #M_mis_val<-0.4
 
 # initial numbers at-age parameters
-initN_par <- c(nage = page, N0 = 2e5, F_full = 0.05, M = M)
+initN_par <- c(nage = page, N0 = 2e4, F_full = 0.04, M = M)
 initN_type <- 'expDecline'
 
 
