@@ -37,7 +37,7 @@ histAssess <- TRUE
 nrep <- 1
 
 # First year to begin actual management
-fmyear <- 2015
+fmyear <- 2017
 
 # first year after the initial condition period. The initial condition period
 # simply fills up the arrays as necessary even before the burn-in period
@@ -46,7 +46,7 @@ fmyear <- 2015
 fyear <- 38
 
 # maximum year predicted into the future
-mxyear <- 2050
+mxyear <- 2040
 
 #### Burn-in parameters ####
 

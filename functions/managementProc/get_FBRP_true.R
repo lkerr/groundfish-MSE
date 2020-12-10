@@ -15,7 +15,7 @@ get_FBRP_true <- function(stock,parenv){
     
     # calculate weight-at-age in year y
     waa <- get_weightAtAge(type=waa_typ, par=waa_par,
-                           laa=laa, inputUnit='kg')
+                           laa=laa, inputUnit='kg',y=y)
     
     # calculate maturity in year y
     mat <- get_maturity(type=mat_typ, par=mat_par, laa=laa)

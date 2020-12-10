@@ -20,7 +20,7 @@
 #      
 
 
-get_weightAtAge <- function(type, par, laa, inputUnit){
+get_weightAtAge <- function(type, par, laa, inputUnit,y,fmyearIdx){
   
   if(type == 'aLb'){
 
@@ -31,7 +31,14 @@ get_weightAtAge <- function(type, par, laa, inputUnit){
     waa <- par[1:length(par)]
   
     
-    }else{
+    }
+  else if(type == 'change'){
+    if (y<fmyearIdx){
+    waa <- par[1:9]
+    }
+  else{waa<-par[10:18]}
+    
+  }else{
 
     stop('weight-at-age type not recognized')
   
