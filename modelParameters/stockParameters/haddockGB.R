@@ -36,7 +36,7 @@ M_mis<-FALSE
 #M_mis_val<-0.4
 
 # initial numbers at-age parameters
-initN_par <- c(nage = page, N0 = 2e4, F_full = 0.04, M = M)
+initN_par <- c(nage = page, N0 = 2e4, F_full = 0.03, M = M)
 initN_type <- 'expDecline'
 
 

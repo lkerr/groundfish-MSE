@@ -206,7 +206,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
           catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
       }
       Fest<-get_estF(catchproj=catchproj[1],parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv)
-      if (y>175){browser()}
       if (Fest>FrefRPvalue){
         catchproj<-matrix(ncol=2,nrow=100)
         for (i in 1:100){
