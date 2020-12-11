@@ -15,14 +15,14 @@ page <- 9
 #### Life history parameters ####
 
 # length-at-age parameters -- see get_lengthAtAge for including covariates
-laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=5)  #AEW
+laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=0)  #AEW
 laa_typ <- 'vonB'
 
 # weight-length parameters
 #waa_par <- c(exp(-11.73233), 3.059) 
 #waa_typ <- 'aLb'
-waa_par <- c(0.177, 0.429, 0.694, 0.889, 1.089, 1.247, 1.396, 1.577, 1.784) #GOM cod ADAPT projection Jan1 M=0.2
-waa_typ <- 'input'
+waa_par <- c(exp(-11.73233), 3.059) 
+waa_typ <- 'aLb'
 
 # maturity-length parameters
 mat_par <- c(0.034, 0.259, 0.746, 0.953, 0.993, 0.999, 1, 1, 1) # GOM cod ADAPT projection M=0.2
