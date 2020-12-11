@@ -3,8 +3,8 @@
 
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.
-burnFmsyScalar <- 3.5
-burnFsd <- 0.7
+burnFmsyScalar <- 4
+burnFsd <- 0.6
 
 
 # first age and plus age
@@ -21,12 +21,12 @@ laa_typ <- 'vonB'
 # weight-length parameters
 #waa_par <- c(exp(-11.73233), 3.059) 
 #waa_typ <- 'aLb'
-waa_par <- c(0.374,0.94,1.374,1.894,2.336,2.7,3.05,3.544,3.972,0.177, 0.429, 0.694, 0.889, 1.089, 1.247, 1.396, 1.577, 1.784) #GOM cod ADAPT projection Jan1 M=0.2
-waa_typ <- 'change'
+waa_par <- c(0.177, 0.429, 0.694, 0.889, 1.089, 1.247, 1.396, 1.577, 1.784) #GOM cod ADAPT projection Jan1 M=0.2
+waa_typ <- 'input'
 
 # maturity-length parameters
-mat_par <- c(0.063,0.469,0.92,0.993,0.999,1,1,1,1,0.034, 0.259, 0.746, 0.953, 0.993, 0.999, 1, 1, 1) # GOM cod ADAPT projection M=0.2
-mat_typ <- 'change'
+mat_par <- c(0.034, 0.259, 0.746, 0.953, 0.993, 0.999, 1, 1, 1) # GOM cod ADAPT projection M=0.2
+mat_typ <- 'input'
 
 # natural mortality
 M <- 0.2
@@ -36,7 +36,7 @@ M_mis<-FALSE
 #M_mis_val<-0.4
 
 # initial numbers at-age parameters
-initN_par <- c(nage = page, N0 = 2e4, F_full = 0.03, M = M)
+initN_par <- c(nage = page, N0 = 2e5, F_full = 0.05, M = M)
 initN_type <- 'expDecline'
 
 
