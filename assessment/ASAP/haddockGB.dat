@@ -202,7 +202,7 @@
 # Fleet End Age
 9
 # Age Range for Average F
-9 9
+8 8
 # Average F report option (1=unweighted, 2=Nweighted, 3=Bweighted)
 1
 # Use Likelihood constants? (1=yes)
@@ -413,49 +413,49 @@
 # Phase for Catchability in 1st Year
 1
 # Phase for Catchability Deviations
--1
+-3
 # Phase for Stock Recruitment Relationship
 1
 # Phase for Steepness
 -1
 # Recruitment CV by Year
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
-0.5
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
+0.8
 # Lambdas by Index
 1
 # Lambda for Total Catch in Weight by Fleet
@@ -639,11 +639,11 @@
 # Lambda for Deviation from Initial Steepness
 0
 # CV for Deviation from Initial Steepness
-0.9
+0.7
 # Lambda for Deviation from Unexploited Stock Size
-0
+1
 # CV for Deviation from Unexploited Stock Size
-0.9
+1.2
 # NAA Deviations Flag
 1
 # Initial Numbers at Age in 1st Year

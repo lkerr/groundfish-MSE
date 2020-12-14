@@ -130,6 +130,7 @@ get_fillRepArrays <- function(stock){
   
   out <- within(stock, {
     
+    omval$N[r,m,] <- rowSums(J1N)
     omval$SSB[r,m,] <- SSB
     omval$R[r,m,] <- R
     omval$F_full[r,m,] <- F_full

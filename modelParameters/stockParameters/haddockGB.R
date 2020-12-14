@@ -1,10 +1,7 @@
-
-
-
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.
-burnFmsyScalar <- 4
-burnFsd <- 0.6
+burnFmsyScalar <- 5.5
+burnFsd <- 0.4
 
 
 # first age and plus age
@@ -19,14 +16,12 @@ laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=0)  #AEW
 laa_typ <- 'vonB'
 
 # weight-length parameters
-#waa_par <- c(exp(-11.73233), 3.059) 
-#waa_typ <- 'aLb'
-waa_par <- c(exp(-11.73233), 3.059) 
-waa_typ <- 'aLb'
+waa_par <- c(0.177, 0.429, 0.694, 0.889, 1.089, 1.247, 1.396, 1.577, 1.784) #GOM cod ADAPT projection Jan1 M=0.2
+waa_typ <- 'input'
 
 # maturity-length parameters
-mat_par <- c(0.034, 0.259, 0.746, 0.953, 0.993, 0.999, 1, 1, 1) # GOM cod ADAPT projection M=0.2
-mat_typ <- 'input'
+mat_par <- c(0.21, 29.7) #AEW
+mat_typ <- 'logistic'
 
 # natural mortality
 M <- 0.2
@@ -49,8 +44,9 @@ qI <- 0.0001
 DecCatch<-FALSE
 
 # fishery selectivity
-selC <- c(0.005, 0.025, 0.09, 0.268, 0.475, 0.688, 1, 0.721, 0.721)
-selC_typ <- 'input'
+# ### change select to L50 paramaterization like maturity
+selC <- c(s0=5, s1=0.08)
+selC_typ <- 'Logistic'
 
 # Recruitment
 ##HS with all recruitment values (what is used in stock assessment projections)##
@@ -93,7 +89,7 @@ oe_sumCW <- 0.05
 oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 1000
 oe_paaCN_typ <- 'multinomial'
-oe_sumIN <- 0.1
+oe_sumIN <- 0.05
 oe_sumIN_typ <- 'lognorm'
 oe_paaIN <- 1000
 oe_paaIN_typ <- 'multinomial'

@@ -38,6 +38,7 @@ get_containers <- function(stockPar){
     ACL = yx0,
     R = yx0,
     Rhat = yx0,
+    N=yx0,
     SSB = yx0,
     RPmat = matrix(NA, nrow=nyear, ncol=2,
                    dimnames = list(paste0(1:nyear), 
@@ -251,6 +252,7 @@ get_containers <- function(stockPar){
     
     
     omval = list(
+      N = save_vector_ann,
       SSB = save_vector_ann,
       R = save_vector_ann,
       F_full = save_vector_ann,
