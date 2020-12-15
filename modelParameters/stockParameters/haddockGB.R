@@ -1,7 +1,7 @@
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.
 burnFmsyScalar <- 3.6
-burnFsd <- 0.7
+burnFsd <- 0.8
 
 
 # first age and plus age
@@ -31,7 +31,7 @@ M_mis<-FALSE
 #M_mis_val<-0.4
 
 # initial numbers at-age parameters
-initN_par <- c(nage = page, N0 = 2e5, F_full = 0.57, M = M)
+initN_par <- c(nage = page, N0 = 2e5, F_full = 0.58, M = M)
 initN_type <- 'expDecline'
 
 
