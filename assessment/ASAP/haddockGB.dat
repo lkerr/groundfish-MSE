@@ -621,7 +621,7 @@
 # Lambda for F Mult Deviations by Fleet
 1
 # CV for F Mult Deviations by Fleet
-0.7
+1.1
 # Lambda for N in 1st Year Deviations
 0
 # CV for N in 1st Year Deviations
