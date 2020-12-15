@@ -1,7 +1,7 @@
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.
-burnFmsyScalar <- 5.5
-burnFsd <- 0.4
+burnFmsyScalar <- 3.6
+burnFsd <- 0.7
 
 
 # first age and plus age
@@ -31,7 +31,7 @@ M_mis<-FALSE
 #M_mis_val<-0.4
 
 # initial numbers at-age parameters
-initN_par <- c(nage = page, N0 = 2e5, F_full = 0.05, M = M)
+initN_par <- c(nage = page, N0 = 2e5, F_full = 0.57, M = M)
 initN_type <- 'expDecline'
 
 
@@ -45,8 +45,8 @@ DecCatch<-FALSE
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
-selC <- c(s0=5, s1=0.08)
-selC_typ <- 'Logistic'
+selC <- c(0.01,0.03,0.09,0.27,0.48,0.69,1,0.72,0.72)
+selC_typ <- 'input'
 
 # Recruitment
 ##HS with all recruitment values (what is used in stock assessment projections)##

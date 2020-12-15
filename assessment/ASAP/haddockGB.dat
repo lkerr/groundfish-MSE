@@ -202,7 +202,7 @@
 # Fleet End Age
 9
 # Age Range for Average F
-8 8
+7 7
 # Average F report option (1=unweighted, 2=Nweighted, 3=Bweighted)
 1
 # Use Likelihood constants? (1=yes)
@@ -617,11 +617,11 @@
 # Lambda for F Mult in First year by Fleet
 0
 # CV for F Mult in First year by Fleet
-0.9
+0.7
 # Lambda for F Mult Deviations by Fleet
-0
+1
 # CV for F Mult Deviations by Fleet
-0.9
+0.3
 # Lambda for N in 1st Year Deviations
 0
 # CV for N in 1st Year Deviations
