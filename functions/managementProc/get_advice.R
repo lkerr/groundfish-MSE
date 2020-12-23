@@ -162,12 +162,11 @@ get_advice <- function(stock){
       plist <- mget(paste('rhoR',(y-peels):(y-1),sep=''))
       pcols <- do.call('cbind', plist)
       Mohns_Rho_R[y] <- rowSums(pcols) / peels
-      cat('Rho calculated.')})}
-    if(mproc[m,'rhoadjust'] == 'TRUE'){
-      tempStock<-within(tempStock,{
-        if(y > fmyearIdx){
-          parpop$SSBhat[length(parpop$SSBhat)]<-parpop$SSBhat[length(parpop$SSBhat)]/(Mohns_Rho_SSB[y]+1)}
-        })}
+      cat('Rho calculated.')
+      if(mproc[m,'rhoadjust'] == 'TRUE'){
+        tempStock<-within(tempStock,{
+          parpop$SSBhat[length(parpop$SSBhat)]<-parpop$SSBhat[length(parpop$SSBhat)]/(Mohns_Rho_SSB[y]+1)})}})}
+
     # Environmental parameters
     parenv <- list(tempY = temp,
                    Tanom = Tanom,

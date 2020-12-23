@@ -32,7 +32,7 @@
 
 
 get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
-  
+
   # A general application of national standard 1 reference points. There
   # are different ways to grab the F reference point and the B reference
   # point and those will be implemented in get_FBRP

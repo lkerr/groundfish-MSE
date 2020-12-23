@@ -65,7 +65,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   
   if(type=='current'){
     suminit<-sum(init)
-    if (mproc$rhoadjust==TRUE & y>165){
+    if (mproc$rhoadjust==TRUE & y>fmyearIdx){
       suminit<-suminit/(1+stockEnv$Mohns_Rho_N[y])
       suminit<-get_error_idx(type=stockEnv$oe_sumIN_typ, idx=suminit, par=stockEnv$pe_IA, switch=FALSE)
     }
@@ -101,7 +101,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   N[1,] <- init 
   #Get beginning of year population in year t+1
   if (type=='current'){
-    if (mproc$rhoadjust==TRUE & y>165){
+    if (mproc$rhoadjust==TRUE & y>fmyearIdx){
       Fhat<-parpop$Fhat/(1+stockEnv$Mohns_Rho_F[y])
     }
     else {Fhat<-parpop$Fhat}
@@ -117,13 +117,13 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       init[nage] * exp(-parpop$sel[nage] * Fhat - 
                           parpop$M[nage])
     
-    R<-parpop$R
+    Recruits<-parpop$R
     
-    if (mproc$rhoadjust==TRUE & y>165){
-      R[length(R)]<-R[length(R)]/(1+stockEnv$Mohns_Rho_R[y])
+    if (mproc$rhoadjust==TRUE & y>fmyearIdx){
+      Recruits[length(Recruits)]<-Recruits[length(Recruits)]/(1+stockEnv$Mohns_Rho_R[y])
     }
     
-    N[1,1] <- prod(tail(R,5))^(1/5)
+    N[1,1] <- prod(tail(Recruits,5))^(1/5)
   }
   for(y in 2:length(Tanom)){
     for(a in 2:(nage-1)){
