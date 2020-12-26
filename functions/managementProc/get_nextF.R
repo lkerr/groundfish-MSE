@@ -106,7 +106,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     overfishing <- ifelse(tail(parpop$Fhat,1) > FThresh, 1, 0) #AEW
     
-    if(tolower(parmgt$HCR) == 'slide'){
+    if(tolower(parmgt$HCR) == 'slide' |tolower(parmgt$HCR) == 'reject'){
      
       F <- get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)['Fadvice']
 
@@ -175,6 +175,10 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   stReportYr = 2,
                                   stockEnv = stockEnv)$sumCW}
       catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
+      if(tolower(parmgt$HCR) == 'reject'){
+        if (y>fmyearIdx & stockEnv$Mohns_Rho_F[y]>0.5 | y>fmyearIdx & stockEnv$Mohns_Rho_SSB[y]>0.5 | y>fmyearIdx & stockEnv$Mohns_Rho_R[y]>0.5){
+     catchproj<-c(stockEnv$obs_sumCW[y-1],stockEnv$obs_sumCW[y-1])
+        }} 
       if(tolower(parmgt$mincatch) == 'true'){
       if (stockNames == 'codGOM'){
          mincatchv<-tail(read.csv('data/data_raw/AssessmentHistory/codGOM_Discard.csv'),10)
