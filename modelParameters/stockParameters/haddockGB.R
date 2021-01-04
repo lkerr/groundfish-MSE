@@ -1,6 +1,6 @@
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.
-burnFmsyScalar <- 3.6
+burnFmsyScalar <- 3
 burnFsd <- 0.7
 
 
@@ -85,7 +85,7 @@ caaInScalar <- 1000
 #### Error parameters ####
 
 # observation error levels
-oe_sumCW <- 0.05
+oe_sumCW <- 0.1
 oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 1000
 oe_paaCN_typ <- 'multinomial'
