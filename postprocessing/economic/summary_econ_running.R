@@ -8,25 +8,38 @@ library(data.table)
 # Naming outputs 
 
 remote_location <- "/net/ftp/pub/dropoff/mlee/anna/summary"
-stub<-"counterfactual_closeown"
-stub<-"validation"
-#stub<-"counterfactual_closemult"
+#Uncomment one of these stub names
+
+#stub<-"counterfactual_closeownA"
+stub<-"validationA"
+#stub<-"counterfactual_closemultA"
 
 econ_out_csv<-paste0("monthly_summary_",stub,".csv")
 stock_status_out_csv<-paste0("stock_status_",stub,".csv")
 pr_hat_out_csv<-paste0("pr_hat_",stub,".csv")
 
 
+####################################################
+#where are the result csvs?
 #selects most recent file path in groundfish_MSE folder that starts with "results_" 
-file_path = file.info(list.files(path=".",pattern="^results_*",include.dirs=TRUE,full.names = T,recursive=TRUE))
-file_path= rownames(file_path)[which.max(file_path$mtime)]
-#file_path="./results_2020-11-10-18-46-11"
+# Option 1: Select the most recent folder automatically
+# file_path = file.info(list.files(path=".",pattern="^results_*",include.dirs=TRUE,full.names = T,recursive=TRUE))
+# file_path= rownames(file_path)[which.max(file_path$mtime)]
+# Option 2: Manually enter the name of the results folder.  The "." is relative to the root of the project.
+file_path="./results_2020-10-26-14-40-06"
 
-#selects just the econ_2020 datasets
-file_names = list.files(path=file.path(file_path, "econ","raw"), pattern = "econ_2020", full.names = TRUE)
-cutout<-100
+#selects csvs that start with a particular pattern 
+select_pat<- "econ_2020"
+file_names = list.files(path=file.path(file_path, "econ","raw"), pattern =select_pat, full.names = TRUE)
 
-cutout<-67
+# Cut out or stop options. some of the Simulations ran partially and therefore only have partial data.  
+# We need to to keep 
+maxrep<-100
+maxrep<-71
+
+
+
+
 
 
 # need to write code for lines 32-73 that works on the pr_hat data
@@ -65,7 +78,7 @@ simulations[[file]]<-monthly_summary
 monthly_summary <- rbindlist(simulations,use.names=TRUE,fill=TRUE) 
 
 table(monthly_summary$replicate)
-monthly_summary <- monthly_summary[replicate<=cutout]
+monthly_summary <- monthly_summary[replicate<=maxrep]
 
 #Verifying econ results before saving
 #source("postprocessing/economic/verify_econ_result.R")
@@ -108,7 +121,7 @@ for(file in 1:file_nums){
 
 
 stock_status <- rbindlist(stock_status,use.names=TRUE,fill=TRUE) 
-stock_status <- stock_status[replicate<=cutout]
+stock_status <- stock_status[replicate<=maxrep]
 
 stock_status[,c("bio_model","SSB","mults_allocated","sectorACL"):=NULL]
 # 1 row per  per year, spstock2, replicate, model,
