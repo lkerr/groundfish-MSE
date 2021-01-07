@@ -233,6 +233,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                    slxCv = stockEnv$slxC[y,], 
                    M = stockEnv$natM[y], 
                    waav = stockEnv$waa[y,])
+      if (F>10){browser()}
       }
       else{
       F <- get_F(x = stockEnv$catchproj[2],
@@ -243,6 +244,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       catchproj<-stockEnv$catchproj
       }
     }
+    if(tolower(parmgt$projections) == 'false'){catchproj<-NA}
   
     out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue), 
                 ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,

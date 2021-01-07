@@ -91,60 +91,60 @@ get_advice <- function(stock){
       if(peels>7){peels<-7}
       if (Sys.info()['sysname'] == "Windows"){
         tempwd<-getwd()
-        SSBnew<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB
-        idx<-length(SSBnew)-peels
-        SSBnew<-SSBnew[idx]
+        SSBnew1<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB
+        idx<-length(SSBnew1)-peels
+        SSBnew<-SSBnew1[idx]
         for (p in (y-peels):(y-1)){
           SSBold<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', p,'.rdat', sep = ''))$SSB[idx]         
           assign(paste('rhoSSB',p,sep=''),(SSBold-SSBnew)/SSBnew)
         }
         tempwd<-getwd()
-        Nnew<-rowSums(readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$N.age)
-        idx<-length(Nnew)-peels
-        Nnew<-Nnew[idx]
+        Nnew1<-rowSums(readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$N.age)
+        idx<-length(Nnew1)-peels
+        Nnew<-Nnew1[idx]
         for (p in (y-peels):(y-1)){
           Nold<-sum(readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', p,'.rdat', sep = ''))$N.age[idx,])         
           assign(paste('rhoN',p,sep=''),(Nold-Nnew)/Nnew)
         }
         tempwd<-getwd()
-        Fnew<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$F.report
-        idx<-length(Fnew)-peels
-        Fnew<-Fnew[idx-1]
+        Fnew1<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$F.report
+        idx<-length(Fnew1)-peels
+        Fnew<-Fnew1[idx-1]
         for (p in (y-peels):(y-1)){
           Fold<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', p,'.rdat', sep = ''))$F.report[idx]        
           assign(paste('rhoF',p,sep=''),(Fold-Fnew)/Fnew)
         }
         tempwd<-getwd()
-        Rnew<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$N.age[,1]
-        Rnew<-Rnew[idx]
+        Rnew1<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$N.age[,1]
+        Rnew<-Rnew1[idx]
         for (p in (y-peels):(y-1)){
           Rold<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', p,'.rdat', sep = ''))$N.age[idx,1]      
           assign(paste('rhoR',p,sep=''),(Rold-Rnew)/Rnew)
         }}
       if (Sys.info()['sysname'] == "Linux"){
-        SSBnew<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB
-        idx<-length(SSBnew)-peels
-        SSBnew<-SSBnew[idx]
+        SSBnew1<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB
+        idx<-length(SSBnew1)-peels
+        SSBnew<-SSBnew1[idx]
         for (p in (y-peels):(y-1)){
           SSBold<-readRDS(paste(rundir,'/', stockName, '_', r, '_', p,'.rdat', sep = ''))$SSB[idx]
           assign(paste('rhoSSB',p,sep=''),(SSBold-SSBnew)/SSBnew)
         }
-        Nnew<-rowSums(readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$N.age)
-        idx<-length(Nnew)-peels
-        Nnew<-Nnew[idx]
+        Nnew1<-rowSums(readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$N.age)
+        idx<-length(Nnew1)-peels
+        Nnew<-Nnew1[idx]
         for (p in (y-peels):(y-1)){
           Nold<-sum(readRDS(paste(rundir,'/', stockName, '_', r, '_', p,'.rdat', sep = ''))$N.age[idx,])
           assign(paste('rhoN',p,sep=''),(Nold-Nnew)/Nnew)
         }
-        Fnew<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$F.report
-        idx<-length(Fnew)-peels
+        Fnew1<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$F.report
+        idx<-length(Fnew1)-peels
         Fnew<-Fnew[idx]
         for (p in (y-peels):(y-1)){
           Fold<-readRDS(paste(rundir,'/', stockName, '_', r, '_', p,'.rdat', sep = ''))$F.report[idx]
           assign(paste('rhoF',p,sep=''),(Fold-Fnew)/Fnew)
         }
-        Rnew<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$N.age[,1]
-        idx<-length(Rnew)-peels
+        Rnew1<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$N.age[,1]
+        idx<-length(Rnew1)-peels
         Rnew<-Rnew[idx]
         for (p in (y-peels):(y-1)){
           Rold<-readRDS(paste(rundir,'/', stockName, '_', r, '_', p,'.rdat', sep = ''))$N.age[idx,1]
@@ -164,7 +164,9 @@ get_advice <- function(stock){
       Mohns_Rho_R[y] <- rowSums(pcols) / peels
       cat('Rho calculated.')
       if(mproc[m,'rhoadjust'] == 'TRUE'){
-          parpop$SSBhat[length(parpop$SSBhat)]<-parpop$SSBhat[length(parpop$SSBhat)]/(Mohns_Rho_SSB[y]+1)}})}
+          parpop$SSBhat[length(parpop$SSBhat)]<-parpop$SSBhat[length(parpop$SSBhat)]/(Mohns_Rho_SSB[y]+1)}
+      })
+      tempStock <- get_relError(stock = tempStock)}
 
     # Environmental parameters
     parenv <- list(tempY = temp,
