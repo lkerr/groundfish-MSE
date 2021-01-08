@@ -1,2 +1,2 @@
 ASSESSCLASS,HCR,FREF_TYP,FREF_PAR0,FREF_PAR1,BREF_TYP,BREF_PAR0,BREF_PAR1,RFUN_NM,RPInt,AssessFreq, ImplementationClass,projections,rhoadjust,mincatch,varlimit,LandZero,CatchZero,EconType,EconName,EconData,MultiplierFile,OutputPriceFile,InputPriceFile,ProdEqn,ChoiceEqn
-ASAP,slide,SPR,0.4,NA,RSSBR,20,-1,hindcastMean,2,2,StandardFisheries,TRUE,FALSE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+ASAP,pstar,SPR,0.4,NA,RSSBR,20,-1,hindcastMean,2,2,StandardFisheries,TRUE,FALSE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
