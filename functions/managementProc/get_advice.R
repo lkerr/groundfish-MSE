@@ -138,14 +138,14 @@ get_advice <- function(stock){
         }
         Fnew1<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$F.report
         idx<-length(Fnew1)-peels
-        Fnew<-Fnew[idx]
+        Fnew<-Fnew1[idx]
         for (p in (y-peels):(y-1)){
           Fold<-readRDS(paste(rundir,'/', stockName, '_', r, '_', p,'.rdat', sep = ''))$F.report[idx]
           assign(paste('rhoF',p,sep=''),(Fold-Fnew)/Fnew)
         }
         Rnew1<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$N.age[,1]
         idx<-length(Rnew1)-peels
-        Rnew<-Rnew[idx]
+        Rnew<-Rnew1[idx]
         for (p in (y-peels):(y-1)){
           Rold<-readRDS(paste(rundir,'/', stockName, '_', r, '_', p,'.rdat', sep = ''))$N.age[idx,1]
           assign(paste('rhoR',p,sep=''),(Rold-Rnew)/Rnew)
