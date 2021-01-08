@@ -13,11 +13,6 @@ if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
-
-
-
-
-
 ####################These are temporary changes for testing ####################
 # econ_timer<-0
 #  mproc_bak<-mproc

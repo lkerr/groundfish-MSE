@@ -233,7 +233,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                    slxCv = stockEnv$slxC[y,], 
                    M = stockEnv$natM[y], 
                    waav = stockEnv$waa[y,])
-      if (F>10){browser()}
+      if (F>2){F<-2}
       }
       else{
       F <- get_F(x = stockEnv$catchproj[2],

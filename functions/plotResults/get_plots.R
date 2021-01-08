@@ -13,7 +13,6 @@
 get_plots <- function(x, stockEnv, dirIn, dirOut){
   
   with(stockEnv, {
-    
     # load some of the necessary variables for plotting by running the
     # setup file.
     source('modelParameters/set_om_parameters_global.R', local=TRUE)

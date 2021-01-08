@@ -37,7 +37,7 @@ histAssess <- TRUE
 nrep <- 1
 
 # First year to begin actual management
-fmyear <- 2017
+fmyear <- 2020
 
 # first year after the initial condition period. The initial condition period
 # simply fills up the arrays as necessary even before the burn-in period
@@ -147,7 +147,7 @@ production_vars_post=c("log_crew","log_trip_days","primary","secondary", "log_tr
 # Years after the management period begins to break up the results. For
 # example, c(10, 20) would result in plots from 0-10 years after the mgmnt
 # period begins, 10-20 years and 20 years to the end of the series.
-plotBrkYrs <- c(5, 10, 20)
+plotBrkYrs <- c(5, 10, 15)
 
 # Which sets of plots should be created? Set these objects to T/F
 
