@@ -5,6 +5,10 @@ output:
   pdf_document: default
 ---
 
+```{r setup}
+knitr::opts_knit$set(root.dir = '../../../')
+```
+
 ```{r, echo=FALSE, results='hide'}
 # Install the necessary functions
 ffiles <- list.files(path='documentation/stockRecruit/functions', 
@@ -62,9 +66,9 @@ codPar <- list(recDat = recT,
                # fix at starting value should have value of 0
                estPar = c(log_h = 1, 
                           log_R0 = 1, 
-                          beta1 = 1, 
+                          beta1 = 0, 
                           beta2 = 0, 
-                          beta3 = 0, 
+                          beta3 = 1, 
                           log_sigR = 1))
 
 parTab <- as.data.frame(round(do.call(cbind, codPar[3:6]), 2))
