@@ -42,7 +42,13 @@ if(useTemp == TRUE){
   Tanom <- rep(0, nburn + nrow(cmip_dwn))
 }
 
+# output the temperature anomalies that are actually used
+tAnomOut <- cbind(cmip_base,
+                  DOWN_T = cmip_dwn$T,
+                  TANOM = tail(Tanom, nrow(cmip_base)),
+                  TANOM_STD = anomStd)
 
+write.csv(tAnomOut, 'data/data_processed/tAnomOut.csv')
 
 
 # Determine the actual years based on the available temperature data
