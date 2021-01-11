@@ -184,18 +184,16 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
          mincatchv<-tail(read.csv('data/data_raw/AssessmentHistory/codGOM_Discard.csv'),10)
          colnames(mincatchv)<-c('Year','Catch')
          mincatchv$Catch<-mincatchv$Catch
-         mincatchv$Year<-155:164
+         mincatchv$Year<-157:168
          }
       if (stockNames == 'haddockGB'){
          mincatchv<-as.data.frame(cbind(155:164,stock$haddockGB$sumCW[(y-10):(y-1)]))
          colnames(mincatchv)<-c('Year','Catch')
       }
-      if (y>fmyearIdx){
-          for (i in fmyearIdx:(y-1)){
+      for (i in fmyearIdx:(y-1)){
           catchadd<-c(i,stockEnv$obs_sumCW[i])
           mincatchv<-rbind(mincatchv,catchadd)
           }
-      }
       if (catchproj[1]<min(tail(mincatchv$Catch,10))){catchproj[1]<-min(tail(mincatchv$Catch,10))}
       if (catchproj[2]<min(c(tail(mincatchv$Catch,9),catchproj[1]))){catchproj[2]<-min(c(tail(mincatchv$Catch,9),catchproj[1]))}
       }
