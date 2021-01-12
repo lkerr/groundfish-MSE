@@ -40,7 +40,7 @@ head(rec)
 Annual temperature anomaly data are also required. See the documentation function **tempAnomaly** for more information on how the anomaly data are calculated
 
 ```{r}
-TAnom <- read.csv('data/data_processed/TAnom.csv', header=TRUE)
+TAnom <- read.csv('data/data_processed/TAnomOut.csv', header=TRUE)
 head(TAnom)
 ```
 

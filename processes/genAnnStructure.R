@@ -48,7 +48,7 @@ tAnomOut <- cbind(cmip_base,
                   TANOM = tail(Tanom, nrow(cmip_base)),
                   TANOM_STD = anomStd)
 
-write.csv(tAnomOut, 'data/data_processed/tAnomOut.csv')
+write.csv(tAnomOut, 'data/data_processed/tAnomOut.csv', row.names = FALSE)
 
 
 # Determine the actual years based on the available temperature data
