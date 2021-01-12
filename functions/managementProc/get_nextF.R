@@ -106,7 +106,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     overfishing <- ifelse(tail(parpop$Fhat,1) > FThresh, 1, 0) #AEW
     
-    if(tolower(parmgt$HCR) == 'slide' |tolower(parmgt$HCR) == 'reject'){
+    if(tolower(parmgt$HCR) == 'slide'){
      
       F <- get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)['Fadvice']
 
@@ -184,16 +184,16 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
          mincatchv<-tail(read.csv('data/data_raw/AssessmentHistory/codGOM_Discard.csv'),10)
          colnames(mincatchv)<-c('Year','Catch')
          mincatchv$Catch<-mincatchv$Catch
-         mincatchv$Year<-157:168
+         mincatchv$Year<-159:168
          }
       if (stockNames == 'haddockGB'){
          mincatchv<-as.data.frame(cbind(155:164,stock$haddockGB$sumCW[(y-10):(y-1)]))
          colnames(mincatchv)<-c('Year','Catch')
       }
-      for (i in fmyearIdx:(y-1)){
+      for (i in (fmyearIdx-1):(y-1)){
           catchadd<-c(i,stockEnv$obs_sumCW[i])
           mincatchv<-rbind(mincatchv,catchadd)
-          }
+      }
       if (catchproj[1]<min(tail(mincatchv$Catch,10))){catchproj[1]<-min(tail(mincatchv$Catch,10))}
       if (catchproj[2]<min(c(tail(mincatchv$Catch,9),catchproj[1]))){catchproj[2]<-min(c(tail(mincatchv$Catch,9),catchproj[1]))}
       }
