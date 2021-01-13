@@ -240,6 +240,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                  M = stockEnv$natM[y], 
                  waav = stockEnv$waa[y,])
       catchproj<-stockEnv$catchproj
+      if (F>2){F<-2}
       }
     }
     if(tolower(parmgt$projections) == 'false'){catchproj<-NA}
