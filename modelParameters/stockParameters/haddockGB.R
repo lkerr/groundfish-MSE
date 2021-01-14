@@ -12,12 +12,15 @@ page <- 9
 #### Life history parameters ####
 
 # length-at-age parameters -- see get_lengthAtAge for including covariates
-laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=0)  #AEW
+#laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=0)#AEW
+laa_par <- c(Linf=64.15, K=0.395, t0=0.285, beta1=0)#MDM (NEFSC 2015; average of spring and fall)
 laa_typ <- 'vonB'
 
-# weight-length parameters
-waa_par <- c(exp(-11.73233), 3.059) 
-waa_typ <- 'aLb'
+# weight-at-age parameters
+#waa_par <- c(exp(-11.58571), 3.0205) #MDM (NEFSC 2015; annual length-weight)
+#waa_typ <- 'aLb'
+waa_par <- c(0.176, 0.397, 0.610, 0.850, 1.14, 	1.40, 1.60, 1.80, 2.26) #Average of last 5 years of weight matrices from 2019 stock assessment 
+waa_typ <- 'input'
 
 # maturity-length parameters
 mat_par <- c(0.21, 29.7) #AEW
