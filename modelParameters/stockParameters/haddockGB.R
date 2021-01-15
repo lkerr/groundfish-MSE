@@ -49,7 +49,7 @@ DecCatch<-FALSE
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
-selC <- c(0.01,0.03,0.09,0.27,0.48,0.69,1,0.72,0.72)
+selC <- c(0,0.05,0.18,0.34,0.53,0.69,0.87,1,0.79) #NEFSC 2019 Catch block 3
 selC_typ <- 'input'
 
 # Recruitment

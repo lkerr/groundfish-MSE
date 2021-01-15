@@ -33,12 +33,12 @@ mat_typ <- 'input'
 
 
 # natural mortality
-#M <- 0.2
-#M_typ <- 'const'
+M <- 0.2
+M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
-M <- 0.4
-M_typ <- 'ramp'
-M_mis<-TRUE
+#M <- 0.4
+#M_typ <- 'ramp'
+M_mis<-FALSE
 M_mis_val<-0.2
 
 # initial numbers at-age parameters
@@ -117,7 +117,7 @@ oe_sumCW <- 0.05
 oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 80
 oe_paaCN_typ <- 'multinomial'
-oe_sumIN <- 0.05
+oe_sumIN <- 0.1
 oe_sumIN_typ <- 'lognorm'
 oe_paaIN <- 100 #15
 oe_paaIN_typ <- 'multinomial'
