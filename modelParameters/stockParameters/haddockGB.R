@@ -23,8 +23,9 @@ waa_par <- c(0.176, 0.397, 0.610, 0.850, 1.14, 	1.40, 1.60, 1.80, 2.26) #Average
 waa_typ <- 'input'
 
 # maturity-length parameters
-mat_par <- c(0.21, 29.7) #AEW
-mat_typ <- 'logistic'
+#mat_par <- c(0.21, 29.7) #AEW
+mat_par <- c(0.04, 0.34, 0.85, 0.98, 1.00, 1.00, 1.00, 1.00, 1.00) # GOM haddock (NEFSC 2019)
+mat_typ <- 'input'
 
 # natural mortality
 M <- 0.2
