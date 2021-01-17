@@ -7,6 +7,7 @@ plotBHSteep <- function(rep, varyT=FALSE){
     newTANOM <- median(rep$TANOM)
   }else{
     newTANOM <- c(-2, -1, 0, 1, 2)
+    # newTANOM <- c(-0.5, -0.25, 0, 0.25, 0.5)
   }
   newSSBMT <- seq(0, max(rep$SSBMT)*1.25, length.out=100)
   Rhat = sapply(1:length(newTANOM),

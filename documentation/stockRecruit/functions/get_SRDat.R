@@ -1,4 +1,4 @@
-get_SRDat <- function(recDat, anomDat, stock){
+get_SRDat <- function(recDat, stock){
   
   # Subset the data to extract the stock of interest
   tmpRec <- subset(recDat, STOCK == stock)

@@ -42,11 +42,11 @@ codPar <- list(recDat = recT,
                stock = 'GBCOD',
             
                start = c(log_h = log(0.5),
-                         log_R0 = log(2e7),
-                         beta1 = 0.2,
+                         log_R0 = log(9.2e7),
+                         beta1 = 0,
                          beta2 = 0,
-                         beta3 = 0,
-                         log_sigR = log(0.3)),
+                         beta3 = -2,
+                         log_sigR = log(0.1)),
             
                lb = c(log_h = log(0.2), # LB should be >= 0.2
                        log_R0 = log(2e6),
@@ -56,7 +56,7 @@ codPar <- list(recDat = recT,
                        log_sigR = log(0.001)),
             
                ub = c(log_h = log(1.0),
-                       log_R0 = log(2e9),
+                       log_R0 = log(8e15),
                        beta1 = 1,
                        beta2 = 5,
                        beta3 = 5,
@@ -68,13 +68,19 @@ codPar <- list(recDat = recT,
                           log_R0 = 1, 
                           beta1 = 0, 
                           beta2 = 0, 
-                          beta3 = 1, 
+                          beta3 = 0, 
                           log_sigR = 1))
 
 parTab <- as.data.frame(round(do.call(cbind, codPar[3:6]), 2))
 parTab$stock <- codPar$stock
+
 print(parTab)
 
+```
+
+```{r}
+# ensure non-estimated values do not show up later
+codPar$start <- ifelse(codPar$estPar == 1, codPar$start, 0)
 ```
 
 

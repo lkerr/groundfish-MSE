@@ -29,7 +29,8 @@ Type objective_function<Type>::operator() ()
   
   // BH parameterization (H&W p. 286)
 
-  Rhat = a * SSBMT / (b + SSBMT) * exp(c * TANOM);
+  // Rhat = a * SSBMT / (b + SSBMT) * exp(c * TANOM);
+  Rhat = a * SSBMT / (1 + b*SSBMT) * exp(c * TANOM);
   
 
   // Negative log likelihood function

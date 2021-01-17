@@ -32,15 +32,18 @@ The models are fit in Template Model Builder. They could be fit in R using ```op
 Read in the stock and recruitment data. These are organized in a single file and the source of the data (e.g., SAW55) are included. Stock size and recruits are in the same year so for the analysis the data will need to be offset (i.e., age-1 recruitment in 2014 should be a function of SSB in 2013).
 
 ```{r}
-rec <- read.csv(file='data/data_raw/recruitment/codHadPolYTFCompiled.csv',
+# Read in version 2 from Mackenzie (this has updated cod recruitment info plus other versions of anomaly)
+rec <- read.csv(file='data/data_raw/recruitment/codHadPolYTFCompiled_v2MM.csv',
          header=TRUE)
+# limit anomaly confusion for now
+rec <- rec[,c('YEAR', 'SSBMT', 'REC000S', 'SSBRF0', 'STOCK', 'SOURCE')]
 head(rec)
 ```
 
 Annual temperature anomaly data are also required. See the documentation function **tempAnomaly** for more information on how the anomaly data are calculated
 
 ```{r}
-TAnom <- read.csv('data/data_processed/TAnomOut.csv', header=TRUE)
+TAnom <- read.csv('data/data_processed/tAnomOut.csv', header=TRUE)
 head(TAnom)
 ```
 
