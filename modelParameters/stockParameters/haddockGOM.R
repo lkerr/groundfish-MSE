@@ -19,7 +19,7 @@ laa_typ <- 'vonB'
 # weight-at-age parameters
 #waa_par <- c(exp(-11.58571), 3.0205) #MDM (NEFSC 2015; annual length-weight)
 #waa_typ <- 'aLb'
-waa_par <- c(0.176, 0.397, 0.610, 0.850, 1.14, 	1.40, 1.60, 1.80, 2.26) #Average of last 5 years of weight matrices from 2019 stock assessment 
+waa_par <- c(0.170,0.384,0.595,0.827,1.11,1.38,1.57,1.78,2.25) #Average of last 5 years of weight matrices from 2019 stock assessment 
 waa_typ <- 'input'
 
 # maturity-length parameters
@@ -35,7 +35,7 @@ M_mis<-FALSE
 #M_mis_val<-0.4
 
 # initial numbers at-age parameters
-initN_par <- c(nage = page, N0 = 2e5, F_full = 0.585, M = M)
+initN_par <- c(nage = page, N0 = 1e4, F_full = 0.05, M = M)
 initN_type <- 'expDecline'
 
 
@@ -66,10 +66,9 @@ R_typ <- 'HS'
 
 ## Survey information
 # slxI <- matrix(1, nrow=nyear, ncol=nage)
-selI <- c(1)
-selI_typ <- 'const'
+selI <- c(0.435,0.555,0.8,0.88,0.98,1,1,1,1) #Spring survey fit from 2019 assessment .rep
+selI_typ <- 'input'
 timeI <- 0.5 # when is the survey (as a proportion of the year)
-
 
 #### Stock assessment model parameters ####
 
@@ -93,7 +92,7 @@ oe_sumCW <- 0.05
 oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 1000
 oe_paaCN_typ <- 'multinomial'
-oe_sumIN <- 0.0574
+oe_sumIN <- 0.05
 oe_sumIN_typ <- 'lognorm'
 oe_paaIN <- 1000
 oe_paaIN_typ <- 'multinomial'
