@@ -58,7 +58,7 @@ get_ASAP <- function(stock){
     dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, N_rows), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN, N_rows)) #year, value, CV, by-age, sample size
     
     # Recruitment CV
-    dat_file$dat$recruit_cv <- matrix(1.6, nrow = N_rows, 1)
+    dat_file$dat$recruit_cv <- matrix(pe_RSA, nrow = N_rows, 1)
     
     #catch CV
     dat_file$dat$catch_cv <- matrix(0.05, nrow = N_rows, 1)

@@ -19,7 +19,7 @@ laa_typ <- 'vonB'
 # weight-at-age parameters
 #waa_par <- c(exp(-11.58571), 3.0205) #MDM (NEFSC 2015; annual length-weight)
 #waa_typ <- 'aLb'
-waa_par <- c(0.176, 0.397, 0.610, 0.850, 1.14, 	1.40, 1.60, 1.80, 2.26) #Average of last 5 years of weight matrices from 2019 stock assessment 
+waa_par <- c(0.170,0.384,0.595,0.827,1.11,1.38,1.57,1.78,2.25) #Average of last 5 years of weight matrices from 2019 stock assessment 
 waa_typ <- 'input'
 
 # maturity-length parameters
@@ -35,7 +35,7 @@ M_mis<-FALSE
 #M_mis_val<-0.4
 
 # initial numbers at-age parameters
-initN_par <- c(nage = page, N0 = 2e5, F_full = 0.585, M = M)
+initN_par <- c(nage = page, N0 = 1e4, F_full = 0.05, M = M)
 initN_type <- 'expDecline'
 
 
@@ -49,12 +49,12 @@ DecCatch<-FALSE
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
-selC <- c(0,0.05,0.18,0.34,0.53,0.69,0.87,1,0.79) #NEFSC 2019 Catch block 3
+selC <- c(0.000001,0.05,0.18,0.34,0.53,0.69,0.87,1,0.79) #NEFSC 2019 Catch block 3
 selC_typ <- 'input'
 
 # Recruitment
 ##HS with all recruitment values (what is used in stock assessment projections)##
-Rpar <- c(SSB_star = 75000, 
+Rpar <- c(SSB_star = 0, 
           cR = 1) # dont need to convert
 R_typ <- 'HS'
 
@@ -66,10 +66,9 @@ R_typ <- 'HS'
 
 ## Survey information
 # slxI <- matrix(1, nrow=nyear, ncol=nage)
-selI <- c(1)
-selI_typ <- 'const'
+selI <- c(0.550,0.650,0.910,1,1,1,1,1,1)
+selI_typ <- 'input'
 timeI <- 0.5 # when is the survey (as a proportion of the year)
-
 
 #### Stock assessment model parameters ####
 
@@ -89,11 +88,11 @@ caaInScalar <- 1000
 #### Error parameters ####
 
 # observation error levels
-oe_sumCW <- 0.05
+oe_sumCW <- 0.01
 oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 1000
 oe_paaCN_typ <- 'multinomial'
-oe_sumIN <- 0.0574
+oe_sumIN <- 0.05
 oe_sumIN_typ <- 'lognorm'
 oe_paaIN <- 1000
 oe_paaIN_typ <- 'multinomial'
@@ -104,6 +103,7 @@ highobserrec<-FALSE
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
 pe_R <- 0.5
+pe_RSA<-1.6
 pe_IA<-0.18
 
 # implementation error of fishing mortality

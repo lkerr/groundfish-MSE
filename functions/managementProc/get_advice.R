@@ -120,7 +120,8 @@ get_advice <- function(stock){
         for (p in (y-peels):(y-1)){
           Rold<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', p,'.rdat', sep = ''))$N.age[idx,1]      
           assign(paste('rhoR',p,sep=''),(Rold-Rnew)/Rnew)
-        }}
+        }
+        Catchnew1<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$catch.pred}
       if (Sys.info()['sysname'] == "Linux"){
         SSBnew1<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB
         idx<-length(SSBnew1)-peels
@@ -149,8 +150,8 @@ get_advice <- function(stock){
         for (p in (y-peels):(y-1)){
           Rold<-readRDS(paste(rundir,'/', stockName, '_', r, '_', p,'.rdat', sep = ''))$N.age[idx,1]
           assign(paste('rhoR',p,sep=''),(Rold-Rnew)/Rnew)
-        }}
-      Catchnew1<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$catch.pred
+        }
+        Catchnew1<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$catch.pred}
       plist <- mget(paste('rhoSSB',(y-peels):(y-1),sep=''))
       pcols <- do.call('cbind', plist)
       Mohns_Rho_SSB[y] <- rowSums(pcols) / peels
