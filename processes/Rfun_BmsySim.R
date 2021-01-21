@@ -19,7 +19,11 @@ Rfun_BmsySim <- list(
     
     
     parpop$Rpar['rho'] <- 0
+    if (stockNameList=='codGOM'&& stock$codGOM$M_mis=='TRUE'){
+    type2<-'Mis'}
+    else {type2<-'True'}
     gr <- get_recruits(type = type, 
+                 type2=type2,
                  par = parpop$Rpar, 
                  SSB = SSB,
                  TAnom = TAnom,

@@ -33,12 +33,12 @@ mat_typ <- 'input'
 
 
 # natural mortality
-M <- 0.2
-M_typ <- 'const'
+# <- 0.2
+#M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
-#M <- 0.4
-#M_typ <- 'ramp'
-M_mis<-FALSE
+M <- 0.4
+M_typ <- 'ramp'
+M_mis<-TRUE
 M_mis_val<-0.2
 
 # initial numbers at-age parameters
@@ -61,8 +61,8 @@ DecCatch<-FALSE
 # ### change select to L50 paramaterization like maturity
 #selC <- c(s0 = 3, s1 = 0.5)
 #selC_typ <- 'Logistic'
-selC <- c(0.013, 0.066, 0.271, 0.663, 0.912, 0.982, 0.997, 1, 1) #GOM cod AGEPRO M=0.2
-#selC <- c(0.009, 0.051, 0.241, 0.651, 0.917, 0.985, 0.997, 1, 1) #GOM cod AGEPRO M-ramp
+#selC <- c(0.013, 0.066, 0.271, 0.663, 0.912, 0.982, 0.997, 1, 1) #GOM cod AGEPRO M=0.2
+selC <- c(0.009, 0.051, 0.241, 0.651, 0.917, 0.985, 0.997, 1, 1) #GOM cod AGEPRO M-ramp
 selC_typ <- 'input'
 
 
@@ -73,12 +73,13 @@ selC_typ <- 'input'
 #           SSBRF0 = 0.01822) # calculated as S0/R0 (81202.9/4456870) (arbitrary because h = 1)
 # R_typ <- 'BHSteep'
 ##For Hockey-stick (Default) Option##
-Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
-      cR = 1,# dont need to convert
-      Rnyr= 20)#recruitment is drawn from the recruitment distribution of the last X years (x=Rnyr)
-#Rpar <- c(SSB_star = 7900, #mt  #from GOM COD 2019 MRAMP 
-          #cR = 1,
-          #Rnyr=20) # dont need to convert
+#Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
+      #cR = 1,# dont need to convert
+      #Rnyr= 20)#recruitment is drawn from the recruitment distribution of the last X years (x=Rnyr)
+Rpar <- c(SSB_star = 7900,
+          SSB_starF= 6300,#mt  #from GOM COD 2019 MRAMP 
+          cR = 1,
+          Rnyr=20) # dont need to convert
 R_typ <- 'HS'
 ###For BH SR with relationship with temperature###
 #R_typ <- 'BH'

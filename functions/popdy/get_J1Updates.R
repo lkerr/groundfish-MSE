@@ -25,12 +25,12 @@ get_J1Updates <- function(stock){
     SSB[y] <- sum(J1N[y-fage,] * mat[y,] * waa[y-fage,])
 
     if (y < fmyearIdx){
-    Rout <- get_recruits(type=R_typ, par=Rpar, S=SSB[y], block = 'early',
+    Rout <- get_recruits(type=R_typ, type2='True', par=Rpar, S=SSB[y], block = 'early',
                          TAnom=Tanom[y], pe_R = pe_R, R_ym1 = R[y-1],
                          Rhat_ym1 = Rhat[y-1])
     }
     if (y >= fmyearIdx){
-      Rout <- get_recruits(type=R_typ, par=Rpar, S=SSB[y], block = 'late',
+      Rout <- get_recruits(type=R_typ, type2='True', par=Rpar, S=SSB[y], block = 'late',
                            TAnom=Tanom[y], pe_R = pe_R, R_ym1 = R[y-1],
                            Rhat_ym1 = Rhat[y-1])
     }

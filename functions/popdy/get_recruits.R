@@ -56,7 +56,7 @@
 # Rhat_ym1: predicted recruitment from previous year
 
 
-get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
+get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
                          R_ym1=NULL, Rhat_ym1=NULL, stockEnv = stock){
 
   if(!type %in% c('BH', 'BHSteep', 'HS','IncFreq','Ricker')){
@@ -145,33 +145,32 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
   }
     
   else if (type == 'HS'){ 
-    assess_vals <- get_HistAssess(stock = stock[[i]])
     if (stockNames== 'codGOM'){
     Rhat <- with(as.list(par),{
-    
+      if (type2 == 'Mis'){SSBhinge<-SSB_starF}
+      else if (type2 == 'True'){SSBhinge<-SSB_star}
+      assess_vals <- get_HistAssess(stock = stock[[i]])
       if (block == 'early'){  # how to calculate historic recruitment, use first 10 assessment years
-        if (SSB >= SSB_star) {
+        if (SSB >= SSBhinge) {
           pred <- cR * remp(1, head(as.numeric(assess_vals$assessdat$R), 10))    
           
-        } else if (SSB < SSB_star){
-          pred <-  cR * (SSB/SSB_star) * remp(1, head(as.numeric(assess_vals$assessdat$R), 10))    
+        } else if (SSB < SSBhinge){
+          pred <-  cR * (SSB/SSBhinge) * remp(1, head(as.numeric(assess_vals$assessdat$R), 10))    
           
         }
         
     } else if (block == 'late'){  # how to calculate projected recruitment using last 20 assessment years
-      if (SSB >= SSB_star) {
+      if (SSB >= SSBhinge) {
        pred <- cR * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
 
-    } else if (SSB < SSB_star){
-      pred <-  cR * (SSB/SSB_star) * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
-
-    }
+    } else if (SSB < SSBhinge){
+      pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
     }
     return(pred)
-       })
-    }
+    }})}
     if (stockNames== 'haddockGB'){
       Rhat <- with(as.list(par),{
+        assess_vals <- get_HistAssess(stock = stock[[i]])
       if (SSB >= SSB_star) {
         pred <- cR * remp(1, as.numeric(assess_vals$assessdat$R))
         
