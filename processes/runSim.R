@@ -55,6 +55,7 @@ for(r in 1:nrep){
 
         #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached, which sets of coefficients to use, and which prices to use
         if(mproc$ImplementationClass[m]=="Economic"){
+          
          source('processes/setupEconType.R')
         }
     # Initialize stocks and determine burn-in F
