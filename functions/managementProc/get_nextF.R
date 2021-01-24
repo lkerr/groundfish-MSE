@@ -137,7 +137,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       else if (y==fmyearIdx & overfished== 0){F<-FThresh}
       else if (y>fmyearIdx & overfished== 1){F<-FrefRPvalue*0.7}
       else if (y>fmyearIdx & overfished== 0){
-        if(any(stockEnv$OFdStatus==1)& tail(stockEnv$res$SSB,1)<BrefRPvalue){F<-FrefRPvalue*0.7}
+        if(any(stockEnv$OFdStatus==1,na.rm=T)& tail(stockEnv$res$SSB,1)<BrefRPvalue){F<-FrefRPvalue*0.7}
         else{F<-FThresh}}
     }
     else if(tolower(parmgt$HCR) == 'pstar'){

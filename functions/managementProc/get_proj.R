@@ -6,7 +6,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       startHCM <- parmgt$FREF_PAR0
       endHCM <- parmgt$FREF_PAR1
     }else if(type == 'BREF'){
-      startHCM <- parmgt$BREF_PAR0
+      startHCM <- -parmgt$BREF_PAR0
       endHCM <- parmgt$BREF_PAR1
     }
     else if(type=='current'){
@@ -139,14 +139,17 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                                      parpop$M[nage])
     ## Recruitment
     # sd of historical R estimates
+
       N[y,1] <- Rfun(type = stockEnv$R_typ,
                      parpop = parpop, 
                      parenv = parenv, 
+                     parmgt = parmgt,
                      SSB = c(N[y-1,]) %*% c(parpop$waa* parpop$mat),
                      sdR = stockEnv$pe_R,
                      TAnom = Tanom[y],
                      Rest = Rest)
   }
+
   # Get weight-at-age
   Waa <- sweep(N, MARGIN=2, STATS=parpop$waa, FUN='*')
   
