@@ -44,7 +44,7 @@ initN_type <- 'expDecline'
 qC <- 0.0001
 qI <- 0.0001
 
-DecCatch<-FALSE
+DecCatch<-TRUE
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
@@ -98,7 +98,7 @@ oe_paaIN_typ <- 'multinomial'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
-highobserrec<-TRUE
+highobserrec<-FALSE
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
 pe_R <- 0.5
