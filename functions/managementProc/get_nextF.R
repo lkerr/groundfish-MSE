@@ -65,8 +65,16 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       
  
     } else { 
-   
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpop, 
+                     parenv = parenv, Rfun_lst = Rfun_BmsySim, 
+                     stockEnv = stockEnv)
+    parmgtT<-parmgt
+    parmgtT$FREF_PAR1<-parmgtT$BREF_PAR1<-NA
+    parmgtT$RFUN_NM<-'forecast'
+    parpopT<-parpop
+    parpopT$J1N<-stock$codGOM$J1N[1:(y-1),]
+    parpopT$selC<-stock$codGOM$selC
+    FrefT <- get_FBRP(parmgt = parmgtT, parpop = parpopT, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
                      stockEnv = stockEnv)
 
@@ -74,9 +82,11 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     # FMSY level (before any temperature projections). This is consistent
     # with how the Fmsy is calculated.
     parpopUpdate <- parpop
+    parpopUpdateT <- parpopT
     if(parmgt$RFUN_NM == 'forecast'){
       
       parpopUpdate$J1N <- Fref$equiJ1N_MSY
+      parpopUpdateT$J1N <- FrefT$equiJ1N_MSY
       
     }
     
@@ -84,13 +94,21 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
     
+    BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT, 
+                     parenv = parenv, Rfun_lst = Rfun_BmsySim,
+                     FBRP = FrefT[['RPvalue']], stockEnv = stockEnv)
+    
     }
     if(evalRP){
       FrefRPvalue <- Fref[['RPvalue']]
       BrefRPvalue <- Bref[['RPvalue']]
+      FrefTRPvalue <- FrefT[['RPvalue']]
+      BrefTRPvalue <- BrefT[['RPvalue']]
     }else{
       FrefRPvalue <- RPlast[1]
       BrefRPvalue <- RPlast[2]
+      FrefTRPvalue <- FrefT[['RPvalue']]
+      BrefTRPvalue <- BrefT[['RPvalue']]
     }
     
     # Determine whether the population is overfished and whether 
@@ -104,7 +122,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     overfished <- ifelse(tail(parpop$SSBhat,1) < BThresh, 1, 0)
     
-    overfishing <- ifelse(tail(parpop$Fhat,1) > FThresh, 1, 0) #AEW
+    overfishing <- ifelse(tail(parpop$Fhat,1) > FrefRPvalue, 1, 0) #MDM
     
     if(tolower(parmgt$HCR) == 'slide'){
      
@@ -120,18 +138,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       F <- FThresh
       
     }
-    else if(tolower(parmgt$HCR) == 'xyrconstc'){
-      if ((y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) == 0){
-        F <- FThresh
-      }
-      else{
-        F <- get_F(x = stock$codGOM$quota,
-                         Nv = stock$codGOM$J1N[y,], 
-                         slxCv = stock$codGOM$slxC[y,], 
-                         M = stock$codGOM$natM[y], 
-                         waav = stock$codGOM$waa[y,])
-      }
-      }
     else if(tolower(parmgt$HCR) == 'step'){
       if (y==fmyearIdx & overfished== 1){F<-FrefRPvalue*0.7}
       else if (y==fmyearIdx & overfished== 0){F<-FThresh}
@@ -245,7 +251,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     }
     if(tolower(parmgt$projections) == 'false'){catchproj<-NA}
   
-    out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue), 
+    out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue,FrefTRPvalue, BrefTRPvalue), 
                 ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
                 OFgStatus = overfishing, catchproj=catchproj) #AEW
     

@@ -1,8 +1,7 @@
 
-
 # Read in the temperature data
 cmip5 <- read.csv(file = 'data/data_raw/NEUS_CMIP5_annual_meansLong.csv',
-                    header=TRUE)
+                  header=TRUE)
 
 # manipulate data to get desired percentile
 cmip_base <- get_temperatureSeries(cmip5, 
@@ -42,7 +41,13 @@ if(useTemp == TRUE){
   Tanom <- rep(0, nburn + nrow(cmip_dwn))
 }
 
+# output the temperature anomalies that are actually used
+tAnomOut <- cbind(cmip_base,
+                  DOWN_T = cmip_dwn$T,
+                  TANOM = tail(Tanom, nrow(cmip_base)),
+                  TANOM_STD = anomStd)
 
+write.csv(tAnomOut, 'data/data_processed/tAnomOut.csv', row.names = FALSE)
 
 
 # Determine the actual years based on the available temperature data
@@ -56,4 +61,3 @@ yrs_temp <- firstYear:max(cmip5$year)
 
 # The first year that actual management will begin
 fmyearIdx <- which(yrs == fmyear)
-

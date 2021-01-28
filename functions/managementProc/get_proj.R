@@ -61,8 +61,8 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   # init <- meanR * exp(-ages * F_val*parpop$sel - as.numeric(parpop$M))
    
   # The initial population is the estimates in the last year
-  init <- tail(parpop$J1N, 1)
-  
+  init <- tail(parpop$J1N,1)
+
   if(type=='current'){
     suminit<-sum(init)
     if (mproc$rhoadjust==TRUE & y>fmyearIdx){
@@ -139,7 +139,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                                      parpop$M[nage])
     ## Recruitment
     # sd of historical R estimates
-
+      parpop$Rpar_mis<-stockEnv$Rpar_mis
       N[y,1] <- Rfun(type = stockEnv$R_typ,
                      parpop = parpop, 
                      parenv = parenv, 

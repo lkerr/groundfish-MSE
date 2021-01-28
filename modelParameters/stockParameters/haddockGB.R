@@ -11,19 +11,16 @@ page <- 9
 #### Life history parameters ####
 
 # length-at-age parameters -- see get_lengthAtAge for including covariates
-#laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=0)#AEW
-laa_par <- c(Linf=64.15, K=0.395, t0=0.285, beta1=0)#MDM (NEFSC 2015; average of spring and fall)
+laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=5)  #AEW
 laa_typ <- 'vonB'
 
 # weight-at-age parameters
-#waa_par <- c(exp(-11.58571), 3.0205) #MDM (NEFSC 2015; annual length-weight)
-#waa_typ <- 'aLb'
-waa_par <- c(0.170,0.384,0.595,0.827,1.11,1.38,1.57,1.78,2.25) #Average of last 5 years of weight matrices from 2019 stock assessment 
+waa_par <- c(0.2215,0.342,0.6385,0.7365,0.956,0.9915,1.287,1.3335,1.514) #Average of catch waa and ssb waa Used in NEFSC 2019 projections
 waa_typ <- 'input'
 
 # maturity-length parameters
 #mat_par <- c(0.21, 29.7) #AEW
-mat_par <- c(0.04, 0.34, 0.85, 0.98, 1.00, 1.00, 1.00, 1.00, 1.00) # GOM haddock (NEFSC 2019)
+mat_par <- c(0.0338,0.2592,0.7464,0.9532,0.9928,0.9988,1,1,1) # GB haddock, average of recent 5 years (NEFSC 2019)
 mat_typ <- 'input'
 
 # natural mortality
@@ -34,9 +31,8 @@ M_mis<-FALSE
 #M_mis_val<-0.4
 
 # initial numbers at-age parameters
-initN_par <- c(nage = page, N0 = 1e4, F_full = 0.2, M = M)
+initN_par <- c(nage = page, N0 = 4e4, F_full = 0.2, M = M)
 initN_type <- 'expDecline'
-
 
 #### Fishery parameters ####
 
@@ -44,16 +40,16 @@ initN_type <- 'expDecline'
 qC <- 0.0001
 qI <- 0.0001
 
-DecCatch<-TRUE
+DecCatch<-FALSE
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
-selC <- c(0.000001,0.05,0.18,0.34,0.53,0.69,0.87,1,0.79) #NEFSC 2019 Catch block 3
+selC <- c(0.012,0.031,0.106,0.313,0.415,0.426,1.000,0.614,0.614) #Used in Projections (NEFSC 2019)
 selC_typ <- 'input'
 
 # Recruitment
 ##HS with all recruitment values (what is used in stock assessment projections)##
-Rpar <- c(SSB_star = 0, 
+Rpar <- c(SSB_star = 75000, #Used in projections (NEFSC 2019)
           cR = 1) # dont need to convert
 R_typ <- 'HS'
 
@@ -64,9 +60,8 @@ R_typ <- 'HS'
 #### Survey parameters ####F
 
 ## Survey information
-# slxI <- matrix(1, nrow=nyear, ncol=nage)
-selI <- c(0.550,0.650,0.910,1,1,1,1,1,1)
-selI_typ <- 'input'
+selI <- c(1)
+selI_typ <- 'const'
 timeI <- 0.5 # when is the survey (as a proportion of the year)
 
 #### Stock assessment model parameters ####
@@ -91,7 +86,7 @@ oe_sumCW <- 0.01
 oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 1000
 oe_paaCN_typ <- 'multinomial'
-oe_sumIN <- 0.05
+oe_sumIN <- 0.04
 oe_sumIN_typ <- 'lognorm'
 oe_paaIN <- 1000
 oe_paaIN_typ <- 'multinomial'

@@ -17,14 +17,17 @@ Rfun_BmsySim <- list(
   
   forecast = function(type, parpop, parenv, SSB, TAnom, sdR, ...){
     
-    
-    parpop$Rpar['rho'] <- 0
-    if (stockNameList=='codGOM'&& stock$codGOM$M_mis=='TRUE'){
+    Rpar<-parpop$Rpar
+    if (stockNameList=='codGOM'&& stock$codGOM$M_mis=='TRUE' && exists("y")=='TRUE'){
     type2<-'Mis'}
     else {type2<-'True'}
+    if (stockNameList=='codGOM'&& stock$codGOM$R_mis=='TRUE' && exists("y")=='TRUE'){
+      type<-'HS'
+      Rpar<-parpop$Rpar_mis}
+    Rpar['rho'] <- 0
     gr <- get_recruits(type = type, 
                  type2=type2,
-                 par = parpop$Rpar, 
+                 par = Rpar, 
                  SSB = SSB,
                  TAnom = TAnom,
                  pe_R = sdR,

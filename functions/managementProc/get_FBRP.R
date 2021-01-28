@@ -56,7 +56,6 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
       parmgtTemp <- parmgt
       parmgtTemp$FREF_PAR0 <- parmgtTemp$BREF_PAR0
       parmgtTemp$FREF_PAR1 <- parmgtTemp$BREF_PAR1
-          
       simAtF <- get_proj(type = 'FREF',
                  parmgt = parmgtTemp, 
                  parpop = parpop, 
@@ -92,7 +91,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     parenvTemp <- parenv
     parenvTemp$Tanom <- rep(parenv$Tanom[parenv$y],
                             times = length(parenv$Tanom))
-    
+
     simAtF <- lapply(1:length(candF), function(x){
                      get_proj(type = 'FREF',
                               parmgt = parmgt, 

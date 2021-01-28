@@ -81,6 +81,7 @@ get_advice <- function(stock){
                        SSBhat = res$SSB,
                        J1N = tail(res$N.age,1),                 ### or use J1B reported in biomass 
                        Rpar = Rpar,
+                       Rpar_mis= Rpar_mis,
                        Fhat = tail(res$F.report, 1))
       })
     }

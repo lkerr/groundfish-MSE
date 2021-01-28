@@ -155,6 +155,8 @@ get_fillRepArrays <- function(stock){
     omval$meanSizeIN[r,m,] <- meanSizeIN
     omval$FPROXY[r,m,] <- RPmat[,1]
     omval$SSBPROXY[r,m,] <- RPmat[,2]
+    omval$FPROXYT[r,m,] <- RPmat[,3]
+    omval$SSBPROXYT[r,m,] <- RPmat[,4]
     if(y == nyear){
       # Determine whether additional years should be added on to the
       # beginning of the series

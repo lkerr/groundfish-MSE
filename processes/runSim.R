@@ -15,6 +15,7 @@ if(runClass != 'HPCC'){
 
 ####################These are temporary changes for testing ####################
 # econ_timer<-0
+
 #  mproc_bak<-mproc
 #
 # mproc<-mproc_bak[5:5,]
@@ -75,7 +76,6 @@ for(r in 1:nrep){
       for(i in 1:nstock){
         stock[[i]] <- get_J1Updates(stock = stock[[i]])
       }
-
 
       source('processes/withinYearAdmin.R')
       begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
@@ -161,6 +161,7 @@ for(r in 1:nrep){
 
 
 } #End rep loop
+
 top_loop_end<-Sys.time()
 big_loop<-top_loop_end-top_loop_start
 big_loop

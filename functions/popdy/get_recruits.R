@@ -148,9 +148,10 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
     if (stockNames== 'codGOM'){
     Rhat <- with(as.list(par),{
       if (type2 == 'Mis'){SSBhinge<-SSB_starF}
-      else if (type2 == 'True'){SSBhinge<-SSB_star}
+      else if (type2 == 'True'){
+        SSBhinge<-SSB_star}
       assess_vals <- get_HistAssess(stock = stock[[i]])
-      if (block == 'early'){  # how to calculate historic recruitment, use first 10 assessment years
+      if (y<=fmyearIdx){  # how to calculate historic recruitment, use first 10 assessment years
         if (SSB >= SSBhinge) {
           pred <- cR * remp(1, head(as.numeric(assess_vals$assessdat$R), 10))    
           
@@ -159,12 +160,12 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
           
         }
         
-    } else if (block == 'late'){  # how to calculate projected recruitment using last 20 assessment years
+    } else if (y>fmyearIdx){ 
+# how to calculate projected recruitment using last 20 assessment years
       if (SSB >= SSBhinge) {
-       pred <- cR * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
-
+       pred <- cR * remp(1, tail(as.numeric(stockEnv$codGOM$res$N.age[,1]), Rnyr))
     } else if (SSB < SSBhinge){
-      pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
+      pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(stockEnv$codGOM$res$N.age[,1]), Rnyr))
     }
     return(pred)
     }})}
