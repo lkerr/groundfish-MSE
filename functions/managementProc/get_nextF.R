@@ -186,22 +186,9 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
      catchproj<-c(stockEnv$obs_sumCW[y-1],stockEnv$obs_sumCW[y-1])
         }} 
       if(tolower(parmgt$mincatch) == 'true'){
-      if (stockNames == 'codGOM'){
-         mincatchv<-tail(read.csv('data/data_raw/AssessmentHistory/codGOM_Discard.csv'),10)
-         colnames(mincatchv)<-c('Year','Catch')
-         mincatchv$Catch<-mincatchv$Catch
-         mincatchv$Year<-159:168
-         }
-      if (stockNames == 'haddockGB'){
-         mincatchv<-as.data.frame(cbind(155:164,stock$haddockGB$sumCW[(y-10):(y-1)]))
-         colnames(mincatchv)<-c('Year','Catch')
-      }
-      for (i in (fmyearIdx-1):(y-1)){
-          catchadd<-c(i,stockEnv$obs_sumCW[i])
-          mincatchv<-rbind(mincatchv,catchadd)
-      }
-      if (catchproj[1]<min(tail(mincatchv$Catch,10))){catchproj[1]<-min(tail(mincatchv$Catch,10))}
-      if (catchproj[2]<min(c(tail(mincatchv$Catch,9),catchproj[1]))){catchproj[2]<-min(c(tail(mincatchv$Catch,9),catchproj[1]))}
+        mincatchv<-tail(stockEnv$sumCW[1:(y-1)],10)
+      if (catchproj[1]<min(mincatchv)){catchproj[1]<-min(tail(mincatchv$Catch,10))}
+      if (catchproj[2]<min(c(tail(mincatchv,9),catchproj[1]))){catchproj[2]<-min(c(tail(mincatchv$Catch,9),catchproj[1]))}
       }
       if(tolower(mproc$varlimit) == 'true'){
         if(((catchproj[1]-(stockEnv$sumCW[y-1]*stockEnv$ob_sumCW))/catchproj[1])*100<(-20)){

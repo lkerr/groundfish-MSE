@@ -129,8 +129,6 @@ oe_paaIN_typ <- 'multinomial'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
-highobserrec<-FALSE
-
 # process error levels  #####o##############################  !!!!!!!!!!!!!!
 pe_R <- 0.01 # cannot be zero 
 pe_RSA<- 0.5 

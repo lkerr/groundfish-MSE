@@ -33,6 +33,8 @@ For general information on GitHub workflows and how to use branches, see [ground
 
 * **realized_catch**: Branch dedicated to developing and integrating the alternative implementations of the management advice, i.e., producing the realized catch given the harvest regulation.  
 
+* **MDM_new_functions**: Branch dedicated to developing additional harvest control rules, stock assessment methods, stock assessment misspecfications, and operating models. 
+
 
 --------
 ## Stale / deleted branches
