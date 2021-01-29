@@ -1,17 +1,14 @@
 ## ---- SIMULATION PARAMETERS ---- ##
 
-
 #### Debugging ####
 
 # Debug using simple temperature trend that reduces variance? (T/F)
 simpleTemperature <- FALSE
 
-
 # Which management procedures csv do you want to read:
 mprocfile<-"mproc.csv"
 #mprocfile<-"mprocTest.csv"
 #mprocfile<-"mprocEcon.csv"
-
 
 #### Stock parameters ####
 
@@ -20,16 +17,14 @@ mprocfile<-"mproc.csv"
 # stockExclude variable. Do not include the extension.R. For example,
 # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
-# Available stocks: haddockGB, haddockGOM, codGOM, codGB_Error, pollock, yellowtailflounderGB
+# Available stocks: haddockGB, codGOM, codGB_Error, pollock, yellowtailflounderGB
 stockExclude <- c('haddockGB', 'codGB_Error', 'pollock', 'yellowtailflounderGB')
-
 
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data
 # just fishing mortality for now
 
 histAssess <- TRUE
-
 
 #### Structural parameters ####
 
@@ -87,7 +82,6 @@ anomFun <- median
 
 # nyear <- nrow(cmip5) + nburn
 
-
 #### Management ####
 
 # Scalars to relate the calculated values of reference points to the
@@ -95,9 +89,6 @@ anomFun <- median
 # these can be changed to examine sensitivity.
 BrefScalar <- 0.5
 FrefScalar <- 0.75
-
-##Do you want to calculate the true Fmsy?##
-calcfmsytrue<-FALSE
 
 #### Helpful parameters ####
 # Scalars to convert things
@@ -111,7 +102,6 @@ last_econ_index<-last_econ_yr-first_econ_yr+1
 
 econ_data_start<-2010
 econ_data_end<-2015
-
 
 ##############Stocks in the Economic Model #############################
 spstock2s<-c("americanlobster","americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","monkfish", "other","pollock","redsilveroffshorehake","redfish","seascallop","skates","spinydogfish","squidmackerelbutterfishherring","summerflounder","whitehake","winterflounderGB","winterflounderGOM","witchflounder","yellowtailflounderCCGOM", "yellowtailflounderGB","yellowtailflounderSNEMA")
@@ -129,9 +119,6 @@ spstock_equation_post<-spstock_equation_pre
 choice_equation_post<-choice_equation_pre
 ############## End Independent variables in the targeting equation ##########################
 
-
-
-
 ##############Independent variables in the Production equation ##########################
 ### If there are different the equations, you can set there up here, then use their suffix in the mproc file to use these new targeting equations
 ### example, using ProdEqn=tiny in the mproc file and uncommenting the next  line will be regression with 2 RHS variables and no constant.
@@ -140,8 +127,6 @@ choice_equation_post<-choice_equation_pre
 production_vars_pre=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","constant")
 production_vars_post=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","log_sector_acl", "constant")
 ############## End Independent variables in the Production equation ##########################
-
-
 
 #### Output ####
 # Years after the management period begins to break up the results. For
@@ -165,8 +150,6 @@ plotDrivers <- FALSE
 plotTrajInd <- FALSE     # samples of individual trajectories
 plotTrajBox <- FALSE     # boxplots of trajectories
 plotTrajSummary <- TRUE  # summary statistics
-
-
 
 #how many years before writing out the results to csv? 6 corresponds to 1 "econ" simulation (2010-2015).  Larger will go faster (less overhead) but you lose work if something crashes,
 savechunksize<-10

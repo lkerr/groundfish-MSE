@@ -9,7 +9,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       startHCM <- -parmgt$BREF_PAR0
       endHCM <- parmgt$BREF_PAR1
     }
-    else if(type=='current'){
+    else if(type=='current'){#'current' being the current method for New England groundfish which uses projections in the catch advice 
       startFCST <- parenv$y
       endFCST <- parenv$y + 2
     }
@@ -139,7 +139,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                                      parpop$M[nage])
     ## Recruitment
     # sd of historical R estimates
-      parpop$Rpar_mis<-stockEnv$Rpar_mis
+      parpop$Rpar_mis<-stockEnv$Rpar_mis#will use incorrect recruitment assumption if set in model parameters script
       N[y,1] <- Rfun(type = stockEnv$R_typ,
                      parpop = parpop, 
                      parenv = parenv, 

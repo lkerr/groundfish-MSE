@@ -1,9 +1,10 @@
+#Function to calculate F from the P* HCR
 pstar<-function(maxp,relB,parmgtproj,parpopproj,parenv,Rfun,stockEnv,FrefRPvalue){
   # Code adapted from John Wiedenmann
   # Mid Atlantic used a ramped control rule to have the target P* change
   # with biomass relative to SSBmsy
   # maxp is the max P* target above SSBmsy (MAFMC used 0.4 previouly)
-  calc_pstar = function(maxp, relB)
+  calc_pstar = function(maxp, relB)#function to calculate P* based on SSB/SSBmsy
   {
     if(relB>=1) #at asymptote
     {
@@ -21,7 +22,8 @@ pstar<-function(maxp,relB,parmgtproj,parpopproj,parenv,Rfun,stockEnv,FrefRPvalue
     }
     return(P)
   }
-  catchproj<-matrix(ncol=2,nrow=100)
+  
+  catchproj<-matrix(ncol=2,nrow=100)#run projections to get median catch at OFL
   for (i in 1:100){
     catchproj[i,]<-get_proj(type = 'current',
                            parmgt = parmgtproj, 
@@ -34,8 +36,11 @@ pstar<-function(maxp,relB,parmgtproj,parpopproj,parenv,Rfun,stockEnv,FrefRPvalue
                            stockEnv = stockEnv)$sumCW
   }
   OFL<-median(catchproj[,1])
-  P<-calc_pstar(maxp,relB)
-  CV<-1
+  
+  P<-calc_pstar(maxp,relB)#calculate P* 
+  
+  CV<-1# assume a CV of 1
+  
   # Calculate what the ABC should be given the target P* 
   calc_ABC <- function(OFL, P, CV)
   {
@@ -46,6 +51,9 @@ pstar<-function(maxp,relB,parmgtproj,parpopproj,parenv,Rfun,stockEnv,FrefRPvalue
     return(qlnorm(P, meanlog = log(OFL), sdlog = sd))
   }
   catch<-calc_ABC(OFL,P,CV)
+  
+  #Estimate F based on the catch 
   F <- get_estF(catchproj=catch,parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv)
   return(F)
+  
   }

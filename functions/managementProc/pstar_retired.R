@@ -1,3 +1,5 @@
+#Function to calulcate P* without assuming a CV of 1. The catch distribution ends up being quite narrow,
+#because there is not a lot of uncertainty assumed in the projections. So the funciton is retired. 
 pstar_retired<-function(OFL,parmgtproj,parpopproj,parenv,Rfun,stockEnv,level){
   getFpstar <- function(logF){
     F <- exp(logF)

@@ -1,8 +1,6 @@
-
-
 ## recruitment functions
 
-# The function returns the recruits. Currently just BH but easily expanded.
+# The function returns the recruits. 
 # Includes an AR1 process if desired -- for this option must include both
 # the desired level of correlation and the previous year's observed and
 # expected values (for a residual).
@@ -11,39 +9,26 @@
 # 
 #      *"BH" time series implementation of the Beverton Holt model
 #       (i.e., that includes an autocorrelative component)
-#       R = a * S / (b + S) * exp(c * TAnom_y) * 
+#       R = a * S / (b + S) * exp(g * TAnom_y) * 
 #           exp(rho*(R_ym1-Rhat_ym1) + Rsig);
 #       where R_ym1-Rhat_ym1 is the residual from the previous year.
 #       par['a']: Ricker a
 #       par['b']: Ricker b
-#       par['c']: temperature effect c
+#       par['g']: temperature effect g
 #       par['rho']: autocorrelative component rho
 #       R_ym1: observed recruitment from previous year
 #       Rhat_ym1: predicted recruitment from previous year
 #
-#      
 #      *'HS' AGEPRO implementation of the empirical cummulative 
 #       distribution function with linear decline to zero; Recruitment model 21
 #       need to have input of historic recruitment in .csv file 
 #       in /data/data_raw/AssessmentHistory/ must have same name as stockName
 #       use only terminal 20 historic years
-#       if SSB >= SSB_star
-#       R = cR * remp(1, as.numeric(assess_vals$assessdat$R))
-#       if SSB < SSB_star
-#       R = cR *SSB/SSB_star * remp(1, as.numeric(assess_vals$assessdat$R))
 #       SSB_star: hockey-stick hinge
-#       cR: conversion coefficient to absolute numbers
 #
-#
-#      
 # par: the model parameters (see descriptions of type above). par must
 #      be a matrix of four columns with named rows that correspond
-#      to the parameter names listed under 'type' above. Column 1 must
-#      be the parameter estimate, column 2 must be the standard error,
-#      and columen 3 and 4 must be the lower and upper parameter bounds,
-#      respectively. For no parameter uncertainty, set the standard error
-#      column equal to zero. If estimates need not be specifically
-#      bounded (e.g., temperature coefficient) then use [-Inf,Inf]
+#      to the parameter names listed under 'type' above.
 # 
 # S: the total spawning stock size -- mature individuals in weight
 # 
@@ -55,11 +40,10 @@
 #       
 # Rhat_ym1: predicted recruitment from previous year
 
-
 get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
                          R_ym1=NULL, Rhat_ym1=NULL, stockEnv = stock){
 
-  if(!type %in% c('BH', 'BHSteep', 'HS','IncFreq','Ricker')){
+  if(!type %in% c('BH', 'BHSteep', 'HS')){
     stop(paste('get_recruits: check spelling of R_typ in individual stock 
                parameter file for', stockNames[i]))
   }
@@ -110,7 +94,9 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
     Rhat <- (par['a']*SSB)/(1+(par['b']*SSB))*exp(par['g']*TAnom_y)
     Rhat <- Rhat*1000
 
-  }else if(type == 'BHSteep'){
+  }
+    
+  else if(type == 'BHSteep'){
   
     # Note that the steepness version of the stock-recruit model requires SSBR
     # at F=0 which is a function of selectivity. Percieved selectivity can
@@ -182,24 +168,14 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
       return(pred)
       })}
   }
-  else if (type == 'IncFreq'){ 
-    Rhat <- par['a'] * SSB * exp(-par['b'] * SSB)*1000
-    }
-  else if (type == 'Ricker'){
-    Rhat <- (par['a'] * SSB * exp(-par['b'] * SSB) * 
-      exp(TAnom_y * par['g']))*1000
-  }
+    
   # Autocorrelation component
   ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
   
   # Random error component
-  if (type != 'IncFreq'){
-  rc <- rnorm(1, mean = 0, sd = pe_R)
-  }
-  else{
   pe_R<-pe_R+(1.5*TAnom_y)
   xi<-1-(0.1*TAnom_y)
-  rc<-rsnorm(1,mean=0,sd=pe_R,xi=xi)}
+  rc<-rsnorm(1,mean=0,sd=pe_R,xi=xi)
   R <- Rhat * exp(ac + rc)
   out <- list(Rhat = unname(Rhat), R = unname(R))
 
