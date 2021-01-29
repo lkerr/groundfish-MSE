@@ -198,8 +198,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
       if(tolower(parmgt$mincatch) == 'true'){
         mincatchv<-tail(stockEnv$sumCW[1:(y-1)],10)
-      if (catchproj[1]<min(mincatchv)){catchproj[1]<-min(tail(mincatchv$Catch,10))}
-      if (catchproj[2]<min(c(tail(mincatchv,9),catchproj[1]))){catchproj[2]<-min(c(tail(mincatchv$Catch,9),catchproj[1]))}
+      if (catchproj[1]<min(mincatchv)){catchproj[1]<-min(mincatchv)}
+      if (catchproj[2]<min(c(tail(mincatchv,9),catchproj[1]))){catchproj[2]<-min(c(tail(mincatchv,9),catchproj[1]))}
       }
       if(tolower(mproc$varlimit) == 'true'){
         if(((catchproj[1]-(stockEnv$sumCW[y-1]*stockEnv$ob_sumCW))/catchproj[1])*100<(-20)){
