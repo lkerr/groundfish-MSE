@@ -1,16 +1,12 @@
 ##################################################################################
 ### function to modify ASAP .dat file, run executable, and produce results object
 ###
-
-
-
 get_ASAP <- function(stock){
   
   out <- within(stock, {
 
     # read in assessment .dat file and modify accordingly
     dat_file <- ReadASAP3DatFile(paste('assessment/ASAP/', stockName, ".dat", sep = ''))
-    
     
     ### modify for each simulation/year
     
@@ -31,11 +27,12 @@ get_ASAP <- function(stock){
     
     #natural mortality
     dat_file$dat$M <- matrix(get_dwindow(natM, styear, endyear), nrow = N_rows, ncol = page)
-    if (M_mis==TRUE){
+    if (M_mis==TRUE){#If there is a natural mortality missepcification, the stock assessment will assume that M is the value in M_mis_val
     natM_mis<-natM
     natM_mis[fmyearIdx:y]<-rep(M_mis_val,length(fmyearIdx:y))
     dat_file$dat$M <- matrix(get_dwindow(natM_mis, styear, endyear), nrow = N_rows, ncol = page)
     }
+    
     #maturity-at-age
     dat_file$dat$maturity <- matrix(get_dwindow(mat, styear, endyear), nrow = N_rows)
     
@@ -79,7 +76,6 @@ get_ASAP <- function(stock){
     dat_file$dat$R_avg_start <- styear
     dat_file$dat$R_avg_end <- endyear - 10
     # 
-    # 
     
     if (Sys.info()['sysname'] == "Windows") {
       
@@ -107,8 +103,6 @@ get_ASAP <- function(stock){
       #file.copy("asap3.par", paste('assessment/ASAP/', stockName, '_', r, '_', y,'.par', sep = ""), overwrite = TRUE)
       
     }
-    
-    
     
     if (Sys.info()['sysname'] == "Linux") { 
       
@@ -142,18 +136,11 @@ get_ASAP <- function(stock){
       
     }
     
-    
-    
   })
   
   return(out)
   
 }
-
-
-
-
-
 
 
 ### scratch code to create new ASAP .dat file 

@@ -1,6 +1,3 @@
-
-
-
 get_advice <- function(stock){
 
   # prepare data
@@ -29,6 +26,7 @@ get_advice <- function(stock){
     else{
       get_ASAP(stock = tempStock)}
   }
+  
   # was the assessment successful?
 
   tempStock <- within(tempStock, {
@@ -40,10 +38,11 @@ get_advice <- function(stock){
                         asapEst == 0), 1, 0)
   })
 
-    # Retrieve the estimated spawner biomass (necessary for advice) &
-    # Vary the parpop depending on the type of assessment model
-    # (can't have just one because one of the models might not
-    # converge.
+  # Retrieve the estimated spawner biomass (necessary for advice) &
+  # Vary the parpop depending on the type of assessment model
+  # (can't have just one because one of the models might not
+  # converge.
+  
     if(mproc[m,'ASSESSCLASS'] == 'CAA'){
       tempStock <- within(tempStock, {
         SSBaa <- rep$J1N * get_dwindow(waa, sty, y-1) * get_dwindow(mat, sty, y-1)
@@ -87,7 +86,7 @@ get_advice <- function(stock){
     }
   
   if(y > fmyearIdx){
-      tempStock<-within(tempStock,{
+      tempStock<-within(tempStock,{#Calculate Mohn's Rho values 
       peels<-y-fmyearIdx
       if(peels>7){peels<-7}
       if (Sys.info()['sysname'] == "Windows"){
@@ -166,9 +165,11 @@ get_advice <- function(stock){
       pcols <- do.call('cbind', plist)
       Mohns_Rho_R[y] <- rowSums(pcols) / peels
       cat('Rho calculated.')
+      
       if(mproc[m,'rhoadjust'] == 'TRUE'){
           parpop$SSBhat[length(parpop$SSBhat)]<-parpop$SSBhat[length(parpop$SSBhat)]/(Mohns_Rho_SSB[y]+1)}
       })
+      
       tempStock <- get_relError(stock = tempStock)}
 
     # Environmental parameters
@@ -178,8 +179,6 @@ get_advice <- function(stock){
                    yrs_temp = yrs_temp, # temperature years
                    y = y-1)
     
-    
-  
     #### Get ref points & assign F ####
     
     # If in the first year or a subsequent year on the reference

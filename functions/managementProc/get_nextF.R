@@ -4,15 +4,31 @@
 #         component of parmgt for this function is the (1-row) column
 #         "HCR". Options are:
 #  
-#           * "slide": based on national standard 1 precautionary approach, this is
-#               the classic harvest control rule that increases linearly and 
-#               then reaches an asymptote at [Bmsy,Fmsy]
-#        
-#           * "simpleThresh": a simple threshold model where fishing is entirely
-#               cut off when the population is overfished (i.e., B<Bmsy)
+#  **constF**: The harvest control rule is simply a flat line, in other words no matter what in each year 
+#F will be determined by the F reference point.
 #
-#           * "constF": fishing mortlality is constant at the fishing mortality target
-#               regardless of population size
+#  **simplethresh**: A simple threshold model. If the estimated SSB is larger than the SSB reference point
+#then the advice will be fishing at the F reference point. If the estimated SSB is smaller than the SSB 
+#reference point F will be 0.
+#
+#  **slide**: A sliding control rule.  Similer to simplethresh, except when the estimated SSB is lower 
+#than the SSB reference point fishing is reduced though not all the way to zero. Instead, a line is drawn
+#between [SSBRefPoint, FRefPoint] and [0, 0] and the advice is the value for F on that line at the 
+#corresponding estimate of SSB.
+#
+#  **pstar**: The P* method. The aim of this HCR option is to avoid overfishing by accounting for 
+#scientific uncertainty with a probabilistic approach. In this scenario, the P* approach (Prager & 
+#Shertzer, 2010) is used to derive target catch. The P* method derives target catch as a low percentile of
+#projected catch at the OFL, to allow for scientific uncertainty. The distribution of the catch at the OFL
+#was assumed to follow a lognormal distribution with a CV of 1 (Wiedenmann et al., 2016). The target catch
+#will correspond to a probability of overfishing no higher than 50% (P* <0.5) in accordance with the 
+#National Standard 1 guidelines.
+#
+#  **step**: Step in fishing mortality. If the SSB decreased below the biomass threshold, this HCR uses a
+#target F of 70% FMSY that has recently been applied to New England groundfish as a default Frebuild. If 
+#the SSB never decreased below the biomass threshold or increased to over SSBMSY after dropping below the 
+#biomass threshold, this HCR uses a target F at the F threshold. This alternative directly emulates an HCR
+#used for some New England groundfish. 
 #                        
 # parpop: named ist of population parameters (vectors) needed for the 
 #         simulation including selectivity (sel), weight-at-age (waa),
@@ -30,7 +46,6 @@
 #         could be simplified a little to combine RPlast and evalRP but
 #         it is pretty clear this way at least.
 
-
 get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
 
   # A general application of national standard 1 reference points. There
@@ -40,7 +55,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
   if(parmgt$ASSESSCLASS == 'CAA' || parmgt$ASSESSCLASS == 'ASAP'){
     
     # for GOM cod, Mramp model uses M = 0.2 for status determination
-    # browser()
     if(names(stock) == 'codGOM' && stock$codGOM$M_typ == 'ramp'){
       
       #insert new M's
@@ -74,7 +88,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     parpopT<-parpop
     parpopT$J1N<-stock$codGOM$J1N[1:(y-1),]
     parpopT$selC<-stock$codGOM$selC
-    FrefT <- get_FBRP(parmgt = parmgtT, parpop = parpopT, 
+    FrefT <- get_FBRP(parmgt = parmgtT, parpop = parpopT, #Also calculate the true Fmsy
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
                      stockEnv = stockEnv)
 
@@ -94,7 +108,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
     
-    BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT, 
+    BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT, #Also calculate the true Bmsy
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = FrefT[['RPvalue']], stockEnv = stockEnv)
     
@@ -114,8 +128,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     # Determine whether the population is overfished and whether 
     # overfishing is occurring
     
-
-
     # otherwise just use same reference points values    
     BThresh <- BrefScalar * BrefRPvalue
     FThresh <- FrefScalar * FrefRPvalue
@@ -128,12 +140,14 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
      
       F <- get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)['Fadvice']
 
-    }else if(tolower(parmgt$HCR) == 'simplethresh'){
+    }
+    else if(tolower(parmgt$HCR) == 'simplethresh'){
      
       # added small value to F because F = 0 causes some estimation errors
       F <- ifelse(tail(parpop$SSBhat, 1) < BThresh, 0, FThresh)+1e-4
       
-    }else if(tolower(parmgt$HCR) == 'constf'){
+    }
+    else if(tolower(parmgt$HCR) == 'constf'){
  
       F <- FThresh
       
@@ -161,6 +175,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       stop('get_nextF: type not recognized')
       
     }
+    
     if(tolower(parmgt$projections) == 'true'){
       if ((y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) == 0){
       parmgtproj<-parmgt
@@ -181,10 +196,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   stReportYr = 2,
                                   stockEnv = stockEnv)$sumCW}
       catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
-      if(tolower(parmgt$HCR) == 'reject'){
-        if (y>fmyearIdx & stockEnv$Mohns_Rho_F[y]>0.5 | y>fmyearIdx & stockEnv$Mohns_Rho_SSB[y]>0.5 | y>fmyearIdx & stockEnv$Mohns_Rho_R[y]>0.5){
-     catchproj<-c(stockEnv$obs_sumCW[y-1],stockEnv$obs_sumCW[y-1])
-        }} 
       if(tolower(parmgt$mincatch) == 'true'){
         mincatchv<-tail(stockEnv$sumCW[1:(y-1)],10)
       if (catchproj[1]<min(mincatchv)){catchproj[1]<-min(tail(mincatchv$Catch,10))}
@@ -224,7 +235,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                    slxCv = stockEnv$slxC[y,], 
                    M = stockEnv$natM[y], 
                    waav = stockEnv$waa[y,])
-      if (F>2){F<-2}
       }
       else{
       F <- get_F(x = stockEnv$catchproj[2],
@@ -236,8 +246,11 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       if (F>2){F<-2}
       }
     }
+    
     if(tolower(parmgt$projections) == 'false'){catchproj<-NA}
   
+    if (F>2){F<-2}#Not letting actual F go over 2
+    
     out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue,FrefTRPvalue, BrefTRPvalue), 
                 ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
                 OFgStatus = overfishing, catchproj=catchproj) #AEW

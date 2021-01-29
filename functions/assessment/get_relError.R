@@ -1,7 +1,4 @@
-
-
 get_relError <- function(stock){
-
 
   out <- within(stock, {
 
@@ -23,19 +20,10 @@ get_relError <- function(stock){
     }
 
     if(mproc[m,'ASSESSCLASS'] == 'ASAP' & y > fmyearIdx-1){
-      # terminal year
-      # relE_SSB[y-1] <- get_relE(tail(res$SSB,1), SSB[y])
-      # relE_CW[y-1] <- get_relE(res$catch.pred[37], sumCW[y-1])
-      # relE_IN[y-1] <- get_relE(tail(res$index.pred$ind01,1), sumIN[y-1])
-      # relE_qI[y-1] <- get_relE(log(res$q.indices), log(qI))
-      # relE_R[y-1] <- get_relE(tail(res$SR.resids$recruits,1), R[y-1])
-
       # average over each assessment time series
       relE_SSB[y-1] <- mean(get_relE(SSBnew1, SSB[(y-length(SSBnew1)+1):y]))
       relE_N[y-1] <- mean(get_relE(Nnew1,rowSums(J1N[(y-length(SSBnew1)):(y-1),])))
       relE_CW[y-1] <- mean(get_relE(Catchnew1, sumCW[(y-length(SSBnew1)):(y-1)]))
-      #relE_IN[y-1] <- mean(get_relE(res$index.pred$ind01, sumIN[(y-length(SSBnew1)):(y-1)]))
-      #relE_qI[y-1] <- get_relE(log(res$q.indices), log(qI))
       relE_R[y-1] <- mean(get_relE(Rnew1, R[(y-length(SSBnew1)):(y-1)]))
       relE_F[y-1] <- mean(get_relE(Fnew1, F_full[(y-length(SSBnew1)):(y-1)]))
     }

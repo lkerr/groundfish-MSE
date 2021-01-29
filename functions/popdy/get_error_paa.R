@@ -15,12 +15,7 @@
 
 get_error_paa <- function(type, paa, par,switch){
   
-  if (switch== TRUE && stock$haddockGB$R[y]>200000000){
-    paa[1]<-paa[1]+paa[1]*.1
-    paa<-paa/sum(paa)
-    paaE <- c(rmultinom(n=1, size=par, prob=paa)) / par
-  }
-  else{paaE <- c(rmultinom(n=1, size=par, prob=paa)) / par}
+  paaE <- c(rmultinom(n=1, size=par, prob=paa)) / par
   
   return(paaE)
   

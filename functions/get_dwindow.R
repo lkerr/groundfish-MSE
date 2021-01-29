@@ -1,5 +1,3 @@
-
-
 # Function for reducing data to the window of interest
 # for feeding into the assessment model
 

@@ -123,6 +123,15 @@ This sets harvesting to be determined by a "StandardFisheries" or "Economic" sub
 ## projections
 This determines if projections are used or not. If set to TRUE, projections are used. When projections are used, catch advice is  generated from the projected catch with F determined from the HCR. There are 100 iterations for each projection and uncertainty in recruitment and the initial population number, which was the estimated number in the last year of the assessment. Initial population number was drawn from a lognormal distribution with a mean of the final population number estimatel. Projections are currently used in determining catch advice for some New England groundfish. 
 
+## rhoadjust
+This determines if rho-ajdustments are used or not. If set to TRUE, rho-adjustments are used. Due to the retrospective patterns apparent in New England groundfish stock assessments, this scenario incorporated rho-adjustments using Mohn’s Rho values (Table A6; Mohn, 1999). A rho-adjustment has been applied to all analytical New England groundfish NEFSC stock assessments, except for GOM cod. This stock assessment scenario option evaluates the effect of a rho-adjustment on the fishery outcomes. If projections are used, rho-adjustments are also applied to the abundance, recruitment, and fishing mortality estimates used in projections.  
+
+## mincatch
+This determines if a minimum catch constraint is used in catch advice or not. If set to TRUE, a minimum catch constraint is used. Due to the low stock sizes in many of the groundfish fisheries, some HCRs would likely create extremely low catches for some fisheries. A a minimum catch limit prevents F from declining close to zero. 
+
+## varlimit
+This determines if a catch variation limit is applied to the catch advice. If set to TRUE, a catch variation limit is applied. The aim of this option is to provide catch stability if stock biomass were to substantially change from year to year. Stable catch was identified as an objective in the Council’s risk policy (NEFMC 2016). This option prevents the current year’s catch limit from changing more than 20% from the previous year’s catch limit. However, catch is constrained so that it will not be higher than the OFL.
+
 # Economic Options
 The following are only relevant if *ImplementationClass*=='Economic.'
 

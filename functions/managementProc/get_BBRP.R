@@ -1,5 +1,3 @@
-
-
 # Function to calculate biomass-based reference points
 # 
 # parmgt: a 1-row data frame of management parameters. The operational
@@ -21,13 +19,8 @@
 #           get_BmsySim
 #         to see what needs to be included in the list.
 
-
-
-
-
 get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
                      distillBmsy=mean, stockEnv){
-
    
   if(parmgt$BREF_TYP == 'RSSBR'){
     
