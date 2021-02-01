@@ -86,8 +86,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     parmgtT$FREF_PAR1<-parmgtT$BREF_PAR1<-NA
     parmgtT$RFUN_NM<-'forecast'
     parpopT<-parpop
-    parpopT$J1N<-stock$codGOM$J1N[1:(y-1),]
-    parpopT$selC<-stock$codGOM$selC
+    parpopT$J1N<-stockEnv$J1N[1:(y-1),]
+    parpopT$selC<-stockEnv$selC
     FrefT <- get_FBRP(parmgt = parmgtT, parpop = parpopT, #Also calculate the true Fmsy
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
                      stockEnv = stockEnv)

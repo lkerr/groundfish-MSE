@@ -1,16 +1,11 @@
-
-
-
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.                                              
 burnFmsyScalar <- 4
 burnFsd <- 0.3
 
-
 # first age and plus age
 fage <- 1
 page <- 9
-
 
 #### Life history parameters ####
 
@@ -24,13 +19,11 @@ laa_typ <- 'vonB'
 waa_par <- c(0.057, 0.365, 0.908, 1.662, 2.426, 3.307, 4.09, 5.928, 10.375) #GOM cod ADAPT projection Jan1 M=0.2
 waa_typ <- 'input'
 
-
 # maturity-length parameters
 #mat_par <- c(0.171, 32.1) # O'brien GOM cod female
 #mat_typ <- 'logistic'
 mat_par <- c(0.087, 0.318, 0.697, 0.919, 0.982, 0.996, 0.999, 1, 1) # GOM cod ADAPT projection M=0.2
 mat_typ <- 'input'
-
 
 # natural mortality
 M  <- 0.2
@@ -38,8 +31,8 @@ M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
 #M <- 0.4
 #M_typ <- 'ramp'
-M_mis<-FALSE
-M_mis_val<-0.2
+M_mis<-FALSE #If there is a M misspecification, set to TRUE
+M_mis_val<-0.2 #The misspecified M value 
 
 # initial numbers at-age parameters
 #initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
@@ -47,15 +40,13 @@ M_mis_val<-0.2
 initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = 0.2)
 initN_type <- 'expDecline'
 
-
-
 #### Fishery parameters ####
 
 # fishery and survey catchabilities
 qC <- 0.0001
 qI <- 0.0001
 
-DecCatch<-FALSE
+DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE. 
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
@@ -64,7 +55,6 @@ DecCatch<-FALSE
 selC <- c(0.013, 0.066, 0.271, 0.663, 0.912, 0.982, 0.997, 1, 1) #GOM cod AGEPRO M=0.2
 #selC <- c(0.009, 0.051, 0.241, 0.651, 0.917, 0.985, 0.997, 1, 1) #GOM cod AGEPRO M-ramp
 selC_typ <- 'input'
-
 
 #### Recruitment Options ####
 ##For BH Steepness Option##
@@ -84,10 +74,10 @@ selC_typ <- 'input'
 ###For BH SR with relationship with temperature###
 R_typ <- 'BH'
 Rpar<-c(a=5.1698169,b=0.0002892,g=-1.423)
-R_mis<-TRUE
-Rpar_mis <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
-cR = 1,# dont need to convert
-Rnyr= 20)#
+R_mis<-TRUE #If BRPs and projections assume a wrong SRR, set to TRUE. 
+Rpar_mis <- c(SSB_star = 6300, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
+cR = 1,
+Rnyr= 20)
 
 #### Survey parameters ####
 
@@ -97,7 +87,6 @@ Rnyr= 20)#
 selI <- c(0.0384337, 0.13369, 0.288846, 0.531086, 0.778406, 1, 1, 1, 1) #Spring survey fit from 2019 assessment .rep
 selI_typ <- 'input'
 timeI <- 0.5 # when is the survey (as a proportion of the year)
-
 
 #### Stock assessment model parameters ####
 
@@ -113,7 +102,6 @@ startCV <- 1.5
 # scalar to bring pop numbers closer to zero (necessary
 # for model fitting)
 caaInScalar <- 1 
-
 
 #### Error parameters ####
 
@@ -131,14 +119,13 @@ oe_effort_typ <- 'lognorm'
 
 # process error levels  #####o##############################  !!!!!!!!!!!!!!
 pe_R <- 0.01 # cannot be zero 
-pe_RSA<- 0.5 
+pe_RSA<- 0.5 #recruitment process error assumed in the stock assessment 
 pe_IA <- 0.18 
 
 # implementation error of fishing mortality
 ie_F <- 0
 ie_typ <- 'lognorm'
 ie_bias <- 0 # % bias in implementation error (F_Full + F_Full*ie_bias)
-
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.) (sumCW*ob_sumCW) (range 0.01-1)
 ob_sumCW <- 1 #0.44 for bias
@@ -147,11 +134,12 @@ ob_sumIN <- 1
 # catch observation bias (codCW + codCW*C_mult)
 C_mult <-  0 #1.25 for bias, 0 for no bias
 
-Change_point2<-FALSE
-Change_point_yr<-2025
-Change_point3<-FALSE
-Change_point_yr1<-2020
-Change_point_yr2<-2022
+#bias change points 
+Change_point2<-FALSE #If TRUE, catch bias changes in the MP period
+Change_point_yr<-2025 #year where catch bias changes
+Change_point3<-FALSE #If TRUE, catch bias changes twice in the MP period
+Change_point_yr1<-2020 #year where catch bias first changes
+Change_point_yr2<-2022 #year where catch bias changes again 
 
 #### -- Errors and warnings -- ####
 if(1.0 %in% c(qI, qC)){

@@ -1,6 +1,3 @@
-
-
-
 # Recruitment function list for use in the recruitment index column
 # of the object mproc (created by the file generateMP.R)
 
@@ -19,10 +16,10 @@ Rfun_BmsySim <- list(
     
     Rpar<-parpop$Rpar
     if (stockNameList=='codGOM'&& stock$codGOM$M_mis=='TRUE' && exists("y")=='TRUE'){
-    type2<-'Mis'}
+    type2<-'Mis'}#If there is an M misspecificaiton for cod, the SSB hinge is different, so BRP estimation and projections will assume a different SSB hinge. 
     else {type2<-'True'}
     if (stockNameList=='codGOM'&& stock$codGOM$R_mis=='TRUE' && exists("y")=='TRUE'){
-      type<-'HS'
+      type<-'HS' #If a theoretical stock-recruitment relationship is used but BRPs and projections do not use it, a hockey-stick SRR is used instead. 
       Rpar<-parpop$Rpar_mis}
     Rpar['rho'] <- 0
     gr <- get_recruits(type = type, 

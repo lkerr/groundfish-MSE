@@ -7,7 +7,6 @@ burnFsd <- 0.4
 fage <- 1
 page <- 9
 
-
 #### Life history parameters ####
 
 # length-at-age parameters -- see get_lengthAtAge for including covariates
@@ -40,7 +39,7 @@ initN_type <- 'expDecline'
 qC <- 0.0001
 qI <- 0.0001
 
-DecCatch<-FALSE
+DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE. 
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
@@ -49,15 +48,19 @@ selC_typ <- 'input'
 
 # Recruitment
 ##HS with all recruitment values (what is used in stock assessment projections)##
-Rpar <- c(SSB_star = 75000, #Used in projections (NEFSC 2019)
-          cR = 1) # dont need to convert
-R_typ <- 'HS'
+#Rpar <- c(SSB_star = 75000, #Used in projections (NEFSC 2019)
+#          cR = 1) # dont need to convert
+#R_typ <- 'HS'
+##For regular BH
+R_typ <- 'BH'
+Rpar<-c(a=0.0004313,b=0.000002392,g=0)
+R_mis<-TRUE #If BRPs and projections assume a wrong SRR, set to TRUE. 
+Rpar_mis <- c(SSB_star = 75000, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
+              cR = 1,
+              Rnyr= 20)
 
-##Ricker with increased frequency of high events with temp.
-#Rpar <- c(a = 0.5540445, 
-#         b = 0.0000174067) 
-#R_typ <- 'IncFreq'
-#### Survey parameters ####F
+
+#### Survey parameters ####
 
 ## Survey information
 selI <- c(1)
@@ -96,7 +99,7 @@ oe_effort_typ <- 'lognorm'
 highobserrec<-FALSE
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 0.5
+pe_R <- 1
 pe_RSA<-1.0
 pe_IA<-0.18
 
@@ -115,50 +118,6 @@ C_mult <- 0 #0 is no bias
 Change_point2<-'FALSE'
 Change_point_yr<-2025
 Change_point3<-FALSE
-
-#### BRPs and HCRs ####
-
-# # reference point calculation types
-# # Fmsy proxy type
-# fbrpTyp <- c('YPR')
-# # Bmsy proxy type
-# bbrpTyp <- c('RSSBR')
-#
-# # Fmsy proxy level
-# fbrpLevel <- c(0.1)
-# # Bmsy proxy level
-# bbrpLevel <- c(1)
-#
-# # Fmsy proxy types and levels
-# fbrp <- rbind(
-#   list('YPR', 0.1),
-#   list('RSSBR', 1)
-# )
-# pol <- data.frame(
-#   FmsyT = c('YPR'  ,   'SPR'        ),
-#   FmsyV = c(0.1    ,     1          ),
-#   BmsyT = c('RSSBR' ,   'dummy'      ),
-#   hcrT  = c('slide'  ,  'simpleThresh')
-# )
-#
-#
-# FmsyT <- list('YPR', 'SPR')
-# FmsyV <- list(c(0.1, 0.15),
-#               c(0.3, 0.4))
-# # i1 <- lapply(1:length(a1), function(x) expand.grid(a1[[x]], a2[[x]]))
-#
-# BmsyT <- list('RSSBR', 'BmsySim')
-# BmsyV <- list(c(1, 0.8),
-#               c(NA, NA))
-# i2 <- lapply(1:length(BmsyT), function(x) expand.grid(BmsyT[[x]], BmsyV[[x]]))
-#
-# # Harvest control rule types
-# i3 <- list('slide', 'simpleThresh')
-#
-#
-# hrcTyp <- list('slide', 'simpleThresh')
-
-
 
 
 #### -- Errors and warnings -- ####
