@@ -173,9 +173,7 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
   ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
   
   # Random error component
-  pe_R<-pe_R+(1.5*TAnom_y)
-  xi<-1-(0.1*TAnom_y)
-  rc<-rsnorm(1,mean=0,sd=pe_R,xi=xi)
+  rc<-rnorm(1,mean=0,sd=pe_R)
   R <- Rhat * exp(ac + rc)
   out <- list(Rhat = unname(Rhat), R = unname(R))
 

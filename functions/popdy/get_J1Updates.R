@@ -35,7 +35,6 @@ get_J1Updates <- function(stock){
     Rhat[y] <- Rout[['Rhat']]
     R[y] <- ifelse(R[y] < 0, 0, R[y])
 
-
     # calculate the selectivity in year y (changes if the laa changes)
     slxC[y,] <- get_slx(type=selC_typ, par=selC, laa=laa[y,])
     slxI[y,] <- get_slx(type=selI_typ, par=selI, laa=NULL)
