@@ -101,7 +101,7 @@ highobserrec<-FALSE
 # process error levels  ###################################  !!!!!!!!!!!!!!
 pe_R <- 1
 pe_RSA<-1.0
-pe_IA<-0.18
+pe_IA<-0.378
 
 # implementation error of fishing mortality
 ie_F <- 0
