@@ -112,7 +112,7 @@ The frequency with which reference points are re-calculated.
 
 * The value represents the frequency. For example, if the value is 3, reference points are recalculated every 3 years. In the years when the reference points are not updated the advice may change based on an updated assessment model but the reference points (and thus the shape of any associated harvest control rule) remains the same.
 
-##AssessFreq
+## AssessFreq
 The frequency with which the stock assessment is conducted. 
 
 *The value represents the frequency. For example, if the value is 3, the stock assessment is conducted every 3 years. In the years when the stock assessment is not conducted, the advice is based on the most recent stock assessment. 
