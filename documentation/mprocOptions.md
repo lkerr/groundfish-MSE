@@ -115,7 +115,7 @@ The frequency with which reference points are re-calculated.
 ## AssessFreq
 The frequency with which the stock assessment is conducted. 
 
-*The value represents the frequency. For example, if the value is 3, the stock assessment is conducted every 3 years. In the years when the stock assessment is not conducted, the advice is based on the most recent stock assessment. 
+* The value represents the frequency. For example, if the value is 3, the stock assessment is conducted every 3 years. In the years when the stock assessment is not conducted, the advice is based on the most recent stock assessment. 
 
 ## ImplementationClass
 This sets harvesting to be determined by a "StandardFisheries" or "Economic" submodel. This column is only used in (variations of) the runSim.R file.
@@ -124,7 +124,7 @@ This sets harvesting to be determined by a "StandardFisheries" or "Economic" sub
 This determines if projections are used or not. If set to TRUE, projections are used. When projections are used, catch advice is  generated from the projected catch with F determined from the HCR. There are 100 iterations for each projection and uncertainty in recruitment and the initial population number, which was the estimated number in the last year of the assessment. Initial population number was drawn from a lognormal distribution with a mean of the final population number estimatel. Projections are currently used in determining catch advice for some New England groundfish. 
 
 ## rhoadjust
-This determines if rho-ajdustments are used or not. If set to TRUE, rho-adjustments are used. Due to the retrospective patterns apparent in New England groundfish stock assessments, this scenario incorporated rho-adjustments using Mohn’s Rho values (Table A6; Mohn, 1999). A rho-adjustment has been applied to all analytical New England groundfish NEFSC stock assessments, except for GOM cod. This stock assessment scenario option evaluates the effect of a rho-adjustment on the fishery outcomes. If projections are used, rho-adjustments are also applied to the abundance, recruitment, and fishing mortality estimates used in projections.  
+This determines if rho-ajdustments are used or not. If set to TRUE, rho-adjustments are used. Due to the retrospective patterns apparent in New England groundfish stock assessments, this scenario incorporated rho-adjustments using Mohn’s Rho values (Mohn, 1999). A rho-adjustment has been applied to all analytical New England groundfish NEFSC stock assessments, except for GOM cod. This stock assessment scenario option evaluates the effect of a rho-adjustment on the fishery outcomes. If projections are used, rho-adjustments are also applied to the abundance, recruitment, and fishing mortality estimates used in projections.  
 
 ## mincatch
 This determines if a minimum catch constraint is used in catch advice or not. If set to TRUE, a minimum catch constraint is used. Due to the low stock sizes in many of the groundfish fisheries, some HCRs would likely create extremely low catches for some fisheries. A a minimum catch limit prevents F from declining close to zero. 
