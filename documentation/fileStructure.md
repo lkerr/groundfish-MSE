@@ -15,7 +15,7 @@ The overall approach to the MSE is to attempt to have the code be as compartment
 
 * **assessment**: Folder that holds assessment models and related material. The simulation does call files in this folder.
 
-* **data**: Data related to the project. Folder subdivided into processes (i.e., .Rdata files) and raw data.  Many preliminary/exploratory analyses use data from this folder, but for everyday runs this folder has limited use save holding the temperature projection data.
+* **data**: Data related to the project. Folder subdivided into processes (i.e., .Rdata files) and raw data.  Many preliminary/exploratory analyses use data from this folder, but for everyday runs this folder has limited use save holding the temperature projection and assessment history data. 
 
 * **documentation**: You are here! Files attempting to document both the MSE methods and use on a local machine or the HPCC.
 
