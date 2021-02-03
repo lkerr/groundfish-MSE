@@ -30,7 +30,7 @@ M_mis<-FALSE
 #M_mis_val<-0.4
 
 # initial numbers at-age parameters
-initN_par <- c(nage = page, N0 = 4e4, F_full = 0.2, M = M)
+initN_par <- c(nage = page, N0 = 1e5, F_full = 0.99, M = M)
 initN_type <- 'expDecline'
 
 #### Fishery parameters ####
@@ -89,7 +89,7 @@ oe_sumCW <- 0.01
 oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 1000
 oe_paaCN_typ <- 'multinomial'
-oe_sumIN <- 0.04
+oe_sumIN <- 0.02
 oe_sumIN_typ <- 'lognorm'
 oe_paaIN <- 1000
 oe_paaIN_typ <- 'multinomial'
