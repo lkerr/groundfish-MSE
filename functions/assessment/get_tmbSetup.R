@@ -19,10 +19,13 @@ get_tmbSetup <- function(stock){
     lyr <- y - 1
     
     # get the random walk deviations
-    R_dev <- get_RWdevs(get_dwindow(R, sty, lyr))
+    R_dev <- get_RWdevs(get_dwindow(R / caaInScalar, sty, lyr))
     
-    # get the initial population mean and deviations
-    ipopInfo <- get_LMdevs(J1N[sty,] / caaInScalar)
+    # get the initial population mean and deviations (and add in small
+    # constant in case abundance in an age class is zero (important to deal
+    # with log(0) issue)
+
+    ipopInfo <- get_LMdevs(J1N[sty,]/ caaInScalar)
     log_ipop_mean <- ipopInfo$lmean
     ipop_dev <- ipopInfo$lLMdevs
     

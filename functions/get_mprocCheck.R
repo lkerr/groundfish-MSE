@@ -13,7 +13,7 @@ get_mprocCheck <- function(mproc){
   # text input (i.e., everything but the parameter columns)
   
   
-  assessclass <- c('CAA', 'PLANB')
+  assessclass <- c('CAA', 'PLANB', 'ASAP')
   hcr <- c('slide', 'simplethresh', 'constF', NA)
   fref_typ <- c('YPR', 'SPR', 'SSBR', 'Fmed', 'FmsySim', NA)
   bref_typ <- c('RSSBR', 'SIM', NA)
@@ -33,26 +33,26 @@ get_mprocCheck <- function(mproc){
   
   if(!all(mproc$ASSESSCLASS %in% assessclass)){
     msg <- c(msg, 
-             paste0('unrecognized entry in ASSESSCLASS column of mproc.txt:',
+             paste0('unrecognized entry in ASSESSCLASS column of ',mprocfile,
               ' check names'))
   }
   
   if(!all(mproc$HCR %in% hcr)){
     msg <- c(msg, 
-             paste0('unrecognized entry in HCR column of mproc.txt:',
+             paste0('unrecognized entry in HCR column of ',mprocfile,
              ' check names'))
   }
   
   if(!all(mproc$FREF_TYP %in% fref_typ)){
     msg <- c(msg, 
-             paste0('unrecognized entry in FREF_TYP column of mproc.txt:',
+             paste0('unrecognized entry in FREF_TYP column ', mprocfile,
               ' check names'))
   }
 
   
   if(!all(mproc$RFUN_NM %in% rfun_nm)){
     msg <- c(msg, 
-             paste0('unrecognized entry in RFUN_NM column of mproc.txt:',
+             paste0('unrecognized entry in RFUN_NM column of ',mprocfile,
                     ' check names'))
   }
 
@@ -60,21 +60,21 @@ get_mprocCheck <- function(mproc){
   if(any(!is.na(mproc$FREF_PAR0) & 
          !mproc$FREF_PAR0 == floor(mproc$FREF_PAR0))){
     msg <- c(msg, 
-             paste0('value out of range in FREF_PAR0 column of mproc.txt:',
+             paste0('value out of range in FREF_PAR0 column of ',mprocfile,
              ' must be integer'))
   }
 
   
   if(!all(mproc$BREF_TYP %in% bref_typ)){
     msg <- c(msg, 
-             paste0('unrecognized entry in BREF_TYP column of mproc.txt:',
+             paste0('unrecognized entry in BREF_TYP column of ',mprocfile,
                     ' check names'))
   }
   
 
   if(!all(mproc$RFUN_NM %in% rfun_nm)){
     msg <- c(msg, 
-             paste0('unrecognized entry in RFUN_NM column of mproc.txt:',
+             paste0('unrecognized entry in RFUN_NM column of ',mprocfile,
                     ' check names'))
   }
 
@@ -86,13 +86,13 @@ get_mprocCheck <- function(mproc){
          ( mproc$RPInt < 1 | !mproc$RPInt == floor(mproc$RPInt) )
   )){
     msg <- c(msg, 
-             paste0('value out of range in RPInt column of mproc.txt:',
+             paste0('value out of range in RPInt column', mprocfile,
                     ' must be both an integer and greater than 0'))
   }
   
   # If there were any errors then stop and report
     if(length(msg) > 0){
-      stop(c(paste(length(msg), 'error(s) in mproc.txt file:\n'),
+      stop(c(paste(length(msg), 'error(s) in ',mprocfile,'\n'),
              paste(msg, collapse='\n')))
     }
   
@@ -265,7 +265,7 @@ get_mprocCheck <- function(mproc){
 #   
 #   # If there were any errors then stop and report
 #   if(length(msg) > 0){
-#     stop(c(paste(length(msg), 'error(s) in mproc.txt file:\n'), 
+#     stop(c(paste(length(msg), 'error(s) in , mprocfile, '\n'), 
 #            paste(msg, collapse='\n')))
 #   }
 #   

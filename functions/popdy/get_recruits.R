@@ -20,8 +20,21 @@
 #       par['rho']: autocorrelative component rho
 #       R_ym1: observed recruitment from previous year
 #       Rhat_ym1: predicted recruitment from previous year
+#
 #      
-#      
+#      *'HS' AGEPRO implementation of the empirical cummulative 
+#       distribution function with linear decline to zero; Recruitment model 21
+#       need to have input of historic recruitment in .csv file 
+#       in /data/data_raw/AssessmentHistory/ must have same name as stockName
+#       use only terminal 20 historic years
+#       if SSB >= SSB_star
+#       R = cR * remp(1, as.numeric(assess_vals$assessdat$R))
+#       if SSB < SSB_star
+#       R = cR *SSB/SSB_star * remp(1, as.numeric(assess_vals$assessdat$R))
+#       SSB_star: hockey-stick hinge
+#       cR: conversion coefficient to absolute numbers
+#
+#
 #      
 # par: the model parameters (see descriptions of type above). par must
 #      be a matrix of four columns with named rows that correspond
@@ -43,11 +56,10 @@
 # Rhat_ym1: predicted recruitment from previous year
 
 
-
-get_recruits <- function(type, par, SSB, TAnom_y, pe_R, 
+get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
                          R_ym1=NULL, Rhat_ym1=NULL, stockEnv = stock){
 
-  if(!type %in% c('BH', 'BHSteep')){
+  if(!type %in% c('BH', 'BHSteep', 'HS')){
     stop(paste('get_recruits: check spelling of R_typ in individual stock 
                parameter file for', stockNames[i]))
   }
@@ -131,6 +143,35 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R,
     
   
   }
+    
+  else if (type == 'HS'){ 
+    assess_vals <- get_HistAssess(stock = stock[[i]])
+    
+    Rhat <- with(as.list(par),{
+    
+      if (block == 'early'){  # how to calculate historic recruitment, use first 10 assessment years
+        if (SSB >= SSB_star) {
+          pred <- cR * remp(1, head(as.numeric(assess_vals$assessdat$R), 10))    
+          
+        } else if (SSB < SSB_star){
+          pred <-  cR * (SSB/SSB_star) * remp(1, head(as.numeric(assess_vals$assessdat$R), 10))    
+          
+        }
+        
+    } else if (block == 'late'){  # how to calculate projected recruitment using last 20 assessment years
+    if (SSB >= SSB_star) {
+       pred <- cR * remp(1, tail(as.numeric(assess_vals$assessdat$R), 20))
+
+    } else if (SSB < SSB_star){
+      pred <-  cR * (SSB/SSB_star) * remp(1, tail(as.numeric(assess_vals$assessdat$R), 20))
+
+    }
+    }
+    return(pred)
+       })
+  }
+    
+    
  
   # Autocorrelation component
   ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
@@ -146,7 +187,6 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R,
   
   })
 }
-
 
 
 
@@ -207,5 +247,8 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R,
 # num2 <- 4 * Rpar2['h'] * ( SSB / (Rpar2['SSBRF0']) )
 # den2 <- ( (1 - Rpar2['h']) + (5*Rpar2['h'] - 1) * ( SSB / (Rpar2['R0'] * Rpar2['SSBRF0']) ) )
 # q2 <- num2/den2
+
+
+
 
 

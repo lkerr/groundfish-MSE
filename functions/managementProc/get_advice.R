@@ -8,35 +8,40 @@ get_advice <- function(stock){
   
   #### Run assessment model ####
   # Run the CAA assessment
+  if(mproc[m,'ASSESSCLASS'] == 'CAA'){
   tempStock <- get_caa(stock = tempStock)
+  }
   
   # Run the PlanB assessment
+  if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
   tempStock <- get_planB(stock = tempStock)
+  }
   
+  # Run ASAP assessment
+  if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
+  tempStock <- get_ASAP(stock = tempStock)
+  }
 
   # was the assessment successful?
   tempStock <- within(tempStock, {
-    conv <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' & 
+    conv <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' && 
                    class(opt) != 'try-error') ||
-                   (mproc[m,'ASSESSCLASS'] == 'PLANB' & 
-                   class(planBest) != 'try-error'),
+                   (mproc[m,'ASSESSCLASS'] == 'PLANB' && 
+                   class(planBest) != 'try-error') ||
+                   (mproc[m, 'ASSESSCLASS'] == 'ASAP' &&
+                   class(asapEst) != 'try-error'),
                    yes = 1, no = 0)
   })
   
   if(tempStock$conv){
-    
-    # Retrieve the estimated spawner biomass (necessary for advice)
-    tempStock <- within(tempStock, {
-      SSBaa <- rep$J1N * get_dwindow(waa, sty, y-1) * get_dwindow(mat, sty, y-1)
-      SSBhat <- apply(SSBaa, 1, sum)
-    })
-    
-    
+    # When using an analytical assessmsent, retrieve the estimated spawner biomass (necessary for advice)
     # Vary the parpop depending on the type of assessment model
     # (can't have just one because one of the models might not
     # converge.
     if(mproc[m,'ASSESSCLASS'] == 'CAA'){
       tempStock <- within(tempStock, {
+      SSBaa <- rep$J1N * get_dwindow(waa, sty, y-1) * get_dwindow(mat, sty, y-1)
+      SSBhat <- apply(SSBaa, 1, sum)
       parpop <- list(waa = tail(rep$waa, 1) / caaInScalar, 
                      sel = tail(rep$slxC, 1), 
                      M = tail(rep$M, 1), 
@@ -47,8 +52,9 @@ get_advice <- function(stock){
                      Rpar = Rpar,
                      Fhat = tail(rep$F_full, 1))
       })
+    }
      
-    }else if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
+    if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
       tempStock <- within(tempStock, {
         parpop <- list(obs_sumCW = tmb_dat$obs_sumCW,
                        mult = planBest$multiplier,
@@ -59,6 +65,21 @@ get_advice <- function(stock){
         })
     }
     
+    if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
+      tempStock <- within(tempStock, {
+        parpop <- list(waa = tail(res$WAA.mats$WAA.catch.fleet1, 1),           
+                       sel = tail(res$fleet.sel.mats$sel.m.fleet1, 1),                      
+                       M = tail(res$M.age, 1), 
+                       mat = res$maturity[1,],                               
+                       R = res$SR.resids$recruits,
+                       SSBhat = res$SSB,
+                       J1N = tail(res$N.age,1),                 ### or use J1B reported in biomass 
+                       Rpar = Rpar,
+                       Fhat = tail(res$F.report, 1))
+      })
+    }
+    
+  
     # Environmental parameters
     parenv <- list(tempY = temp,
                    Tanom = Tanom,
@@ -100,6 +121,9 @@ get_advice <- function(stock){
     tempStock <- within(tempStock, {
       OFdStatus[y-1] <- gnF$OFdStatus
       
+      # Report overfishing status AEW
+      OFgStatus[y-1] <- gnF$OFgStatus
+      
       # Report maximum gradient component for CAA model
       mxGradCAA[y-1] <- ifelse(mproc[m,'ASSESSCLASS'] == 'CAA',
                              yes = rep$maxGrad,
@@ -120,7 +144,7 @@ get_advice <- function(stock){
         # Absolute Catch advice, inherits units of waa
       }
       
-      quota <- get_catch(F_full = adviceF, M = M, N = J1N[y,], selC = slxC[y,])
+      quota <- get_catch(F_full = adviceF, M = natM[y], N = J1N[y,], selC = slxC[y,])
       quota <- quota %*% waa[y,]
       
       F_fullAdvice[y] <- adviceF

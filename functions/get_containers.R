@@ -21,6 +21,9 @@ get_containers <- function(stockPar){
     # Containers that save the simulation data
     J1N = yxage,
     CN = yxage,
+    CN_temp = yxage,
+    codCW = yxage,
+    codCW2 = yx0,
     CW = yxage,
     IN = yxage,
     IJ1= yxage,
@@ -41,6 +44,8 @@ get_containers <- function(stockPar){
                                    c('FRefP', 'BRefP'))),
     OFdStatus = yx0,
     mxGradCAA = yx0,
+    OFgStatus = yx0,
+    natM = yx0,
     
     
     # Containers that have corresponding outputs for the
@@ -83,6 +88,9 @@ get_containers <- function(stockPar){
     relE_SSB = yx0,
     relE_CW = yx0,
     relE_IN = yx0,
+    relE_R = yx0, #AEW
+    relE_F = yx0, #AEW
+    SSB_cur = yx0, #AEW
     
     
     # Econ model containers
@@ -255,7 +263,12 @@ get_containers <- function(stockPar){
       relE_R_dev = save_vector_ann,
       relE_SSB = save_vector_ann,
       relE_CW = save_vector_ann,
-      relE_IN = save_vector_ann
+      relE_IN = save_vector_ann,
+      relE_R = save_vector_ann, #AEW
+      relE_F = save_vector_ann, #AEW
+      OFgStatus = save_vector_ann, #AEW
+      SSB_cur = save_vector_ann, #AEW
+      natM = save_vector_ann #AEW
     )
     
   )

@@ -7,6 +7,8 @@
 ffiles <- list.files(path='functions/', pattern="^.*\\.R$",full.names=TRUE, recursive=TRUE)
 invisible(sapply(ffiles, source))
 
+# Get the result directory path
+source('processes/identifyResultDirectory.R')
 
 # Load the overall operating model parameters
 source('modelParameters/set_om_parameters_global.R')
@@ -76,13 +78,14 @@ source('processes/Rfun_BmsySim.R')
 # Load default ACLs and fractions of the ACL that are allocated to the catch share fishery
 source('processes/genBaselineACLs.R')
 
-#if there are any 
-if(sum(mproc$ImplementationClass=="Economic")>=1){ #Load in Economic Data if there's at least 1 Economic model in mproc
-  source('processes/loadEcon.R')
-}
+#Input data location for economic models
+econdatapath <- 'data/data_processed/econ'
 
-
-
+                            # Reults folders for economic models. Create them if necessary
+econ_results_location<-"results/econ/raw"
+dir.create('results/econ/raw', showWarnings = FALSE, recursive=TRUE)
+dir.create('results/sim', showWarnings = FALSE, recursive=TRUE)
+dir.create('results/fig', showWarnings = FALSE, recursive=TRUE)
 
 # If running on a local machine, more than one repetition should be
 # used otherwise some plotting functions (e.g., boxplots) will fail
@@ -154,5 +157,20 @@ if(fyear < mxModYrs){
              'each stock'))
 }
 
-
+if (platform == 'Linux'){
+  if(!file.exists('../EXE/ASAP3.EXE')){
+    stop(paste('ASAP3.EXE should be loaded in a directory EXE in the parent',
+               'directory of groundfish-MSE -- i.e., you need an EXE',
+               'directory in the same directory as Rlib and EXE must contain',
+               'ASAP3.EXE', sep='\n'))
+  }
+  rand <- sample(1:10000, 1)
+  tempwd <- getwd()
+  rundir <- paste(tempwd, "/assessment/ASAP/Run", '_', rand, sep = "")
+  dir.create(path = rundir)
+  from.path <- paste('../EXE/ASAP3.EXE', sep = "")
+  to.path   <- paste(rundir, sep= "")
+  file.copy(from = from.path, to = to.path)
+  
+}
 

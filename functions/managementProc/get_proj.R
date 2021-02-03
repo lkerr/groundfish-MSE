@@ -69,7 +69,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     # length of recruitment time series
     nR <- length(parpop$R)
     
-    # historical R estimates over the time window specified in mproc.txt
+    # historical R estimates over the time window specified in the file mprocfile (defined in set_om_parameters_global.R)
     Rest <- get_dwindow(parpop$R, 
                         start = unlist(nR- (-startHCM) + 1), 
                         end = unlist(nR - (-endHCM) + 1))
@@ -163,12 +163,12 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                    parpop = parpop, 
                    parenv = parenv, 
                    SSB = c(N[y-1,]) %*% c(parpop$waa),
-                   sdR = stockEnv$pe_R,
+                   sdR = 0,#stockEnv$pe_R,
                    TAnom = Tanom[y],
                    Rest = Rest)
 
   }
- 
+
   # Get weight-at-age
   Waa <- sweep(N, MARGIN=2, STATS=parpop$waa, FUN='*')
   
