@@ -30,7 +30,7 @@ M_mis<-FALSE
 #M_mis_val<-0.4
 
 # initial numbers at-age parameters
-initN_par <- c(nage = page, N0 = 1e3, F_full = 0.5, M = M)
+initN_par <- c(nage = page, N0 = 1e5, F_full = 0.6, M = M)
 initN_type <- 'expDecline'
 
 #### Fishery parameters ####
@@ -39,7 +39,7 @@ initN_type <- 'expDecline'
 qC <- 0.0001
 qI <- 0.0001
 
-DecCatch<-TRUE #If survey catchability decreases with temperature, set to TRUE. 
+DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE. 
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
