@@ -39,7 +39,7 @@ initN_type <- 'expDecline'
 qC <- 0.0001
 qI <- 0.0001
 
-DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE. 
+DecCatch<-TRUE #If survey catchability decreases with temperature, set to TRUE. 
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
@@ -48,13 +48,13 @@ selC_typ <- 'input'
 
 # Recruitment
 ##HS with all recruitment values (what is used in stock assessment projections)##
-#Rpar <- c(SSB_star = 75000, #Used in projections (NEFSC 2019)
-#          cR = 1) # dont need to convert
-#R_typ <- 'HS'
+Rpar <- c(SSB_star = 75000, #Used in projections (NEFSC 2019)
+          cR = 1) # dont need to convert
+R_typ <- 'HS'
 ##For regular BH
-R_typ <- 'BH'
-Rpar<-c(a=0.0004313,b=0.000002392,g=0)
-R_mis<-TRUE #If BRPs and projections assume a wrong SRR, set to TRUE. 
+#R_typ <- 'BH'
+#Rpar<-c(a=0.0004313,b=0.000002392,g=0)
+R_mis<-FALSE #If BRPs and projections assume a wrong SRR, set to TRUE. 
 Rpar_mis <- c(SSB_star = 75000, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
               cR = 1,
               Rnyr= 20)
