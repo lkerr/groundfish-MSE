@@ -1,6 +1,6 @@
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.
-burnFmsyScalar <- 4
+burnFmsyScalar <- 5
 burnFsd <- 0.3
 
 # first age and plus age
@@ -30,7 +30,7 @@ M_mis<-FALSE
 #M_mis_val<-0.4
 
 # initial numbers at-age parameters
-initN_par <- c(nage = page, N0 = 1e5, F_full = 0.99, M = M)
+initN_par <- c(nage = page, N0 = 1e3, F_full = 0.5, M = M)
 initN_type <- 'expDecline'
 
 #### Fishery parameters ####
