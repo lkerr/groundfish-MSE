@@ -1,5 +1,4 @@
 get_burnF <- function(stock){
-  
   Rfun_lst <- Rfun_BmsySim
   parmgt <- list(RFUN_NM = 'forecast',
                  FREF_TYP = 'FmsySim',

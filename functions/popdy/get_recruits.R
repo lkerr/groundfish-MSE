@@ -137,6 +137,7 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
       else if (type2 == 'True'){
         SSBhinge<-SSB_star}
       assess_vals <- get_HistAssess(stock = stock[[i]])
+      if(exists('y')=='FALSE'){y<-1}
       if (y<=fmyearIdx){  # how to calculate historic recruitment, use first 10 assessment years
         if (SSB >= SSBhinge) {
           pred <- cR * remp(1, head(as.numeric(assess_vals$assessdat$R), 10))    

@@ -10,7 +10,7 @@ get_popInit <- function(stock){
     #                                                   fyear + nburn + 1, 
     #                                                   log(0.2), 0.1)
     F_full[1:fyear] <- rlnorm(fyear, log(0.2), burnFsd)
-    
+
     #### Initilizations ####
     # initialize the model with numbers and mortality rates
 
@@ -73,7 +73,7 @@ get_popInit <- function(stock){
     # (depending on the lag) and temperature (forget time lag here)
     SSB[1:fyear] <- sum(J1N[1:fyear,] * 
                             mat[1:fyear,] * waa[1:fyear,])
-    
+
     CN[1:fyear,] <- get_catch(F_full=F_full[1:fyear], M=init_M, 
                                 N=J1N[1:fyear,], selC=slxC[1:fyear,]) + 1e-3
 
@@ -89,7 +89,6 @@ get_popInit <- function(stock){
     
     
   })
-  
   return(out)
   
 }

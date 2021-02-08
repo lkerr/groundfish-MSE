@@ -140,6 +140,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     ## Recruitment
     # sd of historical R estimates
       parpop$Rpar_mis<-stockEnv$Rpar_mis#will use incorrect recruitment assumption if set in model parameters script
+
       N[y,1] <- Rfun(type = stockEnv$R_typ,
                      parpop = parpop, 
                      parenv = parenv, 
