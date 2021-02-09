@@ -141,6 +141,12 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       F <- get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)['Fadvice']
 
     }
+    
+    else if(tolower(parmgt$HCR) == 'tempslide'){
+      
+      F <- get_tempslideHCR(parpop, Fmsy=FThresh, Bmsy= BThresh, temp= Tanom[y])['Fadvice']
+      
+    }
     else if(tolower(parmgt$HCR) == 'simplethresh'){
      
       # added small value to F because F = 0 causes some estimation errors
