@@ -133,9 +133,7 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
   else if (type == 'HS'){ 
     if (stockNames== 'codGOM'){
     Rhat <- with(as.list(par),{
-      if (type2 == 'Mis'){SSBhinge<-SSB_starF}
-      else if (type2 == 'True'){
-        SSBhinge<-SSB_star}
+      SSBhinge<-SSB_star
       assess_vals <- get_HistAssess(stock = stock[[i]])
       if(exists('y')=='FALSE'){y<-1}
       if (y<=fmyearIdx){  # how to calculate historic recruitment, use first 10 assessment years

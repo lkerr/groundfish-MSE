@@ -41,7 +41,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
   Rfun <- Rfun_lst[[parmgt$RFUN_NM]]
   
   if(parmgt$FREF_TYP == 'YPR' | parmgt$FREF_TYP == 'SPR'){
-   
+
     F <- get_perRecruit(parmgt = parmgt, parpop = parpop)$RPvalue
     
     # If using a per-recruit F-based reference point paired with a forecast
