@@ -14,7 +14,7 @@ laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=5)  #AEW
 laa_typ <- 'vonB'
 
 # weight-at-age parameters
-waa_par <- c(0.2215,0.342,0.6385,0.7365,0.956,0.9915,1.287,1.3335,1.514) #Average of catch waa and ssb waa Used in NEFSC 2019 projections
+waa_par <- c(0.1774,0.4291,0.6939,0.8887,1.089,1.247,1.396,1.577,1.784) #Average of waa of last 5 years from 2019 assessment
 waa_typ <- 'input'
 
 # maturity-length parameters
@@ -43,7 +43,7 @@ DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE.
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
-selC <- c(0.012,0.031,0.106,0.313,0.415,0.426,1.000,0.614,0.614) #Used in Projections (NEFSC 2019)
+selC <- c(0.0114,0.0296,0.1014,0.3002,0.3976,0.6324,0.9574,0.6626,0.6626)#average of last 5 years in stock assessment (2019)
 selC_typ <- 'input'
 
 # Recruitment
