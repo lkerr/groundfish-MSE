@@ -30,7 +30,7 @@ M_mis<-FALSE
 #M_mis_val<-0.4
 
 # initial numbers at-age parameters
-initN_par <- c(nage = page, N0 = 1e4, F_full = 0.99, M = M)
+initN_par <- c(nage = page, N0 = 1e5, F_full = 1.1, M = M)
 initN_type <- 'expDecline'
 
 #### Fishery parameters ####

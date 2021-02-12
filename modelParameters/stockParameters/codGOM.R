@@ -26,12 +26,12 @@ mat_par <- c(0.087, 0.318, 0.697, 0.919, 0.982, 0.996, 0.999, 1, 1) # GOM cod AD
 mat_typ <- 'input'
 
 # natural mortality
-M  <- 0.2
-M_typ <- 'const'
+#M  <- 0.2
+#M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
-#M <- 0.4
-#M_typ <- 'ramp'
-M_mis<-FALSE #If there is a M misspecification, set to TRUE
+M <- 0.4
+M_typ <- 'ramp'
+M_mis<-TRUE #If there is a M misspecification, set to TRUE
 M_mis_val<-0.2 #The misspecified M value 
 
 # initial numbers at-age parameters
@@ -52,8 +52,8 @@ DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE.
 # ### change select to L50 paramaterization like maturity
 #selC <- c(s0 = 3, s1 = 0.5)
 #selC_typ <- 'Logistic'
-selC <- c(0.013, 0.066, 0.271, 0.663, 0.912, 0.982, 0.997, 1, 1) #GOM cod AGEPRO M=0.2
-#selC <- c(0.009, 0.051, 0.241, 0.651, 0.917, 0.985, 0.997, 1, 1) #GOM cod AGEPRO M-ramp
+#selC <- c(0.013, 0.066, 0.271, 0.663, 0.912, 0.982, 0.997, 1, 1) #GOM cod AGEPRO M=0.2
+selC <- c(0.009, 0.051, 0.241, 0.651, 0.917, 0.985, 0.997, 1, 1) #GOM cod AGEPRO M-ramp
 selC_typ <- 'input'
 
 #### Recruitment Options ####
@@ -66,13 +66,13 @@ selC_typ <- 'input'
 #Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
       #cR = 1,# dont need to convert
       #Rnyr= 20)#recruitment is drawn from the recruitment distribution of the last X years (x=Rnyr)
-#Rpar <- c(SSB_star = 7900,#mt  #from GOM COD 2019 MRAMP 
-#          cR = 1,
-#          Rnyr=20) # dont need to convert
-#R_typ <- 'HS'
+Rpar <- c(SSB_star = 7900,#mt  #from GOM COD 2019 MRAMP 
+          cR = 1,
+          Rnyr=20) # dont need to convert
+R_typ <- 'HS'
 ###For BH SR with relationship with temperature###
-R_typ <- 'BH'
-Rpar<-c(a=5.1698169,b=0.0002892,g=-1.423)
+#R_typ <- 'BH'
+#Rpar<-c(a=5.1698169,b=0.0002892,g=-1.423)
 R_mis<-TRUE #If BRPs and projections assume a wrong SRR, set to TRUE. 
 Rpar_mis <- c(SSB_star = 6300, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
 cR = 1,
