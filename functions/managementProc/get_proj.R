@@ -100,11 +100,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   # set up initial conditions
   N[1,] <- init 
   #Get beginning of year population in year t+1
-  if (type=='current'){
-    if (mproc$rhoadjust==TRUE & y>fmyearIdx){
-      Fhat<-parpop$Fhat/(1+stockEnv$Mohns_Rho_F[y])
-    }
-    else {Fhat<-parpop$Fhat}
+  if (type=='current'){Fhat<-parpop$Fhat}
     for(a in 2:(nage-1)){
       #init= population at the beginning of the year in t-1  
       #exponential survival to the next year/age (t)
@@ -119,12 +115,8 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     
     Recruits<-parpop$R
     
-    if (mproc$rhoadjust==TRUE & y>fmyearIdx){
-      Recruits[length(Recruits)]<-Recruits[length(Recruits)]/(1+stockEnv$Mohns_Rho_R[y])
-    }
-    
     N[1,1] <- prod(tail(Recruits,5))^(1/5)
-  }
+
   for(y in 2:length(Tanom)){
     for(a in 2:(nage-1)){
       #N[y-1] is the population at the beginning of the previous year 
