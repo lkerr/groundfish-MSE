@@ -91,7 +91,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     parenvTemp <- parenv
     parenvTemp$Tanom <- rep(parenv$Tanom[parenv$y],
                             times = length(parenv$Tanom))
-    
+
     simAtF <- lapply(1:length(candF), function(x){
                      get_proj(type = 'FREF',
                               parmgt = parmgt, 
@@ -106,6 +106,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     sumCW <- do.call(cbind, sapply(simAtF, '[', 'sumCW'))
     
     meanSumCW <- apply(sumCW, 2, mean)
+
     Fmsy <- candF[which.max(meanSumCW)]
     
     # Extract the equilibrium population (at each level of F) for use in 
@@ -126,7 +127,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
       # temperature anomaly (FMSY)
       
       parpopTemp <- parpop
-    
+
       simAtF <- lapply(1:length(candF), function(x){
         parpopTemp$J1N <- equiJ1N_MSY[[x]]
         get_proj(type = 'FREF',
@@ -142,12 +143,14 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
       sumCW <- do.call(cbind, sapply(simAtF, '[', 'sumCW'))
       
       meanSumCW <- apply(sumCW, 2, mean)
+ 
       Fmsy <- candF[which.max(meanSumCW)]
       
     }
     
 
     # Warn if maximum yield did not occur within the range
+
     if(Fmsy %in% range(candF)){
       warning(paste0('get_FBRP: maximum yield occurs at endpoint of ',
                      'candidate F values ', '(stock = ',

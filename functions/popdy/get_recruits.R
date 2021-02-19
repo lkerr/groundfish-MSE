@@ -65,7 +65,7 @@ get_recruits <- function(type, par, SSB, TAnom_y, pe_R, block,
   }
   
   with(stockEnv, {
-  
+
   if('rho' %in% names(par)){
     
     # Check that values for rho are between -1 and 1 as they should be for

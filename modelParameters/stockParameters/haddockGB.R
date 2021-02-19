@@ -53,7 +53,7 @@ selC_typ <- 'input'
 #R_typ <- 'HS'
 ##For regular BH
 R_typ <- 'BH'
-Rpar<-c(a=0.0004313,b=0.000002392,g=0)
+Rpar<-c(a=0.0004313,b=0.000002392,c=0)
 R_mis<-TRUE #If BRPs and projections assume a wrong SRR, set to TRUE. 
 Rpar_mis <- c(SSB_star = 75000, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
               cR = 1,

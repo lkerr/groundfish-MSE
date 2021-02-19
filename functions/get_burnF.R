@@ -28,8 +28,6 @@ get_burnF <- function(stock){
                      Rpar = Rpar,
                      Fhat = NA)})
 
-
-  
   Fref <- get_FBRP(parmgt = parmgt, parpop = parpop, parenv = parenv, 
                    Rfun_lst = Rfun_lst, stockEnv = stock)
   
