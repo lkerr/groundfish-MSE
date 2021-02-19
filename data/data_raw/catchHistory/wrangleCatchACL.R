@@ -4,7 +4,8 @@
 
 # code Description: 
 # This code reads in catch history tables from pdfs obtained from 
-# https://www.greateratlantic.fisheries.noaa.gov/ro/fso/reports/Groundfish_Catch_Accounting.htm
+# https://www.greateratlantic.fisheries.noaa.gov/ro/fso/reports/Groundfish_Catch_Accounting.html or
+# https://www.greateratlantic.fisheries.noaa.gov/ro/fso/reports/h/nemultispecies.html
 # And wrangles the data into a common usable format.
 
 # Last Edit: March 13, 2019

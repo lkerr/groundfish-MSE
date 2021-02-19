@@ -100,7 +100,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   # set up initial conditions
   N[1,] <- init 
   #Get beginning of year population in year t+1
-  if (type=='current'){Fhat<-parpop$Fhat}
+  if (type=='current'){Fhat<-parpop$Fhat
     for(a in 2:(nage-1)){
       #init= population at the beginning of the year in t-1  
       #exponential survival to the next year/age (t)
@@ -116,6 +116,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     Recruits<-parpop$R
     
     N[1,1] <- prod(tail(Recruits,5))^(1/5)
+  }
 
   for(y in 2:length(Tanom)){
     for(a in 2:(nage-1)){
