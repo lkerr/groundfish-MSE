@@ -1,4 +1,3 @@
-
 # Read in the temperature data
 cmip5 <- read.csv(file = 'data/data_raw/NEUS_CMIP5_annual_meansLong.csv',
                   header=TRUE)
@@ -11,13 +10,16 @@ cmip_base <- get_temperatureSeries(cmip5,
 names(cmip_base) <- c('YEAR', 'T')
 
 # Load in the GB temperature data for downscaling
-load('data/data_raw/mqt_oisst.Rdata')
-gbT <- mqt_oisst[,c('Year', 'q1')]
-names(gbT) <- c('YEAR', 'T')
+#load('data/data_raw/mqt_oisst.Rdata')
+#gbT <- mqt_oisst[,c('Year', 'q1')]
+
+#Load in the GOM temperature data for downscaling 
+GOMT<-read.csv('data/data_raw/GOMAveTemp.csv')[2:3]
+names(GOMT) <- c('YEAR', 'T')
 
 # Downscale from NELME to GB
 cmip_dwn <- get_temperatureProj(prj_data = cmip_base, 
-                                obs_data = gbT, 
+                                obs_data = GOMT, 
                                 ref_yrs = c(ref0, ref1))
 
 # Get the temperature vector

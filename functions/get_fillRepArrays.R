@@ -41,6 +41,10 @@ get_fillRepArrays <- function(stock){
     omval$SSBPROXY[r,m,] <- RPmat[,2]
     omval$FPROXYT[r,m,] <- RPmat[,3]
     omval$SSBPROXYT[r,m,] <- RPmat[,4]
+    omval$FRATIO[r,m,] <- stock$res$F.report[length(stock$res$F.report)]/RPmat[,1]
+    omval$SSBRATIO[r,m,] <- stock$res$SSB[length(stock$res$SSB)]/RPmat[,2]
+    omval$FRATIOT[r,m,] <- stock$F_full[y]/RPmat[,3]
+    omval$SSBRATIOT[r,m,] <- stock$SSB[y]/RPmat[,4]
     if(y == nyear){
       # Determine whether additional years should be added on to the
       # beginning of the series
