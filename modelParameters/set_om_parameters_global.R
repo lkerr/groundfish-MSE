@@ -18,7 +18,7 @@ mprocfile<-"mproc.csv"
 # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
 # Available stocks: haddockGB, codGOM, codGB_Error, pollock, yellowtailflounderGB
-stockExclude <- c('haddockGB', 'codGB_Error', 'pollock', 'yellowtailflounderGB')
+stockExclude <- c('codGOM', 'codGB_Error', 'pollock', 'yellowtailflounderGB')
 
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data
@@ -67,7 +67,7 @@ trcp <- 8.5
 
 ## Reference years for temperature downscale
 ref0 <- 1982
-ref1 <- 2018
+ref1 <- 2020
 
 ## Reference year and function for anomaly calculation
 baseTempYear <- 1985
