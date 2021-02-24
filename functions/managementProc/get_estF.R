@@ -4,6 +4,9 @@ get_estF<-function(catchproj,parmgtproj,parpopproj,parenv,Rfun,stockEnv){
     nage <- length(parpopproj$sel)
     N <- matrix(0, nrow=1, ncol=nage)
     init <- tail(parpopproj$J1N, 1)
+    if (mproc$rhoadjust==TRUE & y>fmyearIdx){
+      init<-init/(1+stockEnv$Mohns_Rho_SSB[y])
+    }
     N[1,] <- init 
     for(a in 2:(nage-1)){
       #init= population at the beginning of the year in t-1  
@@ -18,10 +21,6 @@ get_estF<-function(catchproj,parmgtproj,parpopproj,parenv,Rfun,stockEnv){
                          parpopproj$M[nage])
     
     R<-parpopproj$R
-    
-    if (mproc$rhoadjust==TRUE & y>165){
-      R[length(R)]<-R[length(R)]/(1+stockEnv$Mohns_Rho_R[y])
-    }
     
     N[1,1] <- prod(tail(R,5))^(1/5)
     

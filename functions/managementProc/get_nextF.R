@@ -207,6 +207,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parpopproj$SSBhat<-stockEnv$res$SSB
       parpopproj$R<-stockEnv$res$N.age[,1]
       parpopproj$J1N<-tail(stockEnv$res$N.age,1)
+      parpopproj$catch<-stockEnv$res$catch.obs
       for (i in 1:100){
           catchproj[i,]<-get_proj(type = 'current',
                                   parmgt = parmgtproj, 
@@ -252,6 +253,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
             catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
         }
       }
+      if (stockEnv$stockName=='haddockGB'){catchproj[1]<-catchproj[1]*.1278}
       F <- get_F(x = catchproj[1],
                    Nv = stockEnv$J1N[y,], 
                    slxCv = stockEnv$slxC[y,], 
@@ -259,6 +261,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                    waav = stockEnv$waa[y,])
       }
       else{
+      if (stockEnv$stockName=='haddockGB'){catchproj[2]<-catchproj[2]*.1278}
       F <- get_F(x = stockEnv$catchproj[2],
                  Nv = stockEnv$J1N[y,], 
                  slxCv = stockEnv$slxC[y,], 

@@ -100,7 +100,14 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   # set up initial conditions
   N[1,] <- init 
   #Get beginning of year population in year t+1
-  if (type=='current'){Fhat<-parpop$Fhat
+  if (type=='current'){
+
+    Fhat<-get_F(x = parpop$catch[length(parpop$catch)],
+          Nv = init, 
+          slxCv = parpop$sel, 
+          M = parpop$M, 
+          waav = parpop$waa)
+
     for(a in 2:(nage-1)){
       #init= population at the beginning of the year in t-1  
       #exponential survival to the next year/age (t)
