@@ -51,7 +51,7 @@ get_J1Updates <- function(stock){
       for(i in 1:nstock){
         if(y %in% assess_vals$assessdat$MSEyr){
         rep_assess <- get_AssessVals()
-        F_full[y] <- rep_assess$fish_mort
+        #F_full[y] <- rep_assess$fish_mort
         R[y] <- rep_assess$rec
         natM[y] <- rep_assess$nat_mort
       }

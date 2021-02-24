@@ -116,7 +116,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     if(parmgt$RFUN_NM == 'forecast'){
       
       parpopUpdate$J1N <- Fref$equiJ1N_MSY
-      parpopUpdateT$J1N <- FrefT$equiJ1N_MSY
       
     }
     
@@ -124,6 +123,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
     
+    parpopUpdateT$J1N <- FrefT$equiJ1N_MSY
     BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT, #Also calculate the true Bmsy
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = FrefT[['RPvalue']], stockEnv = stockEnv)
@@ -261,7 +261,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                    waav = stockEnv$waa[y,])
       }
       else{
-      if (stockEnv$stockName=='haddockGB'){catchproj[2]<-catchproj[2]*.1278}
+      if (stockEnv$stockName=='haddockGB'){stockEnv$catchproj[2]<-stockEnv$catchproj[2]*.1278}
       F <- get_F(x = stockEnv$catchproj[2],
                  Nv = stockEnv$J1N[y,], 
                  slxCv = stockEnv$slxC[y,], 
