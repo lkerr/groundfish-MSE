@@ -5,6 +5,7 @@
 get_popInit <- function(stock){
 
   stock <- within(stock, {
+
     # First few years of fishery information
     # F_full[1:(ncaayear + fyear + nburn +1)] <- rlnorm(ncaayear + 
     #                                                   fyear + nburn + 1, 
@@ -33,7 +34,7 @@ get_popInit <- function(stock){
                                   selC = slxC[1:(fyear-1),])
     waa[1:(fyear-1),] <- get_weightAtAge(type=waa_typ, par=waa_par, 
                                          laa=laa[1:(fyear-1),],
-                                         inputUnit='kg',y=1,fmyearIdx=fmyearIdx) 
+                                         inputUnit='kg',y=1,fmyearIdx=fmyearIdx)
     
     paaCN[1:(fyear-1),] <- (CN[1:(fyear-1),]) / sum(CN[1:(fyear-1),])
     IN[1:(fyear-1),] <- get_survey(F_full=F_full[1:(fyear-1)], M=init_M, 

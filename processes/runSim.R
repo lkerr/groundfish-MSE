@@ -138,7 +138,6 @@ for(r in 1:nrep){
       } #End killing fish loop
 
 
-
               end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
           #Save economic results once in a while to a csv file.
         if(mproc$ImplementationClass[m]=="Economic" &(y >= fmyearIdx) & (chunk_flag==0 | yearitercounter==max_yiter)) {

@@ -1,7 +1,7 @@
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.
-burnFmsyScalar <- 4
-burnFsd <- 0.4
+burnFmsyScalar <- 6
+burnFsd <- 0.3
 
 # first age and plus age
 fage <- 1
@@ -15,7 +15,7 @@ laa_typ <- 'vonB'
 
 # weight-at-age parameters
 waa_par <- c(0.1774,0.4291,0.6939,0.8887,1.089,1.247,1.396,1.577,1.784) #Average of waa of last 5 years from 2019 assessment
-waa_typ <- 'input'
+waa_typ <- 'matrix'
 
 # maturity-length parameters
 #mat_par <- c(0.21, 29.7) #AEW
@@ -39,7 +39,7 @@ initN_type <- 'expDecline'
 qC <- 0.0001
 qI <- 0.0001
 
-DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE. 
+DecCatch<-TRUE #If survey catchability decreases with temperature, set to TRUE. 
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
@@ -63,8 +63,10 @@ Rpar_mis <- c(SSB_star = 75000, #the 'wrong' SRR parameters that will be used in
 #### Survey parameters ####
 
 ## Survey information
-selI <- c(1)
-selI_typ <- 'const'
+selI <- c(0.444,0.697,0.755,0.759,0.779,0.712,0.807,0.772,0.772)
+#selI<-c(0.01031325,0.03308079,0.1010167,0.2698224,0.5496178,0.8034161,0.9349374,0.9840102,1)
+selI_typ <- 'input'
+
 timeI <- 0.5 # when is the survey (as a proportion of the year)
 
 #### Stock assessment model parameters ####

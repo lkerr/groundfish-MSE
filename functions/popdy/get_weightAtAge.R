@@ -26,7 +26,8 @@ get_weightAtAge <- function(type, par, laa, inputUnit,y,fmyearIdx){
 
     waa <- par[1] * laa ^ par[2]
 
-  }else if(type == 'input'){
+  }
+  else if(type == 'input'){
     
     waa <- par[1:length(par)]
   
@@ -38,7 +39,15 @@ get_weightAtAge <- function(type, par, laa, inputUnit,y,fmyearIdx){
     }
   else{waa<-par[10:18]}
     
-  }else{
+  }
+  else if(type == 'matrix'){
+    waamat<-as.matrix(read.csv('data/data_raw/waamatrix.csv'))
+    colnames(waamat)<-NULL
+    if (y<82){waa <- waamat[1,]}
+    else if (y>81 & y<169){waa <- waamat[(y-81),]}
+    else if (y>168){waa <- par[1:length(par)]}
+  }
+  else{
 
     stop('weight-at-age type not recognized')
   
