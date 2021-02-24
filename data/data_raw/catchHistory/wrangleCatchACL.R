@@ -4,8 +4,7 @@
 
 # code Description: 
 # This code reads in catch history tables from pdfs obtained from 
-# https://www.greateratlantic.fisheries.noaa.gov/ro/fso/reports/Groundfish_Catch_Accounting.html or
-# https://www.greateratlantic.fisheries.noaa.gov/ro/fso/reports/h/nemultispecies.html
+# https://www.greateratlantic.fisheries.noaa.gov/ro/fso/reports/h/groundfish_catch_accounting
 # And wrangles the data into a common usable format.
 
 # Last Edit: March 13, 2019
@@ -16,6 +15,7 @@ library(rJava)
 library(tabulizer)
 library(tidyverse)
 library(purrr)
+library(xml2)
 
 ##### Functions #####
 removeCommas<- function(table) {gsub(",", "", table, fixed = TRUE)}
@@ -33,7 +33,7 @@ wrangle<-function(data,selVars=c(2,4,6:9,11:13,15:16),sliceVars=-c(2),year=2010)
 
 ##### Extract and wrangle the  the tables #####
 # 2010
-location<- c("FY10_Mults_Catch_Estimates.pdf")
+location<- c("data/data_raw/catchHistory/FY10_Mults_Catch_Estimates.pdf")
 FY10 <- extract_tables(location,pages=c(2:6),method="lattice")
 # Convert to tibbles
 FY10_Catch<-as_tibble(FY10[[1]])
@@ -49,7 +49,7 @@ FY10_ACL<-wrangle(FY10_ACL,selVars=c(2,4,6:9,11:12,14:15),sliceVars=-c(1,3:4))
 FY10_CtoACL<-wrangle(FY10_CtoACL,selVars=c(2,4,6:9,11:12,14:15),sliceVars=-c(1,3:4))
 
 # 2011
-location<- c("FY11_Mults_Catch_Estimates.pdf")
+location<- c("data/data_raw/catchHistory/FY11_Mults_Catch_Estimates.pdf")
 FY11 <- extract_tables(location,pages=c(2:6),method="lattice")
 # Convert to tibbles
 FY11_Catch<-as_tibble(FY11[[1]])
@@ -67,7 +67,7 @@ FY11_ACL<-wrangle(FY11_ACL,selVars=c(1:ncol(FY11_ACL)),sliceVars=FY11sliceVars,y
 FY11_CtoACL<-wrangle(FY11_CtoACL,selVars=FY11selVars,sliceVars=-1,year=2011)
 
 # 2012
-location<- c("FY12_Mults_Catch_Estimates.pdf")
+location<- c("data/data_raw/catchHistory/FY12_Mults_Catch_Estimates.pdf")
 FY12 <- extract_tables(location,pages=c(2:6),method="lattice")
 # Convert to tibbles
 FY12_Catch<-as_tibble(FY12[[1]])
@@ -85,7 +85,7 @@ FY12_ACL<-wrangle(FY12_ACL,selVars=FY12selVars,sliceVars=FY12sliceVars,year=2012
 FY12_CtoACL<-wrangle(FY12_CtoACL,selVars=FY12selVars,sliceVars=FY12sliceVars,year=2012)
 
 #2013
-location<- c("FY13_Mults_Catch_Estimates.pdf")
+location<- c("data/data_raw/catchHistory/FY13_Mults_Catch_Estimates.pdf")
 FY13 <- extract_tables(location,pages=c(2:6),method="lattice")
 # Convert to tibbles
 FY13_CtoACL<-as_tibble(FY13[[1]])
@@ -103,7 +103,7 @@ FY13_Landing<-wrangle(FY13_Landing,year=2013)
 FY13_Discard<-wrangle(FY13_Discard,year=2013)
 
 #2014
-location<- c("FY14_Mults_Catch_Estimates.pdf")
+location<- c("data/data_raw/catchHistory/FY14_Mults_Catch_Estimates.pdf")
 FY14 <- extract_tables(location,pages=c(2:6),method="lattice")
 # Convert to tibbles
 FY14_CtoACL<-as_tibble(FY14[[1]])
@@ -121,7 +121,7 @@ FY14_Landing<-wrangle(FY14_Landing,year=2014)
 FY14_Discard<-wrangle(FY14_Discard,year=2014)
 
 #2015
-location<- c("FY15_Mults_Catch_Estimates.pdf")
+location<- c("data/data_raw/catchHistory/FY15_Mults_Catch_Estimates.pdf")
 FY15 <- extract_tables(location,pages=c(2:6),method="lattice")
 # Convert to tibbles
 FY15_CtoACL<-as_tibble(FY15[[1]])
@@ -139,7 +139,7 @@ FY15_Landing<-wrangle(FY15_Landing,year=2015)
 FY15_Discard<-wrangle(FY15_Discard,year=2015)
 
 #2016
-location<- c("FY16_Mults_Catch_Estimates.pdf")
+location<- c("data/data_raw/catchHistory/FY16_Mults_Catch_Estimates.pdf")
 FY16 <- extract_tables(location,pages=c(2:6),method="lattice")
 # Convert to tibbles
 FY16_CtoACL<-as_tibble(FY16[[1]])
@@ -157,7 +157,7 @@ FY16_Landing<-wrangle(FY16_Landing,year=2016)
 FY16_Discard<-wrangle(FY16_Discard,year=2016)
 
 #2017
-location<- c("FY17_Mults_Catch_Estimates.pdf")
+location<- c("data/data_raw/catchHistory/FY17_Mults_Catch_Estimates.pdf")
 FY17 <- extract_tables(location,pages=c(2:6),method="lattice")
 # Convert to tibbles
 FY17_CtoACL<-as_tibble(FY17[[1]])
@@ -172,6 +172,22 @@ FY17_Catch<-wrangle(FY17_Catch,year=2017)
 FY17_Landing<-wrangle(FY17_Landing,year=2017)
 FY17_Discard<-wrangle(FY17_Discard,year=2017)
 
+#2019
+location<- c("data/data_raw/catchHistory/FY19_Mults_Catch_Estimates.pdf")
+FY19 <- extract_tables(location,pages=c(2:6),method="lattice")
+# Convert to tibbles
+FY19_CtoACL<-as_tibble(FY19[[1]])
+FY19_ACL<-as_tibble(FY19[[2]])
+FY19_Catch<-as_tibble(FY19[[3]])
+FY19_Landing<-as_tibble(FY19[[4]])
+FY19_Discard<-as_tibble(FY19[[5]])
+# Wrangle
+FY19_CtoACL<-wrangle(FY19_CtoACL,sliceVars=-c(1,3),year=2019)
+FY19_ACL<-wrangle(FY19_ACL,selVars=c(1:ncol(FY19_ACL)),sliceVars=-c(1,3),year=2019)
+FY19_Catch<-wrangle(FY19_Catch,year=2019)
+FY19_Landing<-wrangle(FY19_Landing,year=2019)
+FY19_Discard<-wrangle(FY19_Discard,year=2019)
+
 ##### Bind annual tables together #####
 
 # Catch Data ####
@@ -181,13 +197,13 @@ names(FY10_Catch)<-names(FY11_Catch)<-names(FY12_Catch)<-
   c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
     "Scallop Fishery","State Water","Other","Year")
 names(FY13_Catch)<-names(FY14_Catch)<-names(FY15_Catch)<-
-  names(FY16_Catch)<-names(FY17_Catch)<-
+  names(FY16_Catch)<-names(FY17_Catch)<-names(FY19_Catch)<-
   c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
     "Scallop Fishery","Small Mesh","State Water","Other","Year")
 
 # Bind yearly tables together
 Catch<-bind_rows(FY10_Catch,FY11_Catch,FY12_Catch,FY13_Catch,FY14_Catch,FY15_Catch,
-                 FY16_Catch,FY17_Catch)
+                 FY16_Catch,FY17_Catch,FY19_Catch)
 
 # Make character columns numeric
 Catch[,-1]<-map(Catch[,-1], as.numeric)
@@ -199,13 +215,13 @@ names(FY10_ACL)<-names(FY11_ACL)<-names(FY12_ACL)<-
   c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
     "Scallop Fishery","State Water","Other","Year")
 names(FY13_ACL)<-names(FY14_ACL)<-names(FY15_ACL)<-
-  names(FY16_ACL)<-names(FY17_ACL)<-
+  names(FY16_ACL)<-names(FY17_ACL)<-names(FY19_ACL)<-
   c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
     "Scallop Fishery","Small Mesh","State Water","Other","Year")
 
 # Bind yearly tables together
 ACL<-bind_rows(FY10_ACL,FY11_ACL,FY12_ACL,FY13_ACL,FY14_ACL,FY15_ACL,
-                 FY16_ACL,FY17_ACL)
+                 FY16_ACL,FY17_ACL,FY19_ACL)
 
 # Make character columns numeric
 ACL[,-1]<-map(ACL[,-1], as.numeric)
@@ -217,13 +233,13 @@ names(FY10_CtoACL)<-names(FY11_CtoACL)<-names(FY12_CtoACL)<-
   c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
     "Scallop Fishery","State Water","Other","Year")
 names(FY13_CtoACL)<-names(FY14_CtoACL)<-names(FY15_CtoACL)<-
-  names(FY16_CtoACL)<-names(FY17_CtoACL)<-
+  names(FY16_CtoACL)<-names(FY17_CtoACL)<-names(FY19_CtoACL)<-
   c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
     "Scallop Fishery","Small Mesh","State Water","Other","Year")
 
 # Bind yearly tables together
 CtoACL<-bind_rows(FY10_CtoACL,FY11_CtoACL,FY12_CtoACL,FY13_CtoACL,FY14_CtoACL,FY15_CtoACL,
-               FY16_CtoACL,FY17_CtoACL)
+               FY16_CtoACL,FY17_CtoACL,FY19_CtoACL)
 
 # Make character columns numeric
 CtoACL[,-1]<-map(CtoACL[,-1], as.numeric)
@@ -235,13 +251,13 @@ names(FY10_Landing)<-names(FY11_Landing)<-names(FY12_Landing)<-
   c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
     "Scallop Fishery","State Water","Other","Year")
 names(FY13_Landing)<-names(FY14_Landing)<-names(FY15_Landing)<-
-  names(FY16_Landing)<-names(FY17_Landing)<-
+  names(FY16_Landing)<-names(FY17_Landing)<-names(FY19_Landing)<-
   c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
     "Scallop Fishery","Small Mesh","State Water","Other","Year")
 
 # Bind yearly tables together
 Landing<-bind_rows(FY10_Landing,FY11_Landing,FY12_Landing,FY13_Landing,FY14_Landing,FY15_Landing,
-                  FY16_Landing,FY17_Landing)
+                  FY16_Landing,FY17_Landing,FY19_Landing)
 
 # Make character columns numeric
 Landing[,-1]<-map(Landing[,-1], as.numeric)
@@ -253,13 +269,13 @@ names(FY10_Discard)<-names(FY11_Discard)<-names(FY12_Discard)<-
   c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
     "Scallop Fishery","State Water","Other","Year")
 names(FY13_Discard)<-names(FY14_Discard)<-names(FY15_Discard)<-
-  names(FY16_Discard)<-names(FY17_Discard)<-
+  names(FY16_Discard)<-names(FY17_Discard)<-names(FY19_Discard)<-
   c("Stock","Total","Commercial","Sector","Common Pool","Recreational","Herring Fishery",
     "Scallop Fishery","Small Mesh","State Water","Other","Year")
 
 # Bind yearly tables together
 Discard<-bind_rows(FY10_Discard,FY11_Discard,FY12_Discard,FY13_Discard,FY14_Discard,FY15_Discard,
-                   FY16_Discard,FY17_Discard)
+                   FY16_Discard,FY17_Discard,FY19_Discard)
 
 # Make character columns numeric
 Discard[,-1]<-map(Discard[,-1], as.numeric)
@@ -274,4 +290,4 @@ catchHist<-bind_rows(Tables)
 catchHist$Stock[which(catchHist$Stock=="SNE Winter Flounder")]<-"SNE/MA Winter Flounder"
 catchHist$Stock[which(catchHist$Stock=="SNE/MA Winter Flounder*")]<-"SNE/MA Winter Flounder"
 
-#write_csv(catchHist,"catchHist.csv")
+write_csv(catchHist,"catchHist.csv")
