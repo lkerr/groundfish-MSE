@@ -180,23 +180,23 @@
 1
 1
 # Selectivity Options for each block 1=by age, 2=logisitic, 3=double logistic
-2
+1
 # Selectivity Block Data
-0 -1 0 0
-0 -1 0 0
-0 -1 0 0
-0 -1 0 0
-0 -1 0 0
-0 -1 0 0
-0 -1 0 0
-0 -1 0 0
-0 -1 0 0
-4.5 1 1 0.2
-0.5 1 1 0.2
-0 -1 0 0
-0 -1 0 0
-0 -1 0 0
-0 -1 0 0
+0.01            1               0               1               
+0.1             1               0               1               
+0.3             1               0               1               
+0.5             1               0               1               
+0.8             1               0               1               
+0.9             1               0               1               
+1               1               0               1               
+1               -2              0               1               
+1               -2              0               1               
+0               0               0               0               
+0               0               0               0               
+0               0               0               0               
+0               0               0               0               
+0               0               0               0               
+0               0               0               0  
 # Fleet Start Age
 1
 # Fleet End Age

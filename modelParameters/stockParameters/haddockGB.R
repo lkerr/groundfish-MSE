@@ -63,8 +63,7 @@ Rpar_mis <- c(SSB_star = 75000, #the 'wrong' SRR parameters that will be used in
 #### Survey parameters ####
 
 ## Survey information
-selI <- c(0.444,0.697,0.755,0.759,0.779,0.712,0.807,0.772,0.772)
-#selI<-c(0.01031325,0.03308079,0.1010167,0.2698224,0.5496178,0.8034161,0.9349374,0.9840102,1)
+selI <- c(0.444,0.697,0.755,0.759,0.779,0.712,0.807,0.772,0.772) #catchabilities from the VPA
 selI_typ <- 'input'
 
 timeI <- 0.5 # when is the survey (as a proportion of the year)
