@@ -84,10 +84,12 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       if(parmgt$RFUN_NM == 'forecast'){
         parpopUpdate$J1N <- Fref$equiJ1N_MSY
       }
-
+      
       Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
                               parenv = parenv, Rfun_lst = Rfun_BmsySim,
                               FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
+   
+      parpopUpdateT$J1N <- FrefT$equiJ1N_MSY
       
       BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT, #Also calculate the true Bmsy
                         parenv = parenv, Rfun_lst = Rfun_BmsySim,
@@ -189,6 +191,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parpopproj$SSBhat<-stockEnv$res$SSB
       parpopproj$R<-stockEnv$res$N.age[,1]
       parpopproj$J1N<-tail(stockEnv$res$N.age,1)
+      parpopproj$catch<-stockEnv$res$catch.obs
       Rfun<-Rfun_BmsySim$forecast
       F<-pstar(maxp=0.4,relB=tail(stockEnv$res$SSB,1)/BThresh,parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv,FrefRPvalue=FrefRPvalue)
     }

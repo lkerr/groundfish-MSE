@@ -4,6 +4,7 @@ pstar<-function(maxp,relB,parmgtproj,parpopproj,parenv,Rfun,stockEnv,FrefRPvalue
   # Mid Atlantic used a ramped control rule to have the target P* change
   # with biomass relative to SSBmsy
   # maxp is the max P* target above SSBmsy (MAFMC used 0.4 previouly)
+
   calc_pstar = function(maxp, relB)#function to calculate P* based on SSB/SSBmsy
   {
     if(relB>=1) #at asymptote

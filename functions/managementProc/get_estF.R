@@ -23,7 +23,7 @@ get_estF<-function(catchproj,parmgtproj,parpopproj,parenv,Rfun,stockEnv){
     R<-parpopproj$R
     
     N[1,1] <- prod(tail(R,5))^(1/5)
-    
+
     Fest <- get_F(x = catchproj,
                     Nv = N, 
                     slxCv = parpopproj$sel, 
