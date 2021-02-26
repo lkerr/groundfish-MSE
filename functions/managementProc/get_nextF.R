@@ -256,7 +256,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
             catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
         }
       }
-      if (stockEnv$stockName=='haddockGB'){catchproj[1]<-catchproj[1]*.1278}
       F <- get_F(x = catchproj[1],
                    Nv = stockEnv$J1N[y,], 
                    slxCv = stockEnv$slxC[y,], 
@@ -264,7 +263,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                    waav = stockEnv$waa[y,])
       }
       else{
-      if (stockEnv$stockName=='haddockGB'){stockEnv$catchproj[2]<-stockEnv$catchproj[2]*.1278}
       F <- get_F(x = stockEnv$catchproj[2],
                  Nv = stockEnv$J1N[y,], 
                  slxCv = stockEnv$slxC[y,], 
