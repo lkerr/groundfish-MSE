@@ -131,28 +131,44 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
   }
     
   else if (type == 'HS'){ 
-    Rhat <- with(as.list(par),{
-      SSBhinge<-SSB_star
-      if (type2=="True"){
-      assess_vals <- get_HistAssess(stock = stock[[i]])
-      if (SSB >= SSBhinge) {
-       pred <- cR * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
-    } else if (SSB < SSBhinge){
-      pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
-    }
-      }
-      else{
-        if (SSB >= SSBhinge) {
-          pred <- cR * remp(1, tail(as.numeric(R_est), Rnyr))
-        } 
-        else if (SSB < SSBhinge){
-          pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(R_est), Rnyr))
+    if(stock[[i]]$stockName=='codGOM'){
+      Rhat <- with(as.list(par),{
+        SSBhinge<-SSB_star
+        if (type2=="True"){
+          assess_vals <- get_HistAssess(stock = stock[[i]])
+          if (SSB >= SSBhinge) {
+            pred <- cR * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
+          } else if (SSB < SSBhinge){
+            pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
+          }
         }
-      }
-    return(pred)
-    })
+        else{
+          if (SSB >= SSBhinge) {
+            pred <- cR * remp(1, tail(as.numeric(R_est), Rnyr))
+          } 
+          else if (SSB < SSBhinge){
+            pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(R_est), Rnyr))
+          }
+        }
+        return(pred)
+      })}
+      if(stock[[i]]$stockName=='haddockGB'){
+        Rhat <- with(as.list(par),{
+        if (type2=="True"){
+          assess_vals <- get_HistAssess(stock = stock[[i]])
+          if(exists('y')==FALSE){
+            pred<-remp(1,as.numeric(assess_vals$assessdat$R[1:(length(assess_vals$assessdat$R)-2)]))
+          }
+          else{
+            pred<-remp(1,as.numeric(assess_vals$assessdat$R))
+          }
+        }
+        else{
+          pred <- remp(1, tail(as.numeric(R_est)))
+        }
+        return(pred)
+        })}
   }
-    
   # Autocorrelation component
   ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
   

@@ -50,7 +50,7 @@ selC_typ <- 'input'
 ##HS with all recruitment values (what is used in stock assessment projections)##
 Rpar <- c(SSB_star = 75000, #Used in projections (NEFSC 2019)
           cR = 1,
-          Rnyr= 20) # dont need to convert
+          Rnyr= 15) # dont need to convert
 R_typ <- 'HS'
 ##For regular BH
 #R_typ <- 'BH'
@@ -58,7 +58,7 @@ R_typ <- 'HS'
 R_mis<-FALSE #If BRPs and projections assume a wrong SRR, set to TRUE. 
 Rpar_mis <- c(SSB_star = 75000, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
               cR = 1,
-              Rnyr= 20)
+              Rnyr= 15)
 
 #### Survey parameters ####
 

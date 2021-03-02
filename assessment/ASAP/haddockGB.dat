@@ -539,43 +539,43 @@
 0
 0
 # Catch Effective Sample Size by Year and Fleet
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
-100
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
+80
 # Discard Effective Sample Size by Year and Fleet
 0
 0
@@ -617,11 +617,11 @@
 # Lambda for F Mult in First year by Fleet
 0
 # CV for F Mult in First year by Fleet
-0.1
+0.4
 # Lambda for F Mult Deviations by Fleet
-0
+1
 # CV for F Mult Deviations by Fleet
-0.1
+1.2
 # Lambda for N in 1st Year Deviations
 1
 # CV for N in 1st Year Deviations
