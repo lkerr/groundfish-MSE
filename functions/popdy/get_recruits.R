@@ -41,7 +41,7 @@
 # Rhat_ym1: predicted recruitment from previous year
 
 get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
-                         R_ym1=NULL, Rhat_ym1=NULL, stockEnv = stock){
+                         R_ym1=NULL, Rhat_ym1=NULL, stockEnv=stock, R_est){
 
   if(!type %in% c('BH', 'BHSteep', 'HS')){
     stop(paste('get_recruits: check spelling of R_typ in individual stock 
@@ -131,41 +131,26 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
   }
     
   else if (type == 'HS'){ 
-    if (stockNames== 'codGOM'){
     Rhat <- with(as.list(par),{
       SSBhinge<-SSB_star
+      if (type2=="True"){
       assess_vals <- get_HistAssess(stock = stock[[i]])
-      if(exists('y')=='FALSE'){y<-1}
-      if (y<=fmyearIdx){  # how to calculate historic recruitment, use first 10 assessment years
-        if (SSB >= SSBhinge) {
-          pred <- cR * remp(1, head(as.numeric(assess_vals$assessdat$R), 10))    
-          
-        } else if (SSB < SSBhinge){
-          pred <-  cR * (SSB/SSBhinge) * remp(1, head(as.numeric(assess_vals$assessdat$R), 10))    
-          
-        }
-        
-    } else if (y>fmyearIdx){ 
-# how to calculate projected recruitment using last 20 assessment years
       if (SSB >= SSBhinge) {
-       pred <- cR * remp(1, tail(as.numeric(stockEnv$codGOM$res$N.age[,1]), Rnyr))
+       pred <- cR * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
     } else if (SSB < SSBhinge){
-      pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(stockEnv$codGOM$res$N.age[,1]), Rnyr))
+      pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
     }
-    return(pred)
-    }})}
-    if (stockNames== 'haddockGB'){
-      Rhat <- with(as.list(par),{
-        assess_vals <- get_HistAssess(stock = stock[[i]])
-      if (SSB >= SSB_star) {
-        pred <- cR * remp(1, as.numeric(assess_vals$assessdat$R))
-        
-      } else if (SSB < SSB_star){
-        pred <-  cR * (SSB/SSB_star) * remp(1, as.numeric(assess_vals$assessdat$R))
-        
       }
-      return(pred)
-      })}
+      else{
+        if (SSB >= SSBhinge) {
+          pred <- cR * remp(1, tail(as.numeric(R_est), Rnyr))
+        } 
+        else if (SSB < SSBhinge){
+          pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(R_est), Rnyr))
+        }
+      }
+    return(pred)
+    })
   }
     
   # Autocorrelation component

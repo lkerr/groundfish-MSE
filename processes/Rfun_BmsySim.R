@@ -12,15 +12,15 @@ Rfun_BmsySim <- list(
   # are 25 years available in the series -- otherwise it just uses what is
   # left).
   
-  forecast = function(type, parpop, parenv, SSB, TAnom, sdR, ...){
+  forecast = function(type, parpop, parenv, SSB, TAnom, sdR, stockEnv,...){
     
     Rpar<-parpop$Rpar
-    if (stockNameList=='codGOM'&& stock$codGOM$M_mis=='TRUE' && exists("y")=='TRUE'){
-    type2<-'Mis'}#If there is an M misspecificaiton for cod, the SSB hinge is different, so BRP estimation and projections will assume a different SSB hinge. 
-    else {type2<-'True'}
-    if (stockNameList=='codGOM'&& stock$codGOM$R_mis=='TRUE' && exists("y")=='TRUE'){
-      type<-'HS' #If a theoretical stock-recruitment relationship is used but BRPs and projections do not use it, a hockey-stick SRR is used instead. 
-      Rpar<-parpop$Rpar_mis}
+    if (stock[[i]]$R_mis=='TRUE' && exists("y")=='TRUE'){
+      type<-'HS' }
+    if (parpop$switch==TRUE){
+      type2<-'True'}
+    else{type2<-'Est'}
+    #If a theoretical stock-recruitment relationship is used but BRPs and projections do not use it, a hockey-stick SRR is used instead. 
     Rpar['rho'] <- 0
     gr <- get_recruits(type = type, 
                  type2=type2,
@@ -29,7 +29,8 @@ Rfun_BmsySim <- list(
                  TAnom = TAnom,
                  pe_R = sdR,
                  R_ym1 = 1, block = 'late',
-                 Rhat_ym1 = 1)
+                 Rhat_ym1 = 1,
+                 R_est=parpop$R)
     return(gr[['Rhat']])
     },
   

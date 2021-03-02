@@ -48,18 +48,17 @@ selC_typ <- 'input'
 
 # Recruitment
 ##HS with all recruitment values (what is used in stock assessment projections)##
-#Rpar <- c(SSB_star = 75000, #Used in projections (NEFSC 2019)
-#          cR = 1,
-#          Rnyr= 20) # dont need to convert
-#R_typ <- 'HS'
+Rpar <- c(SSB_star = 75000, #Used in projections (NEFSC 2019)
+          cR = 1,
+          Rnyr= 20) # dont need to convert
+R_typ <- 'HS'
 ##For regular BH
-R_typ <- 'BH'
-Rpar<-c(a=0.0004313,b=0.000002392,g=0)
+#R_typ <- 'BH'
+#Rpar<-c(a=0.0004313,b=0.000002392,g=0)
 R_mis<-FALSE #If BRPs and projections assume a wrong SRR, set to TRUE. 
 Rpar_mis <- c(SSB_star = 75000, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
               cR = 1,
               Rnyr= 20)
-
 
 #### Survey parameters ####
 
@@ -73,7 +72,6 @@ timeI <- 0.5 # when is the survey (as a proportion of the year)
 
 # number of years in assessment model
 ncaayear <- 33
-
 
 # Expansion range for setting limits on parameter bounds
 boundRgLev <- 1.5

@@ -47,7 +47,6 @@
 #         it is pretty clear this way at least.
 
 get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
-
   # A general application of national standard 1 reference points. There
   # are different ways to grab the F reference point and the B reference
   # point and those will be implemented in get_FBRP
@@ -71,9 +70,11 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parpopT<-parpop
       parpopT$J1N<-stockEnv$J1N[1:(y-1),]
       parpopT$selC<-stockEnv$selC
+      stockEnvT<-stockEnv
+      stockEnvT$R_mis<-FALSE
       FrefT <- get_FBRP(parmgt = parmgtT, parpop = parpopT, #Also calculate the true Fmsy
                         parenv = parenv, Rfun_lst = Rfun_BmsySim, 
-                        stockEnv = stockEnv)
+                        stockEnv = stockEnvT)
       
       # if using forecast start the BMSY initial population at the equilibrium
       # FMSY level (before any temperature projections). This is consistent
@@ -90,13 +91,15 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                               FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
    
       parpopUpdateT$J1N <- FrefT$equiJ1N_MSY
-      
+      stockEnvT<-stockEnv
+      stockEnvT$R_mis<-FALSE
       BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT, #Also calculate the true Bmsy
                         parenv = parenv, Rfun_lst = Rfun_BmsySim,
-                        FBRP = FrefT[['RPvalue']], stockEnv = stockEnv)
+                        FBRP = FrefT[['RPvalue']], stockEnv = stockEnvT)
       
  
     } else { 
+    parpop$switch<-FALSE
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpop, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
                      stockEnv = stockEnv)
@@ -104,11 +107,14 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     parmgtT$FREF_PAR1<-parmgtT$BREF_PAR1<-NA
     parmgtT$RFUN_NM<-'forecast'
     parpopT<-parpop
+    parpopT$switch<-TRUE
     parpopT$J1N<-stockEnv$J1N[1:(y-1),]
     parpopT$selC<-stockEnv$selC
+    stockEnvT<-stockEnv
+    stockEnvT$R_mis<-FALSE
     FrefT <- get_FBRP(parmgt = parmgtT, parpop = parpopT, #Also calculate the true Fmsy
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
-                     stockEnv = stockEnv)
+                     stockEnv = stockEnvT)
 
     # if using forecast start the BMSY initial population at the equilibrium
     # FMSY level (before any temperature projections). This is consistent
@@ -120,15 +126,17 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parpopUpdate$J1N <- Fref$equiJ1N_MSY
       
     }
-    
+ 
     Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
     
     parpopUpdateT$J1N <- FrefT$equiJ1N_MSY
+    stockEnvT<-stockEnv
+    stockEnvT$R_mis<-FALSE
     BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT, #Also calculate the true Bmsy
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
-                     FBRP = FrefT[['RPvalue']], stockEnv = stockEnv)
+                     FBRP = FrefT[['RPvalue']], stockEnv = stockEnvT)
     
     }
     if(evalRP){

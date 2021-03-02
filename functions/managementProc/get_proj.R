@@ -124,7 +124,6 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     
     N[1,1] <- prod(tail(Recruits,5))^(1/5)
   }
-
   for(y in 2:length(Tanom)){
     for(a in 2:(nage-1)){
       #N[y-1] is the population at the beginning of the previous year 
@@ -140,7 +139,6 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     ## Recruitment
     # sd of historical R estimates
       parpop$Rpar_mis<-stockEnv$Rpar_mis#will use incorrect recruitment assumption if set in model parameters script
-
       N[y,1] <- Rfun(type = stockEnv$R_typ,
                      parpop = parpop, 
                      parenv = parenv, 

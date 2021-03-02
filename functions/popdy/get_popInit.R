@@ -83,7 +83,9 @@ get_popInit <- function(stock){
     # Determine the F for the rest of the burn-in period based on the
     # calculation of Fmsy and the proportion given in the parameter file.
   out <- within(stock, {  
-    burnFmsy <- get_burnF(stock)
+    stockT<-stock
+    stockT$R_mis<-FALSE
+    burnFmsy <- get_burnF(stockT)
     burnFmean <- burnFmsyScalar * burnFmsy
     F_full[(fyear+1):fmyearIdx] <- rlnorm(fmyearIdx - (fyear+1)+1, 
                                               log(burnFmean), burnFsd)
