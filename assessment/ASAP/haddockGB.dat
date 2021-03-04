@@ -182,15 +182,15 @@
 # Selectivity Options for each block 1=by age, 2=logisitic, 3=double logistic
 1
 # Selectivity Block Data
-0.0114  -1   0   0.001
-0.0296  -1   0   0.001
-0.1014  -1   0   0.001
-0.3002  -1   0   0.001
-0.3976  -1   0   0.001
-0.6324  -1   0   0.001
-0.9574  -1   0   0.001
-0.6626  -1   0   0.001
-0.6626  -1   0   0.001
+0.0114  1   1   1
+0.0296  1   1   1
+0.1014  1   1   1
+0.3002  1   1   1
+0.3976  1   1   1
+0.6324  1   1   1
+0.9574 -1   0   1
+0.6626  1   1   1
+0.6626  1   1   1
 0    0    0    0
 0    0    0    0
 0    0    0    0
@@ -348,15 +348,15 @@
 # Use Index (Yes=1)
 1
 # Index-1 Selectivity Data
-0.444  -1   0   0.001
-0.697  -1   0   0.001
-0.755  -1   0   0.001
-0.759  -1   0   0.001
-0.779  -1   0   0.001
-0.712  -1   0   0.001
-0.807  -1   0   0.001
-0.772  -1   0   0.001
-0.772  -1   0   0.001
+0.444  1   1   1
+0.697  1   1   1
+0.755  1   1   1
+0.759  1   1   1
+0.779  1   1   1
+0.712  1   1   1
+0.807 -1   0   1
+0.772  1   1   1
+0.772  1   1   1
 0    -1    0    0
 0    -1    0    0
 0    -1    0    0
@@ -539,43 +539,43 @@
 0
 0
 # Catch Effective Sample Size by Year and Fleet
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
-80
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
+125
 # Discard Effective Sample Size by Year and Fleet
 0
 0
@@ -619,11 +619,11 @@
 # CV for F Mult in First year by Fleet
 0.4
 # Lambda for F Mult Deviations by Fleet
-1
+0
 # CV for F Mult Deviations by Fleet
 1.2
 # Lambda for N in 1st Year Deviations
-1
+0
 # CV for N in 1st Year Deviations
 0.1
 # Lambda for Recruitment Deviations
@@ -651,7 +651,7 @@
 # Initial F Mult in 1st Year by Fleet
 0.2
 # Initial Catchabilty by Index
-0.001
+1
 # Stock Recruitment Flag
 0
 # Initial Unexploited Stock
