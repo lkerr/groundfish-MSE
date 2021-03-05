@@ -182,15 +182,15 @@
 # Selectivity Options for each block 1=by age, 2=logisitic, 3=double logistic
 1
 # Selectivity Block Data
-0.0114  1   1   0.01
-0.0296  1   1   0.01
-0.1014  1   1   0.01
-0.3002  1   1   0.01
-0.3976  1   1   0.01
-0.6324  1   1   0.01
-0.9574 -1   0   0.01
-0.6626  1   1   0.01
-0.6626  1   1   0.01
+0.0114  1   1   1
+0.0296  1   1   1
+0.1014  1   1   1
+0.3002  1   1   1
+0.3976  1   1   1
+0.6324  1   1   1
+0.9574 -1   0   1
+0.6626  1   1   1
+0.6626  1   1   1
 0    0    0    0
 0    0    0    0
 0    0    0    0
@@ -348,15 +348,15 @@
 # Use Index (Yes=1)
 1
 # Index-1 Selectivity Data
-0.444  1   1   0.01
-0.697  1   1   0.01
-0.755  1   1   0.01
-0.759  1   1   0.01
-0.779  1   1   0.01
-0.712  1   1   0.01
-0.807 -1   0   0.01
-0.772  1   1   0.01
-0.772  1   1   0.01
+0.444  1   1   1
+0.697  1   1   1
+0.755  1   1   1
+0.759  1   1   1
+0.779  1   1   1
+0.712  1   1   1
+0.807 -1   0   1
+0.772  1   1   1
+0.772  1   1   1
 0    -1    0    0
 0    -1    0    0
 0    -1    0    0
@@ -615,51 +615,51 @@
 0
 0
 # Lambda for F Mult in First year by Fleet
-0
+1
 # CV for F Mult in First year by Fleet
 0.4
 # Lambda for F Mult Deviations by Fleet
-0
+1
 # CV for F Mult Deviations by Fleet
 1.2
 # Lambda for N in 1st Year Deviations
 0
 # CV for N in 1st Year Deviations
-0.1
+0.9
 # Lambda for Recruitment Deviations
 1
 # Lambda for Catchability in First year by Index
 0
 # CV for Catchability in First year by Index
-0.001
+0.9
 # Lambda for Catchability Deviations by Index
 0
 # CV for Catchability Deviations by Index
-0.001
+0.9
 # Lambda for Deviation from Initial Steepness
 0
 # CV for Deviation from Initial Steepness
-0.1
+0.7
 # Lambda for Deviation from Unexploited Stock Size
-0
+1
 # CV for Deviation from Unexploited Stock Size
-0.1
+1.2
 # NAA Deviations Flag
 1
 # Initial Numbers at Age in 1st Year
-10000   10000   10000   10000   10000   10000   10000   10000   10000
+28379.79 1853.083 6815.354 2295.129 10484.45 2085.144 138.3392 1464.855 2214.193
 # Initial F Mult in 1st Year by Fleet
-0.2
+0.5823905
 # Initial Catchabilty by Index
-1
+0.0001294619
 # Stock Recruitment Flag
 0
 # Initial Unexploited Stock
-10000
+200000
 # Initial Steepness
 0.7
 # Maximum F
-5
+3
 # Ignore Guesses (Yes=1)
 0
 # Projection Control
