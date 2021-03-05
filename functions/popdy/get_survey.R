@@ -33,10 +33,10 @@ get_survey <- function(F_full, M, N, slxF, slxI, timeI, qI, DecCatch, Tanom, y){
   
   # Get the index
   if (DecCatch==TRUE & y>fmyearIdx){#decrease survey catchability based on temperature. It does not decrease more than half the original value. 
-#  qI<-0.0001-(0.0000125*Tanom)
-#  if(qI<0.00005){qI<-0.00005}
-    qI<-0.0001-(0.0000225*Tanom)
-    if(qI<0.00001){qI<-0.00001}
+qI<-0.0001-(0.0000125*Tanom)
+if(qI<0.00005){qI<-0.00005}
+   # qI<-0.0001-(0.0000225*Tanom)
+  #  if(qI<0.00001){qI<-0.00001}
   }
   
   I <- slxI * qI * N * exp(-Z * timeI)
