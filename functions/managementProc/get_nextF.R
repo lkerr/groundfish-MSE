@@ -87,7 +87,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       if(parmgt$RFUN_NM == 'forecast'){
         parpopUpdate$J1N <- Fref$equiJ1N_MSY
       }
-      
+
       Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
                               parenv = parenv, Rfun_lst = Rfun_BmsySim,
                               FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
