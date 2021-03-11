@@ -34,7 +34,6 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       startFCST <- parenv$y
       endFCST <- parenv$y + parmgt$FREF_PAR0
     }else if(type == 'BREF'){
-      browser()
       startFCST <- parenv$y
       endFCST <- parenv$y + parmgt$BREF_PAR0
     }
