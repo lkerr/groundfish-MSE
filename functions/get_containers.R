@@ -95,12 +95,13 @@ get_containers <- function(stockPar){
     Mohns_Rho_N = yx0,#MDM
     Mohns_Rho_F = yx0,#MDM
     Mohns_Rho_R = yx0,#MDM
+    mincatchcon = yx0, #MDM
     relTermE_SSB = NA,#MDM
     relTermE_CW = NA,#MDM
     relTermE_IN = NA,#MDM
     relTermE_qI = NA,#MDM
     relTermE_R = NA,#MDM
-    relTermE_F = NA,#MDM
+    relTermE_F = NA,#MDM=
     
     # Econ model containers
     # Total Weight of catch
@@ -156,6 +157,7 @@ get_containers <- function(stockPar){
       Mohns_Rho_N = save_vector_ann,#MDM
       Mohns_Rho_F = save_vector_ann,#MDM
       Mohns_Rho_R = save_vector_ann,#MDM
+      mincatchcon = save_vector_ann, #MDM
       relTermE_SSB = save_vector_ann,#MDM
       relTermE_CW = save_vector_ann,#MDM
       relTermE_IN = save_vector_ann,#MDM

@@ -165,7 +165,7 @@ get_advice <- function(stock){
       Mohns_Rho_R[y] <- rowSums(pcols) / peels
       cat('Rho calculated.')
       
-      if(mproc[m,'rhoadjust'] == 'TRUE'){
+      if(mproc[m,'rhoadjust'] == 'TRUE' & Mohns_Rho_SSB[y]>0.2){
           parpop$SSBhat[length(parpop$SSBhat)]<-parpop$SSBhat[length(parpop$SSBhat)]/(Mohns_Rho_SSB[y]+1)}
       })
       

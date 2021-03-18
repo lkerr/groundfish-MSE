@@ -41,14 +41,14 @@ get_fillRepArrays <- function(stock){
     omval$SSBPROXY[r,m,] <- RPmat[,2]
     omval$FPROXYT[r,m,] <- RPmat[,3]
     omval$SSBPROXYT[r,m,] <- RPmat[,4]
-    omval$FRATIO[r,m,] <- stock$res$F.report[length(stock$res$F.report)]/RPmat[,1]
-    omval$SSBRATIO[r,m,] <- stock$res$SSB[length(stock$res$SSB)]/RPmat[,2]
-    if(mproc[m,'rhoadjust'] == 'TRUE' & y>fmyearIdx){
-    omval$FRATIO[r,m,] <- (stock$res$F.report[length(stock$res$F.report)]/(Mohns_Rho_F[y]+1))/RPmat[,1]
-    omval$SSBRATIO[r,m,] <-(stock$res$SSB[length(stock$res$SSB)]/(Mohns_Rho_SSB[y]+1))/RPmat[,2]
+    omval$FRATIO[r,m,y] <- stock$res$F.report[length(stock$res$F.report)]/RPmat[,1][y]
+    omval$SSBRATIO[r,m,y] <- stock$res$SSB[length(stock$res$SSB)]/RPmat[,2][y]
+    if(mproc[m,'rhoadjust'] == 'TRUE' & y>fmyearIdx & Mohns_Rho_SSB[y]>0.2){
+    omval$FRATIO[r,m,y] <- (stock$res$F.report[length(stock$res$F.report)]/(Mohns_Rho_F[y]+1))/RPmat[,1][y]
+    omval$SSBRATIO[r,m,y] <-(stock$res$SSB[length(stock$res$SSB)]/(Mohns_Rho_SSB[y]+1))/RPmat[,2][y]
     }
-    omval$FRATIOT[r,m,] <- stock$F_full[y]/RPmat[,3]
-    omval$SSBRATIOT[r,m,] <- stock$SSB[y]/RPmat[,4]
+    omval$FRATIOT[r,m,y] <- stock$F_full[y]/RPmat[,3][y]
+    omval$SSBRATIOT[r,m,y] <- stock$SSB[y]/RPmat[,4][y]
     if(y == nyear){
       # Determine whether additional years should be added on to the
       # beginning of the series
@@ -85,8 +85,10 @@ get_fillRepArrays <- function(stock){
     omval$Mohns_Rho_N[r,m,]<-Mohns_Rho_N#MDM
     omval$Mohns_Rho_F[r,m,]<-Mohns_Rho_F#MDM
     omval$Mohns_Rho_R[r,m,]<-Mohns_Rho_R#MDM
+    omval$mincatchcon[r,m,]<-mincatchcon
     if (y == nyear){
     omval$relTermE_SSB[r,m,] <- relTermE_SSB #MDM
+    omval$relTermE_CW[r,m,] <- relTermE_CW #MDM
     omval$relTermE_CW[r,m,] <- relTermE_CW #MDM
     omval$relTermE_IN[r,m,] <- relTermE_IN #MDM
     omval$relTermE_qI[r,m,] <- relTermE_qI #MDM

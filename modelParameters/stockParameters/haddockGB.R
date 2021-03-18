@@ -85,7 +85,7 @@ caaInScalar <- 1000
 #### Error parameters ####
 
 # observation error levels
-oe_sumCW <- 0.01
+oe_sumCW <- 0.05
 oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 1000
 oe_paaCN_typ <- 'multinomial'

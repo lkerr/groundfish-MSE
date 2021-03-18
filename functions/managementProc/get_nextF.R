@@ -66,8 +66,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                               stockEnv = stockEnv)
       
       parmgtT<-parmgt
-      parmgtT$FREF_PAR1<-parmgtT$BREF_PAR1<-NA
-      parmgtT$RFUN_NM<-'forecast'
       parpopT<-parpop
       parpopT$switch<-TRUE
       parpopT$J1N<-stockEnv$J1N[1:(y-1),]
@@ -92,7 +90,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                               parenv = parenv, Rfun_lst = Rfun_BmsySim,
                               FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
    
-      parpopUpdateT$J1N <- FrefT$equiJ1N_MSY
       stockEnvT<-stockEnv
       stockEnvT$R_mis<-FALSE
       BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT, #Also calculate the true Bmsy
@@ -106,8 +103,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
                      stockEnv = stockEnv)
     parmgtT<-parmgt
-    parmgtT$FREF_PAR1<-parmgtT$BREF_PAR1<-NA
-    parmgtT$RFUN_NM<-'forecast'
     parpopT<-parpop
     parpopT$switch<-TRUE
     parpopT$J1N<-stockEnv$J1N[1:(y-1),]
@@ -133,7 +128,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
     
-    parpopUpdateT$J1N <- FrefT$equiJ1N_MSY
     stockEnvT<-stockEnv
     stockEnvT$R_mis<-FALSE
     BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT, #Also calculate the true Bmsy
@@ -233,10 +227,24 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   stockEnv = stockEnv)$sumCW}
       catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
       if(tolower(parmgt$mincatch) == 'true'){
-        mincatchv<-tail(stockEnv$sumCW[1:(y-1)],10)
-      if (catchproj[1]<min(mincatchv)){catchproj[1]<-min(mincatchv)}
-      if (catchproj[2]<min(c(tail(mincatchv,9),catchproj[1]))){catchproj[2]<-min(c(tail(mincatchv,9),catchproj[1]))}
+      if (stockEnv$stockName=='codGOM'){
+        bycatch<-read.csv(paste('./data/data_raw/AssessmentHistory/codGOM_Discard.csv',sep=''))
+        mincatch<-min(tail(bycatch$Discards),10)
       }
+      if (stockEnv$stockName=='haddockGB'){
+        bycatch<-read.csv(paste(getwd(),'/data/data_raw/AssessmentHistory/haddockGB_Discard.csv',sep=""))
+        mincatch<-min(tail(bycatch$Discard),10)
+      }
+      if (catchproj[1]>mincatch & catchproj[2]>mincatch){mincatchcon<-0}
+      if (catchproj[1]<mincatch){
+        catchproj[1]<-mincatch
+        mincatchcon<-1
+      }
+      if (catchproj[2]<mincatch){
+        catchproj[2]<-mincatch
+        mincatchcon<-1
+      }
+}
       if(tolower(mproc$varlimit) == 'true'){
         if(((catchproj[1]-(stockEnv$sumCW[y-1]*stockEnv$ob_sumCW))/catchproj[1])*100<(-20)){
           catchproj[1]<-(stockEnv$sumCW[y-1]*stockEnv$ob_sumCW)-((stockEnv$sumCW[y-1]*stockEnv$ob_sumCW)*.2)}
