@@ -133,7 +133,7 @@ ggplot(Df, aes(x=Year, y=median,color=HCR)) +
   geom_line(size=1, alpha=0.8) +
   geom_ribbon(aes(ymin=CI_lower, ymax=CI_upper,fill=HCR), alpha=0.2) +
   theme_classic()+
-  theme(text=element_text(size=18),legend.position='top',axis.text.x = element_text(angle = 90))+
+  theme(text=element_text(size=18),legend.position='right',axis.text.x = element_text(angle = 90))+
   scale_fill_manual(values=c("#EA4F12","#EACA00","#407331","#00608A"))+
   scale_color_manual(values=c("#EA4F12","#EACA00","#407331","#00608A"))+
   ylab('F')
