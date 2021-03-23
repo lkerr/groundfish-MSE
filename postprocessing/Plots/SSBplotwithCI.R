@@ -4,6 +4,8 @@ library(matrixStats)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
+library(DescTools)
+library(plyr)
 setwd(paste("C:/Users/mmazur/Desktop/Council_Sims/Sim_",Scenarios[1],"/sim",sep=""))
 
 sims <- list.files()
@@ -23,20 +25,14 @@ setwd(paste(tempwd,"/Sim_",Scenarios[1],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  SSBratiots[,k]<-omvalGlobal[[1]]$SSB[170:190]
+  SSBratiots[,k]<-omvalGlobal$codGOM$SSB[170:190]
 }
 
 Df<-as.data.frame(SSBratiots)
 Df$Year<-2020:2040
 Df<- Df %>% gather(Year, SSB, V1:V100)
 Df$Year<-rep(2020:2040,100)
-SSB_summary <- data.frame(Year=unique(Df$Year), n=tapply(Df$SSB, Df$Year, length), mean=tapply(Df$SSB, Df$Year, mean),median=tapply(Df$SSB, Df$Year, median))
-SSB_summary$sd <- tapply(Df$SSB, Df$Year, sd)
-SSB_summary$sem <- SSB_summary$sd/sqrt(SSB_summary$n-1)
-SSB_summary$CI_lower <- SSB_summary$mean + qt((1-0.95)/2, df=SSB_summary$n-1)*SSB_summary$sem
-SSB_summary$CI_upper <- SSB_summary$mean - qt((1-0.95)/2, df=SSB_summary$n-1)*SSB_summary$sem
-Df<-SSB_summary
-Df$n<-Df$mean<-Df$sd<-Df$sem<-NULL
+Df <- ddply(Df, "Year", summarise, median = MedianCI(SSB)[1], CI_lower=MedianCI(SSB)[2], CI_upper=MedianCI(SSB)[3])
 Df$HCR<-Scenarios[1]
 
 setwd(paste("C:/Users/mmazur/Desktop/Council_Sims/Sim_",Scenarios[2],"/sim",sep=""))
@@ -57,20 +53,14 @@ setwd(paste(tempwd,"/Sim_",Scenarios[2],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  SSBratiots[,k]<-omvalGlobal[[1]]$SSB[170:190]
+  SSBratiots[,k]<-omvalGlobal$codGOM$SSB[170:190]
 }
 
 Df2<-as.data.frame(SSBratiots)
 Df2$Year<-2020:2040
 Df2<- Df2 %>% gather(Year, SSB, V1:V100)
 Df2$Year<-rep(2020:2040,100)
-SSB_summary <- data.frame(Year=unique(Df2$Year), n=tapply(Df2$SSB, Df2$Year, length), mean=tapply(Df2$SSB, Df2$Year, mean),median=tapply(Df2$SSB, Df2$Year, median))
-SSB_summary$sd <- tapply(Df2$SSB, Df2$Year, sd)
-SSB_summary$sem <- SSB_summary$sd/sqrt(SSB_summary$n-1)
-SSB_summary$CI_lower <- SSB_summary$mean + qt((1-0.95)/2, df=SSB_summary$n-1)*SSB_summary$sem
-SSB_summary$CI_upper <- SSB_summary$mean - qt((1-0.95)/2, df=SSB_summary$n-1)*SSB_summary$sem
-Df2<-SSB_summary
-Df2$n<-Df2$mean<-Df2$sd<-Df2$sem<-NULL
+Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(SSB)[1], CI_lower=MedianCI(SSB)[2], CI_upper=MedianCI(SSB)[3])
 Df2$HCR<-Scenarios[2]
 Df<-full_join(Df,Df2)
 
@@ -92,20 +82,14 @@ setwd(paste(tempwd,"/Sim_",Scenarios[3],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  SSBratiots[,k]<-omvalGlobal[[1]]$SSB[170:190]
+  SSBratiots[,k]<-omvalGlobal$codGOM$SSB[170:190]
 }
 
 Df2<-as.data.frame(SSBratiots)
 Df2$Year<-2020:2040
 Df2<- Df2 %>% gather(Year, SSB, V1:V100)
 Df2$Year<-rep(2020:2040,100)
-SSB_summary <- data.frame(Year=unique(Df2$Year), n=tapply(Df2$SSB, Df2$Year, length), mean=tapply(Df2$SSB, Df2$Year, mean),median=tapply(Df2$SSB, Df2$Year, median))
-SSB_summary$sd <- tapply(Df2$SSB, Df2$Year, sd)
-SSB_summary$sem <- SSB_summary$sd/sqrt(SSB_summary$n-1)
-SSB_summary$CI_lower <- SSB_summary$mean + qt((1-0.95)/2, df=SSB_summary$n-1)*SSB_summary$sem
-SSB_summary$CI_upper <- SSB_summary$mean - qt((1-0.95)/2, df=SSB_summary$n-1)*SSB_summary$sem
-Df2<-SSB_summary
-Df2$n<-Df2$mean<-Df2$sd<-Df2$sem<-NULL
+Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(SSB)[1], CI_lower=MedianCI(SSB)[2], CI_upper=MedianCI(SSB)[3])
 Df2$HCR<-Scenarios[3]
 Df<-full_join(Df,Df2)
 
@@ -127,20 +111,14 @@ setwd(paste(tempwd,"/Sim_",Scenarios[4],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  SSBratiots[,k]<-omvalGlobal[[1]]$SSB[170:190]
+  SSBratiots[,k]<-omvalGlobal$codGOM$SSB[170:190]
 }
 
 Df2<-as.data.frame(SSBratiots)
 Df2$Year<-2020:2040
 Df2<- Df2 %>% gather(Year, SSB, V1:V100)
 Df2$Year<-rep(2020:2040,100)
-SSB_summary <- data.frame(Year=unique(Df2$Year), n=tapply(Df2$SSB, Df2$Year, length), mean=tapply(Df2$SSB, Df2$Year, mean),median=tapply(Df2$SSB, Df2$Year, median))
-SSB_summary$sd <- tapply(Df2$SSB, Df2$Year, sd)
-SSB_summary$sem <- SSB_summary$sd/sqrt(SSB_summary$n-1)
-SSB_summary$CI_lower <- SSB_summary$mean + qt((1-0.95)/2, df=SSB_summary$n-1)*SSB_summary$sem
-SSB_summary$CI_upper <- SSB_summary$mean - qt((1-0.95)/2, df=SSB_summary$n-1)*SSB_summary$sem
-Df2<-SSB_summary
-Df2$n<-Df2$mean<-Df2$sd<-Df2$sem<-NULL
+Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(SSB)[1], CI_lower=MedianCI(SSB)[2], CI_upper=MedianCI(SSB)[3])
 Df2$HCR<-Scenarios[4]
 Df<-full_join(Df,Df2)
 
@@ -155,7 +133,7 @@ ggplot(Df, aes(x=Year, y=median,color=HCR)) +
   geom_line(size=1, alpha=0.8) +
   geom_ribbon(aes(ymin=CI_lower, ymax=CI_upper,fill=HCR), alpha=0.2) +
   theme_classic()+
-  theme(text=element_text(size=18),legend.position='top',axis.text.x = element_text(angle = 90))+
+  theme(text=element_text(size=18),legend.position='right',axis.text.x = element_text(angle = 90))+
   scale_fill_manual(values=c("#EA4F12","#EACA00","#407331","#00608A"))+
   scale_color_manual(values=c("#EA4F12","#EACA00","#407331","#00608A"))+
   ylab('SSB (mt)')

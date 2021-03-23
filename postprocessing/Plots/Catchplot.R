@@ -169,10 +169,6 @@ df$HCR<-ordered(df$HCR,levels=c('Ramped','P*','Step in F','Ramped with variation
 ggplot(df)+geom_line(aes(x=Year,y=Catchest,color=HCR))+geom_point(aes(x=Year,y=Catchsim,color=HCR))+
   theme_classic()+theme(text=element_text(size=18),legend.position='right')+
   ylab('Catch (mt)')+geom_vline(xintercept=2020, linetype='dotted')+
-  scale_color_manual(values=c("#EA4F12","#EACA00","#407331","#00608A"))
+  scale_color_manual(values=c("#EA4F12","#EACA00","#407331","#00608A"))+
+  scale_y_continuous(breaks = pretty(c(0,18000), n=7),limits = c(0,18000))
 
-df2<-df[df$Year>2020,]
-ggplot(df2)+geom_line(aes(x=Year,y=Catchest,color=HCR))+geom_point(aes(x=Year,y=Catchsim,color=HCR))+
-  theme_classic()+theme(text=element_text(size=18),legend.position='right')+
-  ylab('Catch (mt)')+
-  scale_color_manual(values=c("#EA4F12","#EACA00","#407331","#00608A"))
