@@ -1,4 +1,4 @@
-#####Mohn's Rho for F Plot####
+#####Mohn's Rho for SSB Plot####
 Scenarios<-c(6,32,58,116)
 ####First Sims####
 library(matrixStats)
@@ -18,7 +18,7 @@ Catchsim<-matrix(NA,nrow=56,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$Mohns_Rho_F[134:189]
+  Catchsim[,k]<-omvalGlobal[[1]]$Mohns_Rho_SSB[134:189]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
@@ -41,7 +41,7 @@ Catchsim<-matrix(NA,nrow=56,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$Mohns_Rho_F[134:189]
+  Catchsim[,k]<-omvalGlobal[[1]]$Mohns_Rho_SSB[134:189]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
@@ -66,7 +66,7 @@ Catchsim<-matrix(NA,nrow=56,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$Mohns_Rho_F[134:189]
+  Catchsim[,k]<-omvalGlobal[[1]]$Mohns_Rho_SSB[134:189]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
@@ -90,7 +90,7 @@ Catchsim<-matrix(NA,nrow=56,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$Mohns_Rho_F[134:189]
+  Catchsim[,k]<-omvalGlobal[[1]]$Mohns_Rho_SSB[134:189]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
@@ -111,6 +111,5 @@ df<-na.omit(df)
 
 ggplot(df)+geom_line(aes(x=Year,y=Catchsim,color=HCR))+
   theme_classic()+theme(text=element_text(size=18),legend.position='right')+
-  ylab('Mohns Rho for F')+ylim(-0.5,0.5)+
+  ylab('Mohns Rho for SSB')+ylim(-0.5,0.5)+
   scale_color_manual(values=c("#EA4F12","#EACA00","#407331","#00608A"))
-
