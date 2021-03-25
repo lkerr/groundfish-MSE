@@ -7,8 +7,7 @@ shinyServer(function(input, output, session) {
   
   #Plot for HCRs, depends on user input.
   observeEvent(input$do,{
-    Parms <- isolate(SelectScenario(input$stock,15,input$climate))
-    saveData(input$HCR_type,input$HCR.cat,input$HCR.expl,1,1,values$Outs)
+    saveData(input$OMScenario,input$RhoScenario,input$FreqScenario,input$HCR)
     output$plts<-renderPlot(DoPlots(values$Outs,values$Outs$Parms,10))})
   
   observeEvent(input$compare,{#Response if user clicks 'Compare Scenarios'.
