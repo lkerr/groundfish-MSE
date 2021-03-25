@@ -6,7 +6,17 @@ invisible(sapply(ffiles, source))
 shinyServer(function(input, output, session) {
   
   #Plot for HCRs, depends on user input.
-  output$CTL2 <- renderPlot({ MSEPlots(input$HCR,input$RefPoints,input$sa) })
+  observeEvent(input$do,{
+    Parms <- isolate(SelectScenario(input$stock,15,input$climate))
+    saveData(input$HCR_type,input$HCR.cat,input$HCR.expl,1,1,values$Outs)
+    output$plts<-renderPlot(DoPlots(values$Outs,values$Outs$Parms,10))})
+  
+  observeEvent(input$compare,{#Response if user clicks 'Compare Scenarios'.
+    output$spider<-renderPlot({#A plot is formed from the same data from loadData()
+      par(mar=c(5.8,4.8,4.8,8.8),xpd=TRUE)
+      spiderplot(loadData())#spiderplot function creates a good plot for comparing management strategies
+      legend("topright",legend=rows,bty='n',pch=16,col=colors_line,cex=1,pt.cex=3)},
+      height = 600, width = 900)})
   
 })  # End of ShinyServer
 ## ------------------------------------------------------------------------------------ ##

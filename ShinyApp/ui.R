@@ -46,11 +46,11 @@ shinyUI(fluidPage(theme = shinytheme("cerulean"),
                                mainPanel(#plotOutput can create a plot based on user input. 
                                         plotOutput("CTL2",width="400px",height="300px"),
                                         actionButton("do", "Do projections"),#Creates a button that will initiate an action. 
-                                        plotOutput("plts")),
+                                        plotOutput("plts")))),
                                tabPanel("Compare Scenarios",#Creates another page. 
                                         sidebarPanel(width=3,
                                                      actionButton("compare", "Compare Scenarios")),#If button is clicked, scenarios are compared. 
                                         mainPanel(tableOutput("responses")),#tableOutput creates a table.
                                         mainPanel(plotOutput("spider")))#A spider plot is created to compare scenarios. 
-                                      )))))
+                                      )))
 

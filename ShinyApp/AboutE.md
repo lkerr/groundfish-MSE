@@ -1,5 +1,5 @@
-<h1> Demo MSE for New England Groundfish</h1>
-<p> This tool allows users to explore the performance of candidate harvest control rules in managing New England groundfish. It has been developed as an educational tool to highlight aspects of the <strong>Management Strategy Evaluation (MSE)</strong> approach. </p>
+<h1> New England Groundfish Management Strategy Evaluation</h1>
+<p> This tool allows users to explore the performance of alternative harvest control rules in managing New England groundfish. </p>
 
 <h3> Specifications </h3>
 <p> First, the user can specify some of the parameters defining the simulations using the <strong> Specifications </strong>tab. 
