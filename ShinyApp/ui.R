@@ -29,21 +29,28 @@ shinyUI(fluidPage(theme = shinytheme("cerulean"),
                                                                       "Misspecified Scenario 1" = "misspec1",
                                                                       "Misspecified Scenario 2" = "misspec2")),
                                                         style = "font-size:100%"),
-                                               tags$div(selectInput("RefPoints", "Reference Points:",
-                                                                    c("Climate responsive" = "Refclimresp",
-                                                                      "Temperature linked" = "Reftemplink",
-                                                                      "Status quo"= "Refstatquo")),
+                                               tags$div(selectInput("RhoScenario", "Rho Adjustment Scenario:",
+                                                                    c("No Rho Adjustment" = "rho2",
+                                                                      "Rho Adjustment" = "rho1")),
                                                         style = "font-size:100%"), 
-                                               tags$div(selectInput("sa", "Stock assessment:",
-                                                                    c("Temperature incorporated" = "tempinc",
-                                                                      "Time-varying process" = "tvproc",
-                                                                      "Status quo"= "Sastatquo")),
+                                               tags$div(selectInput("FreqScenario", "Stock Assessment Frequency Scenario:",
+                                                                    c("1 Year Frequency" = "freq2",
+                                                                      "2 Year Frequency" = "freq1")),
+                                                        style = "font-size:100%"), 
+                                               tags$div(selectInput("HCR", "Harvest Control Rule:",
+                                                                    c("Ramped" = "ramped",
+                                                                      "P*" = "pstar",
+                                                                      "Step in Fishing Mortality" = "step",
+                                                                      "Ramped with variation constraint" = "rampedvarconst")),
                                                         style = "font-size:100%"), 
                                mainPanel(#plotOutput can create a plot based on user input. 
                                         plotOutput("CTL2",width="400px",height="300px"),
                                         actionButton("do", "Do projections"),#Creates a button that will initiate an action. 
                                         plotOutput("plts")),
-                             ), # Specifications
-                             
-                  ))))
+                               tabPanel("Compare Scenarios",#Creates another page. 
+                                        sidebarPanel(width=3,
+                                                     actionButton("compare", "Compare Scenarios")),#If button is clicked, scenarios are compared. 
+                                        mainPanel(tableOutput("responses")),#tableOutput creates a table.
+                                        mainPanel(plotOutput("spider")))#A spider plot is created to compare scenarios. 
+                                      )))))
 
