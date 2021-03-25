@@ -1,6 +1,6 @@
 
 
-srRunSteepness <- function(recDat, stock, start, lb, ub, estPar){
+srRunSteepness <- function(recDat, stock, start, lb, ub, estPar, stockArea){
   
   # load the TMB package
   invisible(library(TMB))
@@ -16,7 +16,7 @@ srRunSteepness <- function(recDat, stock, start, lb, ub, estPar){
   dyn.load(dynlib("documentation/stockRecruit/srSteepness"))
   
   
-  srDat <- get_SRDat(recDat = recDat, stock = stock)
+  srDat <- get_SRDat(recDat = recDat, stock = stock, stockArea = stockArea)
   
   # Get rid of NAs
   srDat <- srDat[complete.cases(srDat),]

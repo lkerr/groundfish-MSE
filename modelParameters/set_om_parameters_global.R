@@ -25,6 +25,8 @@ mprocfile<-"mproc.csv"
 # stockExclude <- NULL indludes all stocks.
 stockExclude <- c('pollock', 'yellowtailflounderGB', 'codGOM', 'haddockGB')
 
+# Stock area to use (either GB or GOM). Ensure this aligns with !stockExclude.
+stockArea <- 'GOM'
 
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data
@@ -174,6 +176,7 @@ savechunksize<-10
 
 #Set up a counter for every year that has been simulated
 yearcounter<-0
+
 
 #Set up a list to hold the economic results
 revenue_holder<-list()

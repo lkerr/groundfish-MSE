@@ -9,6 +9,7 @@ output:
 ffiles <- list.files(path='documentation/stockRecruit/functions', 
                      full.names=TRUE, recursive=TRUE)
 invisible(sapply(ffiles, source))
+library(tidyverse)
 ```
 
 # Documentation analyses leading to operating model stock-recruit function parameters
@@ -33,7 +34,7 @@ Read in the stock and recruitment data. These are organized in a single file and
 
 ```{r}
 # Read in version 2 from Mackenzie (this has updated cod recruitment info plus other versions of anomaly)
-rec <- read.csv(file='data/data_raw/recruitment/codHadPolYTFCompiled_v2MM.csv',
+rec <- read.csv(file='data/data_raw/recruitment/codHadPolYTFCompiled_2021-03-24.csv',
          header=TRUE)
 # limit anomaly confusion for now
 rec <- rec[,c('YEAR', 'SSBMT', 'REC000S', 'SSBRF0', 'STOCK', 'SOURCE')]
@@ -43,7 +44,13 @@ head(rec)
 Annual temperature anomaly data are also required. See the documentation function **tempAnomaly** for more information on how the anomaly data are calculated
 
 ```{r}
-TAnom <- read.csv('data/data_processed/tAnomOut.csv', header=TRUE)
+TAnomGB <- read_csv('data/data_processed/tAnomOutGB.csv') %>%
+  mutate(STOCKAREA = 'GB')
+
+TAnomGOM <- read_csv('data/data_processed/tAnomOutGOM.csv') %>%
+  mutate(STOCKAREA = 'GOM')
+
+TAnom <- bind_rows(TAnomGB, TAnomGOM)
 head(TAnom)
 ```
 
@@ -71,7 +78,7 @@ In the function above the records are offset to make sure that the stock and rec
 
 ```{r}
 cod0 <- subset(rec, STOCK == 'GBCOD')
-cod1 <- get_SRDat(recDat = recT, stock = 'GBCOD')
+cod1 <- get_SRDat(recDat = recT, stock = 'GBCOD', stockArea = 'GB')
 print(head(cod0))
 print(head(cod1))
 ```

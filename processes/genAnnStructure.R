@@ -3,6 +3,12 @@
 # Read in the temperature data
 cmip5 <- read.csv(file = 'data/data_raw/NEUS_CMIP5_annual_meansLong.csv',
                     header=TRUE)
+# cmip5 <- cmip5 %>%
+#   group_by(Model) %>%
+#   mutate(Temperature = ifelse(year %in% 2025:2050,
+#                               Temperature[which(year == 2025)-(year-2025)],
+#                               Temperature))
+# plot(cmip5$year, cmip5$Temperature)
 
 # manipulate data to get desired percentile
 cmip_base <- get_temperatureSeries(cmip5, 
@@ -11,14 +17,22 @@ cmip_base <- get_temperatureSeries(cmip5,
                                    quant = tq)
 names(cmip_base) <- c('YEAR', 'T')
 
-# Load in the GB temperature data for downscaling
-load('data/data_raw/mqt_oisst.Rdata')
-gbT <- mqt_oisst[,c('Year', 'q1')]
-names(gbT) <- c('YEAR', 'T')
+# Load in the temperature data for downscaling
+
+if(stockArea == 'GB'){
+  load('data/data_raw/mqt_oisst.Rdata')
+  obsTemp <- mqt_oisst[,c('Year', 'q1')]
+}else if(stockArea == 'GOM'){
+  obsTemp <- read.csv('data/data_raw/GOMAveTemp.csv')[,c('Year', 'AveSST')]
+}else{
+  stop('stock area must be GB or GOM')
+}
+
+names(obsTemp) <- c('YEAR', 'T')
 
 # Downscale from NELME to GB
 cmip_dwn <- get_temperatureProj(prj_data = cmip_base, 
-                                obs_data = gbT, 
+                                obs_data = obsTemp, 
                                 ref_yrs = c(ref0, ref1))
 
 # Get the temperature vector
@@ -48,7 +62,11 @@ tAnomOut <- cbind(cmip_base,
                   TANOM = tail(Tanom, nrow(cmip_base)),
                   TANOM_STD = anomStd)
 
-write.csv(tAnomOut, 'data/data_processed/tAnomOut.csv', row.names = FALSE)
+if(!simpleTemperature){
+  anomOutName <- file.path('data', 'data_processed',
+                           paste0('tAnomOut', stockArea, '.csv'))
+  write.csv(tAnomOut, anomOutName, row.names = FALSE)
+}
 
 
 # Determine the actual years based on the available temperature data
