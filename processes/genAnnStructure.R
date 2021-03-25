@@ -3,12 +3,14 @@
 # Read in the temperature data
 cmip5 <- read.csv(file = 'data/data_raw/NEUS_CMIP5_annual_meansLong.csv',
                     header=TRUE)
-# cmip5 <- cmip5 %>%
-#   group_by(Model) %>%
-#   mutate(Temperature = ifelse(year %in% 2025:2050,
-#                               Temperature[which(year == 2025)-(year-2025)],
-#                               Temperature))
-# plot(cmip5$year, cmip5$Temperature)
+period <- 20
+uy <- unique(cmip5$year)
+piVal <- rep(seq(0, 2*pi, length.out = period), 
+             times = ceiling(length(uy)/period))[1:length(uy)]
+newt <- scales::rescale(sin(piVal), 
+                        to = quantile(cmip5$Temperature, c(0.25, 0.75)))
+cmip5$Temperature <- newt[match(cmip5$year, uy)]
+cat('\n**********\nNOTE! temperature time series has been modified!\n**********\n')
 
 # manipulate data to get desired percentile
 cmip_base <- get_temperatureSeries(cmip5, 
