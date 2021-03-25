@@ -21,10 +21,13 @@ shinyUI(fluidPage(theme = shinytheme("cerulean"),
                              #This part sets up the second page, in this case, the 'specifications' page.
                              tabPanel("Specifications",
                                       fillPage(div(helpText("Specifcations"), style = "font-size:100%"),
-                                               tags$div(selectInput("HCR", "HCR Form:", #Select input allows the user to pick an optino from a dropdown. 
-                                                                    c("Climate responsive" = "HCRclimresp",
-                                                                      "Temperature linked" = "HCRtemplink",
-                                                                      "Threshold"= "threshold")),
+                                               tags$div(selectInput("OMScenario", "OM and Misspecification Scenario:", #Select input allows the user to pick an optino from a dropdown. 
+                                                                    c("Overfished Scneario 1" = "overfish1",
+                                                                      "Overfished Scenario 2" = "overfish2",
+                                                                      "Not Overfished Scenario 1"= "notoverfish1",
+                                                                      "Not Overfished Scenario 2" = "notoverfish2",
+                                                                      "Misspecified Scenario 1" = "misspec1",
+                                                                      "Misspecified Scenario 2" = "misspec2")),
                                                         style = "font-size:100%"),
                                                tags$div(selectInput("RefPoints", "Reference Points:",
                                                                     c("Climate responsive" = "Refclimresp",
