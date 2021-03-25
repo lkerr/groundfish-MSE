@@ -19,7 +19,7 @@ invisible(sapply(ffiles, source))
 recT <- read.csv(file='documentation/stockRecruit/data/recT.csv', 
                  header=TRUE)
 recT$SSBRF0 <- recT$SSBRF0 / 1000
-recT$REC <- recT$REC000S * 1000
+recT$REC <- recT$REC * 1000
 ```
 
 # Analysis of Cod stock-recruit data (Beverton-Holt steepness version)
@@ -39,7 +39,9 @@ beta1 is a steepness effect, beta2 is an R0 effect and beta3 is part of the over
 # Parameters for the cod model
 codPar <- list(recDat = recT,
                
-               stock = 'GBCOD',
+               stock = 'GOMCOD',
+               
+               stockArea = 'GOM',
             
                start = c(log_h = log(0.5),
                          log_R0 = log(9.2e7),
@@ -71,7 +73,7 @@ codPar <- list(recDat = recT,
                           beta3 = 0, 
                           log_sigR = 1))
 
-parTab <- as.data.frame(round(do.call(cbind, codPar[3:6]), 2))
+parTab <- as.data.frame(round(do.call(cbind, codPar[4:7]), 2))
 parTab$stock <- codPar$stock
 
 print(parTab)
