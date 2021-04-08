@@ -52,54 +52,14 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
   # point and those will be implemented in get_FBRP
 
   if(parmgt$ASSESSCLASS == 'CAA' || parmgt$ASSESSCLASS == 'ASAP'){
-    
+
     # for GOM cod, Mramp model uses M = 0.2 for status determination
-    if(names(stock) == 'codGOM' && stock$codGOM$M_typ == 'ramp'){
-      
-      #insert new M's
-      parpop$M[1,] <- rep(0.2, 9) 
-
-      #recalculate reference points
-      parpop$switch<-FALSE
-      Fref <- get_FBRP(parmgt = parmgt, parpop = parpop, 
-                              parenv = parenv, Rfun_lst = Rfun_BmsySim, 
-                              stockEnv = stockEnv)
-      
-      parmgtT<-parmgt
-      parpopT<-parpop
-      parpopT$switch<-TRUE
-      parpopT$J1N<-stockEnv$J1N[1:(y-1),]
-      parpopT$selC<-stockEnv$selC
-      stockEnvT<-stockEnv
-      stockEnvT$R_mis<-FALSE
-      FrefT <- get_FBRP(parmgt = parmgtT, parpop = parpopT, #Also calculate the true Fmsy
-                        parenv = parenv, Rfun_lst = Rfun_BmsySim, 
-                        stockEnv = stockEnvT)
-      
-      # if using forecast start the BMSY initial population at the equilibrium
-      # FMSY level (before any temperature projections). This is consistent
-      # with how the Fmsy is calculated.
-      parpopUpdate <- parpop
-      parpopUpdateT <- parpopT
-      
-      if(parmgt$RFUN_NM == 'forecast'){
-        parpopUpdate$J1N <- Fref$equiJ1N_MSY
-      }
-
-      Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
-                              parenv = parenv, Rfun_lst = Rfun_BmsySim,
-                              FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
-   
-      stockEnvT<-stockEnv
-      stockEnvT$R_mis<-FALSE
-      BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT, #Also calculate the true Bmsy
-                        parenv = parenv, Rfun_lst = Rfun_BmsySim,
-                        FBRP = FrefT[['RPvalue']], stockEnv = stockEnvT)
-      
- 
-    } else { 
-    parpop$switch<-FALSE
-    Fref <- get_FBRP(parmgt = parmgt, parpop = parpop, 
+    parpopF<-parpop
+    if (stockEnv$M_mis==TRUE){
+      parpopF$M<-rep(stockEnv$M_mis_val,9)
+    }
+    parpopF$switch<-FALSE
+    Fref <- get_FBRP(parmgt = parmgt, parpop = parpopF, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
                      stockEnv = stockEnv)
     parmgtT<-parmgt
@@ -134,7 +94,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = FrefT[['RPvalue']], stockEnv = stockEnvT)
     
-    }
     if(evalRP){
       FrefRPvalue <- Fref[['RPvalue']]
       BrefRPvalue <- Bref[['RPvalue']]

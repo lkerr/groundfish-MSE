@@ -27,7 +27,6 @@ get_advice <- function(stock){
   }
   
   # was the assessment successful?
-
   tempStock <- within(tempStock, {
     conv_rate[y] <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' && 
                       class(opt) != 'try-error') ||

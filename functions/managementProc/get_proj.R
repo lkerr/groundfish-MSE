@@ -114,6 +114,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       N[1,a] <- init[a-1] * exp(-parpop$sel[a-1]*Fhat - 
                                     parpop$M[a-1])
     }
+
     # Deal with the plus group
     N[1,nage] <- init[nage-1] * exp(-parpop$sel[nage-1] * Fhat - 
                                        parpop$M[nage-1]) + 
@@ -139,7 +140,8 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     ## Recruitment
     # sd of historical R estimates
       parpop$Rpar_mis<-stockEnv$Rpar_mis#will use incorrect recruitment assumption if set in model parameters script
-      N[y,1] <- Rfun(type = stockEnv$R_typ,
+      if(type=='current'){parpop$switch<-'FALSE'}
+        N[y,1] <- Rfun(type = stockEnv$R_typ,
                      parpop = parpop, 
                      parenv = parenv, 
                      parmgt = parmgt,
