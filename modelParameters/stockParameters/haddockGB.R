@@ -15,7 +15,8 @@ laa_typ <- 'vonB'
 
 # weight-at-age parameters
 waa_par <- c(0.1774,0.4291,0.6939,0.8887,1.089,1.247,1.396,1.577,1.784) #Average of waa of last 5 years from 2019 assessment
-waa_typ <- 'matrix'
+waa_typ <- 'dynamic'
+#####
 
 # maturity-length parameters
 #mat_par <- c(0.21, 29.7) #AEW
@@ -50,14 +51,14 @@ selC_typ <- 'input'
 ##HS with all recruitment values (what is used in stock assessment projections)##
 Rpar <- c(SSB_star = 75000, #Used in projections (NEFSC 2019)
           cR = 1,
-          Rnyr= 15) # dont need to convert
+          Rnyr= 20) # dont need to convert
 R_typ <- 'HS'
 ##For regular BH
 #R_typ <- 'BH'
 #Rpar<-c(a=0.0004313,b=0.000002392,g=0)
 R_mis<-FALSE #If BRPs and projections assume a wrong SRR, set to TRUE. 
 Rpar_mis <- c(cR = 1,
-              Rnyr= 15)
+              Rnyr= 20)
 
 #### Survey parameters ####
 

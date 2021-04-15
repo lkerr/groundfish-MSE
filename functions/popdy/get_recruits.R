@@ -156,8 +156,7 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
         Rhat <- with(as.list(par),{
         if (type2=="True"){
           assess_vals <- get_HistAssess(stock = stock[[i]])
-          Rvals<-assess_vals$assessdat$R[assess_vals$assessdat$R<207000]
-          pred<-remp(1,as.numeric(assess_vals$assessdat$R))
+          pred<-remp(1,tail(as.numeric(assess_vals$assessdat$R,20)))
           
         }
         else{
