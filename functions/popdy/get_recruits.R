@@ -160,8 +160,7 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
           
         }
         else{
-          Rvals<-R_est[R_est<207000]
-          pred <- remp(1, tail(as.numeric(Rvals)))
+          pred <- remp(1, as.numeric(R_est))
         }
         return(pred)
         })}
