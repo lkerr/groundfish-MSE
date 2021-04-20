@@ -5,11 +5,6 @@
 # A little stupid to join the coefficients to the data, because it make a big dataset with lots of replicated data, instead of making a pair of matrices (one for data and one for coefficients). But whatever.
 # need to update this file with variable changes and equation changes. Anna is sending over a stata .ster. for coefficients
 
-production_coefs<-production_outfile
-production_coefs<-readRDS(file.path(savepath, production_coefs))
-production_coefs[, post:=NULL]
- source('preprocessing/economic/import_day_limits.R')
-
 
 inputprices<-readRDS(file.path(savepath, input_working))
 multipliers<-readRDS(file.path(savepath, multiplier_working))
