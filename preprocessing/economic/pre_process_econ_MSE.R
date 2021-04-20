@@ -102,5 +102,12 @@ source('preprocessing/economic/input_price_import.R')
 
 
 # This takes quite a while 
+
+# This takes quite a while 
+
+production_coefs<-production_outfile
+production_coefs<-readRDS(file.path(savepath, production_coefs))
+production_coefs[, post:=NULL]
+source('preprocessing/economic/import_day_limits_validation.R')
 source('preprocessing/economic/targeting_data_import.R')
 
