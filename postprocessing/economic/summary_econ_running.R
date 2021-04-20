@@ -7,9 +7,11 @@ library(data.table)
 
 # Naming outputs 
 
-remote_location <- "/net/ftp/pub/dropoff/mlee/anna/summary"
+remote_location_summ <- "/net/ftp/pub/dropoff/mlee/anna/summary"
+remote_location_full <- "/net/ftp/pub/dropoff/mlee/anna/full"
+
 stub<-"counterfactual_closeown"
-stub<-"validation"
+stub<-"validation2"
 #stub<-"counterfactual_closemult"
 
 econ_out_csv<-paste0("monthly_summary_",stub,".csv")
@@ -26,7 +28,6 @@ file_path= rownames(file_path)[which.max(file_path$mtime)]
 file_names = list.files(path=file.path(file_path, "econ","raw"), pattern = "econ_2020", full.names = TRUE)
 cutout<-100
 
-cutout<-67
 
 
 # need to write code for lines 32-73 that works on the pr_hat data
@@ -182,7 +183,7 @@ write.csv(stock_status, file.path(file_path, stock_status_out_csv))
 # zipping straight to the ftp doesn't work on my workstation. Instead, zip right into your file path and then copy it over
 
 # uncomment this on the mlee_workstation
-remote_location<-file_path
+#remote_location<-file_path
 
 zipcommand <-paste0("zip ",remote_location,"/",stub,"_summary.zip ", file_path,"/*.csv" )
 sha1command <-paste0("sha1sum ",remote_location,"/",stub,"_summary.zip > ", remote_location,"/",stub,"_summary.zip.sha1")
