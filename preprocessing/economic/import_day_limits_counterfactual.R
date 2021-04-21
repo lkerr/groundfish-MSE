@@ -34,21 +34,24 @@ day_limits = day_limits[, !(colnames(day_limits) %in% c("date"))]
 mer = names(day_limits [1:13])
 day_limits = merge(day_limits, dl, by=mer, all=T)
 
+#This is where we set the day limits for the counterfactual policy
+#Pieced together from 50CFR648.86
+# Changes that were in place for the common pool fishery:
+day_limits$dl_codGB[which(day_limits$gffishingyear>=2010 & is.na(day_limits$dl_codGB))]<-2000
+day_limits$dl_pollock[which(day_limits$gffishingyear>=2010 & is.na(day_limits$dl_pollock))]<-1000
 
-day_limits$dl_codGB[which(day_limits$gffishingyear>=2010 & is.na(day_limits$dl_codGB))]<-1000
+
+# Carry over the limits that were in place in 2009
 day_limits$dl_codGOM[which(day_limits$gffishingyear>=2010 & is.na(day_limits$dl_codGOM))]<-800
-day_limits$dl_whitehake[which(day_limits$gffishingyear>=2010 & is.na(day_limits$dl_whitehake))]<-1000
 day_limits$dl_yellowtailflounderCCGOM[which(day_limits$gffishingyear>=2010 & is.na(day_limits$dl_yellowtailflounderCCGOM))]<-250
 day_limits$dl_yellowtailflounderSNEMA[which(day_limits$gffishingyear>=2010 & is.na(day_limits$dl_yellowtailflounderSNEMA))]<-250
- 
+
+#These are trip limits.  I'm going to code them in as day limits, to avoid them going too far off the rails. 
 day_limits$dl_winterflounderGB[which(day_limits$gffishingyear>=2010 & is.na(day_limits$dl_winterflounderGB))]<-5000
 day_limits$dl_yellowtailflounderGB[which(day_limits$gffishingyear>=2010 & is.na(day_limits$dl_yellowtailflounderGB))]<-5000
 
-# GB cod - 1000
-# GOM cod 800
-# white hake 1000
-# yellowtail CCGOM 250
-# yellowtail SNEMA 250
+# White hake limit doesn't come in until 2012.
+day_limits$dl_whitehake[which(day_limits$gffishingyear>=2012 & is.na(day_limits$dl_whitehake))]<-500
 
 
 
