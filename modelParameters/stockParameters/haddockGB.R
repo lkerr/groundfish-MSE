@@ -40,7 +40,7 @@ initN_type <- 'expDecline'
 qC <- 0.0001
 qI <- 0.0001
 
-DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE. 
+DecCatch<-TRUE #If survey catchability decreases with temperature, set to TRUE. 
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
