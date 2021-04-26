@@ -93,8 +93,8 @@ showProgBar<-TRUE
 source('processes/setupYearIndexing_Econ.R')
 
 #### Top rep Loop ####
-for(r in 1:nrep){
-  #for(r in 72:nrep){
+#for(r in 1:nrep){
+ for(r in 78:nrep){
     oldseed_mproc <- .Random.seed
     
   #### Top MP loop ####
@@ -160,7 +160,8 @@ for(r in 1:nrep){
             tda2 <- paste0(tda,"_", round(runif(1, 0, 10000)))
             write.table(revenue_holder, file.path(econ_results_location, paste0("econ_",tda2, ".csv")), sep=",", row.names=FALSE)
             write.table(fishery_output_holder, file.path(econ_results_location, paste0("econ_stock_status_",tda2, ".csv")), sep=",", row.names=FALSE)
-            write.table(fishery_prhat_holder, file.path(econ_results_location, paste0("prhat_",tda2, ".csv")), sep=",", row.names=FALSE)
+            #comment out saving the prhats.
+            #write.table(fishery_prhat_holder, file.path(econ_results_location, paste0("prhat_",tda2, ".csv")), sep=",", row.names=FALSE)
             
             fishery_prhat_holder<-list()
             fishery_output_holder<-list()

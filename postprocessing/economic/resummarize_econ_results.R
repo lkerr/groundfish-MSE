@@ -8,9 +8,9 @@ library(data.table)
 # Naming outputs 
 
 #Uncomment one of these stub names
-#stub<-"counterfactual_closeown2B"
+stub<-"counterfactual_closeownB1"
 #stub<-"validation1A"
-stub<-"counterfactual_closemultB"
+#stub<-"counterfactual_closemultB"
 
 # Assemble the names of the csv where we will store data
 econ_out_csv<-paste0("monthly_summary_",stub,".csv")
@@ -38,7 +38,7 @@ file_names = list.files(path=file.path(file_path, "econ","raw"), pattern =select
 
 # Maxrep options.  Some of the Simulations ran partially and therefore only have partial data.  
 # We need to to keep up to the last full replicate. 
-maxrep<-100
+maxrep<-77
 #maxrep<-71
 
 
@@ -147,18 +147,18 @@ write.csv(monthly_summary, file.path(file_path, econ_out_csv))
 # zipping straight to the ftp doesn't work on my workstation. Instead, zip right into your file path and then copy it over
 
 # uncomment this on the mlee_workstation
-#remote_location<-file_path
+remote_location<-file_path
 # 
-# zipcommand <-paste0("zip ",remote_location,"/",stub,"_summary.zip ", file_path,"/*.csv" )
-# sha1command <-paste0("sha1sum ",remote_location,"/",stub,"_summary.zip > ", remote_location,"/",stub,"_summary.zip.sha1")
+ zipcommand <-paste0("zip ",remote_location,"/",stub,"_summary.zip ", file_path,"/*.csv" )
+ sha1command <-paste0("sha1sum ",remote_location,"/",stub,"_summary.zip > ", remote_location,"/",stub,"_summary.zip.sha1")
 # 
-# system(zipcommand)
-# system(sha1command)
+ system(zipcommand)
+ system(sha1command)
 # 
 # 
-# fullzipcommand <-paste0("zip -r ",remote_location,"/",stub,"_full.zip ", file_path,"/econ/raw/econ_*.csv" )
-# fullsha1command <-paste0("sha1sum ",remote_location,"/",stub,"_full.zip > ", remote_location,"/",stub,"_full.zip.sha1")
+ fullzipcommand <-paste0("zip -r ",remote_location,"/",stub,"_full.zip ", file_path,"/econ/raw/econ_*.csv" )
+ fullsha1command <-paste0("sha1sum ",remote_location,"/",stub,"_full.zip > ", remote_location,"/",stub,"_full.zip.sha1")
 # 
-# system(fullzipcommand)
-# system(fullsha1command)
+ system(fullzipcommand)
+ system(fullsha1command)
 
