@@ -6,6 +6,7 @@
 library(data.table)
 
 # Naming outputs 
+remote_location <- "/net/ftp/pub/dropoff/mlee/anna/summary"
 
 #Uncomment one of these stub names
 #stub<-"counterfactual_closeown2B"
@@ -149,16 +150,16 @@ write.csv(monthly_summary, file.path(file_path, econ_out_csv))
 # uncomment this on the mlee_workstation
 #remote_location<-file_path
 # 
-# zipcommand <-paste0("zip ",remote_location,"/",stub,"_summary.zip ", file_path,"/*.csv" )
-# sha1command <-paste0("sha1sum ",remote_location,"/",stub,"_summary.zip > ", remote_location,"/",stub,"_summary.zip.sha1")
+ zipcommand <-paste0("zip ",remote_location,"/",stub,"_summary.zip ", file_path,"/*.csv" )
+ sha1command <-paste0("sha1sum ",remote_location,"/",stub,"_summary.zip > ", remote_location,"/",stub,"_summary.zip.sha1")
 # 
-# system(zipcommand)
-# system(sha1command)
+ system(zipcommand)
+ system(sha1command)
 # 
 # 
-# fullzipcommand <-paste0("zip -r ",remote_location,"/",stub,"_full.zip ", file_path,"/econ/raw/econ_*.csv" )
-# fullsha1command <-paste0("sha1sum ",remote_location,"/",stub,"_full.zip > ", remote_location,"/",stub,"_full.zip.sha1")
+ fullzipcommand <-paste0("zip -r ",remote_location,"/",stub,"_full.zip ", file_path,"/econ/raw/econ_*.csv" )
+ fullsha1command <-paste0("sha1sum ",remote_location,"/",stub,"_full.zip > ", remote_location,"/",stub,"_full.zip.sha1")
 # 
-# system(fullzipcommand)
-# system(fullsha1command)
+ system(fullzipcommand)
+ system(fullsha1command)
 
