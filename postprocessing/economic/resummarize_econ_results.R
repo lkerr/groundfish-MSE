@@ -6,6 +6,7 @@
 library(data.table)
 
 # Naming outputs 
+remote_location <- "/net/ftp/pub/dropoff/mlee/anna/summary"
 
 #Uncomment one of these stub names
 stub<-"counterfactual_closeownB1"

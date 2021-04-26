@@ -11,8 +11,8 @@ remote_location <- "/net/ftp/pub/dropoff/mlee/anna/summary"
 #Uncomment one of these stub names
 
 #stub<-"counterfactual_closeownA"
-stub<-"validationA"
-#stub<-"counterfactual_closemultA"
+#stub<-"validationA"
+stub<-"counterfactual_closemult"
 
 econ_out_csv<-paste0("monthly_summary_",stub,".csv")
 stock_status_out_csv<-paste0("stock_status_",stub,".csv")
@@ -26,7 +26,7 @@ pr_hat_out_csv<-paste0("pr_hat_",stub,".csv")
 # file_path = file.info(list.files(path=".",pattern="^results_*",include.dirs=TRUE,full.names = T,recursive=TRUE))
 # file_path= rownames(file_path)[which.max(file_path$mtime)]
 # Option 2: Manually enter the name of the results folder.  The "." is relative to the root of the project.
-file_path="./results_2020-10-26-14-40-06"
+file_path="./results_2021-04-21-14-40-06"
 
 #selects csvs that start with a particular pattern 
 select_pat<- "econ_2020"
@@ -35,7 +35,6 @@ file_names = list.files(path=file.path(file_path, "econ","raw"), pattern =select
 # Cut out or stop options. some of the Simulations ran partially and therefore only have partial data.  
 # We need to to keep 
 maxrep<-100
-maxrep<-71
 
 
 
