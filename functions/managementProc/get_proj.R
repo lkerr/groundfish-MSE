@@ -91,7 +91,13 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   
   # if M is not given as a vector, make it one
   if(length(parpop$M) == 1){
-    parpop$M <- rep(parpop$M, nage)
+    if(exists('y') & parpop$switch==TRUE){
+    parpop$M <- rep(stockEnv$natM[y], nage)}
+    else if(exists('y') & parpop$switch==FALSE){
+      parpop$M <- rep(0.2, nage)
+    }
+    else{parpop$M<-rep(parpop$M,nage)}
+    
   }
   
   # set up containers

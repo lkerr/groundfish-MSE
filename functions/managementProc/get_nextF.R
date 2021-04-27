@@ -67,6 +67,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     parpopT$switch<-TRUE
     parpopT$J1N<-stockEnv$J1N[1:(y-1),]
     parpopT$selC<-stockEnv$selC
+    parpopT$R<-stockEnv$R[1:(y-1)]
     stockEnvT<-stockEnv
     stockEnvT$R_mis<-FALSE
     FrefT <- get_FBRP(parmgt = parmgtT, parpop = parpopT, #Also calculate the true Fmsy
@@ -83,7 +84,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parpopUpdate$J1N <- Fref$equiJ1N_MSY
       
     }
- 
+    stockEnvT$R_mis<-TRUE
     Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
