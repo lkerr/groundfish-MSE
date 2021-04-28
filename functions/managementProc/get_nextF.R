@@ -113,7 +113,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     # otherwise just use same reference points values    
     BThresh <- BrefScalar * BrefRPvalue
     FThresh <- FrefScalar * FrefRPvalue
-    
+
     overfished <- ifelse(tail(parpop$SSBhat,1) < BThresh, 1, 0)
     
     overfishing <- ifelse(tail(parpop$Fhat,1) > FrefRPvalue, 1, 0) #MDM
@@ -145,19 +145,18 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       else if (y==fmyearIdx & overfished== 0){F<-FThresh}
       else if (y>fmyearIdx & overfished== 1){F<-FrefRPvalue*0.7}
       else if (y>fmyearIdx & overfished== 0){
-        if(any(stockEnv$OFdStatus==1,na.rm=T)& tail(stockEnv$res$SSB,1)<BrefRPvalue){F<-FrefRPvalue*0.7}
+        if(any(stockEnv$OFdStatus==1,na.rm=T)& tail(parpop$SSBhat,1)<BrefRPvalue){F<-FrefRPvalue*0.7}
         else{F<-FThresh}}
     }
     else if(tolower(parmgt$HCR) == 'pstar'){
       parmgtproj<-parmgt
       parmgtproj$RFUN_NM<-"forecast"
       parpopproj<-parpop
-      parpopproj$SSBhat<-stockEnv$res$SSB
       parpopproj$R<-stockEnv$res$N.age[,1]
       parpopproj$J1N<-tail(stockEnv$res$N.age,1)
       parpopproj$catch<-stockEnv$res$catch.obs
       Rfun<-Rfun_BmsySim$forecast
-      F<-pstar(maxp=0.4,relB=tail(stockEnv$res$SSB,1)/BThresh,parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv,FrefRPvalue=FrefRPvalue)
+      F<-pstar(maxp=0.4,relB=tail(parpop$SSBhat,1)/BThresh,parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv,FrefRPvalue=FrefRPvalue)
     }
     else{
       

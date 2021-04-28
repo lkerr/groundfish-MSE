@@ -94,6 +94,10 @@ get_fillRepArrays <- function(stock){
     omval$relTermE_qI[r,m,] <- relTermE_qI #MDM
     omval$relTermE_R[r,m,] <- relTermE_R #MDM
     omval$relTermE_F[r,m,] <- relTermE_F #MDM
+    omval$SSBest<- stock$res$SSB
+    omval$Fest<- stock$res$F.report
+    omval$Catchest<- stock$res$catch.pred
+    omval$Rest<- stock$res$N.age[,1]
     }
   })
 

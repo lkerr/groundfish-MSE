@@ -5,6 +5,7 @@ get_containers <- function(stockPar){
   
   yxage = matrix(NA, nrow=nyear, ncol=stockPar$nage)
   yx0 = rep(NA, nyear)
+  est = rep(NA, 53)
   
   nomyear = nyear - (stockPar$ncaayear + fyear + nburn)
   nmproc = nrow(mproc)
@@ -101,7 +102,7 @@ get_containers <- function(stockPar){
     relTermE_IN = NA,#MDM
     relTermE_qI = NA,#MDM
     relTermE_R = NA,#MDM
-    relTermE_F = NA,#MDM=
+    relTermE_F = NA,
     
     # Econ model containers
     # Total Weight of catch
@@ -163,7 +164,7 @@ get_containers <- function(stockPar){
       relTermE_IN = save_vector_ann,#MDM
       relTermE_qI = save_vector_ann,#MDM
       relTermE_R = save_vector_ann,#MDM
-      relTermE_F = save_vector_ann #MDM
+      relTermE_F = save_vector_ann
     )
     
   )

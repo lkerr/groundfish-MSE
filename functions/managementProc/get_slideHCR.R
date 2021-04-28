@@ -16,7 +16,7 @@
 get_slideHCR <- function(parpop, Fmsy, Bmsy){
   
   if(tail(parpop$SSBhat, 1) <= Bmsy){
-    
+
     F <- Fmsy * tail(parpop$SSBhat, 1) / Bmsy
     
   }else{
