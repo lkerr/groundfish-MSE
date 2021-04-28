@@ -349,14 +349,14 @@
 1
 # Index-1 Selectivity Data
 0.444  1   1   1
-0.697  1   1   1
-0.755  1   1   1
-0.759  1   1   1
-0.779  1   1   1
-0.712  1   1   1
-0.807 -1   0   1
-0.772  1   1   1
-0.772  1   1   1
+0.697  -1   1   1
+0.755  -1   1   1
+0.759  -1   1   1
+0.779  -1   1   1
+0.712  -1   1   1
+0.807  -1   0   1
+0.772  -1   1   1
+0.772  -1   1   1
 0    -1    0    0
 0    -1    0    0
 0    -1    0    0
@@ -405,17 +405,17 @@
 # Phase for F mult in 1st Year
 1
 # Phase for F mult Deviations
-2
+3
 # Phase for Recruitment Deviations
 2
 # Phase for N in 1st Year
-2
+1
 # Phase for Catchability in 1st Year
 1
 # Phase for Catchability Deviations
 -3
 # Phase for Stock Recruitment Relationship
-1
+2
 # Phase for Steepness
 -1
 # Recruitment CV by Year
@@ -539,43 +539,43 @@
 0
 0
 # Catch Effective Sample Size by Year and Fleet
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
-150
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
+140
 # Discard Effective Sample Size by Year and Fleet
 0
 0
@@ -615,21 +615,21 @@
 0
 0
 # Lambda for F Mult in First year by Fleet
-0
-# CV for F Mult in First year by Fleet
-1.3
-# Lambda for F Mult Deviations by Fleet
 1
+# CV for F Mult in First year by Fleet
+0.9
+# Lambda for F Mult Deviations by Fleet
+0
 # CV for F Mult Deviations by Fleet
-1.2
+0.9
 # Lambda for N in 1st Year Deviations
 0
 # CV for N in 1st Year Deviations
 0.9
 # Lambda for Recruitment Deviations
-1
-# Lambda for Catchability in First year by Index
 0
+# Lambda for Catchability in First year by Index
+1
 # CV for Catchability in First year by Index
 0.9
 # Lambda for Catchability Deviations by Index
@@ -641,13 +641,13 @@
 # CV for Deviation from Initial Steepness
 0.9
 # Lambda for Deviation from Unexploited Stock Size
-1
+0
 # CV for Deviation from Unexploited Stock Size
 1.5
 # NAA Deviations Flag
 1
 # Initial Numbers at Age in 1st Year
-28379.79 1853.083 6815.354 2295.129 10484.45 2085.144 138.3392 1464.855 2214.193
+25316.2643  1653.0474  6079.6540  2047.3757  9352.6805  1860.0580   123.4058  1306.7277  1975.1765
 # Initial F Mult in 1st Year by Fleet
 1.5
 # Initial Catchabilty by Index
@@ -657,7 +657,7 @@
 # Initial Unexploited Stock
 200000
 # Initial Steepness
-0.7
+1
 # Maximum F
 5
 # Ignore Guesses (Yes=1)
