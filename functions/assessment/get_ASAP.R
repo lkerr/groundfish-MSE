@@ -28,9 +28,7 @@ get_ASAP <- function(stock){
     #natural mortality
     dat_file$dat$M <- matrix(get_dwindow(natM, styear, endyear), nrow = N_rows, ncol = page)
     if (M_mis==TRUE){#If there is a natural mortality missepcification, the stock assessment will assume that M is the value in M_mis_val
-    natM_mis<-natM
-    natM_mis[fmyearIdx:y]<-rep(M_mis_val,length(fmyearIdx:y))
-    dat_file$dat$M <- matrix(get_dwindow(natM_mis, styear, endyear), nrow = N_rows, ncol = page)
+    dat_file$dat$M <- matrix(M_mis_val, nrow = N_rows, ncol = page)
     }
     
     #maturity-at-age

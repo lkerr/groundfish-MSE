@@ -64,6 +64,9 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                      stockEnv = stockEnv)
     parmgtT<-parmgt
     parpopT<-parpop
+    if (stockEnv$M_mis==TRUE){
+      parpopT$M<-rep(stockEnv$M,9)
+    }
     parpopT$switch<-TRUE
     parpopT$J1N<-stockEnv$J1N[1:(y-1),]
     parpopT$selC<-stockEnv$selC
