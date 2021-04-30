@@ -4,7 +4,7 @@ get_estF<-function(catchproj,parmgtproj,parpopproj,parenv,Rfun,stockEnv){
     nage <- length(parpopproj$sel)
     N <- matrix(0, nrow=1, ncol=nage)
     init <- tail(parpopproj$J1N, 1)
-    if (mproc$rhoadjust==TRUE & y>fmyearIdx & stockEnv$Mohns_Rho_SSB[y]>0.2){
+    if (mproc$rhoadjust==TRUE & y>fmyearIdx & stockEnv$Mohns_Rho_SSB[y]>0.15){
       init<-init/(1+stockEnv$Mohns_Rho_SSB[y])
     }
     N[1,] <- init 

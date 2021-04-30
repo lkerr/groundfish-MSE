@@ -43,7 +43,7 @@ get_fillRepArrays <- function(stock){
     omval$SSBPROXYT[r,m,] <- RPmat[,4]
     omval$FRATIO[r,m,y] <- stock$res$F.report[length(stock$res$F.report)]/RPmat[,1][y]
     omval$SSBRATIO[r,m,y] <- stock$res$SSB[length(stock$res$SSB)]/RPmat[,2][y]
-    if(mproc[m,'rhoadjust'] == 'TRUE' & y>fmyearIdx & Mohns_Rho_SSB[y]>0.2){
+    if(mproc[m,'rhoadjust'] == 'TRUE' & y>fmyearIdx & Mohns_Rho_SSB[y]>0.15){
     omval$FRATIO[r,m,y] <- (stock$res$F.report[length(stock$res$F.report)]/(Mohns_Rho_F[y]+1))/RPmat[,1][y]
     omval$SSBRATIO[r,m,y] <-(stock$res$SSB[length(stock$res$SSB)]/(Mohns_Rho_SSB[y]+1))/RPmat[,2][y]
     }
