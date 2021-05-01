@@ -116,3 +116,4 @@ ggplot(df)+geom_line(aes(x=Year,y=Catchsim,color=HCR),size=1)+
   ylab('Mohns Rho for SSB')+ylim(-0.5,0.5)+
   scale_color_colorblind()+
   scale_x_continuous(limits = c(2020,2040))
+
