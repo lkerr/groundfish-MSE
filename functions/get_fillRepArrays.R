@@ -86,11 +86,10 @@ get_fillRepArrays <- function(stock){
     omval$Mohns_Rho_F[r,m,]<-Mohns_Rho_F#MDM
     omval$Mohns_Rho_R[r,m,]<-Mohns_Rho_R#MDM
     omval$mincatchcon[r,m,]<-mincatchcon
-    extra<-53-length(stock$res$SSB)
-    omval$SSBest[y,]<-c(stock$res$SSB,rep(NA,extra))
-    omval$Fest[y,]<-c(stock$res$F.report,rep(NA,extra))
-    omval$Catchest[y,]<-c(stock$res$catch.pred,rep(NA,extra))
-    omval$Rest[y,]<-c(stock$res$N.age[,1],rep(NA,extra))
+    omval$SSBest[y,1:length(stock$res$SSB)]<-stock$res$SSB
+    omval$Fest[y,1:length(stock$res$SSB)]<-stock$res$F.report
+    omval$Catchest[y,1:length(stock$res$SSB)]<-stock$res$catch.pred
+    omval$Rest[y,1:length(stock$res$SSB)]<-stock$res$N.age[,1]
     if (y == nyear){
     omval$relTermE_SSB[r,m,] <- relTermE_SSB #MDM
     omval$relTermE_CW[r,m,] <- relTermE_CW #MDM

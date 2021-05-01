@@ -5,7 +5,7 @@ get_containers <- function(stockPar){
   
   yxage = matrix(NA, nrow=nyear, ncol=stockPar$nage)
   yx0 = rep(NA, nyear)
-  est = matrix(NA,nyear,53)
+  est = matrix(NA,nyear,54)
   
   nomyear = nyear - (stockPar$ncaayear + fyear + nburn)
   nmproc = nrow(mproc)
