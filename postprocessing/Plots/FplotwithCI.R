@@ -1,5 +1,5 @@
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(5,6,7,8)
+Scenarios<-c(9,10,11,12)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
@@ -31,10 +31,10 @@ for (k in 1:length(sims)){
   F_fullratiots[,k]<-omvalGlobal$codGOM$F_full[169:190]
 }
 
-Df<-as.data.frame(F_fullratiots)
-Df$Year<-2019:2040
-Df<- Df %>% gather(Year, SSB, 1:(length(Df)-1))
-Df$Year<-rep(2019:2040,(length(Df)-1))
+D<-as.data.frame(F_fullratiots)
+D$Year<-2019:2040
+Df<- D %>% gather(Year, F_full, 1:(length(D)-1))
+Df$Year<-rep(2019:2040,(length(D)-1))
 Df <- ddply(Df, "Year", summarise, median = MedianCI(F_full)[1], CI_lower=MedianCI(F_full)[2], CI_upper=MedianCI(F_full)[3])
 Df$HCR<-Scenarios[1]
 
@@ -61,10 +61,10 @@ for (k in 1:length(sims)){
   F_fullratiots[,k]<-omvalGlobal$codGOM$F_full[169:190]
 }
 
-Df2<-as.data.frame(F_fullratiots)
-Df2$Year<-2019:2040
-Df2<- Df2 %>% gather(Year, SSB, 1:(length(Df2)-1))
-Df2$Year<-rep(2019:2040,(length(Df2)-1))
+D<-as.data.frame(F_fullratiots)
+D$Year<-2019:2040
+Df2<- D %>% gather(Year, F_full, 1:(length(D)-1))
+Df2$Year<-rep(2019:2040,(length(D)-1))
 Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(F_full)[1], CI_lower=MedianCI(F_full)[2], CI_upper=MedianCI(F_full)[3])
 Df2$HCR<-Scenarios[2]
 Df<-full_join(Df,Df2)
@@ -92,10 +92,10 @@ for (k in 1:length(sims)){
   F_fullratiots[,k]<-omvalGlobal$codGOM$F_full[169:190]
 }
 
-Df2<-as.data.frame(F_fullratiots)
-Df2$Year<-2019:2040
-Df2<- Df2 %>% gather(Year, SSB, 1:(length(Df2)-1))
-Df2$Year<-rep(2019:2040,(length(Df2)-1))
+D<-as.data.frame(F_fullratiots)
+D$Year<-2019:2040
+Df2<- D %>% gather(Year, F_full, 1:(length(D)-1))
+Df2$Year<-rep(2019:2040,(length(D)-1))
 Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(F_full)[1], CI_lower=MedianCI(F_full)[2], CI_upper=MedianCI(F_full)[3])
 Df2$HCR<-Scenarios[3]
 Df<-full_join(Df,Df2)
@@ -123,10 +123,10 @@ for (k in 1:length(sims)){
   F_fullratiots[,k]<-omvalGlobal$codGOM$F_full[169:190]
 }
 
-Df2<-as.data.frame(F_fullratiots)
-Df2$Year<-2019:2040
-Df2<- Df2 %>% gather(Year, SSB, 1:(length(Df2)-1))
-Df2$Year<-rep(2019:2040,(length(Df2)-1))
+D<-as.data.frame(F_fullratiots)
+D$Year<-2019:2040
+Df2<- D %>% gather(Year, F_full, 1:(length(D)-1))
+Df2$Year<-rep(2019:2040,(length(D)-1))
 Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(F_full)[1], CI_lower=MedianCI(F_full)[2], CI_upper=MedianCI(F_full)[3])
 Df2$HCR<-Scenarios[4]
 Df<-full_join(Df,Df2)
