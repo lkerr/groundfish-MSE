@@ -191,6 +191,7 @@ get_advice <- function(stock){
                        parenv = parenv,
                        RPlast = NULL, evalRP = TRUE,
                        stock = tempStock)
+ 
       tempStock$RPmat[y,] <- gnF$RPs
       tempStock$catchproj <- gnF$catchproj
       

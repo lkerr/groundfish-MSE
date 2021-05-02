@@ -120,7 +120,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       N[1,a] <- init[a-1] * exp(-parpop$sel[a-1]*Fhat - 
                                     parpop$M[a-1])
     }
-
+    
     # Deal with the plus group
     N[1,nage] <- init[nage-1] * exp(-parpop$sel[nage-1] * Fhat - 
                                        parpop$M[nage-1]) + 
@@ -176,7 +176,6 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   SSBaa <- SSBaa
   SSBpj <- apply(SSBaa, 1, sum)
   sumCWpj <- sumCW
-  
   out <- list(J1N = J1Npj,
               SSBaa = SSBaa,
               SSB = SSBpj,
