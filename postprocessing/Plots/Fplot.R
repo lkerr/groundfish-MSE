@@ -1,7 +1,7 @@
 #####F_full Trajectory Plots####
-Scenarios<-c(25,26,27,28)
+Scenarios<-c(30,31,32,33)
 RhoAdj<-FALSE
-Stock<-'haddockGB'
+Stock<-'codGOM'
 ####First Sims####
 library(matrixStats)
 library(dplyr)
@@ -175,7 +175,7 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1988:2039
+Year<-1987:2038
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[4]
 
@@ -214,6 +214,7 @@ df$HCR<-as.factor(df$HCR)
 df$HCR<-ordered(df$HCR,levels=c('Ramp','P*','F-step','Constrained ramp'))
 
 df<-df[df$Year>1989,]
+df$Year<-df$Year-1
 ggplot(df)+geom_line(aes(x=Year,y=Catchest,color=HCR))+geom_point(aes(x=Year,y=Catchsim,color=HCR))+
   theme_classic()+theme(text=element_text(size=18),legend.position='right')+
   ylab('F')+geom_vline(xintercept=2019, linetype='dotted')+
