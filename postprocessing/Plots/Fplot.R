@@ -1,6 +1,7 @@
 #####F_full Trajectory Plots####
-Scenarios<-c(5,6,7,8)
-Stock<-'codGOM'
+Scenarios<-c(25,26,27,28)
+RhoAdj<-FALSE
+Stock<-'haddockGB'
 ####First Sims####
 library(matrixStats)
 library(dplyr)
@@ -25,12 +26,21 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2039
+Year<-1988:2039
 df<-as.data.frame(cbind(Catchsim,Year))
 df$HCR<-Scenarios[1]
 
+if (RhoAdj==TRUE){
+  Mohn<-rep(NA,length(sims))
+  for (k in 1:length(sims)){
+    load(sims[k])
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F_full[190]
+  }
+  Mohn<-mean(Mohn,na.rm=T)
+}
+
 ####First Assessment####
-Catchest<-matrix(NA,nrow=53,ncol=length(sims))
+Catchest<-matrix(NA,nrow=54,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
@@ -38,6 +48,11 @@ for (k in 1:length(sims)){
 }
 
 Catchest<-rowMedians(Catchest,na.rm=T)
+Catchest<-na.omit(Catchest)
+
+if (RhoAdj==TRUE){
+  Catchest[length(Catchest)]<-Catchest[length(Catchest)]/(Mohn+1)
+}
 
 df$Catchest<-Catchest
 
@@ -60,12 +75,21 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2039
+Year<-1988:2039
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[2]
 
+if (RhoAdj==TRUE){
+  Mohn<-rep(NA,length(sims))
+  for (k in 1:length(sims)){
+    load(sims[k])
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F_full[190]
+  }
+  Mohn<-mean(Mohn,na.rm=T)
+}
+
 ####Second Assessment####
-Catchest<-matrix(NA,nrow=53,ncol=length(sims))
+Catchest<-matrix(NA,nrow=54,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
@@ -73,7 +97,11 @@ for (k in 1:length(sims)){
 }
 
 Catchest<-rowMedians(Catchest,na.rm=T)
+Catchest<-na.omit(Catchest)
 
+if (RhoAdj==TRUE){
+  Catchest[length(Catchest)]<-Catchest[length(Catchest)]/(Mohn+1)
+}
 df2$Catchest<-Catchest
 
 df<-full_join(df,df2)
@@ -97,12 +125,21 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2039
+Year<-1988:2039
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[3]
 
+if (RhoAdj==TRUE){
+  Mohn<-rep(NA,length(sims))
+  for (k in 1:length(sims)){
+    load(sims[k])
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F_full[190]
+  }
+  Mohn<-mean(Mohn,na.rm=T)
+}
+
 ####Third Assessment####
-Catchest<-matrix(NA,nrow=53,ncol=length(sims))
+Catchest<-matrix(NA,nrow=54,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
@@ -110,7 +147,11 @@ for (k in 1:length(sims)){
 }
 
 Catchest<-rowMedians(Catchest,na.rm=T)
+Catchest<-na.omit(Catchest)
 
+if (RhoAdj==TRUE){
+  Catchest[length(Catchest)]<-Catchest[length(Catchest)]/(Mohn+1)
+}
 df2$Catchest<-Catchest
 
 df<-full_join(df,df2)
@@ -134,12 +175,21 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2039
+Year<-1988:2039
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[4]
 
+if (RhoAdj==TRUE){
+  Mohn<-rep(NA,length(sims))
+  for (k in 1:length(sims)){
+    load(sims[k])
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F_full[190]
+  }
+  Mohn<-mean(Mohn,na.rm=T)
+}
+
 ####Fourth Assessment####
-Catchest<-matrix(NA,nrow=53,ncol=length(sims))
+Catchest<-matrix(NA,nrow=54,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
@@ -147,7 +197,11 @@ for (k in 1:length(sims)){
 }
 
 Catchest<-rowMedians(Catchest,na.rm=T)
+Catchest<-na.omit(Catchest)
 
+if (RhoAdj==TRUE){
+  Catchest[length(Catchest)]<-Catchest[length(Catchest)]/(Mohn+1)
+}
 df2$Catchest<-Catchest
 
 df<-full_join(df,df2)
@@ -159,8 +213,12 @@ df$HCR[df$HCR==Scenarios[4]]<-'Constrained ramp'
 df$HCR<-as.factor(df$HCR)
 df$HCR<-ordered(df$HCR,levels=c('Ramp','P*','F-step','Constrained ramp'))
 
+df<-df[df$Year>1989,]
 ggplot(df)+geom_line(aes(x=Year,y=Catchest,color=HCR))+geom_point(aes(x=Year,y=Catchsim,color=HCR))+
   theme_classic()+theme(text=element_text(size=18),legend.position='right')+
   ylab('F')+geom_vline(xintercept=2019, linetype='dotted')+
   scale_color_colorblind()
+
+
+
 

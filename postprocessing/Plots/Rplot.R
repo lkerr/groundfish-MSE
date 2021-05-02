@@ -1,6 +1,7 @@
 #####R Trajectory Plots####
-Scenarios<-c(5,6,7,8)
-Stock<-'codGOM'
+Scenarios<-c(25,26,27,28)
+RhoAdj<-FALSE
+Stock<-'haddockGB'
 ####First Sims####
 library(matrixStats)
 library(dplyr)
@@ -25,22 +26,35 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2039
+Year<-1988:2039
 df<-as.data.frame(cbind(Catchsim,Year))
 df$HCR<-Scenarios[1]
 
+if (RhoAdj==TRUE){
+  Mohn<-rep(NA,length(sims))
+  for (k in 1:length(sims)){
+    load(sims[k])
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_R[190]
+  }
+  Mohn<-mean(Mohn,na.rm=T)
+}
 
 ####First Assessment####
-Catchest<-matrix(NA,nrow=53,ncol=length(sims))
+Rest<-matrix(NA,nrow=54,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchest[,k]<-omvalGlobal[[1]]$Rest[190,]
+  Rest[,k]<-omvalGlobal[[1]]$Rest[190,]
 }
 
-Catchest<-rowMedians(Catchest,na.rm=T)
+Rest<-rowMedians(Rest,na.rm=T)
+Rest<-na.omit(Rest)
 
-df$Catchest<-Catchest
+if (RhoAdj==TRUE){
+  Rest[length(Rest)]<-Rest[length(Rest)]/(Mohn+1)
+}
+
+df$Rest<-Rest
 
 ####Second Sims####
 setwd(paste(wd,"/Sim_",Scenarios[2],"/sim",sep=""))
@@ -61,7 +75,7 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2039
+Year<-1988:2039
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[2]
 
@@ -69,25 +83,26 @@ if (RhoAdj==TRUE){
   Mohn<-rep(NA,length(sims))
   for (k in 1:length(sims)){
     load(sims[k])
-    Mohn[k]<-omvalGlobal[[1]]Mohns_Rho_R[190]
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_R[190]
   }
   Mohn<-mean(Mohn,na.rm=T)
 }
 
 ####Second Assessment####
-Catchest<-matrix(NA,nrow=53,ncol=length(sims))
+Rest<-matrix(NA,nrow=54,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchest[,k]<-omvalGlobal[[1]]$Rest[190,]
+  Rest[,k]<-omvalGlobal[[1]]$Rest[190,]
 }
 
-Catchest<-rowMedians(Catchest,na.rm=T)
+Rest<-rowMedians(Rest,na.rm=T)
+Rest<-na.omit(Rest)
 
 if (RhoAdj==TRUE){
-  Catchest[length(Catchest)]<-Catchest[length(Catchest)]/(Mohn+1)
+  Rest[length(Rest)]<-Rest[length(Rest)]/(Mohn+1)
 }
-df2$Catchest<-Catchest
+df2$Rest<-Rest
 
 df<-full_join(df,df2)
 
@@ -110,7 +125,7 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2039
+Year<-1988:2039
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[3]
 
@@ -118,25 +133,26 @@ if (RhoAdj==TRUE){
   Mohn<-rep(NA,length(sims))
   for (k in 1:length(sims)){
     load(sims[k])
-    Mohn[k]<-omvalGlobal[[1]]Mohns_Rho_R[190]
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_R[190]
   }
   Mohn<-mean(Mohn,na.rm=T)
 }
 
 ####Third Assessment####
-Catchest<-matrix(NA,nrow=53,ncol=length(sims))
+Rest<-matrix(NA,nrow=54,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchest[,k]<-omvalGlobal[[1]]$Rest[190,]
+  Rest[,k]<-omvalGlobal[[1]]$Rest[190,]
 }
 
-Catchest<-rowMedians(Catchest,na.rm=T)
+Rest<-rowMedians(Rest,na.rm=T)
+Rest<-na.omit(Rest)
 
 if (RhoAdj==TRUE){
-  Catchest[length(Catchest)]<-Catchest[length(Catchest)]/(Mohn+1)
+  Rest[length(Rest)]<-Rest[length(Rest)]/(Mohn+1)
 }
-df2$Catchest<-Catchest
+df2$Rest<-Rest
 
 df<-full_join(df,df2)
 
@@ -159,21 +175,34 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2039
+Year<-1988:2039
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[4]
 
+if (RhoAdj==TRUE){
+  Mohn<-rep(NA,length(sims))
+  for (k in 1:length(sims)){
+    load(sims[k])
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_R[190]
+  }
+  Mohn<-mean(Mohn,na.rm=T)
+}
+
 ####Fourth Assessment####
-Catchest<-matrix(NA,nrow=53,ncol=length(sims))
+Rest<-matrix(NA,nrow=54,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchest[,k]<-omvalGlobal[[1]]$Rest[190,]
+  Rest[,k]<-omvalGlobal[[1]]$Rest[190,]
 }
 
-Catchest<-rowMedians(Catchest,na.rm=T)
+Rest<-rowMedians(Rest,na.rm=T)
+Rest<-na.omit(Rest)
 
-df2$Catchest<-Catchest
+if (RhoAdj==TRUE){
+  Rest[length(Rest)]<-Rest[length(Rest)]/(Mohn+1)
+}
+df2$Rest<-Rest
 
 df<-full_join(df,df2)
 
@@ -184,7 +213,11 @@ df$HCR[df$HCR==Scenarios[4]]<-'Constrained ramp'
 df$HCR<-as.factor(df$HCR)
 df$HCR<-ordered(df$HCR,levels=c('Ramp','P*','F-step','Constrained ramp'))
 
-ggplot(df)+geom_line(aes(x=Year,y=Catchest,color=HCR))+geom_point(aes(x=Year,y=Catchsim,color=HCR))+
+df<-df[df$Year>1989,]
+ggplot(df)+geom_line(aes(x=Year,y=Rest,color=HCR))+geom_point(aes(x=Year,y=Catchsim,color=HCR))+
   theme_classic()+theme(text=element_text(size=18),legend.position='right')+
   ylab('Recruitment')+geom_vline(xintercept=2019, linetype='dotted')+
   scale_color_colorblind()
+
+
+

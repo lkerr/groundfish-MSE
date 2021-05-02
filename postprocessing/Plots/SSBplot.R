@@ -22,7 +22,7 @@ Catchsim<-matrix(NA,nrow=53,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$SSB[138:190]
+  Catchsim[,k]<-omvalGlobal[[1]]$SSB[137:189]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
@@ -71,7 +71,7 @@ Catchsim<-matrix(NA,nrow=53,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$SSB[138:190]
+  Catchsim[,k]<-omvalGlobal[[1]]$SSB[137:189]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
@@ -121,7 +121,7 @@ Catchsim<-matrix(NA,nrow=53,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$SSB[138:190]
+  Catchsim[,k]<-omvalGlobal[[1]]$SSB[137:189]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
@@ -171,7 +171,7 @@ Catchsim<-matrix(NA,nrow=53,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$SSB[138:190]
+  Catchsim[,k]<-omvalGlobal[[1]]$SSB[137:189]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
@@ -213,6 +213,7 @@ df$HCR[df$HCR==Scenarios[4]]<-'Constrained ramp'
 df$HCR<-as.factor(df$HCR)
 df$HCR<-ordered(df$HCR,levels=c('Ramp','P*','F-step','Constrained ramp'))
 
+df<-df[df$Year>1989,]
 ggplot(df)+geom_line(aes(x=Year,y=Catchest,color=HCR))+geom_point(aes(x=Year,y=Catchsim,color=HCR))+
   theme_classic()+theme(text=element_text(size=18),legend.position='right')+
   ylab('SSB (mt)')+geom_vline(xintercept=2019, linetype='dotted')+
