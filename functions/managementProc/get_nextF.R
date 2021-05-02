@@ -186,7 +186,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   ny = 200,
                                   stReportYr = 2,
                                   stockEnv = stockEnv)$sumCW}
-      catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
+      catchproj<-c(median(catchproj[,1]),median(catchproj[,1]))
       if(tolower(parmgt$mincatch) == 'true'){
       if (stockEnv$stockName=='codGOM'){
         bycatch<-read.csv(paste('./data/data_raw/AssessmentHistory/codGOM_Discard.csv',sep=''))
@@ -229,7 +229,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                     ny = 200,
                                     stReportYr = 2,
                                     stockEnv = stockEnv)$sumCW}
-        catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
+        catchproj<-c(median(catchproj[,1]),median(catchproj[,1]))
         if(tolower(mproc$varlimit) == 'true'){
           if(((catchproj[2]-catchproj[1])/catchproj[2])*100>20){
             catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
