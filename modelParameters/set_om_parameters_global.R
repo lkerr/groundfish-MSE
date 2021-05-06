@@ -23,7 +23,7 @@ mprocfile<-"mproc.csv"
 # stockExclude variable. Do not include the extension.R. For example,
 # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
-stockExclude <- c('pollock', 'yellowtailflounderGB', 'codGOM', 'haddockGB')
+stockExclude <- c('pollock', 'yellowtailflounderGB', 'codGB_Error', 'haddockGB')
 
 # Stock area to use (either GB or GOM). Ensure this aligns with !stockExclude.
 stockArea <- 'GOM'
