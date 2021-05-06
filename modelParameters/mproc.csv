@@ -1,5 +1,4 @@
-ASSESSCLASS,HCR,FREF_TYP,FREF_PAR0,FREF_PAR1,BREF_TYP,BREF_PAR0,BREF_PAR1,RFUN_NM,RPInt,TRPFlag,ImplementationClass,LandZero,CatchZero,EconType,EconName,EconData,MultiplierFile,OutputPriceFile,InputPriceFile,ProdEqn,ChoiceEqn
-ASAP,constF,FmsySim,15,NA,SIM,15,NA,forecast,1,0,StandardFisheries,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-ASAP,constF,FmsySim,15,NA,SIM,15,NA,forecast,1,1,StandardFisheries,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-ASAP,slide,FmsySim,15,NA,SIM,15,NA,forecast,1,0,StandardFisheries,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+ASSESSCLASS,HCR,FREF_TYP,FREF_PAR0,FREF_PAR1,BREF_TYP,BREF_PAR0,BREF_PAR1,RFUN_NM,RPInt
+ASAP,slide,FmsySim,5,NA,SIM,5,NA,forecast,1,1,StandardFisheries,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
 ASAP,slide,FmsySim,15,NA,SIM,15,NA,forecast,1,1,StandardFisheries,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+ASAP,slide,FmsySim,30,NA,SIM,30,NA,forecast,1,1,StandardFisheries,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
