@@ -11,7 +11,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     }
     else if(type=='current'){#'current' being the current method for New England groundfish which uses projections in the catch advice 
       startFCST <- parenv$y
-      endFCST <- parenv$y + 2
+      endFCST <- parenv$y + 3
     }
     
     # Tanom is unnecessary for hindcasts. Loop below is based on the length
@@ -39,7 +39,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     }
     else if(type=='current'){
       startFCST <- parenv$y
-      endFCST <- parenv$y + 2
+      endFCST <- parenv$y + 3
     }
     
     if(is.na(parenv$Tanom[endFCST])){
@@ -156,7 +156,6 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                      TAnom = Tanom[y],
                      Rest = Rest)
   }
-
   # Get weight-at-age
   Waa <- sweep(N, MARGIN=2, STATS=parpop$waa, FUN='*')
   

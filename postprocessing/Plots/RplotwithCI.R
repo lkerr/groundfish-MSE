@@ -1,5 +1,5 @@
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(9,10,11,12)
+Scenarios<-c(25,26,27,28)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
@@ -28,7 +28,7 @@ setwd(paste(tempwd,"/Sim_",Scenarios[1],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Rratiots[,k]<-omvalGlobal$codGOM$R[169:190]
+  Rratiots[,k]<-omvalGlobal$haddockGB$R[169:190]
 }
 
 Df<-as.data.frame(Rratiots)
@@ -58,7 +58,7 @@ setwd(paste(tempwd,"/Sim_",Scenarios[2],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Rratiots[,k]<-omvalGlobal$codGOM$R[169:190]
+  Rratiots[,k]<-omvalGlobal$haddockGB$R[169:190]
 }
 
 Df2<-as.data.frame(Rratiots)
@@ -89,7 +89,7 @@ setwd(paste(tempwd,"/Sim_",Scenarios[3],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Rratiots[,k]<-omvalGlobal$codGOM$R[169:190]
+  Rratiots[,k]<-omvalGlobal$haddockGB$R[169:190]
 }
 
 Df2<-as.data.frame(Rratiots)
@@ -120,7 +120,7 @@ setwd(paste(tempwd,"/Sim_",Scenarios[4],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Rratiots[,k]<-omvalGlobal$codGOM$R[169:190]
+  Rratiots[,k]<-omvalGlobal$haddockGB$R[169:190]
 }
 
 Df2<-as.data.frame(Rratiots)
@@ -147,4 +147,4 @@ ggplot(Df, aes(x=Year, y=median,color=HCR)) +
   theme(text=element_text(size=18),legend.position='right')+
   ylab('Recruitment')+
   scale_color_colorblind()+scale_fill_colorblind()+
-  scale_y_continuous(breaks = seq(0,7000000,1000000),limits = c(0,7000000))
+  scale_y_continuous(breaks = seq(0,160000,40000),limits = c(0,160000))

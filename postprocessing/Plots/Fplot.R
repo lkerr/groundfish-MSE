@@ -1,5 +1,5 @@
 #####F_full Trajectory Plots####
-Scenarios<-c(30,31,32,33)
+Scenarios<-c(40,41,42,43)
 RhoAdj<-FALSE
 Stock<-'codGOM'
 ####First Sims####
@@ -175,7 +175,7 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2038
+Year<-1988:2039
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[4]
 
@@ -188,7 +188,7 @@ if (RhoAdj==TRUE){
   Mohn<-mean(Mohn,na.rm=T)
 }
 
-####Fourth Assessment####
+####4 Assessment####
 Catchest<-matrix(NA,nrow=54,ncol=length(sims))
 
 for (k in 1:length(sims)){

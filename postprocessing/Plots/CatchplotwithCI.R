@@ -1,5 +1,5 @@
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(9,10,11,12)
+Scenarios<-c(5,6,7,8)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
@@ -35,6 +35,7 @@ D<-as.data.frame(sumCWratiots)
 D$Year<-2019:2040
 Df<- D %>% gather(Year, sumCW, 1:(length(D)-1))
 Df$Year<-rep(2019:2040,(length(D)-1))
+Df<-na.omit(Df)
 Df <- ddply(Df, "Year", summarise, median = MedianCI(sumCW)[1], CI_lower=MedianCI(sumCW)[2], CI_upper=MedianCI(sumCW)[3])
 Df$HCR<-Scenarios[1]
 
@@ -65,6 +66,7 @@ D2<-as.data.frame(sumCWratiots)
 D2$Year<-2019:2040
 Df2<- D2 %>% gather(Year, sumCW, 1:(length(D2)-1))
 Df2$Year<-rep(2019:2040,(length(D2)-1))
+Df2<-na.omit(Df2)
 Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(sumCW)[1], CI_lower=MedianCI(sumCW)[2], CI_upper=MedianCI(sumCW)[3])
 Df2$HCR<-Scenarios[2]
 Df<-full_join(Df,Df2)
@@ -96,6 +98,7 @@ D2<-as.data.frame(sumCWratiots)
 D2$Year<-2019:2040
 Df2<- D2 %>% gather(Year, sumCW, 1:(length(D2)-1))
 Df2$Year<-rep(2019:2040,(length(D2)-1))
+Df2<-na.omit(Df2)
 Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(sumCW)[1], CI_lower=MedianCI(sumCW)[2], CI_upper=MedianCI(sumCW)[3])
 Df2$HCR<-Scenarios[3]
 Df<-full_join(Df,Df2)
@@ -127,6 +130,7 @@ D2<-as.data.frame(sumCWratiots)
 D2$Year<-2019:2040
 Df2<- D2 %>% gather(Year, sumCW, 1:(length(D2)-1))
 Df2$Year<-rep(2019:2040,(length(D2)-1))
+Df2<-na.omit(Df2)
 Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(sumCW)[1], CI_lower=MedianCI(sumCW)[2], CI_upper=MedianCI(sumCW)[3])
 Df2$HCR<-Scenarios[4]
 Df<-full_join(Df,Df2)
@@ -147,4 +151,4 @@ ggplot(Df, aes(x=Year, y=median,color=HCR)) +
   theme(text=element_text(size=18),legend.position='right')+
   ylab('Catch (mt)')+
   scale_color_colorblind()+scale_fill_colorblind()+
-  scale_y_continuous(breaks = seq(0,3000,500),limits = c(0,3000))
+  scale_y_continuous(breaks = seq(0,4000,500),limits = c(0,4000))

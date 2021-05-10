@@ -187,6 +187,7 @@ get_advice <- function(stock){
         mproc[m,'ASSESSCLASS'] == 'PLANB' ||
         (y > fmyearIdx & 
           (y-fmyearIdx) %% mproc[m,'RPInt'] == 0 ) ){
+
       gnF <- get_nextF(parmgt = mproc[m,], parpop = tempStock$parpop,
                        parenv = parenv,
                        RPlast = NULL, evalRP = TRUE,

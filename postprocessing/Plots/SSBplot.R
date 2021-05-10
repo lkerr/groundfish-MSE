@@ -1,7 +1,7 @@
 #####SSB Trajectory Plots####
-Scenarios<-c(25,26,27,28)
+Scenarios<-c(40,41,42,43)
 RhoAdj<-FALSE
-Stock<-'haddockGB'
+Stock<-'codGOM'
 ####First Sims####
 library(matrixStats)
 library(dplyr)

@@ -1,5 +1,5 @@
 #####sumCW Trajectory Plots####
-Scenarios<-c(30,31,32,33)
+Scenarios<-c(40,41,42,43)
 RhoAdj<-FALSE
 Stock<-'codGOM'
 ####First Sims####

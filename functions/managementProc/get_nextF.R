@@ -120,7 +120,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     overfished <- ifelse(tail(parpop$SSBhat,1) < BThresh, 1, 0)
     
     overfishing <- ifelse(tail(parpop$Fhat,1) > FrefRPvalue, 1, 0) #MDM
-    
+
     if(tolower(parmgt$HCR) == 'slide'){
       F <- get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)['Fadvice']
 
@@ -170,7 +170,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       if ((y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) == 0){
       parmgtproj<-parmgt
       parmgtproj$RFUN_NM<-"forecast"
-      catchproj<-matrix(ncol=2,nrow=100)
+      catchproj<-matrix(ncol=3,nrow=100)
       parpopproj<-parpop
       parpopproj$SSBhat<-stockEnv$res$SSB
       parpopproj$R<-stockEnv$res$N.age[,1]
@@ -184,9 +184,9 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   Rfun = Rfun_BmsySim$forecast,
                                   F_val = F,
                                   ny = 200,
-                                  stReportYr = 2,
+                                  stReportYr = 3,
                                   stockEnv = stockEnv)$sumCW}
-      catchproj<-c(median(catchproj[,1]),median(catchproj[,1]))
+      catchproj<-c(median(catchproj[,2]),median(catchproj[,3]))
       if(tolower(parmgt$mincatch) == 'true'){
       if (stockEnv$stockName=='codGOM'){
         bycatch<-read.csv(paste('./data/data_raw/AssessmentHistory/codGOM_Discard.csv',sep=''))

@@ -1,5 +1,5 @@
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(9,10,11,12)
+Scenarios<-c(40,41,42,43)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
@@ -12,7 +12,7 @@ setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[1],"/s
 #setwd(paste("C:/Users/jjesse/Box/Discard Sims/HCR Sims/Sim_", Scenarios[1],"/sim", sep=""))
 sims <- list.files()
 
-F_fullratiots<-matrix(NA,ncol=length(sims),nrow=22)
+Rratiots<-matrix(NA,ncol=length(sims),nrow=22)
 
 for (k in 1:length(sims)){
   if (file.size(sims[k])==0){
@@ -28,21 +28,21 @@ setwd(paste(tempwd,"/Sim_",Scenarios[1],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  F_fullratiots[,k]<-omvalGlobal$codGOM$F_full[169:190]
+  Rratiots[,k]<-omvalGlobal$codGOM$F_full[169:190]
 }
 
-D<-as.data.frame(F_fullratiots)
+D<-as.data.frame(Rratiots)
 D$Year<-2019:2040
-Df<- D %>% gather(Year, F_full, 1:(length(D)-1))
+Df<- D %>% gather(Year, R, 1:(length(D)-1))
 Df$Year<-rep(2019:2040,(length(D)-1))
-Df <- ddply(Df, "Year", summarise, median = MedianCI(F_full)[1], CI_lower=MedianCI(F_full)[2], CI_upper=MedianCI(F_full)[3])
+Df <- ddply(Df, "Year", summarise, median = MedianCI(R)[1], CI_lower=MedianCI(R)[2], CI_upper=MedianCI(R)[3])
 Df$HCR<-Scenarios[1]
 
 setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[2],"/sim",sep=""))
 #setwd(paste("C:/Users/jjesse/Box/Discard Sims/HCR Sims/Sim_", Scenarios[2],"/sim", sep=""))
 sims <- list.files()
 
-F_fullratiots<-matrix(NA,ncol=length(sims),nrow=22)
+Rratiots<-matrix(NA,ncol=length(sims),nrow=22)
 
 for (k in 1:length(sims)){
   if (file.size(sims[k])==0){
@@ -58,14 +58,14 @@ setwd(paste(tempwd,"/Sim_",Scenarios[2],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  F_fullratiots[,k]<-omvalGlobal$codGOM$F_full[169:190]
+  Rratiots[,k]<-omvalGlobal$codGOM$F_full[169:190]
 }
 
-D<-as.data.frame(F_fullratiots)
+D<-as.data.frame(Rratiots)
 D$Year<-2019:2040
-Df2<- D %>% gather(Year, F_full, 1:(length(D)-1))
+Df2<- D %>% gather(Year, R, 1:(length(D)-1))
 Df2$Year<-rep(2019:2040,(length(D)-1))
-Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(F_full)[1], CI_lower=MedianCI(F_full)[2], CI_upper=MedianCI(F_full)[3])
+Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(R)[1], CI_lower=MedianCI(R)[2], CI_upper=MedianCI(R)[3])
 Df2$HCR<-Scenarios[2]
 Df<-full_join(Df,Df2)
 
@@ -73,7 +73,7 @@ setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[3],"/s
 #setwd(paste("C:/Users/jjesse/Box/Discard Sims/HCR Sims/Sim_", Scenarios[3],"/sim", sep=""))
 sims <- list.files()
 
-F_fullratiots<-matrix(NA,ncol=length(sims),nrow=22)
+Rratiots<-matrix(NA,ncol=length(sims),nrow=22)
 
 for (k in 1:length(sims)){
   if (file.size(sims[k])==0){
@@ -89,14 +89,15 @@ setwd(paste(tempwd,"/Sim_",Scenarios[3],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  F_fullratiots[,k]<-omvalGlobal$codGOM$F_full[169:190]
+  Rratiots[,k]<-omvalGlobal$codGOM$F_full[169:190]
 }
 
-D<-as.data.frame(F_fullratiots)
+D<-as.data.frame(Rratiots)
 D$Year<-2019:2040
-Df2<- D %>% gather(Year, F_full, 1:(length(D)-1))
+Df2<- D %>% gather(Year, R, 1:(length(D)-1))
 Df2$Year<-rep(2019:2040,(length(D)-1))
-Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(F_full)[1], CI_lower=MedianCI(F_full)[2], CI_upper=MedianCI(F_full)[3])
+Df2<-na.omit(Df2)
+Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(R)[1], CI_lower=MedianCI(R)[2], CI_upper=MedianCI(R)[3])
 Df2$HCR<-Scenarios[3]
 Df<-full_join(Df,Df2)
 
@@ -104,7 +105,7 @@ setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[4],"/s
 #setwd(paste("C:/Users/jjesse/Box/Discard Sims/HCR Sims/Sim_", Scenarios[4],"/sim", sep=""))
 sims <- list.files()
 
-F_fullratiots<-matrix(NA,ncol=length(sims),nrow=22)
+Rratiots<-matrix(NA,ncol=length(sims),nrow=22)
 
 for (k in 1:length(sims)){
   if (file.size(sims[k])==0){
@@ -120,14 +121,15 @@ setwd(paste(tempwd,"/Sim_",Scenarios[4],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  F_fullratiots[,k]<-omvalGlobal$codGOM$F_full[169:190]
+  Rratiots[,k]<-omvalGlobal$codGOM$F_full[169:190]
 }
 
-D<-as.data.frame(F_fullratiots)
+D<-as.data.frame(Rratiots)
 D$Year<-2019:2040
-Df2<- D %>% gather(Year, F_full, 1:(length(D)-1))
+Df2<- D %>% gather(Year, R, 1:(length(D)-1))
 Df2$Year<-rep(2019:2040,(length(D)-1))
-Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(F_full)[1], CI_lower=MedianCI(F_full)[2], CI_upper=MedianCI(F_full)[3])
+Df2<-na.omit(Df2)
+Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(R)[1], CI_lower=MedianCI(R)[2], CI_upper=MedianCI(R)[3])
 Df2$HCR<-Scenarios[4]
 Df<-full_join(Df,Df2)
 
@@ -147,6 +149,6 @@ ggplot(Df, aes(x=Year, y=median,color=HCR)) +
   theme(text=element_text(size=18),legend.position='right')+
   ylab('F')+
   scale_color_colorblind()+scale_fill_colorblind()+
-  scale_y_continuous(breaks = seq(0,0.3,0.1),limits = c(0,0.3))
+  scale_y_continuous(breaks = seq(0,0.35,0.05),limits = c(0,0.35))
 
 

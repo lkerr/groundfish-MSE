@@ -1,6 +1,6 @@
 #####SSB REE Plot####
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(5,6,7,8)
+Scenarios<-c(40,41,42,43)
 ####First Sims####
 library(matrixStats)
 library(dplyr)
