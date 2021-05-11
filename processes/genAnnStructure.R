@@ -9,8 +9,8 @@ piVal <- rep(seq(0, 2*pi, length.out = period),
              times = ceiling(length(uy)/period))[1:length(uy)]
 newt <- scales::rescale(sin(piVal), 
                         to = quantile(cmip5$Temperature, c(0.25, 0.75)))
-# cmip5$Temperature <- newt[match(cmip5$year, uy)]
-# cat('\n**********\nNOTE! temperature time series has been modified!\n**********\n')
+cmip5$Temperature <- newt[match(cmip5$year, uy)]
+cat('\n**********\nNOTE! temperature time series has been modified!\n**********\n')
 
 # manipulate data to get desired percentile
 cmip_base <- get_temperatureSeries(cmip5, 
