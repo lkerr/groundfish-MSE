@@ -76,7 +76,7 @@ selC_typ <- 'input'
 
 Rpar <- c(a = 2.904e+03,
           b = 6.615e-05,
-          c = 1.825e+00)
+          c = -1.825e+00)
 R_typ <- 'BH'
 
 
