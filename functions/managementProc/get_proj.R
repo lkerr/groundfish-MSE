@@ -11,7 +11,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     }
     else if(type=='current'){#'current' being the current method for New England groundfish which uses projections in the catch advice 
       startFCST <- parenv$y
-      endFCST <- parenv$y + 3
+      endFCST <- parenv$y + 2
     }
     
     # Tanom is unnecessary for hindcasts. Loop below is based on the length
@@ -39,7 +39,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     }
     else if(type=='current'){
       startFCST <- parenv$y
-      endFCST <- parenv$y + 3
+      endFCST <- parenv$y + 2
     }
     
     if(is.na(parenv$Tanom[endFCST])){
@@ -163,7 +163,8 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   SSBaa <- sweep(Waa, MARGIN=2, STATS=parpop$mat, FUN='*')
 
   # Calculate the catch in weight
-  sumCW <- sapply(1:(nrow(N)-1), function(i){
+  if(type=='current'){b}
+  sumCW <- sapply(2:nrow(N), function(i){
     CN <- (parpop$sel * F_val) / (parpop$sel * F_val + parpop$M) * 
       N[i,] * (1 - exp(-F_val * parpop$sel - parpop$M))
     tempSumCW <- CN %*% c(parpop$waa)
