@@ -9,7 +9,7 @@ burnFsd <- 0.3
 
 # first age and plus age
 fage <- 1
-page <- 12
+page <- 10
 
 
 #### Life history parameters ####
