@@ -65,11 +65,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
 
   if(type=='current'){
     suminit<-sum(init)
-    if (mproc$rhoadjust==TRUE & y>fmyearIdx & stockEnv$Mohns_Rho_SSB[y]>0.15){
-      suminit<-suminit/(1+stockEnv$Mohns_Rho_SSB[y])
-      suminit<-get_error_idx(type=stockEnv$oe_sumIN_typ, idx=suminit, par=stockEnv$pe_IA)
-    }
-    else {suminit<-get_error_idx(type=stockEnv$oe_sumIN_typ, idx=suminit, par=stockEnv$pe_IA)}
+    suminit<-get_error_idx(type=stockEnv$oe_sumIN_typ, idx=suminit, par=stockEnv$pe_IA)
     initpaa<-get_error_paa(type=stockEnv$oe_paaIN_typ, paa=init, par=10000)
     init<-suminit*initpaa
   }
@@ -107,13 +103,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   N[1,] <- init 
   #Get beginning of year population in year t+1
   if (type=='current'){
-
-    Fhat<-get_F(x = parpop$catch[length(parpop$catch)],
-          Nv = init, 
-          slxCv = parpop$sel, 
-          M = parpop$M, 
-          waav = parpop$waa)
-
+    Fhat<-parpop$Fhat
     for(a in 2:(nage-1)){
       #init= population at the beginning of the year in t-1  
       #exponential survival to the next year/age (t)
@@ -130,18 +120,34 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     Recruits<-parpop$R
     
     N[1,1] <- prod(tail(Recruits,5))^(1/5)
+    if (mproc$rhoadjust==TRUE & y>fmyearIdx & stockEnv$Mohns_Rho_SSB[y]>0.15){
+      N[1,]<-N[1,]/(1+stockEnv$Mohns_Rho_SSB[y])
+    }
   }
   for(y in 2:length(Tanom)){
+  Fvalue<-F_val
+  if (type=='current'){
+    if (y==2 & !exists('catchproj',stockEnv)){
+      Fvalue<-parpop$Fhat
+    }
+    if (y==2 & exists('catchproj',stockEnv)){
+      Fvalue<-get_F(x = stockEnv$catchproj[2],
+                    Nv = init, 
+                    slxCv = parpop$sel, 
+                    M = parpop$M, 
+                    waav = parpop$waa)
+    }
+  }
     for(a in 2:(nage-1)){
       #N[y-1] is the population at the beginning of the previous year 
       #exponential survival to the next year/age
-      N[y,a] <- N[y-1, a-1] * exp(-parpop$sel[a-1]*F_val - 
+      N[y,a] <- N[y-1, a-1] * exp(-parpop$sel[a-1]*Fvalue - 
                                     parpop$M[a-1])
     }
     # Deal with the plus group
-      N[y,nage] <- N[y-1,nage-1] * exp(-parpop$sel[nage-1] * F_val - 
+      N[y,nage] <- N[y-1,nage-1] * exp(-parpop$sel[nage-1] * Fvalue - 
                                        parpop$M[nage-1]) + 
-                 N[y-1,nage] * exp(-parpop$sel[nage] * F_val - 
+                 N[y-1,nage] * exp(-parpop$sel[nage] * Fvalue - 
                                      parpop$M[nage])
     ## Recruitment
     # sd of historical R estimates
@@ -163,7 +169,6 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   SSBaa <- sweep(Waa, MARGIN=2, STATS=parpop$mat, FUN='*')
 
   # Calculate the catch in weight
-  if(type=='current'){b}
   sumCW <- sapply(2:nrow(N), function(i){
     CN <- (parpop$sel * F_val) / (parpop$sel * F_val + parpop$M) * 
       N[i,] * (1 - exp(-F_val * parpop$sel - parpop$M))

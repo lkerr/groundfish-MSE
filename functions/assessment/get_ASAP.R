@@ -18,8 +18,8 @@ get_ASAP <- function(stock){
     #dat_file$dat$year1 <- y - ncaayear
     #styear <- y - ncaayear
     
-    #end year 
-    endyear <- y-1
+    #end year
+    endyear <- y-2
     
     #number of years in assessment
     N_rows <- length(styear:endyear)
@@ -68,7 +68,7 @@ get_ASAP <- function(stock){
     dat_file$dat$discard_Neff <- matrix(0, nrow = N_rows, 1)
     
     #end year
-    dat_file$dat$nfinalyear <- y
+    dat_file$dat$nfinalyear <- y-1
     dat_file$dat$proj_ini <- c((y), -1, 3, -99, 1)
     # 
     dat_file$dat$R_avg_start <- styear
@@ -124,7 +124,6 @@ get_ASAP <- function(stock){
       
       # Read in results
       res <- dget('asap3.rdat')
-      
       # save .Rdata results from each run
       saveRDS(res, file = paste(rundir, '/', stockName, '_', r, '_', y,'.rdat', sep = ''))
       #save .par file

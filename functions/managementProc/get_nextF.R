@@ -76,11 +76,16 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     FrefT <- get_FBRP(parmgt = parmgtT, parpop = parpopT, #Also calculate the true Fmsy
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
                      stockEnv = stockEnvT)
-
+    
+    parpopT2<-parpopT
+    parpopT2$M<-rep(0.2,9)
+    FrefT2 <- get_FBRP(parmgt = parmgtT, parpop = parpopT2, #Also calculate the true Fmsy
+                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
+                      stockEnv = stockEnvT)
     # if using forecast start the BMSY initial population at the equilibrium
     # FMSY level (before any temperature projections). This is consistent
     # with how the Fmsy is calculated.
-    parpopUpdate <- parpop
+    parpopUpdate <- parpopF
     parpopUpdateT <- parpopT
     if(parmgt$RFUN_NM == 'forecast'){
       
@@ -97,17 +102,26 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT, #Also calculate the true Bmsy
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = FrefT[['RPvalue']], stockEnv = stockEnvT)
+    parpopUpdateT2 <- parpopUpdateT
+    parpopUpdateT2$M<-rep(0.2,9)
+    BrefT2 <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT2, #Also calculate the true Bmsy
+                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
+                      FBRP = FrefT[['RPvalue']], stockEnv = stockEnvT)
     
     if(evalRP){
       FrefRPvalue <- Fref[['RPvalue']]
       BrefRPvalue <- Bref[['RPvalue']]
       FrefTRPvalue <- FrefT[['RPvalue']]
       BrefTRPvalue <- BrefT[['RPvalue']]
+      FrefTRPvalue2 <- FrefT2[['RPvalue']]
+      BrefTRPvalue2 <- BrefT2[['RPvalue']]
     }else{
       FrefRPvalue <- RPlast[1]
       BrefRPvalue <- RPlast[2]
       FrefTRPvalue <- FrefT[['RPvalue']]
       BrefTRPvalue <- BrefT[['RPvalue']]
+      FrefTRPvalue2 <- FrefT2[['RPvalue']]
+      BrefTRPvalue2 <- BrefT2[['RPvalue']]
     }
     
     # Determine whether the population is overfished and whether 
@@ -256,7 +270,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
   
     if (F>2){F<-2}#Not letting actual F go over 2
     
-    out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue,FrefTRPvalue, BrefTRPvalue), 
+    out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue,FrefTRPvalue, BrefTRPvalue,FrefTRPvalue2, BrefTRPvalue2), 
                 ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
                 OFgStatus = overfishing, catchproj=catchproj) #AEW
     
