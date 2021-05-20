@@ -12,19 +12,19 @@ for (k in 1:length(sims)){
     sims[k]<-NA}
 }
 sims<-na.omit(sims)
-SSB<-matrix(NA,nrow=22,ncol=length(sims))
-Catch<-matrix(NA,nrow=22,ncol=length(sims))
-F_mort<-matrix(NA,nrow=22,ncol=length(sims))
-Fproxy<-matrix(NA,nrow=22,ncol=length(sims))
-SSBproxy<-matrix(NA,nrow=22,ncol=length(sims))
+SSB<-matrix(NA,nrow=21,ncol=length(sims))
+Catch<-matrix(NA,nrow=21,ncol=length(sims))
+F_mort<-matrix(NA,nrow=21,ncol=length(sims))
+Fproxy<-matrix(NA,nrow=21,ncol=length(sims))
+SSBproxy<-matrix(NA,nrow=21,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
-  Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
-  F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+  SSB[,k]<-omvalGlobal[[1]]$SSB[170:190]
+  Catch[,k]<-omvalGlobal[[1]]$sumCW[169:189]
+  F_mort[,k]<-omvalGlobal[[1]]$F_full[170:190]
+  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[170:190]
+  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[170:190]
 }
 
 SSBFinal<-rowMedians(SSB[6:10,],na.rm=T)
@@ -40,7 +40,7 @@ for (i in 1:length(Catch[1,])){
   }
   Catchstab[i]<-sqrt((1/(length(Catch[,i])-1))*sum(catchdiff[,i])^2)/((1/(length(Catch[,i])))*sum(Catch[,i]))
 }
-Catchstab<-1/median(Catchstab)
+Catchstab<-1/median(Catchstab,na.rm=T)
 Fprop<-F_mort/Fproxy
 Fprop<-rowMeans(Fprop[6:10,])
 Fprop[Fprop<1]<-1
@@ -63,19 +63,19 @@ for (k in 1:length(sims)){
     sims[k]<-NA}
 }
 sims<-na.omit(sims)
-SSB<-matrix(NA,nrow=22,ncol=length(sims))
-Catch<-matrix(NA,nrow=22,ncol=length(sims))
-F_mort<-matrix(NA,nrow=22,ncol=length(sims))
-Fproxy<-matrix(NA,nrow=22,ncol=length(sims))
-SSBproxy<-matrix(NA,nrow=22,ncol=length(sims))
+SSB<-matrix(NA,nrow=21,ncol=length(sims))
+Catch<-matrix(NA,nrow=21,ncol=length(sims))
+F_mort<-matrix(NA,nrow=21,ncol=length(sims))
+Fproxy<-matrix(NA,nrow=21,ncol=length(sims))
+SSBproxy<-matrix(NA,nrow=21,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
-  Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
-  F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+  SSB[,k]<-omvalGlobal[[1]]$SSB[170:190]
+  Catch[,k]<-omvalGlobal[[1]]$sumCW[169:189]
+  F_mort[,k]<-omvalGlobal[[1]]$F_full[170:190]
+  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[170:190]
+  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[170:190]
 }
 
 SSBFinal<-rowMedians(SSB[6:10,],na.rm=T)
@@ -91,7 +91,7 @@ for (i in 1:length(Catch[1,])){
   }
   Catchstab[i]<-sqrt((1/(length(Catch[,i])-1))*sum(catchdiff[,i])^2)/((1/(length(Catch[,i])))*sum(Catch[,i]))
 }
-Catchstab<-1/median(Catchstab)
+Catchstab<-1/median(Catchstab,na.rm=T)
 Fprop<-F_mort/Fproxy
 Fprop<-rowMeans(Fprop[6:10,])
 Fprop[Fprop<1]<-1
@@ -116,19 +116,19 @@ for (k in 1:length(sims)){
     sims[k]<-NA}
 }
 sims<-na.omit(sims)
-SSB<-matrix(NA,nrow=22,ncol=length(sims))
-Catch<-matrix(NA,nrow=22,ncol=length(sims))
-F_mort<-matrix(NA,nrow=22,ncol=length(sims))
-Fproxy<-matrix(NA,nrow=22,ncol=length(sims))
-SSBproxy<-matrix(NA,nrow=22,ncol=length(sims))
+SSB<-matrix(NA,nrow=21,ncol=length(sims))
+Catch<-matrix(NA,nrow=21,ncol=length(sims))
+F_mort<-matrix(NA,nrow=21,ncol=length(sims))
+Fproxy<-matrix(NA,nrow=21,ncol=length(sims))
+SSBproxy<-matrix(NA,nrow=21,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
-  Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
-  F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+  SSB[,k]<-omvalGlobal[[1]]$SSB[170:190]
+  Catch[,k]<-omvalGlobal[[1]]$sumCW[169:189]
+  F_mort[,k]<-omvalGlobal[[1]]$F_full[170:190]
+  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[170:190]
+  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[170:190]
 }
 
 SSBFinal<-rowMedians(SSB[6:10,],na.rm=T)
@@ -144,7 +144,7 @@ for (i in 1:length(Catch[1,])){
   }
   Catchstab[i]<-sqrt((1/(length(Catch[,i])-1))*sum(catchdiff[,i])^2)/((1/(length(Catch[,i])))*sum(Catch[,i]))
 }
-Catchstab<-1/median(Catchstab)
+Catchstab<-1/median(Catchstab,na.rm=T)
 Fprop<-F_mort/Fproxy
 Fprop<-rowMeans(Fprop[6:10,])
 Fprop[Fprop<1]<-1
@@ -169,19 +169,19 @@ for (k in 1:length(sims)){
     sims[k]<-NA}
 }
 sims<-na.omit(sims)
-SSB<-matrix(NA,nrow=22,ncol=length(sims))
-Catch<-matrix(NA,nrow=22,ncol=length(sims))
-F_mort<-matrix(NA,nrow=22,ncol=length(sims))
-Fproxy<-matrix(NA,nrow=22,ncol=length(sims))
-SSBproxy<-matrix(NA,nrow=22,ncol=length(sims))
+SSB<-matrix(NA,nrow=21,ncol=length(sims))
+Catch<-matrix(NA,nrow=21,ncol=length(sims))
+F_mort<-matrix(NA,nrow=21,ncol=length(sims))
+Fproxy<-matrix(NA,nrow=21,ncol=length(sims))
+SSBproxy<-matrix(NA,nrow=21,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
-  Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
-  F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+  SSB[,k]<-omvalGlobal[[1]]$SSB[170:190]
+  Catch[,k]<-omvalGlobal[[1]]$sumCW[169:189]
+  F_mort[,k]<-omvalGlobal[[1]]$F_full[170:190]
+  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[170:190]
+  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[170:190]
 }
 
 SSBFinal<-rowMedians(SSB[6:10,],na.rm=T)
@@ -204,10 +204,10 @@ Fprop[Fprop<1]<-1
 Fprop[Fprop>1]<-0
 Ffreq<-mean(Fprop)
 Bprop<-SSB/(SSBproxy*0.5)
-Bprop<-rowMeans(Bprop[6:10,])
+Bprop<-rowMeans(Bprop[6:10,],na.rm=T)
 Bprop[Bprop<1]<-0
 Bprop[Bprop>1]<-1
-Bfreq<-mean(Bprop,na.rm=T)
+Bfreq<-mean(Bprop)
 
 x<-'117'
 d2<-as.data.frame(cbind(x,ShorttermSSB,ShorttermCatch,Catchstab,Ffreq,Bfreq))
@@ -222,19 +222,19 @@ if (length(Scenarios)>4){
       sims[k]<-NA}
   }
   sims<-na.omit(sims)
-  SSB<-matrix(NA,nrow=22,ncol=length(sims))
-  Catch<-matrix(NA,nrow=22,ncol=length(sims))
-  F_mort<-matrix(NA,nrow=22,ncol=length(sims))
-  Fproxy<-matrix(NA,nrow=22,ncol=length(sims))
-  SSBproxy<-matrix(NA,nrow=22,ncol=length(sims))
+  SSB<-matrix(NA,nrow=21,ncol=length(sims))
+  Catch<-matrix(NA,nrow=21,ncol=length(sims))
+  F_mort<-matrix(NA,nrow=21,ncol=length(sims))
+  Fproxy<-matrix(NA,nrow=21,ncol=length(sims))
+  SSBproxy<-matrix(NA,nrow=21,ncol=length(sims))
   
   for (k in 1:length(sims)){
     load(sims[k])
-    SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
-    Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
-    F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+    SSB[,k]<-omvalGlobal[[1]]$SSB[170:190]
+    Catch[,k]<-omvalGlobal[[1]]$sumCW[169:189]
+    F_mort[,k]<-omvalGlobal[[1]]$F_full[170:190]
+    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[170:190]
+    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[170:190]
   }
   
   SSBFinal<-rowMedians(SSB[6:10,],na.rm=T)
@@ -250,7 +250,7 @@ if (length(Scenarios)>4){
     }
     Catchstab[i]<-sqrt((1/(length(Catch[,i])-1))*sum(catchdiff[,i])^2)/((1/(length(Catch[,i])))*sum(Catch[,i]))
   }
-  Catchstab<-1/median(Catchstab)
+  Catchstab<-1/median(Catchstab,na.rm=T)
   Fprop<-F_mort/Fproxy
   Fprop<-rowMeans(Fprop[6:10,])
   Fprop[Fprop<1]<-1
@@ -275,19 +275,19 @@ if (length(Scenarios)>4){
       sims[k]<-NA}
   }
   sims<-na.omit(sims)
-  SSB<-matrix(NA,nrow=22,ncol=length(sims))
-  Catch<-matrix(NA,nrow=22,ncol=length(sims))
-  F_mort<-matrix(NA,nrow=22,ncol=length(sims))
-  Fproxy<-matrix(NA,nrow=22,ncol=length(sims))
-  SSBproxy<-matrix(NA,nrow=22,ncol=length(sims))
+  SSB<-matrix(NA,nrow=21,ncol=length(sims))
+  Catch<-matrix(NA,nrow=21,ncol=length(sims))
+  F_mort<-matrix(NA,nrow=21,ncol=length(sims))
+  Fproxy<-matrix(NA,nrow=21,ncol=length(sims))
+  SSBproxy<-matrix(NA,nrow=21,ncol=length(sims))
   
   for (k in 1:length(sims)){
     load(sims[k])
-    SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
-    Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
-    F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+    SSB[,k]<-omvalGlobal[[1]]$SSB[170:190]
+    Catch[,k]<-omvalGlobal[[1]]$sumCW[169:189]
+    F_mort[,k]<-omvalGlobal[[1]]$F_full[170:190]
+    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[170:190]
+    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[170:190]
   }
   
   SSBFinal<-rowMedians(SSB[6:10,],na.rm=T)
@@ -327,19 +327,19 @@ if (length(Scenarios)>4){
       sims[k]<-NA}
   }
   sims<-na.omit(sims)
-  SSB<-matrix(NA,nrow=22,ncol=length(sims))
-  Catch<-matrix(NA,nrow=22,ncol=length(sims))
-  F_mort<-matrix(NA,nrow=22,ncol=length(sims))
-  Fproxy<-matrix(NA,nrow=22,ncol=length(sims))
-  SSBproxy<-matrix(NA,nrow=22,ncol=length(sims))
+  SSB<-matrix(NA,nrow=21,ncol=length(sims))
+  Catch<-matrix(NA,nrow=21,ncol=length(sims))
+  F_mort<-matrix(NA,nrow=21,ncol=length(sims))
+  Fproxy<-matrix(NA,nrow=21,ncol=length(sims))
+  SSBproxy<-matrix(NA,nrow=21,ncol=length(sims))
   
   for (k in 1:length(sims)){
     load(sims[k])
-    SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
-    Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
-    F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+    SSB[,k]<-omvalGlobal[[1]]$SSB[170:190]
+    Catch[,k]<-omvalGlobal[[1]]$sumCW[169:189]
+    F_mort[,k]<-omvalGlobal[[1]]$F_full[170:190]
+    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[170:190]
+    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[170:190]
   }
   
   SSBFinal<-rowMedians(SSB[6:10,],na.rm=T)
@@ -380,19 +380,19 @@ if (length(Scenarios)>4){
       sims[k]<-NA}
   }
   sims<-na.omit(sims)
-  SSB<-matrix(NA,nrow=22,ncol=length(sims))
-  Catch<-matrix(NA,nrow=22,ncol=length(sims))
-  F_mort<-matrix(NA,nrow=22,ncol=length(sims))
-  Fproxy<-matrix(NA,nrow=22,ncol=length(sims))
-  SSBproxy<-matrix(NA,nrow=22,ncol=length(sims))
+  SSB<-matrix(NA,nrow=21,ncol=length(sims))
+  Catch<-matrix(NA,nrow=21,ncol=length(sims))
+  F_mort<-matrix(NA,nrow=21,ncol=length(sims))
+  Fproxy<-matrix(NA,nrow=21,ncol=length(sims))
+  SSBproxy<-matrix(NA,nrow=21,ncol=length(sims))
   
   for (k in 1:length(sims)){
     load(sims[k])
-    SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
-    Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
-    F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+    SSB[,k]<-omvalGlobal[[1]]$SSB[170:190]
+    Catch[,k]<-omvalGlobal[[1]]$sumCW[169:189]
+    F_mort[,k]<-omvalGlobal[[1]]$F_full[170:190]
+    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[170:190]
+    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[170:190]
   }
   
   SSBFinal<-rowMedians(SSB[6:10,],na.rm=T)
@@ -464,7 +464,7 @@ colors_line<-c(alpha("#EA4F12",0.9),
                alpha("#00608A",0.9))
 #Create plot
 radarchart(d,seg=5,pcol=colors_line,
-           pfcol=colors_fill,plwd=4,vlcex=0.3,plty=c(rep(1,4),rep(2,4)))
+           pfcol=colors_fill,plwd=10,vlcex=0.3,plty=c(rep(1,4),rep(2,4)))
 rows<<-rownames(d[-c(1,2),])
 colors_line<<-colors_line
 legend("topleft",
@@ -513,7 +513,7 @@ legend("topleft",inset=-.01,title ="HCR",title.adj = 0.2,
        lty=1, cex=1, bty= 'n', y.intersp=0.4)
 if (length(Scenarios)>4){
   legend("bottomleft",
-         legend=c('Rho-adjustment','No rho-adjustment'),
+         legend=c('Misspecification','No misspecification'),
          pch=16,
          col="black",
          lty=c(1,2),cex=0.7, bty= 'n')}
