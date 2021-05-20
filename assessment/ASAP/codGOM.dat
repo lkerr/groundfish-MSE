@@ -180,17 +180,17 @@
 1
 1
 # Selectivity Options for each block 1=by age, 2=logisitic, 3=double logistic
-2              
+1              
 # Selectivity Block Data 
 0.013          1               0               1               
 0.066          1               0               1               
 0.271          1               0               1               
 0.663          1               0               1               
 0.912          1               0               1               
-0.982          2               0               1               
-0.997          2               0               1               
-1              2               0               1               
-1              2               0               1               
+0.982          -2               0               1               
+0.997          -2               0               1               
+1              -2               0               1               
+1              -2               0               1               
 3              3               1               1               
 0.5            3               1               1               
 0              0               0               0               
@@ -202,7 +202,7 @@
 # Fleet End Age
 9  
 # Age Range for Average F
-8  8
+8  9
 # Average F report option (1=unweighted, 2=Nweighted, 3=Bweighted)
 1
 # Use Likelihood constants? (1=yes)
@@ -350,9 +350,9 @@
 # Index-1 Selectivity Data 
 0.038           1               1               1               
 0.134           1               1               1               
-0.289           1               1               1               
-0.531           1               1               1               
-0.778           1               1               1               
+0.289          -1               1               1               
+0.531          -1               1               1               
+0.778          -1               1               1               
 1               -2              1               1               
 1               -2              1               1               
 1               -2              1               1               
@@ -539,43 +539,43 @@
 0            
 0            
 # Catch Effective Sample Size by Year and Fleet
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
-125           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
+80           
 # Discard Effective Sample Size by Year and Fleet
 0            
 0            
@@ -615,19 +615,19 @@
 0            
 0            
 # Lambda for F Mult in First year by Fleet
-0  
+0
 # CV for F Mult in First year by Fleet
-1  
+0.9
 # Lambda for F Mult Deviations by Fleet
 0  
 # CV for F Mult Deviations by Fleet
-1  
+1
 # Lambda for N in 1st Year Deviations
-0
+1
 # CV for N in 1st Year Deviations
-1
+0.9
 # Lambda for Recruitment Deviations
-1
+0
 # Lambda for Catchability in First year by Index
 0
 # CV for Catchability in First year by Index
@@ -639,11 +639,11 @@
 # Lambda for Deviation from Initial Steepness
 0
 # CV for Deviation from Initial Steepness
-1
+0.9
 # Lambda for Deviation from Unexploited Stock Size
-0
-# CV for Deviation from Unexploited Stock Size
 1
+# CV for Deviation from Unexploited Stock Size
+1.5
 # NAA Deviations Flag
 1
 # Initial Numbers at Age in 1st Year

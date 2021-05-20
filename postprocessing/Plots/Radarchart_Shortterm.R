@@ -27,12 +27,12 @@ for (k in 1:length(sims)){
   SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
 }
 
-SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
+SSBFinal<-rowMedians(SSB[1:5,],na.rm=T)
 ShorttermSSB<-median(SSBFinal)
-Catchmed<-rowMedians(Catch[11:21,],na.rm=T)
+Catchmed<-rowMedians(Catch[1:5,],na.rm=T)
 ShorttermCatch<-median(Catchmed,na.rm=T)
-Catch<-Catch[11:21,]
-catchdiff<-matrix(NA,10,length(Catch[1,]))
+Catch<-Catch[1:5,]
+catchdiff<-matrix(NA,4,length(Catch[1,]))
 Catchstab<-rep(NA,length(Catch[1,]))
 for (i in 1:length(Catch[1,])){
   for (j in 1:(length(Catch[,1])-1)){
@@ -42,12 +42,12 @@ for (i in 1:length(Catch[1,])){
 }
 Catchstab<-1/median(Catchstab,na.rm=T)
 Fprop<-F_mort/Fproxy
-Fprop<-rowMeans(Fprop[11:21,])
+Fprop<-rowMeans(Fprop[1:5,])
 Fprop[Fprop<1]<-1
 Fprop[Fprop>1]<-0
 Ffreq<-mean(Fprop)
 Bprop<-SSB/(SSBproxy*0.5)
-Bprop<-rowMeans(Bprop[11:21,])
+Bprop<-rowMeans(Bprop[1:5,])
 Bprop[Bprop<1]<-0
 Bprop[Bprop>1]<-1
 Bfreq<-mean(Bprop)
@@ -78,12 +78,12 @@ for (k in 1:length(sims)){
   SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
 }
 
-SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
+SSBFinal<-rowMedians(SSB[1:5,],na.rm=T)
 ShorttermSSB<-median(SSBFinal)
-Catchmed<-rowMedians(Catch[11:21,],na.rm=T)
+Catchmed<-rowMedians(Catch[1:5,],na.rm=T)
 ShorttermCatch<-median(Catchmed,na.rm=T)
-Catch<-Catch[11:21,]
-catchdiff<-matrix(NA,10,length(Catch[1,]))
+Catch<-Catch[1:5,]
+catchdiff<-matrix(NA,4,length(Catch[1,]))
 Catchstab<-rep(NA,length(Catch[1,]))
 for (i in 1:length(Catch[1,])){
   for (j in 1:(length(Catch[,1])-1)){
@@ -93,12 +93,12 @@ for (i in 1:length(Catch[1,])){
 }
 Catchstab<-1/median(Catchstab,na.rm=T)
 Fprop<-F_mort/Fproxy
-Fprop<-rowMeans(Fprop[11:21,])
+Fprop<-rowMeans(Fprop[1:5,])
 Fprop[Fprop<1]<-1
 Fprop[Fprop>1]<-0
 Ffreq<-mean(Fprop)
 Bprop<-SSB/(SSBproxy*0.5)
-Bprop<-rowMeans(Bprop[11:21,])
+Bprop<-rowMeans(Bprop[1:5,])
 Bprop[Bprop<1]<-0
 Bprop[Bprop>1]<-1
 Bfreq<-mean(Bprop)
@@ -131,12 +131,12 @@ for (k in 1:length(sims)){
   SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
 }
 
-SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
+SSBFinal<-rowMedians(SSB[1:5,],na.rm=T)
 ShorttermSSB<-median(SSBFinal)
-Catchmed<-rowMedians(Catch[11:21,],na.rm=T)
+Catchmed<-rowMedians(Catch[1:5,],na.rm=T)
 ShorttermCatch<-median(Catchmed,na.rm=T)
-Catch<-Catch[11:21,]
-catchdiff<-matrix(NA,10,length(Catch[1,]))
+Catch<-Catch[1:5,]
+catchdiff<-matrix(NA,4,length(Catch[1,]))
 Catchstab<-rep(NA,length(Catch[1,]))
 for (i in 1:length(Catch[1,])){
   for (j in 1:(length(Catch[,1])-1)){
@@ -146,12 +146,12 @@ for (i in 1:length(Catch[1,])){
 }
 Catchstab<-1/median(Catchstab,na.rm=T)
 Fprop<-F_mort/Fproxy
-Fprop<-rowMeans(Fprop[11:21,])
+Fprop<-rowMeans(Fprop[1:5,])
 Fprop[Fprop<1]<-1
 Fprop[Fprop>1]<-0
 Ffreq<-mean(Fprop)
 Bprop<-SSB/(SSBproxy*0.5)
-Bprop<-rowMeans(Bprop[11:21,])
+Bprop<-rowMeans(Bprop[1:5,])
 Bprop[Bprop<1]<-0
 Bprop[Bprop>1]<-1
 Bfreq<-mean(Bprop)
@@ -184,12 +184,12 @@ for (k in 1:length(sims)){
   SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
 }
 
-SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
+SSBFinal<-rowMedians(SSB[1:5,],na.rm=T)
 ShorttermSSB<-median(SSBFinal)
-Catchmed<-rowMedians(Catch[11:21,],na.rm=T)
+Catchmed<-rowMedians(Catch[1:5,],na.rm=T)
 ShorttermCatch<-median(Catchmed,na.rm=T)
-Catch<-Catch[11:21,]
-catchdiff<-matrix(NA,10,length(Catch[1,]))
+Catch<-Catch[1:5,]
+catchdiff<-matrix(NA,4,length(Catch[1,]))
 Catchstab<-rep(NA,length(Catch[1,]))
 for (i in 1:length(Catch[1,])){
   for (j in 1:(length(Catch[,1])-1)){
@@ -199,12 +199,12 @@ for (i in 1:length(Catch[1,])){
 }
 Catchstab<-1/median(Catchstab,na.rm=T)
 Fprop<-F_mort/Fproxy
-Fprop<-rowMeans(Fprop[11:21,],na.rm=T)
+Fprop<-rowMeans(Fprop[1:5,],na.rm=T)
 Fprop[Fprop<1]<-1
 Fprop[Fprop>1]<-0
 Ffreq<-mean(Fprop)
 Bprop<-SSB/(SSBproxy*0.5)
-Bprop<-rowMeans(Bprop[11:21,],na.rm=T)
+Bprop<-rowMeans(Bprop[1:5,],na.rm=T)
 Bprop[Bprop<1]<-0
 Bprop[Bprop>1]<-1
 Bfreq<-mean(Bprop)
@@ -237,12 +237,12 @@ if (length(Scenarios)>4){
     SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
   }
   
-  SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
+  SSBFinal<-rowMedians(SSB[1:5,],na.rm=T)
   ShorttermSSB<-median(SSBFinal)
-  Catchmed<-rowMedians(Catch[11:21,],na.rm=T)
+  Catchmed<-rowMedians(Catch[1:5,],na.rm=T)
   ShorttermCatch<-median(Catchmed,na.rm=T)
-  Catch<-Catch[11:21,]
-  catchdiff<-matrix(NA,10,length(Catch[1,]))
+  Catch<-Catch[1:5,]
+  catchdiff<-matrix(NA,4,length(Catch[1,]))
   Catchstab<-rep(NA,length(Catch[1,]))
   for (i in 1:length(Catch[1,])){
     for (j in 1:(length(Catch[,1])-1)){
@@ -252,12 +252,12 @@ if (length(Scenarios)>4){
   }
   Catchstab<-1/median(Catchstab,na.rm=T)
   Fprop<-F_mort/Fproxy
-  Fprop<-rowMeans(Fprop[11:21,])
+  Fprop<-rowMeans(Fprop[1:5,])
   Fprop[Fprop<1]<-1
   Fprop[Fprop>1]<-0
   Ffreq<-mean(Fprop)
   Bprop<-SSB/(SSBproxy*0.5)
-  Bprop<-rowMeans(Bprop[11:21,])
+  Bprop<-rowMeans(Bprop[1:5,])
   Bprop[Bprop<1]<-0
   Bprop[Bprop>1]<-1
   Bfreq<-mean(Bprop)
@@ -290,12 +290,12 @@ if (length(Scenarios)>4){
     SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
   }
   
-  SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
+  SSBFinal<-rowMedians(SSB[1:5,],na.rm=T)
   ShorttermSSB<-median(SSBFinal)
-  Catchmed<-rowMedians(Catch[11:21,],na.rm=T)
+  Catchmed<-rowMedians(Catch[1:5,],na.rm=T)
   ShorttermCatch<-median(Catchmed,na.rm=T)
-  Catch<-Catch[11:21,]
-  catchdiff<-matrix(NA,10,length(Catch[1,]))
+  Catch<-Catch[1:5,]
+  catchdiff<-matrix(NA,4,length(Catch[1,]))
   Catchstab<-rep(NA,length(Catch[1,]))
   for (i in 1:length(Catch[1,])){
     for (j in 1:(length(Catch[,1])-1)){
@@ -305,12 +305,12 @@ if (length(Scenarios)>4){
   }
   Catchstab<-1/median(Catchstab)
   Fprop<-F_mort/Fproxy
-  Fprop<-rowMeans(Fprop[11:21,])
+  Fprop<-rowMeans(Fprop[1:5,])
   Fprop[Fprop<1]<-1
   Fprop[Fprop>1]<-0
   Ffreq<-mean(Fprop)
   Bprop<-SSB/(SSBproxy*0.5)
-  Bprop<-rowMeans(Bprop[11:21,])
+  Bprop<-rowMeans(Bprop[1:5,])
   Bprop[Bprop<1]<-0
   Bprop[Bprop>1]<-1
   Bfreq<-mean(Bprop)
@@ -342,12 +342,12 @@ if (length(Scenarios)>4){
     SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
   }
   
-  SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
+  SSBFinal<-rowMedians(SSB[1:5,],na.rm=T)
   ShorttermSSB<-median(SSBFinal)
-  Catchmed<-rowMedians(Catch[11:21,],na.rm=T)
+  Catchmed<-rowMedians(Catch[1:5,],na.rm=T)
   ShorttermCatch<-median(Catchmed,na.rm=T)
-  Catch<-Catch[11:21,]
-  catchdiff<-matrix(NA,10,length(Catch[1,]))
+  Catch<-Catch[1:5,]
+  catchdiff<-matrix(NA,4,length(Catch[1,]))
   Catchstab<-rep(NA,length(Catch[1,]))
   for (i in 1:length(Catch[1,])){
     for (j in 1:(length(Catch[,1])-1)){
@@ -357,12 +357,12 @@ if (length(Scenarios)>4){
   }
   Catchstab<-1/median(Catchstab)
   Fprop<-F_mort/Fproxy
-  Fprop<-rowMeans(Fprop[11:21,])
+  Fprop<-rowMeans(Fprop[1:5,])
   Fprop[Fprop<1]<-1
   Fprop[Fprop>1]<-0
   Ffreq<-mean(Fprop)
   Bprop<-SSB/(SSBproxy*0.5)
-  Bprop<-rowMeans(Bprop[11:21,])
+  Bprop<-rowMeans(Bprop[1:5,])
   Bprop[Bprop<1]<-0
   Bprop[Bprop>1]<-1
   Bfreq<-mean(Bprop)
@@ -395,12 +395,12 @@ if (length(Scenarios)>4){
     SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
   }
   
-  SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
+  SSBFinal<-rowMedians(SSB[1:5,],na.rm=T)
   ShorttermSSB<-median(SSBFinal)
-  Catchmed<-rowMedians(Catch[11:21,],na.rm=T)
+  Catchmed<-rowMedians(Catch[1:5,],na.rm=T)
   ShorttermCatch<-median(Catchmed,na.rm=T)
-  Catch<-Catch[11:21,]
-  catchdiff<-matrix(NA,10,length(Catch[1,]))
+  Catch<-Catch[1:5,]
+  catchdiff<-matrix(NA,4,length(Catch[1,]))
   Catchstab<-rep(NA,length(Catch[1,]))
   for (i in 1:length(Catch[1,])){
     for (j in 1:(length(Catch[,1])-1)){
@@ -410,12 +410,12 @@ if (length(Scenarios)>4){
   }
   Catchstab<-1/median(Catchstab)
   Fprop<-F_mort/Fproxy
-  Fprop<-rowMeans(Fprop[11:21,])
+  Fprop<-rowMeans(Fprop[1:5,])
   Fprop[Fprop<1]<-1
   Fprop[Fprop>1]<-0
   Ffreq<-mean(Fprop)
   Bprop<-SSB/(SSBproxy*0.5)
-  Bprop<-rowMeans(Bprop[11:21,])
+  Bprop<-rowMeans(Bprop[1:5,])
   Bprop[Bprop<1]<-0
   Bprop[Bprop>1]<-1
   Bfreq<-mean(Bprop)

@@ -197,9 +197,9 @@ for (i in 1:length(Catch[1,])){
   }
   Catchstab[i]<-sqrt((1/(length(Catch[,i])-1))*sum(catchdiff[,i])^2)/((1/(length(Catch[,i])))*sum(Catch[,i]))
 }
-Catchstab<-1/median(Catchstab)
+Catchstab<-1/median(Catchstab,na.rm=T)
 Fprop<-F_mort/Fproxy
-Fprop<-rowMeans(Fprop[6:10,])
+Fprop<-rowMeans(Fprop[6:10,],na.rm=T)
 Fprop[Fprop<1]<-1
 Fprop[Fprop>1]<-0
 Ffreq<-mean(Fprop)
@@ -207,7 +207,7 @@ Bprop<-SSB/(SSBproxy*0.5)
 Bprop<-rowMeans(Bprop[6:10,])
 Bprop[Bprop<1]<-0
 Bprop[Bprop>1]<-1
-Bfreq<-mean(Bprop)
+Bfreq<-mean(Bprop,na.rm=T)
 
 x<-'117'
 d2<-as.data.frame(cbind(x,ShorttermSSB,ShorttermCatch,Catchstab,Ffreq,Bfreq))

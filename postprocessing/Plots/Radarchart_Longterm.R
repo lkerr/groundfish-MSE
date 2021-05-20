@@ -197,14 +197,14 @@ for (i in 1:length(Catch[1,])){
   }
   Catchstab[i]<-sqrt((1/(length(Catch[,i])-1))*sum(catchdiff[,i])^2)/((1/(length(Catch[,i])))*sum(Catch[,i]))
 }
-Catchstab<-1/median(Catchstab)
+Catchstab<-1/median(Catchstab,na.rm=T)
 Fprop<-F_mort/Fproxy
-Fprop<-rowMeans(Fprop[11:21,])
+Fprop<-rowMeans(Fprop[11:21,],na.rm=T)
 Fprop[Fprop<1]<-1
 Fprop[Fprop>1]<-0
 Ffreq<-mean(Fprop)
 Bprop<-SSB/(SSBproxy*0.5)
-Bprop<-rowMeans(Bprop[11:21,])
+Bprop<-rowMeans(Bprop[11:21,],na.rm=T)
 Bprop[Bprop<1]<-0
 Bprop[Bprop>1]<-1
 Bfreq<-mean(Bprop)
