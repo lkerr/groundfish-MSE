@@ -109,7 +109,7 @@ oe_sumCW <- 0.05
 oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 80
 oe_paaCN_typ <- 'multinomial'
-oe_sumIN <- 0.05
+oe_sumIN <- 0.5
 oe_sumIN_typ <- 'lognorm'
 oe_paaIN <- 100 #15
 oe_paaIN_typ <- 'multinomial'
