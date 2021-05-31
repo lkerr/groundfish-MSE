@@ -1,0 +1,189 @@
+---
+title: "GOM Cod rec parameters"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(minpack.lm)
+library(gridExtra)
+```
+
+
+```{r}
+# Read in the data. The appropriate stock will be selected below in the model function.
+recT <- read_csv(file='documentation/stockRecruit/data/recT.csv') %>%
+  mutate(SSBRF0 = SSBRF0 / 1000,
+         REC = REC000S * 1000) %>%
+  filter(STOCK == 'GOMCOD', STOCKAREA == 'GOM')
+```
+
+
+
+# @knitr plotAnom ---------------------------------------------------------
+```{r}
+anomPlot <- recT %>%
+  filter(STOCK %in% c('GBCOD', 'GOMCOD')) %>%
+  select(YEAR, TANOM) %>%
+  distinct() %>%
+  ggplot(aes(x = YEAR, y = TANOM)) +
+  geom_line() +
+  geom_point()
+
+TAnomGOM <- read_csv('data/data_processed/tAnomOutGOM.csv') %>%
+  mutate(STOCKAREA = 'GOM')
+```
+
+
+
+
+
+# @knitr bhModelFunction --------------------------------------------------
+```{r}
+get_nls <- function(stock, tempParType, predAnomDF, st){
+
+  stockSub <- recT %>% filter(STOCK == stock)
+  
+  # BH function
+  if(tempParType == 1){
+    
+    BH <- function(S, Te, a, b, g){
+      a * exp(g * Te) * S / (1 + b * S)
+    }
+    
+  }else if(tempParType == 2){
+    
+    BH <- function(S, Te, a, b, g){
+      a * S / (1 + (b * exp(g * Te)) * S)
+    }
+    
+  }else if(tempParType == 3){
+    
+    BH <- function(S, Te, a, b, g){
+      a * S / (1 + b * S) * exp(g * Te)
+    }
+    
+  }else{
+    
+    stop('provide correct tempParType')
+    
+  }
+  
+  # Fit the model using minpack
+  BH_nls = nlsLM(REC ~ BH(S = SSBMT, T = TANOM, a, b, g),
+                 data = stockSub,
+                 start = st)
+  
+  
+  # Extract the coefficients
+  coef <- coef(BH_nls)
+
+  # Predict at different anomalies
+  pdat <- expand.grid(
+    SSBMT = seq(0, max(stockSub$SSBMT), length.out = 100),
+    a = coef['a'],
+    b = coef['b'],
+    g = coef['g'],
+    TANOM = predAnomDF$TANOM) %>%
+    mutate(YEAR = rep(predAnomDF$YEAR, each = 100)) %>%
+    as_tibble() %>%
+    mutate(RHat = BH(S = SSBMT, T = TANOM, a = a, b = b, g = g))
+
+  
+  # Prediction plots
+  plotPredTemp <- pdat %>%
+    mutate(TANOM = factor(YEAR),
+           YEAR = factor(YEAR)) %>%
+    ggplot(aes(x = SSBMT, y = RHat, col = YEAR)) +
+    geom_line() +
+    ggtitle(stock)
+  
+  plotPredTemp2 <- pdat %>%
+    mutate(TANOM = factor(YEAR),
+           YEAR = factor(YEAR)) %>%
+    ggplot(aes(x = SSBMT, y = RHat, col = YEAR)) +
+    geom_line() +
+    ggtitle(stock) +
+    geom_point(aes(x = SSBMT, y = REC), data = recT, inherit.aes = FALSE)
+  
+  plotFit <- stockSub %>%
+    mutate(RHat = predict(BH_nls)) %>%
+    ggplot(aes(x = REC, y = RHat)) +
+    geom_point() +
+    geom_abline(intercept = 0, slope = 1, linetype = 'dashed') +
+    ggtitle(label = stock)
+
+  out <- list(fit = BH_nls, predPlot = plotPredTemp, fitPlot = plotFit)
+  
+}
+
+```
+
+
+
+
+# @knitr predictions ------------------------------------------------------
+```{r}
+yearPreds <- TAnomGOM %>%
+  filter(YEAR >= 2010, YEAR <= 2050) %>%
+  mutate(TANOM = predict(lm(TANOM ~ YEAR))) %>%
+  slice(round(seq(1, n(), length.out = 10)))
+```
+
+
+
+```{r}
+# impacting a
+nls_gomCod_a <- get_nls(stock = 'GOMCOD', tempParType = 1, yearPreds,
+                        st = list(a = 0.1957337, b = 0.000002386, g = 0.32))
+
+# impacting b
+nls_gbCod_b <- get_nls(stock = 'GOMCOD', tempParType = 2, yearPreds,
+                       st = list(a = 0.1957337, b = 0.000002386, g = 0.32))
+
+# impacting error
+nls_gomCod_error <- get_nls(stock = 'GOMCOD', tempParType = 3, yearPreds,
+                            st = list(a = 0.1957337, b = 0.000002386, g = 0.32))
+
+
+
+# @knitr testStartingValues -----------------------------------------------
+gomCodSt1 <- get_nls(stock = 'GOMCOD', tempParType = 3, yearPreds,
+                     st = list(a = 0.1957337, b = 0.000002386, g = 0.32))
+
+
+
+grid.arrange(nls_gomCod_a$predPlot + ggtitle('Temp affects a'), 
+             # nls_gomCod_b$predPlot + ggtitle('Temp affects b'), 
+             nls_gomCod_error$predPlot + ggtitle('Temp affects error'))
+
+
+nls_gomCod_a$predPlot +
+  geom_point(aes(x = SSBMT, y = REC),
+             data = recT)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
