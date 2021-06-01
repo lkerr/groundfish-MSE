@@ -83,7 +83,7 @@ Rnyr= 20)
 ## Survey information
 #selI <- c(1)
 #selI_typ <- 'const'
-selI <- c(0.0384337, 0.13369, 0.288846, 0.531086, 0.778406, 1, 1, 1, 1) #Spring survey fit from 2019 assessment .rep
+selI <- c(0.038, 0.134, 0.289, 0.531, 0.778, 1, 1, 1, 1) #Spring survey fit from 2019 assessment .rep
 selI_typ <- 'input'
 timeI <- 0.5 # when is the survey (as a proportion of the year)
 
