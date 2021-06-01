@@ -1,6 +1,6 @@
 #####F_full REE Plot####
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(40,41,42,43)
+Scenarios<-c(1,2,3,4)
 ####First Sims####
 library(matrixStats)
 library(dplyr)
@@ -20,7 +20,7 @@ Catchsim<-matrix(NA,nrow=11,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Ftrue<-omvalGlobal[[1]]$F_full[169:189]
+  Ftrue<-omvalGlobal[[1]]$F_full[167:187]
   for (i in seq(170,190,2)){
     Fest<-omvalGlobal[[1]]$Fest[i,]
     Fest<-na.omit(Fest)
@@ -49,7 +49,7 @@ Catchsim<-matrix(NA,nrow=11,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Ftrue<-omvalGlobal[[1]]$F_full[169:189]
+  Ftrue<-omvalGlobal[[1]]$F_full[167:187]
   for (i in seq(170,190,2)){
     Fest<-omvalGlobal[[1]]$Fest[i,]
     Fest<-na.omit(Fest)
@@ -80,7 +80,7 @@ Catchsim<-matrix(NA,nrow=11,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Ftrue<-omvalGlobal[[1]]$F_full[169:189]
+  Ftrue<-omvalGlobal[[1]]$F_full[167:187]
   for (i in seq(170,190,2)){
     Fest<-omvalGlobal[[1]]$Fest[i,]
     Fest<-na.omit(Fest)
@@ -110,7 +110,7 @@ Catchsim<-matrix(NA,nrow=11,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Ftrue<-omvalGlobal[[1]]$F_full[169:189]
+  Ftrue<-omvalGlobal[[1]]$F_full[167:187]
   for (i in seq(170,190,2)){
     Fest<-omvalGlobal[[1]]$Fest[i,]
     Fest<-na.omit(Fest)

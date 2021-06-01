@@ -1,5 +1,5 @@
 #####F_full Trajectory Plots####
-Scenarios<-c(40,41,42,43)
+Scenarios<-c(1,2,3,4)
 RhoAdj<-FALSE
 Stock<-'codGOM'
 ####First Sims####
@@ -18,15 +18,15 @@ for (k in 1:length(sims)){
 }
 sims<-na.omit(sims)
 
-Catchsim<-matrix(NA,nrow=53,ncol=length(sims))
+Catchsim<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$F_full[136:188]
+  Catchsim[,k]<-omvalGlobal[[1]]$F_full[136:187]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1988:2039
+Year<-1987:2038
 df<-as.data.frame(cbind(Catchsim,Year))
 df$HCR<-Scenarios[1]
 
@@ -40,21 +40,21 @@ if (RhoAdj==TRUE){
 }
 
 ####First Assessment####
-Catchest<-matrix(NA,nrow=54,ncol=length(sims))
+Fest<-matrix(NA,nrow=54,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchest[,k]<-omvalGlobal[[1]]$Fest[190,]
+  Fest[,k]<-omvalGlobal[[1]]$Fest[190,]
 }
 
-Catchest<-rowMedians(Catchest,na.rm=T)
-Catchest<-na.omit(Catchest)
+Fest<-rowMedians(Fest,na.rm=T)
+Fest<-na.omit(Fest)
 
 if (RhoAdj==TRUE){
-  Catchest[length(Catchest)]<-Catchest[length(Catchest)]/(Mohn+1)
+  Fest[length(Fest)]<-Fest[length(Fest)]/(Mohn+1)
 }
 
-df$Catchest<-Catchest
+df$Fest<-Fest
 
 ####Second Sims####
 setwd(paste(wd,"/Sim_",Scenarios[2],"/sim",sep=""))
@@ -67,15 +67,15 @@ for (k in 1:length(sims)){
 }
 sims<-na.omit(sims)
 
-Catchsim<-matrix(NA,nrow=53,ncol=length(sims))
+Catchsim<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$F_full[136:188]
+  Catchsim[,k]<-omvalGlobal[[1]]$F_full[136:187]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1988:2039
+Year<-1987:2038
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[2]
 
@@ -89,20 +89,20 @@ if (RhoAdj==TRUE){
 }
 
 ####Second Assessment####
-Catchest<-matrix(NA,nrow=54,ncol=length(sims))
+Fest<-matrix(NA,nrow=54,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchest[,k]<-omvalGlobal[[1]]$Fest[190,]
+  Fest[,k]<-omvalGlobal[[1]]$Fest[190,]
 }
 
-Catchest<-rowMedians(Catchest,na.rm=T)
-Catchest<-na.omit(Catchest)
+Fest<-rowMedians(Fest,na.rm=T)
+Fest<-na.omit(Fest)
 
 if (RhoAdj==TRUE){
-  Catchest[length(Catchest)]<-Catchest[length(Catchest)]/(Mohn+1)
+  Fest[length(Fest)]<-Fest[length(Fest)]/(Mohn+1)
 }
-df2$Catchest<-Catchest
+df2$Fest<-Fest
 
 df<-full_join(df,df2)
 
@@ -117,15 +117,15 @@ for (k in 1:length(sims)){
 }
 sims<-na.omit(sims)
 
-Catchsim<-matrix(NA,nrow=53,ncol=length(sims))
+Catchsim<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$F_full[136:188]
+  Catchsim[,k]<-omvalGlobal[[1]]$F_full[136:187]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1988:2039
+Year<-1987:2038
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[3]
 
@@ -139,20 +139,20 @@ if (RhoAdj==TRUE){
 }
 
 ####Third Assessment####
-Catchest<-matrix(NA,nrow=54,ncol=length(sims))
+Fest<-matrix(NA,nrow=54,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchest[,k]<-omvalGlobal[[1]]$Fest[190,]
+  Fest[,k]<-omvalGlobal[[1]]$Fest[190,]
 }
 
-Catchest<-rowMedians(Catchest,na.rm=T)
-Catchest<-na.omit(Catchest)
+Fest<-rowMedians(Fest,na.rm=T)
+Fest<-na.omit(Fest)
 
 if (RhoAdj==TRUE){
-  Catchest[length(Catchest)]<-Catchest[length(Catchest)]/(Mohn+1)
+  Fest[length(Fest)]<-Fest[length(Fest)]/(Mohn+1)
 }
-df2$Catchest<-Catchest
+df2$Fest<-Fest
 
 df<-full_join(df,df2)
 
@@ -167,15 +167,15 @@ for (k in 1:length(sims)){
 }
 sims<-na.omit(sims)
 
-Catchsim<-matrix(NA,nrow=53,ncol=length(sims))
+Catchsim<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$F_full[136:188]
+  Catchsim[,k]<-omvalGlobal[[1]]$F_full[136:187]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1988:2039
+Year<-1987:2038
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[4]
 
@@ -188,21 +188,21 @@ if (RhoAdj==TRUE){
   Mohn<-mean(Mohn,na.rm=T)
 }
 
-####4 Assessment####
-Catchest<-matrix(NA,nrow=54,ncol=length(sims))
+####Fourth Assessment####
+Fest<-matrix(NA,nrow=54,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchest[,k]<-omvalGlobal[[1]]$Fest[190,]
+  Fest[,k]<-omvalGlobal[[1]]$Fest[190,]
 }
 
-Catchest<-rowMedians(Catchest,na.rm=T)
-Catchest<-na.omit(Catchest)
+Fest<-rowMedians(Fest,na.rm=T)
+Fest<-na.omit(Fest)
 
 if (RhoAdj==TRUE){
-  Catchest[length(Catchest)]<-Catchest[length(Catchest)]/(Mohn+1)
+  Fest[length(Fest)]<-Fest[length(Fest)]/(Mohn+1)
 }
-df2$Catchest<-Catchest
+df2$Fest<-Fest
 
 df<-full_join(df,df2)
 
@@ -214,12 +214,9 @@ df$HCR<-as.factor(df$HCR)
 df$HCR<-ordered(df$HCR,levels=c('Ramp','P*','F-step','Constrained ramp'))
 
 df<-df[df$Year>1989,]
-df$Year<-df$Year-1
-ggplot(df)+geom_line(aes(x=Year,y=Catchest,color=HCR))+geom_point(aes(x=Year,y=Catchsim,color=HCR))+
+ggplot(df)+geom_line(aes(x=Year,y=Fest,color=HCR))+geom_point(aes(x=Year,y=Catchsim,color=HCR))+
   theme_classic()+theme(text=element_text(size=18),legend.position='right')+
   ylab('F')+geom_vline(xintercept=2019, linetype='dotted')+
   scale_color_colorblind()
-
-
 
 

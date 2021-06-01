@@ -1,5 +1,5 @@
 #####SSB Trajectory Plots####
-Scenarios<-c(40,41,42,43)
+Scenarios<-c(50,51,52,53)
 RhoAdj<-FALSE
 Stock<-'codGOM'
 ####First Sims####
@@ -18,11 +18,11 @@ for (k in 1:length(sims)){
 }
 sims<-na.omit(sims)
 
-Catchsim<-matrix(NA,nrow=53,ncol=length(sims))
+Catchsim<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$SSB[137:189]
+  Catchsim[,k]<-omvalGlobal[[1]]$SSB[137:188]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
@@ -67,11 +67,11 @@ for (k in 1:length(sims)){
 }
 sims<-na.omit(sims)
 
-Catchsim<-matrix(NA,nrow=53,ncol=length(sims))
+Catchsim<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$SSB[137:189]
+  Catchsim[,k]<-omvalGlobal[[1]]$SSB[137:188]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
@@ -117,11 +117,11 @@ for (k in 1:length(sims)){
 }
 sims<-na.omit(sims)
 
-Catchsim<-matrix(NA,nrow=53,ncol=length(sims))
+Catchsim<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$SSB[137:189]
+  Catchsim[,k]<-omvalGlobal[[1]]$SSB[137:188]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
@@ -167,11 +167,11 @@ for (k in 1:length(sims)){
 }
 sims<-na.omit(sims)
 
-Catchsim<-matrix(NA,nrow=53,ncol=length(sims))
+Catchsim<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$SSB[137:189]
+  Catchsim[,k]<-omvalGlobal[[1]]$SSB[137:188]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
