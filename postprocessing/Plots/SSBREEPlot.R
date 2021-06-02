@@ -1,6 +1,6 @@
 #####SSB REE Plot####
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(40,41,42,43)
+Scenarios<-c(1,2,3,4)
 ####First Sims####
 library(matrixStats)
 library(dplyr)
@@ -20,7 +20,7 @@ Catchsim<-matrix(NA,nrow=11,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  SSBtrue<-omvalGlobal[[1]]$SSB[169:189]
+  SSBtrue<-omvalGlobal[[1]]$SSB[168:188]
   for (i in seq(170,190,2)){
     SSBest<-omvalGlobal[[1]]$SSBest[i,]
     SSBest<-na.omit(SSBest)
@@ -49,7 +49,7 @@ Catchsim<-matrix(NA,nrow=11,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  SSBtrue<-omvalGlobal[[1]]$SSB[169:189]
+  SSBtrue<-omvalGlobal[[1]]$SSB[168:188]
   for (i in seq(170,190,2)){
     SSBest<-omvalGlobal[[1]]$SSBest[i,]
     SSBest<-na.omit(SSBest)
@@ -80,7 +80,7 @@ Catchsim<-matrix(NA,nrow=11,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  SSBtrue<-omvalGlobal[[1]]$SSB[169:189]
+  SSBtrue<-omvalGlobal[[1]]$SSB[168:188]
   for (i in seq(170,190,2)){
     SSBest<-omvalGlobal[[1]]$SSBest[i,]
     SSBest<-na.omit(SSBest)
@@ -110,7 +110,7 @@ Catchsim<-matrix(NA,nrow=11,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  SSBtrue<-omvalGlobal[[1]]$SSB[169:189]
+  SSBtrue<-omvalGlobal[[1]]$SSB[168:188]
   for (i in seq(170,190,2)){
     SSBest<-omvalGlobal[[1]]$SSBest[i,]
     SSBest<-na.omit(SSBest)

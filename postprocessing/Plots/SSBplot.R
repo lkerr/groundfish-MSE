@@ -1,5 +1,5 @@
 #####SSB Trajectory Plots####
-Scenarios<-c(50,51,52,53)
+Scenarios<-c(1,2,3,4)
 RhoAdj<-FALSE
 Stock<-'codGOM'
 ####First Sims####

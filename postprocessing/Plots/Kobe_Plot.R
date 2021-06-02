@@ -8,10 +8,10 @@ setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[1],"/s
 
 sims <- list.files()
 
-Freal<-matrix(NA,ncol=length(sims),nrow=21)
-Fproxy<-matrix(NA,ncol=length(sims),nrow=21)
-SSBreal<-matrix(NA,ncol=length(sims),nrow=21)
-SSBproxy<-matrix(NA,ncol=length(sims),nrow=21)
+Freal<-matrix(NA,ncol=length(sims),nrow=22)
+Fproxy<-matrix(NA,ncol=length(sims),nrow=22)
+SSBreal<-matrix(NA,ncol=length(sims),nrow=22)
+SSBproxy<-matrix(NA,ncol=length(sims),nrow=22)
 
 for (k in 1:length(sims)){
   if (file.size(sims[k])==0){
@@ -37,7 +37,7 @@ Fratioreal<-Freal/Fproxy
 SSBreal<-rowMedians(SSBreal,na.rm=T)
 SSBproxy<-rowMedians(SSBproxy,na.rm=T)
 SSBratioreal<-SSBreal/SSBproxy
-Year<-2020:2040
+Year<-2019:2040
 Dftrue<-as.data.frame(cbind(SSBratioreal,Fratioreal,Year))
 Dftrue$Scenario<-Scenarios[1]
 
@@ -45,10 +45,10 @@ setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[2],"/s
 
 sims <- list.files()
 
-Freal<-matrix(NA,ncol=length(sims),nrow=21)
-Fproxy<-matrix(NA,ncol=length(sims),nrow=21)
-SSBreal<-matrix(NA,ncol=length(sims),nrow=21)
-SSBproxy<-matrix(NA,ncol=length(sims),nrow=21)
+Freal<-matrix(NA,ncol=length(sims),nrow=22)
+Fproxy<-matrix(NA,ncol=length(sims),nrow=22)
+SSBreal<-matrix(NA,ncol=length(sims),nrow=22)
+SSBproxy<-matrix(NA,ncol=length(sims),nrow=22)
 
 for (k in 1:length(sims)){
   if (file.size(sims[k])==0){
@@ -74,7 +74,7 @@ Fratioreal<-Freal/Fproxy
 SSBreal<-rowMedians(SSBreal,na.rm=T)
 SSBproxy<-rowMedians(SSBproxy,na.rm=T)
 SSBratioreal<-SSBreal/SSBproxy
-Year<-2020:2040
+Year<-2019:2040
 Dftrue2<-as.data.frame(cbind(SSBratioreal,Fratioreal,Year))
 Dftrue2$Scenario<-Scenarios[2]
 df<-full_join(Dftrue,Dftrue2)
@@ -83,10 +83,10 @@ setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[3],"/s
 
 sims <- list.files()
 
-Freal<-matrix(NA,ncol=length(sims),nrow=21)
-Fproxy<-matrix(NA,ncol=length(sims),nrow=21)
-SSBreal<-matrix(NA,ncol=length(sims),nrow=21)
-SSBproxy<-matrix(NA,ncol=length(sims),nrow=21)
+Freal<-matrix(NA,ncol=length(sims),nrow=22)
+Fproxy<-matrix(NA,ncol=length(sims),nrow=22)
+SSBreal<-matrix(NA,ncol=length(sims),nrow=22)
+SSBproxy<-matrix(NA,ncol=length(sims),nrow=22)
 
 for (k in 1:length(sims)){
   if (file.size(sims[k])==0){
@@ -112,7 +112,7 @@ Fratioreal<-Freal/Fproxy
 SSBreal<-rowMedians(SSBreal,na.rm=T)
 SSBproxy<-rowMedians(SSBproxy,na.rm=T)
 SSBratioreal<-SSBreal/SSBproxy
-Year<-2020:2040
+Year<-2019:2040
 Dftrue2<-as.data.frame(cbind(SSBratioreal,Fratioreal,Year))
 Dftrue2$Scenario<-Scenarios[3]
 df<-full_join(df,Dftrue2)
@@ -121,10 +121,10 @@ setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[4],"/s
 
 sims <- list.files()
 
-Freal<-matrix(NA,ncol=length(sims),nrow=21)
-Fproxy<-matrix(NA,ncol=length(sims),nrow=21)
-SSBreal<-matrix(NA,ncol=length(sims),nrow=21)
-SSBproxy<-matrix(NA,ncol=length(sims),nrow=21)
+Freal<-matrix(NA,ncol=length(sims),nrow=22)
+Fproxy<-matrix(NA,ncol=length(sims),nrow=22)
+SSBreal<-matrix(NA,ncol=length(sims),nrow=22)
+SSBproxy<-matrix(NA,ncol=length(sims),nrow=22)
 
 for (k in 1:length(sims)){
   if (file.size(sims[k])==0){
@@ -150,7 +150,7 @@ Fratioreal<-Freal/Fproxy
 SSBreal<-rowMedians(SSBreal,na.rm=T)
 SSBproxy<-rowMedians(SSBproxy,na.rm=T)
 SSBratioreal<-SSBreal/SSBproxy
-Year<-2020:2040
+Year<-2019:2040
 Dftrue2<-as.data.frame(cbind(SSBratioreal,Fratioreal,Year))
 Dftrue2$Scenario<-Scenarios[4]
 df<-full_join(df,Dftrue2)
