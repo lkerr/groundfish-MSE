@@ -1,5 +1,5 @@
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(1,2,3,4)
+Scenarios<-c(17,18,19,20)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
@@ -202,11 +202,29 @@ ggplot(Df)+
   geom_hline(yintercept=1, linetype="dashed", color = "black", size=1)
 
 #NEW PLOT
-ggplot(Df)+
+gg<-ggplot(Df)+
   geom_boxplot(aes(x=Time, y=SSBratiot, fill=HCR)) +
   theme_classic()+
   ylab('Catch (mt)')+
   xlab('Time')+
   theme(text=element_text(size=18),legend.position='right')+
   scale_fill_colorblind()+
-  scale_y_continuous(breaks = pretty(c(0,9000), n=5),limits = c(0,9000))
+  scale_y_continuous(breaks = pretty(c(0,6000), n=5),limits = c(0,6000))
+
+gg + theme(axis.ticks = element_line(linetype = "blank"),
+    panel.grid.major = element_line(linetype = "blank"),
+    axis.text = element_text(colour = "gray9"),
+    plot.title = element_text(colour = NA),
+    panel.background = element_rect(fill = NA)) +labs(colour = "black")
+
+library(ggridges)
+
+Df$Time<-ordered(Df$Time,levels=c('Long-term','Medium-term','Short-term'))
+ggplot(Df, aes(x = SSBratiot, y = Time, color = HCR, point_color = HCR, fill = HCR)) +
+  geom_density_ridges(alpha = .5)+
+  theme_classic()+
+  ylab('Time period')+
+  xlab('Catch (mt)')+
+  theme(text=element_text(size=18),legend.position='right')+
+  scale_fill_colorblind()+
+  scale_color_colorblind()
