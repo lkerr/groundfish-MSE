@@ -1,6 +1,6 @@
 #####F_full Trajectory Plots####
-Scenarios<-c(1,2,3,4)
-RhoAdj<-FALSE
+Scenarios<-c(17,18,19,20)
+RhoAdj<-TRUE
 Stock<-'codGOM'
 ####First Sims####
 library(matrixStats)
@@ -34,7 +34,7 @@ if (RhoAdj==TRUE){
   Mohn<-rep(NA,length(sims))
   for (k in 1:length(sims)){
     load(sims[k])
-    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F_full[190]
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F[190]
   }
   Mohn<-mean(Mohn,na.rm=T)
 }
@@ -83,7 +83,7 @@ if (RhoAdj==TRUE){
   Mohn<-rep(NA,length(sims))
   for (k in 1:length(sims)){
     load(sims[k])
-    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F_full[190]
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F[190]
   }
   Mohn<-mean(Mohn,na.rm=T)
 }
@@ -133,7 +133,7 @@ if (RhoAdj==TRUE){
   Mohn<-rep(NA,length(sims))
   for (k in 1:length(sims)){
     load(sims[k])
-    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F_full[190]
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F[190]
   }
   Mohn<-mean(Mohn,na.rm=T)
 }
@@ -183,7 +183,7 @@ if (RhoAdj==TRUE){
   Mohn<-rep(NA,length(sims))
   for (k in 1:length(sims)){
     load(sims[k])
-    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F_full[190]
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F[190]
   }
   Mohn<-mean(Mohn,na.rm=T)
 }
