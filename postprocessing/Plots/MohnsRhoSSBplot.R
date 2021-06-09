@@ -1,6 +1,6 @@
 #####Mohn's Rho for SSB Plot####
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(1,2,3,4)
+Scenarios<-c(17,18,19,20)
 ####First Sims####
 library(matrixStats)
 library(dplyr)
@@ -113,7 +113,7 @@ df<-na.omit(df)
 
 ggplot(df)+geom_line(aes(x=Year,y=Catchsim,color=HCR),size=1)+
   theme_classic()+theme(text=element_text(size=18),legend.position='right')+
-  ylab('Mohns Rho for SSB')+ylim(-0.5,0.5)+
+  ylab('Mohns Rho for SSB')+ylim(-0.5,0.9)+
   scale_color_colorblind()+
   scale_x_continuous(limits = c(2020,2040))
 
