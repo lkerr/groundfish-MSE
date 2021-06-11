@@ -175,8 +175,6 @@ df$HCR[df$HCR==Scenarios[3]]<-'F-step'
 df$HCR[df$HCR==Scenarios[4]]<-'Constrained ramp'
 df$HCR<-as.factor(df$HCR)
 df$HCR<-ordered(df$HCR,levels=c('Ramp','P*','F-step','Constrained ramp'))
-df$Year<-df$Year-1
-df<-df[df$Year>2018,]
 kobe <- ggplot(df, aes(x = SSBestratioreal, y = Fratioreal)) +
   theme_bw() 
 kobe <- kobe + annotate(geom = "rect", xmin = 1, xmax = maxSSBest, ymin = 0, ymax = 1, fill = "green", colour = "green", alpha = 0.5) +
@@ -192,5 +190,5 @@ kobe <- kobe + annotate(geom = "rect", xmin = 1, xmax = maxSSBest, ymin = 0, yma
   scale_color_colorblind()+
   geom_vline(xintercept=0.5, linetype='dotted')+
   theme(text=element_text(size=16),legend.position='bottom')+
-  geom_text_repel(data=subset(df, Year > 2036 | Year < 2020),aes(x = SSBestratioreal, y = Fratioreal, label = Year))
+  geom_text_repel(data=subset(df, Year > 2037 | Year < 2020),aes(x = SSBestratioreal, y = Fratioreal, label = Year))
 kobe
