@@ -1,5 +1,5 @@
 #Kobe Plot
-Scenarios<-c(17,18,19,20)
+Scenarios<-c(5,6,7,8)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
@@ -175,8 +175,8 @@ df$Year<-df$Year-2
 df<-df[df$Year>2018,]
 ####Kobe Plot####
 library(ggplot2)
-maxSSBest<-max(1.1,max(SSBestratioreal))
-maxF<-max(1.1,max(Fratioreal))
+maxSSBest<-max(1.1,max(df$SSBestratioreal))
+maxF<-max(1.1,max(df$Fratioreal))
 df$HCR<-df$Scenario
 df$HCR[df$HCR==Scenarios[1]]<-'Ramp'
 df$HCR[df$HCR==Scenarios[2]]<-'P*'

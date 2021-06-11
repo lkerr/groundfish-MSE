@@ -1,5 +1,5 @@
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(17,18,19,20)
+Scenarios<-c(5,6,7,8)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
@@ -25,7 +25,7 @@ setwd(paste(tempwd,"/Sim_",Scenarios[1],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Fratiot[k,]<-omvalGlobal[[1]]$FPROXY[169:190]/omvalGlobal[[1]]$FPROXYT[169:190]
+  Fratiot[k,]<-omvalGlobal[[1]]$FPROXY[169:190]/omvalGlobal[[1]]$FPROXYT2[169:190]
 }
 
 Fratiots<-rowMedians(Fratiot[,1:5])
@@ -69,7 +69,7 @@ setwd(paste(tempwd,"/Sim_",Scenarios[2],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Fratiot[k,]<-omvalGlobal[[1]]$FPROXY[169:190]/omvalGlobal[[1]]$FPROXYT[169:190]
+  Fratiot[k,]<-omvalGlobal[[1]]$FPROXY[169:190]/omvalGlobal[[1]]$FPROXYT2[169:190]
 }
 
 Fratiots<-rowMedians(Fratiot[,1:5])
@@ -114,7 +114,7 @@ setwd(paste(tempwd,"/Sim_",Scenarios[3],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Fratiot[k,]<-omvalGlobal[[1]]$FPROXY[169:190]/omvalGlobal[[1]]$FPROXYT[169:190]
+  Fratiot[k,]<-omvalGlobal[[1]]$FPROXY[169:190]/omvalGlobal[[1]]$FPROXYT2[169:190]
 }
 
 Fratiots<-rowMedians(Fratiot[,1:5])
@@ -159,7 +159,7 @@ setwd(paste(tempwd,"/Sim_",Scenarios[4],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Fratiot[k,]<-omvalGlobal[[1]]$FPROXY[169:190]/omvalGlobal[[1]]$FPROXYT[169:190]
+  Fratiot[k,]<-omvalGlobal[[1]]$FPROXY[169:190]/omvalGlobal[[1]]$FPROXYT2[169:190]
 }
 
 Fratiots<-rowMedians(Fratiot[,1:5])

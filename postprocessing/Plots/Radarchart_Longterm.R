@@ -1,7 +1,7 @@
 library('fmsb')
 library(matrixStats)
 library(dplyr)
-Scenarios<-c(17,18,19,20)
+Scenarios<-c(5,6,7,8)
 #Load data and change to numeric
 wd<-getwd()
 #wd<-setwd("C:/Users/jjesse/Box/HCR_Sims")
@@ -23,8 +23,8 @@ for (k in 1:length(sims)){
   SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
   Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
   F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
+  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
 }
 
 SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
@@ -74,8 +74,8 @@ for (k in 1:length(sims)){
   SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
   Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
   F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
+  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
 }
 
 SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
@@ -127,8 +127,8 @@ for (k in 1:length(sims)){
   SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
   Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
   F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
+  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
 }
 
 SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
@@ -180,8 +180,8 @@ for (k in 1:length(sims)){
   SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
   Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
   F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
+  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
 }
 
 SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
@@ -233,8 +233,8 @@ if (length(Scenarios)>4){
     SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
     Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
     F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
+    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
   }
   
   SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
@@ -286,8 +286,8 @@ if (length(Scenarios)>4){
     SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
     Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
     F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
+    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
   }
   
   SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
@@ -338,8 +338,8 @@ if (length(Scenarios)>4){
     SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
     Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
     F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
+    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
   }
   
   SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
@@ -391,8 +391,8 @@ if (length(Scenarios)>4){
     SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
     Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
     F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
+    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
   }
   
   SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
