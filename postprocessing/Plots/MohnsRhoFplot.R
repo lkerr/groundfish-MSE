@@ -1,6 +1,6 @@
 #####Mohn's Rho for F Plot####
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(17,18,19,20)
+Scenarios<-c(9,10,11,12)
 ####First Sims####
 library(matrixStats)
 library(dplyr)

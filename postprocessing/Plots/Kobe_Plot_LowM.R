@@ -1,5 +1,5 @@
 #Kobe Plot
-Scenarios<-c(17,18,19,20)
+Scenarios<-c(5,6,7,8)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
