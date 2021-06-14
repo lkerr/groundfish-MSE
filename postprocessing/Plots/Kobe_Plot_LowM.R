@@ -1,5 +1,5 @@
 #Kobe Plot
-Scenarios<-c(5,6,7,8)
+Scenarios<-c(17,18,19,20)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
@@ -24,9 +24,9 @@ setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[1],"/s
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Freal[,k]<-omvalGlobal[[1]]$F_full[169:190]
+  Freal[,k]<-omvalGlobal[[1]]$F_full[168:189]
   Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
-  SSBreal[,k]<-omvalGlobal[[1]]$SSB[169:190]
+  SSBreal[,k]<-omvalGlobal[[1]]$SSB[168:189]
   SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
 }
 
@@ -61,9 +61,9 @@ setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[2],"/s
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Freal[,k]<-omvalGlobal[[1]]$F_full[169:190]
+  Freal[,k]<-omvalGlobal[[1]]$F_full[168:189]
   Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
-  SSBreal[,k]<-omvalGlobal[[1]]$SSB[169:190]
+  SSBreal[,k]<-omvalGlobal[[1]]$SSB[168:189]
   SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
 }
 
@@ -99,9 +99,9 @@ setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[3],"/s
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Freal[,k]<-omvalGlobal[[1]]$F_full[169:190]
+  Freal[,k]<-omvalGlobal[[1]]$F_full[168:189]
   Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
-  SSBreal[,k]<-omvalGlobal[[1]]$SSB[169:190]
+  SSBreal[,k]<-omvalGlobal[[1]]$SSB[168:189]
   SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
 }
 
@@ -137,9 +137,9 @@ setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[4],"/s
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Freal[,k]<-omvalGlobal[[1]]$F_full[169:190]
+  Freal[,k]<-omvalGlobal[[1]]$F_full[168:189]
   Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
-  SSBreal[,k]<-omvalGlobal[[1]]$SSB[169:190]
+  SSBreal[,k]<-omvalGlobal[[1]]$SSB[168:189]
   SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
 }
 
@@ -157,8 +157,8 @@ df<-full_join(df,Dftrue2)
 
 ####Kobe Plot####
 library(ggplot2)
-maxSSBest<-max(1.1,max(SSBratioreal))
-maxF<-max(1.1,max(Fratioreal))
+maxSSBest<-max(1.1,max(df$SSBratioreal))
+maxF<-max(1.1,max(df$Fratioreal))
 df$HCR<-df$Scenario
 df$HCR[df$HCR==Scenarios[1]]<-'Ramp'
 df$HCR[df$HCR==Scenarios[2]]<-'P*'
