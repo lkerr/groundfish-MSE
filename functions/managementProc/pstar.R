@@ -4,7 +4,6 @@ pstar<-function(maxp,relB,parmgtproj,parpopproj,parenv,Rfun,stockEnv,FrefRPvalue
   # Mid Atlantic used a ramped control rule to have the target P* change
   # with biomass relative to SSBmsy
   # maxp is the max P* target above SSBmsy (MAFMC used 0.4 previouly)
-
   calc_pstar = function(maxp, relB)#function to calculate P* based on SSB/SSBmsy
   {
     if(relB>=1) #at asymptote
@@ -36,6 +35,7 @@ pstar<-function(maxp,relB,parmgtproj,parpopproj,parenv,Rfun,stockEnv,FrefRPvalue
                            stReportYr = 2,
                            stockEnv = stockEnv)$sumCW
   }
+browser()
   OFL<-median(catchproj[,1])
   
   P<-calc_pstar(maxp,relB)#calculate P* 
@@ -54,7 +54,6 @@ pstar<-function(maxp,relB,parmgtproj,parpopproj,parenv,Rfun,stockEnv,FrefRPvalue
   catch<-calc_ABC(OFL,P,CV)
   
   #Estimate F based on the catch 
-  F <- get_estF(catchproj=catch,parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv)
-  return(F)
+  return(catch)
   
   }

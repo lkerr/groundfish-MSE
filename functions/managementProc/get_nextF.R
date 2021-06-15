@@ -164,21 +164,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
         if(any(stockEnv$OFdStatus==1,na.rm=T)& tail(parpop$SSBhat,1)<BrefRPvalue){F<-FrefRPvalue*0.7}
         else{F<-FThresh}}
     }
-    else if(tolower(parmgt$HCR) == 'pstar'){
-      parmgtproj<-parmgt
-      parmgtproj$RFUN_NM<-"forecast"
-      parpopproj<-parpop
-      parpopproj$R<-stockEnv$res$N.age[,1]
-      parpopproj$J1N<-tail(stockEnv$res$N.age,1)
-      parpopproj$catch<-stockEnv$res$catch.obs
-      Rfun<-Rfun_BmsySim$forecast
-      F<-pstar(maxp=0.4,relB=tail(parpop$SSBhat,1)/BThresh,parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv,FrefRPvalue=FrefRPvalue)
-    }
-    else{
-      
-      stop('get_nextF: type not recognized')
-      
-    }
     
     if(tolower(parmgt$projections) == 'true'){
       if ((y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) == 0){
@@ -190,6 +175,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parpopproj$R<-stockEnv$res$N.age[,1]
       parpopproj$J1N<-tail(stockEnv$res$N.age,1)
       parpopproj$catch<-stockEnv$res$catch.obs
+      if(tolower(parmgt$HCR) == 'pstar'){F<-FrefRPvalue}
       for (i in 1:100){
           catchproj[i,]<-get_proj(type = 'current',
                                   parmgt = parmgtproj, 
@@ -200,7 +186,39 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   ny = 200,
                                   stReportYr = 2,
                                   stockEnv = stockEnv)$sumCW}
-      catchproj<-c(median(catchproj[,1]),median(catchproj[,1]))
+      catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
+      if(tolower(parmgt$HCR) == 'pstar'){
+        calc_pstar = function(maxp, relB)#function to calculate P* based on SSB/SSBmsy
+        {
+          if(relB>=1) #at asymptote
+          {
+            P = maxp
+          }
+          else if(relB<=0.1)
+          {
+            P = 0.0
+          }
+          else
+          {
+            slope <- (maxp)/(1-0.1)
+            inter <- maxp-slope
+            P = inter+slope*relB
+          }
+          return(P)
+        }
+        P<-calc_pstar(0.4,tail(parpop$SSBhat,1)/BThresh)
+        CV<-1
+        calc_ABC <- function(OFL, P, CV)
+        {
+          # OFL is the median catch by fishing at Flim for the current population
+          #Convert CV to sigma for lognormal dist
+          sd <- sqrt(log(CV*CV+1))
+          #Calculate ABC using inverse of the lognormal dist
+          return(qlnorm(P, meanlog = log(OFL), sdlog = sd))
+        }
+        catchproj[1]<-calc_ABC(catchproj[1],P,CV)
+        catchproj[2]<-calc_ABC(catchproj[2],P,CV)
+      }
       if(tolower(parmgt$mincatch) == 'true'){
       if (stockEnv$stockName=='codGOM'){
         bycatch<-read.csv(paste('./data/data_raw/AssessmentHistory/codGOM_Discard.csv',sep=''))
