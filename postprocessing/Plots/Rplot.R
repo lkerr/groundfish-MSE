@@ -1,8 +1,6 @@
-#####R Trajectory Plots####
-#####R Trajectory Plots####
-Scenarios<-c(5,6,7,8)
+Scenarios<-c(25,26,27,28)
 RhoAdj<-FALSE
-Stock<-'codGOM'
+Stock<-'haddockGB'
 ####First Sims####
 library(matrixStats)
 library(dplyr)
@@ -27,7 +25,7 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2038
+Year<-1986:2037
 df<-as.data.frame(cbind(Catchsim,Year))
 df$HCR<-Scenarios[1]
 
@@ -35,17 +33,17 @@ if (RhoAdj==TRUE){
   Mohn<-rep(NA,length(sims))
   for (k in 1:length(sims)){
     load(sims[k])
-    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_R[190]
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F[190]
   }
   Mohn<-mean(Mohn,na.rm=T)
 }
 
 ####First Assessment####
-Rest<-matrix(NA,nrow=54,ncol=length(sims))
+Rest<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Rest[,k]<-omvalGlobal[[1]]$Rest[190,]
+  Rest[,k]<-omvalGlobal[[1]]$Rest[190,1:52]
 }
 
 Rest<-rowMedians(Rest,na.rm=T)
@@ -76,7 +74,7 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2038
+Year<-1986:2037
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[2]
 
@@ -84,17 +82,17 @@ if (RhoAdj==TRUE){
   Mohn<-rep(NA,length(sims))
   for (k in 1:length(sims)){
     load(sims[k])
-    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_R[190]
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F[190]
   }
   Mohn<-mean(Mohn,na.rm=T)
 }
 
 ####Second Assessment####
-Rest<-matrix(NA,nrow=54,ncol=length(sims))
+Rest<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Rest[,k]<-omvalGlobal[[1]]$Rest[190,]
+  Rest[,k]<-omvalGlobal[[1]]$Rest[190,1:52]
 }
 
 Rest<-rowMedians(Rest,na.rm=T)
@@ -126,7 +124,7 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2038
+Year<-1986:2037
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[3]
 
@@ -134,17 +132,17 @@ if (RhoAdj==TRUE){
   Mohn<-rep(NA,length(sims))
   for (k in 1:length(sims)){
     load(sims[k])
-    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_R[190]
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F[190]
   }
   Mohn<-mean(Mohn,na.rm=T)
 }
 
 ####Third Assessment####
-Rest<-matrix(NA,nrow=54,ncol=length(sims))
+Rest<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Rest[,k]<-omvalGlobal[[1]]$Rest[190,]
+  Rest[,k]<-omvalGlobal[[1]]$Rest[190,1:52]
 }
 
 Rest<-rowMedians(Rest,na.rm=T)
@@ -176,7 +174,7 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2038
+Year<-1986:2037
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[4]
 
@@ -184,17 +182,17 @@ if (RhoAdj==TRUE){
   Mohn<-rep(NA,length(sims))
   for (k in 1:length(sims)){
     load(sims[k])
-    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_R[190]
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F[190]
   }
   Mohn<-mean(Mohn,na.rm=T)
 }
 
 ####Fourth Assessment####
-Rest<-matrix(NA,nrow=54,ncol=length(sims))
+Rest<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Rest[,k]<-omvalGlobal[[1]]$Rest[190,]
+  Rest[,k]<-omvalGlobal[[1]]$Rest[190,1:52]
 }
 
 Rest<-rowMedians(Rest,na.rm=T)
@@ -219,3 +217,8 @@ ggplot(df)+geom_line(aes(x=Year,y=Rest,color=HCR))+geom_point(aes(x=Year,y=Catch
   theme_classic()+theme(text=element_text(size=18),legend.position='right')+
   ylab('Recruitment')+geom_vline(xintercept=2019, linetype='dotted')+
   scale_color_colorblind()
+
+
+
+
+

@@ -1,7 +1,6 @@
-#####SSB Trajectory Plots####
-Scenarios<-c(5,6,7,8)
+Scenarios<-c(25,26,27,28)
 RhoAdj<-FALSE
-Stock<-'codGOM'
+Stock<-'haddockGB'
 ####First Sims####
 library(matrixStats)
 library(dplyr)
@@ -26,7 +25,7 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1988:2039
+Year<-1986:2037
 df<-as.data.frame(cbind(Catchsim,Year))
 df$HCR<-Scenarios[1]
 
@@ -34,27 +33,27 @@ if (RhoAdj==TRUE){
   Mohn<-rep(NA,length(sims))
   for (k in 1:length(sims)){
     load(sims[k])
-    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_SSB[190]
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F[190]
   }
   Mohn<-mean(Mohn,na.rm=T)
 }
 
 ####First Assessment####
-Catchest<-matrix(NA,nrow=54,ncol=length(sims))
+SSBest<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchest[,k]<-omvalGlobal[[1]]$SSBest[190,]
+  SSBest[,k]<-omvalGlobal[[1]]$SSBest[190,1:52]
 }
 
-Catchest<-rowMedians(Catchest,na.rm=T)
-Catchest<-na.omit(Catchest)
+SSBest<-rowMedians(SSBest,na.rm=T)
+SSBest<-na.omit(SSBest)
 
 if (RhoAdj==TRUE){
-  Catchest[length(Catchest)]<-Catchest[length(Catchest)]/(Mohn+1)
+  SSBest[length(SSBest)]<-SSBest[length(SSBest)]/(Mohn+1)
 }
 
-df$Catchest<-Catchest
+df$SSBest<-SSBest
 
 ####Second Sims####
 setwd(paste(wd,"/Sim_",Scenarios[2],"/sim",sep=""))
@@ -75,7 +74,7 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1988:2039
+Year<-1986:2037
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[2]
 
@@ -83,26 +82,26 @@ if (RhoAdj==TRUE){
   Mohn<-rep(NA,length(sims))
   for (k in 1:length(sims)){
     load(sims[k])
-    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_SSB[190]
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F[190]
   }
   Mohn<-mean(Mohn,na.rm=T)
 }
 
 ####Second Assessment####
-Catchest<-matrix(NA,nrow=54,ncol=length(sims))
+SSBest<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchest[,k]<-omvalGlobal[[1]]$SSBest[190,]
+  SSBest[,k]<-omvalGlobal[[1]]$SSBest[190,1:52]
 }
 
-Catchest<-rowMedians(Catchest,na.rm=T)
-Catchest<-na.omit(Catchest)
+SSBest<-rowMedians(SSBest,na.rm=T)
+SSBest<-na.omit(SSBest)
 
 if (RhoAdj==TRUE){
-  Catchest[length(Catchest)]<-Catchest[length(Catchest)]/(Mohn+1)
+  SSBest[length(SSBest)]<-SSBest[length(SSBest)]/(Mohn+1)
 }
-df2$Catchest<-Catchest
+df2$SSBest<-SSBest
 
 df<-full_join(df,df2)
 
@@ -125,7 +124,7 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1988:2039
+Year<-1986:2037
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[3]
 
@@ -133,26 +132,26 @@ if (RhoAdj==TRUE){
   Mohn<-rep(NA,length(sims))
   for (k in 1:length(sims)){
     load(sims[k])
-    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_SSB[190]
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F[190]
   }
   Mohn<-mean(Mohn,na.rm=T)
 }
 
 ####Third Assessment####
-Catchest<-matrix(NA,nrow=54,ncol=length(sims))
+SSBest<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchest[,k]<-omvalGlobal[[1]]$SSBest[190,]
+  SSBest[,k]<-omvalGlobal[[1]]$SSBest[190,1:52]
 }
 
-Catchest<-rowMedians(Catchest,na.rm=T)
-Catchest<-na.omit(Catchest)
+SSBest<-rowMedians(SSBest,na.rm=T)
+SSBest<-na.omit(SSBest)
 
 if (RhoAdj==TRUE){
-  Catchest[length(Catchest)]<-Catchest[length(Catchest)]/(Mohn+1)
+  SSBest[length(SSBest)]<-SSBest[length(SSBest)]/(Mohn+1)
 }
-df2$Catchest<-Catchest
+df2$SSBest<-SSBest
 
 df<-full_join(df,df2)
 
@@ -175,7 +174,7 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1988:2039
+Year<-1986:2037
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[4]
 
@@ -183,26 +182,26 @@ if (RhoAdj==TRUE){
   Mohn<-rep(NA,length(sims))
   for (k in 1:length(sims)){
     load(sims[k])
-    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_SSB[190]
+    Mohn[k]<-omvalGlobal[[1]]$Mohns_Rho_F[190]
   }
   Mohn<-mean(Mohn,na.rm=T)
 }
 
 ####Fourth Assessment####
-Catchest<-matrix(NA,nrow=54,ncol=length(sims))
+SSBest<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchest[,k]<-omvalGlobal[[1]]$SSBest[190,]
+  SSBest[,k]<-omvalGlobal[[1]]$SSBest[190,1:52]
 }
 
-Catchest<-rowMedians(Catchest,na.rm=T)
-Catchest<-na.omit(Catchest)
+SSBest<-rowMedians(SSBest,na.rm=T)
+SSBest<-na.omit(SSBest)
 
 if (RhoAdj==TRUE){
-  Catchest[length(Catchest)]<-Catchest[length(Catchest)]/(Mohn+1)
+  SSBest[length(SSBest)]<-SSBest[length(SSBest)]/(Mohn+1)
 }
-df2$Catchest<-Catchest
+df2$SSBest<-SSBest
 
 df<-full_join(df,df2)
 
@@ -214,9 +213,11 @@ df$HCR<-as.factor(df$HCR)
 df$HCR<-ordered(df$HCR,levels=c('Ramp','P*','F-step','Constrained ramp'))
 
 df<-df[df$Year>1989,]
-ggplot(df)+geom_line(aes(x=Year,y=Catchest,color=HCR))+geom_point(aes(x=Year,y=Catchsim,color=HCR))+
+ggplot(df)+geom_line(aes(x=Year,y=SSBest,color=HCR))+geom_point(aes(x=Year,y=Catchsim,color=HCR))+
   theme_classic()+theme(text=element_text(size=18),legend.position='right')+
   ylab('SSB (mt)')+geom_vline(xintercept=2019, linetype='dotted')+
   scale_color_colorblind()
+
+
 
 

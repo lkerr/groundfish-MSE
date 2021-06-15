@@ -1,7 +1,7 @@
 #####F_full Trajectory Plots####
-Scenarios<-c(9,10,11,12)
+Scenarios<-c(25,26,27,28)
 RhoAdj<-FALSE
-Stock<-'codGOM'
+Stock<-'haddockGB'
 ####First Sims####
 library(matrixStats)
 library(dplyr)
@@ -26,7 +26,7 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2038
+Year<-1986:2037
 df<-as.data.frame(cbind(Catchsim,Year))
 df$HCR<-Scenarios[1]
 
@@ -40,11 +40,11 @@ if (RhoAdj==TRUE){
 }
 
 ####First Assessment####
-Fest<-matrix(NA,nrow=54,ncol=length(sims))
+Fest<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Fest[,k]<-omvalGlobal[[1]]$Fest[190,]
+  Fest[,k]<-omvalGlobal[[1]]$Fest[190,1:52]
 }
 
 Fest<-rowMedians(Fest,na.rm=T)
@@ -75,7 +75,7 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2038
+Year<-1986:2037
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[2]
 
@@ -89,11 +89,11 @@ if (RhoAdj==TRUE){
 }
 
 ####Second Assessment####
-Fest<-matrix(NA,nrow=54,ncol=length(sims))
+Fest<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Fest[,k]<-omvalGlobal[[1]]$Fest[190,]
+  Fest[,k]<-omvalGlobal[[1]]$Fest[190,1:52]
 }
 
 Fest<-rowMedians(Fest,na.rm=T)
@@ -125,7 +125,7 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2038
+Year<-1986:2037
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[3]
 
@@ -139,11 +139,11 @@ if (RhoAdj==TRUE){
 }
 
 ####Third Assessment####
-Fest<-matrix(NA,nrow=54,ncol=length(sims))
+Fest<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Fest[,k]<-omvalGlobal[[1]]$Fest[190,]
+  Fest[,k]<-omvalGlobal[[1]]$Fest[190,1:52]
 }
 
 Fest<-rowMedians(Fest,na.rm=T)
@@ -175,7 +175,7 @@ for (k in 1:length(sims)){
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2038
+Year<-1986:2037
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[4]
 
@@ -189,11 +189,11 @@ if (RhoAdj==TRUE){
 }
 
 ####Fourth Assessment####
-Fest<-matrix(NA,nrow=54,ncol=length(sims))
+Fest<-matrix(NA,nrow=52,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Fest[,k]<-omvalGlobal[[1]]$Fest[190,]
+  Fest[,k]<-omvalGlobal[[1]]$Fest[190,1:52]
 }
 
 Fest<-rowMedians(Fest,na.rm=T)
