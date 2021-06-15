@@ -1,7 +1,7 @@
 library('fmsb')
 library(matrixStats)
 library(dplyr)
-Scenarios<-c(5,6,7,8)
+Scenarios<-c(25,26,27,28)
 #Load data and change to numeric
 wd<-getwd()
 #wd<-setwd("C:/Users/jjesse/Box/HCR_Sims")
@@ -42,12 +42,12 @@ for (i in 1:length(Catch[1,])){
 }
 Catchstab<-1/median(Catchstab,na.rm=T)
 Fprop<-F_mort/Fproxy
-Fprop<-rowMeans(Fprop[1:5,])
+Fprop<-rowMedians(Fprop[1:5,])
 Fprop[Fprop<1]<-1
 Fprop[Fprop>1]<-0
 Ffreq<-mean(Fprop)
 Bprop<-SSB/(SSBproxy*0.5)
-Bprop<-rowMeans(Bprop[1:5,])
+Bprop<-rowMedians(Bprop[1:5,])
 Bprop[Bprop<1]<-0
 Bprop[Bprop>1]<-1
 Bfreq<-mean(Bprop)
@@ -93,12 +93,12 @@ for (i in 1:length(Catch[1,])){
 }
 Catchstab<-1/median(Catchstab,na.rm=T)
 Fprop<-F_mort/Fproxy
-Fprop<-rowMeans(Fprop[1:5,])
+Fprop<-rowMedians(Fprop[1:5,])
 Fprop[Fprop<1]<-1
 Fprop[Fprop>1]<-0
 Ffreq<-mean(Fprop)
 Bprop<-SSB/(SSBproxy*0.5)
-Bprop<-rowMeans(Bprop[1:5,])
+Bprop<-rowMedians(Bprop[1:5,])
 Bprop[Bprop<1]<-0
 Bprop[Bprop>1]<-1
 Bfreq<-mean(Bprop)
@@ -146,12 +146,12 @@ for (i in 1:length(Catch[1,])){
 }
 Catchstab<-1/median(Catchstab,na.rm=T)
 Fprop<-F_mort/Fproxy
-Fprop<-rowMeans(Fprop[1:5,])
+Fprop<-rowMedians(Fprop[1:5,])
 Fprop[Fprop<1]<-1
 Fprop[Fprop>1]<-0
 Ffreq<-mean(Fprop)
 Bprop<-SSB/(SSBproxy*0.5)
-Bprop<-rowMeans(Bprop[1:5,])
+Bprop<-rowMedians(Bprop[1:5,])
 Bprop[Bprop<1]<-0
 Bprop[Bprop>1]<-1
 Bfreq<-mean(Bprop)
@@ -199,12 +199,12 @@ for (i in 1:length(Catch[1,])){
 }
 Catchstab<-1/median(Catchstab,na.rm=T)
 Fprop<-F_mort/Fproxy
-Fprop<-rowMeans(Fprop[1:5,],na.rm=T)
+Fprop<-rowMedians(Fprop[1:5,],na.rm=T)
 Fprop[Fprop<1]<-1
 Fprop[Fprop>1]<-0
 Ffreq<-mean(Fprop)
 Bprop<-SSB/(SSBproxy*0.5)
-Bprop<-rowMeans(Bprop[1:5,],na.rm=T)
+Bprop<-rowMedians(Bprop[1:5,],na.rm=T)
 Bprop[Bprop<1]<-0
 Bprop[Bprop>1]<-1
 Bfreq<-mean(Bprop)
@@ -252,12 +252,12 @@ if (length(Scenarios)>4){
   }
   Catchstab<-1/median(Catchstab,na.rm=T)
   Fprop<-F_mort/Fproxy
-  Fprop<-rowMeans(Fprop[1:5,])
+  Fprop<-rowMedians(Fprop[1:5,])
   Fprop[Fprop<1]<-1
   Fprop[Fprop>1]<-0
   Ffreq<-mean(Fprop)
   Bprop<-SSB/(SSBproxy*0.5)
-  Bprop<-rowMeans(Bprop[1:5,])
+  Bprop<-rowMedians(Bprop[1:5,])
   Bprop[Bprop<1]<-0
   Bprop[Bprop>1]<-1
   Bfreq<-mean(Bprop)
@@ -305,12 +305,12 @@ if (length(Scenarios)>4){
   }
   Catchstab<-1/median(Catchstab)
   Fprop<-F_mort/Fproxy
-  Fprop<-rowMeans(Fprop[1:5,])
+  Fprop<-rowMedians(Fprop[1:5,])
   Fprop[Fprop<1]<-1
   Fprop[Fprop>1]<-0
   Ffreq<-mean(Fprop)
   Bprop<-SSB/(SSBproxy*0.5)
-  Bprop<-rowMeans(Bprop[1:5,])
+  Bprop<-rowMedians(Bprop[1:5,])
   Bprop[Bprop<1]<-0
   Bprop[Bprop>1]<-1
   Bfreq<-mean(Bprop)
@@ -357,12 +357,12 @@ if (length(Scenarios)>4){
   }
   Catchstab<-1/median(Catchstab)
   Fprop<-F_mort/Fproxy
-  Fprop<-rowMeans(Fprop[1:5,])
+  Fprop<-rowMedians(Fprop[1:5,])
   Fprop[Fprop<1]<-1
   Fprop[Fprop>1]<-0
   Ffreq<-mean(Fprop)
   Bprop<-SSB/(SSBproxy*0.5)
-  Bprop<-rowMeans(Bprop[1:5,])
+  Bprop<-rowMedians(Bprop[1:5,])
   Bprop[Bprop<1]<-0
   Bprop[Bprop>1]<-1
   Bfreq<-mean(Bprop)
@@ -410,12 +410,12 @@ if (length(Scenarios)>4){
   }
   Catchstab<-1/median(Catchstab)
   Fprop<-F_mort/Fproxy
-  Fprop<-rowMeans(Fprop[1:5,])
+  Fprop<-rowMedians(Fprop[1:5,])
   Fprop[Fprop<1]<-1
   Fprop[Fprop>1]<-0
   Ffreq<-mean(Fprop)
   Bprop<-SSB/(SSBproxy*0.5)
-  Bprop<-rowMeans(Bprop[1:5,])
+  Bprop<-rowMedians(Bprop[1:5,])
   Bprop[Bprop<1]<-0
   Bprop[Bprop>1]<-1
   Bfreq<-mean(Bprop)
