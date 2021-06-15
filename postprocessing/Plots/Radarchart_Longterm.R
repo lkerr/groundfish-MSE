@@ -435,8 +435,6 @@ d$Bfreq<-as.numeric(d$Bfreq)
 d$ShorttermSSB<-d$ShorttermSSB/max(d$ShorttermSSB)
 d$ShorttermCatch<-d$ShorttermCatch/max(d$ShorttermCatch)
 d$Catchstab<-d$Catchstab/max(d$Catchstab)
-d$Ffreq<-d$Ffreq/max(d$Ffreq +0.001)
-d$Bfreq<-d$Bfreq/max(d$Bfreq +0.001)
 maxs<-rep(1,6)
 mins<-rep(0,6)
 #Add maximum and minimum values to dataframe
