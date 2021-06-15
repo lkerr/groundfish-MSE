@@ -24,9 +24,9 @@ setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[1],"/s
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Freal[,k]<-omvalGlobal[[1]]$F_full[168:189]
+  Freal[,k]<-omvalGlobal[[1]]$F_full[169:190]
   Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
-  SSBreal[,k]<-omvalGlobal[[1]]$SSB[168:189]
+  SSBreal[,k]<-omvalGlobal[[1]]$SSB[169:190]
   SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
 }
 
@@ -61,9 +61,9 @@ setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[2],"/s
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Freal[,k]<-omvalGlobal[[1]]$F_full[168:189]
+  Freal[,k]<-omvalGlobal[[1]]$F_full[169:190]
   Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
-  SSBreal[,k]<-omvalGlobal[[1]]$SSB[168:189]
+  SSBreal[,k]<-omvalGlobal[[1]]$SSB[169:190]
   SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
 }
 
@@ -99,9 +99,9 @@ setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[3],"/s
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Freal[,k]<-omvalGlobal[[1]]$F_full[168:189]
+  Freal[,k]<-omvalGlobal[[1]]$F_full[169:190]
   Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
-  SSBreal[,k]<-omvalGlobal[[1]]$SSB[168:189]
+  SSBreal[,k]<-omvalGlobal[[1]]$SSB[169:190]
   SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
 }
 
@@ -137,9 +137,9 @@ setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[4],"/s
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Freal[,k]<-omvalGlobal[[1]]$F_full[168:189]
+  Freal[,k]<-omvalGlobal[[1]]$F_full[169:190]
   Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
-  SSBreal[,k]<-omvalGlobal[[1]]$SSB[168:189]
+  SSBreal[,k]<-omvalGlobal[[1]]$SSB[169:190]
   SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
 }
 
