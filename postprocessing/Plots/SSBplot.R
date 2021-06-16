@@ -1,6 +1,6 @@
-Scenarios<-c(25,26,27,28)
-RhoAdj<-FALSE
-Stock<-'haddockGB'
+Scenarios<-c(1,2,3,4)
+RhoAdj<-TRUE
+Stock<-'codGOM'
 ####First Sims####
 library(matrixStats)
 library(dplyr)
@@ -212,7 +212,7 @@ df$HCR[df$HCR==Scenarios[4]]<-'Constrained ramp'
 df$HCR<-as.factor(df$HCR)
 df$HCR<-ordered(df$HCR,levels=c('Ramp','P*','F-step','Constrained ramp'))
 
-df<-df[df$Year>1989,]
+df<-df[df$Year>1987,]
 ggplot(df)+geom_line(aes(x=Year,y=SSBest,color=HCR))+geom_point(aes(x=Year,y=Catchsim,color=HCR))+
   theme_classic()+theme(text=element_text(size=18),legend.position='right')+
   ylab('SSB (mt)')+geom_vline(xintercept=2019, linetype='dotted')+
