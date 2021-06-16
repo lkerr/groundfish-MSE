@@ -1,5 +1,5 @@
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(40,41,42,43)
+Scenarios<-c(29,30,31,32)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
@@ -209,5 +209,5 @@ ggplot(Df)+
   xlab('Time')+
   theme(text=element_text(size=18),legend.position='right')+
   scale_fill_colorblind()+
-  scale_y_continuous(breaks = pretty(c(0,4000), n=5),limits = c(0,4000))
+  scale_y_continuous(breaks = pretty(c(0,450), n=5),limits = c(0,450))
 

@@ -1,5 +1,5 @@
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(9,10,11,12)
+Scenarios<-c(29,30,31,32)
 ####Set up files####
 library(matrixStats)
 library(dplyr)

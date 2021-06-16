@@ -25,7 +25,6 @@ get_advice <- function(stock){
     else{
       get_ASAP(stock = tempStock)}
   }
-  
   # was the assessment successful?
   tempStock <- within(tempStock, {
     conv_rate[y] <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' && 

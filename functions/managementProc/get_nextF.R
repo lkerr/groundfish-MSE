@@ -186,7 +186,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   ny = 200,
                                   stReportYr = 2,
                                   stockEnv = stockEnv)$sumCW}
-      catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
+      catchproj<-c(median(catchproj[,1]),median(catchproj[,1]))
       if(tolower(parmgt$HCR) == 'pstar'){
         calc_pstar = function(maxp, relB)#function to calculate P* based on SSB/SSBmsy
         {
