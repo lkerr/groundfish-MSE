@@ -1,5 +1,5 @@
-Scenarios<-c(1,2,3,4)
-RhoAdj<-TRUE
+Scenarios<-c(13,14,15,16)
+RhoAdj<-FALSE
 Stock<-'codGOM'
 ####First Sims####
 library(matrixStats)

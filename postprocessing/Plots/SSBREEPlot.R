@@ -1,6 +1,6 @@
 #####SSB REE Plot####
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(5,6,7,8)
+Scenarios<-c(21,22,23,24)
 ####First Sims####
 library(matrixStats)
 library(dplyr)
@@ -16,21 +16,21 @@ for (k in 1:length(sims)){
 }
 sims<-na.omit(sims)
 
-Catchsim<-matrix(NA,nrow=11,ncol=length(sims))
+Catchsim<-matrix(NA,nrow=21,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  SSBtrue<-omvalGlobal[[1]]$SSB[168:188]
-  for (i in seq(170,190,2)){
+  SSBtrue<-omvalGlobal[[1]]$SSB[169:190]
+  for (i in seq(170,190,1)){
     SSBest<-omvalGlobal[[1]]$SSBest[i,]
     SSBest<-na.omit(SSBest)
     SSBest<-tail(SSBest,1)
-    Catchsim[((i-168)/2),k]<-((SSBest-SSBtrue[i-169])/SSBtrue[i-169])*100
+    Catchsim[(i-169),k]<-((SSBest-SSBtrue[i-169])/SSBtrue[i-169])*100
   }
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-seq(2019,2039,2)
+Year<-seq(2019,2039,1)
 df<-as.data.frame(cbind(Catchsim,Year))
 df$HCR<-Scenarios[1]
 
@@ -45,21 +45,21 @@ for (k in 1:length(sims)){
 }
 sims<-na.omit(sims)
 
-Catchsim<-matrix(NA,nrow=11,ncol=length(sims))
+Catchsim<-matrix(NA,nrow=21,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  SSBtrue<-omvalGlobal[[1]]$SSB[168:188]
-  for (i in seq(170,190,2)){
+  SSBtrue<-omvalGlobal[[1]]$SSB[169:190]
+  for (i in seq(170,190,1)){
     SSBest<-omvalGlobal[[1]]$SSBest[i,]
     SSBest<-na.omit(SSBest)
     SSBest<-tail(SSBest,1)
-    Catchsim[((i-168)/2),k]<-((SSBest-SSBtrue[i-169])/SSBtrue[i-169])*100
+    Catchsim[(i-169),k]<-((SSBest-SSBtrue[i-169])/SSBtrue[i-169])*100
   }
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-seq(2019,2039,2)
+Year<-seq(2019,2039,1)
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[2]
 
@@ -76,21 +76,21 @@ for (k in 1:length(sims)){
 }
 sims<-na.omit(sims)
 
-Catchsim<-matrix(NA,nrow=11,ncol=length(sims))
+Catchsim<-matrix(NA,nrow=21,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  SSBtrue<-omvalGlobal[[1]]$SSB[168:188]
-  for (i in seq(170,190,2)){
+  SSBtrue<-omvalGlobal[[1]]$SSB[169:190]
+  for (i in seq(170,190,1)){
     SSBest<-omvalGlobal[[1]]$SSBest[i,]
     SSBest<-na.omit(SSBest)
     SSBest<-tail(SSBest,1)
-    Catchsim[((i-168)/2),k]<-((SSBest-SSBtrue[i-169])/SSBtrue[i-169])*100
+    Catchsim[(i-169),k]<-((SSBest-SSBtrue[i-169])/SSBtrue[i-169])*100
   }
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-seq(2019,2039,2)
+Year<-seq(2019,2039,1)
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[3]
 
@@ -106,21 +106,21 @@ for (k in 1:length(sims)){
 }
 sims<-na.omit(sims)
 
-Catchsim<-matrix(NA,nrow=11,ncol=length(sims))
+Catchsim<-matrix(NA,nrow=21,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  SSBtrue<-omvalGlobal[[1]]$SSB[168:188]
-  for (i in seq(170,190,2)){
+  SSBtrue<-omvalGlobal[[1]]$SSB[169:190]
+  for (i in seq(170,190,1)){
     SSBest<-omvalGlobal[[1]]$SSBest[i,]
     SSBest<-na.omit(SSBest)
     SSBest<-tail(SSBest,1)
-    Catchsim[((i-168)/2),k]<-((SSBest-SSBtrue[i-169])/SSBtrue[i-169])*100
+    Catchsim[(i-169),k]<-((SSBest-SSBtrue[i-169])/SSBtrue[i-169])*100
   }
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-seq(2019,2039,2)
+Year<-seq(2019,2039,1)
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[4]
 
@@ -135,6 +135,6 @@ df$HCR<-ordered(df$HCR,levels=c('Ramp','P*','F-step','Constrained ramp'))
 
 ggplot(df)+geom_line(aes(x=Year,y=Catchsim,color=HCR),size=1)+
   theme_classic()+theme(text=element_text(size=18),legend.position='right')+
-  ylab('%REE SSB')+ ylim(min(-15,min(df$Catchsim)),max(15,max(df$Catchsim)))+
+  ylab('%REE F')+ ylim(min(-15,min(df$Catchsim)),max(15,max(df$Catchsim)))+
   scale_color_colorblind()+
   scale_x_continuous(limits = c(2019,2040))

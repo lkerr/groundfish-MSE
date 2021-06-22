@@ -74,7 +74,6 @@ get_J1Updates <- function(stock){
     # calculate SSB for the current year AEW
 
     SSB_cur[y] <- sum(J1N[y,] * mat[y,] * waa[y,])
-
   })
 
   return(out)

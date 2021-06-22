@@ -1,4 +1,4 @@
-Scenarios<-c(1,2,3,4)
+Scenarios<-c(9,10,11,12)
 RhoAdj<-FALSE
 Stock<-'codGOM'
 ####First Sims####

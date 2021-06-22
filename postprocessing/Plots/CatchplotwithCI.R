@@ -1,5 +1,5 @@
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(17,18,19,20)
+Scenarios<-c(40,41,42,43)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
@@ -151,4 +151,4 @@ ggplot(Df, aes(x=Year, y=median,color=HCR)) +
   theme(text=element_text(size=18),legend.position='right')+
   ylab('Catch (mt)')+
   scale_color_colorblind()+scale_fill_colorblind()+
-  scale_y_continuous(breaks = seq(0,1800,400),limits = c(0,1800))
+  scale_y_continuous(breaks = seq(0,2500,500),limits = c(0,2500))

@@ -186,7 +186,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   ny = 200,
                                   stReportYr = 2,
                                   stockEnv = stockEnv)$sumCW}
-      catchproj<-c(median(catchproj[,1]),median(catchproj[,1]))
+      catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
       if(tolower(parmgt$HCR) == 'pstar'){
         calc_pstar = function(maxp, relB)#function to calculate P* based on SSB/SSBmsy
         {
@@ -261,7 +261,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                     ny = 200,
                                     stReportYr = 2,
                                     stockEnv = stockEnv)$sumCW}
-        catchproj<-c(median(catchproj[,1]),median(catchproj[,1]))
+        catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
         if(tolower(mproc$varlimit) == 'true'){
           if(((catchproj[2]-catchproj[1])/catchproj[2])*100>20){
             catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
@@ -287,7 +287,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     if(tolower(parmgt$projections) == 'false'){catchproj<-NA}
   
     if (F>2){F<-2}#Not letting actual F go over 2
-    
     out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue,FrefTRPvalue, BrefTRPvalue,FrefTRPvalue2, BrefTRPvalue2), 
                 ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
                 OFgStatus = overfishing, catchproj=catchproj) #AEW

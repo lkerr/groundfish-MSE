@@ -26,8 +26,8 @@ for (k in 1:length(sims)){
   SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
   Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
   F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
+  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
 }
 
 SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
@@ -78,8 +78,8 @@ for (k in 1:length(sims)){
   SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
   Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
   F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
+  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
 }
 
 SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
@@ -133,8 +133,8 @@ for (k in 1:length(sims)){
   SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
   Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
   F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
+  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
 }
 
 SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
@@ -187,8 +187,8 @@ for (k in 1:length(sims)){
   SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
   Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
   F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
+  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
 }
 
 SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
@@ -247,8 +247,8 @@ for (m in 1:((length(Scenarios)/4)-1)){
     SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
     Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
     F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
+    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
   }
   
   SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
@@ -299,8 +299,8 @@ for (m in 1:((length(Scenarios)/4)-1)){
     SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
     Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
     F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
+    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
   }
   
   SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
@@ -354,8 +354,8 @@ for (m in 1:((length(Scenarios)/4)-1)){
     SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
     Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
     F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
+    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
   }
   
   SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
@@ -409,8 +409,8 @@ for (m in 1:((length(Scenarios)/4)-1)){
     SSB[,k]<-omvalGlobal[[1]]$SSB[169:190]
     Catch[,k]<-omvalGlobal[[1]]$sumCW[168:189]
     F_mort[,k]<-omvalGlobal[[1]]$F_full[169:190]
-    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
+    Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT2[169:190]
+    SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT2[169:190]
   }
   
   SSBFinal<-rowMedians(SSB[11:21,],na.rm=T)
@@ -466,7 +466,7 @@ df$Scenario[df$Scenario==6]<-'e'
 df$Scenario<-ordered(df$Scenario,levels=c('a','b','c','d','e'))
 
 df$V2[df$V2>0.5]<-0.5
-df$V2[df$V2<(-1)]<-(-1)
+df$V2[df$V2<(-0.5)]<-(-0.5)
 ggplot(df, aes(x=HCR, y=V2, fill=HCR))+
   geom_bar(stat="identity")+
   scale_fill_colorblind()+

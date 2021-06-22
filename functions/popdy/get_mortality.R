@@ -14,7 +14,6 @@ get_mortality <- function(stock, hotW = FALSE){
       CN_temp[y,] <- get_catch(F_full=F_full[y], M=natM[y], 
                                N=J1N[y,], selC=slxC[y,]) + 1e-3
     }else{
-      
     CN[y,] <- get_catch(F_full=F_full[y], M=natM[y], 
                         N=J1N[y,], selC=slxC[y,]) + 1e-3
     

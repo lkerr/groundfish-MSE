@@ -186,7 +186,6 @@ get_advice <- function(stock){
         mproc[m,'ASSESSCLASS'] == 'PLANB' ||
         (y > fmyearIdx & 
           (y-fmyearIdx) %% mproc[m,'RPInt'] == 0 ) ){
-
       gnF <- get_nextF(parmgt = mproc[m,], parpop = tempStock$parpop,
                        parenv = parenv,
                        RPlast = NULL, evalRP = TRUE,
@@ -198,13 +197,11 @@ get_advice <- function(stock){
     }else{
       # Otherwise use old reference points to calculate stock
       # status
-      tempStock <- within(tempStock, {
-        gnF <- get_nextF(parmgt = mproc[m,], parpop = parpop,
-                         parenv = parenv,
-                         RPlast = RPmat[y-1,], evalRP = FALSE,
-                         stock = tempStock)
-        RPmat[y,] <- RPmat[y-1,]
-      })
+        gnF <- get_nextF(parmgt = mproc[m,], parpop = tempStock$parpop,
+                       parenv = parenv,
+                       RPlast = tempStock$RPmat[y-1,], evalRP = FALSE,
+                       stock = tempStock)
+        tempStock$RPmat[y,] <- tempStock$RPmat[y-1,]
     }
     # Report overfished status (based on previous year's data)
     tempStock <- within(tempStock, {

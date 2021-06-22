@@ -1,6 +1,6 @@
 #####F_full Trajectory Plots####
-Scenarios<-c(17,18,19,20)
-RhoAdj<-TRUE
+Scenarios<-c(9,10,11,12)
+RhoAdj<-FALSE
 Stock<-'codGOM'
 ####First Sims####
 library(matrixStats)
