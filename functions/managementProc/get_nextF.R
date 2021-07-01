@@ -52,7 +52,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
   # point and those will be implemented in get_FBRP
 
   if(parmgt$ASSESSCLASS == 'CAA' || parmgt$ASSESSCLASS == 'ASAP'){
-
     # for GOM cod, Mramp model uses M = 0.2 for status determination
     parpopF<-parpop
     if (stockEnv$M_mis==TRUE){

@@ -3,7 +3,7 @@ library(dplyr)
 library(ggplot2)
 library(ggthemes)
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(13,14,15,16,17,18,19,20)
+Scenarios<-c(13,14,15,16,40,41,42,43)
 #Load data and change to numeric
 wd<-getwd()
 #wd<-setwd("C:/Users/jjesse/Box/HCR_Sims")
