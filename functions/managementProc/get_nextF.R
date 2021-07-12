@@ -164,6 +164,18 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
         else{F<-FThresh}}
     }
     
+    else if(tolower(parmgt$HCR) == 'feco'){
+      Is<-1-((Tanom[y]-min(Tanom))/(max(Tanom)-min(Tanom)))
+      if (tail(parpop$SSBhat,1)< 7260){
+        F<-0
+      }
+      else if (tail(parpop$SSBhat,1)<=BThresh){
+        F<-Is*(Fref$RPvalue*(tail(parpop$SSBhat,1)/BThresh))
+      }
+      else if (tail(parpop$SSBhat,1)>BThresh){
+        F<-Fref$RPvaluelower+(Is*(Fref$RPvalueupper-Fref$RPvaluelower))
+      }
+      }
     if(tolower(parmgt$projections) == 'true'){
       if ((y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) == 0){
       parmgtproj<-parmgt

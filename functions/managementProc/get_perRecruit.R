@@ -140,6 +140,15 @@ get_perRecruit <- function(parmgt, parpop,
     
     # find the F @ the specified level of F_X%
     Fref <- F_full[which.min(abs(SSBR_ratio - parmgt$FREF_PAR0))]
+    Freflower<-NA
+    Frefupper<-NA
+    
+    if(parmgt$HCR == 'feco'){
+      red<-Y[which.min(abs(SSBR_ratio - parmgt$FREF_PAR0))]-Y[which.min(abs(SSBR_ratio - parmgt$FREF_PAR0))]*0.05
+      Frange<-F_full[Y>red]
+      Freflower<-min(Frange)
+      Frefupper<-max(Frange)
+      }
 
     # SSB / R at the reference point
     SSBatRP <- SSB[which.min(abs(SSBR_ratio - parmgt$FREF_PAR0))]
@@ -162,6 +171,8 @@ get_perRecruit <- function(parmgt, parpop,
   out <- list(PRgrid = matrix(c(F_full[oidx], yvalue[oidx]), ncol=2),
               RPlevel = parmgt$FREF_PAR0,
               RPvalue = Fref,
+              RPvaluelower = Freflower,
+              RPvalueupper = Frefupper,
               SSBvalue = SSBatRP)
 
   return(out)

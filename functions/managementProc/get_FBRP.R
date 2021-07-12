@@ -44,6 +44,14 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
 
     F <- get_perRecruit(parmgt = parmgt, parpop = parpop)$RPvalue
     
+    Flower<-NA
+    Fupper<-NA
+    
+    if(parmgt$HCR== 'feco'){
+    Flower <- get_perRecruit(parmgt = parmgt, parpop = parpop)$RPvaluelower
+    Fupper <- get_perRecruit(parmgt = parmgt, parpop = parpop)$RPvalueupper
+    }
+    
     # If using a per-recruit F-based reference point paired with a forecast
     # simulation B-based reference point you will need an starting-point
     # for the simulation -- calcaulte this assuming fishing at the F-based
@@ -74,8 +82,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
       equiJ1N_MSY <- NULL
     }
     
-  
-    return(list(RPvalue = F, equiJ1N_MSY = equiJ1N_MSY))
+    return(list(RPvalue = F, RPvaluelower = Flower, RPvalueupper = Fupper, equiJ1N_MSY = equiJ1N_MSY))
     
   }else if(parmgt$FREF_TYP == 'FmsySim'){
    
