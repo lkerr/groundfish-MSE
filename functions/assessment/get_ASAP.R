@@ -19,7 +19,7 @@ get_ASAP <- function(stock){
     #styear <- y - ncaayear
     
     #end year
-    endyear <- y-2
+    endyear <- y-1
     
     #number of years in assessment
     N_rows <- length(styear:endyear)
