@@ -101,28 +101,29 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
 
   # set up initial conditions
   N[1,] <- init 
-  #Get beginning of year population in year t+1
-  # if (type=='current'){
-  #   Fhat<-parpop$Fhat
-  #   for(a in 2:(nage-1)){
-  #     #init= population at the beginning of the year in t-1  
-  #     #exponential survival to the next year/age (t)
-  #     N[1,a] <- init[a-1] * exp(-parpop$sel[a-1]*Fhat - 
-  #                                   parpop$M[a-1])
-  #   }
-  #   # Deal with the plus group
-  #   N[1,nage] <- init[nage-1] * exp(-parpop$sel[nage-1] * Fhat - 
-  #                                      parpop$M[nage-1]) + 
-  #     init[nage] * exp(-parpop$sel[nage] * Fhat - 
-  #                         parpop$M[nage])
-  #   
-  #   Recruits<-parpop$R
-  #   
-  #   N[1,1] <- prod(tail(Recruits,5))^(1/5)
-  #   if (mproc$rhoadjust==TRUE & y>fmyearIdx & stockEnv$Mohns_Rho_SSB[y]>0.15){
-  #     N[1,]<-N[1,]/(1+stockEnv$Mohns_Rho_SSB[y])
-  #   }
-  # }
+ # Get beginning of year population in year t+1
+  if (type=='current'){
+    Fhat<-parpop$Fhat
+    for(a in 2:(nage-1)){
+      #init= population at the beginning of the year in t-1
+      #exponential survival to the next year/age (t)
+      N[1,a] <- init[a-1] * exp(-parpop$sel[a-1]*Fhat -
+                                    parpop$M[a-1])
+    }
+    # Deal with the plus group
+    N[1,nage] <- init[nage-1] * exp(-parpop$sel[nage-1] * Fhat -
+                                       parpop$M[nage-1]) +
+      init[nage] * exp(-parpop$sel[nage] * Fhat -
+                          parpop$M[nage])
+
+    Recruits<-parpop$R
+
+    N[1,1] <- prod(tail(Recruits,5))^(1/5)
+    if (mproc$rhoadjust==TRUE & y>fmyearIdx & stockEnv$Mohns_Rho_SSB[y]>0.15){
+      N[1,]<-N[1,]/(1+stockEnv$Mohns_Rho_SSB[y])
+    }
+  }
+  
   for(y in 2:length(Tanom)){
   Fvalue<-F_val
   if (type=='current'){
