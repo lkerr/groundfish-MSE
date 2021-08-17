@@ -60,6 +60,6 @@ if(runClass == 'HPCC'){
   require(timeSeries)
   require(fBasics)
   require(fGarch)
-  require(simA)
+  require(ASAPplots)
 
 }
