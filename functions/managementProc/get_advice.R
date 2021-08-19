@@ -192,20 +192,18 @@ get_advice <- function(stock){
                        parenv = parenv,
                        RPlast = NULL, evalRP = TRUE,
                        stock = tempStock)
- 
+
       tempStock$RPmat[y,] <- gnF$RPs
       tempStock$catchproj <- gnF$catchproj
       
     }else{
       # Otherwise use old reference points to calculate stock
       # status
-      tempStock <- within(tempStock, {
         gnF <- get_nextF(parmgt = mproc[m,], parpop = parpop,
                          parenv = parenv,
                          RPlast = RPmat[y-1,], evalRP = FALSE,
                          stock = tempStock)
         RPmat[y,] <- RPmat[y-1,]
-      })
     }
     # Report overfished status (based on previous year's data)
     tempStock <- within(tempStock, {
