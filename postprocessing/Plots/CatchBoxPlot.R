@@ -207,7 +207,7 @@ ggplot(Df)+
   theme_classic()+
   ylab('Catch (mt)')+
   xlab('Time')+
-  theme(text=element_text(size=18),legend.position='right')+
+  theme(text=element_text(size=18),legend.position='bottom')+
   scale_fill_colorblind()+
   scale_y_continuous(breaks = pretty(c(0,5500), n=5),limits = c(0,5500))
 
