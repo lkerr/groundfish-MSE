@@ -56,10 +56,10 @@ if(runClass == 'HPCC'){
   require(tidyverse)
   require(dplyr)
   require(data.table)
-  require(ASAPplots)
   require(fishmethods)
   require(timeSeries)
   require(fBasics)
   require(fGarch)
+  require(ASAPplots)
 
 }
