@@ -31,7 +31,7 @@ mat_typ <- 'input'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
 M <- 0.4
 M_typ <- 'ramp'
-M_mis<-TRUE #If there is a M misspecification, set to TRUE
+M_mis<-FALSE #If there is a M misspecification, set to TRUE
 M_mis_val<-0.2 #The misspecified M value 
 
 # initial numbers at-age parameters
@@ -46,7 +46,7 @@ initN_type <- 'expDecline'
 qC <- 0.0001
 qI <- 0.0001
 
-DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE. 
+DecCatch<-TRUE #If survey catchability decreases with temperature, set to TRUE. 
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
