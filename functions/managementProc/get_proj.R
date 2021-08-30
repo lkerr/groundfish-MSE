@@ -161,7 +161,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                      sdR = stockEnv$pe_R,
                      TAnom = Tanom[y],
                      Rest = Rest)
-      if(type=='BREF'){N[y,1]<-7165447}
+      #if(type=='BREF'){N[y,1]<-7165447}
   }
   # Get weight-at-age
   Waa <- sweep(N, MARGIN=2, STATS=parpop$waa, FUN='*')

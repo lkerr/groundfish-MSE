@@ -55,18 +55,14 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
 
     # for GOM cod, Mramp model uses M = 0.2 for status determination
     parpopF<-parpop
-    if (stockEnv$M_mis==TRUE){
-      parpopF$M<-rep(stockEnv$M_mis_val,9)
-    }
+    parpopF$M<-rep(0.2,9)
     parpopF$switch<-FALSE
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpopF, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
                      stockEnv = stockEnv)
     parmgtT<-parmgt
     parpopT<-parpop
-    if (stockEnv$M_mis==TRUE){
-      parpopT$M<-rep(stockEnv$M,9)
-    }
+    parpopT$M<-rep(0.2,9)
     parpopT$switch<-TRUE
     parpopT$J1N<-stockEnv$J1N[1:(y-1),]
     parpopT$selC<-stockEnv$selC
