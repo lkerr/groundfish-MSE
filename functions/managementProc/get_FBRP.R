@@ -62,6 +62,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
       parmgtTemp <- parmgt
       parmgtTemp$FREF_PAR0 <- parmgtTemp$BREF_PAR0
       parmgtTemp$FREF_PAR1 <- parmgtTemp$BREF_PAR1
+      browser()
       simAtF <- get_proj(type = 'FREF',
                  parmgt = parmgtTemp, 
                  parpop = parpop, 

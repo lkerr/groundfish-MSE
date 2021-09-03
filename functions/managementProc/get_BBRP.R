@@ -62,7 +62,9 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     # get Fmsy proxy
     # Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop, 
                       # parenv = parenv, Rfun_lst = Rfun_lst)
-
+if (stockEnv$waa_mis=='TRUE'){
+parpop$waa<-stock[[1]]$waa[1,]
+}
     SSB <- get_proj(type = 'BREF', parmgt = parmgt, parpop = parpop, 
                     parenv = parenv, 
                     Rfun = Rfun, F_val = FBRP,

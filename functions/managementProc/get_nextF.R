@@ -183,6 +183,9 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parpopproj$J1N<-tail(stockEnv$res$N.age,1)
       parpopproj$catch<-stockEnv$res$catch.obs
       if(tolower(parmgt$HCR) == 'pstar'){F<-FrefRPvalue}
+      if(stockEnv$waa_mis=='TRUE'){
+      parpopproj$waa<-stock[[1]]$waa[1,]
+      }
       for (i in 1:100){
           catchproj[i,]<-get_proj(type = 'current',
                                   parmgt = parmgtproj, 

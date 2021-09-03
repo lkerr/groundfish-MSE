@@ -53,7 +53,6 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     
   }
   
-  
   # Get the initial population for the simulation -- assumes exponential 
   # survival based on the given F, mean recruitment and M
   # ages <- 1:length(parpop$sel)
