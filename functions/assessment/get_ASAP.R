@@ -37,6 +37,10 @@ get_ASAP <- function(stock){
     #WAA matrix
     dat_file$dat$WAA_mats <-matrix(get_dwindow(waa, styear, endyear), nrow = N_rows)
     
+    if(waa_mis==TRUE){
+      dat_file$dat$WAA_mats<-t(replicate(N_rows,waa[1,]))
+    }
+    
     #selectivity block (single block setup)
     dat_file$dat$sel_block_assign <- matrix(1, nrow = N_rows, 1)
     
