@@ -24,15 +24,11 @@ For general information on GitHub workflows and how to use branches, see [ground
 
 --------
 ## Active branches
+* **MDM_Lag**: Contains updates made during the HCR Evaluation project. Has a bit more flexibility than MDM_new_functions. 
 
-* **Economic_model**: Scripts dedicated to integrating Anna and Min-Yang's economic model.
+* **MDM_NoLag**: The same as MDM_Lag but does include a lag in information to the stock assessment. It is assumed that the stock assessment uses data up to the year of the stock assessment. 
 
-* **forecastForBRP**: Updating the biological reference point MPs to include forecasts that mirror hindcasts in simulations. Options are to use recruitment estimates from the assessment model that go back *n* years or to use forecasts based on a S/R function that look forward *n* years.
-
-* **multistock**: Branch dedicated to developing the initial multistock approach where management & fishing are applied to stocks in order via loops.
-
-* **realized_catch**: Branch dedicated to developing and integrating the alternative implementations of the management advice, i.e., producing the realized catch given the harvest regulation.  
-
+* **MDM_new_functions**: Constains updates made during the HCR Evaluation project. This includes projections. 
 
 --------
 ## Stale / deleted branches
@@ -56,5 +52,13 @@ For general information on GitHub workflows and how to use branches, see [ground
 * **HadGB**: Added Haddock population information to parameter file.
 
 * **YtfGB**: In the process of adding yellowtail population information to parameter file.
+*
+* * **Economic_model**: Scripts dedicated to integrating Anna and Min-Yang's economic model.
+
+* **forecastForBRP**: Updating the biological reference point MPs to include forecasts that mirror hindcasts in simulations. Options are to use recruitment estimates from the assessment model that go back *n* years or to use forecasts based on a S/R function that look forward *n* years.
+
+* **multistock**: Branch dedicated to developing the initial multistock approach where management & fishing are applied to stocks in order via loops.
+
+* **realized_catch**: Branch dedicated to developing and integrating the alternative implementations of the management advice, i.e., producing the realized catch given the harvest regulation.  
 
 [Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
