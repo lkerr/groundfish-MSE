@@ -23,7 +23,14 @@ get_J1Updates <- function(stock){
     # calculate recruits in year y based on the SSB in years previous
     # (depending on the lag) and temperature
     SSB[y] <- sum(J1N[y-fage,] * mat[y,] * waa[y-fage,])
-
+    
+    #If hockey-stick function is used, the early block indicates that the last
+    #10 years of recruitment will be used in the cumulative distribution function (cdf)
+    #The early block is used for 'historical' recruitment. This only matters if the 
+    #assessment history is not used for the historical time period. 
+    #The late block indicates that the last 20 years of recruitment will be used in
+    #the cdf. The late block is used for recruitment during the management procedure
+    #period. 
     if (y < fmyearIdx){
     Rout <- get_recruits(type=R_typ, par=Rpar, S=SSB[y], block = 'early',
                          TAnom=Tanom[y], pe_R = pe_R, R_ym1 = R[y-1],
@@ -46,8 +53,8 @@ get_J1Updates <- function(stock){
     if (y < fmyearIdx){
     natM[y] <- init_M
     }
-    if(y >= fmyearIdx) {
-      natM[y] <- M
+    else {
+    natM[y] <- M
     }
 
       # option to overwrite calculated values with historic assessment input values for each year

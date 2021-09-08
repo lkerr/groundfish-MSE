@@ -28,9 +28,7 @@ get_indexData <- function(stock){
     # change point where bias in catch is applied in 2015 before the start of
     # the projection period
      if (y < c(fmyearIdx)){
-     obs_sumCW[y] <- get_error_idx(type=oe_sumCW_typ,
-                                     idx=sumCW[y],
-                                     par=oe_sumCW)
+     obs_sumCW[y] <- sumCW[y]
      }
      if (y >= (fmyearIdx)){
     obs_sumCW[y] <- get_error_idx(type=oe_sumCW_typ, 

@@ -20,7 +20,7 @@ get_implementationF <- function(type, stock){
         # add implimentation bias to catch, need to convert from F to catch, back to F
         # get catch in numbers using the Baranov catch equation from advised F
 
-        if(stockName == 'codGOM'){
+        if(type == 'advicewithcatchbias'){
         CN_temp[y,] <- get_catch(F_full=F_full[y], M=natM[y],
                                  N=J1N[y,], selC=slxC[y,]) + 1e-3
 
