@@ -52,8 +52,8 @@ For general information on GitHub workflows and how to use branches, see [ground
 * **HadGB**: Added Haddock population information to parameter file.
 
 * **YtfGB**: In the process of adding yellowtail population information to parameter file.
-*
-* * **Economic_model**: Scripts dedicated to integrating Anna and Min-Yang's economic model.
+
+* **Economic_model**: Scripts dedicated to integrating Anna and Min-Yang's economic model.
 
 * **forecastForBRP**: Updating the biological reference point MPs to include forecasts that mirror hindcasts in simulations. Options are to use recruitment estimates from the assessment model that go back *n* years or to use forecasts based on a S/R function that look forward *n* years.
 
