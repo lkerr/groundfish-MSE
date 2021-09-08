@@ -1,12 +1,17 @@
-#Scenarios<-c(6,32,58,116)
-Scenarios<-c(1,2)
+#Lists numbers of scenarios that you want to compare here
+Scenarios<-c(5,6,7,8)
+#Set working directory--where the results you want to compare are stored
+wd<-"C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims"
+#List what is being compared
+comparison<-c('Ramp','P*','F-step','Constrained ramp')
 ####Set up files####
 library(matrixStats)
 library(dplyr)
 library(ggplot2)
 library(ggthemes)
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[1],"/sim",sep=""))
-#setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[1],"/sim",sep=""))
+
+####First Scenario####
+setwd(paste(wd,"/Sim_",Scenarios[1],"/sim",sep=""))
 sims <- list.files()
 
 SSBratiot<-matrix(NA,nrow=length(sims),ncol=22)
@@ -16,12 +21,6 @@ for (k in 1:length(sims)){
     sims[k]<-NA}
 }
 sims<-na.omit(sims)
-
-####True Values (From Operating Model)####
-setwd("C:/Users/mmazur/Desktop/COCA_Sims")
-#setwd("C:/Users/jjesse/Box/HCR_Sims")
-tempwd <- getwd()
-setwd(paste(tempwd,"/Sim_",Scenarios[1],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
@@ -49,8 +48,8 @@ Df2$Time<-'Long-term'
 Df<-full_join(Df,Df2)
 Df$HCR<-Scenarios[1]
 
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[2],"/sim",sep=""))
-#setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[2],"/sim",sep=""))
+####Second Scenario####
+setwd(paste(wd,"/Sim_",Scenarios[2],"/sim",sep=""))
 sims <- list.files()
 
 SSBratiot<-matrix(NA,nrow=length(sims),ncol=22)
@@ -60,12 +59,6 @@ for (k in 1:length(sims)){
     sims[k]<-NA}
 }
 sims<-na.omit(sims)
-
-####True Values (From Operating Model)####
-setwd("C:/Users/mmazur/Desktop/COCA_Sims")
-#setwd("C:/Users/jjesse/Box/HCR_Sims")
-tempwd <- getwd()
-setwd(paste(tempwd,"/Sim_",Scenarios[2],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
@@ -94,114 +87,93 @@ Df2<-full_join(Df2,Df3)
 Df2$HCR<-Scenarios[2]
 Df<-full_join(Df,Df2)
 
-# setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[3],"/sim",sep=""))
-# #setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[3],"/sim",sep=""))
-# sims <- list.files()
-# 
-# SSBratiot<-matrix(NA,nrow=length(sims),ncol=22)
-# 
-# for (k in 1:length(sims)){
-#   if (file.size(sims[k])==0){
-#     sims[k]<-NA}
-# }
-# sims<-na.omit(sims)
-# 
-# ####True Values (From Operating Model)####
-# setwd("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims")
-# #setwd("C:/Users/jjesse/Box/HCR_Sims")
-# tempwd <- getwd()
-# setwd(paste(tempwd,"/Sim_",Scenarios[3],"/sim",sep=""))
-# 
-# for (k in 1:length(sims)){
-#   load(sims[k])
-#   SSBratiot[k,]<-omvalGlobal[[1]]$sumCW[169:190]
-# }
-# 
-# SSBratiots<-rowMedians(SSBratiot[,1:5])
-# Df2<-as.data.frame(SSBratiots)
-# Df2$SSBratiot<-SSBratiots
-# Df2$SSBratiots<-NULL
-# Df2$Time<-'Short-term'
-# 
-# SSBratiotm<-rowMedians(SSBratiot[,6:10])
-# Df3<-as.data.frame(SSBratiotm)
-# Df3$SSBratiot<-SSBratiotm
-# Df3$SSBratiotm<-NULL
-# Df3$Time<-'Medium-term'
-# Df2<-full_join(Df2,Df3)
-# 
-# SSBratiotl<-rowMedians(SSBratiot[,11:21])
-# Df3<-as.data.frame(SSBratiotl)
-# Df3$SSBratiot<-SSBratiotl
-# Df3$SSBratiotl<-NULL
-# Df3$Time<-'Long-term'
-# Df2<-full_join(Df2,Df3)
-# Df2$HCR<-Scenarios[3]
-# Df<-full_join(Df,Df2)
-# 
-# setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[4],"/sim",sep=""))
-# #setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[4],"/sim",sep=""))
-# sims <- list.files()
-# 
-# SSBratiot<-matrix(NA,nrow=length(sims),ncol=22)
-# 
-# for (k in 1:length(sims)){
-#   if (file.size(sims[k])==0){
-#     sims[k]<-NA}
-# }
-# sims<-na.omit(sims)
-# 
-# ####True Values (From Operating Model)####
-# setwd("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims")
-# #setwd("C:/Users/jjesse/Box/HCR_Sims")
-# tempwd <- getwd()
-# setwd(paste(tempwd,"/Sim_",Scenarios[4],"/sim",sep=""))
-# 
-# for (k in 1:length(sims)){
-#   load(sims[k])
-#   SSBratiot[k,]<-omvalGlobal[[1]]$sumCW[169:190]
-# }
-# 
-# SSBratiots<-rowMedians(SSBratiot[,1:5])
-# Df2<-as.data.frame(SSBratiots)
-# Df2$SSBratiot<-SSBratiots
-# Df2$SSBratiots<-NULL
-# Df2$Time<-'Short-term'
-# 
-# SSBratiotm<-rowMedians(SSBratiot[,6:10])
-# Df3<-as.data.frame(SSBratiotm)
-# Df3$SSBratiot<-SSBratiotm
-# Df3$SSBratiotm<-NULL
-# Df3$Time<-'Medium-term'
-# Df2<-full_join(Df2,Df3)
-# 
-# SSBratiotl<-rowMedians(SSBratiot[,11:21])
-# Df3<-as.data.frame(SSBratiotl)
-# Df3$SSBratiot<-SSBratiotl
-# Df3$SSBratiotl<-NULL
-# Df3$Time<-'Long-term'
-# Df2<-full_join(Df2,Df3)
-# Df2$HCR<-Scenarios[4]
-# Df<-full_join(Df,Df2)
+####Third Scenario####
+setwd(paste(wd,"/Sim_",Scenarios[3],"/sim",sep=""))
+sims <- list.files()
 
-Df$HCR[Df$HCR==Scenarios[1]]<-'Lag'
-Df$HCR[Df$HCR==Scenarios[2]]<-'No Lag'
-# Df$HCR[Df$HCR==Scenarios[3]]<-'F-step'
-# Df$HCR[Df$HCR==Scenarios[4]]<-'Constrained ramp'
+SSBratiot<-matrix(NA,nrow=length(sims),ncol=22)
+
+for (k in 1:length(sims)){
+  if (file.size(sims[k])==0){
+    sims[k]<-NA}
+}
+sims<-na.omit(sims)
+
+for (k in 1:length(sims)){
+  load(sims[k])
+  SSBratiot[k,]<-omvalGlobal[[1]]$sumCW[169:190]
+}
+
+SSBratiots<-rowMedians(SSBratiot[,1:5])
+Df2<-as.data.frame(SSBratiots)
+Df2$SSBratiot<-SSBratiots
+Df2$SSBratiots<-NULL
+Df2$Time<-'Short-term'
+
+SSBratiotm<-rowMedians(SSBratiot[,6:10])
+Df3<-as.data.frame(SSBratiotm)
+Df3$SSBratiot<-SSBratiotm
+Df3$SSBratiotm<-NULL
+Df3$Time<-'Medium-term'
+Df2<-full_join(Df2,Df3)
+
+SSBratiotl<-rowMedians(SSBratiot[,11:21])
+Df3<-as.data.frame(SSBratiotl)
+Df3$SSBratiot<-SSBratiotl
+Df3$SSBratiotl<-NULL
+Df3$Time<-'Long-term'
+Df2<-full_join(Df2,Df3)
+Df2$HCR<-Scenarios[3]
+Df<-full_join(Df,Df2)
+
+####Fourth Scenario####
+setwd(paste(wd,"/Sim_",Scenarios[4],"/sim",sep=""))
+sims <- list.files()
+
+SSBratiot<-matrix(NA,nrow=length(sims),ncol=22)
+
+for (k in 1:length(sims)){
+  if (file.size(sims[k])==0){
+    sims[k]<-NA}
+}
+sims<-na.omit(sims)
+
+for (k in 1:length(sims)){
+  load(sims[k])
+  SSBratiot[k,]<-omvalGlobal[[1]]$sumCW[169:190]
+}
+
+SSBratiots<-rowMedians(SSBratiot[,1:5])
+Df2<-as.data.frame(SSBratiots)
+Df2$SSBratiot<-SSBratiots
+Df2$SSBratiots<-NULL
+Df2$Time<-'Short-term'
+
+SSBratiotm<-rowMedians(SSBratiot[,6:10])
+Df3<-as.data.frame(SSBratiotm)
+Df3$SSBratiot<-SSBratiotm
+Df3$SSBratiotm<-NULL
+Df3$Time<-'Medium-term'
+Df2<-full_join(Df2,Df3)
+
+SSBratiotl<-rowMedians(SSBratiot[,11:21])
+Df3<-as.data.frame(SSBratiotl)
+Df3$SSBratiot<-SSBratiotl
+Df3$SSBratiotl<-NULL
+Df3$Time<-'Long-term'
+Df2<-full_join(Df2,Df3)
+Df2$HCR<-Scenarios[4]
+Df<-full_join(Df,Df2)
+
+Df$HCR[Df$HCR==Scenarios[1]]<-comparison[1]
+Df$HCR[Df$HCR==Scenarios[2]]<-comparison[2]
+Df$HCR[Df$HCR==Scenarios[3]]<-comparison[3]
+Df$HCR[Df$HCR==Scenarios[4]]<-comparison[4]
 Df$HCR<-as.factor(Df$HCR)
-Df$HCR<-ordered(Df$HCR,levels=c('Lag','No Lag'))
-Df$Time<-ordered(Df$Time,levels=c('Short-term','Medium-term','Long-term'))
+Df$HCR<-ordered(Df$HCR,levels=comparison)
+Df$Time<-ordered(Df$Time,levels=c("Short-term","Medium-term","Long-term"))
 
-ggplot(Df)+
-  geom_violin(aes(x=Time, y=SSBratiot, fill=HCR,linetype=HCR)) +
-  theme_classic()+
-  ylab('F/Fmsy')+
-  xlab('Time')+
-  theme(text=element_text(size=18),legend.position='right')+
-  scale_fill_manual(values=c("#EA4F12","#EACA00","#407331","#00608A"))+
-  geom_hline(yintercept=1, linetype="dashed", color = "black", size=1)
 
-#NEW PLOT
 ggplot(Df)+
   geom_boxplot(aes(x=Time, y=SSBratiot, fill=HCR)) +
   theme_classic()+
@@ -209,5 +181,5 @@ ggplot(Df)+
   xlab('Time')+
   theme(text=element_text(size=18),legend.position='bottom')+
   scale_fill_colorblind()+
-  scale_y_continuous(breaks = pretty(c(0,2200), n=5),limits = c(0,2200))
+  scale_y_continuous(breaks = pretty(c(0,round(range(Df$SSBratiot)[2],-3)), n=5),limits = c(0,round(range(Df$SSBratiot)[2],-3)))
 
