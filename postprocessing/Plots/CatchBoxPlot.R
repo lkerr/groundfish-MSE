@@ -5,7 +5,7 @@ library(matrixStats)
 library(dplyr)
 library(ggplot2)
 library(ggthemes)
-setwd(paste("C:/Users/mmazur/Desktop/WFC_Sims/Sim_",Scenarios[1],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[1],"/sim",sep=""))
 #setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[1],"/sim",sep=""))
 sims <- list.files()
 
@@ -18,7 +18,7 @@ for (k in 1:length(sims)){
 sims<-na.omit(sims)
 
 ####True Values (From Operating Model)####
-setwd("C:/Users/mmazur/Desktop/WFC_Sims")
+setwd("C:/Users/mmazur/Desktop/COCA_Sims")
 #setwd("C:/Users/jjesse/Box/HCR_Sims")
 tempwd <- getwd()
 setwd(paste(tempwd,"/Sim_",Scenarios[1],"/sim",sep=""))
@@ -49,7 +49,7 @@ Df2$Time<-'Long-term'
 Df<-full_join(Df,Df2)
 Df$HCR<-Scenarios[1]
 
-setwd(paste("C:/Users/mmazur/Desktop/WFC_Sims/Sim_",Scenarios[2],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[2],"/sim",sep=""))
 #setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[2],"/sim",sep=""))
 sims <- list.files()
 
@@ -62,7 +62,7 @@ for (k in 1:length(sims)){
 sims<-na.omit(sims)
 
 ####True Values (From Operating Model)####
-setwd("C:/Users/mmazur/Desktop/WFC_Sims")
+setwd("C:/Users/mmazur/Desktop/COCA_Sims")
 #setwd("C:/Users/jjesse/Box/HCR_Sims")
 tempwd <- getwd()
 setwd(paste(tempwd,"/Sim_",Scenarios[2],"/sim",sep=""))
@@ -184,12 +184,12 @@ Df<-full_join(Df,Df2)
 # Df2$HCR<-Scenarios[4]
 # Df<-full_join(Df,Df2)
 
-Df$HCR[Df$HCR==Scenarios[1]]<-'None'
-Df$HCR[Df$HCR==Scenarios[2]]<-'M'
+Df$HCR[Df$HCR==Scenarios[1]]<-'Lag'
+Df$HCR[Df$HCR==Scenarios[2]]<-'No Lag'
 # Df$HCR[Df$HCR==Scenarios[3]]<-'F-step'
 # Df$HCR[Df$HCR==Scenarios[4]]<-'Constrained ramp'
 Df$HCR<-as.factor(Df$HCR)
-Df$HCR<-ordered(Df$HCR,levels=c('None','M'))
+Df$HCR<-ordered(Df$HCR,levels=c('Lag','No Lag'))
 Df$Time<-ordered(Df$Time,levels=c('Short-term','Medium-term','Long-term'))
 
 ggplot(Df)+
@@ -209,5 +209,5 @@ ggplot(Df)+
   xlab('Time')+
   theme(text=element_text(size=18),legend.position='bottom')+
   scale_fill_colorblind()+
-  scale_y_continuous(breaks = pretty(c(0,4000), n=5),limits = c(0,4000))
+  scale_y_continuous(breaks = pretty(c(0,2200), n=5),limits = c(0,2200))
 
