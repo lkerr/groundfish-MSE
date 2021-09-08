@@ -20,7 +20,7 @@ get_burnF <- function(stock){
                    list(
                      waa = waa[1,, drop=FALSE], 
                      sel = slxC[1,, drop=FALSE], 
-                     M = M, 
+                     M = init_M, 
                      mat = mat[1,, drop=FALSE],
                      R = NA,
                      SSBhat = SSB[1, drop=FALSE],
@@ -28,8 +28,6 @@ get_burnF <- function(stock){
                      Rpar = Rpar,
                      Fhat = NA)})
 
-
-  
   Fref <- get_FBRP(parmgt = parmgt, parpop = parpop, parenv = parenv, 
                    Rfun_lst = Rfun_lst, stockEnv = stock)
   

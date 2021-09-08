@@ -51,7 +51,6 @@
 get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                      F_val, stReportYr, ny=NULL, stockEnv, ...){
 
-   
   if(parmgt$RFUN_NM == 'hindcastMean'){
     if(type == 'FREF'){
       startHCM <- parmgt$FREF_PAR0
@@ -69,7 +68,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     # length of recruitment time series
     nR <- length(parpop$R)
     
-    # historical R estimates over the time window specified in mproc.txt
+    # historical R estimates over the time window specified in the file mprocfile (defined in set_om_parameters_global.R)
     Rest <- get_dwindow(parpop$R, 
                         start = unlist(nR- (-startHCM) + 1), 
                         end = unlist(nR - (-endHCM) + 1))
@@ -144,6 +143,8 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   # set up initial conditions
   N[1,] <- init
   for(y in 2:length(Tanom)){
+    
+
     for(a in 2:(nage-1)){
       # exponential survival to the next year/age
       N[y,a] <- N[y-1, a-1] * exp(-parpop$sel[a-1]*F_val - 
@@ -168,7 +169,6 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                    Rest = Rest)
 
   }
- 
   # Get weight-at-age
   Waa <- sweep(N, MARGIN=2, STATS=parpop$waa, FUN='*')
   

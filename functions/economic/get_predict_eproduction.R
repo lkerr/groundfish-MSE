@@ -8,30 +8,28 @@
 # Returns a data.table with an extra column in it.
 
 get_predict_eproduction <- function(prod_ds){
-  indepvars=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","constant")
-  
   # crew, trip days, trawl survey, 
-  fyvars=paste0("fy",2004:2015)
-  monthvars=paste0("month",1:12)
+  fyvars<-grep("^fy",colnames(prod_ds) , value=TRUE)
+  monthvars<-grep("^month",colnames(prod_ds) , value=TRUE)
   
-  datavars=c(indepvars,fyvars,monthvars)
+  datavars=c(production_vars,fyvars,monthvars)
   alphavars=paste0("alpha_",datavars)
   
   
-  Z<-as.matrix(prod_ds[, ..datavars])
+    Z<-as.matrix(prod_ds[, ..datavars])
   A<-as.matrix(prod_ds[,..alphavars])
   
-  prod_ds$harvest_sim<-rowSums(Z*A)
-  prod_ds$harvest_sim=prod_ds$harvest_sim+prod_ds$q
+  prod_ds[, harvest_sim:=rowSums(Z*A)+q]
+  
+  #prod_ds$harvest_sim<-rowSums(Z*A)
+  #prod_ds[, harvest_sim:=harvest_sim+q]
+  #prod_ds$harvest_sim=prod_ds$harvest_sim+prod_ds$q
   
   #production
   # bad way to smear
   #prod_ds$harvest_sim<- exp(prod_ds$harvest_sim + fx)*exp((prod_ds$rmse^2)/2)
   
   #good way to smear
-  prod_ds$harvest_sim<- (exp(prod_ds$harvest_sim))*prod_ds$emean 
-  
-
-  return(prod_ds)
+  prod_ds[, harvest_sim:=(exp(harvest_sim))*emean]
 }
 

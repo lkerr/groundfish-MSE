@@ -7,6 +7,8 @@
 #       *'aLb'
 #        W = par[1] * L^par[2]
 #       *''
+#       *'input'
+#       use vector of weight-at-age, must be same length as number of age classes
 #
 # par: vector of parameters to use in the function. See function
 #      definitions in "type" for the length of the vector and
@@ -24,7 +26,12 @@ get_weightAtAge <- function(type, par, laa, inputUnit){
 
     waa <- par[1] * laa ^ par[2]
 
-  }else{
+  }else if(type == 'input'){
+    
+    waa <- par[1:length(par)]
+  
+    
+    }else{
 
     stop('weight-at-age type not recognized')
   
