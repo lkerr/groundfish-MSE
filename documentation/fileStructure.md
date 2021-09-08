@@ -2,6 +2,7 @@
 
 # MSE File Structure
 #### Sam Truesdell (struesdell@gmri.org)
+#### Mackenzie Mazur (mmazur@gmri.org)
 
 ### This document describes the file structure for groundfish-MSE on GitHub -- and on your local machine once you have cloned the repository.
 
