@@ -13,15 +13,15 @@ The overall approach to the MSE is to attempt to have the code be as compartment
 
 * **ShinyApp**: Work to-date on the shiny application that will eventually be used to communicate MSE results to stakeholders.
 
-* **assessment**: Folder that holds assessment models and related material. The simulation does call files in this folder.
+* **assessment**: Folder that holds assessment models and related material. The simulation does call files in this folder. These files may need to be changed depending on the scenario. 
 
-* **data**: Data related to the project. Folder subdivided into processes (i.e., .Rdata files) and raw data.  Many preliminary/exploratory analyses use data from this folder, but for everyday runs this folder has limited use save holding the temperature projection data.
+* **data**: Data related to the project. Folder subdivided into processes (i.e., .Rdata files) and raw data.  Many preliminary/exploratory analyses use data from this folder, but for everyday runs this folder has limited use save holding the temperature projection data and historical assessment data. 
 
 * **documentation**: You are here! Files attempting to document both the MSE methods and use on a local machine or the HPCC.
 
 * **functions**: All the functions that are used by the MSE. Folder further divided into functions related to the assessment process, management procedures, plotting and population dynamics. These subdivisions are only for organization.
 
-* **modelParameters**: All files that deal with paramaterization of the current model run are found in this folder.  the file set_om_parameters_global.R contains the super-stock level operating model parameters (e.g., things like time-frames and temperature information to use). mproc.csv governs the management procedues that will be compared during the run and mprocTest.csv is a version of this file used for testing. The sub-folder **stockParameters** contains the stock-level information for each stock.  All stocks that are contained in this folder will be included in the run.
+* **modelParameters**: All files that deal with paramaterization of the current model run are found in this folder.  the file set_om_parameters_global.R contains the super-stock level operating model parameters (e.g., things like time-frames and temperature information to use). mproc.csv governs the management procedues that will be compared during the run and mprocTest.csv is a version of this file used for testing. The sub-folder **stockParameters** contains the stock-level information for each stock.  
 
 * **preprocessing**: Processing some of the raw data into .Rdata files to be used in some preliminary/exploratory analyses. Files in this folder are mostly unused.
 
