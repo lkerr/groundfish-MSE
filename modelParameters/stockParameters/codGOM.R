@@ -18,6 +18,7 @@ laa_typ <- 'vonB'
 #waa_typ <- 'aLb'
 waa_par <- c(0.057, 0.365, 0.908, 1.662, 2.426, 3.307, 4.09, 5.928, 10.375) #GOM cod ADAPT projection Jan1 M=0.2
 waa_typ <- 'input'
+waa_mis<-FALSE
 
 # maturity-length parameters
 #mat_par <- c(0.171, 32.1) # O'brien GOM cod female
