@@ -182,12 +182,12 @@
 # Selectivity Options for each block 1=by age, 2=logisitic, 3=double logistic
 1              
 # Selectivity Block Data 
-0.013          1               0               1               
-0.066          1               0               1               
-0.271          1               0               1               
-0.663          1               0               1               
-0.912          1               0               1               
-0.982          -2               0               1               
+0.009          1               0               1               
+0.051          1               0               1               
+0.241          1               0               1               
+0.651          1               0               1               
+0.917          1               0               1               
+0.985          -2               0               1               
 0.997          -2               0               1               
 1              -2               0               1               
 1              -2               0               1               

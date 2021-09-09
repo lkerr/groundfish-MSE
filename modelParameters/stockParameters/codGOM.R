@@ -32,7 +32,7 @@ mat_typ <- 'input'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
 M <- 0.4
 M_typ <- 'ramp'
-M_mis<-TRUE #If there is a M misspecification, set to TRUE
+M_mis<-FALSE #If there is a M misspecification, set to TRUE
 M_mis_val<-0.2 #The misspecified M value 
 
 # initial numbers at-age parameters
