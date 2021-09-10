@@ -21,7 +21,8 @@ get_advice <- function(stock){
   # Run ASAP assessment
   if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
     if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
-    tempStock <- get_ASAP(stock = tempStock)}
+    tempStock <- get_ASAP(stock = tempStock)
+    }
     else{
       get_ASAP(stock = tempStock)}
   }
