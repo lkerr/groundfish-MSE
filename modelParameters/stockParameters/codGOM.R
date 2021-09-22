@@ -1,16 +1,10 @@
-
-
-
-# Average and sd F before the management period begins. Mean on real scale
-# but distribution is lognormal. SD is lognormal SD.                                              
+# F scalar to Fmsy and sd for F before the management period begins. Distribution is lognormal. SD is lognormal SD.                                              
 burnFmsyScalar <- 4
 burnFsd <- 0.3
-
 
 # first age and plus age
 fage <- 1
 page <- 9
-
 
 #### Life history parameters ####
 
@@ -18,35 +12,30 @@ page <- 9
 laa_par <- c(Linf = 150.93, K = 0.11, t0 = 0.13, beta1=0) #SAW 55
 laa_typ <- 'vonB'
 
-# weight-length parameters
+# weight-length parameters. Can be based on equation or input.
 #waa_par <- c(exp(-12.18002), 3.1625) #SAW 55 #kg
 #waa_typ <- 'aLb'
 waa_par <- c(0.057, 0.365, 0.908, 1.662, 2.426, 3.307, 4.09, 5.928, 10.375) #GOM cod ADAPT projection Jan1 M=0.2
 waa_typ <- 'input'
 
-
-# maturity-length parameters
+# maturity-length parameters. Ca be based on logistic equation or input. 
 #mat_par <- c(0.171, 32.1) # O'brien GOM cod female
 #mat_typ <- 'logistic'
 mat_par <- c(0.087, 0.318, 0.697, 0.919, 0.982, 0.996, 0.999, 1, 1) # GOM cod ADAPT projection M=0.2
 mat_typ <- 'input'
 
-
 # natural mortality
 M <- 0.2
 M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
-M_mis<- 'FALSE'
 #M <- 0.4
 #M_typ <- 'ramp'
 
-# initial numbers at-age parameters
+# initial numbers at-age parameters. Can be input or based on exponential decline. 
 #initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
 #initN_type <- 'input'
 initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = 0.2)
 initN_type <- 'expDecline'
-
-
 
 #### Fishery parameters ####
 
@@ -74,11 +63,6 @@ Rpar <- c(SSB_star = 6300, #mt  #from GOM COD 2019 AGEPRO M=0.2
 #          cR = 1) # dont need to convert
 R_typ <- 'HS'
 
-
- 
-
-
-
 #### Survey parameters ####
 
 ## Survey information
@@ -87,7 +71,6 @@ R_typ <- 'HS'
 selI <- c(0.0384337, 0.13369, 0.288846, 0.531086, 0.778406, 1, 1, 1, 1) #Spring survey fit from 2019 assessment .rep
 selI_typ <- 'input'
 timeI <- 0.5 # when is the survey (as a proportion of the year)
-
 
 #### Stock assessment model parameters ####
 
@@ -104,6 +87,7 @@ startCV <- 1.5
 # for model fitting)
 caaInScalar <- 1 
 
+M_mis<- 'FALSE' #Is there a natural mortality stock assessment misspecification? 
 
 #### Error parameters ####
 
@@ -134,51 +118,6 @@ ob_sumIN <- 1
 
 # catch observation bias (codCW + codCW*C_mult)
 C_mult <- 0
-
-#### BRPs and HCRs ####
-
-# # reference point calculation types
-# # Fmsy proxy type
-# fbrpTyp <- c('YPR')
-# # Bmsy proxy type
-# bbrpTyp <- c('RSSBR')
-# 
-# # Fmsy proxy level
-# fbrpLevel <- c(0.1)
-# # Bmsy proxy level
-# bbrpLevel <- c(1)
-# 
-# # Fmsy proxy types and levels
-# fbrp <- rbind(
-#   list('YPR', 0.1),
-#   list('RSSBR', 1)
-# )
-# pol <- data.frame(
-#   FmsyT = c('YPR'  ,   'SPR'        ),
-#   FmsyV = c(0.1    ,     1          ),
-#   BmsyT = c('RSSBR' ,   'dummy'      ),
-#   hcrT  = c('slide'  ,  'simpleThresh')
-# )
-# 
-# 
-# FmsyT <- list('YPR', 'SPR')
-# FmsyV <- list(c(0.1, 0.15),
-#               c(0.3, 0.4))
-# # i1 <- lapply(1:length(a1), function(x) expand.grid(a1[[x]], a2[[x]]))
-# 
-# BmsyT <- list('RSSBR', 'BmsySim')
-# BmsyV <- list(c(1, 0.8),
-#               c(NA, NA))
-# i2 <- lapply(1:length(BmsyT), function(x) expand.grid(BmsyT[[x]], BmsyV[[x]]))
-# 
-# # Harvest control rule types
-# i3 <- list('slide', 'simpleThresh')
-# 
-# 
-# hrcTyp <- list('slide', 'simpleThresh')
-
-
-
 
 #### -- Errors and warnings -- ####
 if(1.0 %in% c(qI, qC)){
