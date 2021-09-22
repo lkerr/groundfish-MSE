@@ -1,16 +1,10 @@
-
-
-
-# Average and sd F before the management period begins. Mean on real scale
-# but distribution is lognormal. SD is lognormal SD.
+# Scalar to Fmsy and sd in F before the management period begins. Distribution is lognormal. SD is lognormal SD.
 burnFmsyScalar <- 1 #4
 burnFsd <- 0.3
-
 
 # first age and plus age
 fage <- 1
 page <- 10
-
 
 #### Life history parameters ####
 
@@ -30,23 +24,10 @@ mat_typ <- 'logistic'
 M <- 0.2
 M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
-M_mis<- FALSE
 
 # initial numbers at-age parameters
 initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = M)
 initN_type <- 'expDecline'
-
-
-#### Fishery parameters ####
-
-# fishery and survey catchabilities
-qC <- 0.0001
-qI <- 0.0001
-
-# fishery selectivity
-# ### change select to L50 paramaterization like maturity
-selC <- c(s0=5, s1=0.08)
-selC_typ <- 'Logistic'
 
 # Recruitment
 ##HS with all recruitment values (what is used in stock assessment projections)##
@@ -59,8 +40,16 @@ R_typ <- 'HS'
 #          SSBRF0 = 0.01972)
 #R_typ <- 'BHSteep'
 
+#### Fishery parameters ####
 
+# fishery and survey catchabilities
+qC <- 0.0001
+qI <- 0.0001
 
+# fishery selectivity
+# ### change select to L50 paramaterization like maturity
+selC <- c(s0=5, s1=0.08)
+selC_typ <- 'Logistic'
 
 #### Survey parameters ####
 
@@ -69,7 +58,6 @@ R_typ <- 'HS'
 selI <- c(1)
 selI_typ <- 'const'
 timeI <- 0.5 # when is the survey (as a proportion of the year)
-
 
 #### Stock assessment model parameters ####
 
@@ -86,6 +74,7 @@ startCV <- 1.5
 # for model fitting)
 caaInScalar <- 1000
 
+M_mis<- FALSE
 
 #### Error parameters ####
 
@@ -112,52 +101,6 @@ ie_bias <- -0.13 #0 #-0.1 # % bias in implementation error
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
 ob_sumCW <- 1
 ob_sumIN <- 1
-
-
-#### BRPs and HCRs ####
-
-# # reference point calculation types
-# # Fmsy proxy type
-# fbrpTyp <- c('YPR')
-# # Bmsy proxy type
-# bbrpTyp <- c('RSSBR')
-#
-# # Fmsy proxy level
-# fbrpLevel <- c(0.1)
-# # Bmsy proxy level
-# bbrpLevel <- c(1)
-#
-# # Fmsy proxy types and levels
-# fbrp <- rbind(
-#   list('YPR', 0.1),
-#   list('RSSBR', 1)
-# )
-# pol <- data.frame(
-#   FmsyT = c('YPR'  ,   'SPR'        ),
-#   FmsyV = c(0.1    ,     1          ),
-#   BmsyT = c('RSSBR' ,   'dummy'      ),
-#   hcrT  = c('slide'  ,  'simpleThresh')
-# )
-#
-#
-# FmsyT <- list('YPR', 'SPR')
-# FmsyV <- list(c(0.1, 0.15),
-#               c(0.3, 0.4))
-# # i1 <- lapply(1:length(a1), function(x) expand.grid(a1[[x]], a2[[x]]))
-#
-# BmsyT <- list('RSSBR', 'BmsySim')
-# BmsyV <- list(c(1, 0.8),
-#               c(NA, NA))
-# i2 <- lapply(1:length(BmsyT), function(x) expand.grid(BmsyT[[x]], BmsyV[[x]]))
-#
-# # Harvest control rule types
-# i3 <- list('slide', 'simpleThresh')
-#
-#
-# hrcTyp <- list('slide', 'simpleThresh')
-
-
-
 
 #### -- Errors and warnings -- ####
 if(1.0 %in% c(qI, qC)){
