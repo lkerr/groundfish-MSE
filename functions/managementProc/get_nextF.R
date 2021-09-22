@@ -176,6 +176,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
         parpopproj$waa<-stock[[1]]$waa[1,]
       }
       for (i in 1:100){
+          if(mproc[m,'Lag'] == 'TRUE'){
           catchproj[i,]<-get_proj(type = 'current',
                                   parmgt = parmgtproj, 
                                   parpop = parpopproj, 
@@ -184,7 +185,21 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   F_val = F,
                                   ny = 200,
                                   stReportYr = 2,
-                                  stockEnv = stockEnv)$sumCW}
+                                  stockEnv = stockEnv)$sumCW
+          }
+          else if(mproc[m,'Lag'] == 'FALSE'){
+          catchproj[i,]<-get_projnolag(type = 'current',
+                                  parmgt = parmgtproj, 
+                                  parpop = parpopproj, 
+                                  parenv = parenv, 
+                                  Rfun = Rfun_BmsySim$forecast,
+                                  F_val = F,
+                                  ny = 200,
+                                  stReportYr = 2,
+                                  stockEnv = stockEnv)$sumCW
+          }
+      }
+        
       catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
       if(tolower(parmgt$HCR) == 'pstar'){
         calc_pstar = function(maxp, relB)#function to calculate P* based on SSB/SSBmsy

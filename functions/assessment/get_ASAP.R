@@ -19,7 +19,12 @@ get_ASAP <- function(stock){
     #styear <- y - ncaayear
     
     #end year
+    if(mproc[m,'Lag'] == 'TRUE'){
     endyear <- y-2
+    }
+    else if(mproc[m,'Lag'] == 'FALSE'){
+    endyear <- y-1
+    }
     
     #number of years in assessment
     N_rows <- length(styear:endyear)
@@ -71,8 +76,13 @@ get_ASAP <- function(stock){
     #discard ESS (even if not using)
     dat_file$dat$discard_Neff <- matrix(0, nrow = N_rows, 1)
     
-    #end year
+    if(mproc[m,'Lag'] == 'TRUE'){
     dat_file$dat$nfinalyear <- y-1
+    }
+    else if(mproc[m,'Lag'] == 'FALSE'){
+    dat_file$dat$nfinalyear <- y
+    }
+    
     dat_file$dat$proj_ini <- c((y), -1, 3, -99, 1)
     # 
     dat_file$dat$R_avg_start <- styear
