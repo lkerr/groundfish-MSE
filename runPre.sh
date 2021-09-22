@@ -29,7 +29,7 @@ rm -r -f groundfish-MSE/
 module load git/2.1.3
 
 # clone the current repository
-git clone -b Discard_sims https://samtruesdell:17d3b37aa4080198a25fe421470b97f92af26794@github.com/COCA-NEgroundfishMSE/groundfish-MSE
+git clone -b master https://samtruesdell:17d3b37aa4080198a25fe421470b97f92af26794@github.com/COCA-NEgroundfishMSE/groundfish-MSE
 
 # load the gcc module for compilation
 module load gcc/5.1.0

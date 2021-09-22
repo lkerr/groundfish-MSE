@@ -8,17 +8,19 @@ get_implementationF <- function(type, stock){
 
       F_full[y]<- F_fullAdvice[y]
 
-    } else if(type == 'adviceWithError'){
+    } 
+    if(type == 'adviceWithError'){
 
         # Borrowed error_idx function from survey function bank
         Fimpl <- F_fullAdvice[y] + F_fullAdvice[y]*ie_bias
         F_full[y] <- get_error_idx(type = ie_typ,
                                    idx = Fimpl,
                                    par = ie_F)
-
+}
         # add implimentation bias to catch, need to convert from F to catch, back to F
         # get catch in numbers using the Baranov catch equation from advised F
 
+    else if(type == 'advicewithcatchbias'){
         CN_temp[y,] <- get_catch(F_full=F_full[y], M=natM[y],
                                  N=J1N[y,], selC=slxC[y,]) + 1e-3
 
@@ -51,7 +53,7 @@ get_implementationF <- function(type, stock){
                            slxCv = slxC[y,],
                            M = natM[y],
                            waav = waa[y,])
-
+}
 
          # Using Pope's approximation;
          # codCW2 needs to be converted to at-age to use
@@ -63,7 +65,7 @@ get_implementationF <- function(type, stock){
          #                                      M = natM[y],
          #                                      ra = c(8))
 
-    }else{
+    else{
 
       stop('get_implementationF: type not recognized')
 

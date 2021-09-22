@@ -21,6 +21,13 @@ get_J1Updates <- function(stock){
     SSB[y] <- sum(J1N[y-fage,] * mat[y,] * waa[y-fage,])
 
     #type2='True' indicates that the recruits will be calculated with the true SRR
+    #If hockey-stick function is used, the early block indicates that the last
+    #10 years of recruitment will be used in the cumulative distribution function (cdf)
+    #The early block is used for 'historical' recruitment. This only matters if the 
+    #assessment history is not used for the historical time period. 
+    #The late block indicates that the last 20 years of recruitment will be used in
+    #the cdf. The late block is used for recruitment during the management procedure
+    #period. 
     if (y < fmyearIdx){
     Rout <- get_recruits(type=R_typ, type2='True', par=Rpar, S=SSB[y], block = 'early',
                          TAnom=Tanom[y], pe_R = pe_R, R_ym1 = R[y-1],
@@ -42,7 +49,7 @@ get_J1Updates <- function(stock){
     if (y < fmyearIdx){
     natM[y] <- init_M
     }
-    if(y >= fmyearIdx) {
+    else {
       natM[y] <- M
     }
 
