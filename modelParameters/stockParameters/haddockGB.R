@@ -1,5 +1,4 @@
-# Average and sd F before the management period begins. Mean on real scale
-# but distribution is lognormal. SD is lognormal SD.
+# Scalar to FMSY and sd for F before the management period begins. Distribution is lognormal. SD is lognormal SD.
 burnFmsyScalar <- 4
 burnFsd <- 0.3
 
@@ -33,6 +32,15 @@ M_mis<-FALSE
 initN_par <- c(nage = page, N0 = 1e5, F_full = 0.99, M = M)
 initN_type <- 'expDecline'
 
+# Recruitment
+##HS with all recruitment values (what is used in stock assessment projections)##
+#Rpar <- c(SSB_star = 75000, #Used in projections (NEFSC 2019)
+#          cR = 1) # dont need to convert
+#R_typ <- 'HS'
+##For regular BH
+R_typ <- 'BH'
+Rpar<-c(a=0.0004313,b=0.000002392,c=0)
+
 #### Fishery parameters ####
 
 # fishery and survey catchabilities
@@ -45,20 +53,6 @@ DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE.
 # ### change select to L50 paramaterization like maturity
 selC <- c(0.012,0.031,0.106,0.313,0.415,0.426,1.000,0.614,0.614) #Used in Projections (NEFSC 2019)
 selC_typ <- 'input'
-
-# Recruitment
-##HS with all recruitment values (what is used in stock assessment projections)##
-#Rpar <- c(SSB_star = 75000, #Used in projections (NEFSC 2019)
-#          cR = 1) # dont need to convert
-#R_typ <- 'HS'
-##For regular BH
-R_typ <- 'BH'
-Rpar<-c(a=0.0004313,b=0.000002392,c=0)
-R_mis<-TRUE #If BRPs and projections assume a wrong SRR, set to TRUE. 
-Rpar_mis <- c(SSB_star = 75000, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
-              cR = 1,
-              Rnyr= 20)
-
 
 #### Survey parameters ####
 
@@ -81,6 +75,11 @@ startCV <- 1.5
 # scalar to bring pop numbers closer to zero (necessary
 # for model fitting)
 caaInScalar <- 1000
+
+R_mis<-TRUE #If BRPs and projections assume a wrong SRR, set to TRUE. 
+Rpar_mis <- c(SSB_star = 75000, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
+              cR = 1,
+              Rnyr= 20)
 
 #### Error parameters ####
 
