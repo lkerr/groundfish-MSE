@@ -1,22 +1,15 @@
-
-
-
 ## ---- SIMULATION PARAMETERS ---- ##
 
-
 #### Debugging ####
-
 # Debug using simple temperature trend that reduces variance? (T/F)
 simpleTemperature <- FALSE
-
 
 # Which management procedures csv do you want to read:
 #mprocfile<-"mproc.csv"
 mprocfile<-"mprocTest.csv"
 #mprocfile<-"mprocEcon.csv"
 
-
-#### Stock parameters ####
+#### Operating model parameters ####
 
 # If you have files in the modelParameters folder for stocks but you don't
 # want to include them in a run you can write them in here in the
@@ -26,41 +19,19 @@ mprocfile<-"mprocTest.csv"
 # Stocks: codGB_Error, codGOM, haddockGB, pollock, yellowtailflounderGB
 stockExclude <- c()
 
-
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data
-# just fishing mortality for now
 
 histAssess <- FALSE
 
-
-#### Structural parameters ####
-
-# number of times to repeat this analysis
-nrep <- 1
-
-# First year to begin actual management
-fmyear <- 2010
-
-# first year after the initial condition period. The initial condition period
-# simply fills up the arrays as necessary even before the burn-in period
-# begins. This is rather arbitrary but should be larger than the number of
-# years in the assessment model and greater than the first age in the model.
-fyear <- 38
-
-# maximum year predicted into the future
-mxyear <- 2060
-
-
 #### Burn-in parameters ####
 
-# number of burn-in years (before the pre-2000 non-assessment period)
+# number of burn-in years (before the historical period)
 nburn <- 50
-
 
 #### Temperature information ####
 
-## Do you want to include temperature projections (in S-R, growth, etc.)
+## Do you want to incorproate temperature in simulations (in S-R, growth, etc.)
 useTemp <- FALSE
 
 ## Do you want to use particular models from the cmip data series? If so
@@ -84,13 +55,23 @@ anomFun <- median
 
 # Number of model years to run are defined by the length of the burn-in
 # period and the dimension of the CMIP5 data set.
-# Load the cmip5 temperature data
-# cmip5 <- read.table(file='data/data_raw/NEUS_CMIP5_annual_means.txt',
-#                     header=TRUE, skip=2)
-# cmip5 <- subset(cmip5, year <= mxyear)
 
-# nyear <- nrow(cmip5) + nburn
+#### Structural parameters ####
 
+# number of times to repeat this analysis
+nrep <- 1
+
+# First year to begin actual management
+fmyear <- 2010
+
+# first year after the initial condition period. The initial condition period
+# simply fills up the arrays as necessary even before the burn-in period
+# begins. This is rather arbitrary but should be larger than the number of
+# years in the assessment model and greater than the first age in the model.
+fyear <- 38
+
+# maximum year predicted into the future
+mxyear <- 2060
 
 #### Management ####
 
@@ -99,7 +80,6 @@ anomFun <- median
 # these can be changed to examine sensitivity.
 BrefScalar <- 0.5
 FrefScalar <- 0.75
-
 
 #### Helpful parameters ####
 # Scalars to convert things
@@ -113,7 +93,6 @@ last_econ_index<-last_econ_yr-first_econ_yr+1
 
 econ_data_start<-2010
 econ_data_end<-2015
-
 
 ##############Stocks in the Economic Model #############################
 spstock2s<-c("americanlobster","americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","monkfish", "other","pollock","redsilveroffshorehake","redfish","seascallop","skates","spinydogfish","squidmackerelbutterfishherring","summerflounder","whitehake","winterflounderGB","winterflounderGOM","witchflounder","yellowtailflounderCCGOM", "yellowtailflounderGB","yellowtailflounderSNEMA")
@@ -131,9 +110,6 @@ spstock_equation_post<-spstock_equation_pre
 choice_equation_post<-choice_equation_pre
 ############## End Independent variables in the targeting equation ##########################
 
-
-
-
 ##############Independent variables in the Production equation ##########################
 ### If there are different the equations, you can set there up here, then use their suffix in the mproc file to use these new targeting equations
 ### example, using ProdEqn=tiny in the mproc file and uncommenting the next  line will be regression with 2 RHS variables and no constant.
@@ -142,8 +118,6 @@ choice_equation_post<-choice_equation_pre
 production_vars_pre=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","constant")
 production_vars_post=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","log_sector_acl", "constant")
 ############## End Independent variables in the Production equation ##########################
-
-
 
 #### Output ####
 # Years after the management period begins to break up the results. For
@@ -167,8 +141,6 @@ plotDrivers <- FALSE
 plotTrajInd <- FALSE     # samples of individual trajectories
 plotTrajBox <- FALSE     # boxplots of trajectories
 plotTrajSummary <- TRUE  # summary statistics
-
-
 
 #how many years before writing out the results to csv? 6 corresponds to 1 "econ" simulation (2010-2015).  Larger will go faster (less overhead) but you lose work if something crashes,
 savechunksize<-10
