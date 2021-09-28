@@ -11,7 +11,7 @@ A component of the operating model for the New England groundfish management str
 In the case of a multispecies fisheries like the New England groundfish fisheries the catch of a stock may be a function not just of the ACL for that stock, but the catch or ACL for other stocks in the multispecies fishery.  We fit multivariate regressions to the available catch and ACL data as a means of predicting this interaction between stocks in the NE groundfish fishery.
 
 ## Data
-Catch history data was downloaded from the Greater Atlantic Regional Fisheries Office year end catch accounting website for the New England multispecies (groundfish) fishery (https://www.greateratlantic.fisheries.noaa.gov/aps/monitoring/nemultispecies.html).  We downloaded data from 8 years of data available, for the 2010-2017 fiscal years, in the Year-End Groundfish Catch Accounting pdf files.
+Catch history data was downloaded from the Greater Atlantic Regional Fisheries Office year end catch accounting website for the New England multispecies (groundfish) fishery (https://www.greateratlantic.fisheries.noaa.gov/ro/fso/reports/h/groundfish_catch_accounting).  We downloaded data from 9 years of data available, for the 2010-2019 fiscal years, in the Year-End Groundfish Catch Accounting pdf files.
 
 Data was extracted from these files and converted into a tidy usable format using R and the script in the wrangleCatchACL.R file.  This file extracts the five relevant data tables from each pdf, creating 5 data tables in R, one each for catch, ACL, the ratio of catch to ACL, landings, and discards, for 25 stocks:
 
@@ -33,7 +33,7 @@ myspread <- function(df, key, value) {
     spread(temp, value)
 }
 
-catchHist<-read_csv("C:/Users/jcummings/OneDrive - UMASS Dartmouth/SMAST/Research/groundfish-MSE/data/data_processed/catchHistory/catchHist.csv")
+catchHist<-read_csv("C:/Users/mmazur/Documents/groundfish-MSE/data/data_raw/catchHistory/catchHist.csv")
 catchHist <- catchHist %>% 
   select(Stock, Total, Year, data_type) %>% #select columns of interest
   rename_all(tolower) %>% #make all names lowercase
@@ -44,45 +44,33 @@ kable(stocks,caption="New England Multispecies stocks")
 
 This results in the following data for each stock:
 ```{r, echo=FALSE, message=FALSE}
-gbcod_data <- catchHist %>% 
-  filter(grepl("gb cod",stock)) %>% 
+gomcod_data <- catchHist %>% 
+  filter(grepl("gom cod",stock)) %>% 
   spread(data_type,total)
-kable(gbcod_data,caption="George's Bank Cod data")
+kable(gbcod_data,caption="Gulf of Maine Cod data")
 ```
 
 
 Plots of the George's Bank data, and subsets of the data showing the catch, ACL, and catch to ACL relationship through time:
 ```{r, echo=FALSE, message=FALSE}
-mydata <- catchHist %>% 
-  filter(grepl(paste(c("cod","haddock"), collapse="|"),stock))
-ggplot(mydata, aes(x=year, y=total, group=data_type, color=data_type)) +
+ggplot(catchHist, aes(x=year, y=total, group=data_type, color=data_type)) +
   geom_line() +
   facet_wrap(~stock,scales = "free") + labs(title="Time Series by stock and data type")
 
 ##### - Set up data to model cod-haddock Interactions - #####
 # select just GB cod and haddock
-mydata<-mydata %>% 
-  filter(stock=="gb cod"|stock=="gb haddock")
-mydata$stock[mydata$stock=="gb cod"]<-"cod"
-mydata$stock[mydata$stock=="gb haddock"]<-"haddock"
+catchHist$stock[catchHist$stock=="gom cod"]<-"cod"
+catchHist$stock[catchHist$stock=="gb haddock"]<-"haddock"
 
 # Plot time series of catch, ACL, C:ACL, Discards, and Landing
-plotdata<-mydata %>% 
-  filter(data_type=="Catch"|data_type=="ACL")
-
-ggplot(plotdata, aes(x=year, y=total, group=data_type, color=data_type)) +
+ggplot(catchHist, aes(x=year, y=total, group=data_type, color=data_type)) +
   geom_line() +
   facet_wrap(~stock,scales = "free") + labs(title="George's Bank Cod and Haddock ACL and Catch")
 
 # Plot time series of catch to ACL for GB
-plotdata2<-mydata %>% 
-  filter(data_type=="CtoACL")
-
-ggplot(plotdata2, aes(x=year, y=total, group=stock, color=stock)) +
-  geom_line() + geom_hline(yintercept=100)+ ylab("Catch as Percentage of ACL") + labs(title="George's Bank Cod and Haddock Catch:ACL")
 
 # organize for regression
-regdata <- mydata %>%
+regdata <- catchHist %>%
   spread(data_type,total) %>% 
   mutate(ACL2=ACL^2) %>% 
   gather(data_type,total,-c(year,stock)) %>% 
@@ -94,7 +82,7 @@ regdata <- mydata %>%
 
 ## Realized Catch Modeling Methodology
 
-Multiple regression models were fit to the George's Bank cod and George's Bank haddock catch, using George's Bank cod and haddock ACL as predictive variables.  We evaluated a set of five multiple regression models.  An intercept only model, a GB cod ACL model, a GB haddock ACL model, a GB cod + haddock ACL model, and a quadratic GB cod + haddock ACL model:
+Multiple regression models were fit to the Gulf of Maine cod and George's Bank haddock catch, using Gulf of Maine cod and GB haddock ACL as predictive variables.  We evaluated a set of five multiple regression models.  An intercept only model, a GOM cod ACL model, a GB haddock ACL model, a GOM cod + haddock ACL model, and a quadratic GB cod + haddock ACL model:
 ```{r, echo=TRUE, message=FALSE}
 # Intercept only model
 mvreg_int<-vglm(cbind(Catch_cod,Catch_haddock)~1,family=binormal,regdata)
@@ -126,7 +114,10 @@ kable(Coef(mvreg_cod, matrix = TRUE),caption="Cod ACL model coefficients")
 # predictions
 ##### - set up prediction for Cod ACL model- #####
 cod_ACL<-seq(0,10000,length.out=21)
-cod_pred<-predictvglm(mvreg_cod,list(ACL_cod=cod_ACL)) %>% 
+cod_ACL2<-seq(0,10000,length.out=21)
+haddock_ACL<-seq(0,10000,length.out=21)
+haddock_ACL2<-seq(0,10000,length.out=21)
+cod_pred<-predictvglm(mvreg_both2,list(ACL_cod=cod_ACL,ACL2_cod=cod_ACL2,ACL_haddock=haddock_ACL,ACL2_haddock=haddock_ACL2)) %>% 
   as_tibble() %>% 
   select(mean1,mean2) %>% 
   mutate(cod=mean1) %>% 

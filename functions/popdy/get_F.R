@@ -50,7 +50,7 @@ get_F <- function(x, Nv, slxCv, M, waav){
     return(diff)
     
   }
-  
+
   opt <- try(optimize(getCW, interval=c(-10, 5)))
   
   return(exp(opt$minimum))

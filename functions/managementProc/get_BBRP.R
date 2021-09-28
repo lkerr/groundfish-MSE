@@ -1,5 +1,3 @@
-
-
 # Function to calculate biomass-based reference points
 # 
 # parmgt: a 1-row data frame of management parameters. The operational
@@ -21,14 +19,9 @@
 #           get_BmsySim
 #         to see what needs to be included in the list.
 
-
-
-
-
 get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
                      distillBmsy=mean, stockEnv){
 
-   
   if(parmgt$BREF_TYP == 'RSSBR'){
     
     # There cannot be any forward projections associated with RSSBR. They
@@ -46,9 +39,11 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     # Load in the recruitment function (recruitment function index is
     # found in the parmgt data frame but the actual functions are from
     # the list Rfun_BmsySim which is created in the processes folder.
-    Rfun <- Rfun_lst[[parmgt$RFUN_NM]]
 
+    Rfun <- Rfun_lst[[parmgt$RFUN_NM]]
+    
     funR <- Rfun(parpop = parpop, 
+                 parmgt= parmgt,
                  ny = parmgt$BREF_PAR0)
    
     B <- ssbrFmax$SSBvalue * funR
@@ -56,19 +51,22 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     out <- list(RPvalue = B)
     
   }else if(parmgt$BREF_TYP == 'SIM'){
-   
+
     # Load in the recruitment function (recruitment function index is
     # found in the parmgt data frame but the actual functions are from
     # the list Rfun_BmsySim which is created in the processes folder.
     Rfun <- Rfun_BmsySim[[parmgt$RFUN_NM]]
-    
     # # get SPR at Fmax
     # sprFmax <- get_perRecruit(parmgt=mproc[m,], parpop=parpop,
     #                           nage=1000, nF=1000, nFrep=100)
     # get Fmsy proxy
     # Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop, 
                       # parenv = parenv, Rfun_lst = Rfun_lst)
-
+    
+    if (stockEnv$waa_mis=='TRUE'){
+      parpop$waa<-stock[[1]]$waa[1,]
+    }
+    
     SSB <- get_proj(type = 'BREF', parmgt = parmgt, parpop = parpop, 
                     parenv = parenv, 
                     Rfun = Rfun, F_val = FBRP,

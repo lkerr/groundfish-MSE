@@ -5,7 +5,7 @@
 
 * **simpleTemperature**. T/F. If true then the temperature data are smoothed. This can be used for debugging because it is nice when you can know that the temperature is supposed to be increasing in every single year.
 
-* **mprocTest**. T/F. If true then **mproc.txt** is bypassed in favor of **mprocTest.txt**. **mprocTest** holds a variety of test cases for the management procedures that is meant to span the range of the potential options. The idea is that if you can run the code using **mprocTest** without errors cropping up then you are probably good to go. Feel free to add to this file to increase its utility; definitely add to this file if you make a substantive change to the management procedure options.
+* **mprocTest**. T/F. If true then **mproc.csv** is bypassed in favor of **mprocTest.csv**. **mprocTest** holds a variety of test cases for the management procedures that is meant to span the range of the potential options. The idea is that if you can run the code using **mprocTest** without errors cropping up then you are probably good to go. Feel free to add to this file to increase its utility; definitely add to this file if you make a substantive change to the management procedure options.
 
 * **stockEcxlude**. By default all stocks parameter files listed in the **modelParameters/stockParameters** directory are included in a multi-stock run. If you wish to exclude one or more stocks you can indicate this in the **stockExclude** vector. A value of **NULL** (i.e., ```stockExclude <- NULL```) means that all listed parameter files will be included. To exclude Georges Bank haddock, for example, write ```stockExclude <- 'haddockGB'``` or to exclude both Georges cod and haddock write ```stockExclude <- c('haddockGB', 'codGB')```. Note that file extensions are not included here. The program sets the skip in **runSetup.R**.
 
@@ -63,6 +63,8 @@
 
 * **qI**. Catchability for the survey index
 
+* **DecCatch**. Switch for if survey catchability decreases with temperature. TRUE= survey catchability decreases. FALSE= survey catchability is constant overtime. 
+
 * **selC**. Selectivity parameters for the commercial fishery. See function ```get_slx()``` for information on parameters.
 
 * **selcC_typ**. Type of selectivity function. See function ```get_slx()``` for information on types.
@@ -71,7 +73,7 @@
   * Traditional Beverton-Holt:
     * a
     * b
-    * c -- the temperature effect
+    * g -- the temperature effect
     * rho -- any annual AR1 correlation effect
   * Beverton-Holt steepness parameterization. The beta parameters can be left out if not included in the model and they will be converted to 0.
     * R<sub>0</sub> -- virgin recruitment
@@ -81,6 +83,9 @@
     * beta3 -- temperature effect on overall error
     * rho -- any annual AR1 correlation effect
     * SSBRF0 -- spawner biomass per recruit at F=0. Stock assessment results are a good place to look for this. Alternatively could build a per-recruit model and use the M selectivity, maturity, etc. from a recent assessment
+  * If you want the BRPs to be estimated with and projections to use the 'wrong' stock-recruitment relationship:
+    * Set R_mis <- TRUE
+    * Decide on what the 'wrong' stock-recruitment relationship is with Rpar_mis. 
 
 * **selI**. Survey selectivity. See function ```get_slx()``` for selectivity options.
 
@@ -118,6 +123,22 @@
 
 * **pe_R**. Recruitement process error (lognormally distributed)
 
+* **pe_RSA**. Recriutment process error assumed in the stock assessment
+
+* **pe_IA**. Initial abundance error assumed in the projections
+
 * **ob_sumCW**. Observation error bias for fishery catch in weight. 1.0 is no bias, 0.9 is -10% bias, 1.1 is +10% bias etc.
 
 * **ob_sumCW**. Observation error bias for fishery catch in weight. 1.0 is no bias, 0.9 is -10% bias, 1.1 is +10% bias etc.
+
+* **Change_point2**. Set to TRUE if there is more than one change point in catch bias. 
+
+* **Change_point_yr**. If Change_point2 is TRUE, then identify the year in which catch bias changes. 
+
+* **Change_point3**. Set to TRUE if there is more than two change points in catch bias.
+
+* **Change_point_yr1**. If Change_point3 is TRUE, then identify the year in which the catch bias changes the first time (the first time after the MP period begins). 
+
+* **Change_point_yr2**. If Change_point3 is TRUE, then identify the year in which the catch bias changes the second time (the second time after the MP period begins). 
+
+
