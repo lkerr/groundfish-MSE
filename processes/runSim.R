@@ -67,7 +67,6 @@ for(r in 1:nrep){
     if (histAssess == TRUE) {
       for (i in 1:nstock){
       assess_vals <- get_HistAssess(stock = stock[[i]])
-      assess_vals$assessdat$M<-rep(0.4,length(assess_vals$assessdat$M))
       }
     }
 
