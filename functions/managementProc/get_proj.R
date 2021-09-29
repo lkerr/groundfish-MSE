@@ -1,53 +1,3 @@
-
-
-# Function to get Bmsy assuming an Fmsy, recruitment history and level of
-# natural mortality.
-# 
-# parmgt: a 1-row data frame of management parameters. The operational
-#         component of parmgt for this function are the (1-row) columns
-#         "FREF_TYP" and "FREF_PAR0". FREF_TYP/FREF_PAR0 determine
-#         how the Fmsy proxy is set (i.e., what the level of fishing
-#         mortality will be during the projections).
-# 
-# parpop: named ist of population parameters (vectors) needed for the 
-#         simulation including selectivity (sel), weight-at-age (waa),
-#         recruitment (R), maturity (mat) and natural mortality (M).
-#         Natural mortality can be a vector or a scalar. Vectors have
-#         one value per age class.
-# 
-# Rfun: Function defining what to do with the recruitment histories. Any 
-#       function will do here, and extra arguments can be included using
-#       the (...). A common function will be sample(), with size=1 included
-#       as an extra argument. That just means a random draw from the
-#       recruitment history. You could also use mean() or mean() with
-#       the trim=p argument in the ... if you wanted to apply the mean
-#       recruitment or a trimmed mean recruitment to every year of the
-#       projection/simulation. Another option would be to do something 
-#       like use rlnorm() and then specify an sd. Or you could define a
-#       trend in the recruitment history and use that.
-#       
-# distillBmsy: function to aggregate biomasses under the particular F policy.
-#              Since temperature can play a role there is no equilibrium
-#              over the period, so need to make a decision about what function
-#              to use like mean, median or a quantile.
-#       
-#         
-#         
-# # Important note: If you want to use only the last n years of the
-# recruitment history, you can use something like
-#     function(x) sample(tail(x, n), 1)
-# as Rfun. But note that if you ever only wanted to apply this function
-# to the very last year (i.e., n=1), sample will not work because,
-# for example, sample(5, n=1) samples the vector 1:5 rather than the
-# number 5. Probably you wouldn't really want to use the last year
-# anyhow though (so I guess this note isn't so critically important!)
-
-
-### ** note: initial numbers-at-age is assuming age-1 is the minimum right now. model ages should be
-###          passed under parpop and the minimum should be used instead of 1.0.
-
-
-
 get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                      F_val, stReportYr, ny=NULL, stockEnv, ...){
 
@@ -56,25 +6,29 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       startHCM <- parmgt$FREF_PAR0
       endHCM <- parmgt$FREF_PAR1
     }else if(type == 'BREF'){
-      startHCM <- parmgt$BREF_PAR0
+      startHCM <- -parmgt$BREF_PAR0
       endHCM <- parmgt$BREF_PAR1
     }
-    
+    else if(type=='current'){#'current' being the current method for New England groundfish which uses projections in the catch advice
+      startFCST <- parenv$y
+      endFCST <- parenv$y + 2
+    }
+
     # Tanom is unnecessary for hindcasts. Loop below is based on the length
     # of Tanom (relevant to "forecast") so adapt this variable to be the
     # appropriate length.
     Tanom <- rep(0, ny)
-    
+
     # length of recruitment time series
     nR <- length(parpop$R)
-    
+
     # historical R estimates over the time window specified in the file mprocfile (defined in set_om_parameters_global.R)
-    Rest <- get_dwindow(parpop$R, 
-                        start = unlist(nR- (-startHCM) + 1), 
+    Rest <- get_dwindow(parpop$R,
+                        start = unlist(nR- (-startHCM) + 1),
                         end = unlist(nR - (-endHCM) + 1))
-    
+
   }
-   
+
   if(parmgt$RFUN_NM == 'forecast'){
     if(type == 'FREF'){
       startFCST <- parenv$y
@@ -83,27 +37,38 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       startFCST <- parenv$y
       endFCST <- parenv$y + parmgt$BREF_PAR0
     }
-    
+    else if(type=='current'){
+      startFCST <- parenv$y
+      endFCST <- parenv$y + 2
+    }
+
     if(is.na(parenv$Tanom[endFCST])){
       stop(paste('get_proj: end projection year out of temperature anomaly',
                  'range. Check FREF_PAR0 or BREF_PAR0 in mproc.'))
     }
-    
+
     Tanom <- parenv$Tanom[startFCST:endFCST]
-       
+
     ny <- length(Tanom)
-    
+
   }
-  
- 
-  # Get the initial population for the simulation -- assumes exponential 
+
+
+  # Get the initial population for the simulation -- assumes exponential
   # survival based on the given F, mean recruitment and M
   # ages <- 1:length(parpop$sel)
   # meanR <- mean(parpop$R)
   # init <- meanR * exp(-ages * F_val*parpop$sel - as.numeric(parpop$M))
-   
+
   # The initial population is the estimates in the last year
-  init <- tail(parpop$J1N, 1)
+  init <- tail(parpop$J1N,1)
+
+  if(type=='current'){
+    suminit<-sum(init)
+    suminit<-get_error_idx(type=stockEnv$oe_sumIN_typ, idx=suminit, par=stockEnv$pe_IA)
+    initpaa<-get_error_paa(type=stockEnv$oe_paaIN_typ, paa=init, par=10000)
+    init<-suminit*initpaa
+  }
 
   # Ensure that all vectors are the same length
   if(!all(length(parpop$sel) == length(init),
@@ -117,87 +82,111 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       stop('get_proj: check vector lengths (M)')
     }
   }
-  
-  
-  
-  # # Calculate the average temperature to use in forward projections
-  # TAnomP <- get_dwindow(parenv$Tanom,
-  #                       starty = parenv$y + 
-  #                                unlist(start),
-  #                       endy = parenv$y + 
-  #                              unlist(end))
-  # TAnomPMean <- mean(TAnomP)
-  
-  
-  # number of ages in the model
+
   nage <- length(parpop$sel)
-  
+
   # if M is not given as a vector, make it one
   if(length(parpop$M) == 1){
-    parpop$M <- rep(parpop$M, nage)
+    if(exists('y') & parpop$switch==TRUE){
+    parpop$M <- rep(stockEnv$natM[y], nage)}
+    else if(exists('y') & parpop$switch==FALSE){
+      parpop$M <- rep(0.2, nage)
+    }
+    else{parpop$M<-rep(parpop$M,nage)}
+
   }
-  
+
   # set up containers
   N <- matrix(0, nrow=ny, ncol=nage)
 
   # set up initial conditions
   N[1,] <- init
-  for(y in 2:length(Tanom)){
-    
-
+  #Get beginning of year population in year t+1
+  if (type=='current'){
+    Fhat<-parpop$Fhat
     for(a in 2:(nage-1)){
-      # exponential survival to the next year/age
-      N[y,a] <- N[y-1, a-1] * exp(-parpop$sel[a-1]*F_val - 
+      #init= population at the beginning of the year in t-1
+      #exponential survival to the next year/age (t)
+      N[1,a] <- init[a-1] * exp(-parpop$sel[a-1]*Fhat -
                                     parpop$M[a-1])
     }
-   
+
     # Deal with the plus group
-    N[y,nage] <- N[y-1,nage-1] * exp(-parpop$sel[nage-1] * F_val - 
-                                       parpop$M[nage-1]) + 
-                 N[y-1,nage] * exp(-parpop$sel[nage] * F_val - 
+    N[1,nage] <- init[nage-1] * exp(-parpop$sel[nage-1] * Fhat -
+                                       parpop$M[nage-1]) +
+      init[nage] * exp(-parpop$sel[nage] * Fhat -
+                          parpop$M[nage])
+
+    Recruits<-parpop$R
+
+    N[1,1] <- prod(tail(Recruits,5))^(1/5)
+    if (mproc$rhoadjust==TRUE & y>fmyearIdx & stockEnv$Mohns_Rho_SSB[y]>0.15){
+      N[1,]<-N[1,]/(1+stockEnv$Mohns_Rho_SSB[y])
+    }
+  }
+  for(y in 2:length(Tanom)){
+  Fvalue<-F_val
+  if (type=='current'){
+    if (y==2 & !exists('catchproj',stockEnv)){
+      Fvalue<-parpop$Fhat
+    }
+    if (y==2 & exists('catchproj',stockEnv)){
+      Fvalue<-get_F(x = stockEnv$catchproj[2],
+                    Nv = init,
+                    slxCv = parpop$sel,
+                    M = parpop$M,
+                    waav = parpop$waa)
+    }
+  }
+    for(a in 2:(nage-1)){
+      #N[y-1] is the population at the beginning of the previous year
+      #exponential survival to the next year/age
+      N[y,a] <- N[y-1, a-1] * exp(-parpop$sel[a-1]*Fvalue -
+                                    parpop$M[a-1])
+    }
+    # Deal with the plus group
+      N[y,nage] <- N[y-1,nage-1] * exp(-parpop$sel[nage-1] * Fvalue -
+                                       parpop$M[nage-1]) +
+                 N[y-1,nage] * exp(-parpop$sel[nage] * Fvalue -
                                      parpop$M[nage])
-    
     ## Recruitment
     # sd of historical R estimates
-
-    N[y,1] <- Rfun(type = stockEnv$R_typ,
-                   parpop = parpop, 
-                   parenv = parenv, 
-                   SSB = c(N[y-1,]) %*% c(parpop$waa),
-                   sdR = stockEnv$pe_R,
-                   TAnom = Tanom[y],
-                   Rest = Rest)
-
+      parpop$Rpar_mis<-stockEnv$Rpar_mis#will use incorrect recruitment assumption if set in model parameters script
+      if(type=='current'){parpop$switch<-'FALSE'}
+        N[y,1] <- Rfun(type = stockEnv$R_typ,
+                     parpop = parpop,
+                     parenv = parenv,
+                     parmgt = parmgt,
+                     SSB = c(N[y-1,]) %*% c(parpop$waa* parpop$mat),
+                     sdR = stockEnv$pe_R,
+                     TAnom = Tanom[y],
+                     Rest = Rest)
+      #if(type=='BREF'){N[y,1]<-7165447}
   }
   # Get weight-at-age
   Waa <- sweep(N, MARGIN=2, STATS=parpop$waa, FUN='*')
-  
+
   # Get mature biomass-at-age
   SSBaa <- sweep(Waa, MARGIN=2, STATS=parpop$mat, FUN='*')
 
-
   # Calculate the catch in weight
-  
-  sumCW <- sapply(1:nrow(N), function(i){
-    CN <- (parpop$sel * F_val) / (parpop$sel * F_val + parpop$M) * 
+  sumCW <- sapply(2:nrow(N), function(i){
+    CN <- (parpop$sel * F_val) / (parpop$sel * F_val + parpop$M) *
       N[i,] * (1 - exp(-F_val * parpop$sel - parpop$M))
     tempSumCW <- CN %*% c(parpop$waa)
     return(tempSumCW)
   })
-  
-  J1Npj <- N[2:ny,]
 
-  SSBaa <- SSBaa[2:ny,]
+  J1Npj <- N
+
+  SSBaa <- SSBaa
   SSBpj <- apply(SSBaa, 1, sum)
-  sumCWpj <- sumCW[2:ny]
-  
+  sumCWpj <- sumCW
   out <- list(J1N = J1Npj,
-              SSBaa <- SSBaa,
+              SSBaa = SSBaa,
               SSB = SSBpj,
               sumCW = sumCWpj)
-  
+
   return(out)
-  
+
 }
-
-

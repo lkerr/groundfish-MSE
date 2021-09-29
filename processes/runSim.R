@@ -13,13 +13,9 @@ if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
-
-
-
-
-
 ####################These are temporary changes for testing ####################
 # econ_timer<-0
+
 #  mproc_bak<-mproc
 #
 # mproc<-mproc_bak[5:5,]
@@ -60,13 +56,13 @@ for(r in 1:nrep){
 
         #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached, which sets of coefficients to use, and which prices to use
         if(mproc$ImplementationClass[m]=="Economic"){
+          
          source('processes/setupEconType.R')
         }
     # Initialize stocks and determine burn-in F
     for(i in 1:nstock){
       stock[[i]] <- get_popInit(stock[[i]])
     }
-
     #### get historic assessment info if there is any
     if (histAssess == TRUE) {
       for (i in 1:nstock){
@@ -76,11 +72,9 @@ for(r in 1:nrep){
 
     #### Top year loop ####
     for(y in fyear:nyear){
-
       for(i in 1:nstock){
         stock[[i]] <- get_J1Updates(stock = stock[[i]])
       }
-
 
       source('processes/withinYearAdmin.R')
       begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
@@ -126,7 +120,9 @@ for(r in 1:nrep){
         }
 
         for(i in 1:nstock){
-          stock[[i]] <- get_relError(stock = stock[[i]])
+          if (y == nyear){
+            stock[[i]] <- get_TermrelError(stock = stock[[i]])
+          }
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         }
       } #End of burn-in loop
@@ -136,7 +132,8 @@ for(r in 1:nrep){
         stock[[i]] <- get_indexData(stock = stock[[i]])
       } #End killing fish loop
 
-        end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
+      end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
+
           #Save economic results once in a while to a csv file.
         if(mproc$ImplementationClass[m]=="Economic" &(y >= fmyearIdx) & (chunk_flag==0 | yearitercounter==max_yiter)) {
             revenue_holder<-rbindlist(revenue_holder)
@@ -151,7 +148,8 @@ for(r in 1:nrep){
         if(showProgBar==TRUE){
           setTxtProgressBar(iterpb, yearitercounter)
         }
-    } #End of year loop
+    }
+       #End of year loop
   } #End of mproc loop
 
 
@@ -166,6 +164,7 @@ big_loop
   # just ensuring that no simulations will be overwritten because the hpcc
   # might finish some in the same second. td is used for uniquely naming the
   # output file as well as for listing in the output results.
+
   td <- as.character(Sys.time())
   td2 <- gsub(':', '', td)
   td2 <- paste(gsub(' ', '_', td2), round(runif(1, 0, 10000)), sep='_')

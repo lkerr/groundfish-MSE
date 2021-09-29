@@ -13,7 +13,6 @@
 get_plots <- function(x, stockEnv, dirIn, dirOut){
   
   with(stockEnv, {
-    
     # load some of the necessary variables for plotting by running the
     # setup file.
     source('modelParameters/set_om_parameters_global.R', local=TRUE)
@@ -30,7 +29,6 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
     
     # Index for years that will be plotted for trajectories and such
     pyidx <- (fmyearIdx-py0+1):length(yrs)
-    
     nm <- names(x)
     # ny <- dim(x[[i]])[3]
     bxidx <- which(nm %in% c("SSB", "R", "F_full", "sumCW", "annPercentChange", 
@@ -45,7 +43,7 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
                                "mxGradCAA",
                                "relE_qI", "relE_qC", "relE_selCs0", "relE_selCs1",
                                "relE_ipop_mean", "relE_ipop_dev",
-                               "relE_R_dev", "relE_SSB", "relE_CW", "relE_IN",
+                               "relE_R_dev", "relE_SSB", "relE_N","relE_CW", "relE_IN",
                                "relE_R", "relE_F", "OFgStatus",   #AEW
                                "FPROXY", "SSBPROXY"))
     
@@ -90,57 +88,6 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
       }
     }
 
-    
-    # # Performance measures: medium term years 10-20
-    # for(i in bxidx){
-    #   jpeg(paste0(dirOut, nm[i], 'yrb10-20.jpg.'))
-    # 
-    #     # If you just have a bunch of NAs for some reason make an
-    #     # empty plot as a place-holder
-    #     if(all(is.na(x[[i]][,,(fmyearIdx+10-1):(fmyearIdx+20),drop=FALSE]))){
-    #       plot(0)
-    #     }else{
-    #       get_box(x=x[[i]][,,(fmyearIdx+10-1):(fmyearIdx+20),drop=FALSE])
-    #     }
-    #   
-    #   dev.off()
-    #     
-    # }
-    # 
-    # # Performance measures using first 5 years
-    # for(i in bxidx){
-    #   
-    #   jpeg(paste0(dirOut, nm[i], 'yra1-5.jpg.'))
-    #   # If you just have a bunch of NAs for some reason make an
-    #   # empty plot as a place-holder
-    #   if(all(is.na(x[[i]][,,fmyearIdx:(fmyearIdx+5-1),drop=FALSE]))){
-    #     plot(0)
-    #   }else{
-    #     get_box(x=x[[i]][,,fmyearIdx:(fmyearIdx+5-1),drop=FALSE])
-    #   }
-    #   
-    #   dev.off()
-    #   
-    # }
-    # 
-    # # Performance measures: long term 20-50 years
-    # for(i in bxidx){
-    #   
-    #   jpeg(paste0(dirOut, nm[i], 'yrc20-end.jpg.'))
-    #   
-    #   # If you just have a bunch of NAs for some reason make an
-    #   # empty plot as a place-holder
-    #   if(all(is.na(x[[i]][,,(nyear-20+1):nyear,drop=FALSE]))){
-    #     plot(0)
-    #   }else{
-    #     get_box(x=x[[i]][,,(nyear-20+1):nyear,drop=FALSE])
-    #   }
-    #   
-    #   dev.off()
-    #   
-    # }
-     
-  
     if(plotRP){
       #### Proxy Reference Point plots ####
       
@@ -243,7 +190,6 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
                     size=min(1, dim(x[[trajidx[1]]])[1]))
   
     for(i in trajidx){
-  
       tempPM <- x[[i]]
       PMname <- nm[i]
       
@@ -341,6 +287,16 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
                         fmyear=yrs[fmyearIdx])
           
         dev.off()
+       # if(nrow(mpMean)== 1 & runClass == 'HPCC' & nm[i]=='SSB'|nrow(mpMean)== 1 & runClass == 'HPCC' & nm[i]=='R'|nrow(mpMean)== 1 & runClass == 'HPCC' & nm[i]=='F_full'){
+        
+      #  jpeg(paste0(dirOut, 'Traj/', PMname, '/MPMeanTrajwithEst.jpg.'),
+      #       width=480*1.75, height=480, pointsize=12*1.5)
+      #  par(mar=c(4,4,1,1))
+      #  get_mpMeanTrajwithEst(mpMeanMat = mpMean, x=yrs[pyidx], nm=nm, 
+      #                 fmyear=yrs[fmyearIdx])
+        
+      #  dev.off()
+      # }
       }
       
     }

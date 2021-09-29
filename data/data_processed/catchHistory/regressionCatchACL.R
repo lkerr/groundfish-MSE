@@ -22,40 +22,39 @@ myspread <- function(df, key, value) {
 
 ##### - Data Import and Processing - #####
 # Reorganize catchHist data for plotting
-catchHist<-read_csv("catchHist.csv")
+catchHist<-read_csv("data/data_raw/catchHistory/catchHist.csv")
 
 mydata <- catchHist %>% 
   select(Stock, Total, Year, data_type) %>% #select columns of interest
   rename_all(tolower) %>% #make all names lowercase
-  mutate(stock = tolower(stock)) %>% #make stock names lowercase
-  filter(grepl(paste(c("cod","haddock"), collapse="|"),stock)) #get just cod and haddock data
+  mutate(stock = tolower(stock)) 
 
 # Plot time series of catch, ACL, C:ACL, Discards, and Landing
-ggplot(mydata, aes(x=year, y=total, group=data_type, color=data_type)) +
-  geom_line() +
-  facet_wrap(~stock,scales = "free")
+#ggplot(catchHist, aes(x=Year, y=Total, group=data_type, color=data_type)) +
+#  geom_line() +
+#  facet_wrap(~Stock,scales = "free")
 
 ##### - Set up data to model cod-haddock Interactions - #####
 # select just GB cod and haddock
-mydata<-mydata %>% 
-  filter(stock=="gb cod"|stock=="gb haddock")
-mydata$stock[mydata$stock=="gb cod"]<-"cod"
+#mydata<-mydata %>% 
+#  filter(stock=="gb cod"|stock=="gb haddock")
+mydata$stock[mydata$stock=="gom cod"]<-"cod"
 mydata$stock[mydata$stock=="gb haddock"]<-"haddock"
 
 # Plot time series of catch, ACL, C:ACL, Discards, and Landing
-plotdata<-mydata %>% 
-  filter(data_type=="Catch"|data_type=="ACL")
+#plotdata<-catchHist %>% 
+#  filter(data_type=="Catch"|data_type=="ACL")
 
-ggplot(plotdata, aes(x=year, y=total, group=data_type, color=data_type)) +
-  geom_line() +
-  facet_wrap(~stock,scales = "free")
+#ggplot(catchHist, aes(x=Year, y=Total, group=data_type, color=data_type)) +
+#  geom_line() +
+#  facet_wrap(~Stock,scales = "free")
 
 # Plot time series of catch to ACL for GB
-plotdata2<-mydata %>% 
-  filter(data_type=="CtoACL")
+#plotdata2<-catchHist%>% 
+#  filter(data_type=="CtoACL")
 
-ggplot(plotdata2, aes(x=year, y=total, group=stock, color=stock)) +
-  geom_line() + geom_hline(yintercept=100)+ ylab("Catch as Percentage of ACL")
+#ggplot(plotdata2, aes(x=year, y=total, group=stock, color=stock)) +
+#  geom_line() + geom_hline(yintercept=100)+ ylab("Catch as Percentage of ACL")
 
 # organize for regression
 regdata <- mydata %>%
@@ -182,3 +181,15 @@ pred_plot_both2<-pred_plot_both %>%
 ggplot(pred_plot_both2, aes(x=Cod_ACL,y=Haddock_ACL,col=value)) + 
   facet_grid(~catch) +  geom_point(aes(size=4))+geom_contour(aes(z=value),col="black") + theme_bw()
 
+
+
+
+
+
+
+####2/24/2021 MDM####
+plot(regdata$CtoACL_haddock~regdata$Catch_cod)
+plot(regdata$Catch_haddock~regdata$Catch_cod)
+mod<-lm(regdata$Catch_haddock~regdata$Catch_cod)
+plot(regdata$CtoACL_haddock~regdata$ACL_cod)
+plot(regdata$Catch_haddock~regdata$ACL_cod)

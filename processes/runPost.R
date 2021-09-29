@@ -1,5 +1,4 @@
 
-
 # Get the result directory path
 source('processes/identifyResultDirectory.R')
 
@@ -18,7 +17,6 @@ invisible(sapply(ffiles, source))
 
 # load the required libraries
 source('processes/loadLibs.R')
-
 flLst <- list()
 for(i in 1:length(fl)){
   load(fl[i])
@@ -42,7 +40,6 @@ for(i in 1:length(flLst[[1]])){
 
   get_plots(x=omval, stockEnv = stockPar[[i]], 
             dirIn=paste0(ResultDirectory, '/sim/'), dirOut=dirOut)
-
 }
 
 # Output the management procedures text file in the figure directory

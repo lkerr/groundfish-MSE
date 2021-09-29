@@ -3,10 +3,10 @@
 
 # Options for management procedures
 ### Sam Truesdell (struesdell@gmri.org)
+### Mackenzie Mazur (mmazur@gmri.org)
 Management procedures are specificed in a csv located in the folder "modelParameters."  The filename is passed in using the object "mprocfile" which is defined in set_om_parameters_global.R
 
 What to write in the mproc.csv file and what it means.
-
 
 ## ASSESSCLASS
 Refers to the class of assessment model. Options are:
@@ -14,6 +14,8 @@ Refers to the class of assessment model. Options are:
 * **CAA**: A catch-at-age model. Currently written in TMB but planning additional option for ASAP-based version.
 
 * **PLANB**: Index-based approach. This version uses Chris Legault's apply_PlanBsmooth() function. More information on that can be found here: [groundfish-MSE/documentation/planBdesc.md](documentation/planBdesc.md).
+
+* **ASAP**: Age-Structured Assessment Program (Legault & Restrepo 1998). This stock assessment model is currently used for the majority of analytical groundfish stock assessments in the region. 
 
 ## HCR
 Refers to the shape of the harvest control rule. Options are:
@@ -23,6 +25,10 @@ Refers to the shape of the harvest control rule. Options are:
 * **simplethresh**: A simple threshold model. If the estimated SSB is larger than the SSB reference point then the advice will be fishing at the F reference point. If the estimated SSB is smaller than the SSB reference point F will be 0.
 
 * **slide**: A sliding control rule.  Similer to simplethresh, except when the estimated SSB is lower than the SSB reference point fishing is reduced though not all the way to zero. Instead, a line is drawn between [SSBRefPoint, FRefPoint] and [0, 0] and the advice is the value for F on that line at the corresponding estimate of SSB.
+
+* **pstar**: The P* method. The aim of this HCR option is to avoid overfishing by accounting for scientific uncertainty with a probabilistic approach. In this scenario, the P* approach (Prager & Shertzer, 2010) is used to derive target catch. The P* method derives target catch as a low percentile of projected catch at the OFL, to allow for scientific uncertainty. The distribution of the catch at the OFL was assumed to follow a lognormal distribution with a CV of 1 (Wiedenmann et al., 2016). The target catch will correspond to a probability of overfishing no higher than 50% (P* <0.5) in accordance with the National Standard 1 guidelines. This option emulates HCRs used in many other Councils in the United States, such as the Mid-Atlantic Fishery Management Council (MAFMC). 
+
+* **step**: Step in fishing mortality. If the SSB decreased below the biomass threshold, this HCR uses a target F of 70% FMSY that has recently been applied to New England groundfish as a default Frebuild. If the SSB never decreased below the biomass threshold or increased to over SSBMSY after dropping below the biomass threshold, this HCR uses a target F at the F threshold. This alternative directly emulates an HCR used for some New England groundfish. National Standard Guidelines were amended in 2016 and these revisions reduced the need to identify an incidental bycatch ABC and indicated that Frebuild need not be recalculated after every assessment, making it less likely that Frebuild will be set to zero in response to short-term lags in rebuilding.
 
 * **NA**: A possible value for situations where there is no harvest control rule (e.g., if using a planB assessment method -- that method gives catch advice directly).
 
@@ -106,8 +112,25 @@ The frequency with which reference points are re-calculated.
 
 * The value represents the frequency. For example, if the value is 3, reference points are recalculated every 3 years. In the years when the reference points are not updated the advice may change based on an updated assessment model but the reference points (and thus the shape of any associated harvest control rule) remains the same.
 
+## AssessFreq
+The frequency with which the stock assessment is conducted. 
+
+* The value represents the frequency. For example, if the value is 3, the stock assessment is conducted every 3 years. In the years when the stock assessment is not conducted, the advice is based on the most recent stock assessment. 
+
 ## ImplementationClass
 This sets harvesting to be determined by a "StandardFisheries" or "Economic" submodel. This column is only used in (variations of) the runSim.R file.
+
+## projections
+This determines if projections are used or not. If set to TRUE, projections are used. When projections are used, catch advice is  generated from the projected catch with F determined from the HCR. There are 100 iterations for each projection and uncertainty in recruitment and the initial population number, which was the estimated number in the last year of the assessment. Initial population number was drawn from a lognormal distribution with a mean of the final population number estimatel. Projections are currently used in determining catch advice for some New England groundfish. 
+
+## rhoadjust
+This determines if rho-ajdustments are used or not. If set to TRUE, rho-adjustments are used. Due to the retrospective patterns apparent in New England groundfish stock assessments, this scenario incorporated rho-adjustments using Mohn’s Rho values (Mohn, 1999). A rho-adjustment has been applied to all analytical New England groundfish NEFSC stock assessments, except for GOM cod. This stock assessment scenario option evaluates the effect of a rho-adjustment on the fishery outcomes. If projections are used, rho-adjustments are also applied to the abundance, recruitment, and fishing mortality estimates used in projections.  
+
+## mincatch
+This determines if a minimum catch constraint is used in catch advice or not. If set to TRUE, a minimum catch constraint is used. Due to the low stock sizes in many of the groundfish fisheries, some HCRs would likely create extremely low catches for some fisheries. A a minimum catch limit prevents F from declining close to zero. 
+
+## varlimit
+This determines if a catch variation limit is applied to the catch advice. If set to TRUE, a catch variation limit is applied. The aim of this option is to provide catch stability if stock biomass were to substantially change from year to year. Stable catch was identified as an objective in the Council’s risk policy (NEFMC 2016). This option prevents the current year’s catch limit from changing more than 20% from the previous year’s catch limit. However, catch is constrained so that it will not be higher than the OFL.
 
 # Economic Options
 The following are only relevant if *ImplementationClass*=='Economic.'

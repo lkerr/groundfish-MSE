@@ -24,11 +24,11 @@ For general information on GitHub workflows and how to use branches, see [ground
 
 --------
 ## Active branches
-* **MDM_Lag**: Contains updates made during the HCR Evaluation project. Has a bit more flexibility than MDM_new_functions. 
+* **MDM_Lag**: Contains updates made during the HCR Evaluation project. Has a bit more flexibility than MDM_new_functions.
 
-* **MDM_NoLag**: The same as MDM_Lag but does include a lag in information to the stock assessment. It is assumed that the stock assessment uses data up to the year of the stock assessment. 
+* **MDM_NoLag**: The same as MDM_Lag but does include a lag in information to the stock assessment. It is assumed that the stock assessment uses data up to the year of the stock assessment.
 
-* **MDM_new_functions**: Constains updates made during the HCR Evaluation project. This includes projections. 
+* **MDM_new_functions**: Constains updates made during the HCR Evaluation project. This includes projections.
 
 --------
 ## Stale / deleted branches

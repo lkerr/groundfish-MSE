@@ -1,5 +1,3 @@
-
-
 # Function for reducing data to the window of interest
 # for feeding into the assessment model
 
@@ -8,7 +6,6 @@
 # endy: year to stop passing data
 
 get_dwindow <- function(data, starty, endy){
-
   w <- window(data, start=starty, end=endy)
   attr(w, 'tsp') <- NULL
   

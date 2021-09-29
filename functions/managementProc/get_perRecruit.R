@@ -71,6 +71,9 @@ get_perRecruit <- function(parmgt, parpop,
   # over which the Y/R or SSB/R is being applied.
   sel <- c(c(parpop$sel), rep(tail(c(parpop$sel), 1), nage-length(parpop$sel)))
   waa <- c(c(parpop$waa), rep(tail(c(parpop$waa), 1), nage-length(parpop$waa)))
+  if (stock[[1]]$waa_mis==TRUE){
+    waa<-c(c(stock[[1]]$waa[1,]), rep(tail(c(parpop$waa), 1), nage-length(parpop$waa)))
+  }
   M <- c(c(parpop$M), rep(tail(c(parpop$M), 1), nage-length(parpop$M)))
   mat <- c(c(parpop$mat), rep(tail(c(parpop$mat), 1), nage-length(parpop$mat)))
   if(!is.null(parpop$mat)){

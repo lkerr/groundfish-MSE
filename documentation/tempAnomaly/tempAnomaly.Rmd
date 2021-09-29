@@ -32,8 +32,8 @@ Next Georges Bank OISST data are read in (**mqt_sst**) because these will be use
 
 ```{r}
 
-load('data/data_raw/mqt_oisst.Rdata')
-gbT <- mqt_oisst[,c('Year', 'q1')]
+load('C:/Users/mmazur/Documents/groundfish-MSE/data/data_raw/mqt_oisst.Rdata')
+gbT <- mqt_oisst[,c('Year', 'q3')]
 names(gbT) <- c('YEAR', 'T')
 
 ```
@@ -44,10 +44,10 @@ We will next downscale the CMIP5 data using the Georges Bank OISST for scaling. 
 ```{r}
 
 # Load in the downscaling function
-source('functions/get_temperatureProj.R')
+source('C:/Users/mmazur/Documents/groundfish-MSE/functions/get_temperatureProj.R')
 
 # Load in OM setup file with reference years ref0 and ref1
-source('processes/set_om_parameters.R')
+source('C:/Users/mmazur/Documents/groundfish-MSE/modelParameters/set_om_parameters_Global.R')
 
 # Run the downscale function
 cmip_dwn <- get_temperatureProj(prj_data = cmip_base,
@@ -91,7 +91,7 @@ The downscaled values are then exported
 ```{r}
 TAnomDF <- data.frame(YEAR = cmip_dwn$YEAR,
                       TANOM = TAnom)
-write.csv(TAnomDF, file = 'data/data_processed/TAnom.csv',
+write.csv(TAnomDF, file = 'C:/Users/mmazur/Documents/groundfish-MSE/data/data_processed/TAnom.csv',
           row.names = FALSE)
 ```
 

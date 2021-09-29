@@ -32,16 +32,16 @@
 
 
 get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
-  
 
   # Load in the recruitment function (recruitment function index is
   # found in the parmgt data frame but the actual functions are from
   # the list Rfun_BmsySim which is created in the processes folder.
   # Necessary for any forecast simulation-based approaches.
+
   Rfun <- Rfun_lst[[parmgt$RFUN_NM]]
   
   if(parmgt$FREF_TYP == 'YPR' | parmgt$FREF_TYP == 'SPR'){
-   
+
     F <- get_perRecruit(parmgt = parmgt, parpop = parpop)$RPvalue
     
     # If using a per-recruit F-based reference point paired with a forecast
@@ -49,13 +49,11 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     # for the simulation -- calcaulte this assuming fishing at the F-based
     # reference point.
     if(parmgt$BREF_TYP == 'SIM' & parmgt$RFUN_NM == 'forecast'){
-      
       # have to use the temporal window set up for the biomass reference
       # point so come up with a dummy parmgt
       parmgtTemp <- parmgt
       parmgtTemp$FREF_PAR0 <- parmgtTemp$BREF_PAR0
       parmgtTemp$FREF_PAR1 <- parmgtTemp$BREF_PAR1
-          
       simAtF <- get_proj(type = 'FREF',
                  parmgt = parmgtTemp, 
                  parpop = parpop, 
