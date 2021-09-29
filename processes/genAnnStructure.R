@@ -35,7 +35,6 @@ if(useTemp == TRUE){
     lo <- loess(temp ~ smidx)
     temp <- predict(lo)
   }
-  
   anomStd <- anomFun(cmip_dwn[msyears,'T'])  # anomoly standard
   Tanom <- temp - anomStd
 }else{

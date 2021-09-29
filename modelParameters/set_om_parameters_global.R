@@ -1,12 +1,13 @@
 ## ---- SIMULATION PARAMETERS ---- ##
 
 #### Debugging ####
+
 # Debug using simple temperature trend that reduces variance? (T/F)
 simpleTemperature <- FALSE
 
 # Which management procedures csv do you want to read:
-#mprocfile<-"mproc.csv"
-mprocfile<-"mprocTest.csv"
+mprocfile<-"mproc.csv"
+#mprocfile<-"mprocTest.csv"
 #mprocfile<-"mprocEcon.csv"
 
 #### Stock parameters ####
@@ -16,23 +17,42 @@ mprocfile<-"mprocTest.csv"
 # stockExclude variable. Do not include the extension.R. For example,
 # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
-# Stocks: codGB_Error, codGOM, haddockGB, pollock, yellowtailflounderGB
-stockExclude <- c()
+# Available stocks: haddockGB, codGOM, codGB_Error, pollock, yellowtailflounderGB
+stockExclude <- c('haddockGB', 'codGB', 'pollock', 'yellowtailflounderGB')
 
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data
+# just fishing mortality for now
 
-histAssess <- FALSE
+histAssess <- TRUE
+
+#### Structural parameters ####
+
+# number of times to repeat this analysis
+nrep <- 1
+
+# First year to begin actual management
+fmyear <- 2019
+
+# first year after the initial condition period. The initial condition period
+# simply fills up the arrays as necessary even before the burn-in period
+# begins. This is rather arbitrary but should be larger than the number of
+# years in the assessment model and greater than the first age in the model.
+fyear <- 38
+
+# maximum year predicted into the future
+mxyear <- 2040
 
 #### Burn-in parameters ####
 
-# number of burn-in years (before the historical period)
+# number of burn-in years (before the pre-2000 non-assessment period)
 nburn <- 50
+
 
 #### Temperature information ####
 
-## Do you want to incorproate temperature in simulations (in S-R, growth, etc.)
-useTemp <- FALSE
+## Do you want to include temperature projections (in S-R, growth, etc.)
+useTemp <- TRUE
 
 ## Do you want to use particular models from the cmip data series? If so
 ## tmods should be a vector of column names (see
@@ -55,23 +75,12 @@ anomFun <- median
 
 # Number of model years to run are defined by the length of the burn-in
 # period and the dimension of the CMIP5 data set.
+# Load the cmip5 temperature data
+# cmip5 <- read.table(file='data/data_raw/NEUS_CMIP5_annual_means.txt',
+#                     header=TRUE, skip=2)
+# cmip5 <- subset(cmip5, year <= mxyear)
 
-#### Structural parameters ####
-
-# number of times to repeat this analysis
-nrep <- 1
-
-# First year to begin actual management
-fmyear <- 2010
-
-# first year after the initial condition period. The initial condition period
-# simply fills up the arrays as necessary even before the burn-in period
-# begins. This is rather arbitrary but should be larger than the number of
-# years in the assessment model and greater than the first age in the model.
-fyear <- 38
-
-# maximum year predicted into the future
-mxyear <- 2060
+# nyear <- nrow(cmip5) + nburn
 
 #### Management ####
 
