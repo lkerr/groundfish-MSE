@@ -1,5 +1,5 @@
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(1,2)
+Scenarios<-c(2,9,11,13,15)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
@@ -94,102 +94,148 @@ Df2<-full_join(Df2,Df3)
 Df2$HCR<-Scenarios[2]
 Df<-full_join(Df,Df2)
 
-# setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[3],"/sim",sep=""))
-# #setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[3],"/sim",sep=""))
-# sims <- list.files()
-# 
-# Fratiot<-matrix(NA,nrow=length(sims),ncol=22)
-# 
-# for (k in 1:length(sims)){
-#   if (file.size(sims[k])==0){
-#     sims[k]<-NA}
-# }
-# sims<-na.omit(sims)
-# 
-# ####True Values (From Operating Model)####
-# setwd("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims")
-# #setwd("C:/Users/jjesse/Box/HCR_Sims")
-# tempwd <- getwd()
-# setwd(paste(tempwd,"/Sim_",Scenarios[3],"/sim",sep=""))
-# 
-# for (k in 1:length(sims)){
-#   load(sims[k])
-#   Fratiot[k,]<-omvalGlobal[[1]]$FPROXY[169:190]/omvalGlobal[[1]]$FPROXYT2[169:190]
-# }
-# 
-# Fratiots<-rowMedians(Fratiot[,1:5])
-# Df2<-as.data.frame(Fratiots)
-# Df2$Fratiot<-Fratiots
-# Df2$Fratiots<-NULL
-# Df2$Time<-'Short-term'
-# 
-# Fratiotm<-rowMedians(Fratiot[,6:10])
-# Df3<-as.data.frame(Fratiotm)
-# Df3$Fratiot<-Fratiotm
-# Df3$Fratiotm<-NULL
-# Df3$Time<-'Medium-term'
-# Df2<-full_join(Df2,Df3)
-# 
-# Fratiotl<-rowMedians(Fratiot[,11:21])
-# Df3<-as.data.frame(Fratiotl)
-# Df3$Fratiot<-Fratiotl
-# Df3$Fratiotl<-NULL
-# Df3$Time<-'Long-term'
-# Df2<-full_join(Df2,Df3)
-# Df2$HCR<-Scenarios[3]
-# Df<-full_join(Df,Df2)
-# 
-# setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[4],"/sim",sep=""))
-# #setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[4],"/sim",sep=""))
-# sims <- list.files()
-# 
-# Fratiot<-matrix(NA,nrow=length(sims),ncol=22)
-# 
-# for (k in 1:length(sims)){
-#   if (file.size(sims[k])==0){
-#     sims[k]<-NA}
-# }
-# sims<-na.omit(sims)
-# 
-# ####True Values (From Operating Model)####
-# setwd("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims")
-# #setwd("C:/Users/jjesse/Box/HCR_Sims")
-# tempwd <- getwd()
-# setwd(paste(tempwd,"/Sim_",Scenarios[4],"/sim",sep=""))
-# 
-# for (k in 1:length(sims)){
-#   load(sims[k])
-#   Fratiot[k,]<-omvalGlobal[[1]]$FPROXY[169:190]/omvalGlobal[[1]]$FPROXYT2[169:190]
-# }
-# 
-# Fratiots<-rowMedians(Fratiot[,1:5])
-# Df2<-as.data.frame(Fratiots)
-# Df2$Fratiot<-Fratiots
-# Df2$Fratiots<-NULL
-# Df2$Time<-'Short-term'
-# 
-# Fratiotm<-rowMedians(Fratiot[,6:10])
-# Df3<-as.data.frame(Fratiotm)
-# Df3$Fratiot<-Fratiotm
-# Df3$Fratiotm<-NULL
-# Df3$Time<-'Medium-term'
-# Df2<-full_join(Df2,Df3)
-# 
-# Fratiotl<-rowMedians(Fratiot[,11:21])
-# Df3<-as.data.frame(Fratiotl)
-# Df3$Fratiot<-Fratiotl
-# Df3$Fratiotl<-NULL
-# Df3$Time<-'Long-term'
-# Df2<-full_join(Df2,Df3)
-# Df2$HCR<-Scenarios[4]
-# Df<-full_join(Df,Df2)
+setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[3],"/sim",sep=""))
+#setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[3],"/sim",sep=""))
+sims <- list.files()
 
-Df$HCR[Df$HCR==Scenarios[1]]<-'Lag'
-Df$HCR[Df$HCR==Scenarios[2]]<-'No Lag'
-# Df$HCR[Df$HCR==Scenarios[3]]<-'F-step'
-# Df$HCR[Df$HCR==Scenarios[4]]<-'Constrained ramp'
+Fratiot<-matrix(NA,nrow=length(sims),ncol=22)
+
+for (k in 1:length(sims)){
+  if (file.size(sims[k])==0){
+    sims[k]<-NA}
+}
+sims<-na.omit(sims)
+
+####True Values (From Operating Model)####
+setwd("C:/Users/mmazur/Desktop/COCA_Sims")
+#setwd("C:/Users/jjesse/Box/HCR_Sims")
+tempwd <- getwd()
+setwd(paste(tempwd,"/Sim_",Scenarios[3],"/sim",sep=""))
+
+for (k in 1:length(sims)){
+  load(sims[k])
+  Fratiot[k,]<-omvalGlobal[[1]]$FPROXY[169:190]/omvalGlobal[[1]]$FPROXYT2[169:190]
+}
+
+Fratiots<-rowMedians(Fratiot[,1:5])
+Df2<-as.data.frame(Fratiots)
+Df2$Fratiot<-Fratiots
+Df2$Fratiots<-NULL
+Df2$Time<-'Short-term'
+
+Fratiotm<-rowMedians(Fratiot[,6:10])
+Df3<-as.data.frame(Fratiotm)
+Df3$Fratiot<-Fratiotm
+Df3$Fratiotm<-NULL
+Df3$Time<-'Medium-term'
+Df2<-full_join(Df2,Df3)
+
+Fratiotl<-rowMedians(Fratiot[,11:21])
+Df3<-as.data.frame(Fratiotl)
+Df3$Fratiot<-Fratiotl
+Df3$Fratiotl<-NULL
+Df3$Time<-'Long-term'
+Df2<-full_join(Df2,Df3)
+Df2$HCR<-Scenarios[3]
+Df<-full_join(Df,Df2)
+
+setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[4],"/sim",sep=""))
+#setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[4],"/sim",sep=""))
+sims <- list.files()
+
+Fratiot<-matrix(NA,nrow=length(sims),ncol=22)
+
+for (k in 1:length(sims)){
+  if (file.size(sims[k])==0){
+    sims[k]<-NA}
+}
+sims<-na.omit(sims)
+
+####True Values (From Operating Model)####
+setwd("C:/Users/mmazur/Desktop/COCA_Sims")
+#setwd("C:/Users/jjesse/Box/HCR_Sims")
+tempwd <- getwd()
+setwd(paste(tempwd,"/Sim_",Scenarios[4],"/sim",sep=""))
+
+for (k in 1:length(sims)){
+  load(sims[k])
+  Fratiot[k,]<-omvalGlobal[[1]]$FPROXY[169:190]/omvalGlobal[[1]]$FPROXYT2[169:190]
+}
+
+Fratiots<-rowMedians(Fratiot[,1:5])
+Df2<-as.data.frame(Fratiots)
+Df2$Fratiot<-Fratiots
+Df2$Fratiots<-NULL
+Df2$Time<-'Short-term'
+
+Fratiotm<-rowMedians(Fratiot[,6:10])
+Df3<-as.data.frame(Fratiotm)
+Df3$Fratiot<-Fratiotm
+Df3$Fratiotm<-NULL
+Df3$Time<-'Medium-term'
+Df2<-full_join(Df2,Df3)
+
+Fratiotl<-rowMedians(Fratiot[,11:21])
+Df3<-as.data.frame(Fratiotl)
+Df3$Fratiot<-Fratiotl
+Df3$Fratiotl<-NULL
+Df3$Time<-'Long-term'
+Df2<-full_join(Df2,Df3)
+Df2$HCR<-Scenarios[4]
+Df<-full_join(Df,Df2)
+
+setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[5],"/sim",sep=""))
+#setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[4],"/sim",sep=""))
+sims <- list.files()
+
+Fratiot<-matrix(NA,nrow=length(sims),ncol=22)
+
+for (k in 1:length(sims)){
+  if (file.size(sims[k])==0){
+    sims[k]<-NA}
+}
+sims<-na.omit(sims)
+
+####True Values (From Operating Model)####
+setwd("C:/Users/mmazur/Desktop/COCA_Sims")
+#setwd("C:/Users/jjesse/Box/HCR_Sims")
+tempwd <- getwd()
+setwd(paste(tempwd,"/Sim_",Scenarios[5],"/sim",sep=""))
+
+for (k in 1:length(sims)){
+  load(sims[k])
+  Fratiot[k,]<-omvalGlobal[[1]]$FPROXY[169:190]/omvalGlobal[[1]]$FPROXYT2[169:190]
+}
+
+Fratiots<-rowMedians(Fratiot[,1:5])
+Df2<-as.data.frame(Fratiots)
+Df2$Fratiot<-Fratiots
+Df2$Fratiots<-NULL
+Df2$Time<-'Short-term'
+
+Fratiotm<-rowMedians(Fratiot[,6:10])
+Df3<-as.data.frame(Fratiotm)
+Df3$Fratiot<-Fratiotm
+Df3$Fratiotm<-NULL
+Df3$Time<-'Medium-term'
+Df2<-full_join(Df2,Df3)
+
+Fratiotl<-rowMedians(Fratiot[,11:21])
+Df3<-as.data.frame(Fratiotl)
+Df3$Fratiot<-Fratiotl
+Df3$Fratiotl<-NULL
+Df3$Time<-'Long-term'
+Df2<-full_join(Df2,Df3)
+Df2$HCR<-Scenarios[5]
+Df<-full_join(Df,Df2)
+
+Df$HCR[Df$HCR==Scenarios[1]]<-'Base'
+Df$HCR[Df$HCR==Scenarios[2]]<-'Lag and Two Year Updates'
+Df$HCR[Df$HCR==Scenarios[3]]<-'Lag and Miss'
+Df$HCR[Df$HCR==Scenarios[4]]<-'Two Year Updates and Miss'
+Df$HCR[Df$HCR==Scenarios[5]]<-'Lag, Miss, and 2 Year Updates'
 Df$HCR<-as.factor(Df$HCR)
-Df$HCR<-ordered(Df$HCR,levels=c('Lag','No Lag'))
+Df$HCR<-ordered(Df$HCR,levels=c('Base','Lag and Two Year Updates','Lag and Miss','Two Year Updates and Miss','Lag, Miss, and 2 Year Updates'))
 Df$Time<-ordered(Df$Time,levels=c('Short-term','Medium-term','Long-term'))
 
 ggplot(Df)+

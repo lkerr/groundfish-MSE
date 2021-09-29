@@ -24,7 +24,7 @@ stockExclude <- c('haddockGB', 'codGB_Error', 'pollock', 'yellowtailflounderGB')
 # if you want to use an input of historic assessment data
 # just fishing mortality for now
 
-histAssess <- TRUE
+histAssess <- FALSE
 
 #### Structural parameters ####
 

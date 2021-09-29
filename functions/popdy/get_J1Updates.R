@@ -63,8 +63,14 @@ get_J1Updates <- function(stock){
         natM[y] <- rep_assess$nat_mort
       }
     }
-  }
-
+    }
+    for(i in 1:nstock){
+      if(y %in% assess_vals$assessdat$MSEyr){
+        rep_assess <- get_AssessVals()
+        natM[y] <- rep_assess$nat_mort
+      }
+      browser()
+    }
     # calculate what the Jan 1 population numbers are for year y, which
     # depend on the numbers and mortality rate in the previous year and
     # on the recruitment this year

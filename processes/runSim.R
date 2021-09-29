@@ -64,12 +64,11 @@ for(r in 1:nrep){
       stock[[i]] <- get_popInit(stock[[i]])
     }
     #### get historic assessment info if there is any
-    if (histAssess == TRUE) {
+#    if (histAssess == TRUE) {
       for (i in 1:nstock){
       assess_vals <- get_HistAssess(stock = stock[[i]])
       }
-    }
-
+ #   }
     #### Top year loop ####
     for(y in fyear:nyear){
       for(i in 1:nstock){

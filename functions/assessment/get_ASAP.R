@@ -44,6 +44,9 @@ get_ASAP <- function(stock){
     
     if(waa_mis==TRUE){
       dat_file$dat$WAA_mats<-t(replicate(N_rows,waa[1,]))
+    if (waa_mistyp=='high'){
+      dat_file$dat$WAA_mats<-t(replicate(N_rows,waa[1,]))+0.0003
+    }
     }
     
     #selectivity block (single block setup)

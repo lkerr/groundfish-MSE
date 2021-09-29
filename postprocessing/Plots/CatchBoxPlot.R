@@ -1,9 +1,9 @@
 #Lists numbers of scenarios that you want to compare here
-Scenarios<-c(5,6,7,8)
+Scenarios<-c(2,9,11,13,15)
 #Set working directory--where the results you want to compare are stored
-wd<-"C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims"
+wd<-"C:/Users/mmazur/Desktop/COCA_Sims"
 #List what is being compared
-comparison<-c('Ramp','P*','F-step','Constrained ramp')
+comparison<-c('Base','Lag and Two Year Updates','Lag and Miss','Two Year Updates and Miss','Lag, Miss, and 2 Year Updates')
 ####Set up files####
 library(matrixStats)
 library(dplyr)
@@ -165,10 +165,50 @@ Df2<-full_join(Df2,Df3)
 Df2$HCR<-Scenarios[4]
 Df<-full_join(Df,Df2)
 
+####Fifth Scenario####
+setwd(paste(wd,"/Sim_",Scenarios[5],"/sim",sep=""))
+sims <- list.files()
+
+SSBratiot<-matrix(NA,nrow=length(sims),ncol=22)
+
+for (k in 1:length(sims)){
+  if (file.size(sims[k])==0){
+    sims[k]<-NA}
+}
+sims<-na.omit(sims)
+
+for (k in 1:length(sims)){
+  load(sims[k])
+  SSBratiot[k,]<-omvalGlobal[[1]]$sumCW[169:190]
+}
+
+SSBratiots<-rowMedians(SSBratiot[,1:5])
+Df2<-as.data.frame(SSBratiots)
+Df2$SSBratiot<-SSBratiots
+Df2$SSBratiots<-NULL
+Df2$Time<-'Short-term'
+
+SSBratiotm<-rowMedians(SSBratiot[,6:10])
+Df3<-as.data.frame(SSBratiotm)
+Df3$SSBratiot<-SSBratiotm
+Df3$SSBratiotm<-NULL
+Df3$Time<-'Medium-term'
+Df2<-full_join(Df2,Df3)
+
+SSBratiotl<-rowMedians(SSBratiot[,11:21])
+Df3<-as.data.frame(SSBratiotl)
+Df3$SSBratiot<-SSBratiotl
+Df3$SSBratiotl<-NULL
+Df3$Time<-'Long-term'
+Df2<-full_join(Df2,Df3)
+Df2$HCR<-Scenarios[5]
+Df<-full_join(Df,Df2)
+
 Df$HCR[Df$HCR==Scenarios[1]]<-comparison[1]
 Df$HCR[Df$HCR==Scenarios[2]]<-comparison[2]
 Df$HCR[Df$HCR==Scenarios[3]]<-comparison[3]
 Df$HCR[Df$HCR==Scenarios[4]]<-comparison[4]
+Df$HCR[Df$HCR==Scenarios[5]]<-comparison[5]
 Df$HCR<-as.factor(Df$HCR)
 Df$HCR<-ordered(Df$HCR,levels=comparison)
 Df$Time<-ordered(Df$Time,levels=c("Short-term","Medium-term","Long-term"))
