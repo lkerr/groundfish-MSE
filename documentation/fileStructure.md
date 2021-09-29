@@ -12,8 +12,6 @@ The overall approach to the MSE is to attempt to have the code be as compartment
 
 #### Folders
 
-* **ShinyApp**: Work to-date on the shiny application that will eventually be used to communicate MSE results to stakeholders.
-
 * **assessment**: Folder that holds assessment models and related material. The simulation does call files in this folder. These files may need to be changed depending on the scenario. 
 
 * **data**: Data related to the project. Folder subdivided into processes (i.e., .Rdata files) and raw data.  Many preliminary/exploratory analyses use data from this folder, but for everyday runs this folder has limited use save holding the temperature projection data and historical assessment data. 
