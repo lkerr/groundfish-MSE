@@ -69,7 +69,6 @@ get_J1Updates <- function(stock){
         rep_assess <- get_AssessVals()
         natM[y] <- rep_assess$nat_mort
       }
-      browser()
     }
     # calculate what the Jan 1 population numbers are for year y, which
     # depend on the numbers and mortality rate in the previous year and
