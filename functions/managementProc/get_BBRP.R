@@ -65,7 +65,6 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     
     if (stockEnv$waa_mis=='TRUE'){
       parpop$waa<-stock[[1]]$waa[1,]
-      browser()
     }
     
     SSB <- get_proj(type = 'BREF', parmgt = parmgt, parpop = parpop, 
