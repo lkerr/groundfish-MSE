@@ -18,17 +18,12 @@ Length-at-age is modeled using the von Bertalanffy function:
 
 <img src="https://render.githubusercontent.com/render/math?math=L_{a,y} = (L_{\infty}+\beta_{0}T_{y}^{*})(1-e^{(-(K+\beta_{1}T_{y}^{*})(t-t_{0}))})">
 
-where $L_{a,y}$ is length at age $a$ in year $y$, $L_{\infty}$ is the asymptotic size, $K$ is the Brody growth coefficient and $t_0$ is a nuisance parameter that accounts for growth at small sizes. $\beta_{0}$ and $\beta_{1}$ are environmental (i.e., temperature) parameters that impact $L_{\infty}$ and $K$, respectively, and $T_{y}^{*}$ is the temperature anomaly in year $y$ (thus, to turn off the temperature effect the $/beta$ parameter may be set to 0). For simplicity and ease of interpretation, typically either $\beta_{0}$ or $\beta_{1}$ would be zero, meaning that temperature would either affect $K$ or $L_{\infty}$ but not both simultaneously.
+where <img src="https://render.githubusercontent.com/render/math?math=L_{a,y}"> is length at age <img src="https://render.githubusercontent.com/render/math?math=a"> in year <img src="https://render.githubusercontent.com/render/math?math=y">, <img src="https://render.githubusercontent.com/render/math?math=L_{\infty}"> is the asymptotic size, <img src="https://render.githubusercontent.com/render/math?math=K"> is the Brody growth coefficient and <img src="https://render.githubusercontent.com/render/math?math=t_0"> is a nuisance parameter that accounts for growth at small sizes. <img src="https://render.githubusercontent.com/render/math?math=\beta_{0}"> and <img src="https://render.githubusercontent.com/render/math?math=\beta_{1}"> are environmental (i.e., temperature) parameters that impact <img src="https://render.githubusercontent.com/render/math?math=L_{\infty}"> and <img src="https://render.githubusercontent.com/render/math?math=K">, respectively, and<img src="https://render.githubusercontent.com/render/math?math=T_{y}^{*}"> is the temperature anomaly in year <img src="https://render.githubusercontent.com/render/math?math=y"> (thus, to turn off the temperature effect the $/beta$ parameter may be set to 0). For simplicity and ease of interpretation, typically either <img src="https://render.githubusercontent.com/render/math?math=\beta_{0}"> or <img src="https://render.githubusercontent.com/render/math?math=\beta_{1}"> would be zero, meaning that temperature would either affect <img src="https://render.githubusercontent.com/render/math?math=K"> or <img src="https://render.githubusercontent.com/render/math?math=L_{\infty}"> but not both simultaneously.
 
 
 **2\.2 Weight-at-age**  
 Weight-at-age can be an input based on a vector (constant overtime) or matrix (time-varying) or follow exponential growth of the form:
-$$
-\begin{equation*}
-\label{eq:eqn2}
-W_{a,y} = {\lambda}L^{\psi}_{a,y}
-\end{equation*}
-$$
+<img src="https://render.githubusercontent.com/render/math?math=W_{a,y} = {\lambda}L^{\psi}_{a,y}">
 where $W_a,y$ is weight at age $a$ in year $y$, $L_a,y$ is length at age $a$ in year $y$, and $a$ and $b$ are parameters.  The parameters $a$ and $b$ are not time varying (i.e., there is no direct temperature effect).  However, the weight-at-age will change over time with length-at-age.
 
 **2\.3 Maturity-at-age**  
