@@ -259,10 +259,8 @@ A constant fishing mortality rule only involves an F-based reference point.  Thi
 **6.3.4 Climate-responsive control rules**  
 Climate-responsive control rules are re-parameterized given updates in the biological reference points.  For example, a changing environment might alter the weight-at-age schedule which would directly impact yield-per-recruit- or spawning potential ratio-based reference points.  Any of the biological reference point methods in Section 6.1 could be updated as a function of changing conditions.  As an example, the ramp control rule could change to
 <img src="https://render.githubusercontent.com/render/math?math=F^T_y = 
-  \begin{cases}
     F_{MSY,y}\frac{S_y}{B_{MSY,y}}, & \text{if}\ S_y < B_{MSY,y}\\
-    F_{MSY,y}, & \text{else}
-  \end{cases}">
+    F_{MSY,y}, & \text{else}">
 
 The change is in the <img src="https://render.githubusercontent.com/render/math?math=y"> subscripts, which indicate that reference points that parameterize the control rule may change over time.
 
