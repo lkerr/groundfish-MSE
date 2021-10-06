@@ -15,12 +15,12 @@ Rfun_BmsySim <- list(
   forecast = function(type, parpop, parenv, SSB, TAnom, sdR, stockEnv,...){
     Rpar<-parpop$Rpar
     if (stock[[i]]$R_mis=='TRUE' && exists("y")=='TRUE'){
-      type<-'HS' 
+      type<-parpop$Rpar_mis_typ
       Rpar<-parpop$Rpar_mis}
     if (parpop$switch==TRUE){
       type2<-'True'}
     else{type2<-'Est'}
-    #If a theoretical stock-recruitment relationship is used but BRPs and projections do not use it, a hockey-stick SRR is used instead. 
+    
     Rpar['rho'] <- 0
     gr <- get_recruits(type = type, 
                  type2=type2,
@@ -43,5 +43,3 @@ Rfun_BmsySim <- list(
   }
   
 )
-
-

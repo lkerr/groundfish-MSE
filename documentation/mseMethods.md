@@ -1,17 +1,3 @@
----
-jupyter:
-  jupytext:
-    text_representation:
-      extension: .md
-      format_name: markdown
-      format_version: '1.3'
-      jupytext_version: 1.13.0
-  kernelspec:
-    display_name: R
-    language: R
-    name: ir
----
-
 <!-- #region -->
 **Description of the management strategy evaluation framework for New England groundfish**
 
@@ -29,81 +15,49 @@ Age structured model.
 
 **2\.1 Length-at-age**  
 Length-at-age is modeled using the von Bertalanffy function:
-$$
-\begin{equation*}
-\label{eq:eqn1}
-L_{a,y} = (L_{\infty}+\beta_{0}T_{y}^{*})(1-e^{(-(K+\beta_{1}T_{y}^{*})(t-t_{0}))})
-\end{equation*}
-$$
 
-where $L_{a,y}$ is length at age $a$ in year $y$, $L_{\infty}$ is the asymptotic size, $K$ is the Brody growth coefficient and $t_0$ is a nuisance parameter that accounts for growth at small sizes. $\beta_{0}$ and $\beta_{1}$ are environmental (i.e., temperature) parameters that impact $L_{\infty}$ and $K$, respectively, and $T_{y}^{*}$ is the temperature anomaly in year $y$ (thus, to turn off the temperature effect the $/beta$ parameter may be set to 0). For simplicity and ease of interpretation, typically either $\beta_{0}$ or $\beta_{1}$ would be zero, meaning that temperature would either affect $K$ or $L_{\infty}$ but not both simultaneously.
+<img src="https://render.githubusercontent.com/render/math?math=L_{a,y} = (L_{\infty}+\beta_{0}T_{y}^{*})(1-e^{(-(K+\beta_{1}T_{y}^{*})(t-t_{0}))})">
+
+where <img src="https://render.githubusercontent.com/render/math?math=L_{a,y}"> is length at age <img src="https://render.githubusercontent.com/render/math?math=a"> in year <img src="https://render.githubusercontent.com/render/math?math=y">, <img src="https://render.githubusercontent.com/render/math?math=L_{\infty}"> is the asymptotic size, <img src="https://render.githubusercontent.com/render/math?math=K"> is the Brody growth coefficient and <img src="https://render.githubusercontent.com/render/math?math=t_0"> is a nuisance parameter that accounts for growth at small sizes. <img src="https://render.githubusercontent.com/render/math?math=\beta_{0}"> and <img src="https://render.githubusercontent.com/render/math?math=\beta_{1}"> are environmental (i.e., temperature) parameters that impact <img src="https://render.githubusercontent.com/render/math?math=L_{\infty}"> and <img src="https://render.githubusercontent.com/render/math?math=K">, respectively, and<img src="https://render.githubusercontent.com/render/math?math=T_{y}^{*}"> is the temperature anomaly in year <img src="https://render.githubusercontent.com/render/math?math=y"> (thus, to turn off the temperature effect the $/beta$ parameter may be set to 0). For simplicity and ease of interpretation, typically either <img src="https://render.githubusercontent.com/render/math?math=\beta_{0}"> or <img src="https://render.githubusercontent.com/render/math?math=\beta_{1}"> would be zero, meaning that temperature would either affect <img src="https://render.githubusercontent.com/render/math?math=K"> or <img src="https://render.githubusercontent.com/render/math?math=L_{\infty}"> but not both simultaneously.
 
 
 **2\.2 Weight-at-age**  
 Weight-at-age can be an input based on a vector (constant overtime) or matrix (time-varying) or follow exponential growth of the form:
-$$
-\begin{equation*}
-\label{eq:eqn2}
-W_{a,y} = {\lambda}L^{\psi}_{a,y}
-\end{equation*}
-$$
-where $W_a,y$ is weight at age $a$ in year $y$, $L_a,y$ is length at age $a$ in year $y$, and $a$ and $b$ are parameters.  The parameters $a$ and $b$ are not time varying (i.e., there is no direct temperature effect).  However, the weight-at-age will change over time with length-at-age.
+<img src="https://render.githubusercontent.com/render/math?math=W_{a,y} = {\lambda}L^{\psi}_{a,y}">
+where <img src="https://render.githubusercontent.com/render/math?math=W_a,y"> is weight at age <img src="https://render.githubusercontent.com/render/math?math=a"> in year <img src="https://render.githubusercontent.com/render/math?math=y">, <img src="https://render.githubusercontent.com/render/math?math=L_{a,y}"> is length at age <img src="https://render.githubusercontent.com/render/math?math=a"> in year <img src="https://render.githubusercontent.com/render/math?math=y">, and <img src="https://render.githubusercontent.com/render/math?math=a"> and <img src="https://render.githubusercontent.com/render/math?math=b"> are parameters.  The parameters <img src="https://render.githubusercontent.com/render/math?math=a"> and <img src="https://render.githubusercontent.com/render/math?math=b"> are not time varying (i.e., there is no direct temperature effect).  However, the weight-at-age will change over time with length-at-age.
 
 **2\.3 Maturity-at-age**  
 Maturity-at-age follows a logistic pattern of the form:
-$$
-\begin{equation*}
-\label{eq:eqn3}
-\theta_{a,y}=\frac{1}{1+e^{\upsilon(L_{50}-L_{ay})}}
-\end{equation*}
-$$
-where $\theta_{ay}$ is the maturity of age $a$ in year $y$ and $\upsilon$ and $L_{50}$ are stock-specific parameters.  Specifically, $L_{50}$ represents the length at which 50% of individuals are mature and $\upsilon$ defines the slope of the logistic function. $L_{a,y}$ is the length of individuals at age $a$ in year $y$.
+<img src="https://render.githubusercontent.com/render/math?math=theta_{a,y}=\frac{1}{1+e^{\upsilon(L_{50}-L_{ay})}}">
+where <img src="https://render.githubusercontent.com/render/math?math=\theta_{ay}"> is the maturity of age <img src="https://render.githubusercontent.com/render/math?math=a"> in year <img src="https://render.githubusercontent.com/render/math?math=y"> and <img src="https://render.githubusercontent.com/render/math?math=\upsilon"> and <img src="https://render.githubusercontent.com/render/math?math=L_{50}"> are stock-specific parameters.  Specifically, <img src="https://render.githubusercontent.com/render/math?math=L_{50}"> represents the length at which 50% of individuals are mature and <img src="https://render.githubusercontent.com/render/math?math=\upsilon"> defines the slope of the logistic function. <img src="https://render.githubusercontent.com/render/math?math=L_{a,y}"> is the length of individuals at age <img src="https://render.githubusercontent.com/render/math?math=a"> in year <img src="https://render.githubusercontent.com/render/math?math=y">.
 
 **2\.4 Recruitment**  
 Recruitment can be modeled in several different ways: Beverton-Holt stock-recruitment relationship (steepness implementation or standard implementation) or cumulative distribution functions. The equation for the steepness implementation of the Beverton-Holt stokc-recruitment relationship is
 
-$$
-\frac{ 4h_{y}^{\prime}\frac{SSB}{SSBR_{F=0}} } { (1-h_{y}^{\prime})+(5h_{y}^{\prime}-1)\frac{SSB}{R_{0,y}^{\prime}SSBR_{F=0}} }
-$$
+<img src="https://render.githubusercontent.com/render/math?math=\frac{ 4h_{y}^{\prime}\frac{SSB}{SSBR_{F=0}} } { (1-h_{y}^{\prime})+(5h_{y}^{\prime}-1)\frac{SSB}{R_{0,y}^{\prime}SSBR_{F=0}} }">
 
-The steepness model includes $R_{0,y}^{\prime}$ and $h_{y}^{\prime}$ (typically $R_0$ and $h$ in this parameterization). These parameters  have been adapted for temperature in year $y$ (see below). $SSBR_{F=0}$ is the spawner biomass-per-recruit at $F=0$. $SSBR_{F=0}$ is re-calculated when determining recruitment and so $SSBR_{F=0}$ is updated in each year. $R_{0,y}^{\prime}$ is
+The steepness model includes <img src="https://render.githubusercontent.com/render/math?math=R_{0,y}^{\prime}"> and <img src="https://render.githubusercontent.com/render/math?math=h_{y}^{\prime}"> (typically <img src="https://render.githubusercontent.com/render/math?math=R_0"> and <img src="https://render.githubusercontent.com/render/math?math=h"> in this parameterization). These parameters  have been adapted for temperature in year <img src="https://render.githubusercontent.com/render/math?math=y"> (see below). <img src="https://render.githubusercontent.com/render/math?math=SSBR_{F=0}"> is the spawner biomass-per-recruit at <img src="https://render.githubusercontent.com/render/math?math=F=0">. <img src="https://render.githubusercontent.com/render/math?math=SSBR_{F=0}"> is re-calculated when determining recruitment and so <img src="https://render.githubusercontent.com/render/math?math=SSBR_{F=0}"> is updated in each year. <img src="https://render.githubusercontent.com/render/math?math=R_{0,y}^{\prime}"> is
 
-$$
-R_{0,y}^{\prime} = R_{0}e^{\beta_{2}T_{y}^{*}}
-$$
+<img src="https://render.githubusercontent.com/render/math?math=R_{0,y}^{\prime} = R_{0}e^{\beta_{2}T_{y}^{*}}">
 
-while $h_{y}^{\prime}$ is
+while <img src="https://render.githubusercontent.com/render/math?math=h_{y}^{\prime}"> is
 
-$$
-h_{y}^{\prime} = 0.2+\frac{1-0.2}{(1+e^{-2\gamma})}
-$$
+<img src="https://render.githubusercontent.com/render/math?math=h_{y}^{\prime} = 0.2+\frac{1-0.2}{(1+e^{-2\gamma})}">
 
-where $\gamma$ is 
+where <img src="https://render.githubusercontent.com/render/math?math=\gamma"> is 
 
-$$
-\gamma = -0.5\log\left(\frac{1-0.2}{h-0.2}-1\right)+\beta_{1}T_{y}^{*}
-$$
+<img src="https://render.githubusercontent.com/render/math?math=\gamma = -0.5\log\left(\frac{1-0.2}{h-0.2}-1\right)+\beta_{1}T_{y}^{*}">
 
-The $\gamma$ parameterization is used here for convenience when fitting the steepness model externally -- this parameterization is useful to keep $h$ within its appropriate bounds (i.e., between 0.2 and 1.0).  See Weston (2018) for details on this parameterization.
+The <img src="https://render.githubusercontent.com/render/math?math=\gamma"> parameterization is used here for convenience when fitting the steepness model externally -- this parameterization is useful to keep $h$ within its appropriate bounds (i.e., between 0.2 and 1.0).  See Weston (2018) for details on this parameterization.
 
 **2\.5 Natural mortality**  
 Natural mortality can be constant across ages and time. Natural mortality can also increase overtime. 
 
 **2\.6 Exponential survival**  
 Annual mortality for ages $a<a^P$ (where $a^P$ is the plus age) is modeled using exponential survival as
-$$
-\begin{equation*}
-\label{eq:eqn4}
-N_{a,y} = N_{a-1,y-1} e^{-\Phi^{F}_{a-1,y-1}F_{y-1}-M_{y-1}}
-\end{equation*}
-$$
-where $N_{a,y}$ is the January 1 numbers-at-age a in year $y$, $F$ is fishing mortality, $M$ is natural mortality and $\Phi^{F}$ is fishery selectivity (see Section 3.1). Plus group abundance in year $y$ is
-$$
-\begin{equation*}
-\label{eq:eqn5}
-N_{a^p,y} = N_{a^p-1,y-1} e^{-\Phi^{F}_{a^p-1,y-1}F_{y-1}-M_{a^p-1,y-1}} + N_{a^p,y-1} e^{-\Phi^{F}_{a^p,y-1}F_{y-1}-M_{a^p,y-1}}
-\end{equation*}
-$$
+<img src="https://render.githubusercontent.com/render/math?math=N_{a,y} = N_{a-1,y-1} e^{-\Phi^{F}_{a-1,y-1}F_{y-1}-M_{y-1}}">
+where <img src="https://render.githubusercontent.com/render/math?math=N_{a,y}"> is the January 1 numbers-at-age a in year <img src="https://render.githubusercontent.com/render/math?math=y">, <img src="https://render.githubusercontent.com/render/math?math=F"> is fishing mortality, <img src="https://render.githubusercontent.com/render/math?math=M"> is natural mortality and <img src="https://render.githubusercontent.com/render/math?math=\Phi^{F}"> is fishery selectivity (see Section 3.1). Plus group abundance in year <img src="https://render.githubusercontent.com/render/math?math=y"> is
+<img src="https://render.githubusercontent.com/render/math?math=N_{a^p,y} = N_{a^p-1,y-1} e^{-\Phi^{F}_{a^p-1,y-1}F_{y-1}-M_{a^p-1,y-1}} + N_{a^p,y-1} e^{-\Phi^{F}_{a^p,y-1}F_{y-1}-M_{a^p,y-1}}">
 
 **2\.7 Historical period**  
 If desired, historical trajectories can be reconstructed by incorporating recruitment and F time series from the most recent stock assessments and calculating SSB and catch as emergent properties. 
@@ -113,44 +67,24 @@ Fishery dynamics include the model components related to the fishery: calculatio
 
 **3\.1 Fishery selectivity**  
 Fishery selectivity is an input as a vector or a logistic function of the form:
-$$
-\begin{equation*}
-\label{eq:eqn6}
-\Phi^F_{a,y} = \frac{1}{1+e^{s_0+s_1L_{a,y}}}
-\end{equation*}
-$$
-(note the different parameterization than for length-maturity) where $\Phi^F_{a,y}$ is the fishery selectivity of age $a$ fish in year $y$ and $s_0$ and $s_1$ are parameters that together govern the position of the curve and its slope.
+<img src="https://render.githubusercontent.com/render/math?math=\Phi^F_{a,y} = \frac{1}{1+e^{s_0+s_1L_{a,y}}}">
+(note the different parameterization than for length-maturity) where <img src="https://render.githubusercontent.com/render/math?math=\Phi^F_{a,y}"> is the fishery selectivity of age <img src="https://render.githubusercontent.com/render/math?math=a"> fish in year <img src="https://render.githubusercontent.com/render/math?math=y"> and <img src="https://render.githubusercontent.com/render/math?math=s_0"> and <img src="https://render.githubusercontent.com/render/math?math=s_1"> are parameters that together govern the position of the curve and its slope.
 
 **3\.2 Fishery catchability**  
-Fleet catchability ($q^F$ below) is constant overtime.
+Fleet catchability (<img src="https://render.githubusercontent.com/render/math?math=q^F"> below) is constant overtime.
 
 **3\.3 Catch**  
 Fishery catch in numbers is defined by the Baranov catch equation:
-$$
-\begin{equation*}
-\label{eq:eqn7}
-C^N_{a,y} = \frac{\Phi^F_{a,y}F_y}{\Phi^F_{a,y}F_y+M_{a,y}} N_{a,y}(1-e^{-\Phi^F_{a,y}F_y-M_{a,y}})
-\end{equation*}
-$$
+<img src="https://render.githubusercontent.com/render/math?math=C^N_{a,y} = \frac{\Phi^F_{a,y}F_y}{\Phi^F_{a,y}F_y+M_{a,y}} N_{a,y}(1-e^{-\Phi^F_{a,y}F_y-M_{a,y}})">
 
-where $C^N_{a,y}$ is the catch of age-a fish in year $y$ in numbers, $F_y$ is the fully selected fishing mortality in year $y$, and $N_{a,y}$ is the number of age-a individuals in the population in year $y$.  Catch in weight $C^W_{a,y}$ is
-$$
-\begin{equation*}
-\label{eq:eqn8}
-C^W_{a,y} = C^N_{a,y}W_{a,y}
-\end{equation*}
-$$
+where <img src="https://render.githubusercontent.com/render/math?math=C^N_{a,y}"> is the catch of age-a fish in year <img src="https://render.githubusercontent.com/render/math?math=y"> in numbers, <img src="https://render.githubusercontent.com/render/math?math=F_y"> is the fully selected fishing mortality in year <img src="https://render.githubusercontent.com/render/math?math=y"> and <img src="https://render.githubusercontent.com/render/math?math=N_{a,y}"> is the number of age-a individuals in the population in year <img src="https://render.githubusercontent.com/render/math?math=y">.  Catch in weight <img src="https://render.githubusercontent.com/render/math?math=C^W_{a,y}"> is
+<img src="https://render.githubusercontent.com/render/math?math=C^W_{a,y} = C^N_{a,y}W_{a,y}">
 As implied by this equation there is no difference in weight-at-age between the population and that observed in the fishery catch.
 
 **3\.4 Fishing effort**  
 Effort is a derived quantity, and is used only as an output for use in the stock assessment model.  Effort is:
-$$
-\begin{equation*}
-\label{eq:eqn9}
-E_y=\frac{F_y}{q^F}
-\end{equation*}
-$$
-where $E_y$ is the fishing effort in year $y$ and $q^F$ is the fishery catchability.
+<img src="https://render.githubusercontent.com/render/math?math=E_y=\frac{F_y}{q^F}">
+where <img src="https://render.githubusercontent.com/render/math?math=E_y"> is the fishing effort in year <img src="https://render.githubusercontent.com/render/math?math=y"> and <img src="https://render.githubusercontent.com/render/math?math=q^F"> is the fishery catchability.
 
 **4\. Fishery-independent survey**  
 Each simulation year there is a fishery-independent survey that is used in the assessment. Time of year for the survey can be set in the model parameter file.
@@ -163,38 +97,23 @@ Survey catchability can be constant or decrease with increasing temperature. If 
 
 **4\.3 Survey catch**  
 Survey catch is modeled as:
-$$
-\begin{equation*}
-\label{eq:eqn10}
-I^N_{a,y} = \Phi^I_{a,y}e^{(-\Phi^I_{a,y}F_y-M)st}
-\end{equation*}
-$$
+<img src="https://render.githubusercontent.com/render/math?math=I^N_{a,y} = \Phi^I_{a,y}e^{(-\Phi^I_{a,y}F_y-M)st}">
 
-where $I^N_{a,y}$ is the survey catch in numbers for age class $a$ in year $y$, $\Phi^I_{a,y}$ is the survey selectivity, $q^I$ is the survey catchability, and $st$ is the survey timing, given as a proportion of the year that has elapsed before the survey occurs.
+where <img src="https://render.githubusercontent.com/render/math?math=I^N_{a,y}"> is the survey catch in numbers for age class <img src="https://render.githubusercontent.com/render/math?math=a"> in year <img src="https://render.githubusercontent.com/render/math?math=y">, <img src="https://render.githubusercontent.com/render/math?math=\Phi^I_{a,y}"> is the survey selectivity, <img src="https://render.githubusercontent.com/render/math?math=q^I"> is the survey catchability, and <img src="https://render.githubusercontent.com/render/math?math=st"> is the survey timing, given as a proportion of the year that has elapsed before the survey occurs.
 
 **5\. Observations**  
 Observations of population and fishery quantities are generated with error for use in the assessment model.  The errors are either lognormal or multinomial.
 
 **5\.1 Lognormal error structure**  
 Observations of magnitude (e.g., numbers or weight) are lognormally distributed.  A single lognormally distributed observation can be written:
-$$
-\begin{equation*}
-\label{eq:eqn11}
-x_i\sim\ LN(\mu_x-\frac{\sigma^2_x}{2},\sigma_x)
-\end{equation*}
-$$
+<img src="https://render.githubusercontent.com/render/math?math=x_i\sim\ LN(\mu_x-\frac{\sigma^2_x}{2},\sigma_x)">
 
-where $x_i$ is the observation, $\mu$ is the mean and $\sigma$ is the standard deviation.  $-\frac{\sigma^2_x}{2}$ is the lognormal bias correction which ensures that the $x_i$ have an expected arithmetic mean of $\mu$.
+where <img src="https://render.githubusercontent.com/render/math?math=x_i"> is the observation, <img src="https://render.githubusercontent.com/render/math?math=\mu"> is the mean and <img src="https://render.githubusercontent.com/render/math?math=\sigma"> is the standard deviation.  <img src="https://render.githubusercontent.com/render/math?math=-\frac{\sigma^2_x}{2}"> is the lognormal bias correction which ensures that the <img src="https://render.githubusercontent.com/render/math?math=x_i"> have an expected arithmetic mean of <img src="https://render.githubusercontent.com/render/math?math=\mu">.
 
 **5.2 Multinomial error structure**  
 Observations of age composition assume multinomial errors
-$$
-\begin{equation*}
-\label{eq:eqn12}
-p\sim\ MN(\mu_p,ESS_p)
-\end{equation*}
-$$
-where $p$ is a vector of observed numbers-at-age, $μ_p$ is a vector of true proportions-at-age, and $ESS_p$ is the effective sample size.
+<img src="https://render.githubusercontent.com/render/math?math=p\sim\ MN(\mu_p,ESS_p)">
+where <img src="https://render.githubusercontent.com/render/math?math=p"> is a vector of observed numbers-at-age, <img src="https://render.githubusercontent.com/render/math?math=μ_p"> is a vector of true proportions-at-age, and <img src="https://render.githubusercontent.com/render/math?math=ESS_p"> is the effective sample size.
 
 **5.3 Application of error structures to data sources**  
 The error structures associated with each of the data streams that are output to the assessment model are given in the table below.  
@@ -220,78 +139,44 @@ The catch-at-age (CAA) model was written in Template Model Builder, a software a
 
 **6.1.1.1 Initial population size**  
 The initial population is estimated as a mean and a set of deviations
-$$
-\begin{equation*}
-\label{eq:eqn13}
-N_{a,0} = e^{\mu^I+\delta^I_a}
-\end{equation*}
-$$
+<img src="https://render.githubusercontent.com/render/math?math=N_{a,0} = e^{\mu^I+\delta^I_a}">
 
-where $N_{a,0}$ is the initial population size for age $a$, $\mu^I$ is the log-scale mean population size and $\delta^I_a$ are the age deviations.
+where <img src="https://render.githubusercontent.com/render/math?math=N_{a,0}"> is the initial population size for age <img src="https://render.githubusercontent.com/render/math?math=a">, <img src="https://render.githubusercontent.com/render/math?math=\mu^I"> is the log-scale mean population size and <img src="https://render.githubusercontent.com/render/math?math=\delta^I_a"> are the age deviations.
 
 **6.1.1.2 Recruitment**  
 Recruitment is parameterized as a random walk
-$$
-\begin{equation*}
-\label{eq:eqn14}
-R_y=e^{\log(R_{y-1}+\delta^R_y)}
-\end{equation*}
-$$
+<img src="https://render.githubusercontent.com/render/math?math=R_y=e^{\log(R_{y-1}+\delta^R_y)}">
 
-Where $R_y$ is recruitment in year $y$ and $\delta^R_y$ is the random walk deviation for year $y$.
+Where <img src="https://render.githubusercontent.com/render/math?math=R_y"> is recruitment in year <img src="https://render.githubusercontent.com/render/math?math=y"> and <img src="https://render.githubusercontent.com/render/math?math=\delta^R_y"> is the random walk deviation for year $<img src="https://render.githubusercontent.com/render/math?math=y">.
 
 **6.1.1.3 Likelihood function**  
 The model log likelihood is
-$$
-\begin{equation*}
-\label{eq:eqn15}
-LL = L^C + L^I + L^R + L^{pC} + L^{pI}
-\end{equation*}
-$$
+<img src="https://render.githubusercontent.com/render/math?math=LL = L^C + L^I + L^R + L^{pC} + L^{pI}">
 
-where $LL$ is the total log likelihood and the $L^x$ components are for catch, the survey index, recruitment deviations, the commercial proportions-at-age and the survey proportions-at-age, respectively.  The commercial catch and survey index assume normally distributed observation errors around the log-scale predicted values.  The general equation is
-$$
-\begin{equation*}
-\label{eq:eqn16}
-L^x = \sum_{y} N(\log(x_y))-\log(\hat{x}_y),\sigma_x)
-\end{equation*}
-$$
+where <img src="https://render.githubusercontent.com/render/math?math=LL"> is the total log likelihood and the $L^x$ components are for catch, the survey index, recruitment deviations, the commercial proportions-at-age and the survey proportions-at-age, respectively.  The commercial catch and survey index assume normally distributed observation errors around the log-scale predicted values.  The general equation is
+<img src="https://render.githubusercontent.com/render/math?math=L^x = \sum_{y} N(\log(x_y))-\log(\hat{x}_y),\sigma_x)">
 
-where $x_y$ is the observed catch or index value for year $y$, $\hat{x}_y$ is the predicted catch or index value, and $\sigma_x$ is the fixed standard deviation (i.e., observation error) for the catch or survey index.  The observation error level is currently set at the true value used in the operating model but estimation for these parameters can be turned on.
+where <img src="https://render.githubusercontent.com/render/math?math=x_y"> is the observed catch or index value for year <img src="https://render.githubusercontent.com/render/math?math=y">, <img src="https://render.githubusercontent.com/render/math?math=\hat{x}_y"> is the predicted catch or index value, and <img src="https://render.githubusercontent.com/render/math?math=\sigma_x"> is the fixed standard deviation (i.e., observation error) for the catch or survey index.  The observation error level is currently set at the true value used in the operating model but estimation for these parameters can be turned on.
 
 Likelihood for the recruitment random walk deviations also are assumed to be normally distributed, but around zero
-$$
-\begin{equation*}
-\label{eq:eqn17}
-L^R = \sum_{y}N(\log(\delta^R_y), \sigma_{\delta^R}
-\end{equation*}
-$$
+<img src="https://render.githubusercontent.com/render/math?math=L^R = \sum_{y}N(\log(\delta^R_y), \sigma_{\delta^R}">
 
-where $\sigma_{\delta^R}$ is the fixed standard deviation for the recruitment deviations.
+where <img src="https://render.githubusercontent.com/render/math?math=\sigma_{\delta^R}"> is the fixed standard deviation for the recruitment deviations.
 The proportions-at-age for the commercial fishery and survey index are multinomial distributed
-$$
-\begin{equation*}
-\label{eq:eqn18}
-L^x = \sum_{y}MN(\mu^x_y,\hat{\mu}^x_y,ESS_x)
-\end{equation*}
-$$
+<img src="https://render.githubusercontent.com/render/math?math=L^x = \sum_{y}MN(\mu^x_y,\hat{\mu}^x_y,ESS_x)">
 
-where $L^x$ is the log likelihood for the commercial fishery or survey proportions-at-age, $\mu^x_y$ is a vector of observations in year $y$, $\hat{\mu}^x_y$ is a vector of predictions in year $y$, and $ESS_x$ is the effective sample size for the commercial fishery or survey.  The effective sample size is fixed at the level used to generate errors in the operating model.
+where <img src="https://render.githubusercontent.com/render/math?math=L^x"> is the log likelihood for the commercial fishery or survey proportions-at-age, <img src="https://render.githubusercontent.com/render/math?math=\mu^x_y"> is a vector of observations in year <img src="https://render.githubusercontent.com/render/math?math=y">, <img src="https://render.githubusercontent.com/render/math?math=\hat{\mu}^x_y"> is a vector of predictions in year <img src="https://render.githubusercontent.com/render/math?math=y">, and <img src="https://render.githubusercontent.com/render/math?math=ESS_x"> is the effective sample size for the commercial fishery or survey.  The effective sample size is fixed at the level used to generate errors in the operating model.
 
 **6.1.2 Index-based model**  
 We include an index-based assessment model for comparison to the catch-at-age version. We use the Plan B approach that has been applied to groundfish in the northeast US (see <https://github.com/cmlegault/PlanBsmooth>). This method fits a linear model to a loess smoothed time series of the last three years of index data on a log scale
 
-$$
-\hat{s\left(I\right)}_y = a + by
-$$
+<img src="https://render.githubusercontent.com/render/math?math=\hat{s\left(I\right)}_y = a + by">
 
-where $\hat{I}_y$ is the predicted index data, $a$ and $b$ are linear model parameters intercept and slope, respectively. An arithmetic scale multiplier is then calculated $m=e^b$. Catch advice in year $y+1$ is then $C_ym$.
+where <img src="https://render.githubusercontent.com/render/math?math=\hat{I}_y"> is the predicted index data, <img src="https://render.githubusercontent.com/render/math?math=a"> and <img src="https://render.githubusercontent.com/render/math?math=b"> are linear model parameters intercept and slope, respectively. An arithmetic scale multiplier is then calculated <img src="https://render.githubusercontent.com/render/math?math=m=e^b">. Catch advice in year <img src="https://render.githubusercontent.com/render/math?math=y+1"> is then <img src="https://render.githubusercontent.com/render/math?math=C_ym">.
 
-$$
-\hat{s\left(I\right)}_y = a + by
-$$
+<img src="https://render.githubusercontent.com/render/math?math=\hat{s\left(I\right)}_y = a + by">
 
-where $\hat{I}_y$ is the predicted index data, $a$ and $b$ are linear model parameters intercept and slope, respectively. An arithmetic scale multiplier is then calculated $m=e^b$. Catch advice in year $y+1$ is then $C_ym$.
+where <img src="https://render.githubusercontent.com/render/math?math=\hat{I}_y"> is the predicted index data, <img src="https://render.githubusercontent.com/render/math?math=a"> and <img src="https://render.githubusercontent.com/render/math?math=b"> are linear model parameters intercept and slope, respectively. An arithmetic scale multiplier is then calculated <img src="https://render.githubusercontent.com/render/math?math=m=e^b">. Catch advice in year <img src="https://render.githubusercontent.com/render/math?math=y+1"> is then <img src="https://render.githubusercontent.com/render/math?math=C_ym">.
 
 **6.1.3 Age-Structured Assessment Program (ASAP)**  
 ASAP (Legault & Restrepo, 1998) is what is currently used for the majority of analytical groundfish stock assessments in the region. 
@@ -314,113 +199,61 @@ Described here are methods to define target $F$ reference points.
 
 **6.2.1.1 Yield-per-recruit**  
 Yield-per-recruit is available as an option in the model to generate a proxy for $F_{MAX}$.  Yield-per-recruit is an equilibrium method that identifies the expected yield at each potential fishing mortality rate for an average individual in the population given schedules of selectivity and weight-at-age.  The equation is
-$$
-\begin{equation*}
-\label{eq:eqn19}
-\frac{Y}{R}_{F^*} = \sum_{a=0}^{a=A} \frac{\Phi^F_aF^*}{\Phi^F_aF^*+M} \Big(1-e^{-\Phi^F_aF^*-M}\Big) e^{\big(\sum_{0}^{a-1}-\Phi^F_aF^*-M\big)}W_a
-\end{equation*}
-$$
-where $A$ is the terminal age and $F^*$ is a candidate fully selected fishing mortality rate.  A range of candidate fishing mortality rates (e.g., from 0.0 to 2.0) are substituted for $F^*$ so each potential value of $F^*$ has an associated yield-per-recruit.  The yield-per-recruit reference point considered here is F0.1 which is the $F^*$ where the slope of the yield-per-recruit curve is 1/10 the slope at the origin.  In the simulation, parameters such as weight-at-age or selectivity-at-age can change; for the reference point calculations the values-at-age that are used are those from the year before the management update will occur (i.e., the most recent year available).
+<img src="https://render.githubusercontent.com/render/math?math=\frac{Y}{R}_{F^*} = \sum_{a=0}^{a=A} \frac{\Phi^F_aF^*}{\Phi^F_aF^*+M} \Big(1-e^{-\Phi^F_aF^*-M}\Big) e^{\big(\sum_{0}^{a-1}-\Phi^F_aF^*-M\big)}W_a">
+where <img src="https://render.githubusercontent.com/render/math?math=A"> is the terminal age and <img src="https://render.githubusercontent.com/render/math?math=F^*"> is a candidate fully selected fishing mortality rate.  A range of candidate fishing mortality rates (e.g., from 0.0 to 2.0) are substituted for <img src="https://render.githubusercontent.com/render/math?math=F^*"> so each potential value of <img src="https://render.githubusercontent.com/render/math?math=F^*"> has an associated yield-per-recruit.  The yield-per-recruit reference point considered here is F0.1 which is the $F^*$ where the slope of the yield-per-recruit curve is 1/10 the slope at the origin.  In the simulation, parameters such as weight-at-age or selectivity-at-age can change; for the reference point calculations the values-at-age that are used are those from the year before the management update will occur (i.e., the most recent year available).
 
 **6.2.1.2 Spawning potential ratio**  
 Spawning potential ratio is based on a similar dynamic pool function, spawning stock biomass-per-recruit.  That equation is
-$$
-\begin{equation*}
-\label{eq:eqn20}
-\frac{SSB}{R}_{F^*} = \sum_{a=0}^{a=A} e^{-\Phi^F_aF^*-M}\theta_a W_a
-\end{equation*}
-$$
+<img src="https://render.githubusercontent.com/render/math?math=\frac{SSB}{R}_{F^*} = \sum_{a=0}^{a=A} e^{-\Phi^F_aF^*-M}\theta_a W_a">
 
-Where $\frac{SSB}{R}_{F^*}$ is the estimated spawning stock biomass per recruit at fishing mortality level $F^*$ for an average individual.  The spawning potential ratio is the ratio of $SSB/R$ at at $F=0$ to $SSB/R$ a given level of $F^*$
-$$
-\begin{equation*}
-\label{eq:eqn21}
-SPR_{F^*} = \frac{\Big[\frac{SSB}{R}_{F=0}\Big]}{\Big[\frac{SSB}{R}_{F=F^*}\Big]}
-\end{equation*}
-$$
+Where <img src="https://render.githubusercontent.com/render/math?math=\frac{SSB}{R}_{F^*}"> is the estimated spawning stock biomass per recruit at fishing mortality level <img src="https://render.githubusercontent.com/render/math?math=F^*"> for an average individual.  The spawning potential ratio is the ratio of <img src="https://render.githubusercontent.com/render/math?math=SSB/R"> at at <img src="https://render.githubusercontent.com/render/math?math=F=0"> to <img src="https://render.githubusercontent.com/render/math?math=SSB/R"> a given level of <img src="https://render.githubusercontent.com/render/math?math=F^*">
+<img src="https://render.githubusercontent.com/render/math?math=SPR_{F^*} = \frac{\Big[\frac{SSB}{R}_{F=0}\Big]}{\Big[\frac{SSB}{R}_{F=F^*}\Big]}">
 
-Spawning potential ratio is set to a particular level (e.g., 35% or a ratio of 0.35) and the level of $F^*$ that results in the given ratio is the $F$ proxy reference point.
+Spawning potential ratio is set to a particular level (e.g., 35% or a ratio of 0.35) and the level of <img src="https://render.githubusercontent.com/render/math?math=F^*"> that results in the given ratio is the <img src="https://render.githubusercontent.com/render/math?math=F"> proxy reference point.
 
 **6.2.1.3 Simulation-based $F_{MSY}$**  
-A "true" value for $F_{MSY}$ can be found using a grid search. Starting with the initial conditions for year $y$ in the model, candidate values for $F$ are tested by running a projection for $n$ years. Assuming this rate of fishing mortality, the population is projected out using a simple age-structured model with input parameters selectivity, weight-at-age and maturity schedules and natural mortality rate. Recruitment is specified either as a constant value that is a function (e.g., the mean) of stock assessment model output or as a function of the available spawner biomass (and possibly temperature if that functionality is switched on). Potential values for $F$ run from 0 to 2.0 and the total yield (catch biomass) in each year is saved. $F_{MSY}$ is specified as the value from the $F$ grid that results in the maximum total yield.
+A "true" value for <img src="https://render.githubusercontent.com/render/math?math=F_{MSY}"> can be found using a grid search. Starting with the initial conditions for year <img src="https://render.githubusercontent.com/render/math?math=y"> in the model, candidate values for <img src="https://render.githubusercontent.com/render/math?math=F"> are tested by running a projection for <img src="https://render.githubusercontent.com/render/math?math=n"> years. Assuming this rate of fishing mortality, the population is projected out using a simple age-structured model with input parameters selectivity, weight-at-age and maturity schedules and natural mortality rate. Recruitment is specified either as a constant value that is a function (e.g., the mean) of stock assessment model output or as a function of the available spawner biomass (and possibly temperature if that functionality is switched on). Potential values for <img src="https://render.githubusercontent.com/render/math?math=F"> run from 0 to 2.0 and the total yield (catch biomass) in each year is saved. <img src="https://render.githubusercontent.com/render/math?math=F_{MSY}"> is specified as the value from the <img src="https://render.githubusercontent.com/render/math?math=F"> grid that results in the maximum total yield.
 
 **6.2.2 Biomass proxy methods**  
 Described here are methods that define biomass-based reference points.  These could be thought of either as targets or limits depending on the control rule (see Section 6.2).
 
 **6.2.2.1 Spawning stock biomass-per-recruit-based**  
-One method to define a biomass-based reference point is to define a target level of fishing mortality $F^T$ and then use the equilibrium spawning stock biomass-per-recruit at that fishing mortality level and a measure of expected recruitment to define the reference point.  The equation is
-$$
-\begin{equation*}
-\label{eq:eqn22}
-S^T = \frac{SSB}{R}_{F^T}f\big(R^*\big)
-\end{equation*}
-$$
+One method to define a biomass-based reference point is to define a target level of fishing mortality <img src="https://render.githubusercontent.com/render/math?math=F^T"> and then use the equilibrium spawning stock biomass-per-recruit at that fishing mortality level and a measure of expected recruitment to define the reference point.  The equation is
+<img src="https://render.githubusercontent.com/render/math?math=S^T = \frac{SSB}{R}_{F^T}f\big(R^*\big)">
 
-Where $S^T$ is the target spawning stock biomass, $\frac{SSB}{R}_{F^T}$ is the spawning stock biomass per recruit at the $F$ target level.  $f()$ is a flexible function and $R^*$ a flexible definition of recruitment.  For example, $f()$ could be the mean, geometric mean or median and $R^*$ could be the entire recruitment time series or the last 5 or 10 years of recruitment.
-Note that this method is dependent on the method/level chosen for the $F$ target.  Thus if the level of $F^T$ was chosen based on $F_{0.1}$, the biomass reference point $S^T$ would be different than if $F^T$ was chosen based on $F_{35}$.
+Where <img src="https://render.githubusercontent.com/render/math?math=S^T"> is the target spawning stock biomass, <img src="https://render.githubusercontent.com/render/math?math=\frac{SSB}{R}_{F^T}"> is the spawning stock biomass per recruit at the <img src="https://render.githubusercontent.com/render/math?math=F"> target level.  <img src="https://render.githubusercontent.com/render/math?math=f()"> is a flexible function and <img src="https://render.githubusercontent.com/render/math?math=R^*"> a flexible definition of recruitment.  For example, <img src="https://render.githubusercontent.com/render/math?math=f()"> could be the mean, geometric mean or median and <img src="https://render.githubusercontent.com/render/math?math=R^*"> could be the entire recruitment time series or the last 5 or 10 years of recruitment.
+Note that this method is dependent on the method/level chosen for the <img src="https://render.githubusercontent.com/render/math?math=F"> target.  Thus if the level of <img src="https://render.githubusercontent.com/render/math?math=F^T"> was chosen based on <img src="https://render.githubusercontent.com/render/math?math=F_{0.1}">, the biomass reference point <img src="https://render.githubusercontent.com/render/math?math=S^T"> would be different than if <img src="https://render.githubusercontent.com/render/math?math=F^T"> was chosen based on <img src="https://render.githubusercontent.com/render/math?math=F_{35}">.
 
 **6.2.2.2 Simulation-based**  
-Another method to define $S^T$ is using simulation.  In this approach, again $F^T$ is defined using one of the $F$ proxy methods.  Then, assuming this rate of fishing mortality, the population is projected out using a simple age-structured model with input parameters selectivity, weight-at-age and maturity schedules and natural mortality rate.  Recruitment is randomly selected from the time series (or a truncated version of the time series such as the last 10 years).  The population will eventually reach a dynamic equilibrium (i.e., will be variable because recruitment is changing but will not be a function of the initial conditions).  The average spawner biomass during the equilibrium phase is $S^T$.
+Another method to define <img src="https://render.githubusercontent.com/render/math?math=S^T"> is using simulation.  In this approach, again <img src="https://render.githubusercontent.com/render/math?math=F^T"> is defined using one of the <img src="https://render.githubusercontent.com/render/math?math=F"> proxy methods.  Then, assuming this rate of fishing mortality, the population is projected out using a simple age-structured model with input parameters selectivity, weight-at-age and maturity schedules and natural mortality rate.  Recruitment is randomly selected from the time series (or a truncated version of the time series such as the last 10 years).  The population will eventually reach a dynamic equilibrium (i.e., will be variable because recruitment is changing but will not be a function of the initial conditions).  The average spawner biomass during the equilibrium phase is <img src="https://render.githubusercontent.com/render/math?math=S^T">.
 
 **6.3 Harvest control rules**  
 Harvest control rules define the objective decisions that are made within the management process.  Often (though not always depending on the type of rule) they are parameterized using biological reference points. All HCR alternatives include a constraint on catch advice so that it will not be higher than the estimated catch that corresponds to the estimated overfishing limit (OFL) from the stock assessment to emulate the current in-season quota monitoring system for New England groundfish. 
 
 **6.3.1 Ramp control rule**  
 The ramp (sliding) control rule does not cut off fishing completely when estimated biomass is below BMSY but reduces it in proportion to the stock status.  One assumption about this rule is the idea that the population will naturally fluctuate about BMSY so the ramping-down should not necessarily occur immediately. The intention of this HCR is to promote rebuilding and optimal yield. The rule is
-$$
-\begin{equation*}
-\label{eq:eqn23}
-F^T = 
-  \begin{cases}
-    \frac{F_{MSY}S}{cB_{MSY}}, & \text{if}\ a=1 \\
-    F_{MSY}, & \text{else}
-  \end{cases}
-\end{equation*}
-$$
+<img src="https://render.githubusercontent.com/render/math?math=F^T=\frac{F_{MSY}S}{cB_{MSY}}"> if <img src="https://render.githubusercontent.com/render/math?math=a=1"> else
+<img src="https://render.githubusercontent.com/render/math?math=F^T=F_{MSY}">
 
-
-where $S$ is the current spawner biomass and $c$ is the proportion of Bmsy at which the stock is considered overfished.
+where <img src="https://render.githubusercontent.com/render/math?math=S"> is the current spawner biomass and <img src="https://render.githubusercontent.com/render/math?math=C"> is the proportion of Bmsy at which the stock is considered overfished.
 The ramp rule described here goes through the origin; similar rules are possible that reduce fishing mortality to zero below a certain biomass level (i.e., a limit).  In that case, the slope of the ramp would be larger than that described here.
 
 **6.3.2 Binary threshold control rule**  
 A binary threshold rule also uses both $F$-based and biomass-based target reference points, but in this case there is no ramp.  The rule is simply
-$$
-\begin{equation*}
-\label{eq:eqn25}
-F^T = 
-  \begin{cases}
-    F_{MSY}, & \text{if}\ S \geq B_{MSY}\\
-    0, & \text{else}
-  \end{cases}
-\end{equation*}
-$$
-
+<img src="https://render.githubusercontent.com/render/math?math=F^T= F_{MSY}"> if <img src="https://render.githubusercontent.com/render/math?math=S > B_{MSY}">  else 
+<img src="https://render.githubusercontent.com/render/math?math=F^T=0">
 
 so fishing is stopped completely when stock spawner biomass is estimated to lie below the target.
 
 **6.3.3 Constant fishing mortality**  
 A constant fishing mortality rule only involves an F-based reference point.  This rule is
-$$
-\begin{equation*}
-\label{eq:eqn26}
-F^T = F_{MSY}
-\end{equation*}
-$$
+<img src="https://render.githubusercontent.com/render/math?math=F^T = F_{MSY}">
 
 **6.3.4 Climate-responsive control rules**  
 Climate-responsive control rules are re-parameterized given updates in the biological reference points.  For example, a changing environment might alter the weight-at-age schedule which would directly impact yield-per-recruit- or spawning potential ratio-based reference points.  Any of the biological reference point methods in Section 6.1 could be updated as a function of changing conditions.  As an example, the ramp control rule could change to
-$$
-\begin{equation*}
-\label{eq:eqn27}
-F^T_y = 
-  \begin{cases}
-    F_{MSY,y}\frac{S_y}{B_{MSY,y}}, & \text{if}\ S_y < B_{MSY,y}\\
-    F_{MSY,y}, & \text{else}
-  \end{cases}
-\end{equation*}
-$$
+<img src="https://render.githubusercontent.com/render/math?math=F^T_y = F_{MSY,y}\frac{S_y}{B_{MSY,y}}"> if <img src="https://render.githubusercontent.com/render/math?math=S_y < B_{MSY,y}"> else <img src="https://render.githubusercontent.com/render/math?math=F^T=F_{MSY,y}">
 
-The change is in the $y$ subscripts, which indicate that reference points that parameterize the control rule may change over time.
+The change is in the <img src="https://render.githubusercontent.com/render/math?math=y"> subscripts, which indicate that reference points that parameterize the control rule may change over time.
 
 **6.3.5 Climate-informed control rules**  
 Climate-informed control rules directly incorporate environmental effects to parameterize the control rules (as opposed to indirectly through updates of biological reference points).  For example, Hurtado-Ferro et al. (2010) test a control rule that modifies the shape of a ramp-like method based on average sea surface temperature, the idea being that temperature determines whether production is occurring in a favorable or unfavorable regime.

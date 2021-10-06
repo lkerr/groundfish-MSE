@@ -1,5 +1,5 @@
 ##################################################################################
-### function to modify ASAP .dat file, run executable, and produce results object
+### function to modify Age Structured Assessment Program (ASAP) .dat file, run executable, and produce results object
 ###
 get_ASAP <- function(stock){
 
@@ -10,7 +10,7 @@ get_ASAP <- function(stock){
 
     ### modify for each simulation/year
 
-    #start year; (adding years with changepoint adjustment for codGOM)
+    #start year;
     dat_file$dat$year1 <- fmyearIdx - ncaayear
     styear <- fmyearIdx - ncaayear
 
@@ -42,7 +42,7 @@ get_ASAP <- function(stock){
     #WAA matrix
     dat_file$dat$WAA_mats <-matrix(get_dwindow(waa, styear, endyear), nrow = N_rows)
 
-    if(waa_mis==TRUE){
+    if(waa_mis==TRUE){#If there is a weight-at-age misspecification, the stock assessment will assume that weight at age was constant overtime (the first vector in the matrix).
       dat_file$dat$WAA_mats<-t(replicate(N_rows,waa[1,]))
     }
 
@@ -52,16 +52,16 @@ get_ASAP <- function(stock){
     #catch-at-age proportions and sum catch weight
     dat_file$dat$CAA_mats <- cbind(get_dwindow(obs_paaCN, styear, endyear), get_dwindow(obs_sumCW, styear, endyear))
 
-    # discards - need additional rows even if not using
+    #discards - need additional rows even if not using
     dat_file$dat$DAA_mats <- matrix(0, nrow = N_rows, ncol = page + 1)
 
-    # release - also need additional rows if not using
+    #release - also need additional rows if not using
     dat_file$dat$prop_rel_mats <- matrix(0, nrow = N_rows, ncol = page)
 
-    # #index data; sum index value, observation error, proportions-at-age, sample size
+    #index data; sum index value, observation error, proportions-at-age, sample size
     dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, N_rows), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN, N_rows)) #year, value, CV, by-age, sample size
 
-    # Recruitment CV
+    #recruitment CV
     dat_file$dat$recruit_cv <- matrix(pe_RSA, nrow = N_rows, 1)
 
     #catch CV
@@ -84,10 +84,8 @@ get_ASAP <- function(stock){
     }
 
     dat_file$dat$proj_ini <- c((y), -1, 3, -99, 1)
-    #
     dat_file$dat$R_avg_start <- styear
     dat_file$dat$R_avg_end <- endyear - 10
-    #
 
     if (Sys.info()['sysname'] == "Windows") {
 
@@ -100,7 +98,6 @@ get_ASAP <- function(stock){
       WriteASAP3DatFile(fname = paste('assessment/ASAP/ASAP3.dat', sep = ''),
                         dat.object = dat_file,
                         header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
-
 
       # Run the ASAP assessment model
       asapEst <- try(system('assessment/ASAP/ASAP3.exe', show.output.on.console = FALSE))
@@ -138,8 +135,10 @@ get_ASAP <- function(stock){
 
       # Read in results
       res <- dget('asap3.rdat')
+      
       # save .Rdata results from each run
       saveRDS(res, file = paste(rundir, '/', stockName, '_', r, '_', y,'.rdat', sep = ''))
+      
       #save .par file
       #file.copy("asap3.par", paste(rundir, '/', stockName, '_', r, '_', y,'.par', sep = ""), overwrite = TRUE)
 

@@ -1,5 +1,5 @@
 # Scalar to Fmsy and sd in F before the management period begins. Distribution is lognormal. SD is lognormal SD.
-burnFmsyScalar <- 1 #4
+burnFmsyScalar <- 1 
 burnFsd <- 0.3
 
 # first age and plus age
@@ -46,22 +46,11 @@ R_typ <- 'HS'
 qC <- 0.0001
 qI <- 0.0001
 
+DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE.
+
 # fishery selectivity
-# ### change select to L50 paramaterization like maturity
 selC <- c(s0=5, s1=0.08)
 selC_typ <- 'Logistic'
-
-# Recruitment
-#Rpar <- c(h = 6.630977e-01,
-#          R0 = 6.087769e+07,
-#          beta3 = -2.501400e-01,
-#          SSBRF0 = 0.01972)
-#R_typ <- 'BHSteep'
-
-##For Hockey-stick (Default) Option##
-Rpar <- c(SSB_star = 50000, #mt
-          cR = 1)
-R_typ <- 'HS'
 
 #### Survey parameters ####
 
@@ -86,7 +75,14 @@ startCV <- 1.5
 # for model fitting)
 caaInScalar <- 1000
 
+# stock assessment misspecifications
 M_mis<- FALSE
+M_mis_val<-0.2
+R_mis<- FALSE
+Rpar_mis <- c(SSB_star = 6300, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
+cR = 1,
+Rnyr= 20)
+waa_mis<- FALSE
 
 #### Error parameters ####
 
@@ -102,8 +98,10 @@ oe_paaIN_typ <- 'multinomial'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
-# process error levels  ###################################  !!!!!!!!!!!!!!
+# process error levels 
 pe_R <- 5.839408e-01
+pe_RSA<- 0.5 #recruitment process error assumed in the stock assessment
+pe_IA <- 0.18
 
 # implementation error of fishing mortality
 ie_F <- 0
@@ -113,6 +111,9 @@ ie_bias <- -0.13 #0 #-0.1 # % bias in implementation error
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
 ob_sumCW <- 1
 ob_sumIN <- 1
+
+# catch observation bias (codCW + codCW*C_mult)
+C_mult <-  0 #1.25 for bias, 0 for no bias
 
 #### -- Errors and warnings -- ####
 if(1.0 %in% c(qI, qC)){
