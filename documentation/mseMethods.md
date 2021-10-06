@@ -240,7 +240,7 @@ The ramp rule described here goes through the origin; similar rules are possible
 
 **6.3.2 Binary threshold control rule**  
 A binary threshold rule also uses both $F$-based and biomass-based target reference points, but in this case there is no ramp.  The rule is simply
-<img src="https://render.githubusercontent.com/render/math?math=F^T= F_{MSY}"> if <img src="https://render.githubusercontent.com/render/math?math= S > B_{MSY}"> else 
+<img src="https://render.githubusercontent.com/render/math?math=F^T= F_{MSY}"> if <img src="https://render.githubusercontent.com/render/math?math=S > B_{MSY}">  else 
 <img src="https://render.githubusercontent.com/render/math?math=F^T=0">
 
 so fishing is stopped completely when stock spawner biomass is estimated to lie below the target.
