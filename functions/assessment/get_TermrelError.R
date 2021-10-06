@@ -1,5 +1,5 @@
 get_TermrelError <- function(stock){
-  
+ 
   out <- within(stock, {
     #### Calculate terminal rel errors ####
     CN[y,] %*% waa[y,]
@@ -7,7 +7,6 @@ get_TermrelError <- function(stock){
     }
     
     if(mproc[m,'ASSESSCLASS'] == 'ASAP' & y > fmyearIdx-1){
-      # terminal year
       relTermE_SSB <- get_relE(tail(res$SSB,1), SSB[y])
       relTermE_CW <- get_relE(res$catch.pred[length(res$catch.pred)], sumCW[y-1])
       relTermE_IN <- get_relE(tail(res$index.pred$ind01,1), sumIN[y-1])
@@ -17,6 +16,5 @@ get_TermrelError <- function(stock){
     
   })
   
-  return(out)
-  
+  return(out) 
 }
