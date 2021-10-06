@@ -233,10 +233,8 @@ Harvest control rules define the objective decisions that are made within the ma
 **6.3.1 Ramp control rule**  
 The ramp (sliding) control rule does not cut off fishing completely when estimated biomass is below BMSY but reduces it in proportion to the stock status.  One assumption about this rule is the idea that the population will naturally fluctuate about BMSY so the ramping-down should not necessarily occur immediately. The intention of this HCR is to promote rebuilding and optimal yield. The rule is
 <img src="https://render.githubusercontent.com/render/math?math=F^T = 
-  \begin{cases}
     \frac{F_{MSY}S}{cB_{MSY}}, & \text{if}\ a=1 \\
-    F_{MSY}, & \text{else}
-  \end{cases}">
+    F_{MSY}, & \text{else}">
 
 
 where <img src="https://render.githubusercontent.com/render/math?math=S"> is the current spawner biomass and <img src="https://render.githubusercontent.com/render/math?math=C"> is the proportion of Bmsy at which the stock is considered overfished.
