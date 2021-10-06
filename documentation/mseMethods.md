@@ -232,21 +232,16 @@ Harvest control rules define the objective decisions that are made within the ma
 
 **6.3.1 Ramp control rule**  
 The ramp (sliding) control rule does not cut off fishing completely when estimated biomass is below BMSY but reduces it in proportion to the stock status.  One assumption about this rule is the idea that the population will naturally fluctuate about BMSY so the ramping-down should not necessarily occur immediately. The intention of this HCR is to promote rebuilding and optimal yield. The rule is
-<img src="https://render.githubusercontent.com/render/math?math=F^T = 
-    \frac{F_{MSY}S}{cB_{MSY}}, & \text{if}\ a=1 \\
-    F_{MSY}, & \text{else}">
-
+<img src="https://render.githubusercontent.com/render/math?math=F^T=\frac{F_{MSY}S}{cB_{MSY}}"> if <img src="https://render.githubusercontent.com/render/math?math=a=1"> else
+<img src="https://render.githubusercontent.com/render/math?math=F^T=F_{MSY}">
 
 where <img src="https://render.githubusercontent.com/render/math?math=S"> is the current spawner biomass and <img src="https://render.githubusercontent.com/render/math?math=C"> is the proportion of Bmsy at which the stock is considered overfished.
 The ramp rule described here goes through the origin; similar rules are possible that reduce fishing mortality to zero below a certain biomass level (i.e., a limit).  In that case, the slope of the ramp would be larger than that described here.
 
 **6.3.2 Binary threshold control rule**  
 A binary threshold rule also uses both $F$-based and biomass-based target reference points, but in this case there is no ramp.  The rule is simply
-<img src="https://render.githubusercontent.com/render/math?math=F^T = 
-  \begin{cases}
-    F_{MSY}, & \text{if}\ S \geq B_{MSY}\\
-    0, & \text{else}
-  \end{cases}">
+<img src="https://render.githubusercontent.com/render/math?math=F^T= F_{MSY}"> if <img src="https://render.githubusercontent.com/render/math?math= S \geq B_{MSY}"> else 
+<img src="https://render.githubusercontent.com/render/math?math=F^T=0">
 
 so fishing is stopped completely when stock spawner biomass is estimated to lie below the target.
 
@@ -256,9 +251,7 @@ A constant fishing mortality rule only involves an F-based reference point.  Thi
 
 **6.3.4 Climate-responsive control rules**  
 Climate-responsive control rules are re-parameterized given updates in the biological reference points.  For example, a changing environment might alter the weight-at-age schedule which would directly impact yield-per-recruit- or spawning potential ratio-based reference points.  Any of the biological reference point methods in Section 6.1 could be updated as a function of changing conditions.  As an example, the ramp control rule could change to
-<img src="https://render.githubusercontent.com/render/math?math=F^T_y = 
-    F_{MSY,y}\frac{S_y}{B_{MSY,y}}, & \text{if}\ S_y < B_{MSY,y}\\
-    F_{MSY,y}, & \text{else}">
+<img src="https://render.githubusercontent.com/render/math?math=F^T_y = F_{MSY,y}\frac{S_y}{B_{MSY,y}}"> if <img src="https://render.githubusercontent.com/render/math?math=S_y < B_{MSY,y}"> else <img src="https://render.githubusercontent.com/render/math?math=F^T=F_{MSY,y}">
 
 The change is in the <img src="https://render.githubusercontent.com/render/math?math=y"> subscripts, which indicate that reference points that parameterize the control rule may change over time.
 
