@@ -1,5 +1,3 @@
-
-
 # Function to help provide starting values for assessment model. x can be
 # a vector to help with running this function on a list of starting
 # values (for instance Rdevs). CV is given and sd is calculated from
@@ -19,7 +17,6 @@
 # 
 # ub: same as lb except for upper bounds.
 
-
 get_svNoise <- function(x, cv, lb, ub){
   
   # add small constant to sd for the case where x = 0
@@ -32,6 +29,3 @@ get_svNoise <- function(x, cv, lb, ub){
   return(newsv)
   
 }
-
-
-
