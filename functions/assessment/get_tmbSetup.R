@@ -1,7 +1,4 @@
-
-
 get_tmbSetup <- function(stock){
-  
   
   out <- within(stock, {
 
@@ -13,7 +10,6 @@ get_tmbSetup <- function(stock){
                       path_current)
       Sys.setenv(PATH=path1)
     }
-    
     
     sty <- y - ncaayear
     lyr <- y - 1
@@ -29,7 +25,6 @@ get_tmbSetup <- function(stock){
     log_ipop_mean <- ipopInfo$lmean
     ipop_dev <- ipopInfo$lLMdevs
     
-
     tmb_dat <- list(
     
                       # index bounds
@@ -37,7 +32,6 @@ get_tmbSetup <- function(stock){
                       nage = nage,
                       
                       # Catch
-
                       obs_sumCW = get_dwindow(obs_sumCW, sty, lyr),
                       obs_paaCN = get_dwindow(obs_paaCN, sty, lyr),
                     
@@ -58,18 +52,9 @@ get_tmbSetup <- function(stock){
                       
                       # Survey info
                       slxI = get_dwindow(slxI, sty, lyr),
-
                       timeI = timeI
     )
         
-    # file.remove('results/caasink.txt')
-    # sapply(1:length(tmb_dat), function(x){
-    #   # cat(names(tmb_dat[[x]]), '\n', file='results/caasink.txt', append=TRUE)
-    #   write.table(tmb_dat[[x]], file='results/caasink.txt', append=TRUE)
-    # })
-    
-    
-    
     # Parameters on an arithmetic scale
     tmb_par_arith <- list(M = M,
                           R_dev = R_dev,
@@ -140,8 +125,6 @@ get_tmbSetup <- function(stock){
                            }, 
                      tmb_par_arith, tmb_par_scale)
       
-    
-    
     tmb_ub <- mapply(FUN = function(x,y){
                              get_bounds(x = x, 
                                         type = 'upper', 
@@ -149,7 +132,6 @@ get_tmbSetup <- function(stock){
                                         logScale = y)
                            }, 
                      tmb_par_arith, tmb_par_scale)
-    
     
     names(tmb_lb) <- sapply(1:length(tmb_lb), 
                              function(x) ifelse(tmb_par_scale[x],
@@ -160,7 +142,6 @@ get_tmbSetup <- function(stock){
                              function(x) ifelse(tmb_par_scale[x],
                                                 paste0('log_', names(tmb_ub)[x]),
                                                 names(tmb_ub)[x]))
-    
     
     # make any deviations have identical scales across all
     devIdx <- match(c('R_dev', 'ipop_dev'),  names(tmb_lb))
@@ -176,5 +157,3 @@ get_tmbSetup <- function(stock){
   return(out)
 
 }
-
-
