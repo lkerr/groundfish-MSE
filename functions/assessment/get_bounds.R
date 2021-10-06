@@ -1,5 +1,3 @@
-
-
 # function to get parameter bounds that are based on the
 # true values. Not implemented for 2d structures.
 # 
@@ -11,8 +9,6 @@
 # p: the extent to which the bound goes. An extent of 1.0 means
 #    that the bound stretches from 0 to 2* the true value (assuming
 #    the parameter is positive)
-
-
 
 get_bounds <- function(x, type, p, logScale){
   
@@ -64,17 +60,3 @@ get_bounds <- function(x, type, p, logScale){
 return(out)
 
 }
-
-
-
-## Testing
-
-# v <- c(exp(14.72))
-# ls <- TRUE
-# p <- 5
-# 
-# get_bounds(x = v, type = 'lower', p = p, logScale = ls)
-# get_bounds(x = v, type = 'upper', p = p, logScale = ls)
-
-
-
