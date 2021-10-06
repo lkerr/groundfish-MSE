@@ -2,7 +2,7 @@
 # Running scripts in sequence using batch jobs
 #### (Sam Truesdell struesdell@gmri.org)
 
-(This material prepared for Gavin Fay's GIt-Hub page)
+(This material prepared for Gavin Fay's Git-Hub page)
 
 ***
 
