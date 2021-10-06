@@ -16,7 +16,7 @@ Age structured model.
 **2\.1 Length-at-age**  
 Length-at-age is modeled using the von Bertalanffy function:
 
-<img src="https://render.githubusercontent.com/render/math?math=L_{a,y} = (L_{\infty}+\beta_{0}T_{y}^{*})(1-e^{(-(K+\beta_{1}T_{y}^{*})(t-t_{0}))})>
+<img src="https://render.githubusercontent.com/render/math?math=L_{a,y} = (L_{\infty}+\beta_{0}T_{y}^{*})(1-e^{(-(K+\beta_{1}T_{y}^{*})(t-t_{0}))})">
 
 where $L_{a,y}$ is length at age $a$ in year $y$, $L_{\infty}$ is the asymptotic size, $K$ is the Brody growth coefficient and $t_0$ is a nuisance parameter that accounts for growth at small sizes. $\beta_{0}$ and $\beta_{1}$ are environmental (i.e., temperature) parameters that impact $L_{\infty}$ and $K$, respectively, and $T_{y}^{*}$ is the temperature anomaly in year $y$ (thus, to turn off the temperature effect the $/beta$ parameter may be set to 0). For simplicity and ease of interpretation, typically either $\beta_{0}$ or $\beta_{1}$ would be zero, meaning that temperature would either affect $K$ or $L_{\infty}$ but not both simultaneously.
 
