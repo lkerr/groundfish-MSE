@@ -1,6 +1,6 @@
 #####Mohn's Rho for SSB Plot####
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(18)
+Scenarios<-c(16,20)
 ####First Sims####
 library(matrixStats)
 library(dplyr)
@@ -127,19 +127,19 @@ df2$HCR<-Scenarios[5]
 
 df<-full_join(df,df2)
 
-df$HCR[df$HCR==Scenarios[1]]<-'Base'
-df$HCR[df$HCR==Scenarios[2]]<-'Lag and Two Year Updates'
-df$HCR[df$HCR==Scenarios[3]]<-'Lag and Miss'
-df$HCR[df$HCR==Scenarios[4]]<-'Two Year Updates and Miss'
-df$HCR[df$HCR==Scenarios[5]]<-'Lag, Miss, and 2 Year Updates'
+df$HCR[df$HCR==Scenarios[1]]<-'Hist'
+df$HCR[df$HCR==Scenarios[2]]<-'No Hist'
+# df$HCR[df$HCR==Scenarios[3]]<-'Lag and Miss'
+# df$HCR[df$HCR==Scenarios[4]]<-'Two Year Updates and Miss'
+# df$HCR[df$HCR==Scenarios[5]]<-'Lag, Miss, and 2 Year Updates'
 df$HCR<-as.factor(df$HCR)
-df$HCR<-ordered(df$HCR,levels=c('Base','Lag and Two Year Updates','Lag and Miss','Two Year Updates and Miss','Lag, Miss, and 2 Year Updates'))
+df$HCR<-ordered(df$HCR,levels=c('Hist','No Hist'))
 
 df<-na.omit(df)
 
 ggplot(df)+geom_line(aes(x=Year,y=Catchsim,color=HCR),size=1)+
   theme_classic()+theme(text=element_text(size=18),legend.position='right')+
-  ylab('Mohns Rho for SSB')+ylim(-0.5,0.75)+
+  ylab('Mohns Rho for SSB')+ylim(-0.5,0.5)+
   scale_color_colorblind()+
   scale_x_continuous(limits = c(2020,2040))
 

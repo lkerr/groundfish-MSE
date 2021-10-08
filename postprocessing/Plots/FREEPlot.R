@@ -1,6 +1,6 @@
 #####F_full REE Plot####
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(2,9,11,13,15)
+Scenarios<-c(16,20)
 ####First Sims####
 library(matrixStats)
 library(dplyr)
@@ -20,7 +20,7 @@ Catchsim<-matrix(NA,nrow=11,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  F_fulltrue<-omvalGlobal[[1]]$F_full[169:189]
+  F_fulltrue<-omvalGlobal[[1]]$F_full[167:187]
   for (i in seq(170,190,2)){
     Fest<-omvalGlobal[[1]]$Fest[i,]
     Fest<-na.omit(Fest)
@@ -157,13 +157,13 @@ df2$HCR<-Scenarios[5]
 
 df<-full_join(df,df2)
 
-df$HCR[df$HCR==Scenarios[1]]<-'Base'
-df$HCR[df$HCR==Scenarios[2]]<-'Lag and Two Year Updates'
-df$HCR[df$HCR==Scenarios[3]]<-'Lag and Miss'
-df$HCR[df$HCR==Scenarios[4]]<-'Two Year Updates and Miss'
-df$HCR[df$HCR==Scenarios[5]]<-'Lag, Miss, and 2 Year Updates'
+df$HCR[df$HCR==Scenarios[1]]<-'Hist'
+df$HCR[df$HCR==Scenarios[2]]<-'No Hist'
+# df$HCR[df$HCR==Scenarios[3]]<-'Lag and Miss'
+# df$HCR[df$HCR==Scenarios[4]]<-'Two Year Updates and Miss'
+# df$HCR[df$HCR==Scenarios[5]]<-'Lag, Miss, and 2 Year Updates'
 df$HCR<-as.factor(df$HCR)
-df$HCR<-ordered(df$HCR,levels=c('Base','Lag and Two Year Updates','Lag and Miss','Two Year Updates and Miss','Lag, Miss, and 2 Year Updates'))
+df$HCR<-ordered(df$HCR,levels=c('Hist','No Hist'))
 
 ggplot(df)+geom_line(aes(x=Year,y=Catchsim,color=HCR),size=1)+
   theme_classic()+theme(text=element_text(size=18),legend.position='right')+

@@ -28,10 +28,10 @@ mat_typ <- 'input'
 
 # natural mortality
 #M  <- 0.2
-#M_typ <- 'const'
-init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
+M_typ <- 'const'
+init_M <- 0.4 #same for M = 0.2 and M-ramp scenarios
 M <- 0.4
-M_typ <- 'ramp'
+#M_typ <- 'ramp'
 M_mis<-TRUE #If there is a M misspecification, set to TRUE
 M_mis_val<-0.2 #The misspecified M value 
 
