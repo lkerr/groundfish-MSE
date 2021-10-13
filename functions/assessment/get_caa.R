@@ -111,38 +111,6 @@ get_caa <- function(stock){
     if(platform != 'Linux'){
       Sys.setenv(PATH=path0)
     }
-    
-    # Diagnostics:
-    #   (1) plots of observed and predicted values; and
-    #   (2) plots of the estimates, true values, starting values, and bounds.
-    
-    if(FALSE){
-      
-      par(mfcol=c(1,1), mar=c(4,4,2,1))
-      nm <- unique(names(sdrep$par.fixed))
-      for(i in 1:length(nm)){
-        psv <- parameters[[nm[i]]]
-        ptv <- tmb_par_base[[nm[i]]]
-        plb <- lb[[nm[i]]]
-        pub <- ub[[nm[i]]]
-        pev <- sdrep$par.fixed[which(nm[i] == names(sdrep$par.fixed))]
-        
-        xrg <- c(0,(length(psv)+1))
-        yrg <- range(plb, pub)
-        plot(NA, xlim=xrg, ylim=yrg, pch=1, main=nm[i], las=1)
-        legend('topleft', bty='n', ncol=3, inset=-0.2, xpd=NA,
-               legend = c('start', 'true', 'est'),
-               col = c('black', 'red', 'blue'),
-               pch = c(1, 16, 3))
-        segments(x0=1:length(plb), y0=plb, y1=pub, lty=3)
-        points(psv, xlim=xrg, ylim=yrg, pch=1)
-        points(ptv, pch=16, cex=0.75, col='red')
-        points(pev, pch=3, col='blue')
-        points(plb, pch=2)
-        points(pub, pch=6)
-      }
-      
-    }
   
   })
   
