@@ -1,10 +1,10 @@
 #Kobe Plot
-Scenarios<-c(2,9,11,13,15)
+Scenarios<-c(1,2,3,4)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
 library(ggrepel)
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[1],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[1],"/sim",sep=""))
 
 sims <- list.files()
 
@@ -20,13 +20,13 @@ for (k in 1:length(sims)){
 sims<-na.omit(sims)
 
 ####True Values (From Operating Model)####
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[1],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[1],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Freal[,k]<-omvalGlobal[[1]]$F_full[168:189]
+  Freal[,k]<-omvalGlobal[[1]]$F_full[169:190]
   Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-  SSBreal[,k]<-omvalGlobal[[1]]$SSB[168:189]
+  SSBreal[,k]<-omvalGlobal[[1]]$SSB[169:190]
   SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
 }
 
@@ -42,7 +42,7 @@ Dftrue<-as.data.frame(cbind(SSBratioreal,Fratioreal,Year))
 Dftrue$Scenario<-Scenarios[1]
 
 df<-Dftrue
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[2],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[2],"/sim",sep=""))
 
 sims <- list.files()
 
@@ -58,13 +58,13 @@ for (k in 1:length(sims)){
 sims<-na.omit(sims)
 
 ####True Values (From Operating Model)####
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[2],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[2],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Freal[,k]<-omvalGlobal[[1]]$F_full[168:189]
+  Freal[,k]<-omvalGlobal[[1]]$F_full[169:190]
   Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-  SSBreal[,k]<-omvalGlobal[[1]]$SSB[168:189]
+  SSBreal[,k]<-omvalGlobal[[1]]$SSB[169:190]
   SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
 }
 
@@ -80,7 +80,7 @@ Dftrue2<-as.data.frame(cbind(SSBratioreal,Fratioreal,Year))
 Dftrue2$Scenario<-Scenarios[2]
 df<-full_join(Dftrue,Dftrue2)
 
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[3],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[3],"/sim",sep=""))
 
 sims <- list.files()
 
@@ -96,13 +96,13 @@ for (k in 1:length(sims)){
 sims<-na.omit(sims)
 
 ####True Values (From Operating Model)####
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[3],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[3],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Freal[,k]<-omvalGlobal[[1]]$F_full[168:189]
+  Freal[,k]<-omvalGlobal[[1]]$F_full[169:190]
   Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-  SSBreal[,k]<-omvalGlobal[[1]]$SSB[168:189]
+  SSBreal[,k]<-omvalGlobal[[1]]$SSB[169:190]
   SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
 }
 
@@ -118,7 +118,7 @@ Dftrue2<-as.data.frame(cbind(SSBratioreal,Fratioreal,Year))
 Dftrue2$Scenario<-Scenarios[3]
 df<-full_join(df,Dftrue2)
 
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[4],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[4],"/sim",sep=""))
 
 sims <- list.files()
 
@@ -134,13 +134,13 @@ for (k in 1:length(sims)){
 sims<-na.omit(sims)
 
 ####True Values (From Operating Model)####
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[4],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[4],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Freal[,k]<-omvalGlobal[[1]]$F_full[168:189]
+  Freal[,k]<-omvalGlobal[[1]]$F_full[169:190]
   Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-  SSBreal[,k]<-omvalGlobal[[1]]$SSB[168:189]
+  SSBreal[,k]<-omvalGlobal[[1]]$SSB[169:190]
   SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
 }
 
@@ -199,13 +199,12 @@ library(ggplot2)
 maxSSBest<-max(1.1,max(SSBratioreal))
 maxF<-max(1.1,max(Fratioreal))
 df$HCR<-df$Scenario
-df$HCR[df$HCR==Scenarios[1]]<-'Base'
-df$HCR[df$HCR==Scenarios[2]]<-'Lag and Two Year Updates'
-df$HCR[df$HCR==Scenarios[3]]<-'Lag and Miss'
-df$HCR[df$HCR==Scenarios[4]]<-'Two Year Updates and Miss'
-df$HCR[df$HCR==Scenarios[5]]<-'Lag, Miss, and 2 Year Updates'
+df$HCR[df$HCR==Scenarios[1]]<-'Ramp'
+df$HCR[df$HCR==Scenarios[2]]<-'P*'
+df$HCR[df$HCR==Scenarios[3]]<-'F-step'
+df$HCR[df$HCR==Scenarios[4]]<-'Constrained ramp'
 df$HCR<-as.factor(df$HCR)
-df$HCR<-ordered(df$HCR,levels=c('Base','Lag and Two Year Updates','Lag and Miss','Two Year Updates and Miss','Lag, Miss, and 2 Year Updates'))
+df$HCR<-ordered(df$HCR,levels=c('Ramp','P*','F-step','Constrained ramp'))
 kobe <- ggplot(df, aes(x = SSBratioreal, y = Fratioreal)) +
   theme_bw() 
 kobe <- kobe + annotate(geom = "rect", xmin = 1, xmax = maxSSBest, ymin = 0, ymax = 1, fill = "green", colour = "green", alpha = 0.5) +

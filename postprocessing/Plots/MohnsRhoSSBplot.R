@@ -1,6 +1,6 @@
 #####Mohn's Rho for SSB Plot####
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(16,20)
+Scenarios<-c(21)
 ####First Sims####
 library(matrixStats)
 library(dplyr)
