@@ -2,6 +2,7 @@
 
 #### Set up environment ####
 
+
 # empty the environment
 rm(list=ls())
 source('processes/runSetup.R')
