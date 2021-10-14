@@ -1,6 +1,6 @@
 #####F_full REE Plot####
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(17,18,19,20)
+Scenarios<-c(13,14,15,16)
 ####First Sims####
 library(matrixStats)
 library(dplyr)
@@ -134,7 +134,7 @@ df$HCR<-as.factor(df$HCR)
 df$HCR<-ordered(df$HCR,levels=c('Ramp','P*','F-step','Constrained ramp'))
 
 ggplot(df)+geom_line(aes(x=Year,y=Catchsim,color=HCR),size=1)+
-  theme_classic()+theme(text=element_text(size=18),legend.position='right')+
+  theme_classic()+theme(text=element_text(size=18),legend.position='bottom')+
   ylab('%REE F')+ ylim(min(-15,min(df$Catchsim)),15)+
   scale_color_colorblind()+
   scale_x_continuous(limits = c(2020,2040))

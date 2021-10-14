@@ -1,6 +1,6 @@
 #####Catch Trajectory Plots with Confidence Intervals####
 #Lists numbers of scenarios that you want to compare here
-Scenarios<-c(5,6,7,8)
+Scenarios<-c(13,14,15,16)
 #Set working directory--where the results you want to compare are stored
 wd<-"C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims"
 #List what is being compared
@@ -126,7 +126,7 @@ ggplot(Df, aes(x=Year, y=median,color=HCR)) +
   geom_line(size=1, alpha=0.8) +
   geom_ribbon(aes(ymin=CI_lower, ymax=CI_upper,fill=HCR), alpha=0.2) +
   theme_classic()+
-  theme(text=element_text(size=18),legend.position='right')+
+  theme(text=element_text(size=18),legend.position='bottom',plot.margin = margin(10, 20, 10, 10))+
   ylab('Catch (mt)')+
   scale_color_colorblind()+scale_fill_colorblind()+
-  scale_y_continuous(breaks = seq(0,round(max(Df$CI_upper),-3),500),limits = c(0,round(max(Df$CI_upper),-3)))
+  scale_y_continuous(breaks = seq(0,2500,500),limits = c(0,2500))
