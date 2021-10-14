@@ -1,9 +1,10 @@
 #Kobe Plot
-Scenarios<-c(1,2,3,4)
+Scenarios<-c(17,18,19,20)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
 library(ggrepel)
+library(ggtheme)
 setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[1],"/sim",sep=""))
 
 sims <- list.files()

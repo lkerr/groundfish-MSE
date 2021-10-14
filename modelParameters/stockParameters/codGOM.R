@@ -38,7 +38,7 @@ M_mis_val<-0.2 #The misspecified M value
 # initial numbers at-age parameters
 #initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
 #initN_type <- 'input'
-initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = 0.2)
+initN_par <- c(nage = page, N0 = 37227000, F_full = 0.7, M = 0.4)
 initN_type <- 'expDecline'
 
 #### Fishery parameters ####
