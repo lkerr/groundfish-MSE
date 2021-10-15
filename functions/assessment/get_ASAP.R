@@ -46,7 +46,7 @@ get_ASAP <- function(stock){
       #dat_file$dat$WAA_mats<-t(replicate(N_rows,waa[1,]))
       waamat<-as.matrix(read.csv('data/data_raw/waamatrix.csv'))
       colnames(waamat)<-NULL
-      dat_file$dat$WAA_mats <- waamat[1,]
+      dat_file$dat$WAA_mats <- t(replicate(N_rows,waamat[1,]))
     if (waa_mistyp=='high'){
       dat_file$dat$WAA_mats<-t(replicate(N_rows,waa[1,]))+0.0003
     }

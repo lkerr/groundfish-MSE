@@ -1,7 +1,4 @@
-
-
 #### Set up environment ####
-
 
 # empty the environment
 rm(list=ls())
