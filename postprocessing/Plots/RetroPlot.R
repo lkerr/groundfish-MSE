@@ -1,4 +1,4 @@
-Scenarios<-c(21)
+Scenarios<-c(22)
 RhoAdj<-FALSE
 Stock<-'codGOM'
 wd<-"C:/Users/mmazur/Desktop/COCA_Sims"
