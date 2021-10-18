@@ -1,11 +1,11 @@
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(5,6,7,8)
+Scenarios<-c(1,2,3,4)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
 library(ggplot2)
 library(ggthemes)
-setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[1],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[1],"/sim",sep=""))
 #setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[1],"/sim",sep=""))
 sims <- list.files()
 
@@ -18,7 +18,7 @@ for (k in 1:length(sims)){
 sims<-na.omit(sims)
 
 ####True Values (From Operating Model)####
-setwd("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims")
+setwd("C:/Users/mmazur/Desktop/COCA_Sims")
 #setwd("C:/Users/jjesse/Box/HCR_Sims")
 tempwd <- getwd()
 setwd(paste(tempwd,"/Sim_",Scenarios[1],"/sim",sep=""))
@@ -49,7 +49,7 @@ Df2$Time<-'Long-term'
 Df<-full_join(Df,Df2)
 Df$HCR<-Scenarios[1]
 
-setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[2],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[2],"/sim",sep=""))
 #setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[2],"/sim",sep=""))
 sims <- list.files()
 
@@ -62,7 +62,7 @@ for (k in 1:length(sims)){
 sims<-na.omit(sims)
 
 ####True Values (From Operating Model)####
-setwd("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims")
+setwd("C:/Users/mmazur/Desktop/COCA_Sims")
 #setwd("C:/Users/jjesse/Box/HCR_Sims")
 tempwd <- getwd()
 setwd(paste(tempwd,"/Sim_",Scenarios[2],"/sim",sep=""))
@@ -94,7 +94,7 @@ Df2<-full_join(Df2,Df3)
 Df2$HCR<-Scenarios[2]
 Df<-full_join(Df,Df2)
 
-setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[3],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[3],"/sim",sep=""))
 #setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[3],"/sim",sep=""))
 sims <- list.files()
 
@@ -107,7 +107,7 @@ for (k in 1:length(sims)){
 sims<-na.omit(sims)
 
 ####True Values (From Operating Model)####
-setwd("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims")
+setwd("C:/Users/mmazur/Desktop/COCA_Sims")
 #setwd("C:/Users/jjesse/Box/HCR_Sims")
 tempwd <- getwd()
 setwd(paste(tempwd,"/Sim_",Scenarios[3],"/sim",sep=""))
@@ -139,7 +139,7 @@ Df2<-full_join(Df2,Df3)
 Df2$HCR<-Scenarios[3]
 Df<-full_join(Df,Df2)
 
-setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[4],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[4],"/sim",sep=""))
 #setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[4],"/sim",sep=""))
 sims <- list.files()
 
@@ -152,7 +152,7 @@ for (k in 1:length(sims)){
 sims<-na.omit(sims)
 
 ####True Values (From Operating Model)####
-setwd("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims")
+setwd("C:/Users/mmazur/Desktop/COCA_Sims")
 #setwd("C:/Users/jjesse/Box/HCR_Sims")
 tempwd <- getwd()
 setwd(paste(tempwd,"/Sim_",Scenarios[4],"/sim",sep=""))
@@ -199,6 +199,6 @@ ggplot(Df)+
   xlab('Time')+
   theme(text=element_text(size=18),legend.position='right')+
   scale_fill_colorblind()+
-  scale_y_continuous(limits = c(0,1.5))+
+  scale_y_continuous(limits = c(0,1.1))+
   geom_hline(yintercept=1, linetype="dashed", color = "black", size=1)+
   geom_hline(yintercept=0.5, linetype="dashed", color = "black", size=1)
