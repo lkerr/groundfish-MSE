@@ -32,8 +32,8 @@ mat_typ <- 'input'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
 M <- 0.4
 M_typ <- 'ramp'
-M_mis<-FALSE #If there is a M misspecification, set to TRUE
-M_mis_val<-0.2 #The misspecified M value 
+M_mis<-TRUE #If there is a M misspecification, set to TRUE
+M_mis_val<-0.3 #The misspecified M value 
 
 # initial numbers at-age parameters
 #initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
