@@ -1,14 +1,12 @@
-
-
-
-# Function to concatonate multiple simulation repetitions (i.e., from
-# running on the hpcc), into a single list output for analysis. simcat
-# refers to concatonating the results from the simulations.
-# 
-# x: list of results. What you do is combine the Rdata files from the different
-#    simulation runs into a single list which is the input x.
-
-
+#' @title Concatonate simulation repetitions
+#' @description Concatonate multiple simulation repetitions (i.e., from running on the hpcc), into a single list output for analysis. simcat refers to concatonating the results from the simulations.
+#' 
+#' @param x A list of MSE results objects, where each list item was loaded from a simulation Rdata file. ??? See runPost.R for specifics
+#'
+#' @return ???
+#' 
+#' @family postprocess
+#' 
 
 get_simcat <- function(x){
   
@@ -22,7 +20,6 @@ get_simcat <- function(x){
   }
   
   return(out)
-  
 }
 
 
