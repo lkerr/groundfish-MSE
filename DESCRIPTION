@@ -1,0 +1,52 @@
+Package: groundfishMSE
+Type: Package
+Title: Conduct Management Strategy Evaluation (MSE) For Groundfish
+Version: 0.1.0
+Authors@R: c(person(given = "Jonathan",
+                   family = "Cummings",
+                   role = c("aut"),
+                   email = ""),
+            person(given = "Amanda",
+                   family = "Hart",
+                   role = c("cre"),
+                   email = "ahart@gmri.org"),
+            person(given = "Lisa",
+                   family = "Kerr",
+                   role = c("aut"),
+                   email = ""),       
+            person(given = "Min-Yang",
+                   family = "Lee",
+                   role = c("aut"),
+                   email = ""),
+            person(given = "Mackenzie",
+                   family = "Mazur",
+                   role = c("aut"),
+                   email = ""),
+            person(given = "Sam",
+                   family = "Truesdell",
+                   role = c("aut"),
+                   email = ""),
+            person(given = "Ashley",
+                   family = "Weston",
+                   role = c("aut"),
+                   email = ""))
+Description:
+License: use_mit_license(copyright_holder = "Gulf of Maine Research Institute")
+Encoding: UTF-8
+LazyData: true
+Depends:
+Imports: abind,
+         ASAPplots,
+         data.table,
+         dplyr,
+         fBasics,
+         fGarch,
+         fishmethods,
+         glue,
+         msm,
+         tidyverse,
+         timeSeries,
+         TMB,
+         tmvtnorm,
+         wham
+RoxygenNote: 7.1.1
