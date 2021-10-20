@@ -1,8 +1,15 @@
-
-
-
-## Function to report the memory used in the runs
-
+#' @title Report Memory Usage
+#' @description Extract HPCC memory usage information from .o output files and save to a .txt file.
+#' 
+#' @param runClass A string specifying the runclass, options: ??? Why is there only an HPCC runClass option?
+#' \itemize{
+#'   \item{"HPCC" - MSE runs performed on High Performance Computing Cluster}
+#' }
+#' 
+#' @return A text table written to the memUsage.txt file in the working directory, nothing returned to R environment.
+#' 
+#' @family postprocess
+#' 
 
 get_memUsage <- function(runClass){
   
@@ -50,5 +57,4 @@ get_memUsage <- function(runClass){
   }
   
   return(NULL)
-    
 }
