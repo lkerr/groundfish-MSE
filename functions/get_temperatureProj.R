@@ -12,7 +12,7 @@
 #'   \item{T - Observed temperature timeseries, must overlap with period in ref_yrs}
 #' }
 #' @param ref_yrs A vector of length 2 containing the minimum and maximum year to define the training period used to scale temperature projections to the local data set.
-#' @param plot A boolean, when TRUE plot of temperature projection generated.
+#' @param plot A boolean, when TRUE plot of temperature projection generated. Default = FALSE.
 #' 
 #' @return A dataframe with the following: ??? Check format & contents
 #' 
