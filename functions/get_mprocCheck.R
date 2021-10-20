@@ -1,11 +1,14 @@
+#' @title Check mproc Inputs
+#' @description Check that input values in mproc are selected from available options (helps avoid subsequent errors)
+#' 
+#' @template global_mproc #??? I think this is a labeled vector not a data.frame, need to clarify in documentation.
+#' 
+#' @return 
+#' 
+#' @family 
+#' 
 
-# Function to check to make sure the values in mproc are part of the set
-# of potential values before running the code. This avoids more confusing
-# error messages later on.
-# 
-# mproc: the mproc file *after* it has been read in as a data frame.
-
-
+# I think assessclass/hcr/fref_typ/bref_typ/rfun_nm need to be updated as options expand ???
 
 get_mprocCheck <- function(mproc){
   
