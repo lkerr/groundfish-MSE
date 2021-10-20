@@ -1,31 +1,28 @@
+#' @title Calculate Temperature Projection
+#' @description Calculate downscaled temperature projections using the delta method. The hindcast mean is calculated over a reference period and used to calculate an anomoly for the projection period. The anomoly is then added to the mean of the observed data over that same reference period in order to downscale the projections.
+#' 
+#' @param prj_data A data frame with the following columns:
+#' \itemize{
+#'   \item{Year - Years corresponding to temperature data}
+#'   \item{T - Hindcast and projected temperature timeseries. The hindcast data must encompass the period in ref_yrs}
+#' } 
+#' @param obs_data A data frame of observed data to scale the predicted temperature series, containing the following columns:
+#' \itemize{
+#'   \item{Year - Years corresponding to observed data}
+#'   \item{T - Observed temperature timeseries, must overlap with period in ref_yrs}
+#' }
+#' @param ref_yrs A vector of length 2 containing the minimum and maximum year to define the training period used to scale temperature projections to the local data set.
+#' @param plot A boolean, when TRUE plot of temperature projection generated.
+#' 
+#' @return A dataframe with the following: ??? Check format & contents
+#' 
+#' @family 
+#' 
 
-
-# Function to calculate downscaled temperature projections using
-# delta method. The  hindcast mean is calculated  over 
-# a reference period and used to calculate an anomoly for the
-# projection period. The anomoly is then added to the mean of the
-# observed data over that same reference period in order to downscale 
-# the projections.
-#
-#
-# prj_data: projection data - these data must include a hindcast
-#           that covers the period in ref_yrs. Must be a data frame
-#           with column names "Year" and "T".
-#           
-# obs_data: observed data to scale the predicted temperature series - 
-#           these data must cover the period in ref_yrs. Must be a data 
-#           frame with column names "Year" and "T".
-#           
-# ref_yrs: the training period to use that scales the projections
-#          down to the local data set. A vector of length 2
-#          (min, max).
-
-
-
-
-
-get_temperatureProj <- function(prj_data, obs_data, 
-                                ref_yrs, plot=FALSE){
+get_temperatureProj <- function(prj_data, 
+                                obs_data, 
+                                ref_yrs, 
+                                plot=FALSE){
   
   # Pull out the reference periods
   refPrj <- subset(prj_data, 
@@ -85,11 +82,7 @@ get_temperatureProj <- function(prj_data, obs_data,
     
     mtext(side=1:2, line=c(2.5,2.5), cex=1.25, c('Year', 'Temperature (C)'))
     
-  }
+  } # End optional plot
   
   return(dsPrj)
-  
 }
-
-
-
