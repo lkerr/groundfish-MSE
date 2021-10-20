@@ -1,5 +1,5 @@
 # Recruitment function list for use in the recruitment index column
-# of the object mproc (created by the file generateMP.R)
+# of the object mproc (created by the file generateMP.R) ??? Unclear to my how this works, why aren't these functions defined elsewhere?
 
 Rfun_BmsySim <- list(
   
