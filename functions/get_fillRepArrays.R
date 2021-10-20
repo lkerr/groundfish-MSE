@@ -1,3 +1,16 @@
+#' @title 
+#' @description 
+#' 
+#' @template global_stock
+#' @template global_r
+#' @template global_m
+#' # Other args or all stored within stock object?
+#' 
+#' @return 
+#' 
+#' @family ???
+#' 
+
 # For simplicity, have one list that goes through comparing
 # the assessment model results with the true values and then have
 # another object that will just hold the values themselves.  Makes
@@ -9,7 +22,9 @@
 ## management time-period so you can see the response. It is set pretty
 ## arbitrarily though.
 
-get_fillRepArrays <- function(stock){
+get_fillRepArrays <- function(stock,
+                              r,
+                              m){
 
   out <- within(stock, {
     
