@@ -1,4 +1,6 @@
 # Roxygen documentation for global argument: stockPar
+# BE CAUTIOUS WHEN EDITING THIS FILE
+# changes will be inherited by all functions that use @template global_stockPar
 
 #' @param stockPar A nested list containing the following list arguments for each species (see ??? for argument definitions):
 #' \itemize{

@@ -1,11 +1,13 @@
-# Roxygen documentation for global argument: mproc
+# Roxygen documentation for global argument: parmgt
 # BE CAUTIOUS WHEN EDITING THIS FILE
-# changes will be inherited by all functions that use @template global_mproc
+# changes will be inherited by all functions that use @template global_parmgt
 
 # This is a simplified version of the documentation and describes the general structure of mproc but does not list all management options
 # For full documentation of options see runSims() documentation and/or the written manual
 
-#' @param mproc A labeled vector containing the following settings for the management procedure, @seealso \code{\link{runSims}} for full description of management options: 
+# ??? This only works if parmgt = mproc, otherwise need to rethink documentation
+
+#' @param parmgt A labeled vector containing the following settings for the management procedure, @seealso \code{\link{runSims}} for full description of management options in mproc argument: 
 #' \itemize{
 #'   \item{ASSESSCLASS - }
 #'   \item{HCR - }
