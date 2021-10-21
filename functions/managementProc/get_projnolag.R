@@ -1,5 +1,22 @@
-get_projnolag <- function(type, parmgt, parpop, parenv, Rfun,
-                     F_val, stReportYr, ny=NULL, stockEnv, ...){
+#' @title Project Stock Without Lag
+#' @description 
+#' 
+#' @inheritParams get_proj
+#' 
+#' @return 
+#' 
+#' @family managementProcedure, regulations
+#'
+
+get_projnolag <- function(type, 
+                          parmgt, 
+                          parpop, 
+                          parenv, 
+                          Rfun,
+                          F_val, 
+                          stReportYr, 
+                          ny=NULL, 
+                          stockEnv, ...){
   
   if(parmgt$RFUN_NM == 'hindcastMean'){
     if(type == 'FREF'){

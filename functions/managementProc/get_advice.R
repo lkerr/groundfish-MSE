@@ -1,4 +1,44 @@
-get_advice <- function(stock){
+#' @title Update Management Advice
+#' @description Run the stock assessment,
+#' 
+#' @template global_stock
+#' @template global_mproc
+# ???Some of the below arguments are probably included in stock or mproc, if so no need to list as separate arguments here
+#' @template global_y
+#' @template global_m
+#' @template global_yrs
+#' @template global_yrs_temp
+#' @template global_fmyearIdx
+#' @param Tanom A vector of temperature anomalies, from genAnnStructure.R ???
+#' @param temp A vector of annual temperatures, from genAnnStructure.R ??? Need to confirm, temp used many places in code
+#' 
+#' @return 
+#' 
+#' @family managementProcedure
+
+get_advice <- function(stock,
+                       mproc,
+                       y,
+                       m,
+                       yrs,
+                       yrs_temp,
+                       fmyearIdx,
+                       rep, # ??? maybe obj$report() as in many scratch files
+                       waa,
+                       mat,
+                       sty,
+                       caaInScalar,
+                       Rpar,
+                       Rpar_mis,
+                       planBest,
+                       J1N,
+                       M,
+                       slxC, 
+                       res,
+                       Mohns_Rho_SSB,
+                       rundir,
+                       temp,
+                       Tanom){
   # prepare data
   tempStock <- get_tmbSetup(stock = stock)
 
@@ -29,7 +69,7 @@ get_advice <- function(stock){
   # was the assessment successful?
   tempStock <- within(tempStock, {
     conv_rate[y] <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' &&
-                      class(opt) != 'try-error') ||
+                      class(opt) != 'try-error') || # ??? Check that opt is in stock or mproc object, also planBest 
                      (mproc[m,'ASSESSCLASS'] == 'PLANB' &&
                         class(planBest) != 'try-error') ||
                      (mproc[m, 'ASSESSCLASS'] == 'ASAP' &&
@@ -240,5 +280,4 @@ get_advice <- function(stock){
     })
 
   return(tempStock)
-
 }

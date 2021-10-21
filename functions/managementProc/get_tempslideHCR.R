@@ -1,17 +1,21 @@
-# Function that returns fishing mortality advice based on the control rule 
-# outlined in the Technical Guidance on the Use of Precautionary
-# Approaches to Implementing National Standard 1 of the MSA (see Gabriel
-# and Mace 1999, Proceedings, 5th NMFS NSAW
-# 
-# parpop: list containing population parameters. Must include named element
-#         "B" which is a vector of biomass history. Only the last number
-#         in the history is used, so could put in a vector of length 1.
-# 
-# Fmsy: Fmsy reference point or proxy
-# 
-# Bmsy: Bmsy reference point or proxy
-# 
-get_tempslideHCR <- function(parpop, Fmsy, Bmsy, temp){
+#' @title Implement Tempslide HCR
+#' @description Implement the "tempslide" HCR option based on the control rule outlined in the Technical Guidance on the Use of Precautionary Approaches to Implementing National Standard 1 of the MSA (see Gabriel and Mace 1999, Proceedings, 5th NMFS NSAW).
+#' 
+#' @inheritParams get_nextF
+#' Only the last year in the parpop$SSBhat timeseries is used.
+#' @param Fmsy A number for the Fmsy reference point or proxy
+#' @param Bmsy A number for the Bmsy reference point or proxy
+#' @param temp ??? Probably a vector of temperatures
+#' 
+#' @return A number describing the F advice (i.e. the recommended target fishing mortality)
+#' 
+#' @family managementProcedure, regulations
+#' 
+
+get_tempslideHCR <- function(parpop, 
+                             Fmsy, 
+                             Bmsy, 
+                             temp){
   
   # c is defined as the maximum of 1-M or 1/2 (Gabriel and Mace 1999)
   c <- max(1 - tail(parpop$M, 1), 1/2)

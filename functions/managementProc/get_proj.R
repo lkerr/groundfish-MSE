@@ -1,5 +1,34 @@
-get_proj <- function(type, parmgt, parpop, parenv, Rfun,
-                     F_val, stReportYr, ny=NULL, stockEnv, ...){
+#' @title Project Stock With Lag
+#' @description 
+#' 
+#' @param type A string specifying the type, available options:
+#' \itemize{
+#'   \item{"FREF" - }
+#'   \item{"BREF" - }
+#'   \item{"current" - Implements the current advice-setting method for New England groundfish which uses projections in the catch advice}
+#' }
+#' @inheritParams get_nextF
+#' @param Rfun A single function pulled from the Rfun_BmsySim list ??? if changed to Rfun_lst would match syntax of get_BBRP and get_FBRP
+#' @param F_val A number describing the fishing mortality rate to implement in the projection.
+#' @param stReportYr ?? Doesn't appear to be used inside function, can I remove this?
+#' @param ny ???
+#' 
+#' @return 
+#' 
+#' @family managementProcedure, regulations
+#'
+
+# Parts of this documentation inherited by get_projnolag.R
+
+get_proj <- function(type, 
+                     parmgt, 
+                     parpop, 
+                     parenv, 
+                     Rfun,
+                     F_val, 
+                     stReportYr, 
+                     ny=NULL, 
+                     stockEnv, ...){
 
   if(parmgt$RFUN_NM == 'hindcastMean'){
     if(type == 'FREF'){
