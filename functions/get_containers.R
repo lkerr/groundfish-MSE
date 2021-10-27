@@ -86,7 +86,6 @@ get_containers <- function(stockPar){
     relE_R_dev = yx0,
     relE_SSB = yx0,
     relE_N= yx0,
-    relE_CW = yx0,
     relE_IN = yx0,
     relE_R = yx0, #AEW
     relE_F = yx0, #AEW
@@ -154,7 +153,6 @@ get_containers <- function(stockPar){
       relE_R_dev = save_vector_ann,
       relE_SSB = save_vector_ann,
       relE_N = save_vector_ann,
-      relE_CW = save_vector_ann,
       relE_IN = save_vector_ann,
       relE_R = save_vector_ann, #AEW
       relE_F = save_vector_ann, #AEW

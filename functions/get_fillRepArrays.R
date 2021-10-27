@@ -80,7 +80,6 @@ get_fillRepArrays <- function(stock){
     omval$relE_R_dev[r,m,] <- relE_R_dev
     omval$relE_SSB[r,m,] <- relE_SSB
     omval$relE_N[r,m,] <- relE_N
-    omval$relE_CW[r,m,] <- relE_CW
     omval$relE_IN[r,m,] <- relE_IN
     omval$relE_R[r,m,] <- relE_R #AEW
     omval$relE_F[r,m,] <- relE_F #AEW
