@@ -1,11 +1,7 @@
-
-
-
-
+#Function to get Fmed reference point
 get_fmed <- function(parpop, rep_slp, ssbrGrid){
  
   # take the inverse of the slope to get the desired replacement-level
-  # SSBR
   ssbr_star <- 1 / rep_slp
 
   # Find the SSBR from the SSBR matrix
