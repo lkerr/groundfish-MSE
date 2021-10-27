@@ -3,7 +3,7 @@
 #!/bin/bash
 
 #BSUB -W 03:59                            # How much time does your job need (HH:MM)
-#BSUB -q short                            # Which queue {short, long, parallel, GPU, interactive}
+#BSUB -q short                       # Which queue {short, long, parallel, GPU, interactive}
 #BSUB -J "runSim[1-100]"                    # Job Name
 #BSUB -R rusage[mem=10000] 
 #BSUB -n 1
