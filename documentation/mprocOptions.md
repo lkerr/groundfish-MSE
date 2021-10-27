@@ -20,7 +20,9 @@ Refers to the class of assessment model. Options are:
 ## HCR
 Refers to the shape of the harvest control rule. Options are:
 
-* **constF**: The harvest control rule is simply a flat line, in other words no matter what in each year F will be determined by the F reference point.
+* **constF**: A ‘constant fishing mortality’ HCR harvests the same fraction of the stock regardless of biomass, and consequently catch increases linearly with abundance (e.g., 75% FMSY; Restrepo et al., 1998; Goodman et al., 2002). The catch is set equal to a fixed proportion of the estimate of the population size. This option provides a balance between constant catch and constant escapement HCRs, as this option responds to stock size (Punt, 2010). Variants of this HCR could be based on different precautionary buffers (Restrepo et al., 1998). Constant F HCRs have been applied in the management of the U.S. west coast groundfish fishery (Dichmont et al., 2016) and the New Zealand orange roughy fisheries (Doonan et al., 2014). 
+
+Status in New England groundfish management: This option (75% FMSY) is the Acceptable Biological Catch (ABC) control rule for many stocks that had not rebuilt on the expected schedule. 
 
 * **simplethresh**: A simple threshold model. If the estimated SSB is larger than the SSB reference point then the advice will be fishing at the F reference point. If the estimated SSB is smaller than the SSB reference point F will be 0.
 
