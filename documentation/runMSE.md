@@ -29,7 +29,7 @@ The MSE is run on the UMASS HPCC as a batch job.  If you are unfamiliar with bat
 
 ### Preparing for a run
 
-Four files are required to run the MSE.  They are: *run.sh*, *runPre.sh*, *runSim.sh* and *runPost.sh*  These need to be located in the same directory.  This is the directory where the folder **groundfish-MSE** will be located after it is cloned from Git-Hub.  Once the files are uploaded they can stay in the directory (i.e., you don't need to upload them every time you intend to run the MSE).
+Four files are required to run the MSE on the HPCC.  They are: *run.sh*, *runPre.sh*, *runSim.sh* and *runPost.sh*  These need to be located in the same directory.  This is the directory where the folder **groundfish-MSE** will be located after it is cloned from Git-Hub.  Once the files are uploaded they can stay in the directory (i.e., you don't need to upload them every time you intend to run the MSE).
 
 The four files are listed in turn below.  You can copy them individually into a new text document on your local machine and save them (with the appropriate .sh extension), then upload them to the appropriate folder in your HPCC account.  Notably, if you are working on a Windows (or presumably Mac) machine you will need to convert each of the files to Unix/Linux structure (the HPCC runs Linux).  This is due to differences in how the systems treat line breaks.  Once you have uploaded each of the files, use the command ```dos2unix``` for the conversion on each of the four files.  The inputs and outputs will look something like:
 ```
