@@ -1,6 +1,6 @@
 #####R Trajectory Plots####
 #####R Trajectory Plots####
-Scenarios<-c(5,6,7,8)
+Scenarios<-c(1,2,3)
 RhoAdj<-FALSE
 Stock<-'codGOM'
 ####First Sims####
@@ -208,11 +208,10 @@ df2$Rest<-Rest
 df<-full_join(df,df2)
 
 df$HCR[df$HCR==Scenarios[1]]<-'Ramp'
-df$HCR[df$HCR==Scenarios[2]]<-'P*'
-df$HCR[df$HCR==Scenarios[3]]<-'F-step'
-df$HCR[df$HCR==Scenarios[4]]<-'Constrained ramp'
+df$HCR[df$HCR==Scenarios[2]]<-'F-step'
+df$HCR[df$HCR==Scenarios[3]]<-'Constrained ramp'
 df$HCR<-as.factor(df$HCR)
-df$HCR<-ordered(df$HCR,levels=c('Ramp','P*','F-step','Constrained ramp'))
+df$HCR<-ordered(df$HCR,levels=c('Ramp','F-step','Constrained ramp'))
 
 df<-df[df$Year>1989,]
 ggplot(df)+geom_line(aes(x=Year,y=Rest,color=HCR))+geom_point(aes(x=Year,y=Catchsim,color=HCR))+

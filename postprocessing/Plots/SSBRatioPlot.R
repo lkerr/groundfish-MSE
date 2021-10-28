@@ -1,5 +1,5 @@
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(1,2,3,4)
+Scenarios<-c(1,2,3)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
@@ -139,7 +139,7 @@ Df2<-full_join(Df2,Df3)
 Df2$HCR<-Scenarios[3]
 Df<-full_join(Df,Df2)
 
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[4],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[4],"/sim",sep=""))
 #setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[4],"/sim",sep=""))
 sims <- list.files()
 
@@ -152,7 +152,7 @@ for (k in 1:length(sims)){
 sims<-na.omit(sims)
 
 ####True Values (From Operating Model)####
-setwd("C:/Users/mmazur/Desktop/COCA_Sims")
+setwd("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims")
 #setwd("C:/Users/jjesse/Box/HCR_Sims")
 tempwd <- getwd()
 setwd(paste(tempwd,"/Sim_",Scenarios[4],"/sim",sep=""))
@@ -185,11 +185,10 @@ Df2$HCR<-Scenarios[4]
 Df<-full_join(Df,Df2)
 
 Df$HCR[Df$HCR==Scenarios[1]]<-'Ramp'
-Df$HCR[Df$HCR==Scenarios[2]]<-'P*'
-Df$HCR[Df$HCR==Scenarios[3]]<-'F-step'
-Df$HCR[Df$HCR==Scenarios[4]]<-'Constrained ramp'
+Df$HCR[Df$HCR==Scenarios[2]]<-'F-step'
+Df$HCR[Df$HCR==Scenarios[3]]<-'Constrained ramp'
 Df$HCR<-as.factor(Df$HCR)
-Df$HCR<-ordered(Df$HCR,levels=c('Ramp','P*','F-step','Constrained ramp'))
+Df$HCR<-ordered(Df$HCR,levels=c('Ramp','F-step','Constrained ramp'))
 Df$Time<-ordered(Df$Time,levels=c('Short-term','Medium-term','Long-term'))
 
 ggplot(Df)+
