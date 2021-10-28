@@ -1,6 +1,6 @@
 #####Mohn's Rho for F Plot####
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(21)
+Scenarios<-c(1,2,3)
 ####First Sims####
 library(matrixStats)
 library(dplyr)
@@ -127,13 +127,13 @@ df2$HCR<-Scenarios[5]
 
 df<-full_join(df,df2)
 
-df$HCR[df$HCR==Scenarios[1]]<-'Hist'
-df$HCR[df$HCR==Scenarios[2]]<-'No Hist'
-# df$HCR[df$HCR==Scenarios[3]]<-'Lag and Miss'
+df$HCR[df$HCR==Scenarios[1]]<-'Ramp'
+df$HCR[df$HCR==Scenarios[2]]<-'F-step'
+df$HCR[df$HCR==Scenarios[3]]<-'Constrained ramp'
 # df$HCR[df$HCR==Scenarios[4]]<-'Two Year Updates and Miss'
 # df$HCR[df$HCR==Scenarios[5]]<-'Lag, Miss, and 2 Year Updates'
 df$HCR<-as.factor(df$HCR)
-df$HCR<-ordered(df$HCR,levels=c('Hist','No Hist'))
+df$HCR<-ordered(df$HCR,levels=c('Ramp','F-step','Constrained ramp'))
 
 df<-na.omit(df)
 
