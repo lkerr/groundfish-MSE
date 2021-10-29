@@ -173,10 +173,13 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parpopproj$catch<-stockEnv$res$catch.obs
       if(tolower(parmgt$HCR) == 'pstar'){F<-FrefRPvalue}
       if(stockEnv$waa_mis=='TRUE'){
-        #parpopproj$waa<-stock[[1]]$waa[1,]
-        waamat<-as.matrix(read.csv('data/data_raw/waamatrix.csv'))
-        colnames(waamat)<-NULL
-        parpopproj$waa <- waamat[1,]
+        parpopproj$waa<-stock[[1]]$waa[1,]
+        # waamat<-as.matrix(read.csv('data/data_raw/waamatrix.csv'))
+        # colnames(waamat)<-NULL
+        # parpopproj$waa <- waamat[1,]
+        if (waa_mistyp=='high'){
+          dat_file$dat$WAA_mats<-t(replicate(N_rows,waa[1,]))+0.0003
+        }
       }
       for (i in 1:100){
           if(mproc[m,'Lag'] == 'TRUE'){
