@@ -68,8 +68,8 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
       # waamat<-as.matrix(read.csv('data/data_raw/waamatrix.csv'))
       # colnames(waamat)<-NULL
       # parpop$waa <- waamat[1,]
-      if (waa_mistyp=='high'){
-      dat_file$dat$WAA_mats<-t(replicate(N_rows,waa[1,]))+0.0003
+      if (stockEnv$waa_mistyp=='high'){
+      parpop$waa<-stock[[1]]$waa[1,]+0.0003
       }
     }
     

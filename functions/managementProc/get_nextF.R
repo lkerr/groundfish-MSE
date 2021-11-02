@@ -177,8 +177,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
         # waamat<-as.matrix(read.csv('data/data_raw/waamatrix.csv'))
         # colnames(waamat)<-NULL
         # parpopproj$waa <- waamat[1,]
-        if (waa_mistyp=='high'){
-          dat_file$dat$WAA_mats<-t(replicate(N_rows,waa[1,]))+0.0003
+        if (stockEnv$waa_mistyp=='high'){
+          parpopproj$waa<-stock[[1]]$waa[1,]+0.0003
         }
       }
       for (i in 1:100){

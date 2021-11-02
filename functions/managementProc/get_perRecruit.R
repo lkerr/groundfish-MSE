@@ -76,8 +76,8 @@ get_perRecruit <- function(parmgt, parpop,
     # waamat<-as.matrix(read.csv('data/data_raw/waamatrix.csv'))
     # colnames(waamat)<-NULL
     # waa <- c(c(waamat[1,]), rep(tail(c(parpop$waa), 1), nage-length(parpop$waa)))
-    if (waa_mistyp=='high'){
-      dat_file$dat$WAA_mats<-t(replicate(N_rows,waa[1,]))+0.0003
+    if (stock[[1]]$waa_mistyp=='high'){
+      waa<-c(c(stock[[1]]$waa[1,]), rep(tail(c(parpop$waa), 1), nage-length(parpop$waa)))+0.0003
     }
   }
   M <- c(c(parpop$M), rep(tail(c(parpop$M), 1), nage-length(parpop$M)))
