@@ -53,7 +53,8 @@ dos2unix: converting file runPost.sh to UNIX format ...
 Below each of the files is described in turn. But first a description of some of the common elements.  Each of the files has headers that give instructions about the job -- the headers start with #BSUB.
 * ```#BSUB -W``` indicates how much time your job needs in hh:mm format
 
-* ```#BSUB -q``` indicates which queue the job should be submitted to.  Have only used the "short" queue for this project.
+* ```#BSUB -q``` indicates which queue the job should be submitted to.  
+
 * ```#BSUB -J``` the name of the job (in quotations)
 
 * ```#BSUB R``` the memory requirements (in MB) -- this is something that may have to be evaluated and changed as you run larger sets of simulations
