@@ -1,5 +1,5 @@
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(2,9,11,13,15)
+Scenarios<-c(1,2,3)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
@@ -229,13 +229,13 @@ Df2<-full_join(Df2,Df3)
 Df2$HCR<-Scenarios[5]
 Df<-full_join(Df,Df2)
 
-Df$HCR[Df$HCR==Scenarios[1]]<-'Base'
-Df$HCR[Df$HCR==Scenarios[2]]<-'Lag and Two Year Updates'
-Df$HCR[Df$HCR==Scenarios[3]]<-'Lag and Miss'
+Df$HCR[Df$HCR==Scenarios[1]]<-'Ramp'
+Df$HCR[Df$HCR==Scenarios[2]]<-'F-step'
+Df$HCR[Df$HCR==Scenarios[3]]<-'Constrained ramp'
 Df$HCR[Df$HCR==Scenarios[4]]<-'Two Year Updates and Miss'
 Df$HCR[Df$HCR==Scenarios[5]]<-'Lag, Miss, and 2 Year Updates'
 Df$HCR<-as.factor(Df$HCR)
-Df$HCR<-ordered(Df$HCR,levels=c('Base','Lag and Two Year Updates','Lag and Miss','Two Year Updates and Miss','Lag, Miss, and 2 Year Updates'))
+Df$HCR<-ordered(Df$HCR,levels=c('Ramp','F-step','Constrained ramp'))
 Df$Time<-ordered(Df$Time,levels=c('Short-term','Medium-term','Long-term'))
 
 ggplot(Df)+
