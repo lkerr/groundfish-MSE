@@ -204,14 +204,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       if(tolower(parmgt$HCR) == 'pstar'){
         P<-calc_pstar(0.4,tail(parpop$SSBhat,1)/BThresh)
         CV<-1
-        calc_ABC <- function(OFL, P, CV)
-        {
-          # OFL is the median catch by fishing at Flim for the current population
-          #Convert CV to sigma for lognormal dist
-          sd <- sqrt(log(CV*CV+1))
-          #Calculate ABC using inverse of the lognormal dist
-          return(qlnorm(P, meanlog = log(OFL), sdlog = sd))
-        }
         catchproj[1]<-calc_ABC(catchproj[1],P,CV)
         catchproj[2]<-calc_ABC(catchproj[2],P,CV)
       }
