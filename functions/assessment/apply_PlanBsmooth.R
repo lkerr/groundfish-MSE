@@ -1,15 +1,29 @@
-#' Applies the Plan B smooth approach.
+#' @title  Apply the Plan B Smooth Approach
+#' @description Smooths data (Year and Biomass Index) using loess, applies log linear regression to most recent three years, and retransforms back to estimate multiplier for catch advice.
+#'
+#' @param dat A data frame of Year and avg (the biomass index)
+#' @param od A string specifying the output directory where plots are saved, default=working directory.
+#' @param my.title A string specifying the title for time series plot with loess smooth, default = "".
+#' @param terminal.year A number for the last year used in smooth (allows easy retro analysis), default = NA uses the most recent year.
+#' @param nyears A number of years to use in loess, default = 33.
+#' @param loess.span proportion time series used in smoothing, default = NA, calculates span=9.9/nyears.
+#' @param saveplots A boolean flag, if TRUE save output to od, default=FALSE.
+#' @param showplots A boolean flag, if TRUE display plots in window, default=TRUE.
+#' @param nameplots A string to be added to start of saved files, default="", spaces not recommended.
 #' 
-#' Smooths data (Year and Biomass Index) using loess, applies log linear regression to most recent three years, and retransforms back to estimate multiplier for catch advice.
-#' @param dat data frame of Year and avg (the biomass index)
-#' @param od output directory where plots are saved (default=working directory)
-#' @param my.title title for time series plot with loess smooth (default = "")
-#' @param terminal.year last year used in smooth (allows easy retro analysis) (default = NA = most recent)
-#' @param nyears number of years to use in loess (default = 33)
-#' @param loess.span proportion time series used in smoothing (default = NA, calculates span=9.9/nyears)
-#' @param saveplots true/false flag to save output to od (default=FALSE)
-#' @param showplots true/false flag to display plots in window (default=TRUE)
-#' @param nameplots added to start of saved files (default=""), spaces not recommended
+#' @return A list containing the following:
+#' \itemize{
+#'   \item{dat.use}
+#'   \item{lfit}
+#'   \item{pred_fit}
+#'   \item{reg.use}
+#'   \item{llr_fit}
+#'   \item{multiplier}
+#'   \item{tsplot}
+#' }
+#' 
+#' @family managementProcedure stockAssess
+#' 
 #' @export
 
 ApplyPlanBsmooth <- function(dat,

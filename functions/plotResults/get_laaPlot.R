@@ -1,4 +1,4 @@
-
+#' @template global_Tanom
 
 # Get plot that shows the progression of length-at-age as it changes with
 # temperature

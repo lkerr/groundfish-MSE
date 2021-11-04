@@ -1,3 +1,13 @@
+#' @title This function doesn't appear to be used
+#' @description 
+#' 
+#' @param distillBmsy The name of a function (CANNOT be a string) to aggregate biomass under the particular F policy, default = mean. Since temperature can play a role there may be no equilibrium over the period, so a decision about what function to use for biomass needs to be made (mean, median or a quantile).
+#'
+#' @return 
+#' 
+#' @family managementProcedure, regulations
+#' 
+
 # Function to estimate Bmsy assuming an Fmsy, recruitment history and level of
 # natural mortality.
 # 
@@ -24,10 +34,7 @@
 #       like use rlnorm() and then specify an sd. Another impcat is to define a
 #       trend in the recruitment history and use that.
 #       
-# distillBmsy: function to aggregate biomass under the particular F policy.
-#              Since temperature can play a role there may be no equilibrium
-#              over the period, so a decision about what function
-#              to use for biomass needs to be made (mean, median or a quantile).
+
 #       
 # # Important note: If you want to use only the last n years of the
 # recruitment history, you can use something like
@@ -41,8 +48,18 @@
 ### ** note: initial numbers-at-age is assuming age-1 is the minimum right now. Model ages should be
 ###    passed under parpop and the minimum should be used instead of 1.0.
 
-get_BmsySim <- function(parmgt, parpop, parenv, Rfun,
-                        F_val, distillBmsy = mean, ...){
+# Since temperature can play a role there may be no equilibrium over the period, 
+# so a decision about what function to use for biomass needs to be made 
+# (mean, median or a quantile).
+
+
+get_BmsySim <- function(parmgt, 
+                        parpop, 
+                        parenv, 
+                        Rfun,
+                        F_val, 
+                        distillBmsy = mean, 
+                        ...){
   
   get_proj(type = 'BREF',
            parmgt = parmgt, 

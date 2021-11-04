@@ -1,4 +1,4 @@
-
+#' @template global_Tanom
 
 # Driver function to create output plots from the simulation
 # 

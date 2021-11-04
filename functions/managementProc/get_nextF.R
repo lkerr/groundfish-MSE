@@ -17,9 +17,9 @@
 #'   \item{switch - A boolean ???}
 #' }
 #' @param parenv A named list containing the following:
-#' \itemixe{
+#' \itemize{
 #'   \item{tempY - set to temp???}
-#'   \item{Tanom - }
+#'   \item{Tanom - ??? maybe  A vector of temperature anomalies, from genAnnStructure.R ??? OR a vector of zeros as in get_burnin}
 #'   \item{yrs - A vector of calendar years from firstYear to mxyear, set in processes/genAnnStructure.R}
 #'   \item{yrs_temp - A vector of years from firstYear to the maximum year in the cmip5 temperature timeseries}
 #'   \item{y - A number to index year loop in MSE simulation}
@@ -31,10 +31,10 @@
 #'
 #' @return out??? revisit structure
 #' 
-#' @family managementProcedure
+#' @family managementProcedure, regulations
 #' 
 
-# Parts of this documentation inherited by get_BBRP.R, get_FBRP.R, get_proj.R, get_projnolag.R. Be careful when making changes to existing functions ("@inheritParams get_nextF" borrows documentation for arguments that are listed in both get_nextF and the file being documented)
+# Parts of this documentation inherited by get_BBRP.R, get_FBRP.R, get_proj.R, get_projnolag.R, get_estF.R, get_fmed.R, get_perRecruit.R, get_replacement.R. Be careful when making changes to existing functions ("@inheritParams get_nextF" borrows documentation for arguments that are listed in both get_nextF and the file being documented)
 
 # parpop: named ist of population parameters (vectors) needed for the 
 #         simulation including selectivity (sel), weight-at-age (waa),
@@ -264,7 +264,7 @@ get_nextF <- function(parmgt,
         if(((catchproj[2]-catchproj[1])/catchproj[2])*100>20){
           catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
       }
-      Fest<-get_estF(catchproj=catchproj[1],parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv)
+      Fest<-get_estF(catchproj=catchproj[1],parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv) #??? Rfun is not defined, I expect this should be Rfun_BmsySim
       if (Fest>FrefRPvalue){
         catchproj<-matrix(ncol=2,nrow=100)
         for (i in 1:100){

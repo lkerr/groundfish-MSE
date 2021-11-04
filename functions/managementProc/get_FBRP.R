@@ -11,6 +11,8 @@
 #' @family managementProcedure, regulations
 #' 
 
+# Parts of this documentation inherited by get_fmed.R, get_perRecruit.R, get_replacement.R
+
 get_FBRP <- function(parmgt, 
                      parpop, 
                      parenv, 
@@ -146,7 +148,7 @@ get_FBRP <- function(parmgt,
     
   }else if(parmgt$FREF_TYP == 'Fmed'){
     
-    slp <- get_replacement(parpop = parpop, parmgt = parmgt)
+    slp <- get_replacement(parpop = parpop, parmgt = parmgt, Rfun_BmsySim = Rfun_lst)
     pmtemp <- list(FREF_TYP = 'SSBR')
     ssbrGrid <- get_perRecruit(parmgt = pmtemp, parpop = parpop)$PRgrid
     F <- get_fmed(parpop = parpop, rep_slp = slp, ssbrGrid = ssbrGrid)

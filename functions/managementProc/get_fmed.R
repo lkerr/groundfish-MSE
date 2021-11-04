@@ -1,10 +1,20 @@
+#' @title Double check this documentation 
+#' @description 
+#' 
+#' @inheritParams get_FBRP
+#' @param rep_slp ??? @seealso \code{\link{get_replacement}}
+#' @param ssbrGrid A matrix of SSBR, @seealso \code{\link{get_perRecruit}}
+#' 
+#' @return A list containing F_star ???
+#' 
+#' @family managementProcedure, regulations
+#' 
 
-
-
-
-get_fmed <- function(parpop, rep_slp, ssbrGrid){
+get_fmed <- function(parpop, 
+                     rep_slp, 
+                     ssbrGrid){
  
-  # take the inverse of the slope to get the desired replacement-level
+  # Take the inverse of the slope to get the desired replacement-level
   # SSBR
   ssbr_star <- 1 / rep_slp
 
@@ -18,7 +28,6 @@ get_fmed <- function(parpop, rep_slp, ssbrGrid){
   }
   
   return(list(RPvalue=F_star))
-
 }
 
 

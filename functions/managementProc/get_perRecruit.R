@@ -1,56 +1,31 @@
-
+#' @title Calculate Per-Recruit and Spawning Potential Ratio
+#' @description Calculate yield-per-recruit (YPR), spawning biomass-per-recruit (SSBR), or spawning potential ratio (SPR) based on the selected "FREF_TYP" and "FREF_PAR0" parameters. 
+#' 
+#' The operational component of parmgt for this function are the "FREF_TYP" and "FREF_PAR0" options.
+#' @inheritParams get_FBRP
+#' @param nage A large number specifying the ages to consider, generally use default = 100. Note that the length of the input vectors do not have to match nage -- the last values in those vectors will be extended out until the vectors are the same length as nage.
+#' @param nF A number of fully selected values of fishing mortality to test (i.e. the increment), default = 1000.
+#' @param nFrep A number of fully selected values of fishing mortality to report out in the matrix of results (i.e., for plotting a curve), default = 100. Note that the reference points will be calculated based on nF, nFrep is just for the output matrix.
+#' 
+#' @return A list containing the following:
+#' \itemize{
+#'   \item{PRgrid - A matrix with a column of Fs assessed as part of reference point calculations (F_full) and associated yields (yvalue)}
+#'   \item{RPlevel - The F level used for the reference point, matches "FREF_PAR0" parameter from parmgt argument}
+#'   \item{RPvalue - A number describing the F reference point value}
+#'   \item{SSBvalue - A number describing the SSB-per-recruit at the reference point}
+#' }
+#' 
+#' @family managementProcedure, regulations
+#' 
 
 ## The YPR doesn't quite line up exactly with GN's version in his fishmethods
 ## package. It's close but not quite. This should be resolved.
 
-
-# Function to return either Yield-per-recruit, Spawning biomass-per-recruit,
-# or Spawning potential ratio.
-# 
-# 
-# parmgt: a 1-row data frame of management parameters. The operational
-#         component of parmgt for this function is the (1-row) columns
-#         "FREF_TYP" and "FREF_PAR0". FREF_TYP indicates the type of model
-#         that should be used to calculate the F reference point and
-#         FREF_PAR0 is the associate F level (e.g., 0.4 for F40% if you are
-#         using SPR or 0.1 for F0.1 if you are using YPR). The options
-#         and associated reference points are:
-#         
-#           * for YPR, the level of slope of the YPR curve that is x% of the
-#             origin slope (e.g., par=0.1 for F_0.1)
-#     
-#           * for SSBR, the desired level of spawner biomass-per-recruit
-#      
-#           * for SPR, the desired ratio of spawner biomass-per-recruit 
-#             relative to the level of spawner biomass-per-recruit at the 
-#             origin (e.g., par=0.4 for F_40%)
-# 
-# parpop: named list of population parameters (vectors) needed for the 
-#         simulation including selectivity (sel), weight-at-age (waa),
-#         recruitment (R), maturity (mat) and natural mortality (M).
-#         Natural mortality can be a vector or a scalar. Vectors have
-#         one value per age class. 
-# 
-# nage: number of ages to consider -- some large number and doesn't really
-#       need to be an argument. Note that the length of the input vectors
-#       do not have to match nage -- the last values in those vectors will
-#       be extended out until the vectors are the same length as nage.
-#       
-# nF: number of fully selected values of fishing mortality to test (i.e., 
-#     the increment)
-#     
-# nFrep: number of fully selected values of fishing mortality to report out
-#        in the matrix of results (i.e., for plotting a curve). Note that
-#        the reference points will be calculated based on nF, nFrep is just
-#        for the output matrix.
-
-
-
-
-
-
-get_perRecruit <- function(parmgt, parpop, 
-                           nage=100, nF=1000, nFrep=100){
+get_perRecruit <- function(parmgt, 
+                           parpop, 
+                           nage=100, 
+                           nF=1000, 
+                           nFrep=100){
   
 
   if(is.null(parpop$mat) & parmgt$FREF_TYP == 'SPR'){
@@ -168,10 +143,4 @@ get_perRecruit <- function(parmgt, parpop,
               SSBvalue = SSBatRP)
 
   return(out)
-  
 }
-
-
-
-
-

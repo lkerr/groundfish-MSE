@@ -9,7 +9,12 @@
 #' @template global_yrs
 #' @template global_yrs_temp
 #' @template global_fmyearIdx
-#' @param Tanom A vector of temperature anomalies, from genAnnStructure.R ???
+#' @template global_Tanom
+#' @param rep Maybe obj$report() as in many scratch files?
+#' @param sty
+#' @param planBest
+#' @param res 
+#' @param rundir
 #' @param temp A vector of annual temperatures, from genAnnStructure.R ??? Need to confirm, temp used many places in code
 #' 
 #' @return 
@@ -23,22 +28,13 @@ get_advice <- function(stock,
                        yrs,
                        yrs_temp,
                        fmyearIdx,
+                       Tanom,
                        rep, # ??? maybe obj$report() as in many scratch files
-                       waa,
-                       mat,
                        sty,
-                       caaInScalar,
-                       Rpar,
-                       Rpar_mis,
                        planBest,
-                       J1N,
-                       M,
-                       slxC, 
                        res,
-                       Mohns_Rho_SSB,
                        rundir,
-                       temp,
-                       Tanom){
+                       temp){
   # prepare data
   tempStock <- get_tmbSetup(stock = stock)
 

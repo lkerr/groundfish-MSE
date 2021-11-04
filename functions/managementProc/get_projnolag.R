@@ -3,9 +3,15 @@
 #' 
 #' @inheritParams get_proj
 #' 
-#' @return 
+#' @return A list containing the following:
+#' \itemize{
+#'   \item{J1N - }
+#'   \item{SSBaa - }
+#'   \item{SSB - }
+#'   \item{sumCW - }
+#' }
 #' 
-#' @family managementProcedure, regulations
+#' @family managementProcedure, regulations, projection
 #'
 
 get_projnolag <- function(type, 
@@ -212,5 +218,4 @@ get_projnolag <- function(type,
               sumCW = sumCWpj)
   
   return(out)
-  
 }

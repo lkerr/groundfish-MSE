@@ -1,4 +1,20 @@
-get_indexData <- function(stock){
+#' @title Perform Survey
+#' @description 
+#' 
+#' @template global_stock
+#' @template global_y
+#' @template global_Tanom
+#' @template global_fmyearIdx
+#' 
+#' @return ??? Missing return object, I think this function just updates the survey placeholders in stock (should document this explictly)
+#' 
+#' @family managementProcedure survey
+#' 
+
+get_indexData <- function(stock,
+                          y,
+                          Tanom,
+                          fmyearIdx){
 
   within(stock, {
 

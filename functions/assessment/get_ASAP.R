@@ -1,7 +1,29 @@
-##################################################################################
-### function to modify Age Structured Assessment Program (ASAP) .dat file, run executable, and produce results object
-###
-get_ASAP <- function(stock){
+#' @title Run ASAP Stock Assessment
+#' @description Modify Age Structured Assessment Program (ASAP) .dat file, run executable, and produce results object.
+#' 
+#' @template global_stock
+#' @template global_fmyearIdx
+#' @param ncaayear
+#' @template global_mproc
+#' @template global_m
+#' @param styear
+#' @param endyear
+#' @template global_r
+#' 
+#' @return ??? May want to provide name of ASAP .dat file as an input to this function rather than reading from assessment/ASAP folder
+#' 
+#' @family 
+#' 
+
+get_ASAP <- function(stock,
+                     fmyearIdx,
+                     ncaayear,
+                     mproc,
+                     m,
+                     y,
+                     styear,
+                     endyear,
+                     r){
 
   out <- within(stock, {
 
@@ -87,7 +109,7 @@ get_ASAP <- function(stock){
     dat_file$dat$R_avg_start <- styear
     dat_file$dat$R_avg_end <- endyear - 10
 
-    if (Sys.info()['sysname'] == "Windows") {
+    if (Sys.info()['sysname'] == "Windows") { 
 
       # save copy of .dat file by stock name, nrep, and sim year
       WriteASAP3DatFile(fname = paste('assessment/ASAP/', stockName, '_', r, '_', y,'.dat', sep = ''),
@@ -149,5 +171,4 @@ get_ASAP <- function(stock){
   })
   
   return(out)
-
 }

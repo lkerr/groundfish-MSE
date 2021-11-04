@@ -1,6 +1,24 @@
-#Function to get what estimated F would be based on the catch advice.
-#Used to make sure estimated F is not over the estimated OFL. 
-get_estF<-function(catchproj,parmgtproj,parpopproj,parenv,Rfun,stockEnv){
+#' @title Estimate F Based On Catch Advice
+#' @description Double check that catch advice does not result in an estimated F that exceeds the estimated overfishing limit (OFL).
+#' 
+#' @inheritParams get_nextF # stockEnv, parenv
+#' @param catchproj ??? @seealso \code{\link{get_proj, get_projnolag}}
+#' @param parmgtproj ??? same structure as parmgt just with updated values in get_nextF, probably want to change so documentation inherited
+#' @param parpopproj ??? same structure as parpop just with updated values in get_nextF, probably want to change so documentation inherited
+#' @param Rfun ??? Probably needs to be Rfun_BmsySim, make documentation more consistent
+#' 
+#' @return 
+#' 
+#' @family managementProcedure, regulations
+#' 
+
+get_estF<-function(catchproj,
+                   parmgtproj,
+                   parpopproj,
+                   parenv,
+                   Rfun,
+                   stockEnv){
+  
     nage <- length(parpopproj$sel)
     N <- matrix(0, nrow=1, ncol=nage)
     init <- tail(parpopproj$J1N, 1)
@@ -25,10 +43,10 @@ get_estF<-function(catchproj,parmgtproj,parpopproj,parenv,Rfun,stockEnv){
     N[1,1] <- prod(tail(R,5))^(1/5)
 
     Fest <- get_F(x = catchproj,
-                    Nv = N, 
-                    slxCv = parpopproj$sel, 
-                    M = parpopproj$M, 
-                    waav = parpopproj$waa)
+                  Nv = N, 
+                  slxCv = parpopproj$sel, 
+                  M = parpopproj$M, 
+                  waav = parpopproj$waa)
 
   return(Fest)
 }

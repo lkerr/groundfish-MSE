@@ -13,9 +13,15 @@
 #' @param stReportYr ?? Doesn't appear to be used inside function, can I remove this?
 #' @param ny ???
 #' 
-#' @return 
+#' @return A list containing the following:
+#' \itemize{
+#'   \item{J1N - }
+#'   \item{SSBaa - }
+#'   \item{SSB - }
+#'   \item{sumCW - }
+#' }
 #' 
-#' @family managementProcedure, regulations
+#' @family managementProcedure, regulations, projection
 #'
 
 # Parts of this documentation inherited by get_projnolag.R
@@ -217,5 +223,4 @@ get_proj <- function(type,
               sumCW = sumCWpj)
 
   return(out)
-
 }
