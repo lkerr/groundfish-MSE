@@ -26,7 +26,7 @@ get_burnF <- function(stock,
                  FREF_PAR0 = length(yrs)-1)
  
   parenv <- list(tempY = temp,
-                 Tanom = rep(0,length(yrs)),
+                 Tanom = rep(0,length(yrs)), #??? Why 0 here rather than passed the values from from genAnnStructure.R ??? maybe because no temperature anomalies wanted during burnin
                  yrs = yrs, # management years
                  yrs_temp = yrs_temp, # temperature years
                  y = 1)
@@ -49,8 +49,3 @@ get_burnF <- function(stock,
   
   return(Fref$RPvalue)
 }
-
-
-
-
-
