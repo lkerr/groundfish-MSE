@@ -4,7 +4,7 @@
 #' @param df The name of the data frame object ??? Is this a string or the dataframe, where is it used (presumably mproc?)
 #' @param file: the output file path
 #' 
-#' @return ??? Probably want to include an explicit return() call in the function below
+#' @return A text file with a dataframe of management procedure options used in the simulation
 #' 
 #' @family ???
 #' 

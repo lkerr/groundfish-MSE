@@ -12,7 +12,7 @@
 #' \itemize{
 #'   \item{Simulation storage containers}
 #'   \itemize{
-#'     \item{J1N - A matrix with nyear rows and a column for each age}
+#'     \item{J1N - A matrix with nyear rows and a column for each age for abundance from the operating model}
 #'     \item{CN - A matrix with nyear rows and a column for each age}
 #'     \item{CN_temp - A matrix with nyear rows and a column for each age}
 #'     \item{codCW - A matrix with nyear rows and a column for each age ??? project specific?}

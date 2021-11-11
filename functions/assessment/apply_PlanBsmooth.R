@@ -25,6 +25,13 @@
 #' @family managementProcedure stockAssess
 #' 
 #' @export
+#' @return dat.use data used in the Plan B approach
+#' @return lfit Loess smoother applied to data
+#' @return pred_fit predicted values from loess smoother
+#' @return reg.use last three values from pred_fit
+#' @return llr_fit log linear regression of last three loess predicted values
+#' @return multiplier multiplier used for catch advice 
+#' @return tsplot plot of Biomass index
 
 ApplyPlanBsmooth <- function(dat,
                              od            = ".\\",
