@@ -1,6 +1,6 @@
 #####R Trajectory Plots####
 #####R Trajectory Plots####
-Scenarios<-c(1,2,3)
+Scenarios<-c(7,8,9)
 RhoAdj<-FALSE
 Stock<-'codGOM'
 ####First Sims####

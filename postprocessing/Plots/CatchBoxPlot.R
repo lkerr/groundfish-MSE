@@ -1,9 +1,9 @@
 #Lists numbers of scenarios that you want to compare here
-Scenarios<-c(5,6,7,8)
+Scenarios<-c(7,8,9)
 #Set working directory--where the results you want to compare are stored
-wd<-"C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims"
+wd<-"C:/Users/mmazur/Desktop/COCA_Sims"
 #List what is being compared
-comparison<-c('Ramp','P*','F-step','Constrained ramp')
+comparison<-c('Ramp','F-step','Constrained ramp')
 ####Set up files####
 library(matrixStats)
 library(dplyr)

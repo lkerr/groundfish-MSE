@@ -1,10 +1,10 @@
 #####Catch Trajectory Plots with Confidence Intervals####
 #Lists numbers of scenarios that you want to compare here
-Scenarios<-c(13,14,15,16)
+Scenarios<-c(7,8,9)
 #Set working directory--where the results you want to compare are stored
-wd<-"C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims"
+wd<-"C:/Users/mmazur/Desktop/COCA_Sims"
 #List what is being compared
-comparison<-c('Ramp','P*','F-step','Constrained ramp')
+comparison<-c('Ramp','F-step','Constrained ramp')
 
 ####Set up files####
 library(matrixStats)
@@ -129,4 +129,5 @@ ggplot(Df, aes(x=Year, y=median,color=HCR)) +
   theme(text=element_text(size=18),legend.position='bottom',plot.margin = margin(10, 20, 10, 10))+
   ylab('Catch (mt)')+
   scale_color_colorblind()+scale_fill_colorblind()+
-  scale_y_continuous(breaks = seq(0,2500,500),limits = c(0,2500))
+  scale_y_continuous(breaks = seq(0,3500,500),limits = c(0,3500))
+

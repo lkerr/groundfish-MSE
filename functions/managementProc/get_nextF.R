@@ -295,8 +295,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     if(tolower(parmgt$projections) == 'false'){catchproj<-NA}
   
     if (F>2){F<-2}#Not letting actual F go over 2
-    
-    out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue,FrefTRPvalue, BrefTRPvalue,FrefTRPvalue2, BrefTRPvalue2), 
+
+    out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue,FrefTRPvalue, BrefTRPvalue), 
                 ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
                 OFgStatus = overfishing, catchproj=catchproj) #AEW
     

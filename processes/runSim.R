@@ -126,7 +126,6 @@ for(r in 1:nrep){
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         }
       } #End of burn-in loop
-
       for(i in 1:nstock){
         stock[[i]] <- get_mortality(stock = stock[[i]])
         stock[[i]] <- get_indexData(stock = stock[[i]])

@@ -25,8 +25,7 @@ get_F <- function(x, Nv, slxCv, M, waav){
   
   # Function to calculate the difference between the true catch weight (x)
   # and the catch weight calculated assuming a value of F.
-
-  opt <- try(optimize(getCW, interval=c(-10, 5)))
+  opt <- try(optimize(getCW, interval=c(-10, 5),slxCv,M,Nv,waav,x))
   
   return(exp(opt$minimum))
   

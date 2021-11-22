@@ -1,4 +1,4 @@
-getCW <- function(logF){
+getCW <- function(logF,slxCv,M,Nv,waav,x){
 
 F <- exp(logF)
 

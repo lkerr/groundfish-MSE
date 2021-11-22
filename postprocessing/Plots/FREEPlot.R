@@ -1,12 +1,12 @@
 #####F_full REE Plot####
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(13,14,15,16)
+Scenarios<-c(7,8,9)
 ####First Sims####
 library(matrixStats)
 library(dplyr)
 library(ggplot2)
 library(ggthemes)
-setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[1],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[1],"/sim",sep=""))
 #setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[1],"/sim",sep=""))
 sims <- list.files()
 
@@ -35,7 +35,7 @@ df<-as.data.frame(cbind(Catchsim,Year))
 df$HCR<-Scenarios[1]
 
 ####Second Sims####
-setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[2],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[2],"/sim",sep=""))
 #setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[2],"/sim",sep=""))
 sims <- list.files()
 
@@ -66,7 +66,7 @@ df2$HCR<-Scenarios[2]
 df<-full_join(df,df2)
 
 ####Third Sims####
-setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[3],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[3],"/sim",sep=""))
 #setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[3],"/sim",sep=""))
 sims <- list.files()
 
@@ -127,11 +127,11 @@ df2$HCR<-Scenarios[4]
 df<-full_join(df,df2)
 
 df$HCR[df$HCR==Scenarios[1]]<-'Ramp'
-df$HCR[df$HCR==Scenarios[2]]<-'P*'
-df$HCR[df$HCR==Scenarios[3]]<-'F-step'
+df$HCR[df$HCR==Scenarios[2]]<-'F-step'
+df$HCR[df$HCR==Scenarios[3]]<-'Constrained ramp'
 df$HCR[df$HCR==Scenarios[4]]<-'Constrained ramp'
 df$HCR<-as.factor(df$HCR)
-df$HCR<-ordered(df$HCR,levels=c('Ramp','P*','F-step','Constrained ramp'))
+df$HCR<-ordered(df$HCR,levels=c('Ramp','F-step','Constrained ramp'))
 
 ggplot(df)+geom_line(aes(x=Year,y=Catchsim,color=HCR),size=1)+
   theme_classic()+theme(text=element_text(size=18),legend.position='bottom')+
