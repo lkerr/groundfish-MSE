@@ -88,30 +88,50 @@ echo "run complete"          # Print statement indicating job is done
 ```
 #!/bin/bash
 
-#BSUB -W 00:59                # How much time does your job need (HH:MM)
-#BSUB -q short                # Which queue
-#BSUB -J "runPre"             # Job Name
-#BSUB -R rusage[mem=1000]     # Memory requirements (in MB)
-#BSUB -n 1                    # Number of nodes to use
-#BSUB -o "./%J.o"             # Specifies name of the output file
-#BSUB -e "./%J.e"             # Specifies name of the error file
+#BSUB -W 00:59                            # How much time does your job need (HH:MM)
+#BSUB -q short                            # Which queue {short, long, parallel, GPU, interactive}
+#BSUB -J "runPre"                    # Job Name
+#BSUB -R rusage[mem=10000] 
+#BSUB -n 1
+
+#BSUB -o "./%J.o"
+#BSUB -e "./%J.e"
 
 
-rm -r -f groundfish-MSE/     # remove old directory
 
-module load git/2.1.3        # load the git module
+# run.sh is located inside git transfer directory here,
+# but when run on HPCC it is assumed that run.sh will be
+# one level up from the root directory. The first thing that
+# happens is run.sh downloads the most up-to-date version from
+# github so we want it outside the root directory so that run.sh
+# isn't part of what gets deleted before the download.
 
-# clone the repository
-git clone https://samtruesdell:17d3b37aa4080198a25fe421470b97f92af26794@github.com/COCA-NEgroundfishMSE/groundfish-MSE
+# 17d3b37aa4080198a25fe421470b97f92af26794
 
-module load gcc/5.1.0        # load the gcc module for compilation
-module load R/3.4.0          # load R module
 
-cd groundfish-MSE/           # change directories to groundfish-MSE
+# remove old directory
+rm -r -f groundfish-MSE/
 
-Rscript ./processes/runPre.R --vanilla    # Run the runPre.R code
+# load the git module
+module load git/2.1.3
 
-echo "runPre complete"       # Print statement indicating job is done
+# clone the current repository
+git clone -b master https://samtruesdell:17d3b37aa4080198a25fe421470b97f92af26794@github.com/COCA-NEgroundfishMSE/groundfish-MSE
+
+# load the gcc module for compilation
+module load gcc/5.1.0
+
+# load R module
+module load R/3.4.0
+
+# load module to run ASAP.exe on unix
+module load wine
+
+cd groundfish-MSE/
+
+Rscript ./processes/runPre.R --vanilla
+
+echo "runPre complete"
 ```
 There are new processes going on in runPre.sh that we haven't discussed:
 * ```rm -r -f groundfish-MSE/``` deletes the previous groundfish-MSE directory if it already exists

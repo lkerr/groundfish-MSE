@@ -24,7 +24,9 @@ Refers to the shape of the harvest control rule. Options are:
 
 Status in New England groundfish management: This option (75% FMSY) is the Acceptable Biological Catch (ABC) control rule for many stocks that had not rebuilt on the expected schedule. 
 
-* **simplethresh**: A simple threshold model. If the estimated SSB is larger than the SSB reference point then the advice will be fishing at the F reference point. If the estimated SSB is smaller than the SSB reference point F will be 0.
+* **simplethresh**: A ‘threshold’ HCR harvest changes target F as a simple step function of stock biomass, with F set to zero at a level of abundance (e.g., 50%SSBMSY; Punt, 2010). Variants of this HCR could be based on different biomass thresholds (Deroba et al., 2019; Feeney et al., 2019). Threshold HCRs have been applied in management of whales by the International Whaling Commission (Butterworth and Best, 1994). 
+
+Status in New England groundfish management: This option has not been implemented.
 
 * **slide**: A sliding control rule.  Similer to simplethresh, except when the estimated SSB is lower than the SSB reference point fishing is reduced though not all the way to zero. Instead, a line is drawn between [SSBRefPoint, FRefPoint] and [0, 0] and the advice is the value for F on that line at the corresponding estimate of SSB.
 
