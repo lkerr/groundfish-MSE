@@ -1,5 +1,11 @@
-#Scenarios<-c(6,32,58,116)
+####F Trajectory Plot with Confidence Intervals####
+#Lists numbers of scenarios that you want to compare here
 Scenarios<-c(7,8,9)
+#Set working directory--where the results you want to compare are stored
+wd<-"C:/Users/mmazur/Desktop/COCA_Sims"
+#List what is being compared
+comparison<-c('Ramp','F-step','Constrained ramp')
+
 ####Set up files####
 library(matrixStats)
 library(dplyr)
@@ -8,8 +14,7 @@ library(tidyr)
 library(DescTools)
 library(plyr)
 library(ggthemes)
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[1],"/sim",sep=""))
-#setwd(paste("C:/Users/jjesse/Box/Discard Sims/HCR Sims/Sim_", Scenarios[1],"/sim", sep=""))
+setwd(paste(wd,"/Sim_",Scenarios[1],"/sim",sep=""))
 sims <- list.files()
 
 Rratiots<-matrix(NA,ncol=length(sims),nrow=22)
@@ -19,12 +24,6 @@ for (k in 1:length(sims)){
     sims[k]<-NA}
 }
 sims<-na.omit(sims)
-
-####True Values (From Operating Model)####
-setwd("C:/Users/mmazur/Desktop/COCA_Sims")
-#setwd("C:/Users/jjesse/Box/Discard Sims/HCR Sims")
-tempwd <- getwd()
-setwd(paste(tempwd,"/Sim_",Scenarios[1],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
@@ -38,8 +37,8 @@ Df$Year<-rep(2019:2040,(length(D)-1))
 Df <- ddply(Df, "Year", summarise, median = MedianCI(R)[1], CI_lower=MedianCI(R)[2], CI_upper=MedianCI(R)[3])
 Df$HCR<-Scenarios[1]
 
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[2],"/sim",sep=""))
-#setwd(paste("C:/Users/jjesse/Box/Discard Sims/HCR Sims/Sim_", Scenarios[2],"/sim", sep=""))
+for (m in 2:length(comparison)){
+setwd(paste(wd,"/Sim_",Scenarios[m],"/sim",sep=""))
 sims <- list.files()
 
 Rratiots<-matrix(NA,ncol=length(sims),nrow=22)
@@ -49,12 +48,6 @@ for (k in 1:length(sims)){
     sims[k]<-NA}
 }
 sims<-na.omit(sims)
-
-####True Values (From Operating Model)####
-setwd("C:/Users/mmazur/Desktop/COCA_Sims")
-#setwd("C:/Users/jjesse/Box/Discard Sims/HCR Sims")
-tempwd <- getwd()
-setwd(paste(tempwd,"/Sim_",Scenarios[2],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
@@ -66,79 +59,15 @@ D$Year<-2019:2040
 Df2<- D %>% gather(Year, R, 1:(length(D)-1))
 Df2$Year<-rep(2019:2040,(length(D)-1))
 Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(R)[1], CI_lower=MedianCI(R)[2], CI_upper=MedianCI(R)[3])
-Df2$HCR<-Scenarios[2]
+Df2$HCR<-Scenarios[m]
 Df<-full_join(Df,Df2)
-
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[3],"/sim",sep=""))
-#setwd(paste("C:/Users/jjesse/Box/Discard Sims/HCR Sims/Sim_", Scenarios[3],"/sim", sep=""))
-sims <- list.files()
-
-Rratiots<-matrix(NA,ncol=length(sims),nrow=22)
-
-for (k in 1:length(sims)){
-  if (file.size(sims[k])==0){
-    sims[k]<-NA}
-}
-sims<-na.omit(sims)
-
-####True Values (From Operating Model)####
-setwd("C:/Users/mmazur/Desktop/COCA_Sims")
-#setwd("C:/Users/jjesse/Box/Discard Sims/HCR Sims")
-tempwd <- getwd()
-setwd(paste(tempwd,"/Sim_",Scenarios[3],"/sim",sep=""))
-
-for (k in 1:length(sims)){
-  load(sims[k])
-  Rratiots[,k]<-omvalGlobal$codGOM$F_full[169:190]
 }
 
-D<-as.data.frame(Rratiots)
-D$Year<-2019:2040
-Df2<- D %>% gather(Year, R, 1:(length(D)-1))
-Df2$Year<-rep(2019:2040,(length(D)-1))
-Df2<-na.omit(Df2)
-Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(R)[1], CI_lower=MedianCI(R)[2], CI_upper=MedianCI(R)[3])
-Df2$HCR<-Scenarios[3]
-Df<-full_join(Df,Df2)
-
-# setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[4],"/sim",sep=""))
-# #setwd(paste("C:/Users/jjesse/Box/Discard Sims/HCR Sims/Sim_", Scenarios[4],"/sim", sep=""))
-# sims <- list.files()
-# 
-# Rratiots<-matrix(NA,ncol=length(sims),nrow=22)
-# 
-# for (k in 1:length(sims)){
-#   if (file.size(sims[k])==0){
-#     sims[k]<-NA}
-# }
-# sims<-na.omit(sims)
-# 
-# ####True Values (From Operating Model)####
-# setwd("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims")
-# #setwd("C:/Users/jjesse/Box/Discard Sims/HCR Sims")
-# tempwd <- getwd()
-# setwd(paste(tempwd,"/Sim_",Scenarios[4],"/sim",sep=""))
-# 
-# for (k in 1:length(sims)){
-#   load(sims[k])
-#   Rratiots[,k]<-omvalGlobal$codGOM$F_full[169:190]
-# }
-# 
-# D<-as.data.frame(Rratiots)
-# D$Year<-2019:2040
-# Df2<- D %>% gather(Year, R, 1:(length(D)-1))
-# Df2$Year<-rep(2019:2040,(length(D)-1))
-# Df2<-na.omit(Df2)
-# Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(R)[1], CI_lower=MedianCI(R)[2], CI_upper=MedianCI(R)[3])
-# Df2$HCR<-Scenarios[4]
-# Df<-full_join(Df,Df2)
-
- Df$HCR[Df$HCR==Scenarios[1]]<-'Ramp'
- Df$HCR[Df$HCR==Scenarios[2]]<-'F-step'
- Df$HCR[Df$HCR==Scenarios[3]]<-'Constrained ramp'
-# Df$HCR[Df$HCR==Scenarios[4]]<-'Ramped with variation constraint'
+for (i in 1:length(comparison)){
+  Df$HCR[Df$HCR==Scenarios[i]]<-comparison[i]
+}
 Df$HCR<-as.factor(Df$HCR)
-Df$HCR<-ordered(Df$HCR,levels=c('Ramp','F-step','Constrained ramp'))
+Df$HCR<-ordered(Df$HCR,levels=comparison)
 
 #NEW PLOT
 #colorblind plot
