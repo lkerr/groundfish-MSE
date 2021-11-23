@@ -1,5 +1,5 @@
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(4,5,6)
+Scenarios<-c(10,11,12)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
@@ -245,5 +245,5 @@ ggplot(Df)+
   xlab('Time')+
   theme(text=element_text(size=18),legend.position='right')+
   scale_fill_colorblind()+
-  scale_y_continuous(limits = c(0.2,1.5))+
+  scale_y_continuous(limits = c(0.5,1.3))+
   geom_hline(yintercept=1, linetype="dashed", color = "black", size=1)

@@ -1,7 +1,7 @@
 library('fmsb')
 library(matrixStats)
 library(dplyr)
-Scenarios<-c(4,5,6)
+Scenarios<-c(10,11,12)
 #Load data and change to numeric
 wd<-getwd()
 #wd<-setwd("C:/Users/jjesse/Box/HCR_Sims")

@@ -1,5 +1,5 @@
 #Scenarios<-c(6,32,58,116)
-Scenarios<-c(2)
+Scenarios<-c(10,11,12)
 ####Set up files####
 library(matrixStats)
 library(dplyr)
@@ -8,7 +8,7 @@ library(tidyr)
 library(DescTools)
 library(plyr)
 library(ggthemes)
-setwd(paste("C:/Users/mmazur/Desktop/WFC_Sims/Sim_",Scenarios[1],"/sim",sep=""))
+setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[1],"/sim",sep=""))
 #setwd(paste("C:/Users/jjesse/Box/Discard Sims/HCR Sims/Sim_", Scenarios[1],"/sim", sep=""))
 sims <- list.files()
 
@@ -21,14 +21,14 @@ for (k in 1:length(sims)){
 sims<-na.omit(sims)
 
 ####True Values (From Operating Model)####
-setwd("C:/Users/mmazur/Desktop/WFC_Sims")
+setwd("C:/Users/mmazur/Desktop/COCA_Sims")
 #setwd("C:/Users/jjesse/Box/Discard Sims/HCR Sims")
 tempwd <- getwd()
 setwd(paste(tempwd,"/Sim_",Scenarios[1],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  SSBratiots[,k]<-omvalGlobal$codGOM$SSB[169:190]
+  SSBratiots[,k]<-omvalGlobal$haddockGB$SSB[169:190]
 }
 
 Df<-as.data.frame(SSBratiots)
@@ -38,68 +38,68 @@ Df$Year<-rep(2019:2040,(length(Df)-1))
 Df <- ddply(Df, "Year", summarise, median = MedianCI(SSB)[1], CI_lower=MedianCI(SSB)[2], CI_upper=MedianCI(SSB)[3])
 Df$HCR<-Scenarios[1]
 
-# setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[2],"/sim",sep=""))
-# #setwd(paste("C:/Users/jjesse/Box/Discard Sims/HCR Sims/Sim_", Scenarios[2],"/sim", sep=""))
-# sims <- list.files()
-# 
-# SSBratiots<-matrix(NA,ncol=length(sims),nrow=22)
-# 
-# for (k in 1:length(sims)){
-#   if (file.size(sims[k])==0){
-#     sims[k]<-NA}
-# }
-# sims<-na.omit(sims)
-# 
-# ####True Values (From Operating Model)####
-# setwd("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims")
-# #setwd("C:/Users/jjesse/Box/Discard Sims/HCR Sims")
-# tempwd <- getwd()
-# setwd(paste(tempwd,"/Sim_",Scenarios[2],"/sim",sep=""))
-# 
-# for (k in 1:length(sims)){
-#   load(sims[k])
-#   SSBratiots[,k]<-omvalGlobal$codGOM$SSB[169:190]
-# }
-# 
-# Df2<-as.data.frame(SSBratiots)
-# Df2$Year<-2019:2040
-# Df2<- Df2 %>% gather(Year, SSB, 1:(length(Df2)-1))
-# Df2$Year<-rep(2019:2040,(length(Df2)-1))
-# Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(SSB)[1], CI_lower=MedianCI(SSB)[2], CI_upper=MedianCI(SSB)[3])
-# Df2$HCR<-Scenarios[2]
-# Df<-full_join(Df,Df2)
-# 
-# setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[3],"/sim",sep=""))
-# #setwd(paste("C:/Users/jjesse/Box/Discard Sims/HCR Sims/Sim_", Scenarios[3],"/sim", sep=""))
-# sims <- list.files()
-# 
-# SSBratiots<-matrix(NA,ncol=length(sims),nrow=22)
-# 
-# for (k in 1:length(sims)){
-#   if (file.size(sims[k])==0){
-#     sims[k]<-NA}
-# }
-# sims<-na.omit(sims)
-# 
-# ####True Values (From Operating Model)####
-# setwd("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims")
-# #setwd("C:/Users/jjesse/Box/Discard Sims/HCR Sims")
-# tempwd <- getwd()
-# setwd(paste(tempwd,"/Sim_",Scenarios[3],"/sim",sep=""))
-# 
-# for (k in 1:length(sims)){
-#   load(sims[k])
-#   SSBratiots[,k]<-omvalGlobal$codGOM$SSB[169:190]
-# }
-# 
-# Df2<-as.data.frame(SSBratiots)
-# Df2$Year<-2019:2040
-# Df2<- Df2 %>% gather(Year, SSB, 1:(length(Df2)-1))
-# Df2$Year<-rep(2019:2040,(length(Df2)-1))
-# Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(SSB)[1], CI_lower=MedianCI(SSB)[2], CI_upper=MedianCI(SSB)[3])
-# Df2$HCR<-Scenarios[3]
-# Df<-full_join(Df,Df2)
-# 
+setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[2],"/sim",sep=""))
+#setwd(paste("C:/Users/jjesse/Box/Discard Sims/HCR Sims/Sim_", Scenarios[2],"/sim", sep=""))
+sims <- list.files()
+
+SSBratiots<-matrix(NA,ncol=length(sims),nrow=22)
+
+for (k in 1:length(sims)){
+  if (file.size(sims[k])==0){
+    sims[k]<-NA}
+}
+sims<-na.omit(sims)
+
+####True Values (From Operating Model)####
+setwd("C:/Users/mmazur/Desktop/COCA_Sims")
+#setwd("C:/Users/jjesse/Box/Discard Sims/HCR Sims")
+tempwd <- getwd()
+setwd(paste(tempwd,"/Sim_",Scenarios[2],"/sim",sep=""))
+
+for (k in 1:length(sims)){
+  load(sims[k])
+  SSBratiots[,k]<-omvalGlobal$haddockGB$SSB[169:190]
+}
+
+Df2<-as.data.frame(SSBratiots)
+Df2$Year<-2019:2040
+Df2<- Df2 %>% gather(Year, SSB, 1:(length(Df2)-1))
+Df2$Year<-rep(2019:2040,(length(Df2)-1))
+Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(SSB)[1], CI_lower=MedianCI(SSB)[2], CI_upper=MedianCI(SSB)[3])
+Df2$HCR<-Scenarios[2]
+Df<-full_join(Df,Df2)
+
+setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[3],"/sim",sep=""))
+#setwd(paste("C:/Users/jjesse/Box/Discard Sims/HCR Sims/Sim_", Scenarios[3],"/sim", sep=""))
+sims <- list.files()
+
+SSBratiots<-matrix(NA,ncol=length(sims),nrow=22)
+
+for (k in 1:length(sims)){
+  if (file.size(sims[k])==0){
+    sims[k]<-NA}
+}
+sims<-na.omit(sims)
+
+####True Values (From Operating Model)####
+setwd("C:/Users/mmazur/Desktop/COCA_Sims")
+#setwd("C:/Users/jjesse/Box/Discard Sims/HCR Sims")
+tempwd <- getwd()
+setwd(paste(tempwd,"/Sim_",Scenarios[3],"/sim",sep=""))
+
+for (k in 1:length(sims)){
+  load(sims[k])
+  SSBratiots[,k]<-omvalGlobal$haddockGB$SSB[169:190]
+}
+
+Df2<-as.data.frame(SSBratiots)
+Df2$Year<-2019:2040
+Df2<- Df2 %>% gather(Year, SSB, 1:(length(Df2)-1))
+Df2$Year<-rep(2019:2040,(length(Df2)-1))
+Df2 <- ddply(Df2, "Year", summarise, median = MedianCI(SSB)[1], CI_lower=MedianCI(SSB)[2], CI_upper=MedianCI(SSB)[3])
+Df2$HCR<-Scenarios[3]
+Df<-full_join(Df,Df2)
+
 # setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[4],"/sim",sep=""))
 # #setwd(paste("C:/Users/jjesse/Box/Discard Sims/HCR Sims/Sim_", Scenarios[4],"/sim", sep=""))
 # sims <- list.files()
@@ -120,7 +120,7 @@ Df$HCR<-Scenarios[1]
 # 
 # for (k in 1:length(sims)){
 #   load(sims[k])
-#   SSBratiots[,k]<-omvalGlobal$codGOM$SSB[169:190]
+#   SSBratiots[,k]<-omvalGlobal$haddockGB$SSB[169:190]
 # }
 # 
 # Df2<-as.data.frame(SSBratiots)
@@ -132,12 +132,12 @@ Df$HCR<-Scenarios[1]
 # Df2$HCR<-Scenarios[4]
 # Df<-full_join(Df,Df2)
 
-# Df$HCR[Df$HCR==Scenarios[1]]<-'Ramp'
-# Df$HCR[Df$HCR==Scenarios[2]]<-'P*'
-# Df$HCR[Df$HCR==Scenarios[3]]<-'Step in F'
+ Df$HCR[Df$HCR==Scenarios[1]]<-'Ramp'
+ Df$HCR[Df$HCR==Scenarios[2]]<-'F-step'
+ Df$HCR[Df$HCR==Scenarios[3]]<-'Constrained ramp'
 # Df$HCR[Df$HCR==Scenarios[4]]<-'Ramped with variation constraint'
 Df$HCR<-as.factor(Df$HCR)
-#Df$HCR<-ordered(Df$HCR,levels=c('Ramp','P*','Step in F','Ramped with variation constraint'))
+Df$HCR<-ordered(Df$HCR,levels=c('Ramp','F-step','Constrained ramp'))
 
 #NEW PLOT
 #colorblind plot
@@ -148,4 +148,4 @@ ggplot(Df, aes(x=Year, y=median,color=HCR)) +
   theme(text=element_text(size=18),legend.position='right')+
   ylab('SSB (mt)')+
   scale_color_colorblind()+scale_fill_colorblind()+
-  scale_y_continuous(breaks = seq(0,12000,4000),limits = c(0,12000))
+  scale_y_continuous(breaks = seq(0,2000,400),limits = c(0,2000))

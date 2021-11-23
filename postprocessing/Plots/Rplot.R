@@ -1,6 +1,6 @@
-Scenarios<-c(4,5,6)
+Scenarios<-c(10,11,12)
 RhoAdj<-FALSE
-Stock<-'codGOM'
+Stock<-'haddockGB'
 ####First Sims####
 library(matrixStats)
 library(dplyr)
