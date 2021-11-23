@@ -54,7 +54,7 @@ Natural mortality can be constant across ages and time. Natural mortality can al
 
 **2\.6 Exponential survival**  
 Abundance-at-age was calculated using exponential survival.
-Annual mortality for ages $a<a^P$ (where $a^P$ is the plus age) is modeled using exponential survival as
+Annual mortality for ages <img src="https://render.githubusercontent.com/render/math?math=a<a^P"> (where <img src="https://render.githubusercontent.com/render/math?math=a^P"> is the plus age) is modeled using exponential survival as
 <img src="https://render.githubusercontent.com/render/math?math=N_{a,y} = N_{a-1,y-1} e^{-\Phi^{F}_{a-1,y-1}F_{y-1}-M_{y-1}}">
 where <img src="https://render.githubusercontent.com/render/math?math=N_{a,y}"> is the January 1 numbers-at-age a in year <img src="https://render.githubusercontent.com/render/math?math=y">, <img src="https://render.githubusercontent.com/render/math?math=F"> is fishing mortality, <img src="https://render.githubusercontent.com/render/math?math=M"> is natural mortality and <img src="https://render.githubusercontent.com/render/math?math=\Phi^{F}"> is fishery selectivity (see Section 3.1). Plus group abundance in year <img src="https://render.githubusercontent.com/render/math?math=y"> is
 <img src="https://render.githubusercontent.com/render/math?math=N_{a^p,y} = N_{a^p-1,y-1} e^{-\Phi^{F}_{a^p-1,y-1}F_{y-1}-M_{a^p-1,y-1}} + N_{a^p,y-1} e^{-\Phi^{F}_{a^p,y-1}F_{y-1}-M_{a^p,y-1}}">
