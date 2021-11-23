@@ -14,7 +14,7 @@ library(ggthemes)
 setwd(paste(wd,"/Sim_",Scenarios[1],"/sim",sep=""))
 sims <- list.files()
 
-Fratiot<-matrix(NA,nrow=length(sims),ncol=22)
+Fratiot<-matrix(NA,nrow=length(sims),ncol=(length(omvalGlobal[[1]]$sumCW)-168))
 
 for (k in 1:length(sims)){
   if (file.size(sims[k])==0){
@@ -24,7 +24,7 @@ sims<-na.omit(sims)
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Fratiot[k,]<-omvalGlobal[[1]]$FPROXY[169:190]/omvalGlobal[[1]]$FPROXYT2[169:190]
+  Fratiot[k,]<-omvalGlobal[[1]]$FPROXY[169:length(omvalGlobal[[1]]$sumCW)]/omvalGlobal[[1]]$FPROXYT2[169:length(omvalGlobal[[1]]$sumCW)]
 }
 
 Fratiots<-rowMedians(Fratiot[,1:5])
@@ -40,7 +40,7 @@ Df2$Fratiotm<-NULL
 Df2$Time<-'Medium-term'
 Df<-full_join(Df,Df2)
 
-Fratiotl<-rowMedians(Fratiot[,11:21])
+Fratiotl<-rowMedians(Fratiot[,11:(length(omvalGlobal[[1]]$sumCW)-169)])
 Df2<-as.data.frame(Fratiotl)
 Df2$Fratiot<-Fratiotl
 Df2$Fratiotl<-NULL
@@ -52,7 +52,7 @@ for (m in 2:length(comparison)){
 setwd(paste(wd,"/Sim_",Scenarios[m],"/sim",sep=""))
 sims <- list.files()
 
-Fratiot<-matrix(NA,nrow=length(sims),ncol=22)
+Fratiot<-matrix(NA,nrow=length(sims),ncol=(length(omvalGlobal[[1]]$sumCW)-168))
 
 for (k in 1:length(sims)){
   if (file.size(sims[k])==0){
@@ -62,7 +62,7 @@ sims<-na.omit(sims)
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Fratiot[k,]<-omvalGlobal[[1]]$FPROXY[169:190]/omvalGlobal[[1]]$FPROXYT2[169:190]
+  Fratiot[k,]<-omvalGlobal[[1]]$FPROXY[169:length(omvalGlobal[[1]]$sumCW)]/omvalGlobal[[1]]$FPROXYT2[169:length(omvalGlobal[[1]]$sumCW)]
 }
 
 Fratiots<-rowMedians(Fratiot[,1:5])
@@ -78,7 +78,7 @@ Df3$Fratiotm<-NULL
 Df3$Time<-'Medium-term'
 Df2<-full_join(Df2,Df3)
 
-Fratiotl<-rowMedians(Fratiot[,11:21])
+Fratiotl<-rowMedians(Fratiot[,11:(length(omvalGlobal[[1]]$sumCW)-169)])
 Df3<-as.data.frame(Fratiotl)
 Df3$Fratiot<-Fratiotl
 Df3$Fratiotl<-NULL
