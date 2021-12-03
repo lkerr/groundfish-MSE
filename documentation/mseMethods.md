@@ -27,7 +27,7 @@ where <img src="https://render.githubusercontent.com/render/math?math=W_a,y"> is
 
 **2\.3 Maturity-at-age**  
 Maturity-at-age follows a logistic pattern of the form:
-<img src="https://render.githubusercontent.com/render/math?math=theta_{a,y}=\frac{1}{1+e^{\upsilon(L_{50}-L_{ay})}}">
+<img src="https://render.githubusercontent.com/render/math?math=\theta_{a,y}=\frac{1}{1+e^{\upsilon(L_{50}-L_{ay})}}">
 where <img src="https://render.githubusercontent.com/render/math?math=\theta_{ay}"> is the maturity of age <img src="https://render.githubusercontent.com/render/math?math=a"> in year <img src="https://render.githubusercontent.com/render/math?math=y"> and <img src="https://render.githubusercontent.com/render/math?math=\upsilon"> and <img src="https://render.githubusercontent.com/render/math?math=L_{50}"> are stock-specific parameters.  Specifically, <img src="https://render.githubusercontent.com/render/math?math=L_{50}"> represents the length at which 50% of individuals are mature and <img src="https://render.githubusercontent.com/render/math?math=\upsilon"> defines the slope of the logistic function. <img src="https://render.githubusercontent.com/render/math?math=L_{a,y}"> is the length of individuals at age <img src="https://render.githubusercontent.com/render/math?math=a"> in year <img src="https://render.githubusercontent.com/render/math?math=y">.
 
 **2\.4 Recruitment**  
