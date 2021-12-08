@@ -85,15 +85,13 @@ runSim # Needs to be formatted as function
 # Add edge statements to connect nodes
 edge[] # optional arrowhead options
 # Connect nodes (may be labeled - appears on line)
-get_advice -> get_ASAP;
-get_advice -> get_caa;
+get_advice -> get_ASAP; get_ASAP -> get_dwindow;
+get_advice -> get_caa; get_caa -> get_svNoise;
 get_advice -> get_nextF;
-get_advice -> get_planB;
+get_advice -> get_planB; get_planB -> ApplyPlanBsmooth; get_planB -> get_dwindow;
 get_advice -> get_tmbSetup;
-get_ASAP -> get_dwindow;
 get_BBRP -> get_perRecruit;
 get_BBRP -> get_proj;
-get_caa -> get_svNoise;
 get_estF -> get_F;
 get_F -> getCW;
 get_FBRP -> get_fmed;
