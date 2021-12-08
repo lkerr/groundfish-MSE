@@ -1,6 +1,13 @@
-
-
-# Function to initialize the stocks
+#' @title Initialize Stocks
+#' @description Use initial values to populate stock data object ??? Need more informative description???
+#' 
+#' @template global_stock
+#'
+#' @return ???
+#' 
+#' @family operatingModel, population
+#' 
+#' @export
 
 get_popInit <- function(stock){
 

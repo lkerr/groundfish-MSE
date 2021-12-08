@@ -1,4 +1,28 @@
-
+#' @title Generate Maturity 
+#' @description Generate maturity expectations using method specified by type argument.
+#' 
+#' @param type A string indicating the type of selectivity function to implement, options include:
+#' \itemize{
+#'   \item{"knife" - Knife-edge selectivity (if laa > par, 1 else 0)}
+#'   \item{"logistic" - L50 parameterization of logistic model (p = 1/(1 + exp(par[1]*(par[2] - laa))) )}
+#'   \item{"input" - Use input vector of maturity-at-age}
+#' }
+#' @param par A vector of parameters used to calculate maturity-at-age, depend on specified type:
+#' \itemize{
+#'   \item{If type = "knife", par is  ???}
+#'   \item{If type = "logistic", par is a vector of 2 parameters where the second is L50}
+#'   \item{If type = "input", par is a vector of maturity-at-age to be reused}
+#' }
+#' @param laa A vector of length-at-age
+#' @param tempY A value for temperature in year y, no default.
+#' @template global_y
+#' @template global_fmyearIdx
+#' 
+#' @return A vector ??? of maturity-at-age.
+#' 
+#' @family operatingModel, population
+#' 
+#' @export
 
 # Function to return the maturity. Maturity functions
 # are size-based so a length-at-age vector is necessary.
@@ -23,7 +47,12 @@
 # tempY: value for temperature in year y
 
 
-get_maturity <- function(type, par, laa, tempY=NULL,y,fmyearIdx){
+get_maturity <- function(type, 
+                         par, 
+                         laa, 
+                         tempY=NULL,
+                         y,
+                         fmyearIdx){
   
   if(is.null(tempY)){
     tempY <- 0
@@ -67,7 +96,6 @@ get_maturity <- function(type, par, laa, tempY=NULL,y,fmyearIdx){
   }
   
   return(mat)
-  
 }
 
 

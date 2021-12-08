@@ -1,21 +1,25 @@
+#' @title Plot MSE Results
+#' @description Take MSE results and plot performance measures, reference points, drivers, operating model output and management procedure performance. 
+#' 
+#' @param x A list of output for plots (i.e., omval)
+#' @param stockEnv ???
+#' @param dirIn A string of the simulation directory to grab specific examples for particular plots (e.g., temperature time series)
+#' @param dirOut A string indicating the directory where plots should be saved.
 #' @template global_Tanom
+#' @param py0 A number indicating the year before the management period to start the plots
+#' 
+#' @return Plots of MSE results as .jpg files in the specified output directory.
+#' 
+#' @family postprocess
+#' 
+#' @export
 
-# Driver function to create output plots from the simulation
-# 
-# x: list of output for plots (i.e., omval)
-# 
-# dirIn: simulation directory to grab specific examples for
-#        particular plots (e.g., temperature time series)
-
-
-
-
-get_plots <- function(x, stockEnv, dirIn, dirOut){
+get_plots <- function(x, stockEnv, dirIn, dirOut, Tanom, py0 = 37){
   
   with(stockEnv, {
     # load some of the necessary variables for plotting by running the
     # setup file.
-    source('modelParameters/set_om_parameters_global.R', local=TRUE)
+    source('modelParameters/set_om_parameters_global.R', local=TRUE) #!!! Probably want this to be either an input or just loaded with the package
     source('processes/genAnnStructure.R', local=TRUE)
     
     # Load one of the simulation environments
@@ -25,7 +29,7 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
     # yrs <- (mxyear - length(temp)+1):mxyear
     
     # Year before the management period to start the plots
-    py0 <- 37 #5
+    py0 <- py0 # 37 #5
     
     # Index for years that will be plotted for trajectories and such
     pyidx <- (fmyearIdx-py0+1):length(yrs)
@@ -117,7 +121,6 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
       }
     }
    
-  
     if(plotDrivers){
       
       # Get diagnostic plots that show (1) the temperature history; (2) the
@@ -239,7 +242,6 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
           dev.off()
         }
         
-      
         if(plotTrajInd){
           # Do (up to) 5 trajectories as examples
           for(r in repidx){
@@ -256,7 +258,7 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
             
           }
         }
-      }
+      } # End loop over mp
       
       
       if(plotTrajSummary){
@@ -299,17 +301,7 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
       # }
       }
       
-    }
-    
-    
-    
+    } # End loop over i
     
   })
 }
-
-
-
-
-
-
-

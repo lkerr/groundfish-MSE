@@ -11,7 +11,6 @@
 #' 
 #' @family operatingModel, population, projection
 #' 
-#' 
 
 get_F <- function(x, 
                   Nv, 

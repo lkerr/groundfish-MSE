@@ -1,13 +1,13 @@
-
-
-# Function to recreate random walk deviations on a log scale
-# (e.g., for recruitment deviations so you know what the true
-# values are in the assessment model if you've coded that as
-# a random walk). Note that the returned vector will have
-# length(x) - 1 elements.
-# 
-# x: the vector that you want the random walk from
-
+#' @title Generate Log-Scale Random Walk Devs
+#' @description Recreate random walk deviations on a log scale (e.g. generate for recruitment deviations so you know what the true values are in the assessment model if the assessment is coded as a random walk). The returned vector will have length(x) - 1 elements.
+#' 
+#' @param x A vector for which a random walk should be generated
+#'
+#' @return A vector of log-scale random walk deviations, length of return is 1 less than input vector, x. 
+#' 
+#' @family operatingModel
+#' 
+#' @export
 
 get_RWdevs <- function(x){
   
@@ -20,5 +20,3 @@ get_RWdevs <- function(x){
   return(lRWdev)
   
 }
-
-

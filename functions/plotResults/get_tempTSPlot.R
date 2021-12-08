@@ -1,6 +1,16 @@
-
-
-
+#' @title Plot Temperature Timeseries
+#' @description Generate plot of temperature timeseries over specified years.
+#' 
+#' @param temp A vector of temperature values for given years (yrs)???
+#' @template global_yrs
+#' @template global_fmyear
+#' @param ftyear ???
+#'
+#' @return A plot of temperature timeseries
+#' 
+#' @family postprocess
+#' 
+#' @export
 
 get_tempTSPlot <- function(temp, yrs, fmyear, ftyear){
   

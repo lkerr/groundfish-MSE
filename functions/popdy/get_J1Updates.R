@@ -1,5 +1,23 @@
+#' @title Update OM Dynamics
+#' @description Update the bulk of operating model (OM) dynamics to January 1st.
+#' 
+#' @template global_stock
+#' @template global_y
+#' @template global_fmyearIdx
+#' @param histAssess A boolean, if TRUE overwrite calculated values with historic assessment input values for each year, default = FALSE.
+#' @param nstock ??? Required for histAssess option
+#' 
+#' @return ???
+#' 
+#' @family operatingModel
+#' 
+#' @export
+
 #Bulk of the OM
-get_J1Updates <- function(stock){
+get_J1Updates <- function(stock, 
+                          y, 
+                          fmyearIdx, 
+                          histAssess = FALSE){
 
   out <- within(stock, {
 
@@ -70,7 +88,7 @@ get_J1Updates <- function(stock){
     J1N[y,] <- get_J1Ny(J1Ny0=J1N[y-1,], Zy0=Z[y-1,], R[y])
 
     # calculate the predicted catch in year y, the catch weight and the
-    # proportions of catch numbers-at-age. Add small number in case F=0
+    # proportions of catch numbers-at-age. Add small number in case F=0 ??? same as get_Mortality, why separated???
     CN[y,] <- get_catch(F_full=F_full[y], M=natM[y],
                         N=J1N[y,], selC=slxC[y,]) + 1e-3
 
@@ -84,5 +102,4 @@ get_J1Updates <- function(stock){
   })
 
   return(out)
-
 }

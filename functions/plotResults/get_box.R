@@ -1,18 +1,21 @@
-
-
-# Function to create boxplots of simulation output
-# 
-# x: input data (i.e., a list element from omval)
-
-
-
+#' @title Generate Boxplots
+#' @description Generate boxplots of simulation output
+#' 
+#' @param x A list of data to plot (i.e. a list element from omval)
+#' @param plotIdx A vector of numbers specifying what list items in x to plot.
+#' @param ylab A string specifying the y axis label.
+#' 
+#' @return Boxplots of data, x
+#' 
+#' @family postprocess
+#' 
+#' @export
 
 get_box <- function(x, plotIdx=NULL, ylab='Value'){
 
   if(is.null(plotIdx)){
     plotIdx <- 1:dim(x)[2]
   }
-  
   
   # boxplot parameter list
   bp <- list()
@@ -22,10 +25,8 @@ get_box <- function(x, plotIdx=NULL, ylab='Value'){
     if(all(is.na(x[,i,]))){
       bp[[i]] <- NA
     }else{
-      
       mn <- apply(x, c(1,2), mean, na.rm=TRUE)
       bp[[i]] <- boxplot(mn[,i], plot=FALSE)
-      
     }
   }
 
@@ -45,13 +46,4 @@ get_box <- function(x, plotIdx=NULL, ylab='Value'){
       boxplot(c(mn[,i]), at=i, add=TRUE)
     }
   }
-  
-  
-  
-  
 }
-
-
-
-
-

@@ -1,40 +1,35 @@
+#' @title Generate Stock-Recruit Parameters
+#' @description Generate correlated random values for use in a stock-recruitment function. Before each iteration of the simulation, function called to generate parameters for use in iteration. 
+#' Depending on the parameters that are given the behavior of the function will change. If no standard errors or covariance matrix is given, the function will pass the input parameters directly (i.e., there will be no stochasticity). Stochasticity can also be turned on or off directly with the 'stochastic' parameter. 
+#' 
+#' @param par A list including:
+#' \itemize{
+#'   \item{"type" - A string indicating the type of stock-recruit model to use, options include:}
+#'   \itemize{
+#'     \item{"constantMean" - ???}
+#'     \item{"rickerlin" - ???}
+#'     \item{"RITS" - for Ricker model}
+#'     \item{"BHTS" - for Beverton-Holt}
+#'   }
+#'   \item{A vector of parameter names corresponding to the provided parameters ??? make sure names provided with possible parameters below}
+#'   \item{A vector of parameters which may include:}
+#'   \itemize{
+#'     \item{A vector of standard errors}
+#'     \item{A variance-covariance matrix}
+#'     \item{A vector of lower bounds for parameters}
+#'     \item{A vector of upper bounds for parameters}
+#'   }
+#' }
+#' @param stochastic A boolean, if TRUE stochastic process applied. Default = FALSE.
+#' 
+#' @return 
+#' 
+#' @family operatingModel, population
+#' 
+#' @export
 
-
-# A function to generate correlated random values to use in a
-# stock recruitment function. Before each iteration of the simulation
-# this function should be run to generate parameters that will be
-# used for that particular iteration.
-# 
-# Depending on the parameters that are given the behavior of the
-# function will change. If no standard errors or covariance matrix
-# is given, the function will pass the input parameters directly
-# (i.e., there will be no stochasticity). Stochasticity can also
-# be turned on or off directly with the 'stochastic' parameter.
-# 
-# 
-# par: Parameters derived from a stock-recruit model. This must be
-#      a list that ALWAYS includes:
-#        (1) "type" for the type of S/R model (type options are 
-#            'constantMean', 
-#            'rickerlin', 
-#            'RITS' (for Ricker model) and
-#            'BHTS' (for beverton-holt)) 
-#        (2) a vector of parameter names
-#        (3) a vector of parameters
-#      and MAY include
-#        (4) a vector of standard errors
-#        (5) a variance-covariance matrix
-#        (6) lower bounds for parameters
-#        (7) upper bounds for parameters
-#        
-# stochastic: should the function return a realization of the parameters
-#             including uncertainty? This should generally be true, but
-#             may be worth turning off for testing.
-# 
-
-
-
-get_recruitment_par <- function(par, stochastic=TRUE){
+get_recruitment_par <- function(par, 
+                                stochastic=TRUE){
   
   # if stochastic is FALSE then just return the given
   # parameter values with no uncertainty
@@ -83,8 +78,3 @@ get_recruitment_par <- function(par, stochastic=TRUE){
   }
 
 }
-
-
-
-
-

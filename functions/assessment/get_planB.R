@@ -1,6 +1,13 @@
-# Run the planB assessment model (Legault)
-# info can be found at:
-# https://github.com/cmlegault/PlanBsmooth
+#' @title Get Plan B Advice
+#' @description Extract data for annual trends and apply Plan B approach to generate advice. Plan B approach adapted from: https://github.com/cmlegault/PlanBsmooth
+#' 
+#' @template global_stock
+#' 
+#' @return ???
+#' 
+#' @family managementProcedure stockAssess
+#' 
+#' @export
 
 get_planB <- function(stock){
   

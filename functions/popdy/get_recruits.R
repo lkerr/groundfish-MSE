@@ -1,12 +1,35 @@
-## recruitment functions
+#' @title Generate recruits
+#' @description Generate recruits using specified method
+#' 
+#' @param type A string indicating the method used to generate recruits, options include:
+#' \itemize{
+#'   \item{"BH" - Timeseries implementation of the Beverton Holt model (i.e. includs autocorrelative component)}
+#'   \item{"BHSteep" - Steepness version of Beverton Holt model.}
+#'   \item{"HS" - AGEPRO implementation of the empirical cumulative distribution function with a linear decline to zero. Recruitment model 21 need to have input of historic recruitment in .csv file in /data/data_raw/AssessmentHistory/ must have same name as stockName use only terminal 20 historic years}
+#' }
+#' @param type2 ???
+#' @param par A vector of parameters used to generate recruits, dependent on selected type:
+#' \itemize{
+#'   \item{If type = "BH", par is a matrix with one row and four named columns containing Ricker "a" and "b" parameters, a temperature effect "g", and an autocorrelative component "rho". Vectors of observed and predicted recruitment from prior year are also required arguments.}
+#'   \item{IF type = "BHSteep", par is a named vector containing 'beta1', 'beta2', and 'beta3', defaults set to 0. Vector of SSBR at F=0 also required argument.}
+#'   \item{If type = "HS", par contains 'SSB_star' which describes the hockey-stick hinge ??? other parameters??? is this also a named matrix???}
+#' }
+#' @param SSB Thetotal spawning stock size - mature individuals in weight ??? single number??? vector???
+#' @param TAnom_y A value for the temperature anomaly in year y.
+#' @param pe_R Process error level for recruitment (lognomal scale).
+#' @param block ??? doesn't appear to be used in code
+#' @param R_ym1 A vector of observed recruitment from the previous year, required when type = "BH", no default.
+#' @param Rhat_ym1 A vector of predicted recruitment from the previous year, required when type = "BH", no default.
+#' @param stockEnv default = stock data object
+#' @param R_est ??? 
+#' @param SSBR0 A vector??? of SSBR at F=0, required when type = "BHSteep", no default. 
+#' 
+#' @return ???
+#' 
+#' @family operatingModel, population
+#' 
+#' @export
 
-# The function returns the recruits. 
-# Includes an AR1 process if desired -- for this option must include both
-# the desired level of correlation and the previous year's observed and
-# expected values (for a residual).
-
-# type: the type of recruitment function
-# 
 #      *"BH" time series implementation of the Beverton Holt model
 #       (i.e., that includes an autocorrelative component)
 #       R = a * S / (b + S) * exp(g * TAnom_y) * 
@@ -26,22 +49,27 @@
 #       use only terminal 20 historic years
 #       SSB_star: hockey-stick hinge
 #
-# par: the model parameters (see descriptions of type above). par must
-#      be a matrix of four columns with named rows that correspond
-#      to the parameter names listed under 'type' above.
-# 
-# S: the total spawning stock size -- mature individuals in weight
-# 
-# TAnom_y: value for the temperature anomaly in year y
-# 
-# pe_R: process error level for recruitment (lognormal scale)
-# 
-# R_ym1: observed recruitment from previous year
-#       
-# Rhat_ym1: predicted recruitment from previous year
+#       * "BHSteep"
+#       Note that the steepness version of the stock-recruit model requires SSBR
+#       at F=0 which is a function of selectivity. Percieved selectivity can
+#       change over the course of the time period according to how the assessment
+#       model estimates it; however for the predicted recruitment we are only
+#       interested in the realized recruitment. Thus we can just use the true
+#       selectivity in the model and not worry about the estimated version.
 
-get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
-                         R_ym1=NULL, Rhat_ym1=NULL, stockEnv=stock, R_est){
+
+get_recruits <- function(type, 
+                         type2, 
+                         par, 
+                         SSB, 
+                         TAnom_y, 
+                         pe_R, 
+                         block,
+                         R_ym1=NULL, 
+                         Rhat_ym1=NULL, 
+                         stockEnv=stock, 
+                         R_est, 
+                         SSBR0 = NULL){
 
   if(!type %in% c('BH', 'BHSteep', 'HS')){
     stop(paste('get_recruits: check spelling of R_typ in individual stock 
@@ -141,12 +169,10 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
           } else if (SSB < SSBhinge){
             pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
           }
-        }
-        else{
+        } else{
           if (SSB >= SSBhinge) {
             pred <- cR * remp(1, tail(as.numeric(R_est), Rnyr))
-          } 
-          else if (SSB < SSBhinge){
+          } else if (SSB < SSBhinge){
             pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(R_est), Rnyr))
           }
         }
@@ -158,8 +184,7 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
           assess_vals <- get_HistAssess(stock = stock[[i]])
           pred<-remp(1,tail(as.numeric(assess_vals$assessdat$R,20)))
           
-        }
-        else{
+        } else{
           pred <- remp(1, as.numeric(R_est))
         }
         return(pred)
@@ -177,9 +202,3 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
   
   })
 }
-
-
-
-
-
-

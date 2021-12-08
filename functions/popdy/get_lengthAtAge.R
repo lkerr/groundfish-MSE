@@ -1,26 +1,27 @@
+#' @title Calculate lengths-at-age
+#' @description Calculate lengths-at-age using the method specified by type.
+#' 
+#' @param type A string indicating the method used to calculate lengths-at-age, options include:
+#' \itemize{
+#'   \item{"vonB" - Use von Bertalanffy equation}
+#' }
+#' @param par A vector of parameters used to calculate lengths-at-age, dependent on selected type:
+#' \itemize{
+#'   \item{If type = "vonB", par is a named vector of two parameters 'beta1' and 'beta2'}
+#' }
+#' @param ages A vector of ages in the model
+#' @template Tanom
+#' 
+#' @return 
+#' 
+#' @family 
+#' 
+#' @export
 
-
-# Function to return lengths-at-age.
-# 
-# nage: number of ages
-# 
-# type: type of function function. Available options are
-#       *'vonB'
-#         L = (Linf + beta1*T) * (1 - exp(-(K + beta2*T) * (ages - t0)))
-#       *''
-#
-# par: vector of parameters to use in the function. See function
-#      definitions in "type" for the length of the vector and
-#      how the function is parameterized. The elements of par must
-#      be named according to the variable names given in "type".
-#      
-# ages: the ages in the model (e.g., 1-15)
-# 
-# Tanom: temperature anomoly from a baseline level (e.g., a historical
-#        average)
-
-
-get_lengthAtAge <- function(type, par, ages, Tanom=NULL){
+get_lengthAtAge <- function(type, 
+                            par, 
+                            ages, 
+                            Tanom=NULL){
   
   if(tolower(type) == 'vonb'){
     
@@ -46,8 +47,5 @@ get_lengthAtAge <- function(type, par, ages, Tanom=NULL){
     
   }
   
-  
   return(laa)
-  
 }
-

@@ -1,47 +1,35 @@
+#' @title Assign M to Age Classes
+#' @description Assign natural mortality (M) values to age classes.
+#' 
+#' @param type A string specifying the mortality function to be applied, options are:
+#' \itemize{
+#'   \item{fixed - fixed mortality rate over time. The same value will be applied to all age classes. Vector of lengths must still be applied so that the appropriate vector length is output.} 
+#'   \item{Pauly - use Pauly's relationship (Pauly 1980)}
+#'   \item{GislasonM1 - Gislason's model 1 (Gislason 2010, Table 1)}
+#'   \item{GislasonM2 - Gislason's model 2 (Gislason 2010, Table 1). This is Gislason's recommended version.}
+#'   \item{GislasonM3 - Gislason's model 3 (Gislason 2010, Table 1). Model 3 includes a temperature effect.}
+#' }
+#' @param par A vector of model parameters including:
+#' \itemize{
+#'   \item{M - The fixed natural mortality rate across all ages, required if type = "fixed"}
+#'   \item{Linf - von Bertalanffy L-infinity, required if type = "Pauly" and all "Gislason" types}
+#'   \item{K - von Bertalanffy carrying capacity, required if type = "Pauly" and all "Gislason" types}
+#' }
+#' @param data A list of data necessary for calculations including:
+#' \itemize{
+#'   \item{L - A vector of length-at-age necessary for all methods, (including type = "fixed" where M does not vary by age or size)}
+#'   \item{Temp - A value for temperature, required when type = "Pauly" and "GislasonM3"}
+#' }
+#' 
+#' @return A vector of equal length to input vector. Options 'fixed' and 'Pauly' return vectors that do not vary by size. Options 'Pauly' and 'GislasonM3' include a temperature effect.
+#' 
+#' @family operatingModel, population 
+#' 
+#' @export
 
-
-# get_M: Function to assign natural mortality values to age classes. Function
-#        returns a vector the same length as the input vector L. Options
-#        'fixed' and 'Pauly' return vectors that do not vary by size. Options
-#        'Pauly' and 'GislasonM3' include a temperature effect.
-# 
-#   * type: type of mortality function to be applied. Options are:
-#   
-#       * fixed: fixed mortality rate over time. The same value will be
-#                applied to all age classes. Vector of lengths must still 
-#                be applied so that the appropriate vector length is output.
-#                
-#       * Pauly: use Pauly's relationship (Pauly 1980)
-#       
-#       * GislasonM1: Gislason's model 1 (Gislason 2010, Table 1)
-#       
-#       * GislasonM2: Gislason's model 2 (Gislason 2010, Table 1). This is 
-#                     Gislason's recommended version.
-#       
-#       * GislasonM3: Gislason's model 3 (Gislason 2010, Table 1). Model 3
-#                     includes a temperature effect.
-#                     
-#   * par: named vector of model parameters including
-#   
-#       * M for method 'fixed' -- this is the fixed natural mortality rate
-#         across all ages
-#         
-#       * Linf: von Bertalanffy L-infinity for Pauly and all Gislason
-#               methods
-#               
-#       * K: von Bertalanffy K for Pauly and all Gislason methods
-#       
-#   * data: list of data necessary for calculations including:
-#   
-#       * L: vector of length-at-age necessary for all methods, even 'fixed'
-#            where M does not vary by age or size
-#            
-#       * Temp: value for temperature necessary for methods 'Pauly' and
-#               'GislasonM3'
-
-
-
-get_M <- function(type, par, data){
+get_M <- function(type, 
+                  par, 
+                  data){
   
   if(is.null(data$Temp) & type != 'fixed'){
     stop('get_M: If <type> is not <fixed> then must provide temperature')
@@ -84,7 +72,6 @@ get_M <- function(type, par, data){
   }
   
   return(out)
-  
 }
 
 

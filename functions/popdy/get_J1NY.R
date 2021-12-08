@@ -1,17 +1,20 @@
+#' @title Calculate Numbers-At-Age at Start of Year
+#' @description Calculate numbers-at-age at the start of each year after recruitment has occurred.
+#' 
+#' @param J1Ny0 A vector of numbers-at-age in year y-1.
+#' @param Zy0 A vector of total mortality-at-age in year y-1.
+#' @param Ry1 Recruitment in year y
+#' @param nage Number of ages in the model
+#' 
+#' @return A vector of numbers-at-age at the start of the year.
+#' 
+#' @family operatingModel, population
+#' 
+#' @export
 
-
-# Function to determine numbers-at-age at the start of each year
-# after recruitment has occurred.
-# 
-# J1Ny0: vector of numbers-at-age in year y-1
-# 
-# Zy0: vector of total mortality-at-age in year y-1
-# 
-# Ry1 recruitment in year y
-
-
-
-get_J1Ny <- function(J1Ny0, Zy0, Ry1){
+get_J1Ny <- function(J1Ny0, 
+                     Zy0, 
+                     Ry1){
   
   # calculate number of ages
   nage <- length(J1Ny0)
@@ -32,11 +35,4 @@ get_J1Ny <- function(J1Ny0, Zy0, Ry1){
   J1Ny1[1] <- Ry1
    
   return(J1Ny1)
-  
 }
-
-
-
-
-
-

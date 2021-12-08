@@ -1,8 +1,16 @@
-
+#' @title Plot Harvest Control Rule #!!! Doesn't appear to be used
+#' @description 
+#' 
+#' @param x
+#' 
+#' @return ???
+#' 
+#' @family postprocess
+#' 
+#' @export
 
 get_hcrPlot <- function(x){
   
-
   rpsum <- apply(x, 3, quantile, 
                  c(0.1, 0.5, 0.9), na.rm=TRUE)
   
@@ -25,15 +33,3 @@ get_hcrPlot <- function(x){
         c('SSB', 'F'))
   
 }
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,3 +1,17 @@
+#' @title Plot MP Trajectory With Estimates #!!!! Doesn't appear to be used
+#' @description Plot mean trajectory over time for each management procedure (MP)
+#' 
+#' @param mpMeanMat A matrix of means for each trajectory where rows are MPs and columns are years.
+#' @param x A vector of years
+#' @param nm A vector of names
+#' @template global_fmyear 
+#' 
+#' @return ???
+#' 
+#' @family postprocess
+#' 
+#' @export
+
 get_mpMeanTrajwithEst <- function(mpMeanMat, x, nm, fmyear=NULL){
   # Get y limits and extend them a little bit so that the legend does not
   # interfere

@@ -6,14 +6,16 @@
 #' @param ncaayear
 #' @template global_mproc
 #' @template global_m
+#' @template global_y
 #' @param styear
 #' @param endyear
 #' @template global_r
 #' 
 #' @return ??? May want to provide name of ASAP .dat file as an input to this function rather than reading from assessment/ASAP folder
 #' 
-#' @family 
+#' @family managementProcedure stockAssess
 #' 
+#' @export
 
 get_ASAP <- function(stock,
                      fmyearIdx,

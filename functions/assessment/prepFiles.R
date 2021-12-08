@@ -1,4 +1,13 @@
-
+#' @title Maybe this doesn't need to be a function but is a chunk of code at the top of the MSE main loop (part of setup at beginning of simulations)
+#' @description 
+#' 
+#' @param 
+#' 
+#' @return 
+#' 
+#' @family managementProcedure stockAssess
+#' 
+#' @export
 
 prepFiles <- function(){
   

@@ -1,9 +1,18 @@
-
-
-
-# Function to generate boxplots of time series
-
-
+#' @title Boxplot of Timeseries 
+#' @description Generate boxplots of timeseries 
+#' 
+#' @param x A vector ??? of data to plot
+#' @param PMname A string indicating the name of the variable to plot ???
+#' @template global_yrs
+#' @param printOutliers
+#' @param yrg A vector of length 2 describing the range of plotted values (i.e. min and max of range) ???
+#' @template global_fmyear
+#' 
+#' @return Boxplots of timeseries data
+#' 
+#' @family postprocess
+#' 
+#' @export
 
 get_tbxplot <- function(x, PMname, yrs, printOutliers, yrg, fmyear){
   
@@ -40,4 +49,3 @@ get_tbxplot <- function(x, PMname, yrs, printOutliers, yrg, fmyear){
         c('Year', PMname))
   
 }
-

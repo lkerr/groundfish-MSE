@@ -7,7 +7,7 @@
 
 # ??? This only works if parmgt = mproc, otherwise need to rethink documentation
 
-#' @param parmgt A labeled vector containing the following settings for the management procedure, @seealso \code{\link{runSims}} for full description of management options in mproc argument: 
+#' @param parmgt A labeled vector containing the following settings for the management procedure, @seealso \code{\link{runSims}} for full description of management options provided in the mproc argument: 
 #' \itemize{
 #'   \item{ASSESSCLASS - }
 #'   \item{HCR - }

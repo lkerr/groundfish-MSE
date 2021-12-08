@@ -1,11 +1,22 @@
+#' @title Run SCAA Stock Assessment
+#' @description Fit Statistical Catch-At-Age (SCAA) stock assessment
+#' 
+#' @template global_stock
+#' 
+#' @return Stock data object with updated sumCW, sumIN, paaCN, paaIN ???
+#' 
+#' @family managementProcedure stockAssess
+#' 
+#' @export
+
 get_caa <- function(stock){
   
   out <- within(stock, {
     
-    invisible(capture.output(dyn.load(dynlib("assessment/caa"))))
+    invisible(capture.output(dyn.load(dynlib("assessment/caa")))) # Loads caa.cpp, probably want to load once with package !!!
     
     # whatever is contained in this list (i.e., not commented out) will be an
-    # inactive parameter so the starting value will be used.
+    # inactive parameter so the starting value will be used. #!!! May want to have an input that selects the parameters to fix at starting values
     map_par <- list(
       log_M = factor(NA),
       #R_dev = factor(rep(NA, ncaayear-1)),

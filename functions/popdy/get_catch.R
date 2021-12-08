@@ -1,17 +1,21 @@
+#' @title Calculate Catch-At-Age
+#' @description Calculate catch-at-age using the Baranov catch equation, available numbers-at-age, F, selectivity, and M
+#' 
+#' @param F_full A number for annual fully-selected fishing mortality ??? make sure not a vector
+#' @param M A number for annual natural mortality ??? or a vector /???
+#' @param N A vector of abundance-at-age (after growth and recruitment)
+#' @param selC A vector of fishery selectivity-at-age
+#' 
+#' @return A vector of catch-at-age.
+#' 
+#' @family 
+#' 
+#' @export
 
-
-# Equation to calculate catch based on available numbers, fishing
-# mortality, selectivity and natural mortality. Just the Baranov
-# catch equation.
-# 
-# F_full: annual fully-selected fishing mortality
-# M: annual natural mortality
-# N: vector of abundance by age (after growth and recruitment)
-# selC: vector of fishery selectivity by age
-
-
-
-get_catch <- function(F_full, M, N, selC){
+get_catch <- function(F_full, 
+                      M, 
+                      N, 
+                      selC){
   
   if(length(N) != length(selC)){
     stop('length N must be == length sel')
@@ -24,9 +28,4 @@ get_catch <- function(F_full, M, N, selC){
   C <- (selC * F_full / Z) * N * (1 - exp(-Z))
   
   return(C)
-  
 }
-
-
-
-

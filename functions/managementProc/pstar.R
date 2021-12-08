@@ -1,9 +1,26 @@
-#Function to calculate F from the P* HCR
-pstar<-function(maxp,relB,parmgtproj,parpopproj,parenv,Rfun,stockEnv,FrefRPvalue){
+#' @title Implement Pstar HCR
+#' @description Implement the "pstar" HCR option to calculate F. ??? This might be integrated into get_nextF? calc_pstar is also defined there, take this documentation and put there if this is the case. 
+#' Adapted from John Wiedenmann to mimic Mid Atlantic ramped control rule to change target P* based on biomass relative to SSBmsy
+#' 
+#' @param maxp A number specifying the maximum P* target above SSBmsy (MAFMC used 0.4 previously)
+#' 
+#' @return 
+#' 
+#' @family 
+#' 
+
+pstar<-function(maxp,
+                relB,
+                parmgtproj,
+                parpopproj,
+                parenv,
+                Rfun,
+                stockEnv,
+                FrefRPvalue){
   # Code adapted from John Wiedenmann
   # Mid Atlantic used a ramped control rule to have the target P* change
   # with biomass relative to SSBmsy
-  # maxp is the max P* target above SSBmsy (MAFMC used 0.4 previouly)
+
   calc_pstar = function(maxp, relB)#function to calculate P* based on SSB/SSBmsy
   {
     if(relB>=1) #at asymptote

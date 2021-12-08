@@ -1,26 +1,40 @@
+#' @title Generate Weight-at-Age Vector
+#' @description Calculate and return weight-at-age
+#' 
+#' @param type A string indicating the method used to generate weight-at-age
+#' \itemize{
+#'   \item{"aLb" - Weight calculated: W = par[1] * L^par[2]}
+#'   \item{"input" - Use weight-at-age provided in par}
+#'   \item{"change" - Changes weight-at-age over time ???}
+#'   \item{"dynamic" - Draws from matrix, in final year uses par ???}
+#' }
+#' @param par A vector of parameters used to calculate weight-at-age, dependent on selected type:
+#' \itemize{
+#'   \item{If type = "aLb", par contains two parameters a and b to describe weight-length relationship}
+#'   \item{If type = "input" or "dynamic", par is a vector of weight-at-age to use, must be same length as number of age classes}
+#'   \item{If type = "change", par is a vector}
+#' }
+#' @param laa A vector of lengths-at-age
+#' @param inputUnit A string indicating the units for the laa vector, options include:
+#' \itemize{
+#'   \item{"kg" - for kilograms}
+#'   \item{"mt" - for metric tons}
+#' }
+#' @template global_y
+#' @template global_fmyearIdx
+#' 
+#' @return A vector of weight-at-age in metric tons
+#' 
+#' @family operatingModel, population
+#' 
+#' @export
 
-# Function to return weight-at-age.
-# 
-# laa: vector of lengths-at-age
-# 
-# type: type of function function. Available options are
-#       *'aLb'
-#        W = par[1] * L^par[2]
-#       *''
-#       *'input'
-#       use vector of weight-at-age, must be same length as number of age classes
-#
-# par: vector of parameters to use in the function. See function
-#      definitions in "type" for the length of the vector and
-#      how the function is parameterized
-#      
-# inputUnit: units for laa vector. Output should be in MT
-#           * kg for kilograms
-#           * mt for metric tons
-#      
-
-
-get_weightAtAge <- function(type, par, laa, inputUnit,y,fmyearIdx){
+get_weightAtAge <- function(type, 
+                            par, 
+                            laa, 
+                            inputUnit, 
+                            y, 
+                            fmyearIdx){
   
   if(type == 'aLb'){
 
@@ -41,11 +55,13 @@ get_weightAtAge <- function(type, par, laa, inputUnit,y,fmyearIdx){
     
   }
   else if(type == 'dynamic'){
-    waamat<-as.matrix(read.csv('data/data_raw/waamatrix.csv'))
+    waamat<-as.matrix(read.csv('data/data_raw/waamatrix.csv')) #!!! Probably want this to be a data input OR reference .rda object from package
     colnames(waamat)<-NULL
-    if (y<82){waa <- waamat[1,]}
-    else if (y>81 & y<169){waa <- waamat[(y-81),]}
-    else if (y>168){
+    if (y<82){
+      waa <- waamat[1,]
+    }else if (y>81 & y<169){
+      waa <- waamat[(y-81),]
+    }else if(y>168){
       waa<-par
       #waa<-waamat[87,]
       #T<-tAnomOut$T[tAnomOut$YEAR==y+1850]
@@ -69,8 +85,7 @@ get_weightAtAge <- function(type, par, laa, inputUnit,y,fmyearIdx){
       #if (waa9>waa[9]){waa9<-waa[9]}
       #waa<-c(waa1,waa2,waa3,waa4,waa5,waa6,waa7,waa8,waa9)
     }
-  }
-  else{
+  } else{
 
     stop('weight-at-age type not recognized')
   
@@ -83,6 +98,7 @@ get_weightAtAge <- function(type, par, laa, inputUnit,y,fmyearIdx){
   }else if(tolower(inputUnit) == 'mt'){
 
     # do nothing 
+    
   }else{
     
     stop('get_weightAtAge: fix inputUnit')
@@ -90,10 +106,4 @@ get_weightAtAge <- function(type, par, laa, inputUnit,y,fmyearIdx){
   }
   
   return(waa)
-   
 }
-
-
-
-
-

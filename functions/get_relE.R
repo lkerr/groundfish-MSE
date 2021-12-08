@@ -6,7 +6,7 @@
 #' 
 #' @return A number (or vector of numbers) describing the percent relative error
 #' 
-#' @family ???
+#' @family postprocess ???
 #' 
 
 get_relE <- function(est, 

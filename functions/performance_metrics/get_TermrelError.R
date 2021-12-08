@@ -1,3 +1,14 @@
+#' @title Get Terminal Relative Error
+#' @description  Obtain relative error in terminal year for SCAA or ASAP stock assessments ???
+#' 
+#' @template global_stock
+#'
+#' @return 
+#'
+#' @family postprocess ???
+#' 
+#' @export
+
 get_TermrelError <- function(stock){
  
   out <- within(stock, {

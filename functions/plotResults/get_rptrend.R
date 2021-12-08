@@ -1,7 +1,14 @@
-
-
-
-
+#' @title Plot Reference Point Trend
+#' @description Generate box plots of reference point trends.
+#' 
+#' @param x A vector of F target data to plot ???
+#' @param y A vector of SSB target data to plot ???
+#' 
+#' @return A plot of reference point trends
+#' 
+#' @family postprocess
+#' 
+#' @export
 
 get_rptrend <- function(x, y){
   
@@ -20,8 +27,4 @@ get_rptrend <- function(x, y){
   mtext(side=1, line=3, cex=1.5, outer=TRUE,
         'Simulation year')
   
-  
 }
-
-
-

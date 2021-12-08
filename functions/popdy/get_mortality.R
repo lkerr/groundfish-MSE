@@ -1,9 +1,17 @@
+#' @title Update Mortality
+#' @description Update predicted catch expectations and total mortality (Z) for a given year.
+#' 
+#' @template global_stock
+#' @template global_y
+#' 
+#' @return ???
+#' 
+#' @family operatingModel
+#' 
+#' @export
 
-
-
-
-get_mortality <- function(stock){
-  
+get_mortality <- function(stock, 
+                          y){
   
   out <- within(stock, {
 
@@ -20,14 +28,4 @@ get_mortality <- function(stock){
   })
   
   return(out)
-  
 }
-
-
-
-
-
-
-
-
-

@@ -1,6 +1,17 @@
+#' @title Plot Stock-Recruit
+#' @description Generate plot of stock-recruits
+#' 
+#' @param type A string indicating the type of stock-recruit relationship
+#' @param par A vector ??? of recruitment parameters
 #' @template global_Tanom
-
-
+#' @param ptyrs A vector of years to use in the plot
+#' @param stockEnv ???
+#' 
+#' @return A stock-recruit plot
+#' 
+#' @family postprocess
+#' 
+#' @export
 
 get_SRPlot <- function(type, par, Tanom, ptyrs, stockEnv){
   

@@ -1,3 +1,14 @@
+#' @title Get Relative Error
+#' @description  Obtain relative error in for SCAA or ASAP stock assessments ???
+#' 
+#' @template global_stock
+#'
+#' @return 
+#'
+#' @family postprocess ???
+#' 
+#' @export
+
 get_relError <- function(stock){
 
   out <- within(stock, {

@@ -1,3 +1,14 @@
+#' @title Setup TMB Files
+#' @description Structure stock data for use in TMB stock assessment ???
+#' 
+#' @template global_stock
+#' 
+#' @return TMB data inputs, are these objects in stock???
+#' 
+#' @family managementProcedure stockAssess
+#' 
+#' @export
+
 get_tmbSetup <- function(stock){
   
   out <- within(stock, {

@@ -1,24 +1,19 @@
-
-
-
-
-# ages: 
-#
-# type: "age" or "length" -- governs whether the output selectivity is
-#       age- or length-based. (Selectivity always length-based ... this just
-#       governs what the plot looks like because you may want to compare
-#       to age-based selectivities in actual assessments.
-#       
-# laa_typ: type of length-at-age model (see get_lengthAtAge)
-# 
-# laa_par: length-at-age parameters (see get_lengthAtAge)
-# 
-# selC_typ: type of selectivity function (see get_slx)
-# 
-# selC_par: selectivity-at-length parameters (see get_slx)
-# 
-# TAnom: temperature anomoly to use in the length-at-age function
-
+#' @title Plot Selectivity
+#' @description Generate a plot of selectivity
+#' 
+#' @param ages A vector of ages
+#' @param type A string of "age" or "length" that governs whether the output selectivity is age- or length-based. (Selectivity always length-based ... this just governs what the plot looks like because you may want to compare to age-based selectivities in actual assessments.) 
+#' @param laa_typ A string describing the type of length-at-age model (@seealso get_lengthAtAge), obtained from "stock" object
+#' @param laa_par A vector of length-at-age parameters (@seealso get_lengthAtAge), obtained from "stock" object
+#' @param selC_typ A string describing the type of selectivity function (@seealso get_slx), obtained from "stock" object
+#' @param selC_par A vector of selectivity-at-age parameters (@seealso get_slx), obtained from "stock" object
+#' @param TAnom A vector of temperature anomolies to use in the length-at-age function
+#' 
+#' @return A plot of selectivity
+#' 
+#' @family postprocess
+#' 
+#' @export
 
 get_slxPlot <- function(ages, type, laa_typ, laa_par, 
                         selC_typ, selCpar, TAnom){

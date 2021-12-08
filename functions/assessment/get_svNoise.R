@@ -1,21 +1,19 @@
-# Function to help provide starting values for assessment model. x can be
-# a vector to help with running this function on a list of starting
-# values (for instance Rdevs). CV is given and sd is calculated from
-# there. Truncated normal distribution is used to ensure that the
-# starting values remain inside the parameter bounds.
-# 
-# x: either a number or a vector of "true" values that you want to
-#    provide assessment model starting values for
-# 
-# cv: the cv for the starting value perturbation (normal scale). This
-#     (along with the parameter bounds) governs how much deviation 
-#     there will be in the assessment model starting value from the 
-#     "true" operating model value.
-#     
-# lb: vector of the same length as x that gives the lower bounds for
-#     the parameter estimates
-# 
-# ub: same as lb except for upper bounds.
+#' @title Pick Starting Assessment Values
+#' @description Function generates starting assessment parameter values using a truncated normal distribution to ensure that starting values remain inside the parameter bounds.
+#' 
+#' @param x A number or a vector of "true" operating model values that you want to provide assessment model starting values for 
+#' @param cv A number or vector of CVs for the starting value perturbation (normal scale). This (along with the parameter bounds) governs how much deviation there will be in the assessment model starting value from the "true" operating model value.
+#' @param lb A vector of the same length as x that gives the lower bounds for the parameter estimates
+#' @param ub A vector of the same length as x that gives the upper bounds for the parameter estimates
+#' 
+#' @return A number or vector of starting parameter values.
+#' 
+#' @family managementProcedure stockAssess
+#' 
+#' @export
+#' 
+#' @example 
+#' get_svNoise(x=0.5, cv=0.1, lb=0, ub=1)
 
 get_svNoise <- function(x, cv, lb, ub){
   

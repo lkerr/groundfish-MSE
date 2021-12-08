@@ -1,16 +1,16 @@
-
-
-# Function to plot the mean trajectory over time for each MP
-
-# mpMeanMat: a matrix of means for each trajectory where the rows are the
-#           MPs and the columns are the years
-#           
-# x: a vector of years
-# 
-# ylab: y axis label
-# 
-# fmyidx: index for the first management year
-
+#' @title Plot MP Trajectory
+#' @description Plot mean trajectory over time for each management procedure (MP)
+#' 
+#' @param mpMeanMat A matrix of means for each trajectory where rows are MPs and columns are years.
+#' @param x A vector of years
+#' @param ylab A string for the y-axis label
+#' @template global_fmyear 
+#' 
+#' @return A plot of mean management procedure trajectory
+#' 
+#' @family postprocess
+#' 
+#' @export
 
 get_mpMeanTraj <- function(mpMeanMat, x, ylab, fmyear=NULL){
   # Get y limits and extend them a little bit so that the legend does not
