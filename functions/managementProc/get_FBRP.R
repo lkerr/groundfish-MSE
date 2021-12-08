@@ -19,6 +19,28 @@ get_FBRP <- function(parmgt,
                      Rfun_lst, 
                      stockEnv){
 
+# parmgt: a 1-row data frame of management parameters. The operational
+#         component of parmgt for this function is the (1-row) columns
+#         "FREF_TYP" and "FREF_PAR0". FREF_TYP indicates the type of model
+#         that should be used to calculate the F reference point and
+#         FREF_PAR0 is the associate F level (e.g., 0.4 for F40% if you are
+#         using SPR or 0.1 for F0.1 if you are using YPR. Options for
+#         FREF_TYP are:
+#     
+#     * YPR: yield-per-recruit-based reference point. See get_perRecruit.R.
+#            Basically the parameters (par) are just the reference point 
+#            level.
+#     
+#     * SPR: spawning potential ratio-based refence point. See 
+#            get_perRecruit.R. Basically the parameters (par) are just the 
+#            reference point level.
+#            
+#     * Mbased: natural mortality-based (data poor) option (see Gabriel and
+#               Mace (1999), p.42. In some cases M or some factor of M has
+#               been considered as a proxy for Fmsy.
+#               
+
+
   # Load in the recruitment function (recruitment function index is
   # found in the parmgt data frame but the actual functions are from
   # the list Rfun_BmsySim which is created in the processes folder.
@@ -34,9 +56,12 @@ get_FBRP <- function(parmgt,
     # simulation B-based reference point you will need an starting-point
     # for the simulation -- calcaulte this assuming fishing at the F-based
     # reference point.
+    
     if(parmgt$BREF_TYP == 'SIM' & parmgt$RFUN_NM == 'forecast'){
+      
       # have to use the temporal window set up for the biomass reference
       # point so come up with a dummy parmgt
+      
       parmgtTemp <- parmgt
       parmgtTemp$FREF_PAR0 <- parmgtTemp$BREF_PAR0
       parmgtTemp$FREF_PAR1 <- parmgtTemp$BREF_PAR1
@@ -60,7 +85,6 @@ get_FBRP <- function(parmgt,
       equiJ1N_MSY <- NULL
     }
     
-  
     return(list(RPvalue = F, equiJ1N_MSY = equiJ1N_MSY))
     
   }else if(parmgt$FREF_TYP == 'FmsySim'){
@@ -72,6 +96,7 @@ get_FBRP <- function(parmgt,
     # temperature-based BRP projections but will not make a difference
     # for hindcast projections. Temperature is length 1 -- the length
     # of the temperature anomaly is tested in get_proj.
+    
     parenvTemp <- parenv
     parenvTemp$Tanom <- rep(parenv$Tanom[parenv$y],
                             times = length(parenv$Tanom))
@@ -96,8 +121,8 @@ get_FBRP <- function(parmgt,
     # Extract the equilibrium population (at each level of F) for use in 
     # forecasts for Fmsy forecast calculations and for output for Bmsy 
     # forecast calculations
-    equiJ1N_MSY <- sapply(simAtF, '[', 'J1N')
     
+    equiJ1N_MSY <- sapply(simAtF, '[', 'J1N')
     
     # If using forward projection, use the equilibrium values for population
     # size at the current temperature (simAtF) and the optimal F (Fmsy) and 
@@ -124,6 +149,7 @@ get_FBRP <- function(parmgt,
                  stockEnv = stockEnv)})
       
       # Update the optimal states assuming variable temperature
+      
       sumCW <- do.call(cbind, sapply(simAtF, '[', 'sumCW'))
       
       meanSumCW <- apply(sumCW, 2, mean)
@@ -131,8 +157,7 @@ get_FBRP <- function(parmgt,
       Fmsy <- candF[which.max(meanSumCW)]
       
     }
-    
-
+  
     # Warn if maximum yield did not occur within the range
 
     if(Fmsy %in% range(candF)){
@@ -142,6 +167,7 @@ get_FBRP <- function(parmgt,
     }
     
     # Equilibrium starting conditions at MSY (used in BMSY calculations)
+    
     equiJ1N_MSY <- equiJ1N_MSY[[which.max(meanSumCW)]]
     
     return(list(RPvalue = Fmsy, equiJ1N_MSY = equiJ1N_MSY))
@@ -160,5 +186,10 @@ get_FBRP <- function(parmgt,
     stop('get_FBRP: parmgt FREF_TYP not recognized')
     
   }
+<<<<<<< HEAD
   
 }
+=======
+
+}
+>>>>>>> master

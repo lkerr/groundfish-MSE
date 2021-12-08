@@ -34,7 +34,6 @@ get_relError <- function(stock){
       # average over each assessment time series
       relE_SSB[y-1] <- mean(get_relE(SSBnew1, SSB[(y-length(SSBnew1)+1):y]))
       relE_N[y-1] <- mean(get_relE(Nnew1,rowSums(J1N[(y-length(SSBnew1)):(y-1),])))
-      relE_CW[y-1] <- mean(get_relE(Catchnew1, sumCW[(y-length(SSBnew1)):(y-1)]))
       relE_R[y-1] <- mean(get_relE(Rnew1, R[(y-length(SSBnew1)):(y-1)]))
       relE_F[y-1] <- mean(get_relE(Fnew1, F_full[(y-length(SSBnew1)):(y-1)]))
     }

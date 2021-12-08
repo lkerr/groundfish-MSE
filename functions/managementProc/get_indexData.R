@@ -18,7 +18,7 @@ get_indexData <- function(stock,
 
   within(stock, {
 
-    sumCW[y] <- CN[y,] %*% waa[y,]    # (dot product)
+    sumCW[y] <- CN[y,] %*% waa[y,]  # dot product
     
     paaCN[y,] <- (CN[y,]) / sum(CN[y,])
    
@@ -39,9 +39,8 @@ get_indexData <- function(stock,
     effort[y] <- F_full[y] / qC
     obs_effort[y] <- get_error_idx(type=oe_effort_typ, idx=effort[y], 
                                      par=oe_effort)
+    
     # Get observation error data for the assessment model
-    # change point where bias in catch is applied in 2015 before the start of
-    # the projection period
      if (y < c(fmyearIdx)){
      obs_sumCW[y] <- sumCW[y]
      }
@@ -59,8 +58,8 @@ get_indexData <- function(stock,
                                           par=oe_sumIN)
     
     # Observed index by weight is a function of the observed index and the
-    # true paa. This preserves the fact that the multinomial paa and the
-    # lognormal numbers-at-age are separate processes (which is consistent with
+    # true proportions at age. This preserves the fact that the multinomial proportions at age
+    # and the lognormal numbers-at-age are separate processes (which is consistent with
     # most assessment models)
     obs_sumIW[y] <- (obs_sumIN[y] * paaIN[y,]) %*% waa[y,]
     obs_paaIN[y,] <- get_error_paa(type=oe_paaIN_typ, paa=paaIN[y,], 

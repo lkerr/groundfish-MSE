@@ -62,7 +62,7 @@ get_advice <- function(stock,
       get_ASAP(stock = tempStock)}
   }
 
-  # was the assessment successful?
+# Was the assessment successful?
   tempStock <- within(tempStock, {
     conv_rate[y] <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' &&
                       class(opt) != 'try-error') || # ??? Check that opt is in stock or mproc object, also planBest 
@@ -72,10 +72,8 @@ get_advice <- function(stock,
                         asapEst == 0), 1, 0)
   })
 
-  # Retrieve the estimated spawner biomass (necessary for advice) &
-  # Vary the parpop depending on the type of assessment model
-  # (can't have just one because one of the models might not
-  # converge.
+  # Retrieve the estimated SSB (necessary for advice) &
+  # Vary the parpop depending on the type of assessment model.
 
     if(mproc[m,'ASSESSCLASS'] == 'CAA'){
       tempStock <- within(tempStock, {
@@ -112,98 +110,27 @@ get_advice <- function(stock,
                        mat = res$maturity[1,],
                        R = res$SR.resids$recruits,
                        SSBhat = res$SSB,
-                       J1N = tail(res$N.age,1),                 ### or use J1B reported in biomass
+                       J1N = tail(res$N.age,1),                 
                        Rpar = Rpar,
                        Rpar_mis= Rpar_mis,
                        Fhat = tail(res$F.report, 1))
       })
     }
 
+# Calculate Mohn's Rho values
+  
   if(y > fmyearIdx){
-      tempStock<-within(tempStock,{#Calculate Mohn's Rho values
-      peels<-y-fmyearIdx
-      if(peels>7){peels<-7}
-      if (Sys.info()['sysname'] == "Windows"){
-        tempwd<-getwd()
-        SSBnew1<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB
-        idx<-length(SSBnew1)-peels
-        SSBnew<-SSBnew1[idx]
-        for (p in (y-peels):(y-1)){
-          SSBold<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', p,'.rdat', sep = ''))$SSB[idx]
-          assign(paste('rhoSSB',p,sep=''),(SSBold-SSBnew)/SSBnew)
-        }
-        tempwd<-getwd()
-        Nnew1<-rowSums(readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$N.age)
-        idx<-length(Nnew1)-peels
-        Nnew<-Nnew1[idx]
-        for (p in (y-peels):(y-1)){
-          Nold<-sum(readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', p,'.rdat', sep = ''))$N.age[idx,])
-          assign(paste('rhoN',p,sep=''),(Nold-Nnew)/Nnew)
-        }
-        tempwd<-getwd()
-        Fnew1<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$F.report
-        idx<-length(Fnew1)-peels
-        Fnew<-Fnew1[idx-1]
-        for (p in (y-peels):(y-1)){
-          Fold<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', p,'.rdat', sep = ''))$F.report[idx]
-          assign(paste('rhoF',p,sep=''),(Fold-Fnew)/Fnew)
-        }
-        tempwd<-getwd()
-        Rnew1<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$N.age[,1]
-        Rnew<-Rnew1[idx]
-        for (p in (y-peels):(y-1)){
-          Rold<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', p,'.rdat', sep = ''))$N.age[idx,1]
-          assign(paste('rhoR',p,sep=''),(Rold-Rnew)/Rnew)
-        }
-        Catchnew1<-readRDS(paste(tempwd,'/assessment/ASAP/', stockName, '_', r, '_', y,'.rdat', sep = ''))$catch.pred}
-      if (Sys.info()['sysname'] == "Linux"){
-        SSBnew1<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$SSB
-        idx<-length(SSBnew1)-peels
-        SSBnew<-SSBnew1[idx]
-        for (p in (y-peels):(y-1)){
-          SSBold<-readRDS(paste(rundir,'/', stockName, '_', r, '_', p,'.rdat', sep = ''))$SSB[idx]
-          assign(paste('rhoSSB',p,sep=''),(SSBold-SSBnew)/SSBnew)
-        }
-        Nnew1<-rowSums(readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$N.age)
-        idx<-length(Nnew1)-peels
-        Nnew<-Nnew1[idx]
-        for (p in (y-peels):(y-1)){
-          Nold<-sum(readRDS(paste(rundir,'/', stockName, '_', r, '_', p,'.rdat', sep = ''))$N.age[idx,])
-          assign(paste('rhoN',p,sep=''),(Nold-Nnew)/Nnew)
-        }
-        Fnew1<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$F.report
-        idx<-length(Fnew1)-peels
-        Fnew<-Fnew1[idx]
-        for (p in (y-peels):(y-1)){
-          Fold<-readRDS(paste(rundir,'/', stockName, '_', r, '_', p,'.rdat', sep = ''))$F.report[idx]
-          assign(paste('rhoF',p,sep=''),(Fold-Fnew)/Fnew)
-        }
-        Rnew1<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$N.age[,1]
-        idx<-length(Rnew1)-peels
-        Rnew<-Rnew1[idx]
-        for (p in (y-peels):(y-1)){
-          Rold<-readRDS(paste(rundir,'/', stockName, '_', r, '_', p,'.rdat', sep = ''))$N.age[idx,1]
-          assign(paste('rhoR',p,sep=''),(Rold-Rnew)/Rnew)
-        }
-        Catchnew1<-readRDS(paste(rundir,'/', stockName, '_', r, '_', y,'.rdat', sep = ''))$catch.pred}
-      plist <- mget(paste('rhoSSB',(y-peels):(y-1),sep=''))
-      pcols <- do.call('cbind', plist)
-      Mohns_Rho_SSB[y] <- rowSums(pcols) / peels
-      plist <- mget(paste('rhoN',(y-peels):(y-1),sep=''))
-      pcols <- do.call('cbind', plist)
-      Mohns_Rho_N[y] <- rowSums(pcols) / peels
-      plist <- mget(paste('rhoF',(y-peels):(y-1),sep=''))
-      pcols <- do.call('cbind', plist)
-      Mohns_Rho_F[y] <- rowSums(pcols) / peels
-      plist <- mget(paste('rhoR',(y-peels):(y-1),sep=''))
-      pcols <- do.call('cbind', plist)
-      Mohns_Rho_R[y] <- rowSums(pcols) / peels
+      tempStock <- get_MohnsRho(stock = tempStock)
       cat('Rho calculated.')
-
+      
+      #Rho-adjustment if that option is turned on
+      
+      tempStock<-within(tempStock,{
       if(mproc[m,'rhoadjust'] == 'TRUE' & Mohns_Rho_SSB[y]>0.15){
           parpop$SSBhat[length(parpop$SSBhat)]<-parpop$SSBhat[length(parpop$SSBhat)]/(Mohns_Rho_SSB[y]+1)}
       })
 
+      #Calculate relative Error
       tempStock <- get_relError(stock = tempStock)}
 
     # Environmental parameters
@@ -213,12 +140,8 @@ get_advice <- function(stock,
                    yrs_temp = yrs_temp, # temperature years
                    y = y-1)
 
-    #### Get ref points & assign F ####
+    #### Get ref points & assign F & get catch advice ####
 
-    # If in the first year or a subsequent year on the reference
-    # point update schedule or if using planB instead then run the
-    # reference point update.  || used to keep from evaluating
-    # mproc[m,'RPInt'] under planB (it will be NA).
     if( y == fmyearIdx ||
         mproc[m,'ASSESSCLASS'] == 'PLANB' ||
         (y > fmyearIdx &
@@ -233,27 +156,28 @@ get_advice <- function(stock,
       tempStock$catchproj <- gnF$catchproj
 
     }else{
-      # Otherwise use old reference points to calculate stock
-      # status
+      # Otherwise use old reference points to calculate stock status
+      
         gnF <- get_nextF(parmgt = mproc[m,], parpop = tempStock$parpop,
                          parenv = parenv,
                          RPlast = tempStock$RPmat[y-1,], evalRP = FALSE,
                          stock = tempStock)
         tempStock$RPmat[y,] <- tempStock$RPmat[y-1,]
     }
+    
     # Report overfished status (based on previous year's data)
     tempStock <- within(tempStock, {
       OFdStatus[y-1] <- gnF$OFdStatus
 
-      # Report overfishing status AEW
+    # Report overfishing status
       OFgStatus[y-1] <- gnF$OFgStatus
 
-      # Report maximum gradient component for CAA model
+    # Report maximum gradient component for CAA model
       mxGradCAA[y-1] <- ifelse(mproc[m,'ASSESSCLASS'] == 'CAA',
                                yes = rep$maxGrad,
                                no = NA)
 
-      # Tabulate advice (plus small constant)
+    # Tabulate advice (plus small constant)
       adviceF <- gnF$F + 1e-5
 
       # Calculate expected J1N using parameters from last year's assessment
@@ -261,11 +185,11 @@ get_advice <- function(stock,
       # just recruitment from the previous year. This could be important
       # depending on what the selectivity pattern is, but if age-1s are
       # not very selected it won't matter much.
-      if(mproc$ASSESSCLASS[m] != 'PLANB'){ # is this necessary?
+      
+      if(mproc$ASSESSCLASS[m] != 'PLANB'){ 
         J1Ny <- get_J1Ny(J1Ny0 = tail(parpop$J1N, 1),
                          Zy0 = parpop$Fhat * parpop$sel + parpop$M,
                          Ry1 = tail(parpop$R, 1)) # last years R
-        # Absolute Catch advice, inherits units of waa
       }
 
       quota <- get_catch(F_full = adviceF, M = natM[y], N = J1N[y,], selC = slxC[y,])

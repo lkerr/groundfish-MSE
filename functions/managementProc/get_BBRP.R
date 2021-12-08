@@ -19,7 +19,6 @@
 # parpop: list of population parameters needed to calculate the biomass-
 #         based reference point. See specific functions, e.g.
 #           get_perRecruit()
-#           get_BmsySim()
 #         to see what needs to be included in the list.
 
 get_BBRP <- function(parmgt, 

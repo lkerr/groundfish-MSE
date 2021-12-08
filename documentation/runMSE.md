@@ -29,7 +29,7 @@ The MSE is run on the UMASS HPCC as a batch job.  If you are unfamiliar with bat
 
 ### Preparing for a run
 
-Four files are required to run the MSE.  They are: *run.sh*, *runPre.sh*, *runSim.sh* and *runPost.sh*  These need to be located in the same directory.  This is the directory where the folder **groundfish-MSE** will be located after it is cloned from Git-Hub.  Once the files are uploaded they can stay in the directory (i.e., you don't need to upload them every time you intend to run the MSE).
+Four files are required to run the MSE on the HPCC.  They are: *run.sh*, *runPre.sh*, *runSim.sh* and *runPost.sh*  These need to be located in the same directory.  This is the directory where the folder **groundfish-MSE** will be located after it is cloned from Git-Hub.  Once the files are uploaded they can stay in the directory (i.e., you don't need to upload them every time you intend to run the MSE).
 
 The four files are listed in turn below.  You can copy them individually into a new text document on your local machine and save them (with the appropriate .sh extension), then upload them to the appropriate folder in your HPCC account.  Notably, if you are working on a Windows (or presumably Mac) machine you will need to convert each of the files to Unix/Linux structure (the HPCC runs Linux).  This is due to differences in how the systems treat line breaks.  Once you have uploaded each of the files, use the command ```dos2unix``` for the conversion on each of the four files.  The inputs and outputs will look something like:
 ```
@@ -53,7 +53,8 @@ dos2unix: converting file runPost.sh to UNIX format ...
 Below each of the files is described in turn. But first a description of some of the common elements.  Each of the files has headers that give instructions about the job -- the headers start with #BSUB.
 * ```#BSUB -W``` indicates how much time your job needs in hh:mm format
 
-* ```#BSUB -q``` indicates which queue the job should be submitted to.  Have only used the "short" queue for this project.
+* ```#BSUB -q``` indicates which queue the job should be submitted to.  
+
 * ```#BSUB -J``` the name of the job (in quotations)
 
 * ```#BSUB R``` the memory requirements (in MB) -- this is something that may have to be evaluated and changed as you run larger sets of simulations
@@ -87,30 +88,50 @@ echo "run complete"          # Print statement indicating job is done
 ```
 #!/bin/bash
 
-#BSUB -W 00:59                # How much time does your job need (HH:MM)
-#BSUB -q short                # Which queue
-#BSUB -J "runPre"             # Job Name
-#BSUB -R rusage[mem=1000]     # Memory requirements (in MB)
-#BSUB -n 1                    # Number of nodes to use
-#BSUB -o "./%J.o"             # Specifies name of the output file
-#BSUB -e "./%J.e"             # Specifies name of the error file
+#BSUB -W 00:59                            # How much time does your job need (HH:MM)
+#BSUB -q short                            # Which queue {short, long, parallel, GPU, interactive}
+#BSUB -J "runPre"                    # Job Name
+#BSUB -R rusage[mem=10000] 
+#BSUB -n 1
+
+#BSUB -o "./%J.o"
+#BSUB -e "./%J.e"
 
 
-rm -r -f groundfish-MSE/     # remove old directory
 
-module load git/2.1.3        # load the git module
+# run.sh is located inside git transfer directory here,
+# but when run on HPCC it is assumed that run.sh will be
+# one level up from the root directory. The first thing that
+# happens is run.sh downloads the most up-to-date version from
+# github so we want it outside the root directory so that run.sh
+# isn't part of what gets deleted before the download.
 
-# clone the repository
-git clone https://samtruesdell:17d3b37aa4080198a25fe421470b97f92af26794@github.com/COCA-NEgroundfishMSE/groundfish-MSE
+# 17d3b37aa4080198a25fe421470b97f92af26794
 
-module load gcc/5.1.0        # load the gcc module for compilation
-module load R/3.4.0          # load R module
 
-cd groundfish-MSE/           # change directories to groundfish-MSE
+# remove old directory
+rm -r -f groundfish-MSE/
 
-Rscript ./processes/runPre.R --vanilla    # Run the runPre.R code
+# load the git module
+module load git/2.1.3
 
-echo "runPre complete"       # Print statement indicating job is done
+# clone the current repository
+git clone -b master https://samtruesdell:17d3b37aa4080198a25fe421470b97f92af26794@github.com/COCA-NEgroundfishMSE/groundfish-MSE
+
+# load the gcc module for compilation
+module load gcc/5.1.0
+
+# load R module
+module load R/3.4.0
+
+# load module to run ASAP.exe on unix
+module load wine
+
+cd groundfish-MSE/
+
+Rscript ./processes/runPre.R --vanilla
+
+echo "runPre complete"
 ```
 There are new processes going on in runPre.sh that we haven't discussed:
 * ```rm -r -f groundfish-MSE/``` deletes the previous groundfish-MSE directory if it already exists
@@ -138,21 +159,32 @@ This is the code that actually runs the simulations.
 ```
 #!/bin/bash
 
-#BSUB -W 03:59                # How much time does your job need (HH:MM)
-#BSUB -q short                # Which queue
-#BSUB -J "runSim[1-25]"       # Job Name (and array size)
-#BSUB -R rusage[mem=10000]    # Memory requirements (in MB)
-#BSUB -n 1                    # Number of nodes to use
-#BSUB -o "./%J.o"             # Specifies name of the output file
-#BSUB -e "./%J.e"             # Specifies name of the error file
-#BSUB -w 'done(runPre)'       # wait to submit until down with runPre job
+#BSUB -W 03:59                            # How much time does your job need (HH:MM)
+#BSUB -q short                       # Which queue {short, long, parallel, GPU, interactive}
+#BSUB -J "runSim[1-100]"                    # Job Name
+#BSUB -R rusage[mem=10000] 
+#BSUB -n 1
 
-cd groundfish-MSE/            # change directories to groundfish-MSE
-module load R/3.4.0           # load R module
+#BSUB -o "./%J.o"
+#BSUB -e "./%J.e"
 
-Rscript ./processes/runSim.R --vanilla       # Run the runSim.R code
+#BSUB -w 'done(runPre)'  # DEPENDENCIES: wait until down with sleep100 job.
 
-echo "runSim complete"        # Print statement indicating job is done
+
+
+
+
+cd groundfish-MSE/
+
+module load R/3.4.0 
+module load gcc/5.1.0
+module load wine
+
+Rscript ./processes/runSim.R --vanilla
+# Rscript $HOME/COCA/processes/runSim.R --vanilla
+
+
+echo "runSim complete"
 ```
 
 Things we haven't yet encountered that show up here:
