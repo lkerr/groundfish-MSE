@@ -40,7 +40,9 @@ get_WAA_pointers <- function(nfleet){
 #' @export
 
 get_sel_block_assign <- function(nfleet, nyear){
+  
   x <- lapply(1:nfleet, function(x) rep(x, nyear))
+  
   return(x)
 }
 
@@ -82,7 +84,7 @@ get_prop_rel_mats <- function(nfleet, nage, nyear){
 #' @param tag ???
 #' @param n ???
 #' 
-#' @return 
+#' @return ???
 #' 
 #' @family managementProcedure stockAssess
 #' 
@@ -106,8 +108,6 @@ editComments <- function(comVec, tag, n){
   ins <- paste(baseCom, '-', 1:n)
   comVec <- comVec[-wIdx]
   comVec <- append(comVec, ins[1:n], after = wIdx[1]-1)
+  
   return(comVec)
 }
-
-
-

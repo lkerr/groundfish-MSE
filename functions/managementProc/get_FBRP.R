@@ -186,10 +186,5 @@ get_FBRP <- function(parmgt,
     stop('get_FBRP: parmgt FREF_TYP not recognized')
     
   }
-<<<<<<< HEAD
   
 }
-=======
-
-}
->>>>>>> master
