@@ -13,11 +13,14 @@ source('processes/get_runinfo.R')
 
 # Ensure that TMB will use the Rtools compiler (only windows ... and 
 # not necessary on all machines)
-if(platform != 'Linux'){
+# If platform != Linux
+if(platform == 'Windows'){
   path_current <- Sys.getenv('PATH')
   path_new <- paste0('c:\\Rtools\\bin;c:\\Rtools\\mingw_32\\bin;',
                      path_current)
   Sys.setenv(PATH=path_new)
+} else if(platform == 'Darwin'){
+  path_current <- Sys.getenv('PATH')
 }
 
 
