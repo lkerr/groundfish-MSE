@@ -1,17 +1,137 @@
+#' @title Run MSE Simulations
+#' @description Main function to run MSE simulations. Previously this function was sourced to run simulations, now input arguments must be provided to run.
+#' 
+#' @param 
+#' 
+#' @return 
+
+runSim <- function(stockNames, # A string or vector of strings indicating what stocks to include (options: "codGB", "codGOM", "haddockGB", "pollock", "yellowtailflounderGB" to add new stockPar to available list provide newStockPar argument below), to use a mix of new and existing provide both stockNames for existing and newStockPar for new to use
+                   newStockPar = NULL, # A string or vector of strings indicating the file path(s) to new stock parameter files, no default but example file available in templates folder ??? check that this folder accessible in R package, may need to provide link to templates folder on GitHub instead
+  mproc, #!!! not name of .csv file, name of object, you need to read in .csv when setting up sim
+                   simpleTemperature, # Debug using simple temperature trend that reduces variance? (T/F)
+                   stockExclude, # !!! I think we probably need to specify this differently (maybe as a list of parameters for each species?, give option to pick from default settings stored as .rda OR add own list)
+                   histAssess = TRUE,  #A boolean, if TRUE overwrite calculated values with historic assessment input values for each year, default = TRUE.
+                   nrep = 1, # number of times to repeat this analysis, default = 1.
+                   fmyear = NULL, # First year to begin actual management, no default.
+                   fyear = NULL, # # first year after the initial condition period. The initial condition period # simply fills up the arrays as necessary even before the burn-in period # begins. This is rather arbitrary but should be larger than the number of # years in the assessment model and greater than the first age in the model.
+                   mxyear = NULL, # maximum year predicted into the future, no default, ??? depend on length of temp timeseries???
+                   nburn = 50, # number of burn-in years (before the pre-2000 non-assessment period) ??? is non-assessment period same as initial condition period from fyear definition???
+                   useTemp = TRUE, # A boolean, if TRUE include temperature effects (e.g in S-R, growht, ect.)
+                   tmods = NULL, # A string or vector of strings indicating what CMIP series to use, default = NULL uses all timeseries. !!! Need to make sure this is input data OR build in as .rda??? ## Do you want to use particular models from the cmip data series? If so tmods should be a vector of column names (see data/data_raw/NEUS_CMIP5_annual_meansLong.csv'). If NULL use all data
+                   tq = 0.5, # The temperature quantile of the cmip data series to use. default = 0.5 for median.
+                   trcp = 8.5, # Representative concentration pathway to use. Default = 8.5, currently only pathway available.
+                   ref0 = NULL, # First reference year for temperature downscale, no default.
+                   ref1 = NULL, # Last reference year for temperature downscale, no default.
+                   baseTempYear = NULL, # Reference year for anomaly calculation, no default.
+                   anomFun = median, # Function used in anomaly calculation, default = median.
+                   BrefScalar = 0.5, # Scalar to relate the calculated biomass reference point to the threshold value, default = 0.5.
+                   FrefScalar = 0.75, # Scalar to relate the calculated fishing mortality reference point to the threshold value, default = 0.75.
+                   ##### May want economic parameters to be provided in mproc when economic option turned on ??? for now arguments here
+                   first_econ_yr = NULL, # First economic year
+                   last_econ_year = NULL, # Last economic year
+                   last_econ_index = last_econ_yr-first_econ-yr+1, # Should calculate in setup section if economic section turned on
+                   econ_data_starts = NULL, # required to match first economic year???
+                   econ_data_end = NULL, # required to match last economic year???
+                   spstock2s=c("americanlobster","americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","monkfish", "other","pollock","redsilveroffshorehake","redfish","seascallop","skates","spinydogfish","squidmackerelbutterfishherring","summerflounder","whitehake","winterflounderGB","winterflounderGOM","witchflounder","yellowtailflounderCCGOM", "yellowtailflounderGB","yellowtailflounderSNEMA"), # Define in economic section???
+                   ##### Independent variables in the targeting equation
+                   # ??? Unclear what difference is between options for targeting equation?
+                   ##### Independent variables in the Production equation
+                   # ??? Is it possible to combine these options (e.g. provide list where items in list vary based on option selected)
+                   ##### Plot options
+                   plotBrkYrs = NULL, # Years after management period begins to break up results for plotting, e.g. c(10,20) would result in plots of the first 0-10 years and 20-last year of the management period.
+                   plotBP = FALSE, # A boolean, if TRUE generate boxplots of performance measures, default = FALSE.
+                   plotRP = FALSE, # A boolean, if TRUE generate extra folder of reference point plots, default = FALSE.
+                   plotDrivers = FALSE, # A boolean, if TRUE plot population drivers (e.g. temperature, recruitment, growth, selectivity), default = FALSE.
+                   plotTrajInd = FALSE, # A boolean, if TRUE plot samples of individual trajectories, default = FALSE.
+                   plotTrajBox = FALSE, # A boolean, if TRUE generate boxplots of trajectories, default = FALSE.
+                   plotTrajSummary = FALSE, # A boolean, if TRUE plot summary statistics, default = FALSE. 
+                   
+                   
+                   
+){
+  
+  
+  #### Output ####
+  # Which sets of plots should be created? Set these objects to T/F
+
+  #how many years before writing out the results to csv? 6 corresponds to 1 "econ" simulation (2010-2015).  Larger will go faster (less overhead) but you lose work if something crashes,
+  savechunksize<-10
+  
+  #Set up a counter for every year that has been simulated ??? How used, maybe this should be in simulation?
+  yearcounter<-0
+  
+  #Set up a list to hold the economic results !!! Only set this up if economic model included
+  revenue_holder<-list()
+  #these two lists will hold a vectors that concatenates (r, m, y, calyear, .Random.seed). They should be r*m*y in length.
+  begin_rng_holder<-list()
+  end_rng_holder<-list()
+  
+  #### Stock parameters ####
+  # If you have files in the modelParameters folder for stocks but you don't
+  # want to include them in a run you can write them in here in the
+  # stockExclude variable. Do not include the extension.R. For example,
+  # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
+  # stockExclude <- NULL indludes all stocks.
+  # Available stocks: haddockGB, codGOM, codGB, pollock, yellowtailflounderGB
+  stockExclude <- c('haddockGB', 'codGB', 'pollock', 'yellowtailflounderGB')
+  
+  # Number of model years to run are defined by the length of the burn-in ??? Where are these defined if not in OM parameters/as input argument???
+  # period and the dimension of the CMIP5 data set.
+  # Load the cmip5 temperature data
+  # cmip5 <- read.table(file='data/data_raw/NEUS_CMIP5_annual_means.txt',
+  #                     header=TRUE, skip=2)
+  # cmip5 <- subset(cmip5, year <= mxyear)
+  
+  # nyear <- nrow(cmip5) + nburn
+
+  ##############Independent variables in the targeting equation ##########################
+  ### If there are different targeting equations, you can set there up here, then use their suffix in the mproc file to use these new targeting equations
+  ### example, using ChoicEqn=small in the mproc file and uncommenting the next two lines will be appropriate for a logit with just 3 RHS variables.
+  
+  ##spstock_equation_small=c("exp_rev_total", "fuelprice_distance")
+  ##choice_equation_small=c("fuelprice_len")
+  spstock_equation_pre=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
+  choice_equation_pre=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
+  
+  spstock_equation_post<-spstock_equation_pre
+  choice_equation_post<-choice_equation_pre
+  ############## End Independent variables in the targeting equation ##########################
+  
+  ##############Independent variables in the Production equation ##########################
+  ### If there are different the equations, you can set there up here, then use their suffix in the mproc file to use these new targeting equations
+  ### example, using ProdEqn=tiny in the mproc file and uncommenting the next  line will be regression with 2 RHS variables and no constant.
+  # production_vars_tiny=c("log_crew","log_trip_days")
+  
+  production_vars_pre=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","constant")
+  production_vars_post=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","log_sector_acl", "constant")
+  ############## End Independent variables in the Production equation ##########################
+  
+  
+  
+  
+  
+  
 
 
 #### Set up environment ####
 
-# empty the environment
+# Empty the environment and setup simulation
 rm(list=ls())
-source('processes/runSetup.R')
+# source('processes/runSetup.R')
+Setup <- runSetup()
 
+# I think that we probably want the executable attached as in the WHAM package rather than compiling the executable here (we could include a copy of the uncompiled code for reference as a text file in the package)
 # if on local machine (i.e., not hpcc) must compile the tmb code
 # (HPCC runs have a separate call to compile this code). Keep out of
 # runSetup.R because it is really a separate process on the HPCC.
 if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
+
+#### Helpful parameters ####
+# Scalars to convert things
+pounds_per_kg <- 2.20462
+kg_per_mt <- 1000
 
 ####################These are temporary changes for testing ####################
 # econ_timer<-0
@@ -73,7 +193,10 @@ for(r in 1:nrep){
     #### Top year loop ####
     for(y in fyear:nyear){
       for(i in 1:nstock){
-        stock[[i]] <- get_J1Updates(stock = stock[[i]])
+        stock[[i]] <- get_J1Updates(stock = stock[[i]], 
+                                    y = y, 
+                                    fmyearIdx = fmyearIdx, 
+                                    histAssess = histAssess)
       }
 
       source('processes/withinYearAdmin.R')
@@ -85,7 +208,10 @@ for(r in 1:nrep){
         manage_counter<-manage_counter+1 #this only gets incremented when y>=fmyearIdx
 
         for(i in 1:nstock){
-          stock[[i]] <- get_advice(stock = stock[[i]])
+          stock[[i]] <- get_advice(stock = stock[[i]], mproc = mproc, y = y, m = m,
+                                   yrs = yrs,  yrs_temp = yrs_temp, fmyearIdx = fmyearIdx,
+                                   Tanom = Tanom, rep = rep, sty = sty, planBest = planBest, 
+                                   res = res, rundir = rundir, temp = temp)
           #stock[[i]] <- get_relError(stock = stock[[i]])
         }
           #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
@@ -127,8 +253,8 @@ for(r in 1:nrep){
         }
       } #End of burn-in loop
       for(i in 1:nstock){
-        stock[[i]] <- get_mortality(stock = stock[[i]])
-        stock[[i]] <- get_indexData(stock = stock[[i]])
+        stock[[i]] <- get_mortality(stock = stock[[i]], y=y)
+        stock[[i]] <- get_indexData(stock = stock[[i]], y=y, Tanom=Tanom, fmyearIdx=fmyearIdx)
       } #End killing fish loop
 
       end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
@@ -174,7 +300,7 @@ big_loop
 
 
   for(i in 1:nstock){
-    pth <- paste0(ResultDirectory,'/fig/', sapply(stock, '[[', 'stockName')[i])
+    pth <- paste0(Setup$ResultDirectory,'/fig/', sapply(stock, '[[', 'stockName')[i])
     dir.create(pth, showWarnings = FALSE)
   }
 
@@ -182,21 +308,21 @@ big_loop
   #### save results ####
   omvalGlobal <- sapply(1:nstock, function(x) stock[[x]]['omval'])
   names(omvalGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
-  save(omvalGlobal, file=paste0(ResultDirectory,'/sim/omvalGlobal', td2, '.Rdata'))
+  save(omvalGlobal, file=paste0(Setup$ResultDirectory,'/sim/omvalGlobal', td2, '.Rdata'))
 
   if(runClass != 'HPCC'){
     omparGlobal <- readLines('modelParameters/set_om_parameters_global.R')
     cat('\n\nSuccess.\n\n',
         'Completion at: ',
         td,
-        file=paste0(ResultDirectory,'/runInfo.txt'))
+        file=paste0(Setup$ResultDirectory,'/runInfo.txt'))
     cat('\n\n\n\n\n\n\n\n  ##### Global OM Parameters ##### \n\n',
         omparGlobal,
-        file=paste0(ResultDirectory,'/runInfo.txt'), sep='\n', append=TRUE)
+        file=paste0(Setup$ResultDirectory,'/runInfo.txt'), sep='\n', append=TRUE)
     for(i in 1:nstock){
       cat('\n\n\n\n\n\n\n\n  ##### Stock OM Parameters ##### \n\n',
           readLines(fileList[i]),
-          file=paste0(ResultDirectory,'/runInfo.txt'), sep='\n', append=TRUE)
+          file=paste0(Setup$ResultDirectory,'/runInfo.txt'), sep='\n', append=TRUE)
     }
   }
 
@@ -212,3 +338,4 @@ big_loop
   print(unique(warnings()))
 
   cat('\n ---- Successfully Completed ----\n')
+}
