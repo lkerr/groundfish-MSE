@@ -2,7 +2,7 @@
 #### (Sam Truesdell struesdell@gmri.org)
 
 <br>
-Running the MSE requires some specific R libraries.  Similarly to when you run install.packages() on your local machine we need to do the same in order to run them on the remote server.  It is probably possible to include this step automatically during each run by testing for library availability and installing any that are missing but that is not currently implemented.  But you can follow these instructions once and you don't have to worry about it later.
+Running the MSE requires some specific R libraries.  Similarly to when you run install.packages() on your local machine we need to do the same in order to run them on the remote server. It is probably possible to include this step automatically during each run by testing for library availability and installing any that are missing but that is not currently implemented. However, you can follow these instructions once and you don't have to worry about it later. If these instructions do not work (sometimes the HPCC does not cooperate), then email Mackenzie (mmazur@gmri.org) for a folder of the R libraries that you can load onto your HPCC account. 
 
 ***
 
