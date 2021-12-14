@@ -6,7 +6,7 @@
 ### Mackenzie Mazur (mmazur@gmri.org)
 Management procedures are specificed in a csv located in the folder "modelParameters."  The filename is passed in using the object "mprocfile" which is defined in set_om_parameters_global.R
 
-What to write in the mproc.csv file and what it means.
+This documentation describes what to write in the mproc.csv file and what it means.
 
 ## ASSESSCLASS
 Refers to the class of assessment model. Options are:
