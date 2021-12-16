@@ -87,19 +87,26 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     # zero if the temperature reference point flag in the management procedure
     # file is turned off.
     parenvTemp <- parenv
-   
-    if(parmgt$TRPFlag == 1){
-    
+
+    if(parmgt$TRPFlag == 'firstModelYear'){
+
+      temp2use <- which(parenv$yrs == fmyear)
+      parenvTemp$Tanom <- rep(parenv$Tanom[temp2use],
+                              times = length(parenv$Tanom))
+      
+    }else if(parmgt$TRPFlag == 'currentModelYear'){
+      
       parenvTemp$Tanom <- rep(parenv$Tanom[parenv$y],
                               times = length(parenv$Tanom))
       
-    }else if(parmgt$TRPFlag == 0){
+    }else if(parmgt$TRPFlag == 'futureYear'){
       
-      parenvTemp$Tanom <- rep(0, times = length(parenv$Tanom))
+      parenvTemp$Tanom <- parenv$Tanom
       
     }else{
       
-      stop('mproc: tempRPFlag must be either 0 or 1')
+      stop(paste('mproc: tempRPFlag must be firstModelYear,',
+                 'currentModelYear or futureYear'))
       
     }
     
@@ -116,9 +123,10 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     
     sumCW <- do.call(cbind, sapply(simAtF, '[', 'sumCW'))
     
-    meanSumCW <- apply(sumCW, 2, mean)
+    # Only apply the mean to the second half of the data (equilibrium)
+    meanSumCW <- apply(tail(sumCW, floor(0.5 * nrow(sumCW))), 2, mean)
     Fmsy <- candF[which.max(meanSumCW)]
-   
+  # browser()
     # Extract the equilibrium population (at each level of F) for use in 
     # forecasts for Fmsy forecast calculations and for output for Bmsy 
     # forecast calculations
@@ -146,13 +154,15 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
                  parenv = parenv, 
                  Rfun = Rfun,
                  F_val = candF[x],
+                 ny = 200, # new, now that taking RP to equilibrium
                  stReportYr = 2,
                  stockEnv = stockEnv)})
       
       # Update the optimal states assuming variable temperature
       sumCW <- do.call(cbind, sapply(simAtF, '[', 'sumCW'))
-      
-      meanSumCW <- apply(sumCW, 2, mean)
+
+      # meanSumCW <- apply(sumCW, 2, mean)
+      meanSumCW <- apply(tail(sumCW, floor(nrow(sumCW) * 0.5)), 2, mean)
       Fmsy <- candF[which.max(meanSumCW)]
       
     }
@@ -167,7 +177,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     
     # Equilibrium starting conditions at MSY (used in BMSY calculations)
     equiJ1N_MSY <- equiJ1N_MSY[[which.max(meanSumCW)]]
-    
+
     return(list(RPvalue = Fmsy, equiJ1N_MSY = equiJ1N_MSY))
     
   }else if(parmgt$FREF_TYP == 'Fmed'){
@@ -178,6 +188,50 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     F <- get_fmed(parpop = parpop, rep_slp = slp, ssbrGrid = ssbrGrid)
     
     return(list(RPvalue = F))
+    
+  }else if(parmgt$FREF_TYP == 'fixedInput'){
+    
+   # Stolen from YPR/SPR above as filler to produce needed info for SSB
+   # reference point.
+    ##################################################################
+    F <- parmgt$FREF_PAR0
+    
+    # If using a per-recruit F-based reference point paired with a forecast
+    # simulation B-based reference point you will need an starting-point
+    # for the simulation -- calcaulte this assuming fishing at the F-based
+    # reference point.
+    if(parmgt$BREF_TYP == 'SIM' & parmgt$RFUN_NM == 'forecast'){
+      
+      # have to use the temporal window set up for the biomass reference
+      # point so come up with a dummy parmgt
+      parmgtTemp <- parmgt
+      parmgtTemp$FREF_PAR0 <- parmgtTemp$BREF_PAR0
+      parmgtTemp$FREF_PAR1 <- parmgtTemp$BREF_PAR1
+      
+      simAtF <- get_proj(type = 'FREF',
+                         parmgt = parmgtTemp, 
+                         parpop = parpop, 
+                         parenv = parenv, 
+                         Rfun = Rfun,
+                         F_val = F,
+                         ny = 200,
+                         stReportYr = 2,
+                         stockEnv = stockEnv)
+      
+      # Extract the equilibrium population for use in forecasts for
+      # Fmsy forecast calculations and for output for Bmsy forecast
+      # calculations
+      
+      equiJ1N_MSY <- simAtF$J1N
+      
+    }else{
+      equiJ1N_MSY <- NULL
+    }
+    
+    
+    return(list(RPvalue = F, equiJ1N_MSY = equiJ1N_MSY))
+    
+    #############################################################
     
   }else{
     

@@ -4,7 +4,7 @@
 get_advice <- function(stock){
   # prepare data
   tempStock <- get_tmbSetup(stock = stock)
-  
+ 
   #### Run assessment model ####
   # Run the CAA assessment
   if(mproc[m,'ASSESSCLASS'] == 'CAA'){
@@ -52,7 +52,7 @@ get_advice <- function(stock){
                      Fhat = tail(rep$F_full, 1))
       })
     }
-     
+        
     if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
       tempStock <- within(tempStock, {
         parpop <- list(obs_sumCW = tmb_dat$obs_sumCW,
@@ -104,7 +104,7 @@ get_advice <- function(stock){
                        RPlast = NULL, evalRP = TRUE,
                        stock = tempStock)
         tempStock$RPmat[y,] <- gnF$RPs
-      
+ 
     }else{
       # Otherwise use old reference points to calculate stock
       # status
@@ -150,9 +150,9 @@ get_advice <- function(stock){
       ACL[y] <- quota
       
     })
-      
-  }else{
     
+  }else{
+
     # if the assessment model didn't work then fill the
     # array with NAs
     tempStock <- within(tempStock, {
@@ -171,7 +171,7 @@ get_advice <- function(stock){
     # the loop and move on to the next management strategy
     break
   }
-
+  
   return(tempStock)
   
 }

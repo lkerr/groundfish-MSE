@@ -90,10 +90,11 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                  'range. Check FREF_PAR0 or BREF_PAR0 in mproc.'))
     }
     
-    Tanom <- parenv$Tanom[startFCST:endFCST]
+    Tanom <- mean(parenv$Tanom[startFCST:endFCST])
+    Tanom <- rep(Tanom, ny)
        
-    ny <- length(Tanom)
-    
+    # ny <- length(Tanom)
+
   }
   
  
@@ -149,7 +150,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       N[y,a] <- N[y-1, a-1] * exp(-parpop$sel[a-1]*F_val - 
                                     parpop$M[a-1])
     }
-   
+      
     # Deal with the plus group
     N[y,nage] <- N[y-1,nage-1] * exp(-parpop$sel[nage-1] * F_val - 
                                        parpop$M[nage-1]) + 
@@ -158,17 +159,18 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     
     ## Recruitment
     # sd of historical R estimates
-
     N[y,1] <- Rfun(type = stockEnv$R_typ,
                    parpop = parpop, 
                    parenv = parenv, 
-                   SSB = c(N[y-1,]) %*% c(parpop$waa),
+                   # not worried about lag here b/c equilibrium by the end
+                   SSB = c(N[y-1,]) %*% c(parpop$waa * parpop$mat),# * stock$codGOM$SSBUnitScalar,
                    sdR = 0,#stockEnv$pe_R,
                    TAnom = Tanom[y],
                    Rest = Rest)
 
+# browser()
   }
-
+# browser()
   # Get weight-at-age
   Waa <- sweep(N, MARGIN=2, STATS=parpop$waa, FUN='*')
   

@@ -71,18 +71,25 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     # file is turned off.
     parenvTemp <- parenv
     
-    if(parmgt$TRPFlag == 1){
+    if(parmgt$TRPFlag == 'firstModelYear'){
+      
+      temp2use <- which(parenv$yrs == fmyear)
+      parenvTemp$Tanom <- rep(parenv$Tanom[temp2use],
+                              times = length(parenv$Tanom))
+      
+    }else if(parmgt$TRPFlag == 'currentModelYear'){
       
       parenvTemp$Tanom <- rep(parenv$Tanom[parenv$y],
                               times = length(parenv$Tanom))
       
-    }else if(parmgt$TRPFlag == 0){
+    }else if(parmgt$TRPFlag == 'futureYear'){
       
-      parenvTemp$Tanom <- rep(0, times = length(parenv$Tanom))
+      parenvTemp$Tanom <- parenv$Tanom
       
     }else{
       
-      stop('mproc: tempRPFlag must be either 0 or 1')
+      stop(paste('mproc: tempRPFlag must be firstModelYear,',
+                 'currentModelYear or futureYear'))
       
     }
     

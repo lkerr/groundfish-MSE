@@ -3,7 +3,7 @@
 
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.                                              
-burnFmsyScalar <- 4
+burnFmsyScalar <- 5
 burnFsd <- 0.3
 
 
@@ -59,6 +59,7 @@ qI <- 0.0001
 #selC <- c(s0 = 3, s1 = 0.5)
 #selC_typ <- 'Logistic'
 selC <- c(0.013, 0.066, 0.271, 0.663, 0.912, 0.982, 0.997, 1, 1) #GOM cod AGEPRO M=0.2
+selC <- c(0.3, 0.3, 0.3, 0.663, 0.912, 0.982, 0.997, 1, 1) #GOM cod AGEPRO M=0.2!!!!!!!<<<<
 #selC <- c(0.009, 0.051, 0.241, 0.651, 0.917, 0.985, 0.997, 1, 1) #GOM cod AGEPRO M-ramp
 selC_typ <- 'input'
 
@@ -74,10 +75,11 @@ selC_typ <- 'input'
 #          cR = 1) # dont need to convert
 # R_typ <- 'HS'
 
-Rpar <- c(a = 2.904e+03,
-          b = 6.615e-05,
-          c = 1.825e+00)
+Rpar <- c(a = 2.904e+03, # see meetings/2021-03-25_lisaMackenzie
+          b = 6.615e-07, # 6.615e-05,
+          c = -3)#-1.825e+00)
 R_typ <- 'BH'
+# SSBUnitScalar <- 0.001
 
 
  

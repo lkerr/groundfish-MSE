@@ -7,7 +7,7 @@
 #### Debugging ####
 
 # Debug using simple temperature trend that reduces variance? (T/F)
-simpleTemperature <- FALSE
+simpleTemperature <- TRUE
 
 
 # Which management procedures csv do you want to read:
@@ -38,7 +38,7 @@ histAssess <- FALSE
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 1
+nrep <- 2
 
 # First year to begin actual management
 fmyear <- 2010
