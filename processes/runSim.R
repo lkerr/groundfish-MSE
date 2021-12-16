@@ -1,15 +1,62 @@
 #' @title Run MSE Simulations
 #' @description Main function to run MSE simulations. Previously this function was sourced to run simulations, now input arguments must be provided to run.
 #' 
-#' @param 
+#' @param stockNames A string or vector of strings indicating what stocks to include in analysis. To add new stocks to the simulation provide newStockPar argument below, to use a mix of new and existing stocks provide both stockNames for existing and newStockPar for new stocks. 
+#' Options for existing stocks include: 
+#' \itemize{
+#'   \item{"codGB"} 
+#'   \item{"codGOM"} 
+#'   \item{"haddockGB"} 
+#'   \item{"pollock"}
+#'   \item{"yellowtailflounderGB"}
+#' } 
+#' @param newStockPar A string or vector of strings indicating the file path(s) to new stock parameter files, no default but example file available in templates folder. ??? check that this folder accessible in R package, may need to provide link to templates folder on GitHub instead
+#' @param mproc !!! A data object not name of .csv file, name of object, you need to read in .csv when setting up sim
+#' @param simpleTemperature A boolean indicating whether smoothed (simple) temperature trend used for debugging purposes, default = FALSE.
+#' @param histAssess A boolean, if TRUE overwrite calculated values with historic assessment input values for each year, default = TRUE.
+#' @param nrep The number of times to repeat this analysis, default = 1.
+#' @template global_fmyear
+#' @template global_fyear
+#' @param mxyear The maximum year predicted into the future, no default.
+#' @param nburn Number of burn-in years, default = 50. (before the pre-2000 non-assessment period) ??? is non-assessment period same as initial condition period from fyear definition???
+#' @param useTemp A boolean, if TRUE include temperature effects (e.g in S-R, growth, ect.), default = TRUE.
+#' @param filenameCMIP The name of the input file containing temperature data, no default. !!! describe structure, see calc_Tanom
+#' @param filenameDownscale The name of the input file of temperature data to downscale, no default. !!! describe structure, see calc_Tanom
+#' @param tmods = NULL, # A string or vector of strings indicating what CMIP series to use (columns in filenameCMIP file), default = NULL uses all timeseries. !!! Need to make sure this is input data OR build in as .rda??? ## Do you want to use particular models from the cmip data series? If so tmods should be a vector of column names (see data/data_raw/NEUS_CMIP5_annual_meansLong.csv'). If NULL use all data
+#' @param tq The temperature quantile of the cmip data series to use. default = 0.5 for median.
+#' @param trcp Representative concentration pathway to use. Default = 8.5, currently only pathway available.
+#' @param ref0 First reference year for temperature downscale, no default.
+#' @param ref1 Last reference year for temperature downscale, no default.
+#' @param baseTempYear Reference year for anomaly calculation, no default.
+#' @param anomFun Function used in anomaly calculation (NOT a string), default = median.
+#' @param BrefScalar Scalar to relate the calculated biomass reference point to the threshold value, default = 0.5.
+#' @param FrefScalar Scalar to relate the calculated fishing mortality reference point to the threshold value, default = 0.75.
+##### May want economic parameters to be provided in mproc when economic option turned on ??? for now arguments here
+#' @param first_econ_yr First economic year, no default.
+#' @param last_econ_yr Last economic year, no default.
+#' @param last_econ_index Should calculate in setup section if economic section turned on, current default to difference between first and last econ year
+#' @param econ_data_starts required to match first economic year???
+#' @param econ_data_end required to match last economic year???
+#' @param spstock2s # Define in economic section???
+##### Independent variables in the targeting equation
+# ??? Unclear what difference is between options for targeting equation?
+##### Independent variables in the Production equation
+# ??? Is it possible to combine these options (e.g. provide list where items in list vary based on option selected)
+#' ##### Plot options
+#' @param plotBrkYrs Years after management period begins to break up results for plotting, e.g. c(10,20) would result in plots of the first 0-10 years and 20-last year of the management period. No default.
+#' @param plotBP A boolean, if TRUE generate boxplots of performance measures, default = FALSE.
+#' @param plotRP A boolean, if TRUE generate extra folder of reference point plots, default = FALSE.
+#' @param plotDrivers A boolean, if TRUE plot population drivers (e.g. temperature, recruitment, growth, selectivity), default = FALSE.
+#' @param plotTrajInd A boolean, if TRUE plot samples of individual trajectories, default = FALSE.
+#' @param plotTrajBox A boolean, if TRUE generate boxplots of trajectories, default = FALSE.
+#' @param plotTrajSummary A boolean, if TRUE plot summary statistics, default = FALSE. 
 #' 
 #' @return 
 
 runSim <- function(stockNames, # A string or vector of strings indicating what stocks to include (options: "codGB", "codGOM", "haddockGB", "pollock", "yellowtailflounderGB" to add new stockPar to available list provide newStockPar argument below), to use a mix of new and existing provide both stockNames for existing and newStockPar for new to use
                    newStockPar = NULL, # A string or vector of strings indicating the file path(s) to new stock parameter files, no default but example file available in templates folder ??? check that this folder accessible in R package, may need to provide link to templates folder on GitHub instead
-  mproc, #!!! not name of .csv file, name of object, you need to read in .csv when setting up sim
-                   simpleTemperature, # Debug using simple temperature trend that reduces variance? (T/F)
-                   stockExclude, # !!! I think we probably need to specify this differently (maybe as a list of parameters for each species?, give option to pick from default settings stored as .rda OR add own list)
+                   mproc, #!!! not name of .csv file, name of object, you need to read in .csv when setting up sim
+                   simpleTemperature = FALSE, # Debug using simple temperature trend that reduces variance? (T/F)
                    histAssess = TRUE,  #A boolean, if TRUE overwrite calculated values with historic assessment input values for each year, default = TRUE.
                    nrep = 1, # number of times to repeat this analysis, default = 1.
                    fmyear = NULL, # First year to begin actual management, no default.
@@ -23,13 +70,15 @@ runSim <- function(stockNames, # A string or vector of strings indicating what s
                    ref0 = NULL, # First reference year for temperature downscale, no default.
                    ref1 = NULL, # Last reference year for temperature downscale, no default.
                    baseTempYear = NULL, # Reference year for anomaly calculation, no default.
+                   filenameCMIP = NULL, # The name of the input file containing temperature data, no default.
+                   filenameDownscale = NULL, 
                    anomFun = median, # Function used in anomaly calculation, default = median.
                    BrefScalar = 0.5, # Scalar to relate the calculated biomass reference point to the threshold value, default = 0.5.
                    FrefScalar = 0.75, # Scalar to relate the calculated fishing mortality reference point to the threshold value, default = 0.75.
                    ##### May want economic parameters to be provided in mproc when economic option turned on ??? for now arguments here
                    first_econ_yr = NULL, # First economic year
-                   last_econ_year = NULL, # Last economic year
-                   last_econ_index = last_econ_yr-first_econ-yr+1, # Should calculate in setup section if economic section turned on
+                   last_econ_yr = NULL, # Last economic year
+                   last_econ_index = last_econ_yr-first_econ_yr+1, # Should calculate in setup section if economic section turned on
                    econ_data_starts = NULL, # required to match first economic year???
                    econ_data_end = NULL, # required to match last economic year???
                    spstock2s=c("americanlobster","americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","monkfish", "other","pollock","redsilveroffshorehake","redfish","seascallop","skates","spinydogfish","squidmackerelbutterfishherring","summerflounder","whitehake","winterflounderGB","winterflounderGOM","witchflounder","yellowtailflounderCCGOM", "yellowtailflounderGB","yellowtailflounderSNEMA"), # Define in economic section???
@@ -50,7 +99,7 @@ runSim <- function(stockNames, # A string or vector of strings indicating what s
                    
 ){
   
-  
+  ###### Below from set_om parameters
   #### Output ####
   # Which sets of plots should be created? Set these objects to T/F
 
@@ -66,14 +115,14 @@ runSim <- function(stockNames, # A string or vector of strings indicating what s
   begin_rng_holder<-list()
   end_rng_holder<-list()
   
-  #### Stock parameters ####
-  # If you have files in the modelParameters folder for stocks but you don't
-  # want to include them in a run you can write them in here in the
-  # stockExclude variable. Do not include the extension.R. For example,
-  # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
-  # stockExclude <- NULL indludes all stocks.
-  # Available stocks: haddockGB, codGOM, codGB, pollock, yellowtailflounderGB
-  stockExclude <- c('haddockGB', 'codGB', 'pollock', 'yellowtailflounderGB')
+  # #### Stock parameters ####
+  # # If you have files in the modelParameters folder for stocks but you don't
+  # # want to include them in a run you can write them in here in the
+  # # stockExclude variable. Do not include the extension.R. For example,
+  # # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
+  # # stockExclude <- NULL indludes all stocks.
+  # # Available stocks: haddockGB, codGOM, codGB, pollock, yellowtailflounderGB
+  # stockExclude <- c('haddockGB', 'codGB', 'pollock', 'yellowtailflounderGB') # - changed so instead provide stockNames
   
   # Number of model years to run are defined by the length of the burn-in ??? Where are these defined if not in OM parameters/as input argument???
   # period and the dimension of the CMIP5 data set.
@@ -114,11 +163,23 @@ runSim <- function(stockNames, # A string or vector of strings indicating what s
 
 
 #### Set up environment ####
-
 # Empty the environment and setup simulation
 rm(list=ls())
+  
 # source('processes/runSetup.R')
 Setup <- runSetup()
+
+# Set global variables from setup
+ResultDirectory <- Setup$ResultDirectory 
+stockPar <- Setup$stockPar 
+stockNames <- Setup$stockNames 
+stock <- Setup$stock 
+nstock <- length(stockNames)
+tAnomOut <- Setup$tAnomOut 
+yrs <- Setup$yrs
+nyear <- Setup$nyear
+yrs_temp <- Setup$yrs_temp
+fmyearIdx <- Setup$fmyearIdx
 
 # I think that we probably want the executable attached as in the WHAM package rather than compiling the executable here (we could include a copy of the uncompiled code for reference as a text file in the package)
 # if on local machine (i.e., not hpcc) must compile the tmb code
@@ -144,22 +205,22 @@ kg_per_mt <- 1000
 ## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
 ####################End Temporary changes for testing ####################
 
+#### Set up year indexing ####
+#This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
 
+source('processes/setupYearIndexing.R')
+
+#### Set up time variables, random seed, progress bar ####
 #set the rng state based on system time.  Store the random state.
 # if we use a plain old date (seconds since Jan 1, 1970), the number is actually too large, but we can just rebase to seconds since Jan 1, 2018.
-
 start<-Sys.time()-as.POSIXct("2018-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
 start<-as.double(start)*100
 # set.seed(start)
 
- oldseed_ALL <- .Random.seed
-showProgBar<-TRUE
-####################End Parameter and storage Setup ####################
-  #This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
+oldseed_ALL <- .Random.seed
+showProgBar <- TRUE
 
-
-source('processes/setupYearIndexing.R')
-top_loop_start<-Sys.time()
+top_loop_start <- Sys.time()
 
 #### Top rep Loop ####
 for(r in 1:nrep){
@@ -168,7 +229,7 @@ for(r in 1:nrep){
   #### Top MP loop ####
   for(m in 1:nrow(mproc)){
 
-       manage_counter<-0
+       manage_counter <- 0
 
        #Restore the rng state.  Depending on whether you use oldseed1 or oldseed2, you'll get different behavior.  oldseed_ALL will force all the replicates to start from the same RNG state.  oldseed_mproc will force all the management procedures to have the same RNG state.  You probably want oldseed_mproc
        #.Random.seed<-oldseed_ALL
@@ -177,7 +238,7 @@ for(r in 1:nrep){
         #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached, which sets of coefficients to use, and which prices to use
         if(mproc$ImplementationClass[m]=="Economic"){
           
-         source('processes/setupEconType.R')
+         source('processes/setupEconType.R') #!!! revisit
         }
     # Initialize stocks and determine burn-in F
     for(i in 1:nstock){
