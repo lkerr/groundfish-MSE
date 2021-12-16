@@ -3,17 +3,38 @@
 # Read in the temperature data
 cmip5 <- read.csv(file = 'data/data_raw/NEUS_CMIP5_annual_meansLong.csv',
                     header=TRUE)
-period <- 50
-uy <- unique(cmip5$year)
-piVal <- rep(seq(0, 2*pi, length.out = period),
-             times = ceiling(length(uy)/period))[1:length(uy)]
-newt <- scales::rescale(sin(piVal),
-                        to = quantile(cmip5$Temperature, c(0.25, 0.75)))
-# newt[1:125] <- 14
-# newt[126:199] <- 18
-# cmip5$Temperature <- newt[match(cmip5$year, uy)]
-# cat('\n**********\nNOTE! temperature time series has been modified!\n**********\n')
-# 
+
+
+# Edit the type of temperature run
+
+if(mproc$tempType == 'sine'){
+
+  period <- 50
+  uy <- unique(cmip5$year)
+  piVal <- rep(seq(0, 2*pi, length.out = period),
+               times = ceiling(length(uy)/period))[1:length(uy)]
+  newt <- scales::rescale(sin(piVal),
+                          to = quantile(cmip5$Temperature, c(0.25, 0.75)))
+  
+  cmip5$Temperature <- newt[match(cmip5$year, uy)]
+  cat('\n**********\nNOTE! temperature time series has been modified!\n**********\n')
+  
+}else if(mproc$tempType == 'regime'){
+
+  cmip5$Temperature <- ifelse(cmip5$year < fmyear + 20, 14, 18)
+  cat('\n**********\nNOTE! temperature time series has been modified!\n**********\n')
+  
+}else if(mproc$tempType == 'cmip'){
+  
+  cat('\nCMIP temperature series used\n')
+  
+}else{
+  
+  stop('check mproc$tempType')
+  
+}
+
+ 
 # manipulate data to get desired percentile
 cmip_base <- get_temperatureSeries(cmip5, 
                                    RCP = trcp, 
