@@ -1,4 +1,4 @@
-ASSESSCLASS,HCR,FREF_TYP,FREF_PAR0,FREF_PAR1,BREF_TYP,BREF_PAR0,BREF_PAR1,RFUN_NM,RPInt,TRPFlag,ImplementationClass,LandZero,CatchZero,EconType,EconName,EconData,MultiplierFile,OutputPriceFile,InputPriceFile,ProdEqn,ChoiceEqn
-CAA,slide,FmsySim,5,NA,SIM,5,NA,forecast,1,firstModelYear,StandardFisheries,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-CAA,slide,FmsySim,5,NA,SIM,5,NA,forecast,1,currentModelYear,StandardFisheries,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-CAA,slide,FmsySim,5,NA,SIM,5,NA,forecast,1,futureYear,StandardFisheries,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+ASSESSCLASS,HCR,FREF_TYP,FREF_PAR0,FREF_PAR1,BREF_TYP,BREF_PAR0,BREF_PAR1,RFUN_NM,RPInt,TRPFlag,tempType, ImplementationClass,LandZero,CatchZero,EconType,EconName,EconData,MultiplierFile,OutputPriceFile,InputPriceFile,ProdEqn,ChoiceEqn
+CAA,slide,FmsySim,5,NA,SIM,15,NA,forecast,1,firstModelYear,regime,StandardFisheries,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+CAA,slide,FmsySim,5,NA,SIM,15,NA,forecast,1,currentModelYear,cmip,StandardFisheries,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+CAA,slide,FmsySim,5,NA,SIM,15,NA,forecast,1,futureYear,cmip,StandardFisheries,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
