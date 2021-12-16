@@ -2,18 +2,41 @@
 # Run simulation setup. This is a separate file so that the model setup
 # parameters can later be accessed by running the setup but not the
 # entire simulation.
+#'
+#' @inheritParams runSim # Inherit parameter definitions from runSim
+#'
 #' @return A list containing the following:
 #' \itemize{
 #'   \item{ResultDirectory - The name of the directory in which results will be stored (a string).}
+#'   \item{stockPar - A list of stock parameters for each stock in stockNames, for multiple stocks this is a list of lists.}
+#'   \item{stockNames - An updated vector of stock names based on input species and new stock parameter files (if no files provided, returns input).}
+#'   \item{stock - A storage object containing initial stock parameters (from stock) and storage for each stock's simulation results.}
+#'   \item{tAnomOut - A matrix containing columns for "YEAR", temperature "T", downscaled temperature "DOWN_T", temperature anomaly "TANOM" and corresponding standard deviation "TANOM_STD"}
+#'   \item{yrs - A vector of calendar years from firstYear to mxyear, set in processes/genAnnStructure.R}
+#'   \item{nyear - The number of years based on available temperature data set in processes/genAnnStructure.R}
+#'   \item{yrs_temp - A vector of years from firstYear to the maximum year in the cmip5 temperature timeseries, set in processes/genAnnStructure.R.}
+#'   \item{fmyearIdx - An index for the year that management begins, from processes/genAnnStructure.R}
 #' }
 #' 
 #' @example 
 #' stockNames <- c("codGB", "haddockGB")
 #' newStockPar <- "templates/template_newStockPar.R"
-#' 
+#' runSetup(stockNames = stockNames, newStockPar = newStockPar, filenameCMIP = filenameCMIP, filenameDownscale = filenameDownscale,fmyear = 2019, ref0 = 1982, ref1 = 2020, baseTempYear = 1985)
+
 
 runSetup <- function(stockNames,
-                     newStockPar = NULL){
+                     newStockPar = NULL,
+                     filenameCMIP = NULL,
+                     filenameDownscale = NULL,
+                     fmyear = NULL,
+                     trcp = 8.5,
+                     tmods = NULL,
+                     tq = 0.5,
+                     ref0 = NULL,
+                     ref1 = NULL,
+                     baseTempYear = NULL,
+                     nburn = 50,
+                     anomFun = median){
   
   # # load all the functions - no longer needed, loaded when R package loaded
   # ffiles <- list.files(path='functions/', pattern="^.*\\.R$",full.names=TRUE, recursive=TRUE)
@@ -86,8 +109,9 @@ runSetup <- function(stockNames,
       }
     }
     
-    # Update list of stock names with new stocks
+    # Update list of stock names with new stocks & reset nstock based on length of stockNames (now includes all stocks of interest)
     stockNames <- c(stockNames, stockNameList)
+    nstock <- length(stockNames)
   } # End if/else to load new stock data  
   
   # # Get the names of each stock (stocks must follow naming convention)
@@ -100,26 +124,41 @@ runSetup <- function(stockNames,
   
   # Get the run info so the functions work appropriately whether they are
   # on Windows or Linux and whether this is an HPCC run or not.
-  source('processes/get_runinfo.R') #!!!!!!!!! START HERE - first confirm that get_containers will work if named list provided to stockPar, probably need to debug what happens if stockPar$stockName != existing stock (may require different assessment data)
+  source('processes/get_runinfo.R') # !!!circle back to this
   
-  # load the required libraries
-  source('processes/loadLibs.R')
+  # # load the required libraries - replaced by DESCRIPTION, all packages loaded with R package as dependencies/required
+  # source('processes/loadLibs.R')
   
   
-  # load the list of management procedures
-  source('processes/generateMP.R')
+  # # load the list of management procedures - I think same info now provided as mproc argument !!! confirm
+  # source('processes/generateMP.R')
   
-  # Model structure (includes loading in temperature data)
-  source('processes/genAnnStructure.R')
+  # # Model structure (includes loading in temperature data) - replaced with function call to calc_Tanom
+  # source('processes/genAnnStructure.R')
+  
+  # Load and process temperature data, use to return year information
+  calc_Tanom(filenameCMIP = filenameCMIP, 
+             filenameDownscale = filenameDownscale,
+                         fmyear = fmyear,
+                         trcp = trcp,
+                         tmods = tmods,
+                         tq = tq,
+                         ref0 = ref0,
+                         ref1 = ref1,
+                         baseTempYear = baseTempYear,
+                         nburn = nburn,
+                         anomFun = anomFun,
+             useTemp = TRUE, 
+             simpleTemperature = FALSE)
   
   # Load specific recruitment functions (these are a list for simulation-based 
   # approach to deriving Bproxy reference points
-  source('processes/Rfun_BmsySim.R')
+  source('processes/Rfun_BmsySim.R') # !!! revisit
   
   # Load default ACLs and fractions of the ACL that are allocated to the catch share fishery
   source('processes/genBaselineACLs.R')
   
-  #Input data location for economic models
+  #Input data location for economic models !!!!!! May want to put this economic setup in an econSetup function (also include if statement at top of runSim to setup data storage, ect.)
   econdatapath <- 'data/data_processed/econ'
   
   # Reults folders for economic models. Create them if necessary
@@ -172,7 +211,7 @@ runSetup <- function(stockNames,
   # get all the necessary containers for the simulation
   stockCont <- list()
   for(i in 1:nstock){
-    stockCont[[i]] <- get_containers(stockPar=stockPar[[i]],
+    stockCont[[i]] <- get_containers(stockPar=stockPar[[stockNames[i]]], # Reference by name given in above processing but assign to number to avoid future conflicts/errors
                                      nyear = nyear,
                                      fyear = fyear,
                                      nburn = nburn,
@@ -183,14 +222,14 @@ runSetup <- function(stockNames,
   # Combine the stock parameters and the stock containers into a single list
   stock <- list()
   for(i in 1:nstock){
-    stock[[i]] <- c(stockPar[[i]], stockCont[[i]])
+    stock[[i]] <- c(stockPar[[stockNames[i]]], stockCont[[i]])
   }
-  names(stock) <- stockNames
+  names(stock) <- stockNames 
   
   
   # Set up a container dataframe for Fleet-level Economic Results
   # These are simulation specific so they are stored in a single dataframe
-  source('processes/genEcon_Containers.R')
+  source('processes/genEcon_Containers.R') #!!! May also want to put in if statement so only run if economic model set up
   
   
   # Ensure that there are enough initial data points to support the
@@ -203,7 +242,7 @@ runSetup <- function(stockNames,
                'each stock'))
   }
   
-  if (platform == 'Linux'){
+  if (platform == 'Linux'){ # !!! Again if this is setup for the HPCC run this line could prevent running on local Linux machine
     if(!file.exists('../EXE/ASAP3.EXE')){
       stop(paste('ASAP3.EXE should be loaded in a directory EXE in the parent',
                  'directory of groundfish-MSE -- i.e., you need an EXE',
@@ -217,12 +256,20 @@ runSetup <- function(stockNames,
     from.path <- paste('../EXE/ASAP3.EXE', sep = "")
     to.path   <- paste(rundir, sep= "")
     file.copy(from = from.path, to = to.path)
-    
   }
   
-  setup$ResultDirectory <- ResultDirectory
-  setup$stockPar <- stockPar # !!! not yet fed back into runSim ??? need to test if this works, this is now a named list of lists rather than an unnamed list of lists
+  # Setup return list
+  setup <- NULL
+  setup$ResultDirectory <- ResultDirectory # A string for the results directory name
+  setup$stockPar <- stockPar # !!! not yet fed back into runSim - this is a subset of stock (which also contains storage containers that get populated in the simulation)
   setup$stockNames <- stockNames # updated list of stock names based on new stock parameter files (if no files provided, returns input) #!!! not yet fed back into runSim
+  setup$stock <- stock # A storage object containing initial stock parameters and storage for simulation results
+  # From calc_Tanom
+  setup$tAnomOut <- tAnomOut 
+  setup$yrs <- yrs
+  setup$nyear <- nyear
+  setup$yrs_temp <- yrs_temp
+  setup$fmyearIdx <- fmyearIdx
   
   return(setup)
 }
