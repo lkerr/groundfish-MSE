@@ -3,15 +3,17 @@
 # Read in the temperature data
 cmip5 <- read.csv(file = 'data/data_raw/NEUS_CMIP5_annual_meansLong.csv',
                     header=TRUE)
-period <- 20
+period <- 50
 uy <- unique(cmip5$year)
-piVal <- rep(seq(0, 2*pi, length.out = period), 
+piVal <- rep(seq(0, 2*pi, length.out = period),
              times = ceiling(length(uy)/period))[1:length(uy)]
-newt <- scales::rescale(sin(piVal), 
+newt <- scales::rescale(sin(piVal),
                         to = quantile(cmip5$Temperature, c(0.25, 0.75)))
+# newt[1:125] <- 14
+# newt[126:199] <- 18
 # cmip5$Temperature <- newt[match(cmip5$year, uy)]
 # cat('\n**********\nNOTE! temperature time series has been modified!\n**********\n')
-
+# 
 # manipulate data to get desired percentile
 cmip_base <- get_temperatureSeries(cmip5, 
                                    RCP = trcp, 
@@ -39,6 +41,8 @@ cmip_dwn <- get_temperatureProj(prj_data = cmip_base,
 
 # Get the temperature vector
 msyears <- cmip_dwn$YEAR < baseTempYear
+anomStd <- anomFun(cmip_dwn[msyears,'T'])  # anomoly standard
+
 if(useTemp == TRUE){
   temp <- c(rep(anomFun(cmip_dwn[msyears,'T']), nburn),
             cmip_dwn[,'T'])
@@ -51,7 +55,6 @@ if(useTemp == TRUE){
     temp <- predict(lo)
   }
   
-  anomStd <- anomFun(cmip_dwn[msyears,'T'])  # anomoly standard
   Tanom <- temp - anomStd
 }else{
   temp <- rep(anomFun(cmip_dwn[msyears,'T']), nburn + nrow(cmip_dwn))
