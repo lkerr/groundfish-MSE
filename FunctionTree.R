@@ -80,11 +80,20 @@ zero_out_closed_areas_asc_cutout
 
 # Need formatted as a function (rough outline - processes)
 runSim # Needs to be formatted as function
+runSetup
+identifyResultDirectory
+get_runinfo
 
 
 # Add edge statements to connect nodes
 edge[] # optional arrowhead options
 # Connect nodes (may be labeled - appears on line)
+runSim -> runSetup; runSetup -> identifyResultDirectory;
+runSetup -> get_runinfo;
+runSetup -> calc_Tanom; calc_Tanom -> get_temperatureSeries; calc_Tanom -> get_temperatureProj;  # calc_Tanom previously genAnnStructure !!!
+runSetup -> Rfun_BmsySim;
+runSetup -> genBaselineACLs;
+
 get_advice -> get_ASAP; get_ASAP -> get_dwindow;
 get_advice -> get_caa; get_caa -> get_svNoise;
 get_advice -> get_nextF;

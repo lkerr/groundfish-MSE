@@ -1,4 +1,4 @@
-#' @title ID Results Directory
+#' @title ID Results Directory !!! No longer needed in setup - ResultDirectory identified in setup for runSim 
 #' @description Identify which folder to store the results in. 
 #' Assuming runPre() was just executed (it should have been!), identify the results folder that was most recently created.
 #' ??? runPre only run locally, would not apply for HPCC, however this code is run on HPCC as well???

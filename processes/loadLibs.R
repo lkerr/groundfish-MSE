@@ -32,34 +32,34 @@ if(runClass == 'HPCC'){
   require(fBasics, lib.loc = '../Rlib')
   require(fGarch, lib.loc = '../Rlib')
 
-}else{
-
-  # check.packages function: install and load multiple R packages.
-  # Check to see if packages are installed. Install them if they are not,
-  # then load them into the R session.
-  # https://gist.github.com/smithdanielle/9913897
-  check.packages <- function(pkg){
-    new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
-    if (length(new.pkg))
-      install.packages(new.pkg, dependencies = TRUE)
-    sapply(pkg, require, character.only = TRUE)
-  }
-
-  pkg<-c("msm", "tmvtnorm", "TMB", "abind", "glue", "tidyverse", "dplyr", "data.table", "ASAPplots","timeSeries","fBasics","fGarch")
-  check.packages(pkg)
-
-  require(msm)
-  require(tmvtnorm)
-  require(TMB)
-  require(abind)
-  require(glue)
-  require(tidyverse)
-  require(dplyr)
-  require(data.table)
-  require(ASAPplots)
-  require(fishmethods)
-  require(timeSeries)
-  require(fBasics)
-  require(fGarch)
-
-}
+} # else{ # Now loaded with R package
+# 
+#   # check.packages function: install and load multiple R packages.
+#   # Check to see if packages are installed. Install them if they are not,
+#   # then load them into the R session.
+#   # https://gist.github.com/smithdanielle/9913897
+#   check.packages <- function(pkg){
+#     new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+#     if (length(new.pkg))
+#       install.packages(new.pkg, dependencies = TRUE)
+#     sapply(pkg, require, character.only = TRUE)
+#   }
+# 
+#   pkg<-c("msm", "tmvtnorm", "TMB", "abind", "glue", "tidyverse", "dplyr", "data.table", "ASAPplots","timeSeries","fBasics","fGarch")
+#   check.packages(pkg)
+# 
+#   require(msm)
+#   require(tmvtnorm)
+#   require(TMB)
+#   require(abind)
+#   require(glue)
+#   require(tidyverse)
+#   require(dplyr)
+#   require(data.table)
+#   require(ASAPplots)
+#   require(fishmethods)
+#   require(timeSeries)
+#   require(fBasics)
+#   require(fGarch)
+# 
+# }
