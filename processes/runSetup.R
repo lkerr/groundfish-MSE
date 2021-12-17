@@ -3,11 +3,11 @@
 # parameters can later be accessed by running the setup but not the
 # entire simulation.
 #'
+#' @param ResultDirectory A string for the name of the results directory from setup section of runSim, no default.
 #' @inheritParams runSim # Inherit parameter definitions from runSim
 #'
 #' @return A list containing the following:
 #' \itemize{
-#'   \item{ResultDirectory - The name of the directory in which results will be stored (a string).}
 #'   \item{stockPar - A list of stock parameters for each stock in stockNames, for multiple stocks this is a list of lists.}
 #'   \item{stockNames - An updated vector of stock names based on input species and new stock parameter files (if no files provided, returns input).}
 #'   \item{stock - A storage object containing initial stock parameters (from stock) and storage for each stock's simulation results.}
@@ -24,7 +24,8 @@
 #' runSetup(stockNames = stockNames, newStockPar = newStockPar, filenameCMIP = filenameCMIP, filenameDownscale = filenameDownscale,fmyear = 2019, ref0 = 1982, ref1 = 2020, baseTempYear = 1985)
 
 
-runSetup <- function(stockNames,
+runSetup <- function(ResultDirectory = NULL,
+                     stockNames,
                      newStockPar = NULL,
                      filenameCMIP = NULL,
                      filenameDownscale = NULL,
@@ -44,7 +45,7 @@ runSetup <- function(stockNames,
   
   # Get the result directory path
   # source('processes/identifyResultDirectory.R')
-  ResultDirectory <- identifyResultDirectory()
+  # ResultDirectory <- identifyResultDirectory()
   
   # # Load the overall operating model parameters - loaded as arguments to runSim, turn this script into the example script
   # source('modelParameters/set_om_parameters_global.R')
@@ -260,7 +261,6 @@ runSetup <- function(stockNames,
   
   # Setup return list
   setup <- NULL
-  setup$ResultDirectory <- ResultDirectory # A string for the results directory name
   setup$stockPar <- stockPar # !!! not yet fed back into runSim - this is a subset of stock (which also contains storage containers that get populated in the simulation)
   setup$stockNames <- stockNames # updated list of stock names based on new stock parameter files (if no files provided, returns input) #!!! not yet fed back into runSim
   setup$stock <- stock # A storage object containing initial stock parameters and storage for simulation results

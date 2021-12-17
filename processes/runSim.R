@@ -1,6 +1,7 @@
 #' @title Run MSE Simulations
 #' @description Main function to run MSE simulations. Previously this function was sourced to run simulations, now input arguments must be provided to run.
 #' 
+#' @param runHPCC A boolean, if TRUE requires running the runPre.R script on HPCC, if FALSE set up results directory for local run. Default = TRUE. 
 #' @param stockNames A string or vector of strings indicating what stocks to include in analysis. To add new stocks to the simulation provide newStockPar argument below, to use a mix of new and existing stocks provide both stockNames for existing and newStockPar for new stocks. 
 #' Options for existing stocks include: 
 #' \itemize{
@@ -53,7 +54,8 @@
 #' 
 #' @return 
 
-runSim <- function(stockNames, # A string or vector of strings indicating what stocks to include (options: "codGB", "codGOM", "haddockGB", "pollock", "yellowtailflounderGB" to add new stockPar to available list provide newStockPar argument below), to use a mix of new and existing provide both stockNames for existing and newStockPar for new to use
+runSim <- function(runHPCC = TRUE, # A boolean, if TRUE requires running the runPre.R script on HPCC, if FALSE set up results directory for local run. Default = FALSE. 
+                   stockNames, # A string or vector of strings indicating what stocks to include (options: "codGB", "codGOM", "haddockGB", "pollock", "yellowtailflounderGB" to add new stockPar to available list provide newStockPar argument below), to use a mix of new and existing provide both stockNames for existing and newStockPar for new to use
                    newStockPar = NULL, # A string or vector of strings indicating the file path(s) to new stock parameter files, no default but example file available in templates folder ??? check that this folder accessible in R package, may need to provide link to templates folder on GitHub instead
                    mproc, #!!! not name of .csv file, name of object, you need to read in .csv when setting up sim
                    simpleTemperature = FALSE, # Debug using simple temperature trend that reduces variance? (T/F)
@@ -165,12 +167,68 @@ runSim <- function(stockNames, # A string or vector of strings indicating what s
 #### Set up environment ####
 # Empty the environment and setup simulation
 rm(list=ls())
+
+# runPre - code for setting up storage, Same process performed by runPre.R script for HPCC
+if(runHPCC == FALSE){
+  # Set run class
+  runClass <- 'Local'
+  
+  # ID platform (used to manage different operating systems) - previously sourced processes/get_runinfo.R
+  platform <- Sys.info()['sysname']
+  
+  # Ensure that TMB will use the Rtools compiler (only windows ... and 
+  # not necessary on all machines) ???
+  # If platform != Linux
+  if(platform == 'Windows'){
+    path_current <- Sys.getenv('PATH')
+    path_new <- paste0('c:\\Rtools\\bin;c:\\Rtools\\mingw_32\\bin;',
+                       path_current)
+    Sys.setenv(PATH=path_new)
+  } else if(platform == 'Darwin'){
+    path_current <- Sys.getenv('PATH')
+  } else if(platform == 'Linux'){
+    # !!!! Currently missing option for local Linux machines
+  }
+  
+  # Remove all files (as long as not running runSetup later within the plotting
+  # function to gather information for diagnostic plots). Ran through the 
+  # available environments before and after the simulation is run and found
+  # one variable that was only available after (active_idx) ... used that to
+  # determine whether or not to delete all the files in the results directory. ???
+  
+  # Create new results directory tagged with date/time
+  # Get and format the system time
+  time <- Sys.time()
+  timeString <- format(x = time, 
+                       format = "%Y-%m-%d-%H-%M-%S")
+  # Define a directory name
+  ResultDirectory <- paste('results', timeString, sep='_')
+  dir.create(ResultDirectory, showWarnings = FALSE, recursive=TRUE)
+  # Results folders for economic models. Create them if necessary
+  
+  # Generate directories for economic results if economic model used
+  if(econModel == TRUE){
+    econ_results_location<-file.path(ResultDirectory,"econ","raw")
+    dir.create(econ_results_location, showWarnings = FALSE, recursive=TRUE)
+  }
+
+  # Generate directories for simulation results and accompanying figures
+  dir.create(file.path(ResultDirectory,"sim"), showWarnings = FALSE, recursive=TRUE)
+  dir.create(file.path(ResultDirectory,"fig"), showWarnings = FALSE, recursive=TRUE)
+  
+  # Compile the c++ file and make available to R
+  TMB::compile("assessment/caa.cpp")
+  
+} else{ # Else this setup occurs by sourcing runPre.R script on HPCC
+  # Set run class
+  runClass <- 'HPCC'
+}
+  
   
 # source('processes/runSetup.R')
-Setup <- runSetup()
+Setup <- runSetup(ResultDirectory = ResultDirectory)
 
 # Set global variables from setup
-ResultDirectory <- Setup$ResultDirectory 
 stockPar <- Setup$stockPar 
 stockNames <- Setup$stockNames 
 stock <- Setup$stock 
@@ -181,13 +239,13 @@ nyear <- Setup$nyear
 yrs_temp <- Setup$yrs_temp
 fmyearIdx <- Setup$fmyearIdx
 
-# I think that we probably want the executable attached as in the WHAM package rather than compiling the executable here (we could include a copy of the uncompiled code for reference as a text file in the package)
-# if on local machine (i.e., not hpcc) must compile the tmb code
-# (HPCC runs have a separate call to compile this code). Keep out of
-# runSetup.R because it is really a separate process on the HPCC.
-if(runClass != 'HPCC'){
-  source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
-}
+# # I think that we probably want the executable attached as in the WHAM package rather than compiling the executable here (we could include a copy of the uncompiled code for reference as a text file in the package)
+# # if on local machine (i.e., not hpcc) must compile the tmb code
+# # (HPCC runs have a separate call to compile this code). Keep out of
+# # runSetup.R because it is really a separate process on the HPCC.
+# if(runClass != 'HPCC'){
+#   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE)) #??? I don't think plotFlag exists/is used anymore
+# }
 
 #### Helpful parameters ####
 # Scalars to convert things

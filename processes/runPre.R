@@ -1,3 +1,4 @@
+# This code is only run on the HPCC, for local runs (runHPCC=FALSE) this is initialized in runSim
 
 # Code to compile TMB code before running the operating model. Doing this
 # because it's probably a little better to compile once and then access the
@@ -48,7 +49,7 @@ dir.create(file.path(ResultDirectory,"sim"), showWarnings = FALSE, recursive=TRU
 dir.create(file.path(ResultDirectory,"fig"), showWarnings = FALSE, recursive=TRUE)
 
 # load the required libraries
-source('processes/loadLibs.R')
+source('processes/loadLibs.R') # !!! May still need this for HPCC runs
 
 # compile the c++ file and make available to R
 TMB::compile("assessment/caa.cpp")
