@@ -42,15 +42,47 @@ ResultDirectory <- paste('results', timeString, sep='_')
 dir.create(ResultDirectory, showWarnings = FALSE, recursive=TRUE)
 # Reults folders for economic models. Create them if necessary
 
-econ_results_location<-file.path(ResultDirectory,"econ","raw")
-
-dir.create(econ_results_location, showWarnings = FALSE, recursive=TRUE)
+# Generate directories for simulation results and accompanying figures
 dir.create(file.path(ResultDirectory,"sim"), showWarnings = FALSE, recursive=TRUE)
 dir.create(file.path(ResultDirectory,"fig"), showWarnings = FALSE, recursive=TRUE)
 
-# load the required libraries
-source('processes/loadLibs.R') # !!! May still need this for HPCC runs
+# Generate directories for economic results  !!! May have other econ-specific things to add here
+econ_results_location<-file.path(ResultDirectory,"econ","raw")
+dir.create(econ_results_location, showWarnings = FALSE, recursive=TRUE)
 
-# compile the c++ file and make available to R
+
+
+##### Compile the c++ file and make available to R for ASSESSCLASS == 'CAA' !!! May want this to be loaded with R package & used rather than compiling here
 TMB::compile("assessment/caa.cpp")
 
+##### Load the required libraries #####
+# load the necessary libraries on the HPCC (loaded with package when run locally). # previously in sourced file loadLibs.R
+# Same libraries are loaded whether using Windows or Linux but a little less complicated
+# to not keep a local copy of corresponding Windows R
+# packages on the machine. An Rlib directory will be
+# necessary for running on the ghpcc. Note that the Rlib
+# directory is located one level outside the home directory
+# (i.e., it is not include in any of the github file
+# transfers).
+  
+  # seems you need to load gmm prior to loading tmvtnorm
+  require(gmm, lib.loc='../Rlib/')
+  require(mvtnorm, lib.loc='../Rlib/')
+  require(tmvtnorm, lib.loc='../Rlib/')
+  
+  require(expm, lib.loc='../Rlib/')
+  require(msm, lib.loc='../Rlib/')
+  require(Matrix, lib.loc='../Rlib/')
+  require(TMB, lib.loc='../Rlib/')
+  require(abind, lib.loc='../Rlib/')
+  require(forcats, lib.loc='../Rlib/')
+  require(readr, lib.loc='../Rlib/')
+  require(tidyverse, lib.loc='../Rlib/')
+  require(dplyr, lib.loc='../Rlib/')
+  require(data.table, lib.loc='../Rlib/')
+  require(ASAPplots, lib.loc = '../Rlib')
+  require(fishmethods, lib.loc = '../Rlib')
+  require(timeSeries, lib.loc = '../Rlib')
+  require(fBasics, lib.loc = '../Rlib')
+  require(fGarch, lib.loc = '../Rlib')
+  
