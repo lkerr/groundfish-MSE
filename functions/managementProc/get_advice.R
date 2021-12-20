@@ -36,7 +36,8 @@ get_advice <- function(filenameASAPWHAM = NULL,
                        planBest,
                        res,
                        rundir,
-                       temp){
+                       temp,
+                       ...){
   # prepare data
   tempStock <- get_tmbSetup(stock = stock)
   
