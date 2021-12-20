@@ -23,6 +23,7 @@
 #' @param useTemp A boolean, if TRUE include temperature effects (e.g in S-R, growth, ect.), default = TRUE.
 #' @param filenameCMIP The name of the input file containing temperature data, no default. !!! describe structure, see calc_Tanom
 #' @param filenameDownscale The name of the input file of temperature data to downscale, no default. !!! describe structure, see calc_Tanom
+#' @param filenameASAPWHAM The name of initial data (.dat) file for ASAP or WHAM assessment, required when mproc$ASSESSCLASS == "ASAP" or mproc$ASSESSCLASS == "WHAM", no default.
 #' @param tmods = NULL, # A string or vector of strings indicating what CMIP series to use (columns in filenameCMIP file), default = NULL uses all timeseries. !!! Need to make sure this is input data OR build in as .rda??? ## Do you want to use particular models from the cmip data series? If so tmods should be a vector of column names (see data/data_raw/NEUS_CMIP5_annual_meansLong.csv'). If NULL use all data
 #' @param tq The temperature quantile of the cmip data series to use. default = 0.5 for median.
 #' @param trcp Representative concentration pathway to use. Default = 8.5, currently only pathway available.
@@ -74,6 +75,7 @@ runSim <- function(runHPCC = TRUE, # A boolean, if TRUE requires running the run
                    baseTempYear = NULL, # Reference year for anomaly calculation, no default.
                    filenameCMIP = NULL, # The name of the input file containing temperature data, no default.
                    filenameDownscale = NULL, 
+                   filenameASAPWHAM = NULL, # Name of initial data (.dat) file for ASAP or WHAM assessment, required when mproc$ASSESSCLASS == "ASAP" or "WHAM"
                    anomFun = median, # Function used in anomaly calculation, default = median.
                    BrefScalar = 0.5, # Scalar to relate the calculated biomass reference point to the threshold value, default = 0.5.
                    FrefScalar = 0.75, # Scalar to relate the calculated fishing mortality reference point to the threshold value, default = 0.75.
@@ -327,10 +329,10 @@ for(r in 1:nrep){
         manage_counter<-manage_counter+1 #this only gets incremented when y>=fmyearIdx
 
         for(i in 1:nstock){
-          stock[[i]] <- get_advice(stock = stock[[i]], mproc = mproc, y = y, m = m,
+          stock[[i]] <- get_advice(filenameASAPWHAM = filenameASAPWHAM, stock = stock[[i]], mproc = mproc, y = y, m = m,
                                    yrs = yrs,  yrs_temp = yrs_temp, fmyearIdx = fmyearIdx,
                                    Tanom = Tanom, rep = rep, sty = sty, planBest = planBest, 
-                                   res = res, rundir = rundir, temp = temp)
+                                   res = res, rundir = rundir, temp = temp, ...)
           #stock[[i]] <- get_relError(stock = stock[[i]])
         }
           #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
