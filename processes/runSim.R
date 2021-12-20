@@ -79,6 +79,7 @@ runSim <- function(runHPCC = TRUE, # A boolean, if TRUE requires running the run
                    anomFun = median, # Function used in anomaly calculation, default = median.
                    BrefScalar = 0.5, # Scalar to relate the calculated biomass reference point to the threshold value, default = 0.5.
                    FrefScalar = 0.75, # Scalar to relate the calculated fishing mortality reference point to the threshold value, default = 0.75.
+                   ##### Economic model: mproc$ImplementationClass[m]=="Economic"
                    ##### May want economic parameters to be provided in mproc when economic option turned on ??? for now arguments here
                    first_econ_yr = NULL, # First economic year
                    last_econ_yr = NULL, # Last economic year
@@ -103,7 +104,7 @@ runSim <- function(runHPCC = TRUE, # A boolean, if TRUE requires running the run
                    
 ){
   
-  ###### Below from set_om parameters
+  ###### Below from set_om parameters ??? do these need to be input arguments? fixed values in code???
   #### Output ####
   # Which sets of plots should be created? Set these objects to T/F
 
@@ -137,27 +138,8 @@ runSim <- function(runHPCC = TRUE, # A boolean, if TRUE requires running the run
   
   # nyear <- nrow(cmip5) + nburn
 
-  ##############Independent variables in the targeting equation ##########################
-  ### If there are different targeting equations, you can set there up here, then use their suffix in the mproc file to use these new targeting equations
-  ### example, using ChoicEqn=small in the mproc file and uncommenting the next two lines will be appropriate for a logit with just 3 RHS variables.
-  
-  ##spstock_equation_small=c("exp_rev_total", "fuelprice_distance")
-  ##choice_equation_small=c("fuelprice_len")
-  spstock_equation_pre=c("exp_rev_total", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
-  choice_equation_pre=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
-  
-  spstock_equation_post<-spstock_equation_pre
-  choice_equation_post<-choice_equation_pre
-  ############## End Independent variables in the targeting equation ##########################
-  
-  ##############Independent variables in the Production equation ##########################
-  ### If there are different the equations, you can set there up here, then use their suffix in the mproc file to use these new targeting equations
-  ### example, using ProdEqn=tiny in the mproc file and uncommenting the next  line will be regression with 2 RHS variables and no constant.
-  # production_vars_tiny=c("log_crew","log_trip_days")
-  
-  production_vars_pre=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","constant")
-  production_vars_post=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","log_sector_acl", "constant")
-  ############## End Independent variables in the Production equation ##########################
+
+ 
   
   
   
@@ -170,7 +152,7 @@ runSim <- function(runHPCC = TRUE, # A boolean, if TRUE requires running the run
 # Empty the environment and setup simulation
 rm(list=ls())
 
-# runPre - code for setting up storage, Same process performed by runPre.R script for HPCC
+# Set up storage, when runHPCC==TRUE same process performed by runPre.R script
 if(runHPCC == FALSE){
   # Set run class
   runClass <- 'Local'
@@ -190,6 +172,7 @@ if(runHPCC == FALSE){
     path_current <- Sys.getenv('PATH')
   } else if(platform == 'Linux'){
     # !!!! Currently missing option for local Linux machines
+    print("Warning, no path available if running locally on a Linux machine, this option is still in development")
   }
   
   # Remove all files (as long as not running runSetup later within the plotting
@@ -206,20 +189,19 @@ if(runHPCC == FALSE){
   # Define a directory name
   ResultDirectory <- paste('results', timeString, sep='_')
   dir.create(ResultDirectory, showWarnings = FALSE, recursive=TRUE)
-  # Results folders for economic models. Create them if necessary
-  
-  # Generate directories for economic results if economic model used
-  if(econModel == TRUE){
-    econ_results_location<-file.path(ResultDirectory,"econ","raw")
-    dir.create(econ_results_location, showWarnings = FALSE, recursive=TRUE)
-  }
 
   # Generate directories for simulation results and accompanying figures
   dir.create(file.path(ResultDirectory,"sim"), showWarnings = FALSE, recursive=TRUE)
   dir.create(file.path(ResultDirectory,"fig"), showWarnings = FALSE, recursive=TRUE)
   
-  # Compile the c++ file and make available to R
+  # Compile the c++ file and make available to R !!! May want executable loaded with package
   TMB::compile("assessment/caa.cpp")
+  
+  # Generate directories for economic results  !!! May have other econ-specific things to add here
+    econ_results_location <- file.path(ResultDirectory,"econ","raw")
+    dir.create(econ_results_location, showWarnings = FALSE, recursive=TRUE)
+    #Input data location for economic models !!!!!! May want to put this economic setup in an econSetup function (also include if statement at top of runSim to setup data storage, ect.)
+    econdatapath <- 'data/data_processed/econ'
   
 } else{ # Else this setup occurs by sourcing runPre.R script on HPCC
   # Set run class
@@ -289,22 +271,26 @@ for(r in 1:nrep){
   #### Top MP loop ####
   for(m in 1:nrow(mproc)){
 
-       manage_counter <- 0
+    #### Initialize simulation with specified management procedure ####
+    manage_counter <- 0
 
-       #Restore the rng state.  Depending on whether you use oldseed1 or oldseed2, you'll get different behavior.  oldseed_ALL will force all the replicates to start from the same RNG state.  oldseed_mproc will force all the management procedures to have the same RNG state.  You probably want oldseed_mproc
-       #.Random.seed<-oldseed_ALL
-       # .Random.seed<-oldseed_mproc
+    #Restore the rng state.  Depending on whether you use oldseed1 or oldseed2, you'll get different behavior.  oldseed_ALL will force all the replicates to start from the same RNG state.  oldseed_mproc will force all the management procedures to have the same RNG state.  You probably want oldseed_mproc
+    #.Random.seed<-oldseed_ALL
+    # .Random.seed<-oldseed_mproc
 
-        #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached, which sets of coefficients to use, and which prices to use
-        if(mproc$ImplementationClass[m]=="Economic"){
-          
-         source('processes/setupEconType.R') #!!! revisit
-        }
+    # Set up economic components of management procedure
+      # ??? No econtype referenced elsewhere the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached, which sets of coefficients to use, and which prices to use
+    if(mproc$ImplementationClass[m]=="Economic"){
+      econType <- setupEconType(mproc=mproc, m=m) # ??? Not clear where the data setup here is used???
+      # source('processes/setupEconType.R') 
+    }
+    
     # Initialize stocks and determine burn-in F
     for(i in 1:nstock){
       stock[[i]] <- get_popInit(stock[[i]])
     }
-    #### get historic assessment info if there is any
+    
+    # get historic assessment info if there is any
     if (histAssess == TRUE) {
       for (i in 1:nstock){
       assess_vals <- get_HistAssess(stock = stock[[i]])
