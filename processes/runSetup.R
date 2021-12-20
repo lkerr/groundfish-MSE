@@ -16,6 +16,11 @@
 #'   \item{nyear - The number of years based on available temperature data set in processes/genAnnStructure.R}
 #'   \item{yrs_temp - A vector of years from firstYear to the maximum year in the cmip5 temperature timeseries, set in processes/genAnnStructure.R.}
 #'   \item{fmyearIdx - An index for the year that management begins, from processes/genAnnStructure.R}
+#'   \item{tAnomOut - A matrix containing columns for "YEAR", temperature "T", downscaled temperature "DOWN_T", temperature anomaly "TANOM" and corresponding standard deviation "TANOM_STD"}
+#'   \item{yrs - A vector of calendar years from firstYear to mxyear, set in processes/genAnnStructure.R}
+#'   \item{nyear - The number of years based on available temperature data set in processes/genAnnStructure.R}
+#'   \item{yrs_temp - A vector of years from firstYear to the maximum year in the cmip5 temperature timeseries, set in processes/genAnnStructure.R.}
+#'   \item{fmyearIdx - An index for the year that management begins, from processes/genAnnStructure.R}
 #' }
 #' 
 #' @example 
@@ -123,11 +128,12 @@ runSetup <- function(ResultDirectory = NULL,
   # usethis::use_data(stockPar, internal = FALSE)
   # # May reference internally in code as groundfishMSE::stockPar # may need to rebuild package to reference in this manner
   
-  # Get the run info so the functions work appropriately whether they are
-  # on Windows or Linux and whether this is an HPCC run or not.
-  source('processes/get_runinfo.R') # !!!circle back to this
+  # # Get the run info so the functions work appropriately whether they are
+  # # on Windows or Linux and whether this is an HPCC run or not.
+  # source('processes/get_runinfo.R') # !!!circle back to this
   
-  # # load the required libraries - replaced by DESCRIPTION, all packages loaded with R package as dependencies/required
+  # # load the required libraries - replaced by DESCRIPTION, all packages loaded with R package as dependencies/required locally, still need to load libraries for HPCC - move to runPre.R
+  
   # source('processes/loadLibs.R')
   
   
@@ -138,19 +144,19 @@ runSetup <- function(ResultDirectory = NULL,
   # source('processes/genAnnStructure.R')
   
   # Load and process temperature data, use to return year information
-  calc_Tanom(filenameCMIP = filenameCMIP, 
-             filenameDownscale = filenameDownscale,
-                         fmyear = fmyear,
-                         trcp = trcp,
-                         tmods = tmods,
-                         tq = tq,
-                         ref0 = ref0,
-                         ref1 = ref1,
-                         baseTempYear = baseTempYear,
-                         nburn = nburn,
-                         anomFun = anomFun,
-             useTemp = TRUE, 
-             simpleTemperature = FALSE)
+  tanomOutput <- calc_Tanom(filenameCMIP = filenameCMIP, # !!! Need to store or return somewhere!!!
+                            filenameDownscale = filenameDownscale,
+                            fmyear = fmyear,
+                            trcp = trcp,
+                            tmods = tmods,
+                            tq = tq,
+                            ref0 = ref0,
+                            ref1 = ref1,
+                            baseTempYear = baseTempYear,
+                            nburn = nburn,
+                            anomFun = anomFun,
+                            useTemp = TRUE, 
+                            simpleTemperature = FALSE)
   
   # Load specific recruitment functions (these are a list for simulation-based 
   # approach to deriving Bproxy reference points
@@ -159,14 +165,14 @@ runSetup <- function(ResultDirectory = NULL,
   # Load default ACLs and fractions of the ACL that are allocated to the catch share fishery
   source('processes/genBaselineACLs.R')
   
-  #Input data location for economic models !!!!!! May want to put this economic setup in an econSetup function (also include if statement at top of runSim to setup data storage, ect.)
-  econdatapath <- 'data/data_processed/econ'
-  
-  # Reults folders for economic models. Create them if necessary
-  econ_results_location<-"results/econ/raw"
-  dir.create('results/econ/raw', showWarnings = FALSE, recursive=TRUE)
-  dir.create('results/sim', showWarnings = FALSE, recursive=TRUE)
-  dir.create('results/fig', showWarnings = FALSE, recursive=TRUE)
+  # #Input data location for economic models !!!!!!Moved to runSim May want to put this economic setup in an econSetup function (also include if statement at top of runSim to setup data storage, ect.)
+  # econdatapath <- 'data/data_processed/econ'
+  # 
+  # # Results folders for economic models. Create them if necessary
+  # econ_results_location<-"results/econ/raw"
+  # dir.create('results/econ/raw', showWarnings = FALSE, recursive=TRUE)
+  # dir.create('results/sim', showWarnings = FALSE, recursive=TRUE)
+  # dir.create('results/fig', showWarnings = FALSE, recursive=TRUE)
   
   # If running on a local machine, more than one repetition should be
   # used otherwise some plotting functions (e.g., boxplots) will fail
@@ -265,11 +271,11 @@ runSetup <- function(ResultDirectory = NULL,
   setup$stockNames <- stockNames # updated list of stock names based on new stock parameter files (if no files provided, returns input) #!!! not yet fed back into runSim
   setup$stock <- stock # A storage object containing initial stock parameters and storage for simulation results
   # From calc_Tanom
-  setup$tAnomOut <- tAnomOut 
-  setup$yrs <- yrs
-  setup$nyear <- nyear
-  setup$yrs_temp <- yrs_temp
-  setup$fmyearIdx <- fmyearIdx
+  setup$tAnomOut <- tanomOutput$tAnomOut 
+  setup$yrs <- tanomOutput$yrs
+  setup$nyear <- tanomOutput$nyear
+  setup$yrs_temp <- tanomOutput$yrs_temp
+  setup$fmyearIdx <- tanomOutput$fmyearIdx
   
   return(setup)
 }
