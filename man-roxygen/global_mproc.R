@@ -7,7 +7,13 @@
 
 #' @param mproc A labeled vector containing the following settings for the management procedure, @seealso \code{\link{runSims}} for full description of management options: 
 #' \itemize{
-#'   \item{ASSESSCLASS - }
+#'   \item{ASSESSCLASS - A string indicating the assessment model to implement, options include:}
+#'   \itemize{
+#'     \item{"CAA" - Implement catch-at-age model provided in package}
+#'     \item{"PLANB" - Implement planB approach !!!}
+#'     \item{"ASAP" - Implement Age-Structured Assessment Program !!!}
+#'     \item{"WHAM" - Implement Woods Hole Assessment Model}
+#'   }
 #'   \item{HCR - }
 #'   \item{FREF_TYP - }
 #'   \item{FREF_PAR0 - }
