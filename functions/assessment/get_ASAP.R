@@ -1,6 +1,7 @@
 #' @title Run ASAP Stock Assessment
 #' @description Modify Age Structured Assessment Program (ASAP) .dat file, run executable, and produce results object.
 #' 
+#' @inheritParams runSim # Inherit parameter definitions from runSim
 #' @template global_stock
 #' @template global_fmyearIdx
 #' @param ncaayear
@@ -16,8 +17,12 @@
 #' @family managementProcedure stockAssess
 #' 
 #' @export
+#' 
+#' @example 
+#' filenameASAPWHAM <- paste('assessment/ASAP/', stockName, ".dat", sep = '')
 
-get_ASAP <- function(stock,
+get_ASAP <- function(filenameASAPWHAM = NULL,
+                     stock,
                      fmyearIdx,
                      ncaayear,
                      mproc,
@@ -30,7 +35,7 @@ get_ASAP <- function(stock,
   out <- within(stock, {
 
     # read in assessment .dat file and modify accordingly
-    dat_file <- ReadASAP3DatFile(paste('assessment/ASAP/', stockName, ".dat", sep = ''))
+    dat_file <- ReadASAP3DatFile(filenameASAPWHAM)
 
     ### modify for each simulation/year
 
