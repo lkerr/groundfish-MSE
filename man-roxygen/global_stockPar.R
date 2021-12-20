@@ -2,7 +2,8 @@
 # BE CAUTIOUS WHEN EDITING THIS FILE
 # changes will be inherited by all functions that use @template global_stockPar
 
-#' @param stockPar A nested list containing the following list arguments for each species (see ??? for argument definitions):
+#' @param stockPar A nested list of stock parameters for each stock, for multiple stocks this is a list of lists.
+#' Each stock list contains the following list arguments:
 #' \itemize{
 #'   \item{ie_typ - }
 #'   \item{oe_paaCN_typ - }

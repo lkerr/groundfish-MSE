@@ -2,4 +2,4 @@
 # BE CAUTIOUS WHEN EDITING THIS FILE
 # changes will be inherited by all functions that use @template global_nyear
 
-#' @param nyear A number specifying the number of years ??? to project forward? number of years of data?
+#' @param nyear The number of years based on available temperature data, set in processes/genAnnStructure.R
