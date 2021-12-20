@@ -201,7 +201,7 @@ if(runHPCC == FALSE){
     econ_results_location <- file.path(ResultDirectory,"econ","raw")
     dir.create(econ_results_location, showWarnings = FALSE, recursive=TRUE)
     #Input data location for economic models !!!!!! May want to put this economic setup in an econSetup function (also include if statement at top of runSim to setup data storage, ect.)
-    econdatapath <- 'data/data_processed/econ'
+    # econdatapath <- 'data/data_processed/econ' # MUST now provide the full file path to economic data files
   
 } else{ # Else this setup occurs by sourcing runPre.R script on HPCC
   # Set run class
