@@ -7,33 +7,4 @@
 
 # ??? This only works if parmgt = mproc, otherwise need to rethink documentation
 
-#' @param parmgt A labeled vector containing the following settings for the management procedure, @seealso \code{\link{runSims}} for full description of management options provided in the mproc argument: 
-#' \itemize{
-#'   \item{ASSESSCLASS - }
-#'   \item{HCR - }
-#'   \item{FREF_TYP - }
-#'   \item{FREF_PAR0 - }
-#'   \item{FREF_PAR1 - }
-#'   \item{BREF_TYP - }
-#'   \item{BREF_PAR0 - }
-#'   \item{BREF_PAR1 - }
-#'   \item{RFUN_NM - }
-#'   \item{RPInt - }
-#'   \item{AssessFreq - }
-#'   \item{ImplementationClass - }
-#'   \item{projections - }
-#'   \item{rhoadjust - }
-#'   \item{mincatch - }
-#'   \item{varlimit - }
-#'   \item{Lag - }
-#'   \item{LandZero - }
-#'   \item{CatchZero - }
-#'   \item{EconType - }
-#'   \item{EconName - }
-#'   \item{EconData - }
-#'   \item{MultiplierFile - }
-#'   \item{OutputPriceFile - }
-#'   \item{InputPriceFile - }
-#'   \item{ProdEqn - }
-#'   \item{ChoiceEqn - }
-#' }
+#' @param parmgt A labeled vector (1 row of mproc) containing settings for the management procedure, @seealso \code{\link{runSims}} for full description of management options provided in the mproc argument: 
