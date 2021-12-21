@@ -9,7 +9,7 @@
 #' @template global_m
 #' 
 #' #' itemize{
-#'   \item{econ_data_stub - ???????}
+#'   \item{econ_data_stub - A full file path to a folder containing annual data files for economic production data (labeled "####.Rda" for each year)}
 #'   \item{production_vars - A vector of strings indicating names of production variables to use}
 #'   \item{spstock_equation - A vector of strings indicating names used in species stock equation}
 #'   \item{choice_equation - A vector of strings indicating names used in choice equation}
@@ -50,6 +50,7 @@ setupEconType <- function(mproc, m){
   econtype <- mproc[m,]
   econtype <- econtype[myvars]
   
+  # Read in Economic Production Data. "full_targeting" is large, so it makes sense to read in each econ_year as needed.
   econ_data_stub <- econtype$EconData
   
   ##### Setup econ variables based on specification in mproc & independent variable definitions above
@@ -70,5 +71,6 @@ setupEconType <- function(mproc, m){
   econSetup$multipliers <- multipliers
   econSetup$outputprices <- outputprices
   econSetup$inputprices <- inputprices
+  
   return(econSetup)
 }
