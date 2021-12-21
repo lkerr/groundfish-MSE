@@ -31,6 +31,7 @@
 #' 
 #' @export
 
+# Script previously named withinYearAdmin.R
 updateYearIndexing <- function(yearitercounter,
                                random_sim_draw,
                                y,
