@@ -16,11 +16,22 @@
 #'   \item{nyear - The number of years based on available temperature data set in processes/genAnnStructure.R}
 #'   \item{yrs_temp - A vector of years from firstYear to the maximum year in the cmip5 temperature timeseries, set in processes/genAnnStructure.R.}
 #'   \item{fmyearIdx - An index for the year that management begins, from processes/genAnnStructure.R}
-#'   \item{tAnomOut - A matrix containing columns for "YEAR", temperature "T", downscaled temperature "DOWN_T", temperature anomaly "TANOM" and corresponding standard deviation "TANOM_STD"}
-#'   \item{yrs - A vector of calendar years from firstYear to mxyear, set in processes/genAnnStructure.R}
-#'   \item{nyear - The number of years based on available temperature data set in processes/genAnnStructure.R}
-#'   \item{yrs_temp - A vector of years from firstYear to the maximum year in the cmip5 temperature timeseries, set in processes/genAnnStructure.R.}
-#'   \item{fmyearIdx - An index for the year that management begins, from processes/genAnnStructure.R}
+#'   \itemize{
+#'   \item{A random_sim_draw data.table containing the following indices as columns:}
+#'   \itemize{
+#'     \item{econ_replicate}
+#'     \item{sim_year_idx}
+#'     \item{cal_year}
+#'     \item{manage_year_idx}
+#'     \item{join_econbase_yr}
+#'     \item{join_econbase_idx}
+#'     \item{join_outputprice_idx}
+#'     \item{join_inputprice_idx}
+#'     \item{join_mult_idx}
+#'   }
+#'   \item{yearitercounter - An iteration counter for year beginning at 0}
+#'   \item{max_yiter - A number for the maximum number of year iterations}
+#'   \item{interpb - Function name (not a string) that generates progress bar}
 #' }
 #' 
 #' @example 
@@ -42,7 +53,10 @@ runSetup <- function(ResultDirectory = NULL,
                      ref1 = NULL,
                      baseTempYear = NULL,
                      nburn = 50,
-                     anomFun = median){
+                     anomFun = median, 
+                     fyear,
+                     mproc,
+                     nrep){
   
   # # load all the functions - no longer needed, loaded when R package loaded
   # ffiles <- list.files(path='functions/', pattern="^.*\\.R$",full.names=TRUE, recursive=TRUE)
@@ -208,7 +222,7 @@ runSetup <- function(ResultDirectory = NULL,
   }
   
   # Error regarding number of years.
-  inTest <- (plotBrkYrs + fmyearIdx) %in% (fmyearIdx+1):nyear
+  inTest <- (plotBrkYrs + tanomOutput$fmyearIdx) %in% (tanomOutput$fmyearIdx+1):tanomOutput$nyear
   if(!all(inTest)){
     stop(paste('check plotBrkYrs in set_om_parameters_global. One or more',
                'of your break years is outside the possible range.'))
@@ -219,7 +233,7 @@ runSetup <- function(ResultDirectory = NULL,
   stockCont <- list()
   for(i in 1:nstock){
     stockCont[[i]] <- get_containers(stockPar=stockPar[[stockNames[i]]], # Reference by name given in above processing but assign to number to avoid future conflicts/errors
-                                     nyear = nyear,
+                                     nyear = tanomOutput$nyear,
                                      fyear = fyear,
                                      nburn = nburn,
                                      mproc = mproc,
@@ -265,6 +279,9 @@ runSetup <- function(ResultDirectory = NULL,
     file.copy(from = from.path, to = to.path)
   }
   
+  # source('processes/setupYearIndexing.R') # !!! Finish integrating this!!!
+  yearIndex <- setupYearIndexing(nyear=tanomOutput$nyear,fyear=fyear,nrep=nrep)
+  
   # Setup return list
   setup <- NULL
   setup$stockPar <- stockPar # !!! not yet fed back into runSim - this is a subset of stock (which also contains storage containers that get populated in the simulation)
@@ -276,6 +293,11 @@ runSetup <- function(ResultDirectory = NULL,
   setup$nyear <- tanomOutput$nyear
   setup$yrs_temp <- tanomOutput$yrs_temp
   setup$fmyearIdx <- tanomOutput$fmyearIdx
+  # From setupYearIndexing
+  setup$random_sim_draw <- yearIndex$random_sim_draw # A table containing the following indices in columns: econ_replicate, sim_year_idx, cal_year, manage_year_idx, join_econbase_yr, join_econbase_idx, join_outputprice_idx, join_inputprice_idx, join_mult_idx
+  setup$yearitercounter <- yearIndex$yearitercounter # An iteration counter for year beginning at 0
+  setup$max_yiter <- yearIndex$max_yiter # A number for the maximum number of year iterations
+  setup$interpb <- yearIndex$interpb # Function name that generates progress bar
   
   return(setup)
 }
