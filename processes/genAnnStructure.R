@@ -17,6 +17,7 @@
 #' filenameDownscale = 'data/data_raw/GOMAveTemp.csv'
 #' calc_Tanom(filenameCMIP = filenameCMIP, filenameDownscale = filenameDownscale,fmyear = 2019, ref0 = 1982, ref1 = 2020, baseTempYear = 1985)
 
+# Script previously named genAnnStructure.R
 calc_Tanom <- function(filenameCMIP = NULL, #!!!!! Will need to rename file to reflect change
                        filenameDownscale = NULL,
                        fmyear = NULL,

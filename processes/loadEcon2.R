@@ -17,6 +17,7 @@
 #' 
 #' @export
 
+# Script previously named loadEcon2.R 
 loadAnnualEconData <- function(econ_data_stub = NULL,
                                econ_base_draw = NULL,
                                econ_mult_idx_draw = NULL,
