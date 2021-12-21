@@ -18,12 +18,13 @@ get_projnolag <- function(type,
                           parmgt, 
                           parpop, 
                           parenv, 
-                          Rfun,
+                          Rfun = NULL,
                           F_val, 
                           stReportYr, 
                           ny=NULL, 
                           stockEnv, ...){
   
+  #### hindcastMean R option ####
   if(parmgt$RFUN_NM == 'hindcastMean'){
     if(type == 'FREF'){
       startHCM <- parmgt$FREF_PAR0
@@ -50,9 +51,8 @@ get_projnolag <- function(type,
                         start = unlist(nR- (-startHCM) + 1), 
                         end = unlist(nR - (-endHCM) + 1))
     
-  }
-  
-  if(parmgt$RFUN_NM == 'forecast'){
+  } else if(parmgt$RFUN_NM == 'forecast'){
+    #### forecast R option ####
     if(type == 'FREF'){
       startFCST <- parenv$y
       endFCST <- parenv$y + parmgt$FREF_PAR0
@@ -90,6 +90,8 @@ get_projnolag <- function(type,
     suminit<-get_error_idx(type=stockEnv$oe_sumIN_typ, idx=suminit, par=stockEnv$pe_IA)
     initpaa<-get_error_paa(type=stockEnv$oe_paaIN_typ, paa=init, par=10000)
     init<-suminit*initpaa
+    print("projnolag paa")
+    print(init)
   }
   
   # Ensure that all vectors are the same length
@@ -147,14 +149,35 @@ get_projnolag <- function(type,
       init[nage] * exp(-parpop$sel[nage] * Fhat - 
                          parpop$M[nage])
     parpop$switch<-'FALSE'
-    N[1,1] <- Rfun(type = stockEnv$R_typ,
-                   parpop = parpop, 
-                   parenv = parenv, 
-                   parmgt = parmgt,
-                   SSB = c(init) %*% c(parpop$waa* parpop$mat),
-                   sdR = stockEnv$pe_R,
-                   TAnom = Tanom[1],
-                   Rest = Rest)
+    if(Rfun == "hindcastMean"){
+      N[1,1] <- hindcastMean(type = stockEnv$R_typ,
+                     parpop = parpop, 
+                     parenv = parenv, 
+                     parmgt = parmgt,
+                     SSB = c(init) %*% c(parpop$waa* parpop$mat),
+                     sdR = stockEnv$pe_R,
+                     TAnom = Tanom[1],
+                     Rest = Rest)
+    }else if(Rfun == "hindcastSample"){
+      N[1,1] <- hindcastSample(type = stockEnv$R_typ,
+                     parpop = parpop, 
+                     parenv = parenv, 
+                     parmgt = parmgt,
+                     SSB = c(init) %*% c(parpop$waa* parpop$mat),
+                     sdR = stockEnv$pe_R,
+                     TAnom = Tanom[1],
+                     Rest = Rest)
+    }else if(Rfun == "forecast"){
+      N[1,1] <- forecast(type = stockEnv$R_typ,
+                     parpop = parpop, 
+                     parenv = parenv, 
+                     parmgt = parmgt,
+                     SSB = c(init) %*% c(parpop$waa* parpop$mat),
+                     sdR = stockEnv$pe_R,
+                     TAnom = Tanom[1],
+                     Rest = Rest)
+    }
+
     if (mproc$rhoadjust==TRUE & y>fmyearIdx & stockEnv$Mohns_Rho_SSB[y]>0.15){
       N[1,]<-N[1,]/(1+stockEnv$Mohns_Rho_SSB[y])
     }

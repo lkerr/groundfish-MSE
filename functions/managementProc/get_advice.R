@@ -175,8 +175,7 @@ get_advice <- function(filenameASAPWHAM = NULL,
                      parenv = parenv,
                      RPlast = NULL, 
                      evalRP = TRUE,
-                     stockEnv = tempStock,
-                     Rfun_BmsySim = Rfun_BmsySim)
+                     stockEnv = tempStock)
     
     tempStock$RPmat[y,] <- gnF$RPs
     tempStock$catchproj <- gnF$catchproj
@@ -189,8 +188,7 @@ get_advice <- function(filenameASAPWHAM = NULL,
                      parenv = parenv,
                      RPlast = tempStock$RPmat[y-1,], 
                      evalRP = FALSE,
-                     stockEnv = tempStock,
-                     Rfun_BmsySim = Rfun_BmsySim)
+                     stockEnv = tempStock)
     tempStock$RPmat[y,] <- tempStock$RPmat[y-1,]
   }
   

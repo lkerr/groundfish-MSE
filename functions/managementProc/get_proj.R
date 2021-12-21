@@ -8,7 +8,7 @@
 #'   \item{"current" - Implements the current advice-setting method for New England groundfish which uses projections in the catch advice}
 #' }
 #' @inheritParams get_nextF
-#' @param Rfun A single function pulled from the Rfun_BmsySim list ??? if changed to Rfun_lst would match syntax of get_BBRP and get_FBRP
+#' @param Rfun A string corresponding to RFUN_NM argument used to generate recruitment index, no default. May be taken from mproc data object (here parmgt is a row of mproc) OR provide another available option (e.g. get_nextF uses forecast option for projections). 
 #' @param F_val A number describing the fishing mortality rate to implement in the projection.
 #' @param stReportYr ?? Doesn't appear to be used inside function, can I remove this?
 #' @param ny ???
@@ -30,12 +30,13 @@ get_proj <- function(type,
                      parmgt, 
                      parpop, 
                      parenv, 
-                     Rfun,
+                     Rfun = NULL,
                      F_val, 
                      stReportYr, 
                      ny=NULL, 
                      stockEnv, ...){
 
+  #### hindcastMean R option ####
   if(parmgt$RFUN_NM == 'hindcastMean'){
     if(type == 'FREF'){
       startHCM <- parmgt$FREF_PAR0
@@ -62,9 +63,8 @@ get_proj <- function(type,
                         start = unlist(nR- (-startHCM) + 1),
                         end = unlist(nR - (-endHCM) + 1))
 
-  }
-
-  if(parmgt$RFUN_NM == 'forecast'){
+  }else if(parmgt$RFUN_NM == 'forecast'){
+    #### forecast R option ####
     if(type == 'FREF'){
       startFCST <- parenv$y
       endFCST <- parenv$y + parmgt$FREF_PAR0
@@ -86,7 +86,7 @@ get_proj <- function(type,
 
     ny <- length(Tanom)
 
-  }
+  } # ??? May need to add hindcastSample - option exists in Rfun_BmsySim but not outlined in get_proj(), should this option be built out or removed?
 
 
   # Get the initial population for the simulation -- assumes exponential
@@ -103,6 +103,8 @@ get_proj <- function(type,
     suminit<-get_error_idx(type=stockEnv$oe_sumIN_typ, idx=suminit, par=stockEnv$pe_IA)
     initpaa<-get_error_paa(type=stockEnv$oe_paaIN_typ, paa=init, par=10000)
     init<-suminit*initpaa
+    print("proj paa")
+    print(init)
   }
 
   # Ensure that all vectors are the same length
@@ -188,14 +190,36 @@ get_proj <- function(type,
     # sd of historical R estimates
       parpop$Rpar_mis<-stockEnv$Rpar_mis#will use incorrect recruitment assumption if set in model parameters script
       if(type=='current'){parpop$switch<-'FALSE'}
-        N[y,1] <- Rfun(type = stockEnv$R_typ,
-                     parpop = parpop,
-                     parenv = parenv,
-                     parmgt = parmgt,
-                     SSB = c(N[y-1,]) %*% c(parpop$waa* parpop$mat),
-                     sdR = stockEnv$pe_R,
-                     TAnom = Tanom[y],
-                     Rest = Rest)
+      
+      if(Rfun == "hindcastMean"){
+        N[y,1] <- hindcastMean(type = stockEnv$R_typ,
+                       parpop = parpop,
+                       parenv = parenv,
+                       parmgt = parmgt,
+                       SSB = c(N[y-1,]) %*% c(parpop$waa* parpop$mat),
+                       sdR = stockEnv$pe_R,
+                       TAnom = Tanom[y],
+                       Rest = Rest)
+      } else if(Rfun == "hindcastSample"){
+        N[y,1] <- hindcastSample(type = stockEnv$R_typ,
+                       parpop = parpop,
+                       parenv = parenv,
+                       parmgt = parmgt,
+                       SSB = c(N[y-1,]) %*% c(parpop$waa* parpop$mat),
+                       sdR = stockEnv$pe_R,
+                       TAnom = Tanom[y],
+                       Rest = Rest)
+      } else if(Rfun == "forecast"){
+        N[y,1] <- forecast(type = stockEnv$R_typ,
+                       parpop = parpop,
+                       parenv = parenv,
+                       parmgt = parmgt,
+                       SSB = c(N[y-1,]) %*% c(parpop$waa* parpop$mat),
+                       sdR = stockEnv$pe_R,
+                       TAnom = Tanom[y],
+                       Rest = Rest)
+      }
+        
       #if(type=='BREF'){N[y,1]<-7165447}
   }
   # Get weight-at-age
