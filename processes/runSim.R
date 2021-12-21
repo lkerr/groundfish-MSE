@@ -208,9 +208,25 @@ if(runHPCC == FALSE){
   runClass <- 'HPCC'
 }
   
-  
+#### Setup stock parameters, storage containers, and global for each simulation ####
 # source('processes/runSetup.R')
-Setup <- runSetup(ResultDirectory = ResultDirectory)
+Setup <- runSetup(ResultDirectory = ResultDirectory,
+                  stockNames = stockNames,
+                  newStockPar = newStockPar,
+                  filenameCMIP = filenameCMIP,
+                  filenameDownscale = filenameDownscale,
+                  fmyear = fmyear,
+                  trcp = trcp,
+                  tmods = tmods,
+                  tq = tq,
+                  ref0 = ref0,
+                  ref1 = ref1,
+                  baseTempYear = baseTempYear,
+                  nburn = nburn,
+                  anomFun = anomFun, 
+                  fyear = fyear,
+                  mproc = mproc,
+                  nrep = nrep)
 
 # Set global variables from setup
 stockPar <- Setup$stockPar 
@@ -222,6 +238,11 @@ yrs <- Setup$yrs
 nyear <- Setup$nyear
 yrs_temp <- Setup$yrs_temp
 fmyearIdx <- Setup$fmyearIdx
+random_sim_draw <- setup$random_sim_draw  # A table containing the following indices in columns: econ_replicate, sim_year_idx, cal_year, manage_year_idx, join_econbase_yr, join_econbase_idx, join_outputprice_idx, join_inputprice_idx, join_mult_idx
+yearitercounter <- setup$yearitercounter # An iteration counter for year beginning at 0
+max_yiter <- setup$max_yiter # A number for the maximum number of year iterations
+interpb <- yearIndex$interpb # Function name that generates progress bar
+
 
 # # I think that we probably want the executable attached as in the WHAM package rather than compiling the executable here (we could include a copy of the uncompiled code for reference as a text file in the package)
 # # if on local machine (i.e., not hpcc) must compile the tmb code
@@ -236,7 +257,7 @@ fmyearIdx <- Setup$fmyearIdx
 pounds_per_kg <- 2.20462
 kg_per_mt <- 1000
 
-####################These are temporary changes for testing ####################
+####################These are temporary changes for testing 
 # econ_timer<-0
 
 #  mproc_bak<-mproc
@@ -245,12 +266,12 @@ kg_per_mt <- 1000
 # nrep<-1
 # nyear<-200
 ## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
-####################End Temporary changes for testing ####################
+####################End Temporary changes for testing 
 
-#### Set up year indexing ####
-#This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
-
-source('processes/setupYearIndexing.R')
+# #### Set up year indexing #### - moved into runSetup.R
+# #This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
+# 
+# source('processes/setupYearIndexing.R')
 
 #### Set up time variables, random seed, progress bar ####
 #set the rng state based on system time.  Store the random state.
@@ -271,7 +292,7 @@ for(r in 1:nrep){
   #### Top MP loop ####
   for(m in 1:nrow(mproc)){
 
-    #### Initialize simulation with specified management procedure ####
+    ##### Initialize simulation with specified management procedure ####
     manage_counter <- 0
 
     #Restore the rng state.  Depending on whether you use oldseed1 or oldseed2, you'll get different behavior.  oldseed_ALL will force all the replicates to start from the same RNG state.  oldseed_mproc will force all the management procedures to have the same RNG state.  You probably want oldseed_mproc
@@ -281,7 +302,7 @@ for(r in 1:nrep){
     # Set up economic components of management procedure
       # ??? No econtype referenced elsewhere the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached, which sets of coefficients to use, and which prices to use
     if(mproc$ImplementationClass[m]=="Economic"){
-      econType <- setupEconType(mproc=mproc, m=m) # ??? Not clear where the data setup here is used???
+      econType <- setupEconType(mproc=mproc, m=m) 
       # source('processes/setupEconType.R') 
     }
     
@@ -299,6 +320,7 @@ for(r in 1:nrep){
 
     #### Top year loop ####
     for(y in fyear:nyear){
+      ##### Update Operating Model ####
       for(i in 1:nstock){
         stock[[i]] <- get_J1Updates(stock = stock[[i]], 
                                     y = y, 
@@ -306,14 +328,21 @@ for(r in 1:nrep){
                                     histAssess = histAssess)
       }
 
-      source('processes/withinYearAdmin.R')
+      # source('processes/withinYearAdmin.R') 
+      # Update year counter and other annual indexing
+      updatedYearIndex <- updateYearIndexing()
+      yearitercounter <- updatedYearIndex$yearitercounter
+      chunk_flag <- updatedYearIndex$chunk_flag #??? need to save???
+      
       begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
 
-      # if burn-in period is over...
+      # If burn-in period is over...
       if(y >= fmyearIdx){
 
-        manage_counter<-manage_counter+1 #this only gets incremented when y>=fmyearIdx
+        manage_counter <- manage_counter+1 #this only gets incremented when y>=fmyearIdx
 
+        #### Implement Management Procedure ####
+        ##### Get Advice ####
         for(i in 1:nstock){
           stock[[i]] <- get_advice(filenameASAPWHAM = filenameASAPWHAM, stock = stock[[i]], mproc = mproc, y = y, m = m,
                                    yrs = yrs,  yrs_temp = yrs_temp, fmyearIdx = fmyearIdx,
@@ -323,6 +352,8 @@ for(r in 1:nrep){
         }
           #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
 
+        ##### Get Implementation: Economic OR add implementation error ####
+        # Economic survey
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
 
           for(i in 1:nstock){
@@ -332,14 +363,18 @@ for(r in 1:nrep){
               IJ1[y,] <- get_survey(F_full=0, M=0, N=J1N[y,], slxC[y,],
                                 slxI=selI, timeI=0, qI=qI)
             })
-          } # End survey loop
+          } # End survey loop over stocks
 
+          # Run the economic model 
+            # Below used to load economic production data (previously sourced in loadEcon2.R, now contains below function)
+          annualEconData <- loadAnnualEconData(econ_data_stub = econType$econ_data_stub,
+                                               econ_base_draw = updatedYearIndex$econ_base_draw,
+                                               econ_mult_idx_draw = updatedYearIndex$econ_mult_idx_draw,
+                                               econ_outputprice_idx_draw = updatedYearIndex$econ_outputprice_idx_draw,
+                                               econ_inputprice_idx_draw = updatedYearIndex$econ_inputprice_idx_draw,
+                                               ggfishingyear) # !!! Figure out where this data is used ???
 
-          # ---- Run the economic model here ----
-          source('processes/loadEcon2.R')
-
-
-          bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline)
+          bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline) #!!! where is econ_baseline from ???
 
           source('processes/runEcon_module.R')
 
@@ -352,6 +387,7 @@ for(r in 1:nrep){
           #Add a warning about invalid ImplementationClass
         }
 
+        # ???
         for(i in 1:nstock){
           if (y == nyear){
             stock[[i]] <- get_TermrelError(stock = stock[[i]])
@@ -359,6 +395,8 @@ for(r in 1:nrep){
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         }
       } #End of burn-in loop
+      
+      ##### Update mortality and index ##### 
       for(i in 1:nstock){
         stock[[i]] <- get_mortality(stock = stock[[i]], y=y)
         stock[[i]] <- get_indexData(stock = stock[[i]], y=y, Tanom=Tanom, fmyearIdx=fmyearIdx)
@@ -380,14 +418,11 @@ for(r in 1:nrep){
         if(showProgBar==TRUE){
           setTxtProgressBar(iterpb, yearitercounter)
         }
-    }
-       #End of year loop
+    } #End of year loop
   } #End of mproc loop
-
-
-
 } #End rep loop
 
+##### Loop ends: save results #####
 top_loop_end<-Sys.time()
 big_loop<-top_loop_end-top_loop_start
 big_loop
