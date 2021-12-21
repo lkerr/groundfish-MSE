@@ -14,8 +14,23 @@
 #'     \item{"ASAP" - Implement Age-Structured Assessment Program !!!}
 #'     \item{"WHAM" - Implement Woods Hole Assessment Model}
 #'   }
-#'   \item{HCR - }
-#'   \item{FREF_TYP - }
+#'   \item{HCR - A string to select the shape of harvest control rule to apply, options include:}
+#'   \itemize{
+#'     \item{"constF"}
+#'     \item{"simplethresh"}
+#'     \item{"slide"}
+#'     \item{pstar"}
+#'     \item{"step"}
+#'     \item{"NA" - No HCR is applied}
+#'   }
+#'   \item{FREF_TYP - A string to select the method used to develop the F reference point (i.e. a proxy for FMSY), options include:}
+#'   \itemize{
+#'     \item{"YPR"}
+#'     \item{"SPR"}
+#'     \item{"Fmed"}
+#'     \item{"FmsySim"}
+#'     \item{"NA" - No reference point where no HCR implemented (e.g. when planB assessment used)}
+#'   }
 #'   \item{FREF_PAR0 - }
 #'   \item{FREF_PAR1 - }
 #'   \item{BREF_TYP - }
