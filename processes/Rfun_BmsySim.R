@@ -1,7 +1,7 @@
 # Recruitment function list for use in the recruitment index column
 # of the object mproc (created by the file generateMP.R) ??? Unclear to my how this works, why aren't these functions defined elsewhere?
 
-Rfun_BmsySim <- list(
+
   
   # MEAN = function(parpop, ...) mean(parpop$R),
   
@@ -12,6 +12,7 @@ Rfun_BmsySim <- list(
   # are 25 years available in the series -- otherwise it just uses what is
   # left).
   
+#' @title Generate Recruitment Index Using Forecast
   forecast = function(type, parpop, parenv, SSB, TAnom, sdR, stockEnv,...){
     Rpar<-parpop$Rpar
     if (stock[[i]]$R_mis=='TRUE' && exists("y")=='TRUE'){
@@ -31,15 +32,20 @@ Rfun_BmsySim <- list(
                  R_ym1 = 1, block = 'late',
                  Rhat_ym1 = 1,
                  R_est=parpop$R)
+    
     return(gr[['Rhat']])
-    },
+    }
   
+  
+#' @title Generate Recruitment Index Using Hindcast Mean  
   hindcastMean = function(parpop,parmgt, ...){
     mean(tail(parpop$R,parmgt$BREF_PAR0))
-  },
+  }
   
+  
+#' @title Generate Recruitment Index Using Hindcast Sample  
   hindcastSample = function(Rest,...){
     sample(Rest, 1)
   }
   
-)
+
