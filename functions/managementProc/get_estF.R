@@ -5,7 +5,6 @@
 #' @param catchproj ??? @seealso \code{\link{get_proj, get_projnolag}}
 #' @param parmgtproj ??? same structure as parmgt just with updated values in get_nextF, probably want to change so documentation inherited
 #' @param parpopproj ??? same structure as parpop just with updated values in get_nextF, probably want to change so documentation inherited
-#' @param Rfun ??? Probably needs to be Rfun_BmsySim, make documentation more consistent
 #' 
 #' @return 
 #' 
@@ -16,7 +15,6 @@ get_estF<-function(catchproj,
                    parmgtproj,
                    parpopproj,
                    parenv,
-                   Rfun,
                    stockEnv){
 
     nage <- length(parpopproj$sel)
