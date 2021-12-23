@@ -89,9 +89,11 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       stop(paste('get_proj: end projection year out of temperature anomaly',
                  'range. Check FREF_PAR0 or BREF_PAR0 in mproc.'))
     }
-    
-    Tanom <- mean(parenv$Tanom[startFCST:endFCST])
-    Tanom <- rep(Tanom, ny)
+ 
+    Tanom <- parenv$Tanom[startFCST:endFCST]
+
+    # Tanom <- mean(parenv$Tanom[startFCST:endFCST])
+    # Tanom <- rep(Tanom, ny)
        
     # ny <- length(Tanom)
 
@@ -147,14 +149,14 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   for(y in 2:length(Tanom)){
     for(a in 2:(nage-1)){
       # exponential survival to the next year/age
-      N[y,a] <- N[y-1, a-1] * exp(-parpop$sel[a-1]*F_val - 
+      N[y,a] <- N[y-1, a-1] * exp(-parpop$sel[a-1]*F_val -
                                     parpop$M[a-1])
     }
       
     # Deal with the plus group
-    N[y,nage] <- N[y-1,nage-1] * exp(-parpop$sel[nage-1] * F_val - 
-                                       parpop$M[nage-1]) + 
-                 N[y-1,nage] * exp(-parpop$sel[nage] * F_val - 
+    N[y,nage] <- N[y-1,nage-1] * exp(-parpop$sel[nage-1] * F_val -
+                                       parpop$M[nage-1]) +
+                 N[y-1,nage] * exp(-parpop$sel[nage] * F_val -
                                      parpop$M[nage])
     
     ## Recruitment
@@ -168,7 +170,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                    TAnom = Tanom[y],
                    Rest = Rest)
 
-# browser()
+
   }
 # browser()
   # Get weight-at-age

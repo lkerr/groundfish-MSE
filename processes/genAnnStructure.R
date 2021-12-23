@@ -7,6 +7,12 @@ cmip5 <- read.csv(file = 'data/data_raw/NEUS_CMIP5_annual_meansLong.csv',
 
 # Edit the type of temperature run
 
+if(length(unique(mproc$tempType)) > 1){
+  stop('please select one temperature type to use for all scenarios.',
+       'This should really be included in global parameter file rather',
+       'than mproc.')
+}
+
 if(mproc$tempType == 'sine'){
 
   period <- 50
