@@ -95,7 +95,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     # Tanom <- mean(parenv$Tanom[startFCST:endFCST])
     # Tanom <- rep(Tanom, ny)
        
-    # ny <- length(Tanom)
+    ny <- length(Tanom)
 
   }
   
@@ -142,7 +142,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   }
   
   # set up containers
-  N <- matrix(0, nrow=ny, ncol=nage)
+  N <- matrix(NA, nrow=ny, ncol=nage)
 
   # set up initial conditions
   N[1,] <- init
