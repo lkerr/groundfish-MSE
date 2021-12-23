@@ -13,7 +13,7 @@ if(length(unique(mproc$tempType)) > 1){
        'than mproc.')
 }
 
-if(mproc$tempType == 'sine'){
+if(mproc$tempType[1] == 'sine'){
 
   period <- 50
   uy <- unique(cmip5$year)
@@ -25,12 +25,12 @@ if(mproc$tempType == 'sine'){
   cmip5$Temperature <- newt[match(cmip5$year, uy)]
   cat('\n**********\nNOTE! temperature time series has been modified!\n**********\n')
   
-}else if(mproc$tempType == 'regime'){
+}else if(mproc$tempType[1] == 'regime'){
 
   cmip5$Temperature <- ifelse(cmip5$year < fmyear + 20, 14, 18)
   cat('\n**********\nNOTE! temperature time series has been modified!\n**********\n')
   
-}else if(mproc$tempType == 'cmip'){
+}else if(mproc$tempType[1] == 'cmip'){
   
   cat('\nCMIP temperature series used\n')
   
