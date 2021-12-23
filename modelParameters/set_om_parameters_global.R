@@ -50,7 +50,8 @@ fmyear <- 2010
 fyear <- 38
 
 # maximum year predicted into the future
-mxyear <- 2060
+# Doesn't work at 2060 ...... should be error message somewhere based on this.
+mxyear <- 2050
 
 
 #### Burn-in parameters ####

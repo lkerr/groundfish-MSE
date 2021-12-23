@@ -76,8 +76,8 @@ selC_typ <- 'input'
 # R_typ <- 'HS'
 
 Rpar <- c(a = 2.904e+03, # see meetings/2021-03-25_lisaMackenzie
-          b = 6.615e-07, # 6.615e-05,
-          c = -3)#-1.825e+00)
+          b = 6.615e-05, # 6.615e-05,
+          c = -1.825e+00)#-1.825e+00)
 R_typ <- 'BH'
 # SSBUnitScalar <- 0.001
 
