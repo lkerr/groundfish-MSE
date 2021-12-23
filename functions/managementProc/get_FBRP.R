@@ -124,9 +124,9 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     sumCW <- do.call(cbind, sapply(simAtF, '[', 'sumCW'))
     
     # Only apply the mean to the second half of the data (equilibrium)
-    meanSumCW <- apply(tail(sumCW, floor(0.5 * nrow(sumCW))), 2, mean)
+    meanSumCW <- apply(tail(sumCW, floor(1.0 * nrow(sumCW))), 2, mean)
     Fmsy <- candF[which.max(meanSumCW)]
-  # browser()
+# if(parenv$y >= (fmyearIdx+25)) browser()
     # Extract the equilibrium population (at each level of F) for use in 
     # forecasts for Fmsy forecast calculations and for output for Bmsy 
     # forecast calculations
