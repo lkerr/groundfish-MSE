@@ -3,7 +3,7 @@
 
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.                                              
-burnFmsyScalar <- 5
+burnFmsyScalar <- 0.5
 burnFsd <- 0.3
 
 
@@ -77,7 +77,7 @@ selC_typ <- 'input'
 
 Rpar <- c(a = 2.904e+03, # see meetings/2021-03-25_lisaMackenzie
           b = 6.615e-05, # 6.615e-05,
-          c = -2)#-1.825e+00)
+          c = -3)#-1.825e+00)
 R_typ <- 'BH'
 # SSBUnitScalar <- 0.001
 
