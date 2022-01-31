@@ -8,4 +8,4 @@ Github workflow documentation: https://github.com/lkerr/groundfish-MSE/blob/mast
 
 Branch descriptions: https://github.com/lkerr/groundfish-MSE/blob/master/documentation/branchDescriptions.md
 
-MSE file structure: https://github.com/lkerr/groundfish-MSE/blob/master/documentation/fileStructure.m
+MSE file structure: https://github.com/lkerr/groundfish-MSE/blob/master/documentation/fileStructure.md
