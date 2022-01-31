@@ -1,6 +1,8 @@
 Github: https://github.com/lkerr/groundfish-MSE
 
-MSE Framework Structure
+***MSE Framework Structure***
+
+![MSEFramework](images/MSEFramework.png)
 
 -Projections feature can be found on MDM_Lag branch. 
 
