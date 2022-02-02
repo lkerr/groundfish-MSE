@@ -1,10 +1,17 @@
 #Kobe Plot
+#Lists numbers of scenarios that you want to compare here
 Scenarios<-c(7,8,9)
-####Set up files####
+#Set working directory--where the results you want to compare are stored
+wd<-"C:/Users/mmazur/Desktop/COCA_Sims"
+#List what is being compared
+comparison<-c('Ramp','F-step','Constrained ramp')
+
 library(matrixStats)
 library(dplyr)
 library(ggrepel)
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[1],"/sim",sep=""))
+
+####First simulation####
+setwd(paste(wd,"/Sim_",Scenarios[1],"/sim",sep=""))
 
 sims <- list.files()
 
@@ -18,9 +25,6 @@ for (k in 1:length(sims)){
     sims[k]<-NA}
 }
 sims<-na.omit(sims)
-
-####True Values (From Operating Model)####
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[1],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
@@ -42,7 +46,10 @@ Dftrue<-as.data.frame(cbind(SSBratioreal,Fratioreal,Year))
 Dftrue$Scenario<-Scenarios[1]
 
 df<-Dftrue
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[2],"/sim",sep=""))
+
+for (i in 2:length(Scenarios)){
+  
+setwd(paste(wd,"/Sim_",Scenarios[i],"/sim",sep=""))
 
 sims <- list.files()
 
@@ -56,9 +63,6 @@ for (k in 1:length(sims)){
     sims[k]<-NA}
 }
 sims<-na.omit(sims)
-
-####True Values (From Operating Model)####
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[2],"/sim",sep=""))
 
 for (k in 1:length(sims)){
   load(sims[k])
@@ -77,84 +81,9 @@ SSBproxy<-rowMedians(SSBproxy,na.rm=T)
 SSBratioreal<-SSBreal/SSBproxy
 Year<-2019:2040
 Dftrue2<-as.data.frame(cbind(SSBratioreal,Fratioreal,Year))
-Dftrue2$Scenario<-Scenarios[2]
+Dftrue2$Scenario<-Scenarios[i]
 df<-full_join(Dftrue,Dftrue2)
-
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[3],"/sim",sep=""))
-
-sims <- list.files()
-
-Freal<-matrix(NA,ncol=length(sims),nrow=22)
-Fproxy<-matrix(NA,ncol=length(sims),nrow=22)
-SSBreal<-matrix(NA,ncol=length(sims),nrow=22)
-SSBproxy<-matrix(NA,ncol=length(sims),nrow=22)
-
-for (k in 1:length(sims)){
-  if (file.size(sims[k])==0){
-    sims[k]<-NA}
 }
-sims<-na.omit(sims)
-
-####True Values (From Operating Model)####
-setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[3],"/sim",sep=""))
-
-for (k in 1:length(sims)){
-  load(sims[k])
-  Freal[,k]<-omvalGlobal[[1]]$F_full[168:189]
-  Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-  SSBreal[,k]<-omvalGlobal[[1]]$SSB[168:189]
-  SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
-}
-
-Freal<-rowMedians(Freal,na.rm=T)
-Fproxy<-rowMedians(Fproxy,na.rm=T)
-Fratioreal<-Freal/Fproxy
-
-SSBreal<-rowMedians(SSBreal,na.rm=T)
-SSBproxy<-rowMedians(SSBproxy,na.rm=T)
-SSBratioreal<-SSBreal/SSBproxy
-Year<-2019:2040
-Dftrue2<-as.data.frame(cbind(SSBratioreal,Fratioreal,Year))
-Dftrue2$Scenario<-Scenarios[3]
-df<-full_join(df,Dftrue2)
-
-# setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[4],"/sim",sep=""))
-# 
-# sims <- list.files()
-# 
-# Freal<-matrix(NA,ncol=length(sims),nrow=22)
-# Fproxy<-matrix(NA,ncol=length(sims),nrow=22)
-# SSBreal<-matrix(NA,ncol=length(sims),nrow=22)
-# SSBproxy<-matrix(NA,ncol=length(sims),nrow=22)
-# 
-# for (k in 1:length(sims)){
-#   if (file.size(sims[k])==0){
-#     sims[k]<-NA}
-# }
-# sims<-na.omit(sims)
-
-# ####True Values (From Operating Model)####
-# setwd(paste("C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims/Sim_",Scenarios[4],"/sim",sep=""))
-# 
-# for (k in 1:length(sims)){
-#   load(sims[k])
-#   Freal[,k]<-omvalGlobal[[1]]$F_full[168:189]
-#   Fproxy[,k]<-omvalGlobal[[1]]$FPROXYT[169:190]
-#   SSBreal[,k]<-omvalGlobal[[1]]$SSB[168:189]
-#   SSBproxy[,k]<-omvalGlobal[[1]]$SSBPROXYT[169:190]
-# }
-# 
-# Freal<-rowMedians(Freal,na.rm=T)
-# Fproxy<-rowMedians(Fproxy,na.rm=T)
-# Fratioreal<-Freal/Fproxy
-# 
-# SSBreal<-rowMedians(SSBreal,na.rm=T)
-# SSBproxy<-rowMedians(SSBproxy,na.rm=T)
-# SSBratioreal<-SSBreal/SSBproxy
-# Year<-2019:2040
-# Dftrue2<-as.data.frame(cbind(SSBratioreal,Fratioreal,Year))
-# Dftrue2$Scenario<-Scenarios[4]
-# df<-full_join(df,Dftrue2)
 
 ####Kobe Plot####
 library(ggplot2)
