@@ -87,15 +87,16 @@ df<-full_join(Dftrue,Dftrue2)
 
 ####Kobe Plot####
 library(ggplot2)
-maxSSBest<-max(1.1,max(SSBratioreal))
-maxF<-max(1.1,max(Fratioreal))
-df$HCR<-df$Scenario
- df$HCR[df$HCR==Scenarios[1]]<-'Ramp'
- df$HCR[df$HCR==Scenarios[2]]<-'F-step'
- df$HCR[df$HCR==Scenarios[3]]<-'Constrained ramp'
-# df$HCR[df$HCR==Scenarios[4]]<-'Constrained ramp'
- df$HCR<-as.factor(df$HCR)
-# df$HCR<-ordered(df$HCR,levels=c('Ramp','P*','F-step','Constrained ramp'))
+
+for (i in 1:length(comparison)){
+  df$HCR[df$HCR==Scenarios[i]]<-comparison[i]
+}
+df$HCR<-as.factor(df$HCR)
+df$HCR<-ordered(df$HCR,levels=comparison)
+
+maxSSBest<-max(1.1,max(df$SSBratioreal))
+maxF<-max(1.1,max(df$Fratioreal))
+
 kobe <- ggplot(df, aes(x = SSBratioreal, y = Fratioreal)) +
   theme_bw() 
 kobe <- kobe + annotate(geom = "rect", xmin = 1, xmax = maxSSBest, ymin = 0, ymax = 1, fill = "green", colour = "green", alpha = 0.5) +
