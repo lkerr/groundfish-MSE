@@ -2,11 +2,12 @@ library(matrixStats)
 library(dplyr)
 library(ggplot2)
 library(ggthemes)
-#Scenarios<-c(6,32,58,116)
-Scenarios<-c(1,2,3,4,17,18,19,20)
-#Load data and change to numeric
-wd<-getwd()
-#wd<-setwd("C:/Users/jjesse/Box/HCR_Sims")
+
+#Medium Term Decision Table 
+#Lists numbers of scenarios that you want to compare here
+Scenarios<-c(7,8,9)
+#Set working directory--where the results you want to compare are stored
+wd<-"C:/Users/mmazur/Desktop/COCA_Sims"
 
 setwd(paste(wd,"/Sim_",Scenarios[1],"/sim",sep=""))
 sims <- list.files()
