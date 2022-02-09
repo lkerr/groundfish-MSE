@@ -57,12 +57,11 @@ df2$HCR<-Scenarios[i]
 df<-full_join(df,df2)
 }
 
-df$HCR[df$HCR==Scenarios[1]]<-'Ramp'
-df$HCR[df$HCR==Scenarios[2]]<-'F-step'
-df$HCR[df$HCR==Scenarios[3]]<-'Constrained ramp'
-df$HCR[df$HCR==Scenarios[4]]<-'Constrained ramp'
+for (i in 1:length(comparison)){
+  df$HCR[df$HCR==Scenarios[i]]<-comparison[i]
+}
 df$HCR<-as.factor(df$HCR)
-df$HCR<-ordered(df$HCR,levels=c('Ramp','F-step','Constrained ramp'))
+df$HCR<-ordered(df$HCR,levels=comparison)
 
 df<-na.omit(df)
 
