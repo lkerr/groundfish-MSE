@@ -20,22 +20,37 @@ global bio_data "$projectdir/data/data_processed/catchHistory"
 /* There are a bunch; we'll read them all in */
 /* filenames for sters and outputs*/
 
-/* NC2 models */
-/* pre */
-global input_ster "preCSasclogitnc2.ster"
-global gillnet_out "asclogit_gillnet_pre_coefsnc2.txt"
-global trawl_out "asclogit_trawl_pre_coefsnc2.txt"
+/* NC2 post models */
 
-
-do "$codedir/asclogit_coef_export.do"
-
-/* post */
 global input_ster "postCSasclogitnc2.ster"
 global gillnet_out "asclogit_gillnet_post_coefsnc2.txt"
 global trawl_out "asclogit_trawl_post_coefsnc2.txt"
 
 do "$codedir/asclogit_coef_export.do"
 
+
+
+
+/*
+there are no post 2 models.
+there are no post 1 models.
+there are not post nc1 models.
+*/
+
+
+
+
+/* These are the pre models*/
+
+
+/* NC2 post models */
+
+global input_ster "preCSasclogitnc2.ster"
+global gillnet_out "asclogit_gillnet_pre_coefsnc2.txt"
+global trawl_out "asclogit_trawl_pre_coefsnc2.txt"
+
+
+do "$codedir/asclogit_coef_export.do"
 
 
 
@@ -62,17 +77,6 @@ global gillnet_out "asclogit_gillnet_pre_coefs2.txt"
 global trawl_out "asclogit_trawl_pre_coefs2.txt"
 
 do "$codedir/asclogit_coef_export.do"
-
-
-
-
-/* post nc2 models */
-
-global input_ster "postCSasclogit2.ster"
-global gillnet_out "asclogit_gillnet_post_coefs2.txt"
-global trawl_out "asclogit_trawl_post_coefs2.txt"
-do "$codedir/asclogit_coef_export.do"
-
 
 
 
