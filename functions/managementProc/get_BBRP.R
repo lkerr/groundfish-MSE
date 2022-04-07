@@ -64,12 +64,12 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
                       # parenv = parenv, Rfun_lst = Rfun_lst)
     
     if (stockEnv$waa_mis=='TRUE'){
-      parpop$waa<-stock[[1]]$waa[1,]
+      parpop$waa<-colMeans(stock[[1]]$waa[160:165,])
       # waamat<-as.matrix(read.csv('data/data_raw/waamatrix.csv'))
       # colnames(waamat)<-NULL
       # parpop$waa <- waamat[1,]
       if (stockEnv$waa_mistyp=='high'){
-      parpop$waa<-stock[[1]]$waa[1,]+0.0003
+      parpop$waa<-colMeans(stock[[1]]$waa[150:155,])
       }
     }
     
