@@ -10,6 +10,9 @@
 #         follows L50 parameterization of logistic model
 #         p = 1 / ( 1 + exp( par[1] * (par[2] - laa) ) )
 #         where par[2] is L50
+#       *'input'
+#         give vector of maturity-at-age, must be same 
+#         length as number of age classes
 #
 # par: vector of parameters to use in the function. See function
 #      definitions in "type" for the length of the vector and
@@ -20,7 +23,7 @@
 # tempY: value for temperature in year y
 
 
-get_maturity <- function(type, par, laa, tempY=NULL){
+get_maturity <- function(type, par, laa, tempY=NULL,y,fmyearIdx){
   
   if(is.null(tempY)){
     tempY <- 0
@@ -39,7 +42,8 @@ get_maturity <- function(type, par, laa, tempY=NULL){
 
     mat <- as.numeric(laa >= par)
   
-  }else if(tolower(type) == 'logistic'){
+  }
+  if(tolower(type) == 'logistic'){
 
     # par[2] is L50
     # Looks like we can simply add an additional parameter here despite
@@ -49,6 +53,18 @@ get_maturity <- function(type, par, laa, tempY=NULL){
     
   }
   
+  if(tolower(type) == 'input'){
+    mat <- par[1:length(par)]
+  }
+  
+  if(tolower(type) == 'change'){
+    if(y<fmyearIdx){
+    mat <- par[1:9]
+    }
+    else{
+   mat <- par[10:18]
+    }
+  }
   
   return(mat)
   

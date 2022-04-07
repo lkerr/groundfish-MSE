@@ -1,6 +1,3 @@
-
-
-
 # Recruitment function list for use in the recruitment index column
 # of the object mproc (created by the file generateMP.R)
 
@@ -15,28 +12,34 @@ Rfun_BmsySim <- list(
   # are 25 years available in the series -- otherwise it just uses what is
   # left).
   
-  forecast = function(type, parpop, parenv, SSB, TAnom, sdR, ...){
+  forecast = function(type, parpop, parenv, SSB, TAnom, sdR, stockEnv,...){
+    Rpar<-parpop$Rpar
+    if (stock[[i]]$R_mis=='TRUE' && exists("y")=='TRUE'){
+      type<-parpop$Rpar_mis_typ
+      Rpar<-parpop$Rpar_mis}
+    if (parpop$switch==TRUE){
+      type2<-'True'}
+    else{type2<-'Est'}
     
-    
-    parpop$Rpar['rho'] <- 0
+    Rpar['rho'] <- 0
     gr <- get_recruits(type = type, 
-                 par = parpop$Rpar, 
+                 type2=type2,
+                 par = Rpar, 
                  SSB = SSB,
                  TAnom = TAnom,
                  pe_R = sdR,
-                 R_ym1 = 1,
-                 Rhat_ym1 = 1)
+                 R_ym1 = 1, block = 'late',
+                 Rhat_ym1 = 1,
+                 R_est=parpop$R)
     return(gr[['Rhat']])
     },
   
-  hindcastMean = function(Rest, ...){
-    mean(Rest)
+  hindcastMean = function(parpop,parmgt, ...){
+    mean(tail(parpop$R,parmgt$BREF_PAR0))
   },
-
+  
   hindcastSample = function(Rest,...){
     sample(Rest, 1)
   }
   
 )
-
-

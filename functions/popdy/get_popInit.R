@@ -11,30 +11,35 @@ get_popInit <- function(stock){
     #                                                   fyear + nburn + 1, 
     #                                                   log(0.2), 0.1)
     F_full[1:fyear] <- rlnorm(fyear, log(0.2), burnFsd)
-    
+
     #### Initilizations ####
     # initialize the model with numbers and mortality rates
 
     # in the first n (fyear-1) years.
    
-    initN <- get_init(nage=nage, N0=2e7, F_full=F_full[1], M=M)
+    initN <- get_init(type = initN_type, par = initN_par)
+
+    
     J1N[1:fyear,] <- rep(initN, each=fyear)
+    
+    natM[1:fyear] <- rep(init_M, each = fyear) #AEW
     
     laa[1:(fyear-1),] <- rep(get_lengthAtAge(type='vonB', par=laa_par, 
                                              ages=fage:page, Tanom=0),
                              each=(fyear-1))
     slxC[1:(fyear-1),] <- get_slx(type = selC_typ, par = selC, 
                                   laa = laa[1:(fyear-1),])
-    CN[1:(fyear-1),] <- get_catch(F_full = F_full[1:(fyear-1)], M = M,
+    CN[1:(fyear-1),] <- get_catch(F_full = F_full[1:(fyear-1)], M = init_M,
                                   N = J1N[1:(fyear-1),],
                                   selC = slxC[1:(fyear-1),])
-    waa[1:(fyear-1),] <- get_weightAtAge(type='aLb', par=waa_par, 
+    waa[1:(fyear-1),] <- get_weightAtAge(type=waa_typ, par=waa_par, 
                                          laa=laa[1:(fyear-1),],
-                                         inputUnit='kg')
+                                         inputUnit='kg',y=1,fmyearIdx=fmyearIdx)
+    
     paaCN[1:(fyear-1),] <- (CN[1:(fyear-1),]) / sum(CN[1:(fyear-1),])
-    IN[1:(fyear-1),] <- get_survey(F_full=F_full[1:(fyear-1)], M=M, 
+    IN[1:(fyear-1),] <- get_survey(F_full=F_full[1:(fyear-1)], M=init_M, 
                                    N=J1N[1:(fyear-1),], slxC[1:(fyear-1),], 
-                                   slxI=selI, timeI=timeI, qI=qI)
+                                   slxI=selI, timeI=timeI, qI=qI,DecCatch=FALSE,Tanom=0,y=1)
     sumIN[1:(fyear-1)] <- sum(IN[1:(fyear-1),])
     sumIW[1:(fyear-1)] <- apply(IN[1:(fyear-1),] * waa[1:(fyear-1),], 1, sum)
     paaIN[1:(fyear-1),] <- IN[1:(fyear-1),] / sum(IN[1:(fyear-1),])
@@ -42,7 +47,7 @@ get_popInit <- function(stock){
     effort[1:(fyear-1)] <- F_full[1:(fyear-1)] / qC
     
     
-    Z[1:(fyear-1),] <- rep(F_full[1]+M, each=(fyear-1))
+    Z[1:(fyear-1),] <- rep(F_full[1]+init_M, each=(fyear-1))
     
     
     # calculate length-at-age
@@ -54,11 +59,12 @@ get_popInit <- function(stock){
     
     # calculate weight-at-age in year y
     waaTemp <- get_weightAtAge(type=waa_typ, par=waa_par, 
-                               laa=laaTemp, inputUnit='kg')
+                               laa=laaTemp, inputUnit='kg',y=1,fmyearIdx=fmyearIdx) 
+
     waa[1:fyear,] <- rep(waaTemp, each = fyear)
     
     # calculate maturity in year y
-    matTemp <- get_maturity(type=mat_typ, par=mat_par, laa=laaTemp)
+    matTemp <- get_maturity(type=mat_typ, par=mat_par, laa=laaTemp,y=1,fmyearIdx=fmyearIdx)
     mat[1:fyear,] <- rep(matTemp, each = fyear)
     
     slxTemp <- get_slx(type=selC_typ, par=selC, laa=laaTemp)
@@ -68,8 +74,8 @@ get_popInit <- function(stock){
     # (depending on the lag) and temperature (forget time lag here)
     SSB[1:fyear] <- sum(J1N[1:fyear,] * 
                             mat[1:fyear,] * waa[1:fyear,])
-    
-    CN[1:fyear,] <- get_catch(F_full=F_full[1:fyear], M=M, 
+
+    CN[1:fyear,] <- get_catch(F_full=F_full[1:fyear], M=init_M, 
                                 N=J1N[1:fyear,], selC=slxC[1:fyear,]) + 1e-3
 
   })
@@ -77,12 +83,15 @@ get_popInit <- function(stock){
     # Determine the F for the rest of the burn-in period based on the
     # calculation of Fmsy and the proportion given in the parameter file.
   out <- within(stock, {  
-    burnFmsy <- get_burnF(stock)
+    stockT<-stock
+    stockT$R_mis<-FALSE
+    burnFmsy <- get_burnF(stockT)
     burnFmean <- burnFmsyScalar * burnFmsy
     F_full[(fyear+1):fmyearIdx] <- rlnorm(fmyearIdx - (fyear+1)+1, 
                                               log(burnFmean), burnFsd)
+    
+    
   })
-  
   return(out)
   
 }

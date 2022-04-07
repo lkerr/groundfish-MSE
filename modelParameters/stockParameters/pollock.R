@@ -1,35 +1,40 @@
-
-
-
-# Average and sd F before the management period begins. Mean on real scale
-# but distribution is lognormal. SD is lognormal SD.                                              
+# Scalar to Fmsy and sd for F before the management period begins. Distribution is lognormal. SD is lognormal SD.                                              
 burnFmsyScalar <- 1.5
 burnFsd <- 0.5
-
 
 # first age and plus age
 fage <- 1
 page <- 9
 
-
 #### Life history parameters ####
 
 # length-at-age parameters -- see get_lengthAtAge for including covariates
-laa_par <- c(Linf=73.8, K=0.3763, t0=0.1649, beta1=5) #udpate
+laa_par <- c(Linf=108, K=0.16, t0=-0.44, beta1=0)
 laa_typ <- 'vonB'
 
 # weight-length parameters
-waa_par <- c(exp(-11.9), 3.1024) 
+waa_par <- c(0.00000743, 3.09) 
 waa_typ <- 'aLb'
 
 # maturity-length parameters
-mat_par <- c(0.154, 39.1) 
+mat_par <- c(0.1636, 50.9967) 
 mat_typ <- 'logistic'
 
 # natural mortality
 M <- 0.2
+M_typ <- 'const'
+init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
 
+# initial numbers at-age parameters
+initN_par <- c(nage = page, N0 = 2e5, F_full = 0.05, M = M)
+initN_type <- 'expDecline'
 
+# Recruitment 
+##HS with all recruitment values (what is used in stock assessment projections)##
+##Could not find a SSB hinge point in the assessment report materials##
+Rpar <- c(SSB_star = 0, 
+          cR = 1) # dont need to convert
+R_typ <- 'HS'
 
 #### Fishery parameters ####
 
@@ -39,21 +44,17 @@ qI <- 0.0001
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
-selC <- c(s0=5, s1=0.08)
-selC_typ <- 'Logistic'
+selC <- c(s0=0.03645717,s1=0.06016626,s2=0.09265774,s3=0.13423546,s4=0.24148544,s5=0.48153900,s6=1.00000000,s7=0.94751736,s8=0.19443504)
+selC_typ <- 'input'
 
-# Recruitment (parameters need updating!!!) #AEW 
+#Rpar <- c(h = 0.94,
+#          R0 = 24198,
+#          c = -0.540,            #update
+#          SSBRF0 = 0.01972,      #update
+#          sigR = 0.4,
+#          beta3 = -2.501400e-01) #update
 
-Rpar <- c(h = 0.94,
-          R0 = 24198,
-          c = -0.540,            #update
-          SSBRF0 = 0.01972,      #update
-          sigR = 0.4,
-          beta3 = -2.501400e-01) #update
-
-R_typ <- 'BHSteep'
-
-
+#R_typ <- 'BHSteep'
 
 #### Survey parameters ####
 
@@ -62,7 +63,6 @@ R_typ <- 'BHSteep'
 selI <- c(1)
 selI_typ <- 'const'
 timeI <- 0.5 # when is the survey (as a proportion of the year)
-
 
 #### Stock assessment model parameters ####
 
@@ -79,6 +79,7 @@ startCV <- 1.5
 # for model fitting)
 caaInScalar <- 1000  
 
+M_mis<- 'FALSE'
 
 #### Error parameters ####
 
@@ -106,57 +107,8 @@ ie_bias <- 0 # % bias in implementation error
 ob_sumCW <- 1
 ob_sumIN <- 1
 
-
-#### BRPs and HCRs ####
-
-# # reference point calculation types
-# # Fmsy proxy type
-# fbrpTyp <- c('YPR')
-# # Bmsy proxy type
-# bbrpTyp <- c('RSSBR')
-# 
-# # Fmsy proxy level
-# fbrpLevel <- c(0.1)
-# # Bmsy proxy level
-# bbrpLevel <- c(1)
-# 
-# # Fmsy proxy types and levels
-# fbrp <- rbind(
-#   list('YPR', 0.1),
-#   list('RSSBR', 1)
-# )
-# pol <- data.frame(
-#   FmsyT = c('YPR'  ,   'SPR'        ),
-#   FmsyV = c(0.1    ,     1          ),
-#   BmsyT = c('RSSBR' ,   'dummy'      ),
-#   hcrT  = c('slide'  ,  'simpleThresh')
-# )
-# 
-# 
-# FmsyT <- list('YPR', 'SPR')
-# FmsyV <- list(c(0.1, 0.15),
-#               c(0.3, 0.4))
-# # i1 <- lapply(1:length(a1), function(x) expand.grid(a1[[x]], a2[[x]]))
-# 
-# BmsyT <- list('RSSBR', 'BmsySim')
-# BmsyV <- list(c(1, 0.8),
-#               c(NA, NA))
-# i2 <- lapply(1:length(BmsyT), function(x) expand.grid(BmsyT[[x]], BmsyV[[x]]))
-# 
-# # Harvest control rule types
-# i3 <- list('slide', 'simpleThresh')
-# 
-# 
-# hrcTyp <- list('slide', 'simpleThresh')
-
-
-
-
 #### -- Errors and warnings -- ####
 if(1.0 %in% c(qI, qC)){
   stop('catchability (qI and qC) must not be exactly one (you can make it
         however close you want though')
 }
-
-
-

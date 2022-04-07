@@ -2,7 +2,7 @@
 # Running scripts in sequence using batch jobs
 #### (Sam Truesdell struesdell@gmri.org)
 
-(This material prepared for Gavin Fay's GIt-Hub page)
+(This material prepared for Gavin Fay's Git-Hub page)
 
 ***
 
@@ -199,6 +199,12 @@ Read file <./1003.e> for stderr output of this job.
 * If you are like me you may find this perplexing. Feel free to e-mail me at struesdell@gmri.org. I'm not a computer programmer and I only know what I've found necessary for my work but I might be able to help with some basics!
 
 * I've found UMASS GHPCC support to be very responsive -- you can e-mail them at hpcc-support@umassmed.edu. They helped me figure out ```-w 'done()'``` and they provided me this example.
+
+* At some point you might have to troubleshoot on the HPCC. Staff advise not to use the head node to run anything. Instead you can use a different node by first running the command
+  ```
+  bsub -Is -q interactive -n5 -R "span[hosts=1]" /bin/bash
+  ```
+  Then you can proceed to do your work interactively and you will still have access to your files.
 
 ***
 

@@ -21,6 +21,7 @@ if(platform != 'Linux'){
 }
 
 
+
 # Remove all files (as long as not running runSetup later within the plotting
 # function to gather information for diagnostic plots). Ran through the 
 # available environments before and after the simulation is run and found

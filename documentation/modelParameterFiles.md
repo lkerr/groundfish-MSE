@@ -63,6 +63,8 @@
 
 * **qI**. Catchability for the survey index
 
+* **DecCatch**. Switch for if survey catchability decreases with temperature. TRUE= survey catchability decreases. FALSE= survey catchability is constant overtime. 
+
 * **selC**. Selectivity parameters for the commercial fishery. See function ```get_slx()``` for information on parameters.
 
 * **selcC_typ**. Type of selectivity function. See function ```get_slx()``` for information on types.
@@ -71,7 +73,7 @@
   * Traditional Beverton-Holt:
     * a
     * b
-    * c -- the temperature effect
+    * g -- the temperature effect
     * rho -- any annual AR1 correlation effect
   * Beverton-Holt steepness parameterization. The beta parameters can be left out if not included in the model and they will be converted to 0.
     * R<sub>0</sub> -- virgin recruitment
@@ -81,6 +83,9 @@
     * beta3 -- temperature effect on overall error
     * rho -- any annual AR1 correlation effect
     * SSBRF0 -- spawner biomass per recruit at F=0. Stock assessment results are a good place to look for this. Alternatively could build a per-recruit model and use the M selectivity, maturity, etc. from a recent assessment
+  * If you want the BRPs to be estimated with and projections to use the 'wrong' stock-recruitment relationship:
+    * Set R_mis <- TRUE
+    * Decide on what the 'wrong' stock-recruitment relationship is with Rpar_mis. 
 
 * **selI**. Survey selectivity. See function ```get_slx()``` for selectivity options.
 
@@ -118,6 +123,22 @@
 
 * **pe_R**. Recruitement process error (lognormally distributed)
 
+* **pe_RSA**. Recriutment process error assumed in the stock assessment
+
+* **pe_IA**. Initial abundance error assumed in the projections
+
 * **ob_sumCW**. Observation error bias for fishery catch in weight. 1.0 is no bias, 0.9 is -10% bias, 1.1 is +10% bias etc.
 
 * **ob_sumCW**. Observation error bias for fishery catch in weight. 1.0 is no bias, 0.9 is -10% bias, 1.1 is +10% bias etc.
+
+* **Change_point2**. Set to TRUE if there is more than one change point in catch bias. 
+
+* **Change_point_yr**. If Change_point2 is TRUE, then identify the year in which catch bias changes. 
+
+* **Change_point3**. Set to TRUE if there is more than two change points in catch bias.
+
+* **Change_point_yr1**. If Change_point3 is TRUE, then identify the year in which the catch bias changes the first time (the first time after the MP period begins). 
+
+* **Change_point_yr2**. If Change_point3 is TRUE, then identify the year in which the catch bias changes the second time (the second time after the MP period begins). 
+
+

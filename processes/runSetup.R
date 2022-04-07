@@ -157,5 +157,20 @@ if(fyear < mxModYrs){
              'each stock'))
 }
 
-
+if (platform == 'Linux'){
+  if(!file.exists('../EXE/ASAP3.EXE')){
+    stop(paste('ASAP3.EXE should be loaded in a directory EXE in the parent',
+               'directory of groundfish-MSE -- i.e., you need an EXE',
+               'directory in the same directory as Rlib and EXE must contain',
+               'ASAP3.EXE', sep='\n'))
+  }
+  rand <- sample(1:10000, 1)
+  tempwd <- getwd()
+  rundir <- paste(tempwd, "/assessment/ASAP/Run", '_', rand, sep = "")
+  dir.create(path = rundir)
+  from.path <- paste('../EXE/ASAP3.EXE', sep = "")
+  to.path   <- paste(rundir, sep= "")
+  file.copy(from = from.path, to = to.path)
+  
+}
 
