@@ -83,7 +83,7 @@ start_rep = 1
 # uncomment if models runs is terminated unexpectedly
 # Set up to be re-run from line 85; not the whole script 
 
-source('processes/restore_RNG_state.R')
+# source('processes/restore_RNG_state.R')
 
 #### Top rep Loop ####
 for(r in start_rep:nrep){
