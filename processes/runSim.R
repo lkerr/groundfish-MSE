@@ -30,9 +30,9 @@ if(runClass != 'HPCC'){
 
 start<-Sys.time()-as.POSIXct("2018-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
 start<-as.double(start)*100
-# set.seed(start)
+set.seed(start)
 
- oldseed_ALL <- .Random.seed
+oldseed_ALL <- .Random.seed
 showProgBar<-TRUE
 ####################End Parameter and storage Setup ####################
   #This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
