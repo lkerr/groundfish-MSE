@@ -43,16 +43,15 @@ top_loop_start<-Sys.time()
 
 #### Top rep Loop ####
 for(r in 1:nrep){
-    # oldseed_mproc <- .Random.seed
+    oldseed_mproc <- .Random.seed
 
   #### Top MP loop ####
   for(m in 1:nrow(mproc)){
 
        manage_counter<-0
 
-       #Restore the rng state.  Depending on whether you use oldseed1 or oldseed2, you'll get different behavior.  oldseed_ALL will force all the replicates to start from the same RNG state.  oldseed_mproc will force all the management procedures to have the same RNG state.  You probably want oldseed_mproc
-       #.Random.seed<-oldseed_ALL
-       # .Random.seed<-oldseed_mproc
+       #Restore the rng state to the value of oldseed_mproc.  For the same values of r, all the management procedures to start from the same RNG state.  You probably want oldseed_mproc
+       .Random.seed<-oldseed_mproc
 
         #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached, which sets of coefficients to use, and which prices to use
         if(mproc$ImplementationClass[m]=="Economic"){
