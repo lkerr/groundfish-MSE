@@ -50,7 +50,7 @@ for(r in 1:nrep){
 
        manage_counter<-0
 
-       #Restore the rng state to the value of oldseed_mproc.  For the same values of r, all the management procedures to start from the same RNG state.  You probably want oldseed_mproc
+       #Restore the rng state to the value of oldseed_mproc.  For the same values of r, all the management procedures to start from the same RNG state.
        .Random.seed<-oldseed_mproc
 
         #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached, which sets of coefficients to use, and which prices to use
