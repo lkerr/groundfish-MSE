@@ -72,7 +72,6 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
       parpop$waa<-colMeans(stock[[1]]$waa[150:155,])
       }
     }
-    
     SSB <- get_proj(type = 'BREF', parmgt = parmgt, parpop = parpop, 
                     parenv = parenv, 
                     Rfun = Rfun, F_val = FBRP,
