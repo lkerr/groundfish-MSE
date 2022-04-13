@@ -19,7 +19,7 @@ if(runClass != 'HPCC'){
   mproc_bak<-mproc
 
  mproc<-mproc_bak[3:4,]
-# nrep<-1
+ nrep<-3
 # nyear<-200
 ## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
 ####################End Temporary changes for testing ####################
