@@ -47,23 +47,8 @@ if(y == fmyearIdx){
 # Ideally, everthing from here to the end should be a function.  It's inputs are:
 # fishery_holder (which should contain info on the ACL, biomass or stock indices, and which stocks need biological outputs (Catch at age or survivors at age))
 # Production and targeting data
-
-# As a function, it can only have one output. A list of stuff?
-# Updated fishery_holder?
-# Catch or survivors at age -- if so, we'll have to do 
-# Revenue or catch by vessel? Topline catch/revenue?
 ############################################################
 ############################################################
-
-
-
-
-# It may be faster to change the way this model runs.  Currently, it's day-by-day and the ACLs are checked at
-# the end of each day (to shut the fishery down).
-# It may be better to 
-#  predict for the entire year at the same time, generate a "cumulative harvest" under "all open"
-#  Find the date that the first quota binds, then predict from that point forward under "1 closed"
-#  Repeat until you get to the end of the year or all quotas bind.
 
 
 
@@ -101,10 +86,10 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
     working_targeting[spstock2=="nofish", exp_rev_total:=0L]
     working_targeting[spstock2=="nofish", actual_rev_total:=0L]
     
-    #rescale
+    #rescale to thousands of dollars.
     working_targeting[, exp_rev_total:=exp_rev_total/1000]
     working_targeting[, actual_rev_total:=actual_rev_total/1000]
-    #fill the _das variables, which is not 
+    #fill the _das variables, which is needed to use the 2 and nc2 models
     working_targeting[, exp_rev_total_das:=exp_rev_total]
     working_targeting[, actual_rev_total_das:=actual_rev_total]
     
@@ -178,7 +163,7 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
 #contract that list down to a single data.table
   annual_revenue_holder<-rbindlist(annual_revenue_holder) 
   annual_revenue_holder$r<-r
-  annual_revenue_holder$m<-m
+  annual_revenue_holder$m<-model
   annual_revenue_holder$y<-y
   annual_revenue_holder$year<-yrs[y]
   revenue_holder[[yearitercounter]]<-annual_revenue_holder
