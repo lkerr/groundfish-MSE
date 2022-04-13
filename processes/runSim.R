@@ -113,8 +113,8 @@ for(r in 1:nrep){
           # ---- Run the economic model here ----
           source('processes/loadEcon2.R')
 
-
-          bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline)
+          bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline_averages)
+      
 
           source('processes/runEcon_module.R')
 
