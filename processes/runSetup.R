@@ -159,7 +159,7 @@ if(fyear < mxModYrs){
 
 if (platform == 'Linux'){
   if(!file.exists('../EXE/ASAP3.EXE')){
-    stop(paste('ASAP3.EXE should be loaded in a directory EXE in the parent',
+    warning(paste('ASAP3.EXE should be loaded in a directory EXE in the parent',
                'directory of groundfish-MSE -- i.e., you need an EXE',
                'directory in the same directory as Rlib and EXE must contain',
                'ASAP3.EXE', sep='\n'))
