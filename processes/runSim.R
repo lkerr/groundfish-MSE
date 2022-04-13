@@ -16,16 +16,18 @@ if(runClass != 'HPCC'){
 
 ####################These are temporary changes for testing ####################
 # mproc_bak<-mproc
-# mproc<-mproc_bak[1:2,] #selects validation of four models
+# mproc<-mproc_bak[3:4,] #selects validation of four models
 # 
 # nrep<-2
-# # yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
-# # I want to start the economic model at fmyear=2010 and temporarily end it in 2011
-# start_sim<-2010
-# end_sim<-2015
-# 
-# fyear<-which(yrs == start_sim)
-# nyear<-which(yrs == end_sim)
+# yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
+# I want to start the economic model at fmyear=2010 and temporarily end it in 2011
+# management starts this year:
+#start_managmement<-2010
+#Simulation ends in this year:
+#end_managmement<-2015
+#This is overwriting fmyearIdx. Not sure where that is set.
+#fmyearIdx<-which(yrs == start_managmement)
+#nyear<-which(yrs == end_managmement)
 
 ####################End Temporary changes for testing ####################
 
