@@ -3,14 +3,14 @@
 # Economic module documentation
 ### Min-Yang Lee; Anna Birkenbach (Min-Yang.Lee@noaa.gov; abirken@udel.edu)
 
-<br> Describes the code that implements the "Economic Simulation Module" in the management strategy evaluation.  Also describes a sub-model (runSim_econonly.R and runEcon_moduleonly.R) that have been modified to only simulate the economic component of the model.
+<br> Describes the code that implements the "Economic Simulation Module" in the management strategy evaluation.  
 
 ***
 ### Status
-The code runs the econonomic only model. We' are missing a few features for the integrated model.  When mproc.csv contains a row with ImplementationClass=="Economic", the economic model will run.
+The code adds an  econonomic component to the MSE model. We' are missing a few features for the integrated model.  When mproc.csv contains a row with ``ImplementationClass=="Economic"``, the economic model will run.  When you want to run the Economic model, you have to specify a few more columns in mproc.csv that are not necessary when ``ImplementationClass=="Standard Fisheries"``
 
 ## Overview
-The runSim.R file has been modified to allow for an economic model of harvesting to substitute for a standardFisheries model of implementation error.  The economic module can be viewed as an alternative to the get_implementationF() function in a the standard fisheries model.  It takes inputs from the stock dynamics models and outputs an F_full.  It also constructs some economic metrics, but I haven't coded where to save them yet.
+The ``runSim.R`` file has been modified to allow for an economic model of harvesting to substitute for a standardFisheries model of implementation error.  The economic module can be viewed as an alternative to the ``get_implementationF()`` function in a the standard fisheries model.  It takes inputs from the stock dynamics models and outputs an F_full.  It also constructs some economic metrics, but I haven't coded where to save them yet.
 
 
 ## Statistics Behind the Economic simulation module
@@ -51,11 +51,11 @@ The statistical estimation of the model takes place externally to the MSE model 
 
 ### Options
 We can set some options using the mproc.csv file. Notably:
-* **EconType :** Multi or Single.  
+* **EconType :** Multi or Single.  Multi is more realistic.
    Multi --> a closure in a stockarea closes everything in that stockarea (no landings of GB Cod if GB haddock is closed)
    Single --> a closure in a stockarea does not close everything in that stockarea ( landings of GB Cod allowed if GB haddock is closed)
    
-* **CatchZero :**
+* **CatchZero :** Governs catch when a stock is closed.
   TRUE --> no catch of GB Cod if GB cod is closed.
   FALSE --> catch of GB Cod happens even if GB cod is closed (but all catch would be discarded).
 * **EconName :** A short name for the scenario. "pre" or "post" in the naming conventions refers to the coefficients used ie (coefs1, coefs2, coefsnc1 and coefsnc2)
@@ -73,15 +73,9 @@ There's a pile of code.
 
 * **runEcon_module.R :**  is a *working* economic module. The last part is kinda janky, but closes the bio$\rightarrow$ econ $\rightarrow$ bio loop.  This used to be in the scratch folder with a different name.
 
-* **runEcon_moduleonly.R :**  is a *working* economic module.  It leaves out the biological parts loop part and should be used for doing simulations of the economic model.
-
 * **setupYearIndexing.R:** sets up a small data.table that keeps track of year indices. 
 
-* **setupYearIndexing_Econ.R:** sets up a small data.table that keeps track of year indices. Specific for economic simulations.
-
 * **withinYearAdmin.R:** Operates on that datatable every year.
-
-* **runSim_Econonly.R :**  is a modified version of runSim.R that only does the economic simulations.
 
 * **loadsetRNG.R :**  code to load/reset the RNG state based on a list.
 
@@ -92,8 +86,6 @@ There are  "processes" files that run one time per simulation run:
 
 * **genEcon_Containers.R:** Gets called in the runSetup.R file. It sets up a few placeholders for Fleet level economic outputs.
 
-* **loadEcon.R:** Gets called in the runSetup.R file. Loads in some of the smaller data.tables that will remain in memory every time runSim.R is called. (NOT NEEDED ANYMORE)
-
 * **loadEcon2.R:** Gets called in the runSim.R file.  Loads in a single large data.table that remains in memory for one simulated year.  These files are too big to load and hold in memory for the entire simulation.  Also loads in input prices, output prices, and multipliers
 
 * **setupEconType.R:** Parses the mproc file for economic options (multipliers, output prices, input prices, production equation, choice equation).
@@ -102,7 +94,7 @@ Functions - these run many times per simulation:
 * **get_bio_for_econ:** passes *things* from the biological model (in stock[[i]]) to the economic model.
 
 * **get_fishery_next_period:** adds up catch from individual vessels to the daily level and then aggregates with prior catch.  Checks if the sector sub-ACL is reached and closes the fishery if so.
-* **get_fishery_next_period_areaclose:** adds up catch from individual vessels to the daily level and then aggregates with prior catch.  Checks if the sector sub-ACL is reached and closes the fishery if so.  For the allocated multispecie stocks, this creates and extrac column that indicates if that stockarea is closed.
+* **get_fishery_next_period_areaclose:** adds up catch from individual vessels to the daily level and then aggregates with prior catch.  Checks if the sector sub-ACL is reached and closes the fishery if so.  For the allocated multispecies stocks, this creates and extracts column that indicates if that stockarea is closed.
 
 * **get_joint_production:** Replaces the catch multiplier, landings multiplier, quota prices, lag prices, and prices with catch (lbs), landings(lbs), quota prices, lag prices, and prices.  This accounts for the jointness in production. These variables are now a little misleading in names.  However, I chose to replace instead of create new columns to save on space.
 
@@ -111,20 +103,20 @@ Functions - these run many times per simulation:
 * **predict_etargeting:** predicts targeting, returns a data.table.
 
 
-* **get_best_trip:** for each vessel-day (id) selects the choice (spstock2) with the highest prhat
-
 * **get_random_draw_tripsDT:** for each vessel-day (id) randomly selects a choice (spstock2) based on prhat. Reworked to  data.table
 
 * **get_reshape_catches:** Aggregates the catch from the day's trips to the fleet level.
 
 * **get_reshape_landings:** Aggregates the landings from the day's trips to the fleet level.
 
+* **get_reshape_targets_revenues:**  ?
+
+
 * **joint_adjust_allocated_mults:** Adjusts the joint production multipliers for the allocated multispecies stocks
 * **joint_adjust_others:** Adjusts the joint production multipliers for other stocks
 
 
 * **zero_out_closed_areas_asc_cutout:** Closes a fishery and redistributes the probability associated with that stock to the other options.  This is based on the "stockarea_open" logical column.   Skips math if all stocks are open
-
 
 * **get_reshape_targets_revenues:** A small "helper" function to reshape targets and revenues.
 
