@@ -20,7 +20,7 @@ non_sector_data<-"catch_limits_2010_2017.csv"
 non_sector_econ_baseline <- read.csv(file.path(sourcepath,non_sector_data), sep=",", header=TRUE,stringsAsFactors=FALSE)
 
 #Just keep the spstock2,nonsector_nonrec_fraction,rec_fraction,	sector_frac
-ns_keep=c("spstock2","nonsector_nonrec_fraction","rec_fraction","sector_frac")
+ns_keep=c("spstock2","nonsector_nonrec_fraction","rec_fraction","sector_frac","non_mult")
 non_sector_econ_baseline<-non_sector_econ_baseline[, ns_keep]
 
 
