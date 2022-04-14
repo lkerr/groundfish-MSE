@@ -42,8 +42,8 @@ badj_GDP=c("live_priceGDP","quota_remaining_BOQ","WTswtquota_remaining_BOQ","WTD
 
 
 #names of quota price files.
-quota_coefs_in<-"quota_price_linear.txt"
-quota_coefs_out<-"quota_price_coefs.Rds"
+quotaprice_coefs_in<-"quota_price_linear.txt"
+quotaprice_coefs_out<-"quotaprice_coefs.Rds"
 
 
 
@@ -82,9 +82,9 @@ droppval<-function(working_coefs){
 }
 
 ### Code works for post-as-post and post-as-pre as long as the pre_process files are run separately  
-quota_coefs <- read.csv(file.path(rawpath,quota_coefs_in), sep="\t", header=TRUE,stringsAsFactors=FALSE)
+quotaprice_coefs <- read.csv(file.path(rawpath,quotaprice_coefs_in), sep="\t", header=TRUE,stringsAsFactors=FALSE)
 
-qc_rownames<-quota_coefs[,1]
+qc_rownames<-quotaprice_coefs[,1]
 #here is a good place to gsub out the ":", "_I", and _cons to constant
 #qc_rownames<-gsub(":","_",qc_rownames)
 qc_rownames<-gsub("_I","",qc_rownames)
@@ -93,37 +93,37 @@ qc_rownames<-gsub("__","_",qc_rownames)
 qc_rownames<-gsub("#","X",qc_rownames)
 qc_rownames<-gsub("c\\.","",qc_rownames)
 
-quota_coefs<-zero_out(quota_coefs,thresh)
-quota_coefs<-droppval(quota_coefs)
+quotaprice_coefs<-zero_out(quotaprice_coefs,thresh)
+quotaprice_coefs<-droppval(quotaprice_coefs)
 
 
 
 # Keep the sescond row 
-quota_coefs<-quota_coefs[,2]
+quotaprice_coefs<-quotaprice_coefs[,2]
 
 #transpose and send to dataframe, fix naming, and characters
-quota_coefs<-as.data.frame(t(quota_coefs))
-colnames(quota_coefs)<-qc_rownames
+quotaprice_coefs<-as.data.frame(t(quotaprice_coefs))
+colnames(quotaprice_coefs)<-qc_rownames
  
 
 # parse the "model" string variable to facilitate merging to production dataset
 
 ## Rename columns 
 ### First, Unlabel.  Strip out the equal signs. Prepend "alpha_" to all
-# colnames(quota_coefs)[colnames(quota_coefs)=="Number of Crew (Log)"] <- "log_crew"
-# colnames(quota_coefs)[colnames(quota_coefs)=="Trip Length Days (Log)"] <- "log_trip_days"
-# colnames(quota_coefs)[colnames(quota_coefs)=="Cumulative Harvest (Log)"] <- "logh_cumul"
-# colnames(quota_coefs)[colnames(quota_coefs)=="Primary Target"] <- "primary"
-# colnames(quota_coefs)[colnames(quota_coefs)=="Secondary Target"] <- "secondary"
-# colnames(quota_coefs)[colnames(quota_coefs)=="Trawl Survey Biomass (Log)"]<- "log_trawl_survey_weight"
-# colnames(quota_coefs)[colnames(quota_coefs)=="Sector ACL (Log)"]<- "log_sector_acl"
+# colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="Number of Crew (Log)"] <- "log_crew"
+# colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="Trip Length Days (Log)"] <- "log_trip_days"
+# colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="Cumulative Harvest (Log)"] <- "logh_cumul"
+# colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="Primary Target"] <- "primary"
+# colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="Secondary Target"] <- "secondary"
+# colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="Trawl Survey Biomass (Log)"]<- "log_trawl_survey_weight"
+# colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="Sector ACL (Log)"]<- "log_sector_acl"
 # 
-# colnames(quota_coefs)<- tolower(gsub("=","",colnames(quota_coefs)))
+# colnames(quotaprice_coefs)<- tolower(gsub("=","",colnames(quotaprice_coefs)))
 
 
 
-quota_coefs<-as.data.table(quota_coefs)
-saveRDS(quota_coefs, file=file.path(savepath, quota_coefs_out), compress=FALSE)
-
+quotaprice_coefs<-as.data.table(quotaprice_coefs)
+saveRDS(quotaprice_coefs, file=file.path(savepath, quotaprice_coefs_out), compress=FALSE)
+rm(list=c("badj_GDP","selection","qc_rownames","quotaprice_coefs_in","quotaprice_coefs_out"))
 
 
