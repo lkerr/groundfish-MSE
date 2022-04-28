@@ -14,6 +14,7 @@ input_price_loc<-econtype$InputPriceFile
 
 quarterly_output_price_loc<-"quarterly_prices_2022_03_04.csv"
 
+quotaprice_coefs_loc<-"quotaprice_coefs.Rds"
 
 
 # you need to fix this so it flexibly reads in the vectors
@@ -25,7 +26,8 @@ multipliers<-readRDS(file.path(econdatapath,multiplier_loc))
 outputprices<-readRDS(file.path(econdatapath,output_price_loc))
 inputprices<-readRDS(file.path(econdatapath,input_price_loc))
 
-quarterly_output_prices<-read.csv(file.path(econdatapath,"quarterly_prices_2022_03_04.csv"), header=TRUE)
-quarterly_output_prices$splitcol<-quarterly_output_prices$gffishingyear-2009
-quarterly_output_prices<-as.data.table(quarterly_output_prices)
-quarterly_output_prices<-split(quarterly_output_prices, by="splitcol")
+
+#Quota price coefficients
+quotaprice_coefs<-readRDS(file.path(econdatapath,quotaprice_coefs_loc))
+quarterly_output_prices<-as.data.table(read.csv(file.path(econdatapath,"quarterly_prices_2022_03_04.csv"), header=TRUE))
+quarterly_output_prices<-split(quarterly_output_prices, by="gffishingyear")

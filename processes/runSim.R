@@ -3,7 +3,7 @@
 #### Set up environment ####
 
 # empty the environment
-rm(list=ls())
+#rm(list=ls())
 source('processes/runSetup.R')
 
 # if on local machine (i.e., not hpcc) must compile the tmb code
@@ -15,10 +15,10 @@ if(runClass != 'HPCC'){
 
 
 ####################These are temporary changes for testing ####################
-# mproc_bak<-mproc
-# mproc<-mproc_bak[3:4,] #selects validation of four models
-# 
-# nrep<-2
+ mproc_bak<-mproc
+ mproc<-mproc[2:2,] #selects validation of four models
+ 
+ nrep<-2
 # yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
 # I want to start the economic model at fmyear=2010 and temporarily end it in 2011
 # management starts this year:
