@@ -25,7 +25,5 @@ multipliers<-readRDS(file.path(econdatapath,multiplier_loc))
 outputprices<-readRDS(file.path(econdatapath,output_price_loc))
 inputprices<-readRDS(file.path(econdatapath,input_price_loc))
 
-quarterly_output_prices<-read.csv(file.path(econdatapath,"quarterly_prices_2022_03_04.csv"), header=TRUE)
-quarterly_output_prices$splitcol<-quarterly_output_prices$gffishingyear-2009
-quarterly_output_prices<-as.data.table(quarterly_output_prices)
-quarterly_output_prices<-split(quarterly_output_prices, by="splitcol")
+quarterly_output_prices<-as.data.table(read.csv(file.path(econdatapath,"quarterly_prices_2022_03_04.csv"), header=TRUE))
+quarterly_output_prices<-split(quarterly_output_prices, by="gffishingyear")
