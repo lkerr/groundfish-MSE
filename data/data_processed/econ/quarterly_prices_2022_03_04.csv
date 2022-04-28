@@ -1,0 +1,681 @@
+fishing_year,q_fy,stockcode,stock_string,spstock2,live_price_nom,live_price_R
+2010,1,17,SNEMA Winter Flounder,,1.3264468,1.4314808
+2010,1,13,Redfish,redfish,.48644093,.5249595
+2010,1,3,GBW Cod,codGB,1.539098,1.6609707
+2010,1,11,Plaice,americanplaiceflounder,1.3285644,1.4337661
+2010,1,8,GOM Cod,codGOM,1.7645446,1.9042692
+2010,1,4,GBE Haddock,haddockGB,1.0874279,1.1735353
+2010,1,16,Witch Flounder,witchflounder,2.5223088,2.7220366
+2010,1,10,GOM Winter Flounder,winterflounderGOM,1.9804101,2.137228
+2010,1,7,GB Yellowtail Flounder,yellowtailflounderGB,1.3811414,1.4905064
+2010,1,9,GOM Haddock,haddockGOM,1.7428148,1.8808187
+2010,1,6,GB Winter Flounder,winterflounderGB,1.8205079,1.9646639
+2010,1,2,GBE Cod,codGB,1.5297556,1.6508886
+2010,1,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.8366426,1.9820763
+2010,1,5,GBW Haddock,haddockGB,1.0537214,1.1371598
+2010,1,12,Pollock,pollock,.98653275,1.0646509
+2010,1,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.5320458,1.6533601
+2010,1,15,White Hake,whitehake,1.0250251,1.1061913
+2010,2,2,GBE Cod,codGB,1.7235264,1.8342029
+2010,2,9,GOM Haddock,haddockGOM,1.2084856,1.2860887
+2010,2,10,GOM Winter Flounder,winterflounderGOM,2.0355971,2.1663134
+2010,2,13,Redfish,redfish,.50988489,.54262722
+2010,2,15,White Hake,whitehake,.99006206,1.0536391
+2010,2,8,GOM Cod,codGOM,1.9672997,2.0936301
+2010,2,7,GB Yellowtail Flounder,yellowtailflounderGB,1.3783995,1.4669137
+2010,2,17,SNEMA Winter Flounder,,2.1398041,2.2772119
+2010,2,6,GB Winter Flounder,winterflounderGB,2.1604843,2.2992201
+2010,2,16,Witch Flounder,witchflounder,2.6491497,2.8192654
+2010,2,12,Pollock,pollock,.78193122,.83214307
+2010,2,11,Plaice,americanplaiceflounder,1.2848779,1.3673866
+2010,2,3,GBW Cod,codGB,1.8032699,1.9190671
+2010,2,4,GBE Haddock,haddockGB,.95165968,1.0127707
+2010,2,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.555297,1.6551707
+2010,2,5,GBW Haddock,haddockGB,1.1006013,1.1712766
+2010,2,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.5987546,1.701419
+2010,3,7,GB Yellowtail Flounder,yellowtailflounderGB,1.3514076,1.3917181
+2010,3,15,White Hake,whitehake,1.0115126,1.0416845
+2010,3,2,GBE Cod,codGB,1.463264,1.5069109
+2010,3,11,Plaice,americanplaiceflounder,1.5768434,1.6238782
+2010,3,4,GBE Haddock,haddockGB,1.2487441,1.2859923
+2010,3,6,GB Winter Flounder,winterflounderGB,2.2125814,2.2785792
+2010,3,5,GBW Haddock,haddockGB,1.1816632,1.2169104
+2010,3,17,SNEMA Winter Flounder,,2.1017556,2.1644478
+2010,3,9,GOM Haddock,haddockGOM,1.6478055,1.696957
+2010,3,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.494218,1.5387882
+2010,3,12,Pollock,pollock,.71639627,.73776531
+2010,3,16,Witch Flounder,witchflounder,2.588871,2.6660931
+2010,3,3,GBW Cod,codGB,1.5976027,1.6452568
+2010,3,8,GOM Cod,codGOM,1.8996989,1.956364
+2010,3,10,GOM Winter Flounder,winterflounderGOM,2.1516166,2.215796
+2010,3,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.4549626,1.4983619
+2010,3,13,Redfish,redfish,.69826484,.71909302
+2010,4,12,Pollock,pollock,.8810395,.88381058
+2010,4,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.2366142,1.2405037
+2010,4,5,GBW Haddock,haddockGB,.99841976,1.0015601
+2010,4,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.2735838,1.2775896
+2010,4,11,Plaice,americanplaiceflounder,1.660086,1.6653074
+2010,4,7,GB Yellowtail Flounder,yellowtailflounderGB,.86948913,.87222391
+2010,4,6,GB Winter Flounder,winterflounderGB,1.5030673,1.5077947
+2010,4,10,GOM Winter Flounder,winterflounderGOM,1.612432,1.6175035
+2010,4,15,White Hake,whitehake,.96446544,.9674989
+2010,4,17,SNEMA Winter Flounder,,1.6485424,1.6537275
+2010,4,9,GOM Haddock,haddockGOM,1.7231543,1.728574
+2010,4,2,GBE Cod,codGB,1.8889039,1.8948449
+2010,4,16,Witch Flounder,witchflounder,2.038269,2.0446799
+2010,4,4,GBE Haddock,haddockGB,1.0750523,1.0784335
+2010,4,13,Redfish,redfish,.64698893,.64902389
+2010,4,3,GBW Cod,codGB,1.9706837,1.976882
+2010,4,8,GOM Cod,codGOM,2.2092481,2.2161968
+2011,1,13,Redfish,redfish,.50994176,.49898294
+2011,1,10,GOM Winter Flounder,winterflounderGOM,1.585681,1.5516042
+2011,1,12,Pollock,pollock,.76120287,.74484438
+2011,1,16,Witch Flounder,witchflounder,1.9955163,1.9526321
+2011,1,4,GBE Haddock,haddockGB,1.3307623,1.3021637
+2011,1,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.0644555,1.0415801
+2011,1,2,GBE Cod,codGB,1.6209379,1.5861034
+2011,1,9,GOM Haddock,haddockGOM,2.1180961,2.0725775
+2011,1,6,GB Winter Flounder,winterflounderGB,1.5041265,1.4718024
+2011,1,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.0742363,1.0511506
+2011,1,3,GBW Cod,codGB,1.566588,1.5329216
+2011,1,5,GBW Haddock,haddockGB,1.259535,1.2324672
+2011,1,7,GB Yellowtail Flounder,yellowtailflounderGB,1.0195104,.99760079
+2011,1,17,SNEMA Winter Flounder,,1.0594428,1.036675
+2011,1,8,GOM Cod,codGOM,1.7982858,1.7596401
+2011,1,15,White Hake,whitehake,1.0384339,1.0161177
+2011,1,11,Plaice,americanplaiceflounder,1.2231476,1.1968619
+2011,2,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.3757917,1.3616623
+2011,2,10,GOM Winter Flounder,winterflounderGOM,1.9046992,1.8851379
+2011,2,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.3458433,1.3320215
+2011,2,2,GBE Cod,codGB,1.946592,1.9266005
+2011,2,4,GBE Haddock,haddockGB,1.4547737,1.4398332
+2011,2,15,White Hake,whitehake,.83414441,.82557774
+2011,2,17,SNEMA Winter Flounder,,2,1.97946
+2011,2,7,GB Yellowtail Flounder,yellowtailflounderGB,1.3358783,1.3221588
+2011,2,12,Pollock,pollock,.79756325,.78937227
+2011,2,5,GBW Haddock,haddockGB,1.7933768,1.7749588
+2011,2,16,Witch Flounder,witchflounder,2.1056895,2.084064
+2011,2,6,GB Winter Flounder,winterflounderGB,2.0072639,1.9866493
+2011,2,3,GBW Cod,codGB,1.7488443,1.7308836
+2011,2,11,Plaice,americanplaiceflounder,1.3264006,1.3127785
+2011,2,8,GOM Cod,codGOM,2.0056098,1.9850122
+2011,2,9,GOM Haddock,haddockGOM,1.8954663,1.8759999
+2011,2,13,Redfish,redfish,.67292541,.66601449
+2011,3,4,GBE Haddock,haddockGB,1.6836566,1.6366432
+2011,3,7,GB Yellowtail Flounder,yellowtailflounderGB,1.3988374,1.3597772
+2011,3,13,Redfish,redfish,.77732992,.75562423
+2011,3,10,GOM Winter Flounder,winterflounderGOM,2.0106564,1.954512
+2011,3,6,GB Winter Flounder,winterflounderGB,1.9548788,1.9002919
+2011,3,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.3376893,1.3003365
+2011,3,11,Plaice,americanplaiceflounder,1.4355658,1.3954799
+2011,3,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.4782684,1.4369901
+2011,3,2,GBE Cod,codGB,1.844148,1.7926532
+2011,3,12,Pollock,pollock,.70916098,.68935883
+2011,3,5,GBW Haddock,haddockGB,1.8303478,1.7792382
+2011,3,8,GOM Cod,codGOM,1.9748724,1.9197272
+2011,3,9,GOM Haddock,haddockGOM,2.1597664,2.0994585
+2011,3,3,GBW Cod,codGB,1.8154881,1.7647935
+2011,3,16,Witch Flounder,witchflounder,2.0178418,1.9614968
+2011,3,15,White Hake,whitehake,.82053798,.79762578
+2011,3,17,SNEMA Winter Flounder,,2.0998487,2.0412138
+2011,4,10,GOM Winter Flounder,winterflounderGOM,1.7604043,1.7152805
+2011,4,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.4202341,1.3838297
+2011,4,13,Redfish,redfish,.74462664,.72553986
+2011,4,7,GB Yellowtail Flounder,yellowtailflounderGB,1.1351694,1.1060719
+2011,4,2,GBE Cod,codGB,2.2246964,2.1676714
+2011,4,8,GOM Cod,codGOM,2.1797676,2.1238945
+2011,4,9,GOM Haddock,haddockGOM,1.9153692,1.8662732
+2011,4,5,GBW Haddock,haddockGB,1.3972194,1.361405
+2011,4,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.2072783,1.1763325
+2011,4,15,White Hake,whitehake,1.0711966,1.043739
+2011,4,6,GB Winter Flounder,winterflounderGB,1.9788572,1.9281337
+2011,4,17,SNEMA Winter Flounder,,2.6226563,2.5554307
+2011,4,4,GBE Haddock,haddockGB,1.40734,1.3712661
+2011,4,16,Witch Flounder,witchflounder,1.8033139,1.7570901
+2011,4,11,Plaice,americanplaiceflounder,1.6687176,1.6259439
+2011,4,12,Pollock,pollock,.90049082,.87740886
+2011,4,3,GBW Cod,codGB,2.0350106,1.9828478
+2012,1,7,GB Yellowtail Flounder,yellowtailflounderGB,1.5192616,1.4890705
+2012,1,3,GBW Cod,codGB,2.166096,2.1230509
+2012,1,8,GOM Cod,codGOM,2.5226233,2.4724932
+2012,1,2,GBE Cod,codGB,2.0988657,2.0571566
+2012,1,5,GBW Haddock,haddockGB,1.9851881,1.9457381
+2012,1,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.2854991,1.2599534
+2012,1,13,Redfish,redfish,.63169014,.61913705
+2012,1,9,GOM Haddock,haddockGOM,2.6687741,2.6157396
+2012,1,6,GB Winter Flounder,winterflounderGB,1.7873762,1.751857
+2012,1,10,GOM Winter Flounder,winterflounderGOM,1.8761632,1.8388797
+2012,1,16,Witch Flounder,witchflounder,1.9621738,1.9231811
+2012,1,12,Pollock,pollock,.75492448,.73992246
+2012,1,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.3442553,1.317542
+2012,1,4,GBE Haddock,haddockGB,1.9736662,1.9344451
+2012,1,15,White Hake,whitehake,1.2455876,1.220835
+2012,1,17,SNEMA Winter Flounder,,1.5365031,1.5059694
+2012,1,11,Plaice,americanplaiceflounder,1.4557534,1.4268245
+2012,2,3,GBW Cod,codGB,2.3049014,2.2943847
+2012,2,10,GOM Winter Flounder,winterflounderGOM,2.064579,2.0551591
+2012,2,8,GOM Cod,codGOM,2.5798743,2.5681031
+2012,2,4,GBE Haddock,haddockGB,2.103718,2.0941195
+2012,2,5,GBW Haddock,haddockGB,2.1551142,2.1452811
+2012,2,17,SNEMA Winter Flounder,,1.6213592,1.6139615
+2012,2,13,Redfish,redfish,.57772911,.57509309
+2012,2,6,GB Winter Flounder,winterflounderGB,2.243891,2.2336528
+2012,2,9,GOM Haddock,haddockGOM,2.2746301,2.2642517
+2012,2,16,Witch Flounder,witchflounder,1.7106806,1.7028753
+2012,2,11,Plaice,americanplaiceflounder,1.5262867,1.5193228
+2012,2,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.50491,1.4980435
+2012,2,15,White Hake,whitehake,1.2574055,1.2516683
+2012,2,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.8504777,1.8420346
+2012,2,2,GBE Cod,codGB,2.3101792,2.2996385
+2012,2,7,GB Yellowtail Flounder,yellowtailflounderGB,1.6475432,1.640026
+2012,2,12,Pollock,pollock,1.0071079,1.0025127
+2012,3,10,GOM Winter Flounder,winterflounderGOM,2.0183134,2.0241766
+2012,3,2,GBE Cod,codGB,1.6423202,1.647091
+2012,3,13,Redfish,redfish,.62389153,.62570393
+2012,3,16,Witch Flounder,witchflounder,1.8955895,1.9010961
+2012,3,4,GBE Haddock,haddockGB,1.842556,1.8479085
+2012,3,12,Pollock,pollock,.93317324,.93588406
+2012,3,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.4501393,1.4543519
+2012,3,11,Plaice,americanplaiceflounder,1.593237,1.5978653
+2012,3,9,GOM Haddock,haddockGOM,2.5075114,2.5147955
+2012,3,5,GBW Haddock,haddockGB,2.0993009,2.1053991
+2012,3,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.5896189,1.5942367
+2012,3,8,GOM Cod,codGOM,1.768949,1.7740878
+2012,3,15,White Hake,whitehake,1.3149328,1.3187526
+2012,3,17,SNEMA Winter Flounder,,2.2757976,2.2824087
+2012,3,6,GB Winter Flounder,winterflounderGB,1.9675537,1.9732693
+2012,3,3,GBW Cod,codGB,1.8761306,1.8815807
+2012,3,7,GB Yellowtail Flounder,yellowtailflounderGB,1.3554364,1.3593739
+2012,4,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.44089,1.4443729
+2012,4,10,GOM Winter Flounder,winterflounderGOM,1.9652389,1.9699893
+2012,4,3,GBW Cod,codGB,2.1441104,2.1492932
+2012,4,5,GBW Haddock,haddockGB,1.967032,1.9717866
+2012,4,2,GBE Cod,codGB,2.0218401,2.0267272
+2012,4,11,Plaice,americanplaiceflounder,2.2034233,2.2087493
+2012,4,17,SNEMA Winter Flounder,,2.2720718,2.2775638
+2012,4,9,GOM Haddock,haddockGOM,2.4374771,2.4433689
+2012,4,7,GB Yellowtail Flounder,yellowtailflounderGB,1.5146779,1.5183392
+2012,4,4,GBE Haddock,haddockGB,1.8606076,1.865105
+2012,4,6,GB Winter Flounder,winterflounderGB,2.2776072,2.2831125
+2012,4,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.7245532,1.7287219
+2012,4,8,GOM Cod,codGOM,2.3102562,2.3158405
+2012,4,13,Redfish,redfish,.58424461,.58565682
+2012,4,12,Pollock,pollock,1.0363195,1.0388244
+2012,4,16,Witch Flounder,witchflounder,2.4221563,2.4280112
+2012,4,15,White Hake,whitehake,1.3815134,1.3848528
+2013,1,3,GBW Cod,codGB,1.8702619,1.8479555
+2013,1,17,SNEMA Winter Flounder,,1.5108479,1.4928281
+2013,1,7,GB Yellowtail Flounder,yellowtailflounderGB,1.5295869,1.5113436
+2013,1,13,Redfish,redfish,.50606787,.50003207
+2013,1,5,GBW Haddock,haddockGB,1.6022203,1.5831107
+2013,1,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.3570164,1.3408314
+2013,1,11,Plaice,americanplaiceflounder,1.3015641,1.2860404
+2013,1,16,Witch Flounder,witchflounder,2.4777865,2.4482341
+2013,1,2,GBE Cod,codGB,2.0372186,2.0129209
+2013,1,10,GOM Winter Flounder,winterflounderGOM,1.4530343,1.435704
+2013,1,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.3712821,1.3549269
+2013,1,8,GOM Cod,codGOM,2.6409891,2.6094902
+2013,1,6,GB Winter Flounder,winterflounderGB,1.4681938,1.4506828
+2013,1,15,White Hake,whitehake,1.2884094,1.2730426
+2013,1,9,GOM Haddock,haddockGOM,2.3925424,2.3640068
+2013,1,12,Pollock,pollock,1.0561538,1.043557
+2013,1,4,GBE Haddock,haddockGB,1.5189557,1.5008392
+2013,2,4,GBE Haddock,haddockGB,1.1413329,1.1298786
+2013,2,13,Redfish,redfish,.48741505,.48252344
+2013,2,5,GBW Haddock,haddockGB,1.1464007,1.1348956
+2013,2,3,GBW Cod,codGB,1.7916064,1.7736262
+2013,2,8,GOM Cod,codGOM,2.2075827,2.1854279
+2013,2,6,GB Winter Flounder,winterflounderGB,1.6711261,1.654355
+2013,2,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.2423958,1.2299273
+2013,2,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.3245922,1.3112988
+2013,2,11,Plaice,americanplaiceflounder,1.1423942,1.1309294
+2013,2,7,GB Yellowtail Flounder,yellowtailflounderGB,1.351283,1.3377217
+2013,2,10,GOM Winter Flounder,winterflounderGOM,1.5830852,1.5671977
+2013,2,9,GOM Haddock,haddockGOM,1.6856903,1.6687731
+2013,2,2,GBE Cod,codGB,1.5988199,1.5827744
+2013,2,12,Pollock,pollock,1.0922009,1.0812397
+2013,2,15,White Hake,whitehake,1.1887661,1.1768359
+2013,2,16,Witch Flounder,witchflounder,2.4807513,2.4558549
+2013,2,17,SNEMA Winter Flounder,,1.5522276,1.5366497
+2013,3,13,Redfish,redfish,.5700829,.55756694
+2013,3,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.7241395,1.6862866
+2013,3,4,GBE Haddock,haddockGB,1.192394,1.1662154
+2013,3,3,GBW Cod,codGB,1.7429725,1.7047062
+2013,3,7,GB Yellowtail Flounder,yellowtailflounderGB,3.1018102,3.0337112
+2013,3,16,Witch Flounder,witchflounder,2.9439993,2.8793647
+2013,3,8,GOM Cod,codGOM,2.3444574,2.2929857
+2013,3,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,2.0820737,2.0363624
+2013,3,15,White Hake,whitehake,1.3928329,1.3622538
+2013,3,9,GOM Haddock,haddockGOM,1.8681391,1.8271248
+2013,3,5,GBW Haddock,haddockGB,1.3357614,1.3064352
+2013,3,12,Pollock,pollock,1.0149471,.99266428
+2013,3,2,GBE Cod,codGB,1.5007797,1.4678307
+2013,3,17,SNEMA Winter Flounder,,2.1927502,2.1446092
+2013,3,11,Plaice,americanplaiceflounder,2.0894797,2.0436058
+2013,3,6,GB Winter Flounder,winterflounderGB,2.084671,2.0389028
+2013,3,10,GOM Winter Flounder,winterflounderGOM,2.3781466,2.3259354
+2013,4,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.7270113,1.6620228
+2013,4,4,GBE Haddock,haddockGB,1.077114,1.0365815
+2013,4,10,GOM Winter Flounder,winterflounderGOM,2.0050099,1.9295601
+2013,4,3,GBW Cod,codGB,1.6112844,1.5506507
+2013,4,12,Pollock,pollock,.92436421,.88957977
+2013,4,6,GB Winter Flounder,winterflounderGB,2.8798003,2.7714317
+2013,4,2,GBE Cod,codGB,1.760461,1.6942137
+2013,4,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.1797476,1.135353
+2013,4,15,White Hake,whitehake,1.3658563,1.3144583
+2013,4,17,SNEMA Winter Flounder,,2.5082138,2.4138281
+2013,4,8,GOM Cod,codGOM,2.0727253,1.9947274
+2013,4,11,Plaice,americanplaiceflounder,2.026794,1.9505244
+2013,4,5,GBW Haddock,haddockGB,1.1144298,1.0724931
+2013,4,9,GOM Haddock,haddockGOM,1.6968683,1.6330141
+2013,4,13,Redfish,redfish,.56160891,.54047519
+2013,4,16,Witch Flounder,witchflounder,2.0154696,1.9396261
+2013,4,7,GB Yellowtail Flounder,yellowtailflounderGB,2.0119812,1.936269
+2014,1,7,GB Yellowtail Flounder,yellowtailflounderGB,1.5452297,1.4706838
+2014,1,12,Pollock,pollock,1.0713836,1.0196973
+2014,1,6,GB Winter Flounder,winterflounderGB,1.8965794,1.8050835
+2014,1,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.5055327,1.432902
+2014,1,3,GBW Cod,codGB,1.5093044,1.4364916
+2014,1,11,Plaice,americanplaiceflounder,1.5072749,1.4345601
+2014,1,16,Witch Flounder,witchflounder,2.8024101,2.6672146
+2014,1,2,GBE Cod,codGB,1.4695311,1.3986371
+2014,1,13,Redfish,redfish,.52992076,.50435603
+2014,1,15,White Hake,whitehake,1.2994353,1.2367471
+2014,1,8,GOM Cod,codGOM,2.241991,2.1338315
+2014,1,10,GOM Winter Flounder,winterflounderGOM,1.7550739,1.6704046
+2014,1,9,GOM Haddock,haddockGOM,1.8345578,1.7460539
+2014,1,4,GBE Haddock,haddockGB,1.0072156,.9586249
+2014,1,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.1229897,1.0688137
+2014,1,5,GBW Haddock,haddockGB,1.0396606,.98950464
+2014,1,17,SNEMA Winter Flounder,,2.0088155,1.9119051
+2014,2,3,GBW Cod,codGB,1.8362604,1.7521061
+2014,2,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.2443594,1.1873314
+2014,2,13,Redfish,redfish,.54238784,.51753068
+2014,2,10,GOM Winter Flounder,winterflounderGOM,1.8115457,1.7285241
+2014,2,12,Pollock,pollock,1.3930521,1.3292097
+2014,2,7,GB Yellowtail Flounder,yellowtailflounderGB,1.4908245,1.4225012
+2014,2,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.2472317,1.1900721
+2014,2,8,GOM Cod,codGOM,2.0846617,1.9891233
+2014,2,4,GBE Haddock,haddockGB,1.0287857,.9816373
+2014,2,2,GBE Cod,codGB,1.8123839,1.7293239
+2014,2,17,SNEMA Winter Flounder,,1.8025492,1.7199398
+2014,2,9,GOM Haddock,haddockGOM,1.3849261,1.3214561
+2014,2,6,GB Winter Flounder,winterflounderGB,1.9070685,1.8196691
+2014,2,15,White Hake,whitehake,1.5108039,1.441565
+2014,2,5,GBW Haddock,haddockGB,1.1391397,1.0869339
+2014,2,16,Witch Flounder,witchflounder,2.4701226,2.3569188
+2014,2,11,Plaice,americanplaiceflounder,1.3961234,1.3321402
+2014,3,12,Pollock,pollock,1.1261265,1.0690953
+2014,3,10,GOM Winter Flounder,winterflounderGOM,1.9770529,1.8769276
+2014,3,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.7123845,1.6256629
+2014,3,3,GBW Cod,codGB,1.8973774,1.8012872
+2014,3,15,White Hake,whitehake,1.4079071,1.3366054
+2014,3,6,GB Winter Flounder,winterflounderGB,2.3619981,2.2423778
+2014,3,7,GB Yellowtail Flounder,yellowtailflounderGB,1.9561838,1.8571154
+2014,3,8,GOM Cod,codGOM,1.5100129,1.4335402
+2014,3,17,SNEMA Winter Flounder,,2.2039466,2.0923305
+2014,3,9,GOM Haddock,haddockGOM,1.6345314,1.5517527
+2014,3,11,Plaice,americanplaiceflounder,2.0029662,1.9015285
+2014,3,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.1423631,1.0845096
+2014,3,16,Witch Flounder,witchflounder,3.0992422,2.9422851
+2014,3,4,GBE Haddock,haddockGB,1.1340208,1.0765898
+2014,3,5,GBW Haddock,haddockGB,1.3952764,1.3246144
+2014,3,13,Redfish,redfish,.56285697,.53435183
+2014,3,2,GBE Cod,codGB,1.9951782,1.894135
+2014,4,3,GBW Cod,codGB,1.9131004,1.8158019
+2014,4,5,GBW Haddock,haddockGB,1.0458902,.99269718
+2014,4,2,GBE Cod,codGB,1.8042527,1.7124901
+2014,4,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,2.0812004,1.9753524
+2014,4,4,GBE Haddock,haddockGB,1.0351253,.98247975
+2014,4,11,Plaice,americanplaiceflounder,2.2639556,2.1488128
+2014,4,15,White Hake,whitehake,1.6903039,1.6043366
+2014,4,9,GOM Haddock,haddockGOM,1.5995249,1.5181745
+2014,4,13,Redfish,redfish,.61649972,.58514512
+2014,4,17,SNEMA Winter Flounder,,2.0547192,1.9502181
+2014,4,16,Witch Flounder,witchflounder,2.4547515,2.329905
+2014,4,12,Pollock,pollock,1.0961373,1.0403887
+2014,4,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.6331811,1.550119
+2014,4,10,GOM Winter Flounder,winterflounderGOM,1.4871069,1.411474
+2014,4,8,GOM Cod,codGOM,2.0579727,1.9533061
+2014,4,7,GB Yellowtail Flounder,yellowtailflounderGB,1.2907411,1.2250952
+2014,4,6,GB Winter Flounder,winterflounderGB,2.5378084,2.4087379
+2015,1,6,GB Winter Flounder,winterflounderGB,1.7592528,1.6989708
+2015,1,10,GOM Winter Flounder,winterflounderGOM,1.7328041,1.6734284
+2015,1,13,Redfish,redfish,.58728224,.56715864
+2015,1,4,GBE Haddock,haddockGB,.83800292,.8092882
+2015,1,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.5461882,1.4932071
+2015,1,7,GB Yellowtail Flounder,yellowtailflounderGB,1.5375903,1.4849037
+2015,1,2,GBE Cod,codGB,1.8103548,1.7483218
+2015,1,5,GBW Haddock,haddockGB,.92577428,.89405203
+2015,1,15,White Hake,whitehake,1.4902238,1.4391602
+2015,1,12,Pollock,pollock,1.5015426,1.4500912
+2015,1,11,Plaice,americanplaiceflounder,1.6075488,1.5524651
+2015,1,3,GBW Cod,codGB,1.7607048,1.7003731
+2015,1,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.0295519,.9942736
+2015,1,9,GOM Haddock,haddockGOM,1.347345,1.3011774
+2015,1,8,GOM Cod,codGOM,2.2613695,2.1838822
+2015,1,16,Witch Flounder,witchflounder,2.3784084,2.2969108
+2015,1,17,SNEMA Winter Flounder,,1.8945862,1.829667
+2015,2,7,GB Yellowtail Flounder,yellowtailflounderGB,1.7560099,1.7560099
+2015,2,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.9935573,1.9935573
+2015,2,6,GB Winter Flounder,winterflounderGB,2.5103514,2.5103514
+2015,2,15,White Hake,whitehake,1.1053158,1.1053158
+2015,2,8,GOM Cod,codGOM,2.1390958,2.1390958
+2015,2,3,GBW Cod,codGB,1.8240309,1.8240309
+2015,2,2,GBE Cod,codGB,2.075551,2.075551
+2015,2,11,Plaice,americanplaiceflounder,1.6177473,1.6177473
+2015,2,12,Pollock,pollock,1.1358888,1.1358888
+2015,2,16,Witch Flounder,witchflounder,2.5939662,2.5939662
+2015,2,13,Redfish,redfish,.5126248,.5126248
+2015,2,9,GOM Haddock,haddockGOM,1.1580452,1.1580452
+2015,2,17,SNEMA Winter Flounder,,2.3306835,2.3306835
+2015,2,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.4718781,1.4718781
+2015,2,5,GBW Haddock,haddockGB,1.1851951,1.1851951
+2015,2,4,GBE Haddock,haddockGB,1.0005876,1.0005876
+2015,2,10,GOM Winter Flounder,winterflounderGOM,2.1746626,2.1746626
+2015,3,16,Witch Flounder,witchflounder,3.0959337,3.1049273
+2015,3,2,GBE Cod,codGB,1.8794652,1.884925
+2015,3,3,GBW Cod,codGB,1.8663809,1.8718027
+2015,3,5,GBW Haddock,haddockGB,1.2361746,1.2397656
+2015,3,8,GOM Cod,codGOM,2.3643582,2.3712265
+2015,3,10,GOM Winter Flounder,winterflounderGOM,2.3809965,2.3879132
+2015,3,6,GB Winter Flounder,winterflounderGB,2.8919485,2.9003494
+2015,3,7,GB Yellowtail Flounder,yellowtailflounderGB,2.0409186,2.0468473
+2015,3,9,GOM Haddock,haddockGOM,1.220961,1.2245078
+2015,3,11,Plaice,americanplaiceflounder,2.1614017,2.1676805
+2015,3,4,GBE Haddock,haddockGB,1.1864085,1.189855
+2015,3,13,Redfish,redfish,.6093725,.61114269
+2015,3,17,SNEMA Winter Flounder,,2.5007958,2.5080605
+2015,3,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,2.0931644,2.0992451
+2015,3,15,White Hake,whitehake,1.3462951,1.350206
+2015,3,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.7732462,1.7783973
+2015,3,12,Pollock,pollock,.7881766,.79046619
+2015,4,2,GBE Cod,codGB,1.2008086,1.2008086
+2015,4,7,GB Yellowtail Flounder,yellowtailflounderGB,1.6512966,1.6512966
+2015,4,12,Pollock,pollock,1.1484642,1.1484642
+2015,4,17,SNEMA Winter Flounder,,2.1784217,2.1784217
+2015,4,3,GBW Cod,codGB,1.5197932,1.5197932
+2015,4,13,Redfish,redfish,.58856529,.58856529
+2015,4,6,GB Winter Flounder,winterflounderGB,1.5909784,1.5909784
+2015,4,8,GOM Cod,codGOM,1.9820273,1.9820273
+2015,4,4,GBE Haddock,haddockGB,1.1689986,1.1689986
+2015,4,11,Plaice,americanplaiceflounder,2.2471862,2.2471862
+2015,4,5,GBW Haddock,haddockGB,1.1822509,1.1822509
+2015,4,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,2.0148413,2.0148413
+2015,4,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.6138661,1.6138661
+2015,4,10,GOM Winter Flounder,winterflounderGOM,2.0864265,2.0864265
+2015,4,15,White Hake,whitehake,1.8321913,1.8321913
+2015,4,16,Witch Flounder,witchflounder,2.325294,2.325294
+2015,4,9,GOM Haddock,haddockGOM,1.3944215,1.3944215
+2016,1,13,Redfish,redfish,.55575931,.5518949
+2016,1,10,GOM Winter Flounder,winterflounderGOM,3.0436702,3.0225062
+2016,1,4,GBE Haddock,haddockGB,1.1481175,1.1401342
+2016,1,12,Pollock,pollock,1.3395511,1.3302367
+2016,1,6,GB Winter Flounder,winterflounderGB,3.4930274,3.468739
+2016,1,8,GOM Cod,codGOM,2.7392304,2.7201834
+2016,1,5,GBW Haddock,haddockGB,1.0191326,1.0120461
+2016,1,2,GBE Cod,codGB,2.1568148,2.1418176
+2016,1,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.7802438,1.7678649
+2016,1,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,2.5095,2.4920504
+2016,1,7,GB Yellowtail Flounder,yellowtailflounderGB,2.3951626,2.3785081
+2016,1,11,Plaice,americanplaiceflounder,2.7456005,2.7265091
+2016,1,15,White Hake,whitehake,1.4552556,1.4451367
+2016,1,3,GBW Cod,codGB,2.3527808,2.336421
+2016,1,16,Witch Flounder,witchflounder,3.5220642,3.4975739
+2016,1,17,SNEMA Winter Flounder,,2.9285161,2.9081528
+2016,1,9,GOM Haddock,haddockGOM,1.3015779,1.2925276
+2016,2,5,GBW Haddock,haddockGB,1.0919098,1.0621675
+2016,2,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,2.313879,2.2508519
+2016,2,3,GBW Cod,codGB,2.2885988,2.2262604
+2016,2,16,Witch Flounder,witchflounder,3.5275185,3.4314334
+2016,2,12,Pollock,pollock,1.0865623,1.0569657
+2016,2,15,White Hake,whitehake,1.5401635,1.4982115
+2016,2,17,SNEMA Winter Flounder,,3.1901627,3.1032667
+2016,2,9,GOM Haddock,haddockGOM,1.2686501,1.2340937
+2016,2,7,GB Yellowtail Flounder,yellowtailflounderGB,2.2129424,2.1526647
+2016,2,6,GB Winter Flounder,winterflounderGB,3.5506017,3.4538879
+2016,2,13,Redfish,redfish,.61149788,.59484148
+2016,2,4,GBE Haddock,haddockGB,.94114757,.91551191
+2016,2,10,GOM Winter Flounder,winterflounderGOM,3.4493237,3.3553686
+2016,2,11,Plaice,americanplaiceflounder,2.7142351,2.6403029
+2016,2,2,GBE Cod,codGB,2.0722072,2.015763
+2016,2,8,GOM Cod,codGOM,2.3579679,2.2937398
+2016,2,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,2.1373978,2.0791779
+2016,3,10,GOM Winter Flounder,winterflounderGOM,3.064055,2.9358025
+2016,3,7,GB Yellowtail Flounder,yellowtailflounderGB,2.1999254,2.1078429
+2016,3,2,GBE Cod,codGB,2.4019635,2.3014243
+2016,3,5,GBW Haddock,haddockGB,1.302325,1.2478135
+2016,3,11,Plaice,americanplaiceflounder,2.7383285,2.6237099
+2016,3,6,GB Winter Flounder,winterflounderGB,3.2945826,3.1566808
+2016,3,17,SNEMA Winter Flounder,,3.1490505,3.0172403
+2016,3,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,2.0704007,1.9837397
+2016,3,13,Redfish,redfish,.62637967,.60016119
+2016,3,15,White Hake,whitehake,1.3748856,1.3173368
+2016,3,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,2.7055354,2.5922894
+2016,3,9,GOM Haddock,haddockGOM,1.4064139,1.3475455
+2016,3,12,Pollock,pollock,.85753268,.82163882
+2016,3,4,GBE Haddock,haddockGB,1.189586,1.1397934
+2016,3,8,GOM Cod,codGOM,2.898742,2.7774091
+2016,3,3,GBW Cod,codGB,2.5710988,2.46348
+2016,3,16,Witch Flounder,witchflounder,3.9404058,3.7754719
+2016,4,11,Plaice,americanplaiceflounder,2.2937617,2.1544042
+2016,4,4,GBE Haddock,haddockGB,1.2371498,1.1619867
+2016,4,3,GBW Cod,codGB,2.1344643,2.0047848
+2016,4,10,GOM Winter Flounder,winterflounderGOM,2.1860359,2.0532231
+2016,4,7,GB Yellowtail Flounder,yellowtailflounderGB,1.0972513,1.0305878
+2016,4,8,GOM Cod,codGOM,2.3433714,2.2009997
+2016,4,12,Pollock,pollock,.78330165,.73571211
+2016,4,9,GOM Haddock,haddockGOM,1.3042436,1.2250042
+2016,4,5,GBW Haddock,haddockGB,1.0501499,.98634803
+2016,4,2,GBE Cod,codGB,2.1003196,1.9727147
+2016,4,16,Witch Flounder,witchflounder,2.448256,2.2995121
+2016,4,13,Redfish,redfish,.61119193,.57405895
+2016,4,6,GB Winter Flounder,winterflounderGB,2.1412549,2.0111628
+2016,4,17,SNEMA Winter Flounder,,2.7466137,2.5797431
+2016,4,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.4611725,1.3723989
+2016,4,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,2.4382036,2.2900703
+2016,4,15,White Hake,whitehake,1.2913303,1.2128755
+2017,1,8,GOM Cod,codGOM,2.8222098,2.6316488
+2017,1,17,SNEMA Winter Flounder,,2.7857163,2.5976193
+2017,1,10,GOM Winter Flounder,winterflounderGOM,2.8518445,2.6592824
+2017,1,15,White Hake,whitehake,.96955812,.90409166
+2017,1,2,GBE Cod,codGB,2.487,2.319073
+2017,1,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.5139933,1.4117655
+2017,1,4,GBE Haddock,haddockGB,.98241836,.91608357
+2017,1,6,GB Winter Flounder,winterflounderGB,3.0600233,2.8534045
+2017,1,12,Pollock,pollock,.87313199,.81417644
+2017,1,11,Plaice,americanplaiceflounder,2.485245,2.3174365
+2017,1,13,Redfish,redfish,.50523472,.4711203
+2017,1,3,GBW Cod,codGB,2.4850357,2.3172412
+2017,1,9,GOM Haddock,haddockGOM,1.2949419,1.2075049
+2017,1,5,GBW Haddock,haddockGB,.97876221,.91267431
+2017,1,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.9566361,1.8245202
+2017,1,16,Witch Flounder,witchflounder,2.7527168,2.566848
+2017,1,7,GB Yellowtail Flounder,yellowtailflounderGB,1.7729658,1.6532516
+2017,2,12,Pollock,pollock,1.0011919,.95092577
+2017,2,8,GOM Cod,codGOM,2.4274483,2.3055751
+2017,2,5,GBW Haddock,haddockGB,.75086814,.71316987
+2017,2,6,GB Winter Flounder,winterflounderGB,3.448245,3.2751217
+2017,2,15,White Hake,whitehake,.95407069,.90617037
+2017,2,4,GBE Haddock,haddockGB,.5364784,.50954384
+2017,2,11,Plaice,americanplaiceflounder,2.184258,2.0745947
+2017,2,10,GOM Winter Flounder,winterflounderGOM,2.6848686,2.5500715
+2017,2,2,GBE Cod,codGB,2.1722546,2.0631938
+2017,2,7,GB Yellowtail Flounder,yellowtailflounderGB,1.8780141,1.7837261
+2017,2,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.6125408,1.5315813
+2017,2,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,2.7044234,2.5686445
+2017,2,13,Redfish,redfish,.53682262,.50987077
+2017,2,17,SNEMA Winter Flounder,,2.9609098,2.8122537
+2017,2,9,GOM Haddock,haddockGOM,.89066565,.8459487
+2017,2,3,GBW Cod,codGB,2.1898005,2.0798588
+2017,2,16,Witch Flounder,witchflounder,2.2408693,2.1283636
+2017,3,3,GBW Cod,codGB,2.6976247,2.5417862
+2017,3,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.7227629,1.6232409
+2017,3,10,GOM Winter Flounder,winterflounderGOM,3.2539942,3.0660148
+2017,3,12,Pollock,pollock,.81493092,.76785332
+2017,3,2,GBE Cod,codGB,2.4145694,2.2750826
+2017,3,6,GB Winter Flounder,winterflounderGB,3.5042121,3.3017781
+2017,3,13,Redfish,redfish,.57347906,.54034984
+2017,3,7,GB Yellowtail Flounder,yellowtailflounderGB,1.9285575,1.817147
+2017,3,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,2.8700995,2.7042973
+2017,3,5,GBW Haddock,haddockGB,.88709992,.83585322
+2017,3,16,Witch Flounder,witchflounder,2.4612572,2.3190734
+2017,3,17,SNEMA Winter Flounder,,3.2363544,3.0493941
+2017,3,9,GOM Haddock,haddockGOM,1.0656191,1.0040596
+2017,3,11,Plaice,americanplaiceflounder,2.6984437,2.5425577
+2017,3,8,GOM Cod,codGOM,2.9466274,2.7764041
+2017,3,15,White Hake,whitehake,1.0051353,.94706982
+2017,3,4,GBE Haddock,haddockGB,.59724599,.56274378
+2017,4,3,GBW Cod,codGB,2.1095138,1.9626623
+2017,4,15,White Hake,whitehake,1.1129906,1.035511
+2017,4,13,Redfish,redfish,.58077991,.5403496
+2017,4,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.3265338,1.2341887
+2017,4,12,Pollock,pollock,.7706123,.71696699
+2017,4,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,2.1680877,2.0171587
+2017,4,4,GBE Haddock,haddockGB,.89505213,.83274412
+2017,4,9,GOM Haddock,haddockGOM,1.2682173,1.1799319
+2017,4,6,GB Winter Flounder,winterflounderGB,4.2914476,3.9927034
+2017,4,11,Plaice,americanplaiceflounder,2.5050662,2.3306789
+2017,4,8,GOM Cod,codGOM,2.3539755,2.1901062
+2017,4,2,GBE Cod,codGB,2.1710074,2.0198753
+2017,4,16,Witch Flounder,witchflounder,1.786155,1.6618139
+2017,4,17,SNEMA Winter Flounder,,2.7974916,2.6027474
+2017,4,5,GBW Haddock,haddockGB,.87408036,.81323224
+2017,4,10,GOM Winter Flounder,winterflounderGOM,2.5893829,2.409126
+2017,4,7,GB Yellowtail Flounder,yellowtailflounderGB,1.3080467,1.2169886
+2018,1,13,Redfish,redfish,.4529103,.42309171
+2018,1,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.7194079,1.6062059
+2018,1,6,GB Winter Flounder,winterflounderGB,3.2452402,3.0315809
+2018,1,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,.98489475,.92005152
+2018,1,17,SNEMA Winter Flounder,,2.8860242,2.6960149
+2018,1,11,Plaice,americanplaiceflounder,2.087219,1.9498012
+2018,1,15,White Hake,whitehake,.79116291,.73907453
+2018,1,16,Witch Flounder,witchflounder,1.7782735,1.661196
+2018,1,4,GBE Haddock,haddockGB,.86999816,.81271946
+2018,1,5,GBW Haddock,haddockGB,.85943711,.8028537
+2018,1,8,GOM Cod,codGOM,2.5775735,2.407872
+2018,1,2,GBE Cod,codGB,2.1436102,2.0024798
+2018,1,12,Pollock,pollock,.73880696,.69016558
+2018,1,9,GOM Haddock,haddockGOM,1.180398,1.1026833
+2018,1,3,GBW Cod,codGB,2.0157242,1.8830135
+2018,1,10,GOM Winter Flounder,winterflounderGOM,2.694705,2.5172918
+2018,1,7,GB Yellowtail Flounder,yellowtailflounderGB,1.6543454,1.5454271
+2018,2,4,GBE Haddock,haddockGB,.64847368,.58481336
+2018,2,3,GBW Cod,codGB,2.0177066,1.8196293
+2018,2,10,GOM Winter Flounder,winterflounderGOM,2.8341248,2.5559001
+2018,2,17,SNEMA Winter Flounder,,2.6581995,2.3972454
+2018,2,2,GBE Cod,codGB,2.0148623,1.8170643
+2018,2,9,GOM Haddock,haddockGOM,.92021883,.82988137
+2018,2,7,GB Yellowtail Flounder,yellowtailflounderGB,2.1042259,1.897655
+2018,2,6,GB Winter Flounder,winterflounderGB,3.3264952,2.9999347
+2018,2,16,Witch Flounder,witchflounder,1.9949433,1.7991006
+2018,2,11,Plaice,americanplaiceflounder,1.9626111,1.7699425
+2018,2,8,GOM Cod,codGOM,2.6880226,2.4241407
+2018,2,5,GBW Haddock,haddockGB,.77928859,.70278621
+2018,2,13,Redfish,redfish,.51960075,.46859178
+2018,2,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.2793269,1.153736
+2018,2,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,2.4459863,2.2058649
+2018,2,12,Pollock,pollock,.91000158,.82066715
+2018,2,15,White Hake,whitehake,.84113294,.75855935
+2018,3,5,GBW Haddock,haddockGB,.82307082,.74210554
+2018,3,6,GB Winter Flounder,winterflounderGB,2.9364471,2.6475894
+2018,3,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,2.2602615,2.03792
+2018,3,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.5063444,1.3581656
+2018,3,8,GOM Cod,codGOM,2.4424372,2.2021751
+2018,3,11,Plaice,americanplaiceflounder,2.3321459,2.1027331
+2018,3,16,Witch Flounder,witchflounder,1.6465431,1.484573
+2018,3,12,Pollock,pollock,.57746392,.52065891
+2018,3,15,White Hake,whitehake,1.155513,1.0418454
+2018,3,13,Redfish,redfish,.52292264,.47148284
+2018,3,2,GBE Cod,codGB,2.1984344,1.9821749
+2018,3,7,GB Yellowtail Flounder,yellowtailflounderGB,2.0406852,1.8399434
+2018,3,4,GBE Haddock,haddockGB,.8020969,.72319484
+2018,3,17,SNEMA Winter Flounder,,2.9980867,2.7031655
+2018,3,3,GBW Cod,codGB,2.0739076,1.8698978
+2018,3,10,GOM Winter Flounder,winterflounderGOM,3.0707378,2.7686701
+2018,3,9,GOM Haddock,haddockGOM,.95142227,.85783106
+2018,4,4,GBE Haddock,haddockGB,.84112859,.75921482
+2018,4,7,GB Yellowtail Flounder,yellowtailflounderGB,1.9369617,1.7483295
+2018,4,5,GBW Haddock,haddockGB,.91433543,.82529235
+2018,4,11,Plaice,americanplaiceflounder,2.299696,2.0757389
+2018,4,6,GB Winter Flounder,winterflounderGB,2.951519,2.6640837
+2018,4,16,Witch Flounder,witchflounder,1.4981177,1.3522227
+2018,4,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,2.0451212,1.845956
+2018,4,17,SNEMA Winter Flounder,,2.8413274,2.5646231
+2018,4,9,GOM Haddock,haddockGOM,1.1120182,1.0037237
+2018,4,2,GBE Cod,codGB,1.9106007,1.7245357
+2018,4,10,GOM Winter Flounder,winterflounderGOM,2.2525175,2.0331547
+2018,4,12,Pollock,pollock,.77308673,.69779927
+2018,4,13,Redfish,redfish,.55049074,.49688089
+2018,4,3,GBW Cod,codGB,1.8546056,1.6739937
+2018,4,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.1205972,1.0114672
+2018,4,15,White Hake,whitehake,1.0540122,.9513666
+2018,4,8,GOM Cod,codGOM,2.2002292,1.9859586
+2019,1,3,GBW Cod,codGB,2.3228173,2.087508
+2019,1,12,Pollock,pollock,1.0482584,.94206625
+2019,1,11,Plaice,americanplaiceflounder,1.6217843,1.457492
+2019,1,10,GOM Winter Flounder,winterflounderGOM,2.5610979,2.3016498
+2019,1,7,GB Yellowtail Flounder,yellowtailflounderGB,1.9402673,1.7437116
+2019,1,4,GBE Haddock,haddockGB,.81483883,.73229283
+2019,1,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.4465832,1.3000393
+2019,1,16,Witch Flounder,witchflounder,1.9379057,1.7415892
+2019,1,13,Redfish,redfish,.51128167,.45948708
+2019,1,9,GOM Haddock,haddockGOM,1.0675491,.95940268
+2019,1,2,GBE Cod,codGB,2.4816053,2.2302101
+2019,1,5,GBW Haddock,haddockGB,.88430005,.79471743
+2019,1,15,White Hake,whitehake,.87946784,.7903747
+2019,1,6,GB Winter Flounder,winterflounderGB,3.9768665,3.5739963
+2019,1,8,GOM Cod,codGOM,2.7691815,2.4886539
+2019,1,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.0931379,.98239923
+2019,1,17,SNEMA Winter Flounder,,3.661747,3.2907994
+2019,2,3,GBW Cod,codGB,2.2719026,2.0360138
+2019,2,17,SNEMA Winter Flounder,,2.5891666,2.3203368
+2019,2,16,Witch Flounder,witchflounder,2.2294703,1.9979873
+2019,2,5,GBW Haddock,haddockGB,.91835022,.82299912
+2019,2,13,Redfish,redfish,.50826663,.45549396
+2019,2,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.3926011,1.2480092
+2019,2,4,GBE Haddock,haddockGB,.8657701,.77587831
+2019,2,2,GBE Cod,codGB,2.2733984,2.0373545
+2019,2,9,GOM Haddock,haddockGOM,1.0602045,.95012486
+2019,2,12,Pollock,pollock,.94319576,.84526497
+2019,2,6,GB Winter Flounder,winterflounderGB,2.5001233,2.2405388
+2019,2,10,GOM Winter Flounder,winterflounderGOM,2.4988112,2.239363
+2019,2,11,Plaice,americanplaiceflounder,1.6386662,1.4685256
+2019,2,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,2.2833333,2.0462577
+2019,2,8,GOM Cod,codGOM,2.837316,2.5427213
+2019,2,7,GB Yellowtail Flounder,yellowtailflounderGB,2.0343575,1.8231329
+2019,2,15,White Hake,whitehake,1.2316509,1.1037703
+2019,3,13,Redfish,redfish,.57589841,.51222456
+2019,3,12,Pollock,pollock,.77263969,.68721324
+2019,3,16,Witch Flounder,witchflounder,1.6487541,1.4664607
+2019,3,8,GOM Cod,codGOM,3.0179112,2.6842377
+2019,3,10,GOM Winter Flounder,winterflounderGOM,2.4364445,2.1670606
+2019,3,5,GBW Haddock,haddockGB,1.0842518,.96437216
+2019,3,7,GB Yellowtail Flounder,yellowtailflounderGB,1.26,1.1206889
+2019,3,9,GOM Haddock,haddockGOM,1.2158287,1.0814013
+2019,3,11,Plaice,americanplaiceflounder,1.922994,1.7103794
+2019,3,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,1.3167368,1.1711526
+2019,3,15,White Hake,whitehake,.96211565,.85573995
+2019,3,17,SNEMA Winter Flounder,,2.1685669,1.9288007
+2019,3,4,GBE Haddock,haddockGB,.99072027,.8811819
+2019,3,6,GB Winter Flounder,winterflounderGB,1.9128994,1.7014009
+2019,3,3,GBW Cod,codGB,2.725642,2.424283
+2019,3,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.843181,1.6393908
+2019,3,2,GBE Cod,codGB,2.372684,2.1103497
+2019,4,11,Plaice,americanplaiceflounder,2.1125793,1.8891507
+2019,4,13,Redfish,redfish,.5786863,.51748383
+2019,4,9,GOM Haddock,haddockGOM,1.0017643,.89581668
+2019,4,7,GB Yellowtail Flounder,yellowtailflounderGB,1.0595238,.94746751
+2019,4,12,Pollock,pollock,.65962362,.58986115
+2019,4,15,White Hake,whitehake,.72959554,.65243274
+2019,4,5,GBW Haddock,haddockGB,.94501692,.84507096
+2019,4,6,GB Winter Flounder,winterflounderGB,1.7517532,1.566486
+2019,4,14,SNEMA Yellowtail Flounder,yellowtailflounderSNEMA,1.5676646,1.4018668
+2019,4,1,CCGOM Yellowtail Flounder,yellowtailflounderCCGOM,.94529313,.84531796
+2019,4,16,Witch Flounder,witchflounder,1.5681902,1.4023368
+2019,4,17,SNEMA Winter Flounder,,2.0170863,1.8037571
+2019,4,8,GOM Cod,codGOM,2.1784606,1.9480643
+2019,4,2,GBE Cod,codGB,1.3616228,1.2176162
+2019,4,3,GBW Cod,codGB,1.924185,1.7206812
+2019,4,10,GOM Winter Flounder,winterflounderGOM,1.9109279,1.7088262
+2019,4,4,GBE Haddock,haddockGB,.84146565,.75247139
