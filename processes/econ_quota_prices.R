@@ -6,6 +6,7 @@ for (day in 1:365){
   q_fy<-q_fy+1
   print(paste("It is quarter",q_fy))
   
+  # Construct RHS variables for the selection and quota price equations 
   # Extract elements of fishery_holder that you need to compute fish prices
   quarterly<-fishery_holder[,c("stocklist_index","stockName","spstock2","sectorACL","bio_model", "cumul_catch_pounds")]
   quarterly$quota_remaining_BOQ<-sector_ACL-cumul_catch_pounds
@@ -22,11 +23,7 @@ for (day in 1:365){
   quarterly$q_fy3<-as.integer(q_fy==3)
   quarterly$q_fy4<-as.integer(q_fy==4)
   
-  # extract elements of 
-  # working_targeting<-copy(targeting_dataset[[day]]).   
-  # You should just need one observation of prices.  
-  # This is harder than it looks. Could 'pick' todays price, but better to pick the whole quarters price
-  # you will have to go and get a subset of the targeting dataset[[1:90]] 
+  # Pull in quarterly prices
   
   }
 }
@@ -36,8 +33,6 @@ for (day in 1:365){
   
 
 
-# you will need to operate on 2 things:
-#  1. The working_targeting dataset will give you spstock2 and it's price
-#  2. fishery_holder will give you 
-  # fishery_holder<-bio_params_for_econ[,c("stocklist_index","stockName","spstock2","sectorACL","bio_model", "cumul_catch_pounds")]
-  # Be careful about units. The quota_price model is on 000s of mt. 
+#  fishery_holder will give you 
+# fishery_holder<-bio_params_for_econ[,c("stocklist_index","stockName","spstock2","sectorACL","bio_model", "cumul_catch_pounds")]
+# Be careful about units. The quota_price model is on 000s of mt. 
