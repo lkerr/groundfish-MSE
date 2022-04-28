@@ -111,7 +111,7 @@ colnames(quotaprice_coefs)<-qc_rownames
  colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="lnsigma:constant"] <- "sigma"
  quotaprice_coefs$sigma<-exp(quotaprice_coefs$sigma)
  ## Rename columns 
-  # colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="Trip Length Days (Log)"] <- "log_trip_days"
+colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="selection:quota_remaining_BOQXrecip_ACL"] <- "selection:fraction_remaining_BOQ"
 # colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="Cumulative Harvest (Log)"] <- "logh_cumul"
 # colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="Primary Target"] <- "primary"
 # colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="Secondary Target"] <- "secondary"
