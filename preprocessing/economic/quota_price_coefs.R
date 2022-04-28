@@ -106,12 +106,12 @@ quotaprice_coefs<-as.data.frame(t(quotaprice_coefs))
 colnames(quotaprice_coefs)<-qc_rownames
  
 
-# parse the "model" string variable to facilitate merging to production dataset
 
-## Rename columns 
-### First, Unlabel.  Strip out the equal signs. Prepend "alpha_" to all
-# colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="Number of Crew (Log)"] <- "log_crew"
-# colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="Trip Length Days (Log)"] <- "log_trip_days"
+# Exponentiate Sigma and rename 
+ colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="lnsigma:constant"] <- "sigma"
+ quotaprice_coefs$sigma<-exp(quotaprice_coefs$sigma)
+ ## Rename columns 
+  # colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="Trip Length Days (Log)"] <- "log_trip_days"
 # colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="Cumulative Harvest (Log)"] <- "logh_cumul"
 # colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="Primary Target"] <- "primary"
 # colnames(quotaprice_coefs)[colnames(quotaprice_coefs)=="Secondary Target"] <- "secondary"
