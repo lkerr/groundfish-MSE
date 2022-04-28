@@ -23,6 +23,7 @@ random_sim_draw[, join_econbase_idx:= join_econbase_yr-econ_data_start+1]
 random_sim_draw[, join_outputprice_idx:= join_econbase_idx]
 random_sim_draw[, join_inputprice_idx:= join_econbase_idx]
 random_sim_draw[, join_mult_idx:= join_econbase_idx]
+random_sim_draw[, join_quarterly_price_idx:= join_econbase_idx]
 
 #maximum 'years' (this is total times through innermost loop), a counter, and a progress bar.
 

@@ -12,6 +12,9 @@ multiplier_loc<-econtype$MultiplierFile
 output_price_loc<-econtype$OutputPriceFile
 input_price_loc<-econtype$InputPriceFile
 
+quarterly_output_price_loc<-"quarterly_prices_2022_03_04.csv"
+
+
 
 # you need to fix this so it flexibly reads in the vectors
 production_vars<-get(paste0("production_vars_",econtype$ProdEqn))
@@ -21,3 +24,8 @@ choice_equation<-get(paste0("choice_equation_",econtype$ChoiceEqn))
 multipliers<-readRDS(file.path(econdatapath,multiplier_loc))
 outputprices<-readRDS(file.path(econdatapath,output_price_loc))
 inputprices<-readRDS(file.path(econdatapath,input_price_loc))
+
+quarterly_output_prices<-read.csv(file.path(econdatapath,"quarterly_prices_2022_03_04.csv"), header=TRUE)
+quarterly_output_prices$splitcol<-quarterly_output_prices$gffishingyear-2009
+quarterly_output_prices<-as.data.table(quarterly_output_prices)
+quarterly_output_prices<-split(quarterly_output_prices, by="splitcol")

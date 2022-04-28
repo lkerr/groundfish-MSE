@@ -15,6 +15,13 @@ wi<-inputprices[[econ_inputprice_idx_draw]]
 if ('gffishingyear' %in% colnames(wi)){
   wi[, gffishingyear:=NULL]
 }
+
+quarterly_prices<-quarterly_output_prices[[econ_quarterlyprice_idx_draw]]
+if ('gffishingyear' %in% colnames(quarterly_prices)){
+  quarterly_prices[, gffishingyear:=NULL]
+}
+  
+  
 #temp for debugging
 #targeting_dataset$prhat<-targeting_dataset$pr
 
