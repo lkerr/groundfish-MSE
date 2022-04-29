@@ -14,7 +14,7 @@ input_price_loc<-econtype$InputPriceFile
 
 quarterly_output_price_loc<-"quarterly_prices_2022_03_04.csv"
 
-quotaprice_coefs_loc<-"quotaprice_coefs.Rds"
+quotaprice_coefs_loc<-"quotaprice_coefs_exponential.Rds"
 
 
 # you need to fix this so it flexibly reads in the vectors
