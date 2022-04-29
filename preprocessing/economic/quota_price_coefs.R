@@ -32,20 +32,19 @@ rawpath <- savepath
 
 
 # 
-# ##############Independent variables in the Production equation ##########################
-# ### If there are different the equations, you can set there up here, then use their suffix in the mproc file to use these new targeting equations
-# ### example, using ProdEqn=tiny in the mproc file and uncommenting the next  line will be regression with 2 RHS variables and no constant.
-# # production_vars_tiny=c("log_crew","log_trip_days")
-# 
+# ##############Independent variables in the Quota price equations ##########################
+
 selection=c("quota_remaining_BOQ","QuotaFraction","Q2","Q3", "Q4","constant")
 badj_GDP=c("live_priceGDP","quota_remaining_BOQ","WTswtquota_remaining_BOQ","WTDswtquota_remaining_BOQ", "Q2","Q3", "Q4","constant")
 
 
 #names of quota price files.
 quotaprice_coefs_in<-"quota_price_linear.txt"
-quotaprice_coefs_out<-"quotaprice_coefs.Rds"
+quotaprice_coefs_out<-"quotaprice_coefs_linear.Rds"
 
 
+quotaprice_coefs_in<-"quota_price_exponential.txt"
+quotaprice_coefs_out<-"quotaprice_coefs_exponential.Rds"
 
 
 
