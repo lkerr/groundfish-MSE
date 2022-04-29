@@ -52,9 +52,16 @@ if(y == fmyearIdx){
 
 
 
-
+q_fy<-0
 for (day in 1:365){
 
+  if (day==1 | day==91 | day==182 | day==273){
+    q_fy<-q_fy+1
+    print(paste("It is quarter",q_fy))
+    qp<-get_predict_quota_prices()
+  }
+  
+  
   # Subset for the day.  Add in production coeffients and construct some extra data.
 working_targeting<-copy(targeting_dataset[[day]])
 working_targeting<-get_predict_eproduction(working_targeting)
