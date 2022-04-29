@@ -2,11 +2,8 @@
 
 # A function to predict quota prices, using the exponential model of quota prices 
 # No arguments, which is kind of lame.
-# returns a data.table with 4 columns: 
-   # spstock2
-   # psel - probability that the price is positive p[Y>0|x]
-   # ycen - the prediction of the censored mean E[y|x]
-   # ytrun - the prediction of the truncated mean E[y|x, y>0]
+# returns a data.table with many columns and 1 row: 
+   # columns are q_spstock2 for the allocated species
 get_predict_quota_prices <- function(){
   # Construct RHS variables for the selection and quota price equations 
   # Extract elements of fishery_holder that you need to compute fish prices
@@ -77,8 +74,12 @@ get_predict_quota_prices <- function(){
   #Convert from rGDP to rseafood prices. Multiply by the GDPtoSFD factor
   quarterly$ycen<-quarterly$ycen*quarterly$fGDPtoSFD
   quarterly$ytrun<-quarterly$ytrun*quarterly$fGDPtoSFD
-  keepcols<-c("spstock2","psel","ytrun","ycen")  
+  keepcols<-c("spstock2","ycen")  
   quarterly<-quarterly[,..keepcols]
+  quarterly$spstock2<-paste0("q_",quarterly$spstock2)
+  quarterly$m<-1
+  quarterly<-dcast(quarterly,  m~ spstock2, value.var="ycen")
+  quarterly$m<-NULL
   return(quarterly)
 }
 
