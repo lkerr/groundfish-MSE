@@ -1,5 +1,5 @@
 # A function to handle jointness in production (technical interactions) 
-#
+# Within the c_, l_, p_, q_, and r_ columns, the spstock2's need to be in the same order.
 # Inputs
 #  wt: The working_targeting_dataset that contains coefficients and independent variables. 
 # 	
