@@ -19,7 +19,6 @@ est use $input_ster, number(1)
 est store linear
 
 
-
 est restore linear
 mat b=e(b)
 mat b=b'
@@ -27,6 +26,20 @@ mat b=b'
 mat colnames b="coefficient"
 mat2txt, matrix(b) saving($linear_out) replace
 
+
+
+/* read in exponential model */
+est use $input_ster, number(3)
+est store exponential
+
+
+
+est restore exponential
+mat b=e(b)
+mat b=b'
+
+mat colnames b="coefficient"
+mat2txt, matrix(b) saving($exponential_out) replace
 
 /* read in exponential model */
 /*
