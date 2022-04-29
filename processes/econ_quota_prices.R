@@ -44,111 +44,29 @@ if(y == fmyearIdx){
 ############################################################
 ############################################################
 
-
+qpl<-list()
 
 q_fy<-0
-#for (day in 1:365){
-day<-1
-
+for (day in 1:365){
 # On the first day of each quarter, do something 
   if (day==1 | day==91 | day==182 | day==273){
   q_fy<-q_fy+1
   print(paste("It is quarter",q_fy))
   
-  # Construct RHS variables for the selection and quota price equations 
-  # Extract elements of fishery_holder that you need to compute fish prices
-  quarterly<-fishery_holder[,c("stocklist_index","stockName","spstock2","sectorACL","bio_model", "cumul_catch_pounds", "mults_allocated")]
-  quarterly$quota_remaining_BOQ<-quarterly$sectorACL-quarterly$cumul_catch_pounds
-  quarterly$quota_remaining_BOQ<-quarterly$quota_remaining_BOQ/(pounds_per_kg*kg_per_mt)
-  quarterly$fraction_remaining_BOQ<-quarterly$quota_remaining_BOQ/quarterly$sectorACL
+  # This stuff should be a function. 
+  # It should return the data.frame quarterly.
   
-  #Scale to 1000s of mt
-  quarterly$quota_remaining_BOQ<-quarterly$quota_remaining_BOQ/1000
-  
-  
-  #Quarterly dummmies
-  quarterly$q_fy<-q_fy
-  quarterly$q_fy_1<-as.integer(q_fy==1)
-  quarterly$q_fy_2<-as.integer(q_fy==2)
-  quarterly$q_fy_3<-as.integer(q_fy==3)
-  quarterly$q_fy_4<-as.integer(q_fy==4)
-  
-  # Pull in quarterly prices
-  # merge quarterly prices on spstock2 and q_fy into the quarterly dataframe
-  quarterly <- merge(quarterly,quarterly_prices, by=c("spstock2","q_fy"), all.x = FALSE, all.y = FALSE)
-
-  
-  # snemawinter isn't a choice. So what do we do here?
-  # I guess just leave it alone?
-  
-  
-  # 1. Split the quota_price coeffs into a selection and a badj equation. 
-  
-  
-  
-  # This is how I do it for production. It's a little easier
-  
-  # fyvars<-grep("^fy",colnames(prod_ds) , value=TRUE)
-  # monthvars<-grep("^month",colnames(prod_ds) , value=TRUE)
-  # 
-  # datavars=c(production_vars,fyvars,monthvars)
-  # alphavars=paste0("alpha_",datavars)
-  # 
-  # 
-  # Z<-as.matrix(prod_ds[, ..datavars])
-  # A<-as.matrix(prod_ds[,..alphavars])
-  # 
-  # prod_ds[, harvest_sim:=rowSums(Z*A)+q]
-  # 
-  
-  ######################################################################
-  ###################################here is the code from stata about how to do the predictions after the hurdle 
-  ######################################################################
-#   
-#   /* doing the margins after nehurdle, by hand */		
-#     
-#     /* extract lnsigma and exponentiate */
-#     local sig exp(_b[lnsigma:_cons])
-#   
-#   /* define xbs and the Inverse mills ratio */
-#     local xbw xb(wage)
-#     local xbs `xbw'/`sig'
-# 		local IMR normalden(`xbs')/normal(`xbs')
-# 		
-# 		/* PSEL */
-# 		/* predicted probabilities */
-# 		margins, predict(psel)
-# 		margins,  expression(normal(xb(selection)))
-# 		
-# 		/* ytrun */
-# 		/* E[y|x, y>0] */
-# 
-# 		/* all four of these should be identical*/
-# 		margins, predict(ytrun)
-# 		margins, expression(`xbw'+`sig'*normalden(`xbw'/`sig')/normal(`xbw'/`sig'))
-# 		margins, expression(`xbw'+`sig'*normalden(`xbs')/normal(`xbs'))
-#     margins, expression(`xbw'+`sig'*`IMR')
-# 
-# 		
-# 		/*ycen */
-# 		/* E[y|x] */
-# 
-# 		margins, predict(ycen)
-# 		margins,  expression(normal(xb(selection))*xb(wage) + `sig'*normalden(`xbs')   )
-# 
-  
-  
-  
-  
-  
-  }
-#}
+  qp<-get_predict_quota_prices()
+  qp$quarter<-q_fy
+  qpl[[q_fy]]<-qp
+   }
+}
     
-    
-  
-  
+
+qpD<-do.call(rbind.data.frame, qpl)
+qpD$psel<-round(qpD$psel, digits=3)
+qpD$ytrun<-round(qpD$ytrun, digits=3)
+qpD$ycen<-round(qpD$ycen, digits=3)
 
 
-#  fishery_holder will give you 
-# fishery_holder<-bio_params_for_econ[,c("stocklist_index","stockName","spstock2","sectorACL","bio_model", "cumul_catch_pounds")]
-# Be careful about units. The quota_price model is on 000s of mt. 
+
