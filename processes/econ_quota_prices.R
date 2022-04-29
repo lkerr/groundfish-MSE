@@ -64,9 +64,7 @@ for (day in 1:365){
     
 
 qpD<-do.call(rbind.data.frame, qpl)
-qpD$psel<-round(qpD$psel, digits=3)
-qpD$ytrun<-round(qpD$ytrun, digits=3)
-qpD$ycen<-round(qpD$ycen, digits=3)
+qpD<-round(qpD, digits=3)
 
 
 
