@@ -57,13 +57,45 @@ for (day in 1:365){
 
   if (day==1 | day==91 | day==182 | day==273){
     q_fy<-q_fy+1
-    print(paste("It is quarter",q_fy))
+    #print(paste("It is quarter",q_fy))
     qp<-get_predict_quota_prices()
-  }
-  
-  
+    qp_names<-colnames(qp)
+    qp$key<-1  
+    
+}
   # Subset for the day.  Add in production coeffients and construct some extra data.
 working_targeting<-copy(targeting_dataset[[day]])
+
+#Merge the prices from qp into working_targeting
+working_targeting$key<-1
+
+working_targeting[qp, on="key", `:=`( q_americanplaiceflounder=i.q_americanplaiceflounder,
+q_codGB=i.q_codGB,
+q_codGOM=i.q_codGOM,
+q_haddockGB=i.q_haddockGB,
+q_haddockGOM=i.q_haddockGOM,
+q_pollock=i.q_pollock,
+q_redfish=i.q_redfish,
+q_whitehake=i.q_whitehake,
+q_winterflounderGB=i.q_winterflounderGB,
+q_winterflounderGOM=i.q_winterflounderGOM,
+q_witchflounder=i.q_witchflounder,
+q_yellowtailflounderCCGOM=i.q_yellowtailflounderCCGOM,
+q_yellowtailflounderGB=i.q_yellowtailflounderGB,
+q_yellowtailflounderSNEMA=i.q_yellowtailflounderSNEMA)
+]
+working_targeting[,key:=NULL]
+
+wt_old<-copy(targeting_dataset[[day]])
+#compare the q_ variables in wt_old to the q_ variables in working_targeting. They should be different. And they are
+#summary(working_targeting$q_witchflounder)
+#summary(wt_old$q_witchflounder)
+
+#summary(working_targeting$q_codGB)
+#summary(wt_old$q_codGB)
+
+
+
 working_targeting<-get_predict_eproduction(working_targeting)
 working_targeting[spstock2=="nofish", harvest_sim:=0L]
 working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse(harvest_sim >= dl_primary, dl_primary, harvest_sim))]
