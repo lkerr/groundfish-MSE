@@ -161,7 +161,7 @@ if(fyear < mxModYrs){
 
 # setup command to run ASAP. For now, ASAP is located at /net/home2/mlee/admb-12.3/asap3/asap3
 if (platform == 'Linux' & runClass=='neptune'){
-  full.path.to.asap<- "/net/home2/mlee/admb-12.3/asap3/asap3"
+  full.path.to.asap<- "/net/home2/mlee/admb-12.3/ASAP3/ASAP3"
 }  
 
 
