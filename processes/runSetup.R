@@ -157,6 +157,14 @@ if(fyear < mxModYrs){
              'each stock'))
 }
 
+
+
+# setup command to run ASAP. For now, ASAP is located at /net/home2/mlee/admb-12.3/asap3/asap3
+if (platform == 'Linux' & runClass=='neptune'){
+  full.path.to.asap<- "/net/home2/mlee/admb-12.3/asap3/asap3"
+}  
+
+
 if (platform == 'Linux'){
   if(!file.exists('../EXE/ASAP3.EXE')){
     warning(paste('ASAP3.EXE should be loaded in a directory EXE in the parent',
@@ -169,6 +177,9 @@ if (platform == 'Linux'){
   rundir <- paste(tempwd, "/assessment/ASAP/Run", '_', rand, sep = "")
   dir.create(path = rundir)
   from.path <- paste('../EXE/ASAP3.EXE', sep = "")
+  if (runClass=='neptune'){
+    from.path<- full.path.to.asap
+  } 
   to.path   <- paste(rundir, sep= "")
   file.copy(from = from.path, to = to.path)
   
