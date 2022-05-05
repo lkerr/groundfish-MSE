@@ -293,6 +293,12 @@ Here is the methods section
 
 ## A structural economic model of targeting 
 
+## A model of quota prices
+
+The model of quota prices is built on the findings of Lee and Demarest 2022.  We make the following adjustments.
+1.  We aggregate together GBE+GBW cod into GB cod and GBE+GBW haddock into GB haddock to match the choice set in the econometric model.
+2.  We use model A3 from the Appendix. This is a model without spatial lag terms. Incorporating the spatial lag terms is difficult because of the aggregation of the GBE and GBW stocks. 
+
 ## A model of the fishery 
 
 ## A model of stock dynamics
