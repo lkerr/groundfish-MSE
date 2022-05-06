@@ -158,7 +158,7 @@ if(fyear < mxModYrs){
 }
 
 if (platform == 'Linux'){
-  if(!file.exists('../EXE/ASAP3.EXE')){
+  if(!file.exists('../EXE/ASAP3.EXE') & runClass=='HPCC'){
     warning(paste('ASAP3.EXE should be loaded in a directory EXE in the parent',
                'directory of groundfish-MSE -- i.e., you need an EXE',
                'directory in the same directory as Rlib and EXE must contain',
@@ -168,7 +168,20 @@ if (platform == 'Linux'){
   tempwd <- getwd()
   rundir <- paste(tempwd, "/assessment/ASAP/Run", '_', rand, sep = "")
   dir.create(path = rundir)
-  from.path <- paste('../EXE/ASAP3.EXE', sep = "")
+  
+  # setup command to run ASAP. For now, ASAP is located at /net/home2/mlee/admb-12.3/asap3/asap3
+  if(runClass=='neptune'){
+    full.path.to.asap<- "/net/home2/mlee/admb-12.3/ASAP3/ASAP3"
+  } else if(runClass=='mleeLocal'){
+    full.path.to.asap<- "placeholder/path/to/ASAP3"
+  } else if(runClass=='HPCC'){
+    full.path.to.asap<- paste('../EXE/ASAP3.EXE', sep = "")
+  } else{
+    warning(paste('Unknown Linux runClass.',
+                  'You will not be able to find ASAP',
+                  'Modify runSetup.R', sep='\n', immediate.=TRUE))
+  }   
+  from.path <- full.path.to.asap
   to.path   <- paste(rundir, sep= "")
   file.copy(from = from.path, to = to.path)
   
