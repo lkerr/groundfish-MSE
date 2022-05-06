@@ -81,7 +81,7 @@ source('processes/genBaselineACLs.R')
 #Input data location for economic models
 econdatapath <- 'data/data_processed/econ'
 
-                            # Reults folders for economic models. Create them if necessary
+# Reults folders for economic models. Create them if necessary
 econ_results_location<-"results/econ/raw"
 dir.create('results/econ/raw', showWarnings = FALSE, recursive=TRUE)
 dir.create('results/sim', showWarnings = FALSE, recursive=TRUE)

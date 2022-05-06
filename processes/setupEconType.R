@@ -4,14 +4,17 @@
   # LandZero is unused
 
 myvars<-c("LandZero", "CatchZero","EconType","EconName","EconData","MultiplierFile","OutputPriceFile","InputPriceFile","ProdEqn","ChoiceEqn")
-econtype<-mproc[m,]
+econtype<-mproc[m, myvars]
 
-econtype<-econtype[myvars]
 econ_data_stub<-econtype$EconData
 
 multiplier_loc<-econtype$MultiplierFile
 output_price_loc<-econtype$OutputPriceFile
 input_price_loc<-econtype$InputPriceFile
+
+quarterly_output_price_loc<-"quarterly_prices_2022_03_04.csv"
+
+quotaprice_coefs_loc<-"quotaprice_coefs_exponential.Rds"
 
 
 # you need to fix this so it flexibly reads in the vectors
@@ -22,3 +25,9 @@ choice_equation<-get(paste0("choice_equation_",econtype$ChoiceEqn))
 multipliers<-readRDS(file.path(econdatapath,multiplier_loc))
 outputprices<-readRDS(file.path(econdatapath,output_price_loc))
 inputprices<-readRDS(file.path(econdatapath,input_price_loc))
+
+
+#Quota price coefficients
+quotaprice_coefs<-readRDS(file.path(econdatapath,quotaprice_coefs_loc))
+quarterly_output_prices<-as.data.table(read.csv(file.path(econdatapath,"quarterly_prices_2022_03_04.csv"), header=TRUE))
+quarterly_output_prices<-split(quarterly_output_prices, by="gffishingyear")

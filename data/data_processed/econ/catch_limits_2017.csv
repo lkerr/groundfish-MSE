@@ -1,5 +1,5 @@
 spstock2,totalACL_mt,nonsector_nonrec_fraction,rec_fraction,sector_frac,mults_allocated,mults_nonalloc,non_mult,stockarea
-americanlobster,,0,0,1,0,0,0,Unit
+americanlobster,,0,0,1,0,0,1,Unit
 americanplaiceflounder,1272,.0502,0,.9498,1,0,0,Unit
 codGB,637,.1301,0,.8699,1,0,0,GB
 codGOM,473,.2254,.337,.4376,1,0,0,GOM

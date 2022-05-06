@@ -46,7 +46,7 @@ get_bio_for_econ=function(stock,basecase){
   #Pull in baseline ACLs from historical data, mark rows that have a biological model, and compute the sector and non-sector ACLs
   rownames(biocontain)<- c()
   biocontain<-merge(biocontain,basecase,by="spstock2",all=TRUE)
-  biocontain<-within(biocontain, ACL[is.na(ACL)] <- baselineACL_mt[is.na(ACL)])
+  biocontain<-within(biocontain, ACL[is.na(ACL)] <- mean_baselineACL_mt[is.na(ACL)])
   
   biocontain<-within(biocontain, bio_model[is.na(bio_model)] <- 0)
              

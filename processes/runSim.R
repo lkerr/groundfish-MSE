@@ -3,7 +3,7 @@
 #### Set up environment ####
 
 # empty the environment
-rm(list=ls())
+#rm(list=ls())
 source('processes/runSetup.R')
 
 # if on local machine (i.e., not hpcc) must compile the tmb code
@@ -13,22 +13,29 @@ if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
-####################These are temporary changes for testing ####################
-# econ_timer<-0
 
-#  mproc_bak<-mproc
-#
-# mproc<-mproc_bak[5:5,]
-# nrep<-1
-# nyear<-200
-## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
+####################These are temporary changes for testing ####################
+ mproc_bak<-mproc
+ mproc<-mproc[2:2,] #selects validation of four models
+ 
+ nrep<-2
+# yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
+# I want to start the economic model at fmyear=2010 and temporarily end it in 2011
+# management starts this year:
+#start_managmement<-2010
+#Simulation ends in this year:
+#end_managmement<-2015
+#This is overwriting fmyearIdx. Not sure where that is set.
+#fmyearIdx<-which(yrs == start_managmement)
+#nyear<-which(yrs == end_managmement)
+
 ####################End Temporary changes for testing ####################
 
 
 #set the rng state based on system time.  Store the random state.
 # if we use a plain old date (seconds since Jan 1, 1970), the number is actually too large, but we can just rebase to seconds since Jan 1, 2018.
 
-start<-Sys.time()-as.POSIXct("2018-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
+start<-Sys.time()-as.POSIXct("2018-01-01 00:00:00",tz="","%Y-%m-%d %H:%M:%S")
 start<-as.double(start)*100
 set.seed(start)
 
@@ -36,6 +43,10 @@ oldseed_ALL <- .Random.seed
 showProgBar<-TRUE
 ####################End Parameter and storage Setup ####################
   #This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
+
+
+
+
 
 
 source('processes/setupYearIndexing.R')
@@ -52,6 +63,7 @@ for(r in 1:nrep){
 
        #Restore the rng state to the value of oldseed_mproc.  For the same values of r, all the management procedures to start from the same RNG state.
        .Random.seed<-oldseed_mproc
+
 
         #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached, which sets of coefficients to use, and which prices to use
         if(mproc$ImplementationClass[m]=="Economic"){
@@ -104,8 +116,8 @@ for(r in 1:nrep){
           # ---- Run the economic model here ----
           source('processes/loadEcon2.R')
 
-
-          bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline)
+          bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline_averages)
+      
 
           source('processes/runEcon_module.R')
 

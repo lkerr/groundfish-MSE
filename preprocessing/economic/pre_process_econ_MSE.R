@@ -45,14 +45,17 @@ targeting_vars=c(spstock_equation, choice_equation)
 
 production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","log_sector_acl","primary", "secondary","constant")
 
+# models = c("coefsnc2", "coefs")
+models = c("coefsnc2")
+
 ####################Locations of files. 
 
 
 # MSE uses post-targeting coefficients
-trawl_targeting_coef_source<-"asclogit_trawl_post_coefs.txt" 
-gillnet_targeting_coef_source<-"asclogit_gillnet_post_coefs.txt" 
+trawl_targeting_coef_source<-c("asclogit_trawl_post_coefsnc2.txt", "asclogit_trawl_post_coefs.txt")
+gillnet_targeting_coef_source<-c("asclogit_gillnet_post_coefsnc2.txt", "asclogit_gillnet_post_coefs.txt")
 
-target_coef_outfile<-"targeting_coefs_post.Rds"
+target_coef_outfile<-c("targeting_coefs_post_coefsnc2.Rds", "targeting_coefs_post_coefs.Rds")
 #MSE uses post-production coefficients
 production_coef_in<-"production_regs_actual_post_forR.txt"
 production_outfile<-"production_coefs_post.Rds"
@@ -78,13 +81,15 @@ output_preoutfile<-paste0("output_prices_pre",file_suffix,".Rds")
 output_postoutfile<-paste0("output_prices_post",file_suffix,".Rds")
 output_working<-output_postoutfile
 
-
+# bits for day limits dataset 
+day_limits <- "trip_limits_forsim.dta"
 
 ####################END Locations of files. You shouldn't have to change these unless you're adding new datasets (like a pre-as-pre or pre-as-pre), new coefficients, new multipliers, etc) 
 
 ####prefix  (see datafile_split_prefix in wrapper.do)
 yrstub<-"econ_data"
-yearly_savename<-"full_targeting"
+# yearly_savename<-c("full_targeting_coefsnc2", "full_targeting_coefs")
+yearly_savename<-c("full_targeting_coefsnc2")
 
 
 source('preprocessing/economic/targeting_coeff_import.R')
@@ -97,5 +102,12 @@ source('preprocessing/economic/input_price_import.R')
 
 
 # This takes quite a while 
+
+# This takes quite a while 
+
+production_coefs<-production_outfile
+production_coefs<-readRDS(file.path(savepath, production_coefs))
+production_coefs[, post:=NULL]
+source('preprocessing/economic/import_day_limits_validation.R')
 source('preprocessing/economic/targeting_data_import.R')
 

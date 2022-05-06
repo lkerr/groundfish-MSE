@@ -9,7 +9,8 @@ econ_replicate<-rep(1:nrep,each=eyears)
 sim_year_idx<-rep(fyear:nyear, times=nrep)
 
 random_sim_draw <-as.data.table(cbind(econ_replicate, sim_year_idx)) 
-
+rm(econ_replicate)
+rm(sim_year_idx)
 colnames(random_sim_draw)<-c("econ_replicate","sim_year_idx")
 random_sim_draw[, cal_year:=yrs[sim_year_idx]]
 random_sim_draw[, manage_year_idx:=cal_year-fmyear+1]
@@ -22,6 +23,9 @@ random_sim_draw[, join_econbase_idx:= join_econbase_yr-econ_data_start+1]
 random_sim_draw[, join_outputprice_idx:= join_econbase_idx]
 random_sim_draw[, join_inputprice_idx:= join_econbase_idx]
 random_sim_draw[, join_mult_idx:= join_econbase_idx]
+random_sim_draw[, join_quarterly_price_idx:= join_econbase_idx]
+
+#maximum 'years' (this is total times through innermost loop), a counter, and a progress bar.
 
 yearitercounter<-0
 max_yiter<-nrep*nrow(mproc)*(nyear-fyear+1)

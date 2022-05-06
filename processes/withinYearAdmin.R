@@ -9,3 +9,5 @@ econ_base_idx_draw<-ebd[,join_econbase_idx]
 econ_outputprice_idx_draw<-ebd[,join_outputprice_idx]
 econ_mult_idx_draw<-ebd[,join_mult_idx]
 econ_inputprice_idx_draw<-ebd[,join_inputprice_idx]
+
+econ_quarterlyprice_idx_draw<-ebd[,join_quarterly_price_idx]
