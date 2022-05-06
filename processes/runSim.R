@@ -37,7 +37,7 @@ if(runClass != 'HPCC'){
 
 start<-Sys.time()-as.POSIXct("2018-01-01 00:00:00",tz="","%Y-%m-%d %H:%M:%S")
 start<-as.double(start)*100
-set.seed(start)
+ set.seed(start)
 
 oldseed_ALL <- .Random.seed
 showProgBar<-TRUE
@@ -54,17 +54,16 @@ top_loop_start<-Sys.time()
 
 #### Top rep Loop ####
 for(r in 1:nrep){
-    oldseed_mproc <- .Random.seed
+     oldseed_mproc <- .Random.seed
 
   #### Top MP loop ####
   for(m in 1:nrow(mproc)){
-
-       manage_counter<-0
-
-       #Restore the rng state to the value of oldseed_mproc.  For the same values of r, all the management procedures to start from the same RNG state.
-       .Random.seed<-oldseed_mproc
-
-
+    
+    manage_counter<-0
+    
+    #Restore the rng state to the value of oldseed_mproc.  For the same values of r, all the management procedures to start from the same RNG state.  You probably want oldseed_mproc
+    .Random.seed<-oldseed_mproc
+    
         #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached, which sets of coefficients to use, and which prices to use
         if(mproc$ImplementationClass[m]=="Economic"){
           
