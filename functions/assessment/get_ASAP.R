@@ -127,11 +127,8 @@ get_ASAP <- function(stock){
 
       tempwd <- getwd()
       setwd(rundir)
-      if(runClass =="HPCC"){
-        asapEst<- try(system("singularity exec $WINEIMG wine ASAP3.EXE", wait = TRUE))
-      } else if (runClass =="neptune"){
-        asapEst<- try(system("./ASAP3", wait = TRUE))
-      }
+      asapEst<- try(system("singularity exec $WINEIMG wine ASAP3.EXE", wait = TRUE))
+
       while (!file.exists('asap3.rdat')) {
         Sys.sleep(1)
       }
