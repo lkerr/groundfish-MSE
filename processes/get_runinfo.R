@@ -18,6 +18,8 @@ if(platform == 'Linux'){
     runClass <- 'HPCC'
   }else if(servername=='neptune'){
     runClass<-'neptune'
+  }else if(servername=='mlee-linux-pc'){
+    runClass<-'mleeLocal'
   }else{
     runClass <- 'Local'
   }
