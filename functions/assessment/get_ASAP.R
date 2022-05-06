@@ -132,12 +132,12 @@ get_ASAP <- function(stock){
       } else if (runClass =="neptune"){
         asapEst<- try(system("./ASAP3", wait = TRUE))
       }
-      while (!file.exists('asap3.rdat')) {
+      while (!file.exists('ASAP3.rdat')) {
         Sys.sleep(1)
       }
 
       # Read in results
-      res <- dget('asap3.rdat')
+      res <- dget('ASAP3.rdat')
       
       # save .Rdata results from each run
       saveRDS(res, file = paste(rundir, '/', stockName, '_', r, '_', y,'.rdat', sep = ''))
