@@ -77,6 +77,10 @@ get_predict_quota_prices <- function(){
   keepcols<-c("spstock2","ycen")  
   quarterly<-quarterly[,..keepcols]
   quarterly$spstock2<-paste0("q_",quarterly$spstock2)
+  # upper bound of quota prices, the highest of 1.5x live price or $5. 
+  quarterly$ub_qp<-max(1.5*quarterly$live_priceGDP,5)
+  quarterly[ycen<=ub_qp]<-ub_qp
+  # reshape
   quarterly$m<-1
   quarterly<-dcast(quarterly,  m~ spstock2, value.var="ycen")
   quarterly$m<-NULL
