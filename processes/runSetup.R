@@ -157,13 +157,7 @@ if(fyear < mxModYrs){
              'each stock'))
 }
 
-
-
 if (platform == 'Linux'){
-}
-
-if (platform == 'Linux'){
-  # Print a warning if you are on the HPCC and don't have a ASAP3.EXE
   if(!file.exists('../EXE/ASAP3.EXE') & runClass=='HPCC'){
     warning(paste('ASAP3.EXE should be loaded in a directory EXE in the parent',
                'directory of groundfish-MSE -- i.e., you need an EXE',
