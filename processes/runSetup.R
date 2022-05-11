@@ -157,6 +157,7 @@ if(fyear < mxModYrs){
              'each stock'))
 }
 
+# Code to get the HPCC or NEFSC Neptune server ready to run ASAP.                            
 if (platform == 'Linux'){
   if(!file.exists('../EXE/ASAP3.EXE') & runClass=='HPCC'){
     warning(paste('ASAP3.EXE should be loaded in a directory EXE in the parent',
