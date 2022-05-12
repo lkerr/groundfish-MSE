@@ -10,7 +10,7 @@ global codedir "$projectdir/preprocessing/economic"
 global bio_data "$projectdir/data/data_processed/catchHistory"
 
 /*name of main data file */
-global datafilename "data_for_simulations_mse.dta"
+global datafilename "data_for_simulations_POSTasPOST.dta"
 global datafile_split_prefix "econ_data"
 
 
