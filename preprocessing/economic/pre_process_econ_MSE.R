@@ -45,7 +45,7 @@ targeting_vars=c(spstock_equation, choice_equation)
 
 production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","log_sector_acl","primary", "secondary","constant")
 
-# models = c("coefsnc2", "coefs")
+#models = c("coefsnc2", "coefs")
 models = c("coefsnc2")
 
 ####################Locations of files. 
