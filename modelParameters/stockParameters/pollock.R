@@ -42,6 +42,9 @@ R_typ <- 'HS'
 qC <- 0.0001
 qI <- 0.0001
 
+DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE.
+
+
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
 selC <- c(s0=0.03645717,s1=0.06016626,s2=0.09265774,s3=0.13423546,s4=0.24148544,s5=0.48153900,s6=1.00000000,s7=0.94751736,s8=0.19443504)
