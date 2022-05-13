@@ -4,23 +4,18 @@
 #       pre-choice coefficients, 
 #       slightly adjusted data. 
 #       Quota prices for groundfish are zeroed out. not sure what to do with DAS.
-rm(list=ls())
-if(!require(readstata13)) {  
-    install.packages("readstata13")
-    require(readstata13)}
-if(!require(tidyr)) {  
-    install.packages("tidyr")
-    require(tidyr)}
-if(!require(dplyr)) {  
-    install.packages("dplyr")
-    require(dplyr)}
-if(!require(data.table)) {  
-    install.packages("data.table")
-    require(data.table)}
+here::i_am("preprocessing/economic/pre_process_AB_counterfactual.R")
+
+
+library(readstata13)
+library(tidyr)
+library(dplyr)
+library(data.table)
+library(here)
 
 # Setting up the data.
 # Before you do anything, you put all your "data" files into the 
-# /data/data_raw/econ folder
+# /data/data_raw/econ 
  
     # main data file: data_for_simulations_mse.dta, data_for_simulations_POSTasPOST.dta, data_for_simulations_POSTasPRE.dta
     # multipliers.dta (multipliers)
@@ -28,15 +23,11 @@ if(!require(data.table)) {
     # Logit coefficients: preCSasclogit2.ster,postCSasclogit2.ster
 
 
-
 # file paths for the raw and final directories
 # windows is kind of stupid, so you'll have to deal with it in some way.
-rawpath <- './data/data_raw/econ'
-savepath <- './data/data_processed/econ'
+rawpath <- here("data","data_raw","econ")
+savepath <- here("data","data_processed","econ")
 # Just a guess on your paths.  
-#rawpath <- 'C:/Users/abirken/Documents/GitHub/groundfish-MSE/data/data_raw/econ'
-#savepath <- 'C:/Users/abirken/Documents/GitHub/groundfish-MSE/data/data_processed/econ'
-
 
 
 ###########################Make sure you have the correct set of RHS variables.
@@ -88,18 +79,6 @@ choice_equation_post2<-choice_equation_pre2
  #the counterfactual  dataset always uses pre production.
  production_vars<- production_vars_pre
  # ############## End Independent variables in the Production equation ##########################
-# 
-# 
-# 
-# 
-# #spstock_equation2=c("exp_rev_total_das", "fuelprice_distance", "distance", "mean_wind", "mean_wind_noreast", "permitted", "lapermit", "choice_prev_fish", "partial_closure", "start_of_season")
-# 
-# choice_equation=c("wkly_crew_wage", "len", "fuelprice", "fuelprice_len")
-# 
-# targeting_vars=c(spstock_equation, choice_equation)
-# 
-# production_vars=c("log_crew","log_trip_days","log_trawl_survey_weight","log_sector_acl","primary", "secondary","constant")
-
 ####################Locations of files. 
 # Counterfactual uses pre-targeting coefficients
 models = paste0("pre_", c("coefsnc1", "coefsnc2", "coefs1", "coefs2"))
@@ -134,6 +113,8 @@ output_preoutfile<-paste0("output_prices_pre",file_suffix,".Rds")
 output_postoutfile<-paste0("output_prices_post",file_suffix,".Rds")
 output_working<-output_postoutfile
 
+# bits for day limits dataset 
+day_limits <- "trip_limits_forsim.dta"
 ####################END Locations of files. You shouldn't have to change these unless you're adding new datasets (like a pre-as-pre or pre-as-pre), new coefficients, new multipliers, etc) 
 
 ####prefix  (see datafile_split_prefix in wrapper.do)
@@ -145,20 +126,23 @@ yearly_savename<-paste0("counterfactual_", models)
 
 quotaprice_zero_cf<-c("q_americanplaiceflounder","q_codGB","q_codGOM","q_haddockGB","q_haddockGOM","q_pollock","q_redfish","q_whitehake","q_winterflounderGB","q_winterflounderGOM","q_witchflounder","q_yellowtailflounderCCGOM","q_yellowtailflounderGB", "q_yellowtailflounderSNEMA")
 
-source('preprocessing/economic/targeting_coeff_import.R')
-source('preprocessing/economic/production_coefs.R')
+source(here("preprocessing","economic","targeting_coeff_import.R"))
+source(here("preprocessing","economic","production_coefs.R"))
 #output prices
-source('preprocessing/economic/output_price_import.R')
-source('preprocessing/economic/multiplier_import.R')
+ 
+source(here("preprocessing","economic","output_price_import.R"))
+source(here("preprocessing","economic","multiplier_import.R"))
+
 #input prices
-source('preprocessing/economic/input_price_import.R')
+source(here("preprocessing","economic","input_price_import.R"))
 
 
 # This takes quite a while 
-
 production_coefs<-production_outfile
 production_coefs<-readRDS(file.path(savepath, production_coefs))
 production_coefs[, post:=NULL]
-source('preprocessing/economic/import_day_limits_counterfactual.R')
-source('preprocessing/economic/targeting_data_import.R')
+
+source(here("preprocessing","economic","import_day_limits_validation.R"))
+source(here("preprocessing","economic","targeting_data_import.R"))
+
 
