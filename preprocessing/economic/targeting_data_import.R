@@ -13,9 +13,6 @@ outputprices<-readRDS(file.path(savepath, output_working))
 
 #For loop to create targetting data set for other models 
 for (coef in 1:length(models)) {
-  require(readstata13)
-  require(data.table)
-  
   modelname<-models[coef]
 target_coefs<-target_coef_outfile[coef]
 targeting_coefs<-readRDS(file.path(savepath,target_coefs))
