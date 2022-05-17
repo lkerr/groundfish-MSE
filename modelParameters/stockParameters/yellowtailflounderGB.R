@@ -45,6 +45,8 @@ R_typ <- 'BHSteep'
 qC <- 0.0001
 qI <- 0.0001
 
+DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE.
+
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
 selC <- c(s0=5, s1=0.08)
@@ -72,8 +74,20 @@ startCV <- 1.5
 # scalar to bring pop numbers closer to zero (necessary
 # for model fitting)
 caaInScalar <- 1000  
+# stock assessment misspecifications
 
 M_mis<- 'FALSE'
+
+# Placeholder carried over from codGB
+#  M_mis_val <- 
+#  R_mis <- 
+#  Rpar_mis <- 
+
+waa_mis<- FALSE
+
+
+
+
 
 #### Error parameters ####
 
@@ -91,7 +105,7 @@ oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
 pe_R <- 0.5
-
+pe_RSA<-0
 # implementation error of fishing mortality
 ie_F <- 0
 ie_typ <- 'lognorm'
