@@ -4,6 +4,8 @@
 
 # empty the environment
 rm(list=ls())
+here:i_am("processes/runSim.R")
+library("here")
 source('processes/runSetup.R')
 
 # if on local machine (i.e., not hpcc) must compile the tmb code
@@ -16,10 +18,10 @@ if(runClass != 'HPCC'){
 ####################These are temporary changes for testing ####################
 # econ_timer<-0
 
-#  mproc_bak<-mproc
+  mproc_bak<-mproc
 #
-# mproc<-mproc_bak[5:5,]
-# nrep<-1
+ mproc<-mproc_bak[1:1,]
+ nrep<-2
 # nyear<-200
 ## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
 ####################End Temporary changes for testing ####################
