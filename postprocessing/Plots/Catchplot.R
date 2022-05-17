@@ -1,10 +1,10 @@
 #####Catch Trajectory Plots####
 #Lists numbers of scenarios that you want to compare here
-Scenarios<-c(5,6,7,8)
+Scenarios<-c(7,8,9)
 #Set working directory--where the results you want to compare are stored
-wd<-"C:/Users/mmazur/Box/Mackenzie_Mazur/HCR_Sims"
+wd<-"C:/Users/mmazur/Desktop/COCA_Sims"
 #List what is being compared
-comparison<-c('Ramp','P*','F-step','Constrained ramp')
+comparison<-c('Ramp','F-step','Constrained ramp')
 ####Load packages####
 library(matrixStats)
 library(dplyr)
@@ -21,17 +21,17 @@ for (k in 1:length(sims)){
 }
 sims<-na.omit(sims)
 
-Catchsim<-matrix(NA,nrow=53,ncol=length(sims))
+Catchsim<-matrix(NA,nrow=52,ncol=length(sims))
 Catchest<-matrix(NA,nrow=54,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$sumCW[136:188]
+  Catchsim[,k]<-omvalGlobal[[1]]$sumCW[136:187]
   Catchest[,k]<-omvalGlobal[[1]]$Catchest[190,]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2039
+Year<-1987:2038
 df<-as.data.frame(cbind(Catchsim,Year))
 df$HCR<-Scenarios[1]
 Catchest<-rowMedians(Catchest,na.rm=T)
@@ -49,17 +49,17 @@ for (k in 1:length(sims)){
 }
 sims<-na.omit(sims)
 
-Catchsim<-matrix(NA,nrow=53,ncol=length(sims))
+Catchsim<-matrix(NA,nrow=52,ncol=length(sims))
 Catchest<-matrix(NA,nrow=54,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$sumCW[136:188]
+  Catchsim[,k]<-omvalGlobal[[1]]$sumCW[136:187]
   Catchest[,k]<-omvalGlobal[[1]]$Catchest[190,]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2039
+Year<-1987:2038
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[2]
 Catchest<-rowMedians(Catchest,na.rm=T)
@@ -79,17 +79,17 @@ for (k in 1:length(sims)){
 }
 sims<-na.omit(sims)
 
-Catchsim<-matrix(NA,nrow=53,ncol=length(sims))
+Catchsim<-matrix(NA,nrow=52,ncol=length(sims))
 Catchest<-matrix(NA,nrow=54,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$sumCW[136:188]
+  Catchsim[,k]<-omvalGlobal[[1]]$sumCW[136:187]
   Catchest[,k]<-omvalGlobal[[1]]$Catchest[190,]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1987:2039
+Year<-1987:2038
 df2<-as.data.frame(cbind(Catchsim,Year))
 df2$HCR<-Scenarios[3]
 Catchest<-rowMedians(Catchest,na.rm=T)

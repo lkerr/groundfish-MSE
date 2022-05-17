@@ -1,12 +1,8 @@
-
-
 ## The YPR doesn't quite line up exactly with GN's version in his fishmethods
 ## package. It's close but not quite. This should be resolved.
 
-
 # Function to return either Yield-per-recruit, Spawning biomass-per-recruit,
 # or Spawning potential ratio.
-# 
 # 
 # parmgt: a 1-row data frame of management parameters. The operational
 #         component of parmgt for this function is the (1-row) columns
@@ -44,15 +40,9 @@
 #        the reference points will be calculated based on nF, nFrep is just
 #        for the output matrix.
 
-
-
-
-
-
 get_perRecruit <- function(parmgt, parpop, 
                            nage=100, nF=1000, nFrep=100){
   
-
   if(is.null(parpop$mat) & parmgt$FREF_TYP == 'SPR'){
     stop('get_perRecruit: must provide maturity if using SPR')
   }
@@ -71,9 +61,12 @@ get_perRecruit <- function(parmgt, parpop,
   # over which the Y/R or SSB/R is being applied.
   sel <- c(c(parpop$sel), rep(tail(c(parpop$sel), 1), nage-length(parpop$sel)))
   waa <- c(c(parpop$waa), rep(tail(c(parpop$waa), 1), nage-length(parpop$waa)))
+  
+  #If weight-at-age is misspecified, make sure it is misspecified in per recruit estimation
   if (stock[[1]]$waa_mis==TRUE){
     waa<-c(c(stock[[1]]$waa[1,]), rep(tail(c(parpop$waa), 1), nage-length(parpop$waa)))
   }
+  
   M <- c(c(parpop$M), rep(tail(c(parpop$M), 1), nage-length(parpop$M)))
   mat <- c(c(parpop$mat), rep(tail(c(parpop$mat), 1), nage-length(parpop$mat)))
   if(!is.null(parpop$mat)){
@@ -83,8 +76,8 @@ get_perRecruit <- function(parmgt, parpop,
   # Generate Yield- and SSB-at-age
   Y <- numeric(length(F_full))
   SSB <- numeric(length(F_full))
+  
   for(i in seq_along(Y)){
-
     # Calculate mortality, survival and catch
     F <- sel * F_full[i]
     Z <- c(0, F[-length(F)] + M[-length(M)])
@@ -103,6 +96,7 @@ get_perRecruit <- function(parmgt, parpop,
     # get all slopes
     slp <- sapply(2:length(Y), function(i){
                    (Y[i] - Y[i-1]) / (F_full[i] - F_full[i-1])})
+    
     # slope at the origin
     slpo <- slp[1]
     
@@ -117,6 +111,7 @@ get_perRecruit <- function(parmgt, parpop,
    
     # for outputs
     yvalue <- Y
+    
   }else if(parmgt$FREF_TYP == 'SSBR'){
     
     # find the F @ the specified level of SSB/R. Recall that SSB is the
@@ -125,6 +120,7 @@ get_perRecruit <- function(parmgt, parpop,
     # realm of F-based reference points. Noting this just because subtracting
     # something that looks like F from something that looks like SSB makes
     # no sense at first blush.
+    
     Fref <- F_full[which.min(abs(SSB - parmgt$FREF_PAR0))]
     
     # SSB / R at the reference point
@@ -151,9 +147,7 @@ get_perRecruit <- function(parmgt, parpop,
     yvalue <- SSBR_ratio
    
   }else{
-    
     stop('get_perRecruit: type not recognized')
-    
   }
   
   # index for outputs
@@ -170,8 +164,3 @@ get_perRecruit <- function(parmgt, parpop,
   return(out)
   
 }
-
-
-
-
-

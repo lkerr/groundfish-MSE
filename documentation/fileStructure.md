@@ -4,7 +4,7 @@
 #### Sam Truesdell (struesdell@gmri.org)
 #### Mackenzie Mazur (mmazur@gmri.org)
 
-### This document describes the file structure for groundfish-MSE on GitHub -- and on your local machine once you have cloned the repository.
+### This document describes the file structure for groundfish-MSE.
 
 
 #### General Framework
@@ -16,9 +16,9 @@ The overall approach to the MSE is to attempt to have the code be as compartment
 
 * **data**: Data related to the project. Folder subdivided into processes (i.e., .Rdata files) and raw data.  Many preliminary/exploratory analyses use data from this folder, but for everyday runs this folder has limited use save holding the temperature projection data and historical assessment data.
 
-* **documentation**: You are here! Files attempting to document both the MSE methods and use on a local machine or the HPCC.
+* **documentation**: You are here! Files attempting to document both the MSE structure, methods, and use on a local machine or the HPCC.
 
-* **functions**: All the functions that are used by the MSE. Folder further divided into functions related to the assessment process, management procedures, plotting and population dynamics. These subdivisions are only for organization.
+* **functions**: All the functions that are used by the MSE. Folder further divided into functions related to the assessment process, economic processes, management procedures, population dynamics, performance metrics, and plotting. These subdivisions are only for organization.
 
 * **modelParameters**: All files that deal with paramaterization of the current model run are found in this folder.  the file set_om_parameters_global.R contains the super-stock level operating model parameters (e.g., things like time-frames and temperature information to use). mproc.csv governs the management procedues that will be compared during the run and mprocTest.csv is a version of this file used for testing. The sub-folder **stockParameters** contains the stock-level information for each stock.  
 

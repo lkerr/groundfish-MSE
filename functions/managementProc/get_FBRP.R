@@ -1,5 +1,3 @@
-
-
 # Function to calculate F-based reference points
 # 
 # parmgt: a 1-row data frame of management parameters. The operational
@@ -23,13 +21,11 @@
 #               been considered as a proxy for Fmsy.
 #               
 #     
-# parpop: named ist of population parameters (vectors) needed for the 
+# parpop: named list of population parameters (vectors) needed for the 
 #         simulation including selectivity (sel), weight-at-age (waa),
 #         recruitment (R), maturity (mat) and natural mortality (M).
 #         Natural mortality can be a vector or a scalar. Vectors have
 #         one value per age class.
-
-
 
 get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
 
@@ -48,9 +44,12 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     # simulation B-based reference point you will need an starting-point
     # for the simulation -- calcaulte this assuming fishing at the F-based
     # reference point.
+    
     if(parmgt$BREF_TYP == 'SIM' & parmgt$RFUN_NM == 'forecast'){
+      
       # have to use the temporal window set up for the biomass reference
       # point so come up with a dummy parmgt
+      
       parmgtTemp <- parmgt
       parmgtTemp$FREF_PAR0 <- parmgtTemp$BREF_PAR0
       parmgtTemp$FREF_PAR1 <- parmgtTemp$BREF_PAR1
@@ -74,7 +73,6 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
       equiJ1N_MSY <- NULL
     }
     
-  
     return(list(RPvalue = F, equiJ1N_MSY = equiJ1N_MSY))
     
   }else if(parmgt$FREF_TYP == 'FmsySim'){
@@ -86,6 +84,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     # temperature-based BRP projections but will not make a difference
     # for hindcast projections. Temperature is length 1 -- the length
     # of the temperature anomaly is tested in get_proj.
+    
     parenvTemp <- parenv
     parenvTemp$Tanom <- rep(parenv$Tanom[parenv$y],
                             times = length(parenv$Tanom))
@@ -110,8 +109,8 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     # Extract the equilibrium population (at each level of F) for use in 
     # forecasts for Fmsy forecast calculations and for output for Bmsy 
     # forecast calculations
-    equiJ1N_MSY <- sapply(simAtF, '[', 'J1N')
     
+    equiJ1N_MSY <- sapply(simAtF, '[', 'J1N')
     
     # If using forward projection, use the equilibrium values for population
     # size at the current temperature (simAtF) and the optimal F (Fmsy) and 
@@ -138,6 +137,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
                  stockEnv = stockEnv)})
       
       # Update the optimal states assuming variable temperature
+      
       sumCW <- do.call(cbind, sapply(simAtF, '[', 'sumCW'))
       
       meanSumCW <- apply(sumCW, 2, mean)
@@ -145,8 +145,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
       Fmsy <- candF[which.max(meanSumCW)]
       
     }
-    
-
+  
     # Warn if maximum yield did not occur within the range
 
     if(Fmsy %in% range(candF)){
@@ -156,6 +155,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     }
     
     # Equilibrium starting conditions at MSY (used in BMSY calculations)
+    
     equiJ1N_MSY <- equiJ1N_MSY[[which.max(meanSumCW)]]
     
     return(list(RPvalue = Fmsy, equiJ1N_MSY = equiJ1N_MSY))
@@ -176,8 +176,3 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
   }
 
 }
-
-
-
-
-

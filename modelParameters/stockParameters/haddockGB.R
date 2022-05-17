@@ -15,8 +15,6 @@ laa_typ <- 'vonB'
 # weight-at-age parameters
 waa_par <- c(0.1774,0.4291,0.6939,0.8887,1.089,1.247,1.396,1.577,1.784) #Average of waa of last 5 years from 2019 assessment
 waa_typ <- 'dynamic'
-waa_mis <- TRUE
-#####
 
 # maturity-length parameters
 #mat_par <- c(0.21, 29.7) #AEW
@@ -27,8 +25,6 @@ mat_typ <- 'input'
 M <- 0.2
 M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
-M_mis<-FALSE
-#M_mis_val<-0.4
 
 # initial numbers at-age parameters
 initN_par <- c(nage = page, N0 = 1e5, F_full = 0.99, M = M)
@@ -89,7 +85,11 @@ startCV <- 1.5
 # for model fitting)
 caaInScalar <- 1000
 
-R_mis<-TRUE #If BRPs and projections assume a wrong SRR, set to TRUE. 
+M_mis<-FALSE
+#M_mis_val<-0.4
+waa_mis <- TRUE
+R_mis<-TRUE#If BRPs and projections assume a wrong SRR, set to TRUE. 
+R_mis_typ<-'HS'
 Rpar_mis <- c(SSB_star = 75000, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
               cR = 1,
               Rnyr= 20)

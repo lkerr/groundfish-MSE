@@ -42,9 +42,7 @@
 #        update reference points once every N number of years.
 #        
 # evalRP: True/False variable indicating whether reference points should
-#         be evaluated at all -- if not then just use RPlast. Function
-#         could be simplified a little to combine RPlast and evalRP but
-#         it is pretty clear this way at least.
+#         be evaluated at all -- if not then just use RPlast. 
 
 get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
   # A general application of national standard 1 reference points. There
@@ -52,106 +50,106 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
   # point and those will be implemented in get_FBRP
 
   if(parmgt$ASSESSCLASS == 'CAA' || parmgt$ASSESSCLASS == 'ASAP'){
-
-    # for GOM cod, Mramp model uses M = 0.2 for status determination
+    
     parpopF<-parpop
+    
+    # for GOM cod, Mramp model uses M = 0.2 for status determination
+    if (stockEnv$stockName=='codGOM' & stockEnv$M_typ == 'ramp'){
     parpopF$M<-rep(0.2,9)
+    }
+    
     parpopF$switch<-FALSE
+    
+    #Estimate F reference point
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpopF, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
                      stockEnv = stockEnv)
+    
+    #Determine True F reference point
     parmgtT<-parmgt
     parpopT<-parpop
+    
+    # for GOM cod, Mramp model uses M = 0.2 for status determination
+    if (stockEnv$stockName=='codGOM' & stockEnv$M_typ == 'ramp'){
     parpopT$M<-rep(0.2,9)
+    }
+    
     parpopT$switch<-TRUE
+    
+    #Use OM values
     parpopT$J1N<-stockEnv$J1N[1:(y-1),]
     parpopT$selC<-stockEnv$selC
     parpopT$R<-stockEnv$R[1:(y-1)]
     stockEnvT<-stockEnv
     stockEnvT$R_mis<-FALSE
+    
     FrefT <- get_FBRP(parmgt = parmgtT, parpop = parpopT, #Also calculate the true Fmsy
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
                      stockEnv = stockEnvT)
     
-    parpopT2<-parpopT
-    parpopT2$M<-rep(0.2,9)
-    FrefT2 <- get_FBRP(parmgt = parmgtT, parpop = parpopT2, #Also calculate the true Fmsy
-                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
-                      stockEnv = stockEnvT)
     # if using forecast start the BMSY initial population at the equilibrium
     # FMSY level (before any temperature projections). This is consistent
     # with how the Fmsy is calculated.
     parpopUpdate <- parpopF
     parpopUpdateT <- parpopT
     if(parmgt$RFUN_NM == 'forecast'){
-      
       parpopUpdate$J1N <- Fref$equiJ1N_MSY
-      
     }
+    
+    #Estimate biomass reference point
     stockEnvT$R_mis<-TRUE
     Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
     
+    #Determine true biomass reference point
     stockEnvT<-stockEnv
     stockEnvT$R_mis<-FALSE
     BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT, #Also calculate the true Bmsy
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = FrefT[['RPvalue']], stockEnv = stockEnvT)
-    parpopUpdateT2 <- parpopUpdateT
-    parpopUpdateT2$M<-rep(0.2,9)
-    BrefT2 <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT2, #Also calculate the true Bmsy
-                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
-                      FBRP = FrefT[['RPvalue']], stockEnv = stockEnvT)
     
+    #Save reference points if it is the correct year to do so or else use previous reference ponits in catch advice
     if(evalRP){
       FrefRPvalue <- Fref[['RPvalue']]
       BrefRPvalue <- Bref[['RPvalue']]
       FrefTRPvalue <- FrefT[['RPvalue']]
       BrefTRPvalue <- BrefT[['RPvalue']]
-      FrefTRPvalue2 <- FrefT2[['RPvalue']]
-      BrefTRPvalue2 <- BrefT2[['RPvalue']]
     }else{
       FrefRPvalue <- RPlast[1]
       BrefRPvalue <- RPlast[2]
       FrefTRPvalue <- FrefT[['RPvalue']]
       BrefTRPvalue <- BrefT[['RPvalue']]
-      FrefTRPvalue2 <- FrefT2[['RPvalue']]
-      BrefTRPvalue2 <- BrefT2[['RPvalue']]
     }
-    
-    # Determine whether the population is overfished and whether 
-    # overfishing is occurring
-    
-    # otherwise just use same reference points values    
+
+    #Determine overfished threshold and target fishing mortality
     BThresh <- BrefScalar * BrefRPvalue
     FThresh <- FrefScalar * FrefRPvalue
+    
+    # Determine whether the population is perceived to be overfished and whether 
+    # overfishing is perceived to be occurring
 
     overfished <- ifelse(tail(parpop$SSBhat,1) < BThresh, 1, 0)
     
     overfishing <- ifelse(tail(parpop$Fhat,1) > FrefRPvalue, 1, 0) #MDM
 
+    #Ramp HCR
     if(tolower(parmgt$HCR) == 'slide'){
       F <- get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)['Fadvice']
+    }
 
-    }
-    
-    else if(tolower(parmgt$HCR) == 'tempslide'){
-      
-      F <- get_tempslideHCR(parpop, Fmsy=FThresh, Bmsy= BThresh, temp= Tanom[y])['Fadvice']
-      
-    }
+    #Threshold HCR
     else if(tolower(parmgt$HCR) == 'simplethresh'){
-     
       # added small value to F because F = 0 causes some estimation errors
       F <- ifelse(tail(parpop$SSBhat, 1) < BThresh, 0, FThresh)+1e-4
-      
     }
+    
+    #Constant fishing mortality HCR
     else if(tolower(parmgt$HCR) == 'constf'){
- 
       F <- FThresh
-      
     }
+    
+    #Step in fishing mortality HCR
     else if(tolower(parmgt$HCR) == 'step'){
       if (y==fmyearIdx & overfished== 1){F<-FrefRPvalue*0.7}
       else if (y==fmyearIdx & overfished== 0){F<-FThresh}
@@ -161,6 +159,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
         else{F<-FThresh}}
     }
     
+    #Projections
     if(tolower(parmgt$projections) == 'true'){
       if ((y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) == 0){
       parmgtproj<-parmgt
@@ -171,10 +170,16 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parpopproj$R<-stockEnv$res$N.age[,1]
       parpopproj$J1N<-tail(stockEnv$res$N.age,1)
       parpopproj$catch<-stockEnv$res$catch.obs
+      
+      #Use Fmsy for F in projections for P* HCR
       if(tolower(parmgt$HCR) == 'pstar'){F<-FrefRPvalue}
+      
+      #If weight-at-age is misspecified, make it misspecified in projections
       if(stockEnv$waa_mis=='TRUE'){
         parpopproj$waa<-stock[[1]]$waa[1,]
       }
+      
+      #Projections differ if there is a lag or no lag in information to the assessment
       for (i in 1:100){
           if(mproc[m,'Lag'] == 'TRUE'){
           catchproj[i,]<-get_proj(type = 'current',
@@ -199,40 +204,19 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                                   stockEnv = stockEnv)$sumCW
           }
       }
-        
+  
+      #Get catch advice 
       catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
+      
+      #Determine catch advice for P* HCR
       if(tolower(parmgt$HCR) == 'pstar'){
-        calc_pstar = function(maxp, relB)#function to calculate P* based on SSB/SSBmsy
-        {
-          if(relB>=1) #at asymptote
-          {
-            P = maxp
-          }
-          else if(relB<=0.1)
-          {
-            P = 0.0
-          }
-          else
-          {
-            slope <- (maxp)/(1-0.1)
-            inter <- maxp-slope
-            P = inter+slope*relB
-          }
-          return(P)
-        }
         P<-calc_pstar(0.4,tail(parpop$SSBhat,1)/BThresh)
         CV<-1
-        calc_ABC <- function(OFL, P, CV)
-        {
-          # OFL is the median catch by fishing at Flim for the current population
-          #Convert CV to sigma for lognormal dist
-          sd <- sqrt(log(CV*CV+1))
-          #Calculate ABC using inverse of the lognormal dist
-          return(qlnorm(P, meanlog = log(OFL), sdlog = sd))
-        }
         catchproj[1]<-calc_ABC(catchproj[1],P,CV)
         catchproj[2]<-calc_ABC(catchproj[2],P,CV)
       }
+      
+      #If the minimum catch constraint is on, make sure catch advice is not below that constraint
       if(tolower(parmgt$mincatch) == 'true'){
       if (stockEnv$stockName=='codGOM'){
         bycatch<-read.csv(paste('./data/data_raw/AssessmentHistory/codGOM_Discard.csv',sep=''))
@@ -251,7 +235,9 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
         catchproj[2]<-mincatch
         mincatchcon<-1
       }
-}
+      }
+      
+      #If catch variation constraint is on, make sure catch advice does not vary more than 20% from year to year
       if(tolower(mproc$varlimit) == 'true'){
         if(((catchproj[1]-(stockEnv$sumCW[y-1]*stockEnv$ob_sumCW))/catchproj[1])*100<(-20)){
           catchproj[1]<-(stockEnv$sumCW[y-1]*stockEnv$ob_sumCW)-((stockEnv$sumCW[y-1]*stockEnv$ob_sumCW)*.2)}
@@ -262,7 +248,11 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
         if(((catchproj[2]-catchproj[1])/catchproj[2])*100>20){
           catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
       }
+      
+      #Estimate F to make sure catch advice is not over the perceived OFL
       Fest<-get_estF(catchproj=catchproj[1],parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv)
+      
+      #If catch advice is over the perceived OFL, catch advice becomes the catch at the perceived OFL
       if (Fest>FrefRPvalue){
         catchproj<-matrix(ncol=2,nrow=100)
         for (i in 1:100){
@@ -281,12 +271,16 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
             catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
         }
       }
+      
+      #Get F for the OM based on catch advice
       F <- get_F(x = catchproj[1],
                    Nv = stockEnv$J1N[y,], 
                    slxCv = stockEnv$slxC[y,], 
                    M = stockEnv$natM[y], 
                    waav = stockEnv$waa[y,])
       }
+      
+      #If it is on an 'off' year (assessment does not occur) use catch advice from the previous projections second year
       else{
       F <- get_F(x = stockEnv$catchproj[2],
                  Nv = stockEnv$J1N[y,], 
@@ -294,18 +288,19 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                  M = stockEnv$natM[y], 
                  waav = stockEnv$waa[y,])
       catchproj<-stockEnv$catchproj
-      if (F>2){F<-2}
       }
     }
     
+    #No projections (no projected catch advice)
     if(tolower(parmgt$projections) == 'false'){catchproj<-NA}
   
     if (F>2){F<-2}#Not letting actual F go over 2
-    
-    out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue,FrefTRPvalue, BrefTRPvalue,FrefTRPvalue2, BrefTRPvalue2), 
+
+    out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue,FrefTRPvalue, BrefTRPvalue), 
                 ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
                 OFgStatus = overfishing, catchproj=catchproj) #AEW
     
+  #Plan B Approach
   }else if(parmgt$ASSESSCLASS == 'PLANB'){
     
     # Find the recommended level for catch in weight

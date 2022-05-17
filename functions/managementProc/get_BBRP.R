@@ -6,7 +6,7 @@
 #         based reference point you want to use and BREF_PAR0 refers to
 #         an associated level for that reference point. Options are:
 #
-#     * RSSBR: mean recruitment multiplied by SPR(Fmsy) or some proxy of
+#     * RSSBR: mean recruitment multiplied by SPR at Fmsy or some proxy of
 #             SPR at Fmsy
 #
 #             par[1]: SPR level for Fmsy proxy (e.g., 0.35 for F35%)
@@ -16,20 +16,21 @@
 # parpop: list of population parameters needed to calculate the biomass-
 #         based reference point. See specific functions, e.g.
 #           get_perRecruit()
-#           get_BmsySim
 #         to see what needs to be included in the list.
 
 get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
                      distillBmsy=mean, stockEnv){
 
+#Assigning misspecified weight-at-age if there is a weight-at-age misspecification
+  if (stockEnv$waa_mis=='TRUE'){
+    parpop$waa<-stock[[1]]$waa[1,]
+  }
+  
   if(parmgt$BREF_TYP == 'RSSBR'){
 
     # There cannot be any forward projections associated with RSSBR. They
     # don't make sense because if that is your assumption about recruitment
-    # then biomasses in the future won't matter.
-
-    # get Fmsy proxy
-    # Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop)
+    # then biomass in the future won't matter.
 
     parmgt1 <- list(FREF_PAR0 = FBRP, FREF_TYP = 'SSBR')
 
@@ -55,17 +56,8 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     # Load in the recruitment function (recruitment function index is
     # found in the parmgt data frame but the actual functions are from
     # the list Rfun_BmsySim which is created in the processes folder.
-    Rfun <- Rfun_BmsySim[[parmgt$RFUN_NM]]
-    # # get SPR at Fmax
-    # sprFmax <- get_perRecruit(parmgt=mproc[m,], parpop=parpop,
-    #                           nage=1000, nF=1000, nFrep=100)
-    # get Fmsy proxy
-    # Fprox <- get_FBRP(parmgt = parmgt, parpop = parpop,
-                      # parenv = parenv, Rfun_lst = Rfun_lst)
     
-    if (stockEnv$waa_mis=='TRUE'){
-      parpop$waa<-stock[[1]]$waa[1,]
-    }
+    Rfun <- Rfun_BmsySim[[parmgt$RFUN_NM]]
 
     SSB <- get_proj(type = 'BREF', parmgt = parmgt, parpop = parpop,
                     parenv = parenv,
