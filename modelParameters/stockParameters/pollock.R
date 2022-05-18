@@ -15,6 +15,7 @@ laa_typ <- 'vonB'
 # weight-length parameters
 waa_par <- c(0.00000743, 3.09) 
 waa_typ <- 'aLb'
+waa_mis<- FALSE
 
 # maturity-length parameters
 mat_par <- c(0.1636, 50.9967) 
@@ -24,6 +25,7 @@ mat_typ <- 'logistic'
 M <- 0.2
 M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
+M_mis<- FALSE
 
 # initial numbers at-age parameters
 initN_par <- c(nage = page, N0 = 2e5, F_full = 0.05, M = M)
@@ -35,6 +37,7 @@ initN_type <- 'expDecline'
 Rpar <- c(SSB_star = 0, 
           cR = 1) # dont need to convert
 R_typ <- 'HS'
+R_mis<-FALSE
 
 #### Fishery parameters ####
 
@@ -82,7 +85,6 @@ startCV <- 1.5
 # for model fitting)
 caaInScalar <- 1000  
 
-M_mis<- 'FALSE'
 
 #### Error parameters ####
 
