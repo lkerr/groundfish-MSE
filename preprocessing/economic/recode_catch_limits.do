@@ -31,7 +31,7 @@ Other stocks do not have a rec allocation.  Since the other rec stocks don't hav
 version 15.1
 clear
 
-import delimited "$bio_data/$catch_hist_file"
+import delimited "$bio_data/$catch_hist_file", stringcols(_all)
 
 foreach var of varlist commercial sector smallmesh commonpool herringfishery recreational scallopfishery statewater other{
 replace `var'="0" if strmatch(`var',"NA")
