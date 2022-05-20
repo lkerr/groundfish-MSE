@@ -12,7 +12,7 @@ global projectdir $MSEprojdir
 global inputdir "$projectdir/data/data_raw/econ"
 global outdir "$projectdir/data/data_processed/econ"
 global codedir "$projectdir/preprocessing/economic"
-global bio_data "$projectdir/data/data_processed/catchHistory"
+global bio_data "$projectdir/data/data_raw/catchHistory"
 
 
 
