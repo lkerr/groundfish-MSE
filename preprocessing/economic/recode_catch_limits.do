@@ -101,7 +101,8 @@ merge 1:1 spstock2 using "$outdir/stocks_in_choiceset.dta", nogenerate
 gen mults_allocated=inlist(spstock2,"americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","pollock","redfish","whitehake")
 replace mults_allocated=1 if inlist(spstock2,`"winterflounderGB"', `"yellowtailflounderCCGOM"',`"yellowtailflounderGB"',`"yellowtailflounderSNEMA"',`"winterflounderGOM"',`"winterflounderSNEMA"',`"witchflounder"')
 gen mults_nonalloc=inlist(spstock2,`"windowpanen"',`"windowpanes"',`"wolffish"',`"halibut"',`"oceanpout"')
-gen non_mult=inlist(spstock2, `"americanLobster"',`"monkfish"',`"other"',`"redsilveroffshorehake"',`"seascallop"',`"skates"',`"spinydogfish"',`"squidmackerelbutterfishherring"',`"summerflounder"')
+gen non_mult=inlist(spstock2, `"americanlobster"',`"americanLobster"',`"monkfish"',`"other"',`"redsilveroffshorehake"',`"seascallop"',`"skates"')
+replace non_mult=1 if inlist(spstock2,`"spinydogfish"',`"squidmackerelbutterfishherring"',`"summerflounder"')
 
 /* encode stock areas */
 gen stockarea="Unit"
@@ -152,7 +153,8 @@ merge 1:1 spstock2 using "$outdir/stocks_in_choiceset.dta", nogenerate
 gen mults_allocated=inlist(spstock2,"americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","pollock","redfish","whitehake")
 replace mults_allocated=1 if inlist(spstock2,`"winterflounderGB"', `"yellowtailflounderCCGOM"',`"yellowtailflounderGB"',`"yellowtailflounderSNEMA"',`"winterflounderGOM"',`"winterflounderSNEMA"',`"witchflounder"')
 gen mults_nonalloc=inlist(spstock2,`"windowpanen"',`"windowpanes"',`"wolffish"',`"halibut"',`"oceanpout"')
-gen non_mult=inlist(spstock2, `"americanLobster"',`"monkfish"',`"other"',`"redsilveroffshorehake"',`"seascallop"',`"skates"',`"spinydogfish"',`"squidmackerelbutterfishherring"',`"summerflounder"')
+gen non_mult=inlist(spstock2, `"americanlobster"',`"americanLobster"',`"monkfish"',`"other"',`"redsilveroffshorehake"',`"seascallop"',`"skates"')
+replace non_mult=1 if inlist(spstock2,`"spinydogfish"',`"squidmackerelbutterfishherring"',`"summerflounder"')
 
 /* encode stock areas */
 gen stockarea="Unit"
@@ -192,7 +194,8 @@ merge m:1 spstock2 using "$outdir/stocks_in_choiceset.dta", nogenerate
 gen mults_allocated=inlist(spstock2,"americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","pollock","redfish","whitehake")
 replace mults_allocated=1 if inlist(spstock2,`"winterflounderGB"', `"yellowtailflounderCCGOM"',`"yellowtailflounderGB"',`"yellowtailflounderSNEMA"',`"winterflounderGOM"',`"winterflounderSNEMA"',`"witchflounder"')
 gen mults_nonalloc=inlist(spstock2,`"windowpanen"',`"windowpanes"',`"wolffish"',`"halibut"',`"oceanpout"')
-gen non_mult=inlist(spstock2, `"americanLobster"',`"monkfish"',`"other"',`"redsilveroffshorehake"',`"seascallop"',`"skates"',`"spinydogfish"',`"squidmackerelbutterfishherring"',`"summerflounder"')
+gen non_mult=inlist(spstock2, `"americanlobster"',`"americanLobster"',`"monkfish"',`"other"',`"redsilveroffshorehake"',`"seascallop"',`"skates"')
+replace non_mult=1 if inlist(spstock2,`"spinydogfish"',`"squidmackerelbutterfishherring"',`"summerflounder"')
 
 /* encode stock areas */
 gen stockarea="Unit"
