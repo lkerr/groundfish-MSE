@@ -16,7 +16,7 @@ if(runClass != 'HPCC'){
 
 ####################These are temporary changes for testing ####################
  mproc_bak<-mproc
- mproc<-mproc[2:2,] #selects validation of four models
+ mproc<-mproc_bak[2:2,] #selects validation of four models
  
  nrep<-2
 # yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
@@ -107,7 +107,8 @@ for(r in 1:nrep){
             # for use in the economic submodel. timeI=0 implies Jan1.
             stock[[i]]<- within(stock[[i]], {
               IJ1[y,] <- get_survey(F_full=0, M=0, N=J1N[y,], slxC[y,],
-                                slxI=selI, timeI=0, qI=qI)
+                                slxI=selI, timeI=0, qI=qI,
+                                DecCatch=DecCatch, Tanom=Tanom[y],y=y)
             })
           } # End survey loop
 
