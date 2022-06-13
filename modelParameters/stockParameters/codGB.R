@@ -32,7 +32,8 @@ initN_type <- 'expDecline'
 # Recruitment
 ##HS with all recruitment values (what is used in stock assessment projections)##
 Rpar <- c(SSB_star = 50000,
-          cR = 1) # dont need to convert
+          cR = 1,
+          Rnyr=10) # dont need to convert
 R_typ <- 'HS'
 #Rpar <- c(h = 6.630977e-01,
 #          R0 = 6.087769e+07,

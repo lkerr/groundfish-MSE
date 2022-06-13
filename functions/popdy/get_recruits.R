@@ -131,7 +131,19 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
   }
     
   else if (type == 'HS'){ 
-    if(stock[[i]]$stockName=='codGOM'){
+    if(stock[[i]]$stockName=='haddockGB'){
+      Rhat <- with(as.list(par),{
+        if (type2=="True"){
+          assess_vals <- get_HistAssess(stock = stock[[i]])
+          pred<-remp(1,tail(as.numeric(assess_vals$assessdat$R,20)))
+          
+        }
+        else{
+          pred <- remp(1, as.numeric(R_est))
+        }
+        return(pred)
+      })}
+    else{
       Rhat <- with(as.list(par),{
         SSBhinge<-SSB_star
         if (type2=="True"){
@@ -151,19 +163,8 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
           }
         }
         return(pred)
-      })}
-      if(stock[[i]]$stockName=='haddockGB'){
-        Rhat <- with(as.list(par),{
-        if (type2=="True"){
-          assess_vals <- get_HistAssess(stock = stock[[i]])
-          pred<-remp(1,tail(as.numeric(assess_vals$assessdat$R,20)))
-          
-        }
-        else{
-          pred <- remp(1, as.numeric(R_est))
-        }
-        return(pred)
-        })}
+      })
+    }
   }
   # Autocorrelation component
   ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
@@ -174,9 +175,8 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
   out <- list(Rhat = unname(Rhat), R = unname(R))
 
   return(out)
-  
-  })
-}
+  })}
+
 
 
 
