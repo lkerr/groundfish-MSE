@@ -16,7 +16,7 @@ if(runClass != 'HPCC'){
 
 ####################These are temporary changes for testing ####################
  mproc_bak<-mproc
- mproc<-mproc_bak[2:2,] #selects validation of four models
+ mproc<-mproc_bak[1:1,] 
  
  nrep<-2
 # yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
