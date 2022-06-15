@@ -128,6 +128,9 @@ source(here("preprocessing","economic","multiplier_import.R"))
 source(here("preprocessing","economic","input_price_import.R"))
 
 
+# Quota price 
+source(here("preprocessing","economic","quota_price_coefs.R"))
+
 # This takes quite a while 
 production_coefs<-production_outfile
 production_coefs<-readRDS(file.path(savepath, production_coefs))

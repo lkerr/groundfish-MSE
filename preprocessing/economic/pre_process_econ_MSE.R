@@ -114,6 +114,13 @@ day_limits <- "trip_limits_forsim.dta"
 
 ####################END Locations of files. You shouldn't have to change these unless you're adding new datasets (like a pre-as-pre or pre-as-pre), new coefficients, new multipliers, etc) 
 
+
+
+
+
+
+
+
 ####prefix  (see datafile_split_prefix in wrapper.do)
 yrstub<-"econ_data"
 # yearly_savename<-c("full_targeting_coefsnc2", "full_targeting_coefs")
@@ -129,6 +136,9 @@ source(here("preprocessing","economic","multiplier_import.R"))
 
 #input prices
 source(here("preprocessing","economic","input_price_import.R"))
+
+# Quota price 
+source(here("preprocessing","economic","quota_price_coefs.R"))
 
 
 # This takes quite a while 
