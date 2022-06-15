@@ -1,34 +1,4 @@
 # Load in quota price coefficients
-rm(list=ls())
-if(!require(readstata13)) {  
-  install.packages("readstata13")
-  require(readstata13)}
-if(!require(tidyr)) {  
-  install.packages("tidyr")
-  require(tidyr)}
-if(!require(dplyr)) {  
-  install.packages("dplyr")
-  require(dplyr)}
-if(!require(data.table)) {  
-  install.packages("data.table")
-  require(data.table)}
-if(!require(here)) {  
-  install.packages("here")
-  require(here)}
-
-# Setting up the data.
-# Before you do anything, you put all your "data" files into the 
-# /data/data_raw/econ folder
-#here::i_am("preprocessing/economic/quota_price_coefs.R")
-
-# file paths for the raw and final directories
-# windows is kind of stupid, so you'll have to deal with it in some way.
-savepath <- here("data","data_processed","econ")
-rawpath <- savepath
-# Just a guess on your paths.  
-#rawpath <- 'C:/Users/abirken/Documents/GitHub/groundfish-MSE/data/data_raw/econ'
-#savepath <- 'C:/Users/abirken/Documents/GitHub/groundfish-MSE/data/data_processed/econ'
-
 
 
 # 
@@ -81,7 +51,7 @@ droppval<-function(working_coefs){
 }
 
 ### Code works for post-as-post and post-as-pre as long as the pre_process files are run separately  
-quotaprice_coefs <- read.csv(file.path(rawpath,quotaprice_coefs_in), sep="\t", header=TRUE,stringsAsFactors=FALSE)
+quotaprice_coefs <- read.csv(file.path(savepath,quotaprice_coefs_in), sep="\t", header=TRUE,stringsAsFactors=FALSE)
 
 qc_rownames<-quotaprice_coefs[,1]
 #here is a good place to gsub out the ":", "_I", and _cons to constant
