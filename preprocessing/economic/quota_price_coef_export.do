@@ -7,19 +7,34 @@ global projectdir $MSEprojdir
 global inputdir "$projectdir/data/data_raw/econ"
 global outdir "$projectdir/data/data_processed/econ"
 
-global input_ster "${inputdir}/quota_price_hurdle_results_2022_03_04.ster"
+global input_ster "${inputdir}/coverage_results2022_03_04.ster"
 global exponential_out "${outdir}/quota_price_exponential.txt"
 global linear_out "${outdir}/quota_price_linear.txt"
 
 est drop _all
 
 
+
+
+/* load in models hurdle */
+qui est describe using $input_ster
+
+local numest=r(nestresults)
+forvalues est=1(1)`numest'{
+	est desc using $input_ster, number(`est')
+	local newtitle=r(title)
+	est use $input_ster, number(`est')
+	est store `newtitle'
+}
+
+est dir
+
+
+
 /* read in linear model */
-est use $input_ster, number(1)
-est store linear
+est restore linear_P3NS
 
 
-est restore linear
 mat b=e(b)
 mat b=b'
 
@@ -29,12 +44,9 @@ mat2txt, matrix(b) saving($linear_out) replace
 
 
 /* read in exponential model */
-est use $input_ster, number(3)
-est store exponential
+est restore exp_P1NS
 
 
-
-est restore exponential
 mat b=e(b)
 mat b=b'
 
