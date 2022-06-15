@@ -50,7 +50,7 @@ get_predict_quota_prices <- function(){
   # Grab sigma, the names of the coefficients, names of the data  and put them into matrices
   sig<-quotaprice_coefs$sigma[1]
   
-  levelRHS_names<-c("live_priceGDP","quota_remaining_BOQ", "q_fy_2","q_fy_3","q_fy_4","constant")
+  levelRHS_names<-c("live_priceGDP","quota_remaining_BOQ","proportion_observed", "q_fy_2","q_fy_3","q_fy_4","constant")
   levels_coefs<-paste0("lnbadj_GDP:", levelRHS_names)
   
   levelsRHS<-quarterly[,..levelRHS_names]
