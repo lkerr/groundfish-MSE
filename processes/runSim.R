@@ -3,7 +3,7 @@
 #### Set up environment ####
 
 # empty the environment
-#rm(list=ls())
+# rm(list=ls())
 source('processes/runSetup.R')
 
 # if on local machine (i.e., not hpcc) must compile the tmb code
@@ -16,7 +16,7 @@ if(runClass != 'HPCC'){
 
 ####################These are temporary changes for testing ####################
  mproc_bak<-mproc
- mproc<-mproc_bak[1:1,] 
+ mproc<-mproc_bak[3:3,] 
  
 # Don't set nrep smaller than the nrep in set_om_parameters_global.R 
 # yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
