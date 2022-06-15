@@ -41,7 +41,13 @@ Rpar <- c(h = 6.286813e-01,      #update all
 
 R_typ <- 'BHSteep'
 R_mis <- FALSE
-
+Rpar_mis <- c(h = 6.286813e-01,      #update all
+              R0 = 8.062700e+07,
+              c = -0.540,
+              SSBRF0 = 0.01972,
+              sigR = 0.56,
+              beta3 = -2.501400e-01)
+  
 #### Fishery parameters ####
 
 # fishery and survey catchabilities
@@ -95,6 +101,8 @@ oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
 pe_R <- 0.5
+pe_RSA <- 0.5 #from cod assessment, needs to be updated
+pe_IA <- 0.18
 
 # implementation error of fishing mortality
 ie_F <- 0
