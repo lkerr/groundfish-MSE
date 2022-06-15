@@ -1,11 +1,10 @@
 	coefficient	
-selection:quota_remaining_BOQ	-.14642595	
-selection:c.quota_remaining_BOQ#c.recip_ACL	-3.5589513	
-selection:_Iq_fy_2	-.75608211	
-selection:_Iq_fy_3	-1.1608493	
-selection:_Iq_fy_4	-2.1153528	
-selection:proportion_observed	 1.5350466	
-selection:_cons	 4.0255706	
+selection:quota_remaining_BOQ	-.14222996	
+selection:c.quota_remaining_BOQ#c.recip_ACL	 -3.603486	
+selection:_Iq_fy_2	 -.7621398	
+selection:_Iq_fy_3	-1.1643244	
+selection:_Iq_fy_4	-2.1201888	
+selection:_cons	 4.4036525	
 badj_GDP:live_priceGDP	 .88219601	
 badj_GDP:quota_remaining_BOQ	-.73839138	
 badj_GDP:_Iq_fy_2	 -.3937107	
