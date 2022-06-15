@@ -35,10 +35,13 @@ initN_type <- 'expDecline'
 ##HS with all recruitment values (what is used in stock assessment projections)##
 ##Could not find a SSB hinge point in the assessment report materials##
 Rpar <- c(SSB_star = 0, 
-          cR = 1) # dont need to convert
+          cR = 1,
+          Rnyr = 20) # dont need to convert
 R_typ <- 'HS'
 R_mis<-FALSE
-
+Rpar_mis <- c(SSB_star = 0, 
+              cR = 1,
+              Rnyr = 20)
 #### Fishery parameters ####
 
 # fishery and survey catchabilities
@@ -102,7 +105,9 @@ oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
 pe_R <- 0.5
-
+pe_RSA <- 0.5 #stolen from cod, find values from stock assessment
+pe_IA <- 0.18
+  
 # implementation error of fishing mortality
 ie_F <- 0
 ie_typ <- 'lognorm'
