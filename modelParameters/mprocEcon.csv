@@ -1,3 +1,4 @@
 ASSESSCLASS,HCR,FREF_TYP,FREF_PAR0,FREF_PAR1,BREF_TYP,BREF_PAR0,BREF_PAR1,RFUN_NM,RPInt,AssessFreq,ImplementationClass,projections,rhoadjust,mincatch,varlimit,Lag,LandZero,CatchZero,EconType,EconName,EconData,MultiplierFile,OutputPriceFile,InputPriceFile,ProdEqn,ChoiceEqn
 ASAP,slide,SPR,0.4,NA,SIM,20,-1,hindcastMean,2,2,StandardFisheries,TRUE,FALSE,TRUE,FALSE,TRUE,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-ASAP,slide,SPR,0.4,NA,SIM,20,-1,hindcastMean,2,2,Economic,TRUE,FALSE,TRUE,FALSE,TRUE,TRUE,TRUE,Multi,valid_pre_coefsnc1,validation_pre_coefsnc1,sim_multipliers_post_valid.Rds,output_prices_post_valid.Rds,input_prices_post_valid.Rds,post,prenc1
+ASAP,slide,SPR,0.4,NA,SIM,20,-1,hindcastMean,2,2,Economic,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,Multi,valid_pre_coefsnc1,validation_pre_coefsnc1,sim_multipliers_post_valid.Rds,output_prices_post_valid.Rds,input_prices_post_valid.Rds,post,prenc1
+ASAP,slide,SPR,0.4,NA,SIM,20,-1,hindcastMean,2,2,Economic,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,Multi,MSE_postn_coefsc2,full_targeting_coefsnc2,sim_multipliers_post_MSE.Rds,output_prices_post_MSE.Rds,input_prices_post_MSE.Rds,post,postnc2
