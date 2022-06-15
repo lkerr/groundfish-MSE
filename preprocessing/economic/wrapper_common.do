@@ -106,4 +106,5 @@ do "$codedir/multiplier_prep.do"
 
 
 do "$codedir/quota_price_coef_export.do"
-
+/* get rhs data needed for quota price predictions */
+do "$codedir/quota_price_data_export.do"
