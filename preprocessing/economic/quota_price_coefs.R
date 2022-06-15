@@ -35,7 +35,7 @@ rawpath <- savepath
 # ##############Independent variables in the Quota price equations ##########################
 
 selection=c("quota_remaining_BOQ","QuotaFraction","Q2","Q3", "Q4","constant")
-badj_GDP=c("live_priceGDP","quota_remaining_BOQ","WTswtquota_remaining_BOQ","WTDswtquota_remaining_BOQ", "Q2","Q3", "Q4","constant")
+badj_GDP=c("live_priceGDP","quota_remaining_BOQ","WTswtquota_remaining_BOQ","WTDswtquota_remaining_BOQ", "Q2","Q3", "Q4","constant", "proportion_observed")
 
 
 #names of quota price files.
