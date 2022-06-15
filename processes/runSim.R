@@ -18,7 +18,7 @@ if(runClass != 'HPCC'){
  mproc_bak<-mproc
  mproc<-mproc_bak[1:1,] 
  
- nrep<-2
+# Don't set nrep smaller than the nrep in set_om_parameters_global.R 
 # yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
 # I want to start the economic model at fmyear=2010 and temporarily end it in 2011
 # management starts this year:
