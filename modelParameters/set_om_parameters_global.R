@@ -19,13 +19,13 @@ mprocfile<-"mprocEcon.csv"
 # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
 # Available stocks: haddockGB, codGOM, codGB, pollock, yellowtailflounderGB
-stockExclude <- c('haddockGB', 'codGB', 'pollock', 'yellowtailflounderGB')
+stockExclude <- c('haddockGB', 'codGB', 'pollock')
 
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data
 # just fishing mortality for now
 
-histAssess <- TRUE
+histAssess <- FALSE
 
 #### Structural parameters ####
 
@@ -91,6 +91,10 @@ anomFun <- median
 BrefScalar <- 0.5
 FrefScalar <- 0.75
 
+
+#################### BEGIN ECON GLOBAL PARAMETERS ##############################
+
+
 #### Helpful parameters ####
 # Scalars to convert things
 pounds_per_kg<-2.20462
@@ -152,6 +156,13 @@ choice_equation_post2<-choice_equation_pre2
 production_vars_pre=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","constant")
 production_vars_post=c("log_crew","log_trip_days","primary","secondary", "log_trawl_survey_weight","log_sector_acl", "constant")
 ############## End Independent variables in the Production equation ##########################
+
+#################### quota price bits ##############################
+
+quarterly_output_price_loc<-"quarterly_prices_2022_03_04.csv"
+quotaprice_coefs_loc<-"quotaprice_coefs_exponential.Rds"
+#################### END ECON GLOBAL PARAMETERS ##############################
+
 
 #### Output ####
 # Years after the management period begins to break up the results. For
