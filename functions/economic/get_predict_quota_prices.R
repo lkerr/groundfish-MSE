@@ -31,11 +31,11 @@ get_predict_quota_prices <- function(){
   quarterly <- merge(quarterly,quarterly_prices, by=c("spstock2","q_fy"), all.x = FALSE, all.y = FALSE)
   
   #Names of RHS vars in the selection equation
-  RHSvars<-c("quota_remaining_BOQ","fraction_remaining_BOQ","q_fy_2","q_fy_3","q_fy_4","constant")
-  selectcoefs<-paste0("selection:", RHSvars)
+  selectRHS_names<-c("quota_remaining_BOQ","fraction_remaining_BOQ","q_fy_2","q_fy_3","q_fy_4","constant")
+  selectcoefs<-paste0("selection:", selectRHS_names)
 
   # subset the RHS vars and coefficients. Transpose the coefficients
-  selectRHS<-quarterly[,..RHSvars]
+  selectRHS<-quarterly[,..selectRHS_names]
   A<-t(as.matrix(quotaprice_coefs[,..selectcoefs]))
   
   # Compute the probability that the quota price will be positive
