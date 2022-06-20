@@ -41,7 +41,7 @@ get_weightAtAge <- function(type, par, laa, inputUnit,y,fmyearIdx){
     
   }
   else if(type == 'dynamic'){
-    waamat<-as.matrix(read.csv('data/data_raw/waamatrix.csv'))
+    waamat<-as.matrix(read.csv('data/data_raw/waamatrix.csv'),header=FALSE)
     colnames(waamat)<-NULL
     if (y<82){waa <- waamat[1,]}
     else if (y>81 & y<169){waa <- waamat[(y-81),]}
