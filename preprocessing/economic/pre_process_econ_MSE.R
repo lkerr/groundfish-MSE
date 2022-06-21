@@ -90,23 +90,23 @@ production_outfile<-"production_coefs_post.Rds"
 
 
 # bits for input_price_import.R 
-file_suffix<-"_MSE"
+file_prefix<-"MSE_"
+input_price_loc<-paste0("MSE_post_input_price_series.dta")
 
-input_price_loc<-paste0("input_price_series",file_suffix,".dta")
-input_preoutfile<-paste0("input_prices_pre",file_suffix,".Rds")
-input_postoutfile<-paste0("input_prices_post",file_suffix,".Rds")
+input_preoutfile<-paste0(file_prefix,"pre_input_prices.Rds")
+input_postoutfile<-paste0(file_prefix,"post_input_prices.Rds")
 input_working<-input_postoutfile
 
 # bits for multiplier_import.R 
 multip_location<-"reshape_multipliers.dta"
-multi_postoutfile<-paste0("sim_multipliers_post",file_suffix,".Rds")
-multi_preoutfile<-paste0("sim_multipliers_pre",file_suffix,".Rds")
+multi_postoutfile<-paste0(file_prefix,"post_multipliers.Rds")
+multi_preoutfile<-paste0(file_prefix,"pre_multipliers.Rds")
 multiplier_working<-multi_postoutfile
 
 # bits for output_price_import.R 
-output_price_loc<-paste0("output_price_series",file_suffix,".dta")
-output_preoutfile<-paste0("output_prices_pre",file_suffix,".Rds")
-output_postoutfile<-paste0("output_prices_post",file_suffix,".Rds")
+output_price_loc<-paste0(file_prefix,"post_output_price_series.dta")
+output_preoutfile<-paste0(file_prefix,"pre_output_prices.Rds")
+output_postoutfile<-paste0(file_prefix,"post_output_prices.Rds")
 output_working<-output_postoutfile
 
 # bits for day limits dataset 
@@ -124,7 +124,7 @@ day_limits <- "trip_limits_forsim.dta"
 ####prefix  (see datafile_split_prefix in wrapper.do)
 yrstub<-"econ_data"
 # yearly_savename<-c("full_targeting_coefsnc2", "full_targeting_coefs")
-yearly_savename<-c("full_targeting_coefsnc2")
+yearly_savename<-c("MSE_post_coefsnc2")
 
 
 source(here("preprocessing","economic","targeting_coeff_import.R"))
