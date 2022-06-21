@@ -86,7 +86,7 @@ q_yellowtailflounderSNEMA=i.q_yellowtailflounderSNEMA)
 ]
 working_targeting[,key:=NULL]
 
-wt_old<-copy(targeting_dataset[[day]])
+#wt_old<-copy(targeting_dataset[[day]])
 #compare the q_ variables in wt_old to the q_ variables in working_targeting. They should be different. And they are
 #summary(working_targeting$q_witchflounder)
 #summary(wt_old$q_witchflounder)
