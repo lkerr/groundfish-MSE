@@ -47,6 +47,19 @@ For both the production and targeting models, the unit of observation is a hulln
 
 The statistical estimation of the model takes place externally to the MSE model -- there isn't a need to have this occur simultaneously (yet).
 
+The econometric model of targeting uses Real (1st quarter of 2016) US dollars, deflated using WPU0223 - the PPI for Unprocessed and Prepared Seafood.
+
+## Quota Price submodel
+
+### In Brief
+
+The quota price model uses the econometric results of Lee and Demarest (In Review).  Lee and Demarest estimate two step model to understand the determinants of quota prices in groundfish from 2010-2019.  In the first step, a hedonic price function is estimated on transactions-level data to recover the per-pound price of quota for each stock. In the second step, a reduced form model is estimated to explain the variation in quota prices using output prices, quota availability, observer coverage rates, and other explanatory variables.  "Corner solutions," characterized by excess supply of quota (low quota utilization rates) and a zero price are prevalent; therefore a hurdle model with an exponential functional form for the outcome equation was used.
+
+The quota price model was estimated in Real (1st quarter of 2010) US dollars, using the GDP Implicit Price Deflator (GDPDEF). Therefore, the quota price submodel first predicts quota prices in Real 2010 US dollars, then converts them to 2016Q1 dollars to match the units of the targeting model. 
+
+
+
+
 ## The Main Simulation code
 
 ### Options
@@ -109,8 +122,6 @@ Functions - these run many times per simulation:
 
 * **get_reshape_landings:** Aggregates the landings from the day's trips to the fleet level.
 
-* **get_reshape_targets_revenues:**  ?
-
 
 * **joint_adjust_allocated_mults:** Adjusts the joint production multipliers for the allocated multispecies stocks
 * **joint_adjust_others:** Adjusts the joint production multipliers for other stocks
@@ -119,6 +130,8 @@ Functions - these run many times per simulation:
 * **zero_out_closed_areas_asc_cutout:** Closes a fishery and redistributes the probability associated with that stock to the other options.  This is based on the "stockarea_open" logical column.   Skips math if all stocks are open
 
 * **get_reshape_targets_revenues:** A small "helper" function to reshape targets and revenues.
+
+* **get_predict_quota_prices:** A function that uses exogenous data (average quarterly (live) prices of fish, proportion_observed) and endogenous data (quota remaining and fraction of quota remaining) to predict quota prices.  
 
 There are few files in "scratch/econscratch" that may be useful
 * **test_predict_etargeting_and_production.R :** was used to verify that the predict_etargeting.R and predict_eproduction.R functions works properly. It runs as a standalone and might be fun to explore. 
@@ -169,7 +182,8 @@ You'll also need to put your data files into \${MSEprojdir}\\data\\data_raw\\eco
 * **recode_catch_limits.do** A little cleanup and conforming of the catch limit csv.
 * **price_prep.do** : Construct output prices at the spstock2-date-post level and input prices at the hullnum-spstock2-date-post level.  Quota prices are at the hullnum-spstock2-month-post level, but stored with the other input prices.  Quota prices may vary by hullnum because some vessels are DAS scallopers and others are IFQ scallopers.  Note -- right now, we are only have Post period prices ready. All simulations are currently using 2010-2015 prices.
 * **multiplier_prep.do** : Construct multipliers at the hullnum-spstock2-month-post level.  
-
+* **quota_price_coef_export.do** : export the results of the "coverage" models of quota prices to text files.
+* **quota_price_data_export.do**: export the exogenous independent data needed to simulate quota prices.   
 Outputs of these are:
 
 1. Four files containing asc logit coefficients corresponding to each gear and time period.
@@ -185,6 +199,11 @@ Outputs of these are:
     a.  annual_sector_catch_limits.csv - the catch limits averaged over 2010-2017
 
 3.  A small dataset of spstock2 names: stocks_in_choiceset.dta.  I'm not sure what this is used for. 
+
+4.  Text files containing the linear and exponential quota price model coefficients 
+    a.  quota_price_exponential.txt
+    a.  quota_price_linear.txt
+5. A small dataset (quarterly_prices_${vintage_string}.csv) containing the indpendent variables needed to simulate quota prices.
 
 
 ### R preprocessing code
@@ -204,7 +223,7 @@ Outputs of these are:
 * **output_price_import.R** imports and saves data.tables containing output prices
 * **multiplier_import.R** constructs vessel 
 * **targeting_data_import.R** constructs the simulation datasets.  There are the "data" is joined to coefficients, prices, and multipliers using various combinations of "hullnum", "MONTH" , "spstock2", "doffy" (day of groundfish fishing year), "gearcat".  Note that because the data loops through "gffishingyears", we do not join on gffishingyear. This piece of code also computes average multipliers in the pre-period for the counterfactual sims.
-
+* **quota_price_coefs.R**: Code to convert the coefficients in text files to a .Rds.
 ## Input Data
 There are a few input datasets needed to run. 
 Anna generates these:
@@ -241,14 +260,17 @@ asclogit*.txt
 
 POSTasPOST*.dta
 
+* **STUB**: can be "CF", "MSE", or "valid" 
+* **TIME**: can be "pre" or "post" 
 
-* **full_targeting_YYYY.Rds** - contains "independant variables" associated with the production and targeting models, estimated coefficients. Each row corresponds a vessel-day-targeting choice.  I tried to optimize for less memory usage, but it makes the model run extremely slowly.  
 
-* **input_prices_POST_STUB.Rds** vessel-day level input prices. fuelprice and crew wages vary by vessel.  This variability is partially due to their locations (prices of fuel vary by state; so do prices of labor). Also varies based on the size and composition of the boat's crew.  POST can be "pre" or "post" and STUB can be "CF", "MSE", or "valid" 
+* **STUB_TIMEMODELYYYY.Rds** - contains "independant variables" associated with the production and targeting models, estimated coefficients. Each row corresponds a vessel-day-targeting choice.  I tried to optimize for less memory usage, but it makes the model run extremely slowly.  
 
-* **output_prices_POST_STUB.Rds**  day-level output prices that are gearcat specific. They are gearcat specific because the mix  of "other" varies by gearcat.  POST can be "pre" or "post" and STUB can be "CF", "MSE", or "valid" 
+* **STUB_TIME_input_prices.Rds** vessel-day level input prices. fuelprice and crew wages vary by vessel.  This variability is partially due to their locations (prices of fuel vary by state; so do prices of labor). Also varies based on the size and composition of the boat's crew.  
 
-* **sim_multipliers_POST_STUB.Rds**  These are vessel specific coefficients that scale landings of a target species to catch/landings of other (non-target) species that are used for simulating the pre catch-share period. POST can be "pre" or "post" and STUB can be "CF", "MSE", or "valid" 
+* **STUB_TIME_output_prices.Rds**  day-level output prices that are gearcat specific. They are gearcat specific because the mix  of "other" varies by gearcat.   
+
+* **STUB_TIME_multipliers.Rds**  These are vessel specific coefficients that scale landings of a target species to catch/landings of other (non-target) species that are used for simulating the pre catch-share period. POST can be "pre" or "post" and STUB can be "CF", "MSE", or "valid" 
 
 
 
@@ -286,4 +308,4 @@ These can be pulled into stata with "postprocessing/economic/import_econ.do"
  * The Econ module is mostly written using data.table. 
  
 
-[Return to Wiki Home](https://github.com/thefaylab/groundfish-MSE/wiki)
+[Return to Wiki Home](https://github.com/lkerr/groundfish-MSE/wiki)
