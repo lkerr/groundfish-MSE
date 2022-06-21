@@ -53,9 +53,18 @@ The econometric model of targeting uses Real (1st quarter of 2016) US dollars, d
 
 ### In Brief
 
-The quota price model uses the econometric results of Lee and Demarest (In Review).  Lee and Demarest estimate two step model to understand the determinants of quota prices in groundfish from 2010-2019.  In the first step, a hedonic price function is estimated on transactions-level data to recover the per-pound price of quota for each stock. In the second step, a reduced form model is estimated to explain the variation in quota prices using output prices, quota availability, observer coverage rates, and other explanatory variables.  "Corner solutions," characterized by excess supply of quota (low quota utilization rates) and a zero price are prevalent; therefore a hurdle model with an exponential functional form for the outcome equation was used.
+The quota price model uses the econometric results of Lee and Demarest (In Review).  Lee and Demarest estimate two step model to understand the determinants of quota prices in groundfish from 2010-2019.  In the first step, a hedonic price function is estimated on transactions-level data to recover the per-pound price of quota for each stock. In the second step, a reduced form model is estimated to explain the variation in quota prices using output prices, quota availability, observer coverage rates, and other explanatory variables.  "Corner solutions," characterized by excess supply of quota (low quota utilization rates) and a zero price are prevalent; therefore a hurdle model with an exponential functional form for the outcome equation was used.  The preferred specification in Lee and Demarest (2019) includes a Spatial Lag X term; this term is difficult to simulate and excluded.
 
 The quota price model was estimated in Real (1st quarter of 2010) US dollars, using the GDP Implicit Price Deflator (GDPDEF). Therefore, the quota price submodel first predicts quota prices in Real 2010 US dollars, then converts them to 2016Q1 dollars to match the units of the targeting model. 
+
+### Technical Details
+
+Quota price coefficients are stored in ``quotaprice_coefs_exponential.Rds`` and read into memory by ``setupEconType.R`` 
+
+The ``fishery_holder`` data.table holds the catch limit (sectorACL) and cumulative catch (cumul_cat), by stock (spstock2). These are determined inside the coupled model and computed daily, although the quota prices are only updated quarterly.
+
+The ``quarterly_prices`` data.table holds live prices (2010Q1 GDP), a conversion factor to get to 2016Q1 SFD dollars, and the proportion_obsered. 
+
 
 
 
@@ -99,9 +108,9 @@ There are  "processes" files that run one time per simulation run:
 
 * **genEcon_Containers.R:** Gets called in the runSetup.R file. It sets up a few placeholders for Fleet level economic outputs.
 
-* **loadEcon2.R:** Gets called in the runSim.R file.  Loads in a single large data.table that remains in memory for one simulated year.  These files are too big to load and hold in memory for the entire simulation.  Also loads in input prices, output prices, and multipliers
+* **loadEcon2.R:** Gets called in the runSim.R file.  Loads in a single large data.table that remains in memory for one simulated year.  These files are too big to load and hold in memory for the entire simulation.  Also loads in input prices, output prices, multipliers, and quota prices.
 
-* **setupEconType.R:** Parses the mproc file for economic options (multipliers, output prices, input prices, production equation, choice equation).
+* **setupEconType.R:** Parses the mproc file and loads in data for economic model runs (multipliers, output prices, input prices, production equation, choice equation, quota price coefficients and indep vars).
 
 Functions - these run many times per simulation:
 * **get_bio_for_econ:** passes *things* from the biological model (in stock[[i]]) to the economic model.
