@@ -10,37 +10,20 @@ output:
     pandoc_args: --pdf-engine=xelatex
   html_document: null
   word_document: null
-bibliography: library.bib
+bibliography: C:\\Users\\Min-Yang.Lee\\Documents\\library.bib
 ---
 <!---Don't read, or touch this part -->
 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, fig.align='center')
-if(!require(ggplot2)) {  
-  install.packages("ggplot2")
-  require(ggplot2)}
-if(!require(tidyr)) {  
-  install.packages("tidyr")
-  require(tidyr)}
-if(!require(dplyr)) {  
-  install.packages("dplyr")
-  require(dplyr)}
-if(!require(broom)) {  
-  install.packages("broom")
-  require(broom)}
-if(!require(knitr)) {  
-  install.packages("knitr")
-  require(knitr)}
-if(!require(gridExtra)) {  
-  install.packages("gridExtra")
-  require(gridExtra)}
-if(!require(grid)) {  
-  install.packages("grid")
-  require(grid)}
-if(!require(ggthemes)) {  
-  install.packages("ggthemes")
-  require(ggthemes)}
+library(ggplot2)
+library(tidyverse)
+library(broom)
+library(knitr)
+library(gridExtra)
+library(grid)
+library(ggthemes)
 
 
 #to get table captions and numbering
@@ -157,12 +140,13 @@ Simulation 1B - Multispecies bioeconomic:  If the aggregate quotas are reached f
 Simulation 2B -“single-species” bioeconomic -- if the aggregate quota is reached for a stock, fishing for only that stock stops.  Perfect avoidance (fishermen somehow avoid all of the closed stock).  
 
 
-\iffalse
+<!---
 \begin{align}
 F_{real}& = F_{advice}*\varepsilon\\
 \varepsilon &= \frac{F_{real}}{F_{advice}}
 \end{align}
-  \fi
+--->
+  
 For both of these simulations, we can compute realized $F$ and therefore the implementation error in any year. We characterize the distribution of "implementation error" for our stocks (that is assumed to be i.i.d, probably a log-normal or half normal). We will either fit a distribution or draw directly out of those error terms.  We then simulate the "traditional" fisheries model with random implementation error implied by those distributions[^method2].  This mimics an MSE-implementation error approach.  
 
 Simulation 1T Multispecies traditional: apply a traditional fisheries model where the implementation errors come from the Simulation 1B.
@@ -229,7 +213,7 @@ IAM is listed as individual based, but that does not appear to be the case in Ne
 
 Single species models, with or without random implementation error, cannot credibly model interrelated fisheries with technical interactions. 
 
-We realistically allow for leakages out of the main fishery into other fisheries [@Cunningham2016].  Because our model is grounded in a structural model of individuals's utility maximization, instead of a reduced form model of metiers, we are better able to predict changes in behavior that result from changes in policies.  <!--For example, we can examine policies that include tradable output controls (ITQs), non-tradable output controls (IFQs), and certain input controls (Days-at-Sea).  We also do some other cool stuff.-->
+We realistically allow for leakages out of the main fishery into other fisheries [@Cunningham2016].  Because our model is grounded in a structural model of individuals's utility maximization, instead of a reduced form model of metiers, we are better able to predict changes in behavior that result from changes in policies.  <!---For example, we can examine policies that include tradable output controls (ITQs), non-tradable output controls (IFQs), and certain input controls (Days-at-Sea).  We also do some other cool stuff.--->
 
 Even without an ecological linkage (predator-prey or competition), a single species model of $F$ with implementation error lead to very different recommendations compared to a multispecies simulation model.
 
