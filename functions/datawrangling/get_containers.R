@@ -26,7 +26,7 @@ get_containers <- function(stockPar){
     codCW2 = yx0,
     CW = yxage,
     IN = yxage,
-    IJ1= yxage,
+    EconIN= yxage,
     laa = yxage,
     waa = yxage,
     Z = yxage,
