@@ -75,7 +75,7 @@ get_containers <- function(stockPar){
     # survey proportions-at-age
     paaIN = yxage,
     obs_paaIN = yxage,
-    paaEconIn=yxage,
+    paaEconIN=yxage,
     
     # fishing effort
     effort = yx0,
