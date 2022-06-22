@@ -19,6 +19,27 @@ random_sim_draw[, manage_year_idx:=cal_year-fmyear+1]
 
 random_sim_draw[,join_econbase_yr :=rep(econ_data_start:econ_data_end, length.out=nrow(random_sim_draw))]
 
+## Align so that cal_year==2010 <--> join_econbase_yr==2010
+# Look up how far offset things are
+# This will break if 2010 is not in the econ data, so I've written an if statement here. 
+if(econ_data_start<=2010 & econ_data_end>=2010){
+offset<-random_sim_draw[cal_year==2010]
+offset<-(offset$join_econbase_yr-offset$cal_year)
+offset<-econ_data_end-econ_data_start+1-offset
+
+#Create a longer sequence and subset
+join_econbase_yr <-rep(econ_data_start:econ_data_end, length.out=nrow(random_sim_draw)+offset)
+join_econbase_yr<-tail(join_econbase_yr, -1*offset)
+
+#cbind and cleanup
+random_sim_draw$join_econbase_yr<-NULL
+random_sim_draw<-cbind(random_sim_draw, join_econbase_yr)
+rm(join_econbase_yr)
+} else {
+  stop('Economic base data does not contain 2010. Economic data not aligned to cal_year')
+}
+
+#set the index position
 random_sim_draw[, join_econbase_idx:= join_econbase_yr-econ_data_start+1]
 random_sim_draw[, join_outputprice_idx:= join_econbase_idx]
 random_sim_draw[, join_inputprice_idx:= join_econbase_idx]
