@@ -115,10 +115,6 @@ for(r in 1:nrep){
               
               paaEconIN[y,] <- EconIN[y,] / sum(EconIN[y,])
               
-              
-              #don't think I need this line.
-              obs_paaEconCN[y,] <- get_error_paa(type=oe_paaCN_typ, paa=paaCN[y,], 
-                                             par=oe_paaCN)
               obs_sumEconIN[y] <- get_error_idx(type=oe_sumIN_typ, 
                                             idx=sumEconIN[y] * ob_sumIN, 
                                             par=oe_sumIN)
