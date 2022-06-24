@@ -37,7 +37,7 @@ P[Target_{nit}] =P(Revenues_{nit}, Costs_{nit}, Z_{nit})
 ```
 We observe whether the vessel actually targeted a thing or did not. These statistical models are referred to as discrete-, binary-, or multinomial- choice models.  The theoretical model underneath this is a Random Utility Model.  Currently, we're using an Alternative-specific Conditional Logit, but we're exploring other options, including nested and mixed logits. Estimation of the asc logit is by maximum likelihood (or quasi-ML, can't remember).
 
-We can simulate either the production or targeting equations at any values of the explanatory variables: for example changes in the trawl survey (used as a biomass proxy) can affect changes in harvest, which feeds into expected revenue and eventually the target equation.  Changes in costs or weather would directly affect the targeting equation. 
+We can simulate either the production or targeting equations at any values of the explanatory variables: for example changes in the trawl survey (used as a biomass proxy) can affect changes in harvest, which feeds into expected revenue and eventually the target equation.  Changes in costs or weather would directly affect the targeting equation.   The biomass proxy that goes into the harvest equation is the log of the trawl survey weights (in kg), the average of the spring and fall surveys is used.  The MSE model keeps track of weight-at-age (mt), numbers-at-age (individuals), and total biomass (N*waa). All I need to do is multiplyby 1000 and take the natural log.
 
 We can also simulate what happens when a fishery (GOM Cod, Pollock, Skates) are closed -- how does fishing effort redistribute to other targets?
 
