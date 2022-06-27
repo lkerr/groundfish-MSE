@@ -79,7 +79,7 @@ R_mis<-TRUE #If BRPs and projections assume a wrong SRR, set to TRUE.
 # Rpar_mis <- c(SSB_star = 6300, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
 # cR = 1,
 # Rnyr= 20)
-Rpar<-c(a=5.1479515,b=0.0002547,g=0)
+Rpar_mis<-c(a=5.1479515,b=0.0002547,g=0)
 
 #### Survey parameters ####
 
