@@ -49,6 +49,8 @@ The statistical estimation of the model takes place externally to the MSE model 
 
 The econometric model of targeting uses Real (1st quarter of 2016) US dollars, deflated using WPU0223 - the PPI for Unprocessed and Prepared Seafood.
 
+The production regressions use ``log_trawl_survey_weight`` as a right hand side variable. We update this inside the model from the ``obs_sumEconIW`` and ``sumEconIW`` terms.
+
 ## Quota Price submodel
 
 ### In Brief
