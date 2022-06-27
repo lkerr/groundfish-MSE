@@ -15,7 +15,7 @@ Rfun_BmsySim <- list(
   forecast = function(type, parpop, parenv, SSB, TAnom, sdR, stockEnv,...){
     Rpar<-parpop$Rpar
     if (stock[[i]]$R_mis=='TRUE' && exists("y")=='TRUE'){
-      type<-'HS' 
+      type<-'BH' 
       Rpar<-parpop$Rpar_mis}
     if (parpop$switch==TRUE){
       type2<-'True'}
