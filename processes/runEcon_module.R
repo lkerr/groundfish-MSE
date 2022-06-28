@@ -15,7 +15,7 @@
 ############################################################
 ############################################################
 
-fishery_holder<-bio_params_for_econ[,c("stocklist_index","stockName","spstock2","sectorACL","nonsector_catch_mt","bio_model","SSB", "mults_allocated", "stockarea","non_mult")]
+fishery_holder<-bio_params_for_econ[,c("stocklist_index","stockName","spstock2","sectorACL","nonsector_catch_mt","bio_model","SSB", "mults_allocated", "stockarea","non_mult","ln_trawlsurvey", "ln_obs_trawlsurvey")]
 fishery_holder$underACL<-as.logical("TRUE")
 fishery_holder$stockarea_open<-as.logical("TRUE")
 fishery_holder$cumul_catch_pounds<-0
@@ -86,15 +86,15 @@ q_yellowtailflounderSNEMA=i.q_yellowtailflounderSNEMA)
 ]
 working_targeting[,key:=NULL]
 
-#wt_old<-copy(targeting_dataset[[day]])
-#compare the q_ variables in wt_old to the q_ variables in working_targeting. They should be different. And they are
-#summary(working_targeting$q_witchflounder)
-#summary(wt_old$q_witchflounder)
-
-#summary(working_targeting$q_codGB)
-#summary(wt_old$q_codGB)
+# Subset the fishery_holder to rows that have a biological model, and keep the spstock2 and ln_trawl_survey columns
+ts<-fishery_holder[biocontain=1, c('spstock2','ln_trawlsurvey','ln_obs_trawlsurvey')]
+#Sanity check. The actual values in the trawl survey have never been higher than 5. So, set a max at 7, just in case, which is nearly an order of magnitude higher.
+ts[ln_trawlsurvey>=7, ln_trawlsurvey:=7]
+ts[ln_obs_trawlsurvey>=7, ln_obs_trawlsurvey:=7]
 
 
+# Merge-update working targeting. You can also switch this to ln_obs_trawlsurvey 
+working_targeting[ts,on="spstock2", `:=`(log_trawl_survey_weight=ln_trawlsurvey)]
 
 working_targeting<-get_predict_eproduction(working_targeting)
 working_targeting[spstock2=="nofish", harvest_sim:=0L]

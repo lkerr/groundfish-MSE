@@ -122,7 +122,7 @@ for(r in 1:nrep){
               
          
             })
-          } # End survey loop
+          } # End Economic Jan1 survey loop
 
 
           # ---- Run the economic model here ----

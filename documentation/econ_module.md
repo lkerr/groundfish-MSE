@@ -5,18 +5,19 @@
 
 <br> Describes the code that implements the "Economic Simulation Module" in the management strategy evaluation.  
 
-***
-### Status
-The code adds an  econonomic component to the MSE model. We' are missing a few features for the integrated model.  When mproc.csv contains a row with ``ImplementationClass=="Economic"``, the economic model will run.  When you want to run the Economic model, you have to specify a few more columns in mproc.csv that are not necessary when ``ImplementationClass=="Standard Fisheries"``
 
 ## Overview
-The ``runSim.R`` file has been modified to allow for an economic model of harvesting to substitute for a standardFisheries model of implementation error.  The economic module can be viewed as an alternative to the ``get_implementationF()`` function in a the standard fisheries model.  It takes inputs from the stock dynamics models and outputs an F_full.  It also constructs some economic metrics, but I haven't coded where to save them yet.
+The code adds an  econonomic component to the MSE model.   When mproc.csv contains a row with ``ImplementationClass=="Economic"``, the economic model will run. The ``runSim.R`` file has been modified to allow for an economic model of harvesting to substitute for a standardFisheries model of implementation error.  This is done with the following if() statement 
+```
+        if(mproc$ImplementationClass[m]=="Economic"){}
+```
+The economic module can be viewed as an alternative to the ``get_implementationF()`` function in a the standard fisheries model.  It takes inputs from the stock dynamics models and outputs an F_full.  It also constructs some economic metrics, but I haven't coded where to save them yet.
 
 
-## Statistics Behind the Economic simulation module
+## The Economic model of Targeting
 The population of vessels in the statistical model is: "Vessels that landed groundfish in the 2004-2015 time period, primarily used gillnet or trawl to catch groundfish, elected to fish in the sector program in 2010-2015, and were not falsifying their catch or sales records."  *i* indexes individuals, *n* indexes target, and *t* indexes time (days).
 
-The statistical economic module has two stages. In the first stage, we estimate this harvest equation   
+The statistical economic module has two stages. In the first stage, we estimate this equation to model expected harvests.   
 
 ```math
 H_{nit}=h(q_{ni},E_{nit},{X_{it})
@@ -49,11 +50,13 @@ The statistical estimation of the model takes place externally to the MSE model 
 
 The econometric model of targeting uses Real (1st quarter of 2016) US dollars, deflated using WPU0223 - the PPI for Unprocessed and Prepared Seafood.
 
+The production regressions use ``log_trawl_survey_weight`` as a right hand side variable. We update this inside the model from the ``obs_sumEconIW`` and ``sumEconIW`` terms.
+
 ## Quota Price submodel
 
 ### In Brief
 
-The quota price model uses the econometric results of Lee and Demarest (In Review).  Lee and Demarest estimate two step model to understand the determinants of quota prices in groundfish from 2010-2019.  In the first step, a hedonic price function is estimated on transactions-level data to recover the per-pound price of quota for each stock. In the second step, a reduced form model is estimated to explain the variation in quota prices using output prices, quota availability, observer coverage rates, and other explanatory variables.  "Corner solutions," characterized by excess supply of quota (low quota utilization rates) and a zero price are prevalent; therefore a hurdle model with an exponential functional form for the outcome equation was used.  The preferred specification in Lee and Demarest (2019) includes a Spatial Lag X term; this term is difficult to simulate and excluded.
+The quota price model uses the econometric results of Lee and Demarest (In Review).  Lee and Demarest estimate two step model to understand the determinants of quota prices in groundfish from 2010-2019.  In the first step, a hedonic price function is estimated on transactions-level data to recover the per-pound price of quota for each stock. In the second step, a reduced form model is estimated to explain the variation in quota prices using output prices, quota remaining, observer coverage rates, and other explanatory variables.  "Corner solutions," characterized by excess supply of quota (low quota utilization rates) and a zero price are prevalent; therefore a hurdle model with an exponential functional form for the outcome equation was used.  The preferred specification in Lee and Demarest (2019) includes a Spatial Lag X term; this term is difficult to simulate and excluded.
 
 The quota price model was estimated in Real (1st quarter of 2010) US dollars, using the GDP Implicit Price Deflator (GDPDEF). Therefore, the quota price submodel first predicts quota prices in Real 2010 US dollars, then converts them to 2016Q1 dollars to match the units of the targeting model. 
 
@@ -65,14 +68,28 @@ The ``fishery_holder`` data.table holds the catch limit (sectorACL) and cumulati
 
 The ``quarterly_prices`` data.table holds live prices (2010Q1 GDP), a conversion factor to get to 2016Q1 SFD dollars, and the proportion_obsered. 
 
+## Feedbacks between the biological and Economic model components
+
+There are a few feedback loops between the biological, management, and economic models.  The management model contains a control rule for the Fishing Mortality Rate (F).  The control rule is combined with the estimated biomass and the overfished status to determine the ACL (mt). The biological model also simulates a trawl survey.
+
+1.  A portion of the ACL is immediately deducted because it is caught by recreational vessels, non-groundfish vessels, vessels in state-waters, or simply groundfish vessels that opted out of the catch share fleet and are not part of the modeled fleet.  We set these deductions at either the historical averages or their actual allocations.  When the catch-share fleet's catch of a stock reaches the ACL, fishing for that stock, and other stocks caught with it, is closed.
+2.  The ACL affects quota prices through the "quota remaining" term.  When there is abundant quota remaining, the price of quota is likely to be zero. As the aggregate supply of quota decreases, the quota prices increases.
+3.  The production regressions use the the (natural) "log of trawl survey biomass (kg)" as an explanatory variable where possible.  Increases in trawl survey generally increase the amount of a stock that is caught on a trip. For the stocks with full biological models, we are able to allow catch on a trip (and therefore revenue)  to be a function of environmental conditions.  
 
 
+## Shortcomings
 
+As with all models, there are some shortcomings:
+
+1. Output prices are exogenous to the economic model.  Daily prices are fixed, which is unrealistic. 
+2. "Only" five stock models.  While it would be best to get "all" of the stock models, this is pretty good. There's a GOM stock (Cod), 3 GB stocks (Yellowtail, Cod, and Haddock), and unit stock (pollock).
+3. Year dummy variables -- The "other" target in the expected harvest equation contains a set of dummies for the fishing year. 
 
 ## The Main Simulation code
 
 ### Options
 We can set some options using the mproc.csv file. Notably:
+
 * **EconType :** Multi or Single.  Multi is more realistic.
    Multi --> a closure in a stockarea closes everything in that stockarea (no landings of GB Cod if GB haddock is closed)
    Single --> a closure in a stockarea does not close everything in that stockarea ( landings of GB Cod allowed if GB haddock is closed)
@@ -93,7 +110,7 @@ This is also in the mproc documentation.
 
 There's a pile of code.
 
-* **runEcon_module.R :**  is a *working* economic module. The last part is kinda janky, but closes the bio$\rightarrow$ econ $\rightarrow$ bio loop.  This used to be in the scratch folder with a different name.
+* **runEcon_module.R :**  is a *working* economic module.
 
 * **setupYearIndexing.R:** sets up a small data.table that keeps track of year indices. 
 
@@ -113,6 +130,7 @@ There are  "processes" files that run one time per simulation run:
 * **setupEconType.R:** Parses the mproc file and loads in data for economic model runs (multipliers, output prices, input prices, production equation, choice equation, quota price coefficients and indep vars).
 
 Functions - these run many times per simulation:
+
 * **get_bio_for_econ:** passes *things* from the biological model (in stock[[i]]) to the economic model.
 
 * **get_fishery_next_period:** adds up catch from individual vessels to the daily level and then aggregates with prior catch.  Checks if the sector sub-ACL is reached and closes the fishery if so.
@@ -307,7 +325,6 @@ These can be pulled into stata with "postprocessing/economic/import_econ.do"
     * The tidyverse version took approx 48sec/yr.
     * The revised data.table version takes 19 seconds/yr (depending on how often fisheries are closed). I should probably profile the code to speed it up.
     * I tried rewriting the model to economize on memory by only loading "small" data.tables and then mergeing them. That actually takes a large amount of time (>2-3 minutes). 
-  * Doesn't read/use IJ1 trawl survey index(biomass index computed on Jan 1).
   * slowest parts are joint_production, zero-ing out the closed stocks, and the randomdraw.
   
 ### Notes
