@@ -36,7 +36,6 @@ We realistically allow for leakages out of the main fishery into other fisheries
 Even without an ecological linkage (predator-prey or competition), a single species model of $F$ with implementation error lead to very different recommendations compared to a multispecies simulation model.
 
 
-
 <!---
 The implementation error approach is quite common.
 
@@ -63,3 +62,35 @@ Aquatic Sciences 54, 1699–1715.
 
 Dichemont 2006abc papers.
  -->
+ 
+ 
+## Groundfish Fishery 
+
+
+We're going to need stylized facts about the groundfish fishery
+
+
+## Related Literature
+<!---We're not actually going to have a related literature section -->
+
+Construction of complex simulation models with many sources of uncertainty is standard in the fisheries literature [c.f. @Smith1999; @Punt2016].  Our model is similar to that of @Ono2018, which models three principal groundfish stocks (Pacific Cod, Alaska Pollock, and Yellowfin Sole) and one bycatch species (Pacific Halibut).  Fishing vessels are assigned to metiers and assigned a baseline catch level based on historical data.  The fishery manager *selects* total allowable catch for each metier-species combination. SSB will scale the baseline catch. It's unclear how/why the fishery stops fishing. But it's also quasi-behavioral, there's an "adjustment" to the scaling that accounts for adaptation.
+
+Here is a partial list of single-species or independent models applied to  a fishery with techincal interactions (joint).
+
+@Forrest2018 examines Hecate Strait Pacific Cod and Rock Sole.  The Rock sole stock assessment notes:
+
+> Substantial reductions in the Pacific Cod (Gadus macrocephalus) TAC, starting with the 2000/2001 fishing season, likely affected Rock Sole catch patterns, as Rock Sole are often caught concurrently with Pacific Cod.  In Area 5CD, the reduction in Pacific Cod TAC was from 1000 tonnes to 200 tonnes within a single year (2000/2001).  Pacific Cod TACs have risen in recent years and are now at 1,200 tonnes in Area 5CDE and 590 tonnes in Area 5AB
+
+@Sun2019 examines Gulf of Maine Atlantic Cod.  These are caught with other groundfish [@Squires1987;@Scheld2018] 
+
+@Needle2008 examines North Sea haddock. These are also caught with other groundfish.
+@Amar2009 and @Ianelli2011 examine Gulf of Alaska Walleye Pollock. These are also caught with other groundfish [@Ono2018].
+
+@Prellozo2016 examine the multispecies fishery in the Bay of Biscay.  A metier-stock approach is taken: each metier has it's own catchability coefficient estimated from Increasing Returns to Scale production fucntion 
+$$
+h=qE^\alpha X^\beta
+$$
+where $\alpha=\beta=1$. @Prellozo2016 builds upon @Ulrich2011's FCUBE, which in turn, builds up on @Kell2007's FLR.
+
+@Thorpe2017a; @Thorpe2019; @Thorpe2019a examines a multispecies fishery using a metier based approach.
+
