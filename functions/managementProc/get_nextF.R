@@ -226,6 +226,14 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
         bycatch<-read.csv(paste(getwd(),'/data/data_raw/AssessmentHistory/haddockGB_Discard.csv',sep=""))
         mincatch<-min(tail(bycatch$Discard),10)
       }
+        if (stockEnv$stockName=='codGB'){
+          bycatch<-read.csv(paste(getwd(),'/data/data_raw/AssessmentHistory/codGB_Discard.csv',sep=""))
+          mincatch<-min(tail(bycatch$Discard),10)
+        }
+        if (stockEnv$stockName=='pollock'){
+          bycatch<-read.csv(paste(getwd(),'/data/data_raw/AssessmentHistory/pollock_Discard.csv',sep=""))
+          mincatch<-min(tail(bycatch$Discard),10)
+        }
       if (catchproj[1]>mincatch & catchproj[2]>mincatch){mincatchcon<-0}
       if (catchproj[1]<mincatch){
         catchproj[1]<-mincatch

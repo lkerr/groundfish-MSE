@@ -130,41 +130,39 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
   
   }
     
-  else if (type == 'HS'){ 
-    if(stock[[i]]$stockName=='haddockGB'){
-      Rhat <- with(as.list(par),{
-        if (type2=="True"){
-          assess_vals <- get_HistAssess(stock = stock[[i]])
-          pred<-remp(1,tail(as.numeric(assess_vals$assessdat$R,20)))
-          
-        }
-        else{
-          pred <- remp(1, as.numeric(R_est))
-        }
-        return(pred)
-      })}
-    else{
-      Rhat <- with(as.list(par),{
-        SSBhinge<-SSB_star
-        if (type2=="True"){
-          assess_vals <- get_HistAssess(stock = stock[[i]])
-          if (SSB >= SSBhinge) {
-            pred <- cR * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
-          } else if (SSB < SSBhinge){
-            pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
+    else if (type == 'HS'){ 
+      if(stock[[i]]$stockName=='haddockGB'){
+        Rhat <- with(as.list(par),{
+          if (type2=="True"){
+            assess_vals <- get_HistAssess(stock = stock[[i]])
+            pred<-remp(1,tail(as.numeric(assess_vals$assessdat$R,20)))
+           }
+          else{
+            pred <- remp(1, as.numeric(R_est))
           }
-        }
-        else{
-          if (SSB >= SSBhinge) {
-            pred <- cR * remp(1, tail(as.numeric(R_est), Rnyr))
-          } 
-          else if (SSB < SSBhinge){
-            pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(R_est), Rnyr))
+          return(pred)
+        })}
+      else{
+        Rhat <- with(as.list(par),{
+          SSBhinge<-SSB_star
+          if (type2=="True"){
+            assess_vals <- get_HistAssess(stock = stock[[i]])
+            if (SSB >= SSBhinge) {
+              pred <- cR * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
+            } else if (SSB < SSBhinge){
+              pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
+            }
           }
-        }
-        return(pred)
-      })
-    }
+          else{
+            if (SSB >= SSBhinge) {
+              pred <- cR * remp(1, tail(as.numeric(R_est), Rnyr))
+            } 
+            else if (SSB < SSBhinge){
+              pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(R_est), Rnyr))
+            }
+          }
+          return(pred)
+        })}
   }
   # Autocorrelation component
   ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
