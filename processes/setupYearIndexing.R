@@ -9,7 +9,8 @@ econ_replicate<-rep(1:nrep,each=eyears)
 sim_year_idx<-rep(fyear:nyear, times=nrep)
 
 random_sim_draw <-as.data.table(cbind(econ_replicate, sim_year_idx)) 
-
+rm(econ_replicate)
+rm(sim_year_idx)
 colnames(random_sim_draw)<-c("econ_replicate","sim_year_idx")
 random_sim_draw[, cal_year:=yrs[sim_year_idx]]
 random_sim_draw[, manage_year_idx:=cal_year-fmyear+1]
@@ -18,10 +19,34 @@ random_sim_draw[, manage_year_idx:=cal_year-fmyear+1]
 
 random_sim_draw[,join_econbase_yr :=rep(econ_data_start:econ_data_end, length.out=nrow(random_sim_draw))]
 
+## Align so that cal_year==2010 <--> join_econbase_yr==2010
+# Look up how far offset things are
+# This will break if 2010 is not in the econ data, so I've written an if statement here. 
+if(econ_data_start<=2010 & econ_data_end>=2010){
+offset<-random_sim_draw[cal_year==2010]
+offset<-(offset$join_econbase_yr-offset$cal_year)
+offset<-econ_data_end-econ_data_start+1-offset
+
+#Create a longer sequence and subset
+join_econbase_yr <-rep(econ_data_start:econ_data_end, length.out=nrow(random_sim_draw)+offset)
+join_econbase_yr<-tail(join_econbase_yr, -1*offset)
+
+#cbind and cleanup
+random_sim_draw$join_econbase_yr<-NULL
+random_sim_draw<-cbind(random_sim_draw, join_econbase_yr)
+rm(join_econbase_yr)
+} else {
+  stop('Economic base data does not contain 2010. Economic data not aligned to cal_year')
+}
+
+#set the index position
 random_sim_draw[, join_econbase_idx:= join_econbase_yr-econ_data_start+1]
 random_sim_draw[, join_outputprice_idx:= join_econbase_idx]
 random_sim_draw[, join_inputprice_idx:= join_econbase_idx]
 random_sim_draw[, join_mult_idx:= join_econbase_idx]
+random_sim_draw[, join_quarterly_price_idx:= join_econbase_idx]
+
+#maximum 'years' (this is total times through innermost loop), a counter, and a progress bar.
 
 yearitercounter<-0
 max_yiter<-nrep*nrow(mproc)*(nyear-fyear+1)

@@ -1,5 +1,5 @@
 # A function to handle jointness in production (technical interactions) 
-#
+# Within the c_, l_, p_, q_, and r_ columns, the spstock2's need to be in the same order.
 # Inputs
 #  wt: The working_targeting_dataset that contains coefficients and independent variables. 
 # 	
@@ -14,12 +14,11 @@
 # actual_rev_total is updated as sum price*landings minus sum quota_price*catch
 
 
-
 get_joint_production <- function(wt,spstock_names){
 
   catches<-paste0("c_",spstock_names)
   landings<-paste0("l_",spstock_names)
-  
+  daylimits <-paste0("dl_",spstock_names)
   quotaprices<-paste0("q_",spstock_names)
   lagp<-paste0("p_",spstock_names)
   prices<-paste0("r_",spstock_names)
@@ -32,14 +31,14 @@ get_joint_production <- function(wt,spstock_names){
     set(wt, i = NULL, j = catches[idx], value = wt[[catches[idx]]]*wt[['harvest_sim']])
     set(wt, i = NULL, j = landings[idx], value = wt[[landings[idx]]]*wt[['harvest_sim']])
     
+    #set(wt, i = NULL, j = landings[idx], value = ifelse(is.na(wt[[daylimits[idx]]]), wt[[landings[idx]]], ifelse(wt[[landings[idx]]]>= wt[[daylimits[idx]]], wt[[daylimits[idx]]], wt[[landings[idx]]])))
+    wt [, landings[idx]:= ifelse(is.na(wt[[daylimits[idx]]]), wt[[landings[idx]]], ifelse(wt[[landings[idx]]] >= wt[[daylimits[idx]]], wt[[daylimits[idx]]], wt[[landings[idx]]]))]
+    
     set(wt, i = NULL, j = quotaprices[idx], value = wt[[quotaprices[idx]]]*wt[[catches[idx]]])
     set(wt, i = NULL, j = lagp[idx], value = wt[[lagp[idx]]]*wt[[landings[idx]]])
     set(wt, i = NULL, j = prices[idx], value = wt[[prices[idx]]]*wt[[landings[idx]]])
   }
   
-  
-
-
   ##compute quota costs, actual revenue, and expected revenue   
   ##Assemble formulas for
   
@@ -61,16 +60,11 @@ get_joint_production <- function(wt,spstock_names){
   my.arformula<-paste0(my.arformula,"-quota_cost")
   
   # parse(text=my.erformula, keep.source=FALSE)
-  #this might not work
    my.erformula<-parse(text=my.erformula, keep.source=FALSE)
    my.arformula<-parse(text=my.arformula, keep.source=FALSE)
    my.qformula<-parse(text=my.qformula, keep.source=FALSE)
   
     
-  # my.erformula<-parse(text=my.erformula, keep.source=FALSE)
-  # my.arformula<-str2lang(my.arformula)
-  # my.qformula<-str2lang(my.qformula)
-  
   wt[, quota_cost:=eval(my.qformula)]
   wt[, exp_rev_total:=eval(my.erformula)]
   wt[, actual_rev_total:=eval(my.arformula)]
