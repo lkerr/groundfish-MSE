@@ -21,7 +21,7 @@ get_bio_for_econ=function(stock,basecase){
   trawlsurvey<-lapply(X = trawlsurvey, FUN = `[`, y)
   
   obs_trawlsurvey<-lapply(X = stock, FUN = `[[`, "obs_sumEconIW")
-  obs_trawlsurvey<-lapply(X = trawlsurvey, FUN = `[`, y)
+  obs_trawlsurvey<-lapply(X = obs_trawlsurvey, FUN = `[`, y)
   
   
   # Hack the ACL to 1e6 mt if it is null
