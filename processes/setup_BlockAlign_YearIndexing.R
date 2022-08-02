@@ -49,6 +49,7 @@ random_sim_draw<-random_sim_draw %>%
          join_inputprice_idx=join_econbase_idx,
          join_mult_idx=join_econbase_idx,
          join_quarterly_price_idx=join_econbase_idx)
+random_sim_draw<-as.data.table(random_sim_draw)
 
 
 #maximum 'years' (this is total times through innermost loop), a counter, and a progress bar.
