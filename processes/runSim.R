@@ -49,7 +49,7 @@ showProgBar<-TRUE
 
 
 
-source('processes/setupYearIndexing.R')
+source('processes/setup_BlockAlign_YearIndexing.R')
 top_loop_start<-Sys.time()
 
 #### Top rep Loop ####
