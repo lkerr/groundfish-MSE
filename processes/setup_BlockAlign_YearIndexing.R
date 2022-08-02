@@ -1,3 +1,14 @@
+# This assigns an "economic year" to a simulation year.  
+# It is aligned so that the first year of economic data matches to the first calendar year in the simulation. 
+# Each replicate will have the same economic year.
+    # In Rep 1, cal_year=2010 matches to econ_year=2010.
+    # In Rep 2, cal_year=2010 matches to econ_year=2010.
+    # In Rep 1, cal_year=2015 matches to econ_year=2015.
+    # In Rep 2, cal_year=2015 matches to econ_year=2015.
+    # In Rep 1, cal_year=2016 matches to econ_year=2010.
+    # In Rep 2, cal_year=2016 matches to econ_year=2010.
+
+
 # The simulation model has "calendar years," stored in the vector yrs.  
 # The model loops through the index position (y in fyear:nyear) of yrs. 
 # A small data.table that contains the replicate number, year index position, calendar year, index
@@ -40,6 +51,16 @@ rm(join_econbase_yr)
   stop('Economic base data does not contain 2010. Economic data not aligned to cal_year')
 }
 
+#Expand to the same number of rows as we have years*nrep. Arrange.
+random_sim_draw<-random_sim_draw %>%
+  slice(rep(1:n(), each=nrep)) %>%
+  group_by(cal_year,sim_year_idx,manage_year_idx) %>%
+  mutate(replicate=row_number()) %>%
+  ungroup() %>%
+  relocate(replicate) %>%
+  arrange(replicate, cal_year)
+  
+
 
 #  We use the join_econ_yr, join_econ_idx, join_outputprice, join_inputpprice, join_mult columns to pull in economic data. Right now, it's identical to the calendar year and manage_year_idx, but it may be advantageous to "cross" or "randomly" cross data.   
 #  set the index position
@@ -49,6 +70,7 @@ random_sim_draw<-random_sim_draw %>%
          join_inputprice_idx=join_econbase_idx,
          join_mult_idx=join_econbase_idx,
          join_quarterly_price_idx=join_econbase_idx)
+
 random_sim_draw<-as.data.table(random_sim_draw)
 
 

@@ -1,7 +1,7 @@
 #This takes care of within-year counters and indexing. These are needed/useful for the economic model.
 
 yearitercounter<-yearitercounter+1
-ebd<-random_sim_draw[y-fyear+1,]
+ebd<-random_sim_draw[replicate==r &sim_year_idx==y]
 chunk_flag<-yearitercounter %% savechunksize
 
 econ_base_draw<-ebd[,join_econbase_yr]
