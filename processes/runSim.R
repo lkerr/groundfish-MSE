@@ -15,9 +15,9 @@ if(runClass != 'HPCC'){
 
 
 ####################These are temporary changes for testing ####################
- mproc_bak<-mproc
- mproc<-mproc_bak[3:3,] 
- 
+# mproc_bak<-mproc
+# mproc<-mproc_bak[1:1,] 
+# nrep<-2
 # Don't set nrep smaller than the nrep in set_om_parameters_global.R 
 # yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
 # I want to start the economic model at fmyear=2010 and temporarily end it in 2011
@@ -46,10 +46,12 @@ showProgBar<-TRUE
 
 
 
+# Should write an extra column into mproc.csv about this. 
+source('processes/setup_Random_YearIndexing.R')
+#source('processes/setup_BlockRandom_YearIndexing.R')
 
 
-
-source('processes/setup_BlockAlign_YearIndexing.R')
+#source('processes/setup_BlockAlign_YearIndexing.R')
 top_loop_start<-Sys.time()
 
 #### Top rep Loop ####
@@ -82,6 +84,7 @@ for(r in 1:nrep){
 
     #### Top year loop ####
     for(y in fyear:nyear){
+   
       for(i in 1:nstock){
         stock[[i]] <- get_J1Updates(stock = stock[[i]])
       }
@@ -170,8 +173,14 @@ for(r in 1:nrep){
         if(showProgBar==TRUE){
           setTxtProgressBar(iterpb, yearitercounter)
         }
+    } #End of year loop
+  
+    # Estimate the implementation error parameters
+    for(i in 1:nstock){
+      stock[[i]] <- get_error_params(stock[[i]],fit_ie='lognorm',firstyear=fmyearIdx, lastyear=nyear)
     }
-       #End of year loop
+
+        
   } #End of mproc loop
 
 
