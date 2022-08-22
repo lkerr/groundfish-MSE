@@ -15,6 +15,12 @@ get_containers <- function(stockPar){
                           dimnames = list(paste0('rep', 1:nrep), 
                                           paste0('mproc', 1:nmproc),
                                           paste0('nyear', 1:nyear)))
+  # A place to store 'replicate' level results
+  save_vector_replicate = array(data = NA,
+                          dim = c(nrep, nmproc),
+                          dimnames = list(paste0('rep', 1:nrep), 
+                                          paste0('mproc', 1:nmproc)))
+  
   
   out <- list(
 
@@ -113,8 +119,10 @@ get_containers <- function(stockPar){
     Rest = est,
     
     # Econ model containers
-    # Total Weight of catch
+    # Total Weight of catch, estimated ie_F, and estimated iebias
     econCW= yx0, 
+    ie_F_hat = save_vector_replicate,
+    iebias_hat = save_vector_replicate,
     
     # container to hold operating/assessment model results
     # (operating model-assessment model comparison)
@@ -179,7 +187,10 @@ get_containers <- function(stockPar){
       SSBest = est,
       Fest = est,
       Catchest = est,
-      Rest = est
+      Rest = est,
+      ie_F_hat = save_vector_replicate,
+      iebias_hat= save_vector_replicate
+      
     )
     
   )
