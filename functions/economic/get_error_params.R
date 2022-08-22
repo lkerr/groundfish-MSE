@@ -6,22 +6,43 @@
 # I'm using iebias_hat to denote the point estimate of ie_b -- the average difference between F_fullAdvice and the F_full.
 
 
-get_lognormal_error_params<-function(F_full, F_fullAdvice){
-  x<-F_full/F_fullAdvice
-  if (any(x <= 0)) 
-    stop("need positive values to fit a log-Normal")
+
+get_error_params <- function(stock, fit_ie,firstyear, lastyear){
   
-  n <- length(x)
-  lx <- log(x)
-  mx <- mean(lx)
+  out <- within(stock, {
+    
+    # calculate the predicted catch in year y, the catch weight and the
+    # proportions of catch numbers-at-age. Add small number in case F=0
+    errs<-F_full[firstyear:lastyear]/F_fullAdvice[firstyear:lastyear]
+    
+    if (any(errs <= 0)) 
+      stop("need positive values to fit a log-Normal")
+    
+    
+    # Fit the lognormal 
+    if (fit_ie== 'lognorm'){
+      
+      iefit_n <- length(errs)
+      iefit_lx <- log(errs)
+      iefit_mx <- mean(iefit_lx)
+      
+      #ieF_hat is simply the sdlog term.
+      omval$ie_F_hat[r,m]<- ie_F_hat[r,m] <- sqrt((iefit_n - 1)/iefit_n) * sd(iefit_lx)
+      omval$iebias_hat[r,m]<-  iebias_hat[r,m] <- exp(iefit_mx)-1
+      
+      
+      #ie_F_hat <- sqrt((iefit_n - 1)/iefit_n) * sd(iefit_lx)
+      #iebias_hat<-exp(iefit_mx)-1
+    }else {
+      stop("Attempting to fit lognormal parameters to ie_b and ie_F. Check the operating model params ")
+    }
+    
+  })
   
-  #ieF_hat is simply the sdlog term.
-  ie_F_hat <- sqrt((n - 1)/n) * sd(lx)
-  iebias_hat<-exp(mx)-1
-  estimate <- c(mx, iebias_hat, ie_F_hat)
-  names(estimate) <- c("meanlog", "iebias_hat", "ie_F_hat")
-  return(estimate)
+  return(out)
+  
 }
+
 
 
 
@@ -38,4 +59,3 @@ get_lognormal_error_params<-function(F_full, F_fullAdvice){
 #
 # iebias_hat is the estimate of ie_bias
 # ie_F_hat is the estimate of ie_F
-
