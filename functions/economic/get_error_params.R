@@ -11,30 +11,25 @@ get_error_params <- function(stock, fit_ie,firstyear, lastyear){
   
   out <- within(stock, {
     
-    # calculate the predicted catch in year y, the catch weight and the
-    # proportions of catch numbers-at-age. Add small number in case F=0
     errs<-F_full[firstyear:lastyear]/F_fullAdvice[firstyear:lastyear]
-    
-    if (any(errs <= 0)) 
-      stop("need positive values to fit a log-Normal")
     
     
     # Fit the lognormal 
     if (fit_ie== 'lognorm'){
+      
+      if (any(errs <= 0)) 
+        stop("need positive values to fit a log-Normal")
       
       iefit_n <- length(errs)
       iefit_lx <- log(errs)
       iefit_mx <- mean(iefit_lx)
       
       #ieF_hat is simply the sdlog term.
-      omval$ie_F_hat[r,m]<- ie_F_hat[r,m] <- sqrt((iefit_n - 1)/iefit_n) * sd(iefit_lx)
-      omval$iebias_hat[r,m]<-  iebias_hat[r,m] <- exp(iefit_mx)-1
-      
-      
-      #ie_F_hat <- sqrt((iefit_n - 1)/iefit_n) * sd(iefit_lx)
-      #iebias_hat<-exp(iefit_mx)-1
+      omval$ie_F_hat[r,m]<-ie_F_hat[r,m] <- sqrt((iefit_n - 1)/iefit_n) * sd(iefit_lx)
+      omval$iebias_hat[r,m]<-  iebias_hat[r,m]<- exp(iefit_mx)-1
+
     }else {
-      stop("Attempting to fit lognormal parameters to ie_b and ie_F. Check the operating model params ")
+      stop("function get_error_params() can only recover parameters of a lognormal distribution. ")
     }
     
   })
