@@ -16,7 +16,7 @@ laa_typ <- 'vonB'
 # weight-at-age parameters
 waa_par <- c(0.1774,0.4291,0.6939,0.8887,1.089,1.247,1.396,1.577,1.784) #Average of waa of last 5 years from 2019 assessment
 waa_typ <- 'dynamic'
-waa_mis <- TRUE
+waa_mis <- FALSE
 waa_mistyp <- 'high'
 #####
 
@@ -42,7 +42,7 @@ initN_type <- 'expDecline'
 qC <- 0.0001
 qI <- 0.0001
 
-DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE. 
+DecCatch<-TRUE #If survey catchability decreases with temperature, set to TRUE. 
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
