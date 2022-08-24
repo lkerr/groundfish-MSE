@@ -218,22 +218,13 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       
       #If the minimum catch constraint is on, make sure catch advice is not below that constraint
       if(tolower(parmgt$mincatch) == 'true'){
-      if (stockEnv$stockName=='codGOM'){
-        bycatch<-read.csv(paste('./data/data_raw/AssessmentHistory/codGOM_Discard.csv',sep=''))
-        mincatch<-min(tail(bycatch$Discards),10)
-      }
-      if (stockEnv$stockName=='haddockGB'){
-        bycatch<-read.csv(paste(getwd(),'/data/data_raw/AssessmentHistory/haddockGB_Discard.csv',sep=""))
-        mincatch<-min(tail(bycatch$Discard),10)
-      }
-        if (stockEnv$stockName=='codGB'){
-          bycatch<-read.csv(paste(getwd(),'/data/data_raw/AssessmentHistory/codGB_Discard.csv',sep=""))
-          mincatch<-min(tail(bycatch$Discard),10)
-        }
-        if (stockEnv$stockName=='pollock'){
-          bycatch<-read.csv(paste(getwd(),'/data/data_raw/AssessmentHistory/pollock_Discard.csv',sep=""))
-          mincatch<-min(tail(bycatch$Discard),10)
-        }
+        
+      #Use the stock name from to read in the   
+      bycatchfile<-paste0(stockEnv$stockName,"_Discard.csv")
+      bycatch<-read.csv(paste0(getwd(),"/data/data_raw/AssessmentHistory/",bycatchfile))
+      mincatch<-min(tail(bycatch$Discard),10)
+        
+        
       if (catchproj[1]>mincatch & catchproj[2]>mincatch){mincatchcon<-0}
       if (catchproj[1]<mincatch){
         catchproj[1]<-mincatch
