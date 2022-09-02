@@ -20,7 +20,10 @@ get_gini=function(dataset, y){
 
 
 
-#Data setup and example
+## Data setup and example
+# library(dplyr)
+# library(readr)
+# library(tidyr)
 # id=c(1,2,3,4,5)
 # income2=c(11,12,13,14,15)
 # income=c(1,2,3,4,5)
