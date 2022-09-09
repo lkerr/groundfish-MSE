@@ -64,18 +64,13 @@ get_predict_quota_prices <- function(){
   ytrun<-exp(XB+sig^2/2)
   colnames(ytrun)<-c("ytrun")
   
-  # COMPUTE YCEN from psel, XB, sig, and xbs
-  # In stata: psel*ytrun
-  
-  ycen<-psel*ytrun
-  colnames(ycen)<-c("ycen")
-  
   quarterly<-cbind(quarterly,psel,ytrun)
 
   #Compute normalize ytrun.  
   quarterly[,ytrun:= ytrun*fGDPtoSFD]
-  #Construct ycen   
   
+  #Construct ycen   
+  # In stata: psel*ytrun
   quarterly[,ycen:= psel*ytrun]
   # Put an upper bound on quota prices
   quarterly[,ub_qp :=max(1.5*live_priceGDP,6)]
