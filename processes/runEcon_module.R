@@ -26,6 +26,9 @@ annual_revenue_holder<-list()
 
 #set up a list to hold the date, spstock2, and aggregate metrics, like open/closed status and cumulative catch
 annual_fishery_status_holder<-list()
+# setup a list to hold the intraseason Gini ala Birkenbach, Kazcan, Smith nature.
+Gini_within_season_BKS<-list()
+
 #Initialize the most_recent_target data.table. 
 #This could move to preprocessing; I'll need to set one up for the entire simulation dataset (all 6 years)
 # You need to save it as a .RDS and then read.  And you need to figure out what to do with your merge statements In order to keep *all*
@@ -219,7 +222,12 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
   # annual_fishery_status_holder<-c(annual_fishery_status_holder,econtype)
   fishery_output_holder[[yearitercounter]]<-annual_fishery_status_holder
 # We probably want to contract this down further to a data.table of "hullnum","spstock2","exp_rev_total","targeted"
-  
+
+  mystocks<-c("codGB","haddockGB","pollock")
+  setorderv(annual_fishery_status_holder, c("spstock2","doffy"))
+  annual_fishery_status_holder[,daily_pounds_caught :=cumul_catch_pounds-shift(cumul_catch_pounds,1,fill=0,type="lag"), by=spstock2]
+  Gini_within_season_BKS[[yearitercounter]]<-lapply(mystocks, get_gini_subset, dataset=annual_fishery_status_holder, y="daily_pounds_caught", filter_var="spstock2")
+  names(Gini_within_season_BKS[[yearitercounter]])<-mystocks
   
   
 #subset fishery_holder to have just things that have a biological model. send it to a list?
