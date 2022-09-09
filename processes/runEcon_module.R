@@ -23,11 +23,13 @@ fishery_holder$targeted<-0
 
 #set up a list to hold the expected revenue by date, hullnum, and target spstock2
 annual_revenue_holder<-list()
-
 #set up a list to hold the date, spstock2, and aggregate metrics, like open/closed status and cumulative catch
 annual_fishery_status_holder<-list()
 # setup a list to hold the intraseason Gini ala Birkenbach, Kazcan, Smith nature.
-Gini_within_season_BKS<-list()
+Gini_stock_within_season_BKS<-list()
+
+Gini_fleet<-list()
+Gini_fleet_bioecon_stocks<-list()
 
 #Initialize the most_recent_target data.table. 
 #This could move to preprocessing; I'll need to set one up for the entire simulation dataset (all 6 years)
@@ -223,6 +225,23 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
     summarise(actual_rev=sum(actual_rev_total)) 
 
   Gini_fleet_bioecon_stocks[[yearitercounter]]<-get_gini(vessel_rev,"actual_rev")
+  
+  
+  
+  
+  # This is the place to do any fleet-level metrics that are sub-yearly. You can use annual_revenue_holder to to get 
+  # Total rev, total rev from groundfish. revenue by species.
+  # A gini or theil for total rev (across the vessels)
+  # A gini or theil for the fleet's revenue sources
+  
+  # If you want to construct something based on removals, use "fishery_holder"  or
+  # bio_output<-fishery_holder[which(fishery_holder$bio_model==1),]
+  # 
+  
+  
+  
+  
+  
   rm(annual_revenue_holder)
 
   #contract the fishery-level list down to a single data.table
