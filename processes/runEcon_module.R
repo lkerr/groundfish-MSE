@@ -210,6 +210,19 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
   annual_revenue_holder$year<-yrs[y]
   revenue_holder[[yearitercounter]]<-annual_revenue_holder
   
+  #Gini for the fleet
+  vessel_rev <-annual_revenue_holder %>%
+    group_by(hullnum) %>%
+    summarise(actual_rev=sum(actual_rev_total))
+  
+  Gini_fleet[[yearitercounter]]<-get_gini(vessel_rev,"actual_rev")
+  
+  vessel_rev <-annual_revenue_holder %>%
+    dplyr::filter(spstock2 %in% stockNames) %>%
+    group_by(hullnum) %>%
+    summarise(actual_rev=sum(actual_rev_total)) 
+
+  Gini_fleet_bioecon_stocks[[yearitercounter]]<-get_gini(vessel_rev,"actual_rev")
   rm(annual_revenue_holder)
 
   #contract the fishery-level list down to a single data.table
