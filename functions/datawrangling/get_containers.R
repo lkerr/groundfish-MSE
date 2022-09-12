@@ -66,6 +66,8 @@ get_containers <- function(stockPar){
     obs_sumIN = yx0,
     sumEconIN =yx0,
     obs_sumEconIN=yx0,
+    #within season Gini
+    Gini_stock_within_season_BKS=yx0,
     
     # total survey index in weight (if obs_sumIW is needed see note in
     # get_indexData comments)
@@ -188,8 +190,9 @@ get_containers <- function(stockPar){
       Fest = est,
       Catchest = est,
       Rest = est,
-      ie_F_hat = save_vector_replicate,
-      iebias_hat= save_vector_replicate
+      iebias_hat= save_vector_replicate, # An estimate of average difference between F_full and F_fullAdvice
+      ie_F_hat = save_vector_replicate, # An estimate of the sdlog parameter for the implementation error distribution  
+      Gini_stock_within_season_BKS=save_vector_ann # Gini coefficient for within season timing. Only filled for economic models.
       
     )
     

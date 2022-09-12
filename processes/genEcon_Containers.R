@@ -19,6 +19,7 @@
                                           paste0('mproc', 1:nmproc),
                                           paste0('nyear', 1:nyear)))
   
+
   # A place to store 'replicate' level results (probably not using this)
   save_vector_replicate = array(data = NA,
                                 dim = c(nrep, nmproc),
@@ -31,8 +32,12 @@
   simlevelresults <- list(
 
     Gini_fleet = save_vector_ann,
-    Gini_fleet_bioecon_stocks = save_vector_ann
-    Gini_stock_within_season_BKS= save_vector_ann
+    Gini_fleet_bioecon_stocks = save_vector_ann,
+    #Gini_stock_within_season_BKS= save_vector_ann
+    total_rev=save_vector_ann,
+    total_modeled_rev=save_vector_ann,
+    total_groundfish_rev=save_vector_ann
+    
     
   )
 

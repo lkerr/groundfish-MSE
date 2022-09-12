@@ -1,0 +1,15 @@
+# This stores the Economic results that are at the simulation level in a place.
+# Borrowed from get_fillRepArrays, but simpler because my objects are in the global environment
+
+get_fillRepArraysEcon <- function(simulation_container){
+  simulation_container$Gini_fleet[r,m,y]<-Gini_fleet
+  simulation_container$Gini_fleet_bioecon_stocks[r,m,y]<-Gini_fleet_bioecon_stocks
+  simulation_container$total_rev[r,m,y]<-total_rev
+  simulation_container$total_groundfish_rev[r,m,y]<-total_groundfish_rev
+  simulation_container$total_modeled_rev[r,m,y]<-total_modeled_rev
+  
+  return(simulation_container)
+  
+}
+
+

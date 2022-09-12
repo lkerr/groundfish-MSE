@@ -26,10 +26,10 @@ annual_revenue_holder<-list()
 #set up a list to hold the date, spstock2, and aggregate metrics, like open/closed status and cumulative catch
 annual_fishery_status_holder<-list()
 # setup a list to hold the intraseason Gini ala Birkenbach, Kazcan, Smith nature.
-Gini_stock_within_season_BKS<-list()
+#Gini_stock_within_season_BKS<-list()
 
-Gini_fleet<-list()
-Gini_fleet_bioecon_stocks<-list()
+#Gini_fleet<-list()
+#Gini_fleet_bioecon_stocks<-list()
 
 #Initialize the most_recent_target data.table. 
 #This could move to preprocessing; I'll need to set one up for the entire simulation dataset (all 6 years)
@@ -217,15 +217,32 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
     group_by(hullnum) %>%
     summarise(actual_rev=sum(actual_rev_total))
   
-  Gini_fleet[[yearitercounter]]<-get_gini(vessel_rev,"actual_rev")
+  Gini_fleet<-get_gini(vessel_rev,"actual_rev")
   
   vessel_rev <-annual_revenue_holder %>%
     dplyr::filter(spstock2 %in% stockNames) %>%
     group_by(hullnum) %>%
     summarise(actual_rev=sum(actual_rev_total)) 
 
-  Gini_fleet_bioecon_stocks[[yearitercounter]]<-get_gini(vessel_rev,"actual_rev")
+  Gini_fleet_bioecon_stocks<-get_gini(vessel_rev,"actual_rev")
   
+  
+  #Total Revenue
+  total_rev <-annual_revenue_holder %>%
+    summarise(total_rev=sum(actual_rev_total))
+  total_rev<-unlist(total_rev)
+  
+  #Total revenue for just the stocks with a biological model.
+  my_revenue_names<-paste0("r_",stockNames)
+  annual_revenue_holder2<-as.data.table(annual_revenue_holder)
+  annual_revenue_holder2<-annual_revenue_holder2[, lapply(.SD, sum),.SDcols = my_revenue_names]
+  total_modeled_rev<-rowSums(annual_revenue_holder2, na.rm=TRUE)
+
+  #Total revenue for the allocated groundfish
+  my_revenue_names<-paste0("r_",allocated_groundfish)
+  annual_revenue_holder2<-as.data.table(annual_revenue_holder)
+  annual_revenue_holder2<-annual_revenue_holder2[, lapply(.SD, sum),.SDcols = my_revenue_names]
+  total_groundfish_rev<-rowSums(annual_revenue_holder2, na.rm=TRUE)
   
   
   
@@ -257,8 +274,15 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
 
   setorderv(annual_fishery_status_holder, c("spstock2","doffy"))
   annual_fishery_status_holder[,daily_pounds_caught :=cumul_catch_pounds-shift(cumul_catch_pounds,1,fill=0,type="lag"), by=spstock2]
-  Gini_stock_within_season_BKS[[yearitercounter]]<-lapply(stockNames, get_gini_subset, dataset=annual_fishery_status_holder, y="daily_pounds_caught", filter_var="spstock2")
-  names(Gini_stock_within_season_BKS[[yearitercounter]])<-stockNames
+  
+  
+  # Compute the within-season Gini for each modeled stock and put it in 'stock'
+  for(i in 1:nstock){
+      stock[[i]]$Gini_stock_within_season_BKS[y]<-get_gini_subset(dataset=annual_fishery_status_holder, y="daily_pounds_caught", filter_var="spstock2", filter_value=stock[[i]]$stockName)
+  }
+  
+  #Gini_stock_within_season_BKS<-lapply(stockNames, get_gini_subset, dataset=annual_fishery_status_holder, y="daily_pounds_caught", filter_var="spstock2")
+  #names(Gini_stock_within_season_BKS)<-stockNames
   
   
 #subset fishery_holder to have just things that have a biological model. send it to a list?
@@ -274,5 +298,7 @@ for(i in 1:nstock){
     F_full[y]<- get_F(econCW[y],J1N[y,],slxC[y,],M,waa[y,])
   }) 
 }
+
+
 
 
