@@ -227,10 +227,11 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
   Gini_fleet_bioecon_stocks<-get_gini(vessel_rev,"actual_rev")
   
   
-  #Total Revenue
-  total_rev <-annual_revenue_holder %>%
-    summarise(total_rev=sum(actual_rev_total))
-  total_rev<-unlist(total_rev)
+  # Total Revenue, excluding quota costs.  Better to exclude quota costs, because these are just transfers across vessels and I'm not including quota benefits anywhere.
+  my_revenue_names<-grep("^r_",colnames(annual_revenue_holder) , value=TRUE)
+  annual_revenue_holder2<-as.data.table(annual_revenue_holder)
+  annual_revenue_holder2<-annual_revenue_holder2[, lapply(.SD, sum),.SDcols = my_revenue_names]
+  total_rev<-rowSums(annual_revenue_holder2, na.rm=TRUE)
   
   #Total revenue for just the stocks with a biological model.
   my_revenue_names<-paste0("r_",stockNames)
