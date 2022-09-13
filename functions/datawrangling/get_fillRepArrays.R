@@ -97,12 +97,12 @@ get_fillRepArrays <- function(stock){
     omval$relTermE_R[r,m,] <- relTermE_R #MDM
     omval$relTermE_F[r,m,] <- relTermE_F #MDM
     }
-    #Econ specific outputs
-    if(y == nyear){
-    omval$Gini_stock_within_season_BKS[r,m,y]<-Gini_stock_within_season_BKS
-
-        }
-    
+    #Econ specific outputs. Not put until management starts in fmyearIdx
+    if(mproc$ImplementationClass[m]=="Economic"){
+      if(y >= fmyearIdx){
+    omval$Gini_stock_within_season_BKS[r,m,y]<-Gini_stock_within_season_BKS[y]
+      }
+    }    
   })
 
   return(out)
