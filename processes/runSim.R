@@ -133,7 +133,8 @@ for(r in 1:nrep){
 
           bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline_averages)
       
-
+          # Print the status of the model.
+          cat("This is Replicate", r, "of", nrep, ". This is model", m, "of", nrow(mproc), ". This is year", yrs[y],"of", yrs[nyear], ".\n ")
           source('processes/runEcon_module.R')
 
         }else if(mproc$ImplementationClass[m] == "StandardFisheries"){
