@@ -40,7 +40,7 @@ start<-as.double(start)*100
  set.seed(start)
 
 oldseed_ALL <- .Random.seed
-showProgBar<-TRUE
+showProgBar<-TRUE # ProgBar less useful when stockassessment results are printed to screen. 
 ####################End Parameter and storage Setup ####################
   #This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
 
@@ -245,7 +245,8 @@ big_loop
   omvalGlobal <- sapply(1:nstock, function(x) stock[[x]]['omval'])
   names(omvalGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
   save(omvalGlobal, file=paste0(ResultDirectory,'/sim/omvalGlobal', td2, '.Rdata'))
-
+  save(simlevelresults, file=paste0(ResultDirectory,'/sim/simlevelresults', td2, '.Rdata'))
+  
   if(runClass != 'HPCC'){
     omparGlobal <- readLines('modelParameters/set_om_parameters_global.R')
     cat('\n\nSuccess.\n\n',
