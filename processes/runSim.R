@@ -92,7 +92,7 @@ for(r in 1:nrep){
       source('processes/withinYearAdmin.R')
       begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
 
-      # if burn-in period is over...
+      # if burn-in period is over and fishery management has started
       if(y >= fmyearIdx){
 
         manage_counter<-manage_counter+1 #this only gets incremented when y>=fmyearIdx
@@ -151,7 +151,9 @@ for(r in 1:nrep){
           }
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         }
-      } #End of burn-in loop
+        
+      } # End of the if "burn-in period is over and fishery management has started" clause 
+
       for(i in 1:nstock){
         stock[[i]] <- get_mortality(stock = stock[[i]])
         stock[[i]] <- get_indexData(stock = stock[[i]])
