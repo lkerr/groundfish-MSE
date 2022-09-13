@@ -145,6 +145,7 @@ for(r in 1:nrep){
           #Add a warning about invalid ImplementationClass
         }
 
+        # Store stock-year level results
         for(i in 1:nstock){
           if (y == nyear){
             stock[[i]] <- get_TermrelError(stock = stock[[i]])
