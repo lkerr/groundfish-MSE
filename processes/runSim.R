@@ -157,6 +157,20 @@ for(r in 1:nrep){
         stock[[i]] <- get_indexData(stock = stock[[i]])
       } #End killing fish loop
 
+      # Compute Fleet level HHI and shannon index. Store fishery-year level results
+
+      cwdata<-NULL
+      for(i in 1:nstock){
+        cwdata<-rbind(cwdata, stock[[i]]$sumCW[y])
+      }
+      cwdata<-as_tibble(cwdata)
+      colnames(cwdata)<-c("catch")
+      HHI<-get_HHI(cwdata, "catch")
+      shannon<-get_shannon(cwdata, "catch")
+      
+      simlevelresults <- get_fillRepArraysSimLevel(simlevelresults)
+      
+      
       end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
 
           # Do some cleanup that is specific to the economic model 
