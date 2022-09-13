@@ -162,15 +162,20 @@ for(r in 1:nrep){
       } #End killing fish loop
 
       # Compute Fleet level HHI and shannon index. Store fishery-year level results
-
+      
       cwdata<-NULL
       for(i in 1:nstock){
-        cwdata<-rbind(cwdata, stock[[i]]$sumCW[y])
+        z<-data.frame( stock[[i]]$stockName,stock[[i]]$sumCW[y], stock[[i]]$SSB[y])
+        names(z)<-c("stockName", "catch", "SSB")
+        cwdata<-rbind(cwdata, z)
       }
-      cwdata<-as_tibble(cwdata)
-      colnames(cwdata)<-c("catch")
+      rm(z)
+
       HHI<-get_HHI(cwdata, "catch")
       shannon<-get_shannon(cwdata, "catch")
+      Theil_managed_CtoB<-get_relTheil(cwdata,"catch","SSB")
+      Theil_managed_Relative_C<-get_Theil(cwdata,"catch")
+      
       
       simlevelresults <- get_fillRepArraysSimLevel(simlevelresults)
       
