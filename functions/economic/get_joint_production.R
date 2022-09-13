@@ -23,10 +23,12 @@ get_joint_production <- function(wt,spstock_names){
   lagp<-paste0("p_",spstock_names)
   prices<-paste0("r_",spstock_names)
   
-  #overwrite the c_ multiplier and the l_multipliers with catch and landings in pounds
+  # overwrite the c_ multiplier and the l_multipliers with catch and landings in pounds
   # overwrite the quotaprices with quotacost
   # overwrite the lagp with expected revenue
-  #overwrite the prices with actual revenue
+  # overwrite the prices with actual revenue
+  # This code looks really janky. It also looks fragile to reordering the catches, landings, daylimits, quotaprices, lagp, and 
+  # prices vectors. But those are all set immediately above and depend on spstock_names. So, the order shoudl be okay.
   for(idx in 1:length(spstock_names)){
     set(wt, i = NULL, j = catches[idx], value = wt[[catches[idx]]]*wt[['harvest_sim']])
     set(wt, i = NULL, j = landings[idx], value = wt[[landings[idx]]]*wt[['harvest_sim']])
@@ -40,35 +42,15 @@ get_joint_production <- function(wt,spstock_names){
   }
   
   ##compute quota costs, actual revenue, and expected revenue   
-  ##Assemble formulas for
   
-  my.erformula<-NULL 
-  my.arformula<-NULL 
-  my.qformula<-NULL 
-  
-  for(idx in 1:length(spstock_names)){
-    my.erformula<- paste0(my.erformula,"+",lagp[idx],"+")
-    my.arformula<- paste0(my.arformula,"+",prices[idx],"+")
-    my.qformula<- paste0(my.qformula,"+",quotaprices[idx],"+")
-    
-  }
-  my.erformula<-substr(my.erformula,1,nchar(my.qformula)-1)
-  my.arformula<-substr(my.arformula,1,nchar(my.arformula)-1)
-  my.qformula<-substr(my.qformula,1,nchar(my.qformula)-1)
-  
-  my.erformula<-paste0(my.erformula,"-quota_cost")
-  my.arformula<-paste0(my.arformula,"-quota_cost")
-  
-  # parse(text=my.erformula, keep.source=FALSE)
-   my.erformula<-parse(text=my.erformula, keep.source=FALSE)
-   my.arformula<-parse(text=my.arformula, keep.source=FALSE)
-   my.qformula<-parse(text=my.qformula, keep.source=FALSE)
-  
-    
-  wt[, quota_cost:=eval(my.qformula)]
-  wt[, exp_rev_total:=eval(my.erformula)]
-  wt[, actual_rev_total:=eval(my.arformula)]
-  
+  # Add up the quota_cost, expected rev, and actual rev columns
+  wt[,quota_cost :=rowSums(.SD), .SDcols = quotaprices]
+  wt[,exp_rev_total :=rowSums(.SD), .SDcols = lagp]
+  wt[,actual_rev_total :=rowSums(.SD), .SDcols = prices]
+
+    # Subtract off the quota costs
+  wt[,exp_rev_total :=exp_rev_total - quota_cost]
+  wt[,actual_rev_total :=actual_rev_total - quota_cost]
   return(wt)
   
 }
