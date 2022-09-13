@@ -30,7 +30,8 @@
   mproc_vec <- 1:nrow(mproc)
   
   simlevelresults <- list(
-
+    HHI_fleet = save_vector_ann,
+    Shannon_fleet = save_vector_ann,
     Gini_fleet = save_vector_ann,
     Gini_fleet_bioecon_stocks = save_vector_ann,
     #Gini_stock_within_season_BKS= save_vector_ann
