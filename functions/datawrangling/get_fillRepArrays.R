@@ -101,6 +101,8 @@ get_fillRepArrays <- function(stock){
     if(mproc$ImplementationClass[m]=="Economic"){
       if(y >= fmyearIdx){
     omval$Gini_stock_within_season_BKS[r,m,y]<-Gini_stock_within_season_BKS[y]
+    omval$econCW[r,m,y]<-econCW[y]
+    
       }
     }    
   })
