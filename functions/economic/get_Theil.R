@@ -10,7 +10,7 @@ get_Theil=function(dataset, y){
   nobs<-nrow(dataset)
   working<-dataset  %>%
     mutate(meany=mean(!!y2)) %>%
-  filter(!!y2>0) %>%
+  dplyr::filter(!!y2>0) %>%
     mutate(proportionality_factor=!!y2/meany) %>%
     summarise(Thiel=sum(proportionality_factor*log(proportionality_factor)/nobs))
   return(working$Thiel)
