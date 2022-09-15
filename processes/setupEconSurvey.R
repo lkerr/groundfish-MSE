@@ -7,7 +7,8 @@ for(i in 1:nstock){
                              DecCatch=DecCatch, Tanom=Tanom[y],y=y)
     
     sumEconIN[y] <- sum(EconIN[y,])
-    sumEconIW[y] <- EconIN[y,] %*% waa[y,]
+    
+    #sumEconIW[y] <- sum(EconIN[y,] * waa[y,])
     
     paaEconIN[y,] <- EconIN[y,] / sum(EconIN[y,])
     
@@ -18,4 +19,9 @@ for(i in 1:nstock){
     
     
   })
+  #For reasons unknown to me, I can't get this to work "within"
+  stock[[i]]$sumEconIW[y]<-sum(stock[[i]]$EconIN[y,]*stock[[i]]$waa[y,])
 } # End Economic Jan1 survey loop
+
+
+
