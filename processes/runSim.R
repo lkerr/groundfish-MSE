@@ -104,31 +104,9 @@ for(r in 1:nrep){
           #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
 
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
-
-          for(i in 1:nstock){
-            # Specific "survey" meant to track the population on Jan1
-            # for use in the economic submodel. timeI=0 implies Jan1.
-            stock[[i]]<- within(stock[[i]], {
-              EconIN[y,] <- get_survey(F_full=0, M=0, N=J1N[y,], slxC[y,],
-                                slxI=selI, timeI=0, qI=qI,
-                                DecCatch=DecCatch, Tanom=Tanom[y],y=y)
-
-              sumEconIN[y] <- sum(EconIN[y,])
-              sumEconIW[y] <- EconIN[y,] %*% waa[y,]
-              
-              paaEconIN[y,] <- EconIN[y,] / sum(EconIN[y,])
-              
-              obs_sumEconIN[y] <- get_error_idx(type=oe_sumIN_typ, 
-                                            idx=sumEconIN[y] * ob_sumIN, 
-                                            par=oe_sumIN)
-              obs_sumEconIW[y] <- (obs_sumEconIN[y] * paaEconIN[y,]) %*% waa[y,]
-              
-         
-            })
-          } # End Economic Jan1 survey loop
-
-
-          # ---- Run the economic model here ----
+          # Setup the Jan 1 survey.
+          source('processes/setupEconSurvey.R')
+          # Load economic data from disk, wrangle endogenous bio data to a format ready for econ model 
           source('processes/loadEcon2.R')
 
           bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline_averages)
