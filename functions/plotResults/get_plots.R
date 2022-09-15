@@ -135,7 +135,7 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
      
       #### Growth ####
       # Plot describing how growth changed over time
-      jpeg(paste0(dirOut, 'laa.jpg),
+      jpeg(paste0(dirOut, 'laa.jpg'),
            width=480*1.75, height=480, pointsize=12*1.5)
         ptyridx <- fmyearIdx:length(yrs)
         get_laaPlot(laa_par=laa_par, laa_typ=laa_typ, laafun=get_lengthAtAge, 
