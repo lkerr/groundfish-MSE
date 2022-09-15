@@ -115,7 +115,8 @@ for(r in 1:nrep){
           cat("This is Replicate", r, "of", nrep, ". This is model", m, "of", nrow(mproc), ". This is year", yrs[y],"of", yrs[nyear], ".\n ")
           source('processes/runEcon_module.R')
 
-        }else if(mproc$ImplementationClass[m] == "StandardFisheries"){
+          
+        }else if(mproc$ImplementationClass[m] == "StandardFisheries"){ #Run the Standard Fisheries model
           for(i in 1:nstock){
             stock[[i]] <- get_implementationF(type = 'adviceWithError',
                                               stock = stock[[i]])
