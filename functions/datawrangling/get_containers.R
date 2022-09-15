@@ -15,6 +15,12 @@ get_containers <- function(stockPar){
                           dimnames = list(paste0('rep', 1:nrep), 
                                           paste0('mproc', 1:nmproc),
                                           paste0('nyear', 1:nyear)))
+  # A place to store 'replicate' level results
+  save_vector_replicate = array(data = NA,
+                          dim = c(nrep, nmproc),
+                          dimnames = list(paste0('rep', 1:nrep), 
+                                          paste0('mproc', 1:nmproc)))
+  
   
   out <- list(
 
@@ -26,7 +32,7 @@ get_containers <- function(stockPar){
     codCW2 = yx0,
     CW = yxage,
     IN = yxage,
-    IJ1= yxage,
+    EconIN= yxage,
     laa = yxage,
     waa = yxage,
     Z = yxage,
@@ -58,19 +64,26 @@ get_containers <- function(stockPar){
     # total survey index in numbers
     sumIN = yx0,
     obs_sumIN = yx0,
+    sumEconIN =yx0,
+    obs_sumEconIN=yx0,
+    #within season Gini
+    Gini_stock_within_season_BKS=yx0,
     
     # total survey index in weight (if obs_sumIW is needed see note in
     # get_indexData comments)
     sumIW = yx0,
     obs_sumIW = yx0,
+    sumEconIW =yx0,
+    obs_sumEconIW=yx0,
     
     # catch proportions-at-age
     paaCN = yxage,
     obs_paaCN = yxage,
-    
+    obs_paaEconCN=yxage,
     # survey proportions-at-age
     paaIN = yxage,
     obs_paaIN = yxage,
+    paaEconIN=yxage,
     
     # fishing effort
     effort = yx0,
@@ -108,8 +121,10 @@ get_containers <- function(stockPar){
     Rest = est,
     
     # Econ model containers
-    # Total Weight of catch
+    # Total Weight of catch, estimated ie_F, and estimated iebias
     econCW= yx0, 
+    ie_F_hat = save_vector_replicate,
+    iebias_hat = save_vector_replicate,
     
     # container to hold operating/assessment model results
     # (operating model-assessment model comparison)
@@ -174,7 +189,11 @@ get_containers <- function(stockPar){
       SSBest = est,
       Fest = est,
       Catchest = est,
-      Rest = est
+      Rest = est,
+      iebias_hat= save_vector_replicate, # An estimate of average difference between F_full and F_fullAdvice
+      ie_F_hat = save_vector_replicate, # An estimate of the sdlog parameter for the implementation error distribution  
+      Gini_stock_within_season_BKS=save_vector_ann # Gini coefficient for within season timing. Only filled for economic models.
+      
     )
     
   )
