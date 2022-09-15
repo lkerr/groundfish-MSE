@@ -296,7 +296,11 @@ for(i in 1:nstock){
   stock[[i]]$econCW[y]<-bio_output$removals_mt[bio_output$stocklist_index==i]
 
     stock[[i]]<-within(stock[[i]], {
-    F_full[y]<- get_F(econCW[y],J1N[y,],slxC[y,],M,waa[y,])
+    F_full[y]<- get_F(x=econCW[y],
+                      Nv=J1N[y,],
+                      slxCv=slxC[y,],
+                      M=M,
+                      waav=waa[y,])
   }) 
 }
 
