@@ -130,13 +130,17 @@ for(r in 1:nrep){
       for(i in 1:nstock){
         stock[[i]] <- get_mortality(stock = stock[[i]])
         stock[[i]] <- get_indexData(stock = stock[[i]])
+      } #End killing fish loop
+      
+      # Store results
+      for(i in 1:nstock){
         if (y == nyear){
           stock[[i]] <- get_TermrelError(stock = stock[[i]])
         }
-        stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
-        
-        } #End killing fish loop
-
+        if(y>=fmyearIdx){
+          stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
+        }
+      } 
       
       end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
       
