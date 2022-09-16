@@ -99,7 +99,8 @@ ts[ln_obs_trawlsurvey>=7, ln_obs_trawlsurvey:=7]
 ts[, ln_sector_acl:=log(sectorACL)]
 ts[,sectorACL:=NULL]
 # Merge-update working targeting. You can also switch this to ln_obs_trawlsurvey 
-working_targeting[ts,on="spstock2", `:=`(log_trawl_survey_weight=ln_trawlsurvey) (log_sector_acl=ln_sector_acl)]
+working_targeting[ts,on="spstock2", `:=`(log_trawl_survey_weight=ln_trawlsurvey, 
+                                         log_sector_acl=ln_sector_acl)]
 
 working_targeting<-get_predict_eproduction(working_targeting)
 working_targeting[spstock2=="nofish", harvest_sim:=0L]
