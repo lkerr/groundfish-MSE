@@ -1,5 +1,6 @@
 # This stores the Economic results that are at the simulation level in a place.
 # Borrowed from get_fillRepArrays, but simpler because my objects are in the global environment
+# This is the function that should be used when we are storing performance metrics that are only constructed in an Economic model run.
 
 get_fillRepArraysEcon <- function(simulation_container){
   simulation_container$Gini_fleet[r,m,y]<-Gini_fleet
