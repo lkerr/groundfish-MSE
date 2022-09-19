@@ -137,9 +137,7 @@ for(r in 1:nrep){
         if (y == nyear){
           stock[[i]] <- get_TermrelError(stock = stock[[i]])
         }
-        if(y>=fmyearIdx){
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
-        }
       } 
       
       end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
