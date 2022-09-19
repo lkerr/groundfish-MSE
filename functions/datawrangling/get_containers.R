@@ -3,20 +3,20 @@
 
 get_containers <- function(stockPar){
   
-  yxage = matrix(NA, nrow=nyear, ncol=stockPar$nage)
-  yx0 = rep(NA, nyear)
-  est = matrix(NA,nyear,54)
+  yxage = matrix(as.numeric(NA), nrow=nyear, ncol=stockPar$nage)
+  yx0 = rep(as.numeric(NA), nyear)
+  est = matrix(as.numeric(NA),nyear,54)
   
   nomyear = nyear - (stockPar$ncaayear + fyear + nburn)
   nmproc = nrow(mproc)
   
-  save_vector_ann = array(data = NA,
+  save_vector_ann = array(data = as.numeric(NA),
                           dim = c(nrep, nmproc, nyear),
                           dimnames = list(paste0('rep', 1:nrep), 
                                           paste0('mproc', 1:nmproc),
                                           paste0('nyear', 1:nyear)))
   # A place to store 'replicate' level results
-  save_vector_replicate = array(data = NA,
+  save_vector_replicate = array(data = as.numeric(NA),
                           dim = c(nrep, nmproc),
                           dimnames = list(paste0('rep', 1:nrep), 
                                           paste0('mproc', 1:nmproc)))
@@ -64,17 +64,18 @@ get_containers <- function(stockPar){
     # total survey index in numbers
     sumIN = yx0,
     obs_sumIN = yx0,
-    sumEconIN =yx0,
-    obs_sumEconIN=yx0,
+    sumEconIN = yx0,
+    obs_sumEconIN = yx0,
+    sumEconIW = yx0, 
+    
     #within season Gini
-    Gini_stock_within_season_BKS=yx0,
+    Gini_stock_within_season_BKS = yx0,
     
     # total survey index in weight (if obs_sumIW is needed see note in
     # get_indexData comments)
     sumIW = yx0,
     obs_sumIW = yx0,
-    sumEconIW =yx0,
-    obs_sumEconIW=yx0,
+    obs_sumEconIW = yx0,
     
     # catch proportions-at-age
     paaCN = yxage,
@@ -140,8 +141,9 @@ get_containers <- function(stockPar){
       F_full = save_vector_ann,
       F_fullAdvice = save_vector_ann,
       ACL = save_vector_ann,
-      econCW= save_vector_ann, 
-      sumCW = save_vector_ann,
+      econCW= save_vector_ann, #catch weights from the econ model
+      sumCW = save_vector_ann, # catch weights
+      sumEconIW=save_vector_ann, #"economic" survey 
       annPercentChange = save_vector_ann, #cheap ... not really vector.
       meanSizeCN = save_vector_ann,
       meanSizeIN = save_vector_ann,
@@ -193,7 +195,7 @@ get_containers <- function(stockPar){
       iebias_hat= save_vector_replicate, # An estimate of average difference between F_full and F_fullAdvice
       ie_F_hat = save_vector_replicate, # An estimate of the sdlog parameter for the implementation error distribution  
       Gini_stock_within_season_BKS=save_vector_ann # Gini coefficient for within season timing. Only filled for economic models.
-      
+
     )
     
   )

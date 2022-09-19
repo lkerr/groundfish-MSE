@@ -1,4 +1,4 @@
-# Set up a container dataframe that contains:
+# Set up a container array that contains:
 # year, nomyear  
 # row of mproc
 # Gross Revenues
@@ -7,13 +7,13 @@
 
 
   #yxage = matrix(NA, nrow=nyear, ncol=stockPar$nage)
-  yx0 = rep(NA, nyear)
-  est = matrix(NA,nyear,54)
+  yx0 = rep(as.numeric(NA), nyear)
+  est = matrix(as.numeric(NA),nyear,54)
   
   nmproc = nrow(mproc)
   
   # a placeholder to store 'yearly' results 
-  save_vector_ann = array(data = NA,
+  save_vector_ann = array(data = as.numeric(NA),
                           dim = c(nrep, nmproc, nyear),
                           dimnames = list(paste0('rep', 1:nrep), 
                                           paste0('mproc', 1:nmproc),
@@ -21,7 +21,7 @@
   
 
   # A place to store 'replicate' level results (probably not using this)
-  save_vector_replicate = array(data = NA,
+  save_vector_replicate = array(data = as.numeric(NA),
                                 dim = c(nrep, nmproc),
                                 dimnames = list(paste0('rep', 1:nrep), 
                                                 paste0('mproc', 1:nmproc)))
