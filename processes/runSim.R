@@ -87,6 +87,8 @@ for(r in 1:nrep){
    
       for(i in 1:nstock){
         stock[[i]] <- get_J1Updates(stock = stock[[i]])
+        stock[[i]] <- get_EconSurvey(stock = stock[[i]])
+  
       }
 
       source('processes/withinYearAdmin.R')
@@ -105,7 +107,7 @@ for(r in 1:nrep){
 
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
           # Setup the Jan 1 survey.
-          source('processes/setupEconSurvey.R')
+          
           # Load economic data from disk, wrangle endogenous bio data to a format ready for econ model 
           source('processes/loadEcon2.R')
 
@@ -137,7 +139,9 @@ for(r in 1:nrep){
         if (y == nyear){
           stock[[i]] <- get_TermrelError(stock = stock[[i]])
         }
+        if (y>=fmyearIdx){
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
+        } 
       } 
       
       end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
@@ -210,12 +214,12 @@ big_loop
   }
 
 
-
-  if(runClass != 'HPCC'){
-    # Note that runPost.R re-sets the containers; results have already been
-    # saved however.
-    source('processes/runPost.R')
-  }
+# 
+#   if(runClass != 'HPCC'){
+#     # Note that runPost.R re-sets the containers; results have already been
+#     # saved however.
+#     source('processes/runPost.R')
+#   }
 
 
   print(unique(warnings()))

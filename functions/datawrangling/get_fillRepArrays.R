@@ -25,6 +25,8 @@ get_fillRepArrays <- function(stock){
     omval$SSB_cur[r,m,] <- SSB_cur #AEW
     omval$natM[r,m,] <- natM #AEW
     
+    omval$sumEconIW[r,m,y]<-sumEconIW[y]
+    
     # annPercentChange not true vector -- just repeated values. This needs
     # to be calculated after the run so that the appropriate time windows
     # can be used.
@@ -102,7 +104,6 @@ get_fillRepArrays <- function(stock){
       if(y >= fmyearIdx){
     omval$Gini_stock_within_season_BKS[r,m,y]<-Gini_stock_within_season_BKS[y]
     omval$econCW[r,m,y]<-econCW[y]
-    omval$sumEconIW[r,m,y]<-sumEconIW[y]
     
       }
     }    
