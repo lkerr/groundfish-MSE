@@ -119,7 +119,7 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
 
     working_targeting<-joint_adjust_allocated_mults(working_targeting,fishery_holder, econtype)
     working_targeting<-joint_adjust_others(working_targeting,fishery_holder, econtype)
-    working_targeting<-get_joint_production(working_targeting,spstock2s) 
+    working_targeting<-get_joint_production(working_targeting,spstock2s, fishery_holder, econtype) 
     # The data for MSE does not have DAS costs, so this is all commmented out.
     # adjust for DAS costs.
     # subtract off das_costs from expected and actual  revenue.

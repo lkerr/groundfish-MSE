@@ -14,7 +14,7 @@
 # actual_rev_total is updated as sum price*landings minus sum quota_price*catch
 
 
-get_joint_production <- function(wt,spstock_names){
+get_joint_production <- function(wt,spstock_names, fh, ec_type){
 
   catches<-paste0("c_",spstock_names)
   landings<-paste0("l_",spstock_names)
@@ -51,6 +51,20 @@ get_joint_production <- function(wt,spstock_names){
     # Subtract off the quota costs
   wt[,exp_rev_total :=exp_rev_total - quota_cost]
   wt[,actual_rev_total :=actual_rev_total - quota_cost]
+  
+    
+  mul_alloc<-fh[mults_allocated==1]
+  if (ec_type$EconType=="Multi"){
+      closeds<-mul_alloc[stockarea_open==FALSE]$spstock2
+    }else if (ec_type$EconType=="Single"){
+      closeds<-mul_alloc[underACL==FALSE]$spstock2
+    }
+  
+  wt[spstock2 %in% closeds, exp_rev_total :=-1e6]
+  wt[spstock2 %in% closeds, actual_rev_total :=0]
+    
+  
+  
   return(wt)
   
 }
