@@ -33,7 +33,7 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
     # ny <- dim(x[[i]])[3]
     bxidx <- which(nm %in% c("SSB", "R", "F_full", "sumCW", "annPercentChange", 
                              "meanSizeCN", "meanSizeIN", "OFdStatus", "OFgStatus" ,
-                             "mxGradCAA"))
+                             "mxGradCAA", "sumEconIW"))
     
     rpidx <- which(nm %in% c("FPROXY", "SSBPROXY"))
     
@@ -45,7 +45,7 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
                                "relE_ipop_mean", "relE_ipop_dev",
                                "relE_R_dev", "relE_SSB", "relE_N","relE_CW", "relE_IN",
                                "relE_R", "relE_F", "OFgStatus",   #AEW
-                               "FPROXY", "SSBPROXY"))
+                               "FPROXY", "SSBPROXY","sumEconIW"))
     
     
     #### Performance measure plots ####
