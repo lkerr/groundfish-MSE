@@ -8,8 +8,8 @@ source('processes/identifyResultDirectory.R')
 source('processes/runSetup.R')
 
 
-# Load in the simulation results
-fl <- list.files(file.path(ResultDirectory, 'sim'), full.names=TRUE)
+# Load in the stock-level simulation results
+fl <- list.files(file.path(ResultDirectory, 'sim'), pattern="omvalGlobal", full.names=TRUE)
 
 # load all the functions
 ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
@@ -23,6 +23,15 @@ for(i in 1:length(fl)){
   flLst[[i]] <- omvalGlobal
   names(flLst[[i]]) <- names(omvalGlobal)
 }
+
+# Load in the aggregate simulation results
+sl <- list.files(file.path(ResultDirectory, 'sim'), pattern="simlevelresults", full.names=TRUE)
+
+simlevel <-list()
+for(i in 1:length(sl)){
+  simlevel[[i]]<-readRDS(sl[i])
+}
+
 
 for(i in 1:length(flLst[[1]])){
 
