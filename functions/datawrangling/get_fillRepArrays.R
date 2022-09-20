@@ -16,7 +16,7 @@ get_fillRepArrays <- function(stock){
     omval$SSB[r,m,] <- SSB
     omval$R[r,m,] <- R
     omval$F_full[r,m,] <- F_full
-    omval$sumCW[r,m,] <- sumCW
+    omval$sumCW[r,m,] <- sumCW #Catch of fish, metric tons
     omval$OFdStatus[r,m,] <- OFdStatus
     omval$mxGradCAA[r,m,] <- mxGradCAA
     omval$F_fullAdvice[r,m,] <- F_fullAdvice #AEW
@@ -25,7 +25,7 @@ get_fillRepArrays <- function(stock){
     omval$SSB_cur[r,m,] <- SSB_cur #AEW
     omval$natM[r,m,] <- natM #AEW
     
-    omval$sumEconIW[r,m,y]<-sumEconIW[y]
+    omval$sumEconIW[r,m,y]<-sumEconIW[y] # "Economic" trawl survey biomass, metric tons per tow.
     
     # annPercentChange not true vector -- just repeated values. This needs
     # to be calculated after the run so that the appropriate time windows
@@ -111,8 +111,8 @@ get_fillRepArrays <- function(stock){
     #Econ specific outputs. Not put until management starts in fmyearIdx
     if(mproc$ImplementationClass[m]=="Economic"){
       if(y >= fmyearIdx){
-    omval$Gini_stock_within_season_BKS[r,m,y]<-Gini_stock_within_season_BKS[y]
-    omval$econCW[r,m,y]<-econCW[y]
+    omval$Gini_stock_within_season_BKS[r,m,y]<-Gini_stock_within_season_BKS[y] #Gini coefficient over the days of the fishing year
+    omval$econCW[r,m,y]<-econCW[y] #"Economic" total catch in metric tons  
     
       }
     }    
