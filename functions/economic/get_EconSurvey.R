@@ -1,6 +1,7 @@
 #for(i in 1:nstock){
   # Specific "survey" meant to track the population on Jan1
   # for use in the economic submodel. timeI=0 implies Jan1.
+  # Weights inherit the units of waa, which are in metric tons/individual at this point. 
 get_EconSurvey <- function(stock){
   
   out<- within(stock, {
