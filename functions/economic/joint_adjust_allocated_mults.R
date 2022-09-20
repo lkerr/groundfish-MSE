@@ -54,7 +54,8 @@ joint_adjust_allocated_mults <- function(wt,fh, ec_type){
     # Set c_ and/or l_ mults to zero. 
       
         wt[, (closed):=0]
-    # set harvest_sim=0 based on closeds. We don't actually want to do this.    
+    # do not set harvest_sim=0 by just doing 
+      # wt[, (harvest_sim):=0]
     # wt[spstock2 %in% closeds, harvest_sim :=0]
     }
     
