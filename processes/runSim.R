@@ -104,7 +104,6 @@ for(r in 1:nrep){
           #stock[[i]] <- get_relError(stock = stock[[i]])
         }
           #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
-
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
           # Setup the Jan 1 survey.
           
@@ -112,7 +111,6 @@ for(r in 1:nrep){
           source('processes/loadEcon2.R')
 
           bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline_averages)
-      
           # Print the status of the model.
           cat("This is Replicate", r, "of", nrep, ". This is model", m, "of", nrow(mproc), ". This is year", yrs[y],"of", yrs[nyear], ".\n ")
           source('processes/runEcon_module.R')
@@ -139,9 +137,7 @@ for(r in 1:nrep){
         if (y == nyear){
           stock[[i]] <- get_TermrelError(stock = stock[[i]])
         }
-        if (y>=fmyearIdx){
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
-        } 
       } 
       
       end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
@@ -214,12 +210,12 @@ big_loop
   }
 
 
-# 
-#   if(runClass != 'HPCC'){
-#     # Note that runPost.R re-sets the containers; results have already been
-#     # saved however.
-#     source('processes/runPost.R')
-#   }
+
+  # if(runClass != 'HPCC'){
+  #   # Note that runPost.R re-sets the containers; results have already been
+  #   # saved however.
+  #   source('processes/runPost.R')
+  # }
 
 
   print(unique(warnings()))
