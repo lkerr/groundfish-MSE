@@ -36,7 +36,7 @@ for(i in 1:length(sl)){
 
 boxplot_these<-c("SSB", "R", "F_full", "sumCW", "annPercentChange", 
   "meanSizeCN", "meanSizeIN", "OFdStatus", "OFgStatus" ,
-  "mxGradCAA", "sumEconIW")
+  "mxGradCAA", "sumEconIW","Gini_stock_within_season_BKS")
 rp_these<-c("FPROXY", "SSBPROXY")
 
 traj_these <- c("SSB", "R", "F_full", "sumCW", 
@@ -46,7 +46,7 @@ traj_these <- c("SSB", "R", "F_full", "sumCW",
               "relE_ipop_mean", "relE_ipop_dev",
               "relE_R_dev", "relE_SSB", "relE_N","relE_CW", "relE_IN",
               "relE_R", "relE_F", "OFgStatus",   #AEW
-              "FPROXY", "SSBPROXY","sumEconIW")
+              "FPROXY", "SSBPROXY","sumEconIW","Gini_stock_within_season_BKS")
 
 
 for(i in 1:length(flLst[[1]])){
