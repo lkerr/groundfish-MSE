@@ -219,5 +219,6 @@ big_loop
 
 
   print(unique(warnings()))
-
+  cat("You ran",r, "Replicates. You ran",m,"models. You ran from year", yrs[fmyearIdx], " to year", yrs[y],".\n ")
+  top_loop_end-top_loop_start
   cat('\n ---- Successfully Completed ----\n')
