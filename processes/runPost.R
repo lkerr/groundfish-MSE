@@ -23,14 +23,6 @@ for(i in 1:length(fl)){
   names(flLst[[i]]) <- names(omvalGlobal)
 }
 
-# Load in the aggregate simulation results
-sl <- list.files(file.path(ResultDirectory, 'sim'), pattern="simlevelresults", full.names=TRUE)
-
-simlevel <-list()
-for(i in 1:length(sl)){
-  simlevel[[i]]<-readRDS(sl[i])
-}
-
 
 
 
@@ -67,6 +59,40 @@ for(i in 1:length(flLst[[1]])){
             dirIn=file.path(ResultDirectory, "sim"), dirOut=dirOut, 
             boxnames=boxplot_these, rpnames=rp_these, trajnames=traj_these)
 }
+
+
+
+
+# Load in the aggregate simulation results
+sl <- list.files(file.path(ResultDirectory, 'sim'), pattern="simlevelresults", full.names=TRUE)
+#assumes there is just 1 file that matches pattern. Don't know how to stack the results together.
+simlevel <-list()
+simlevel<-readRDS(sl)
+#simlevel$YEAR<-tt
+
+simlevel[['YEAR']] <- simlevel[['YEAR']][1:(length(simlevel[['YEAR']])/length(simlevel))]
+
+dirOut <- file.path(ResultDirectory, "fig", "simulation")
+dir.create(file.path(dirOut), showWarnings=FALSE)
+
+
+
+
+
+
+SIMboxplot_these<-c("HHI_fleet","Shannon_fleet","Gini_fleet", "Gini_fleet_bioecon_stocks", "total_rev", "total_modeled_rev", "total_groundfish_rev")
+SIMrp_these<-SIMboxplot_these
+SIMtraj_these <-SIMboxplot_these
+
+plotRP<-FALSE
+plotDrivers<-FALSE
+plotTrajInd<-TRUE
+plotTrajBox<-TRUE
+get_SimLevelplots(x=simlevel, dirIn=file.path(ResultDirectory, "sim"), dirOut=dirOut, 
+          boxnames=SIMboxplot_these, rpnames=SIMrp_these, trajnames=SIMtraj_these)
+
+
+
 
 # Output the management procedures text file in the figure directory
 get_catdf(df = mproc, file = paste0(ResultDirectory,'/fig/',mprocfile))
