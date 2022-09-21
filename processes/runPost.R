@@ -57,7 +57,7 @@ for(i in 1:length(flLst[[1]])){
   dirOut <- paste0(ResultDirectory, '/fig/', stknm, '/')
 
   get_plots(x=omval, stockEnv = stockPar[[i]], 
-            dirIn=paste0(ResultDirectory, '/sim/'), dirOut=dirOut, 
+            dirIn=file.path(ResultDirectory, "sim"), dirOut=dirOut, 
             boxnames=boxplot_these, rpnames=rp_these, trajnames=traj_these)
 }
 
