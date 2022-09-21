@@ -7,16 +7,15 @@ source('processes/identifyResultDirectory.R')
 # source('processes/get_runinfo.R')
 source('processes/runSetup.R')
 
-
-# Load in the stock-level simulation results
-fl <- list.files(file.path(ResultDirectory, 'sim'), pattern="omvalGlobal", full.names=TRUE)
-
 # load all the functions
 ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
 invisible(sapply(ffiles, source))
 
 # load the required libraries
 source('processes/loadLibs.R')
+
+# Load in the stock-level simulation results
+fl <- list.files(file.path(ResultDirectory, 'sim'), pattern="omvalGlobal", full.names=TRUE)
 flLst <- list()
 for(i in 1:length(fl)){
   load(fl[i])
