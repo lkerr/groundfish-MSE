@@ -10,6 +10,7 @@ simpleTemperature <- FALSE
 #mprocfile<-"mproc.csv"
 #mprocfile<-"mprocTest.csv"
 mprocfile<-"mprocEcon.csv"
+#mprocfile<-"mprocEconT.csv"
 
 #### Stock parameters ####
 
@@ -21,6 +22,7 @@ mprocfile<-"mprocEcon.csv"
 # Available stocks: haddockGB, codGOM, codGB, pollock, yellowtailflounderGB
 #stockExclude <- c('haddockGB', 'codGOM','codGB', 'pollock','yellowtailflounderGB')
 stockExclude<-NULL
+stockExclude <- c('yellowtailflounderGB')
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data
 # just fishing mortality for now
@@ -30,7 +32,7 @@ histAssess <- FALSE
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 1
+nrep <- 4
 
 # First year to begin actual management
 fmyear <- 2019
