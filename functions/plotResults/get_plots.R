@@ -7,6 +7,7 @@
 # dirIn: simulation directory to grab specific examples for
 #        particular plots (e.g., temperature time series)
 
+# boxnames, rpnames, trajnames: performance measures you want to plot
 
 
 
