@@ -10,7 +10,7 @@
 
 
 
-get_plots <- function(x, stockEnv, dirIn, dirOut){
+get_plots <- function(x, stockEnv, dirIn, dirOut, boxnames, rpnames, trajnames){
   
   with(stockEnv, {
     # load some of the necessary variables for plotting by running the
@@ -31,23 +31,12 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
     pyidx <- (fmyearIdx-py0+1):length(yrs)
     nm <- names(x)
     # ny <- dim(x[[i]])[3]
-    bxidx <- which(nm %in% c("SSB", "R", "F_full", "sumCW", "annPercentChange", 
-                             "meanSizeCN", "meanSizeIN", "OFdStatus", "OFgStatus" ,
-                             "mxGradCAA", "sumEconIW"))
-    
-    rpidx <- which(nm %in% c("FPROXY", "SSBPROXY"))
-    
-    # index for trajectories to plot
-    trajidx <- which(nm %in% c("SSB", "R", "F_full", "sumCW", 
-                               "ginipaaCN", "ginipaaIN", "OFdStatus",
-                               "mxGradCAA",
-                               "relE_qI", "relE_qC", "relE_selCs0", "relE_selCs1",
-                               "relE_ipop_mean", "relE_ipop_dev",
-                               "relE_R_dev", "relE_SSB", "relE_N","relE_CW", "relE_IN",
-                               "relE_R", "relE_F", "OFgStatus",   #AEW
-                               "FPROXY", "SSBPROXY","sumEconIW"))
-    
-    
+
+    bxidx <-which(nm %in% boxnames)    
+    rpidx <- which(nm %in% rpnames)
+    trajidx <-which(nm %in% trajnames)
+
+
     #### Performance measure plots ####
 
     # Identify break points for selecting years to produce for each of the
