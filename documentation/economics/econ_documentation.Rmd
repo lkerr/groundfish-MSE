@@ -21,7 +21,7 @@ output:
     keep_tex: yes
     toc: False
     fig_caption: yes
-bibliography: C:\\Users\\Min-Yang.Lee\\Documents\\library.bib
+bibliography: library.bib
 ---
 
 <!---Don't read, or touch this part
@@ -34,8 +34,9 @@ csl: canadian-journal-of-fisheries-and-aquatic-sciences.csl
     keep_tex: yes
   html_document: null
   word_document: null
-  
-       
+ 
+---
+
 
   -->
   

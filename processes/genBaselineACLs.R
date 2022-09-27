@@ -62,10 +62,23 @@ econ_baseline_averages <- econ_baseline %>%
 econ_baseline <- left_join(econ_baseline, non_sector_econ_baseline, by="spstock2")
 econ_baseline_averages <- left_join(econ_baseline_averages, non_sector_econ_baseline, by="spstock2")
 
-
-
-
 #econ_baseline has: 
   # spstock2, gffishingyear, baselineACL_mt, sectorACL_mt, 
   # mults_allocated, mults_nonalloc, non_mult, stockarea
   # nonsector_rec_fraction, rec_fraction, sector_frac columns
+
+#Get the names of groundfish and allocated groundfish. Put them in a vector. exclude SNEMA winter.
+allocated_groundfish <-econ_baseline_averages %>%
+  dplyr::filter(mults_allocated==1) %>%
+  select(spstock2)%>%
+  dplyr::filter(spstock2!="winterflounderSNEMA")
+  
+allocated_groundfish<-pull(allocated_groundfish)
+
+groundfish <-econ_baseline_averages %>%
+  dplyr::filter(mults_allocated==1 | mults_allocated==1) %>%
+  select(spstock2)%>%
+  dplyr::filter(spstock2!="winterflounderSNEMA")
+
+groundfish<-pull(groundfish)
+

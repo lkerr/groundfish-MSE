@@ -69,14 +69,7 @@ get_J1Updates <- function(stock){
     # on the recruitment this year
     J1N[y,] <- get_J1Ny(J1Ny0=J1N[y-1,], Zy0=Z[y-1,], R[y])
 
-    # calculate the predicted catch in year y, the catch weight and the
-    # proportions of catch numbers-at-age. Add small number in case F=0
-    CN[y,] <- get_catch(F_full=F_full[y], M=natM[y],
-                        N=J1N[y,], selC=slxC[y,]) + 1e-3
-
-    # get Z for the current year
-    Z[y,] <- F_full[y]*slxC[y,] + natM[y]
-
+    
     # calculate SSB for the current year AEW
 
     SSB_cur[y] <- sum(J1N[y,] * mat[y,] * waa[y,])

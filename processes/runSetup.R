@@ -142,8 +142,8 @@ for(i in 1:nstock){
 names(stock) <- stockNames
 
 
-# Set up a container dataframe for Fleet-level Economic Results
-# These are simulation specific so they are stored in a single dataframe
+# Set up a container list for Economic Results
+# Unlike the stock list, These are simulation specific so they are stored in a single list
 source('processes/genEcon_Containers.R')
 
 

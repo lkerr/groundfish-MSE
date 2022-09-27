@@ -2,28 +2,25 @@
 
 # Driver function to create output plots from the simulation
 # 
-# x: list of output for plots (i.e., omval)
+# x: list of output for plots (i.e., simlevelresults)
 # 
 # dirIn: simulation directory to grab specific examples for
 #        particular plots (e.g., temperature time series)
+# dirOut : place to store the outputs
+# boxnames, rpnames, trajnames: performance measures you want to plot
 
 
 
 
-get_plots <- function(x, stockEnv, dirIn, dirOut, boxnames, rpnames, trajnames){
+get_SimLevelplots <- function(x, dirIn, dirOut, boxnames, rpnames, trajnames){
   
-  with(stockEnv, {
+  with(x, {
     # load some of the necessary variables for plotting by running the
     # setup file.
     source('modelParameters/set_om_parameters_global.R', local=TRUE)
     source('processes/genAnnStructure.R', local=TRUE)
     
-    # Load one of the simulation environments
-    # load(file.path(dirIn, list.files(dirIn)[1]))
-  
-    # model years
-    # yrs <- (mxyear - length(temp)+1):mxyear
-    
+
     # Year before the management period to start the plots
     py0 <- 37 #5
     
@@ -50,6 +47,10 @@ get_plots <- function(x, stockEnv, dirIn, dirOut, boxnames, rpnames, trajnames){
     yearID <- cut(1:nyear, breaks=brkYrsIdxExt, labels=brkYrsNames2)
     
     if(plotBP){
+      
+      dir.create(file.path(dirOut, "boxplot"), showWarnings=FALSE)
+      
+      
       # Create the boxplots
       for(i in bxidx){
         for(j in 2:length(brkYrsNames2)){
@@ -65,7 +66,7 @@ get_plots <- function(x, stockEnv, dirIn, dirOut, boxnames, rpnames, trajnames){
             tempDat <- array(data=tempDatUnit, dim=dim(tempCW))
             dimnames(tempDat) <- dimnames(tempCW)
           }
-          jpeg(paste0(dirOut, nm[i], '_', brkYrsNames2[j], '.jpg'))
+          jpeg(file.path(dirOut, "boxplot", paste0(nm[i],"_", brkYrsNames2[j], ".jpg")))
           
             if(all(is.na(tempDat))){
               plot(0)
@@ -77,36 +78,11 @@ get_plots <- function(x, stockEnv, dirIn, dirOut, boxnames, rpnames, trajnames){
       }
     }
 
-    if(plotRP){
-      #### Proxy Reference Point plots ####
-      
-      dir.create(file.path(dirOut, 'RP'), showWarnings=FALSE)
-      for(i in 1:dim(x$FPROXY)[2]){
-      
-        jpeg(paste0(dirOut, 'RP/', 'mp', i, '.jpg'))
-          
-          if(all(is.na(x$FPROXY[,i,]))){
-            plot(0)
-          }else{
-            get_rptrend(x=x$FPROXY[,i,pyidx], 
-                        y=x$SSBPROXY[,i,pyidx])
-          }
-        
-        dev.off()
-        
-        # HCR plot not working -- got rid of RP. Not bothering to change
-        # back right now because I don't think it was that useful of a plot.
-        # jpeg(paste0(dirOut, 'RP/', 'hcr', i, '.jpg'))
-        # 
-        #   get_hcrPlot(rp[,i,,])
-        # 
-        # dev.off()
-        
-        
-      }
-    }
-   
-  
+    
+    ###################################################
+    # I have not coded this yet. not likely to work.
+    ###################################################
+    
     if(plotDrivers){
       
       # Get diagnostic plots that show (1) the temperature history; (2) the
@@ -170,14 +146,18 @@ get_plots <- function(x, stockEnv, dirIn, dirOut, boxnames, rpnames, trajnames){
       
     } 
     
-   
+    ##########################################################
     #### Trajectories of OM values ####
+    ###################################################
+    
     dir.create(file.path(dirOut, 'Traj'), showWarnings=FALSE)
     
     # only make a few trajectories so you don't get so many plots
     repidx <-sample(1:dim(x[[trajidx[1]]])[1], 
                     size=min(1, dim(x[[trajidx[1]]])[1]))
   
+    #Loop over the PMs you want to plot.
+    
     for(i in trajidx){
       tempPM <- x[[i]]
       PMname <- nm[i]
@@ -214,8 +194,15 @@ get_plots <- function(x, stockEnv, dirIn, dirOut, boxnames, rpnames, trajnames){
         if(all(is.na(tempPMmp))){
           next
         }
-  
+        ###################################################
+        #### END Trajectories of OM values ####
+        ###################################################
+        
+        
+       # Doesn't work
+
         if(plotTrajBox){
+
           # First do a general boxplot of the trajectory over years
           jpeg(paste0(dirOut, 'Traj/', PMname, '/boxmp', mp, '.jpg'),
                width=480*1.75, height=480, pointsize=12*1.5)
@@ -227,13 +214,16 @@ get_plots <- function(x, stockEnv, dirIn, dirOut, boxnames, rpnames, trajnames){
           
           dev.off()
         }
-        
-      
+        ###################################################
+
+        # Plot individual trajectories
+        # Doesn't work
+        ###################################################
         if(plotTrajInd){
           # Do (up to) 5 trajectories as examples
           for(r in repidx){
-    
-            jpeg(paste0(dirOut, 'Traj/', PMname, '/mp', mp, 'rep', r, '.jpg'),
+            
+            jpeg(file.path(dirOut,"Traj", PMname,paste0("mp", mp, "rep", r, ".jpg")),
                  width=480*1.75, height=480, pointsize=12*1.5)
             
               get_tplot(x=tempPMmp[r,], yrs = yrs[pyidx], 
@@ -245,8 +235,13 @@ get_plots <- function(x, stockEnv, dirIn, dirOut, boxnames, rpnames, trajnames){
             
           }
         }
+        ###################################################
+        ###################################################
+        
+        
       }
       
+      #Works
       
       if(plotTrajSummary){
         # Trajectories for the medians of each MP over time
@@ -263,7 +258,7 @@ get_plots <- function(x, stockEnv, dirIn, dirOut, boxnames, rpnames, trajnames){
         }
         
         # Make the plot
-        jpeg(file.path(dirOut, "Traj", PMname, paste0(stockNames,"_MPMeanTraj.jpg")),
+        jpeg(file.path(dirOut, "Traj", PMname, "SIM_MPMeanTraj.jpg"),
              width=480*1.75, height=480, pointsize=12*1.5)
           par(mar=c(4,4,1,1))
           

@@ -64,18 +64,20 @@ get_predict_quota_prices <- function(){
   ytrun<-exp(XB+sig^2/2)
   colnames(ytrun)<-c("ytrun")
   
-  # COMPUTE YCEN from psel, XB, sig, and xbs
+  quarterly<-cbind(quarterly,psel,ytrun)
+
+  #Compute normalize ytrun.  
+  quarterly[,ytrun:= ytrun*fGDPtoSFD]
+  
+  #Construct ycen   
   # In stata: psel*ytrun
+  quarterly[,ycen:= psel*ytrun]
+  # Put an upper bound on quota prices
+  quarterly[,ub_qp :=max(1.5*live_priceGDP,6)]
+  quarterly[ycen >= ub_qp, ycen := ub_qp]
+  # And a lower bound of 1/2 of a cent
+  quarterly[ycen <= 0.005, ycen := 0.005]
   
-  ycen<-psel*ytrun
-  colnames(ycen)<-c("ycen")
-  
-  quarterly<-cbind(quarterly,psel,ytrun,ycen)
-  #Convert from rGDP to rseafood prices. Multiply by the GDPtoSFD factor
-  quarterly$ycen<-quarterly$ycen*quarterly$fGDPtoSFD
-  quarterly$ytrun<-quarterly$ytrun*quarterly$fGDPtoSFD
-  quarterly$ub_qp<-max(1.5*quarterly$live_priceGDP,5)
-  quarterly[ycen>=ub_qp]$ycen<-quarterly$ub_qp
   
   keepcols<-c("spstock2","ycen")  
   quarterly<-quarterly[,..keepcols]

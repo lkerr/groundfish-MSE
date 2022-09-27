@@ -23,9 +23,14 @@ fishery_holder$targeted<-0
 
 #set up a list to hold the expected revenue by date, hullnum, and target spstock2
 annual_revenue_holder<-list()
-
 #set up a list to hold the date, spstock2, and aggregate metrics, like open/closed status and cumulative catch
 annual_fishery_status_holder<-list()
+# setup a list to hold the intraseason Gini ala Birkenbach, Kazcan, Smith nature.
+#Gini_stock_within_season_BKS<-list()
+
+#Gini_fleet<-list()
+#Gini_fleet_bioecon_stocks<-list()
+
 #Initialize the most_recent_target data.table. 
 #This could move to preprocessing; I'll need to set one up for the entire simulation dataset (all 6 years)
 # You need to save it as a .RDS and then read.  And you need to figure out what to do with your merge statements In order to keep *all*
@@ -87,14 +92,15 @@ q_yellowtailflounderSNEMA=i.q_yellowtailflounderSNEMA)
 working_targeting[,key:=NULL]
 
 # Subset the fishery_holder to rows that have a biological model, and keep the spstock2 and ln_trawl_survey columns
-ts<-fishery_holder[biocontain=1, c('spstock2','ln_trawlsurvey','ln_obs_trawlsurvey')]
+ts<-fishery_holder[bio_model==1, c('spstock2','ln_trawlsurvey','ln_obs_trawlsurvey','sectorACL')]
 #Sanity check. The actual values in the trawl survey have never been higher than 5. So, set a max at 7, just in case, which is nearly an order of magnitude higher.
 ts[ln_trawlsurvey>=7, ln_trawlsurvey:=7]
 ts[ln_obs_trawlsurvey>=7, ln_obs_trawlsurvey:=7]
-
-
+ts[, ln_sector_acl:=log(sectorACL)]
+ts[,sectorACL:=NULL]
 # Merge-update working targeting. You can also switch this to ln_obs_trawlsurvey 
-working_targeting[ts,on="spstock2", `:=`(log_trawl_survey_weight=ln_trawlsurvey)]
+working_targeting[ts,on="spstock2", `:=`(log_trawl_survey_weight=ln_trawlsurvey, 
+                                         log_sector_acl=ln_sector_acl)]
 
 working_targeting<-get_predict_eproduction(working_targeting)
 working_targeting[spstock2=="nofish", harvest_sim:=0L]
@@ -113,7 +119,7 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
 
     working_targeting<-joint_adjust_allocated_mults(working_targeting,fishery_holder, econtype)
     working_targeting<-joint_adjust_others(working_targeting,fishery_holder, econtype)
-    working_targeting<-get_joint_production(working_targeting,spstock2s) 
+    working_targeting<-get_joint_production(working_targeting,spstock2s, fishery_holder, econtype) 
     # The data for MSE does not have DAS costs, so this is all commmented out.
     # adjust for DAS costs.
     # subtract off das_costs from expected and actual  revenue.
@@ -207,6 +213,54 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
   annual_revenue_holder$year<-yrs[y]
   revenue_holder[[yearitercounter]]<-annual_revenue_holder
   
+  #Gini for the fleet
+  vessel_rev <-annual_revenue_holder %>%
+    group_by(hullnum) %>%
+    summarise(actual_rev=sum(actual_rev_total))
+  
+  Gini_fleet<-get_gini(vessel_rev,"actual_rev")
+  
+  vessel_rev <-annual_revenue_holder %>%
+    dplyr::filter(spstock2 %in% stockNames) %>%
+    group_by(hullnum) %>%
+    summarise(actual_rev=sum(actual_rev_total)) 
+
+  Gini_fleet_bioecon_stocks<-get_gini(vessel_rev,"actual_rev")
+  
+  
+  # Total Revenue, excluding quota costs.  Better to exclude quota costs, because these are just transfers across vessels and I'm not including quota benefits anywhere.
+  my_revenue_names<-grep("^r_",colnames(annual_revenue_holder) , value=TRUE)
+  annual_revenue_holder2<-as.data.table(annual_revenue_holder)
+  annual_revenue_holder2<-annual_revenue_holder2[, lapply(.SD, sum),.SDcols = my_revenue_names]
+  total_rev<-rowSums(annual_revenue_holder2, na.rm=TRUE)
+  
+  #Total revenue for just the stocks with a biological model.
+  my_revenue_names<-paste0("r_",stockNames)
+  annual_revenue_holder2<-as.data.table(annual_revenue_holder)
+  annual_revenue_holder2<-annual_revenue_holder2[, lapply(.SD, sum),.SDcols = my_revenue_names]
+  total_modeled_rev<-rowSums(annual_revenue_holder2, na.rm=TRUE)
+
+  #Total revenue for the allocated groundfish
+  my_revenue_names<-paste0("r_",allocated_groundfish)
+  annual_revenue_holder2<-as.data.table(annual_revenue_holder)
+  annual_revenue_holder2<-annual_revenue_holder2[, lapply(.SD, sum),.SDcols = my_revenue_names]
+  total_groundfish_rev<-rowSums(annual_revenue_holder2, na.rm=TRUE)
+  
+  
+  
+  # This is the place to do any fleet-level metrics that are sub-yearly. You can use annual_revenue_holder to to get 
+  # Total rev, total rev from groundfish. revenue by species.
+  # A gini or theil for total rev (across the vessels)
+  # A gini or theil for the fleet's revenue sources
+  
+  # If you want to construct something based on removals, use "fishery_holder"  or
+  # bio_output<-fishery_holder[which(fishery_holder$bio_model==1),]
+  # 
+  
+  
+  
+  
+  
   rm(annual_revenue_holder)
 
   #contract the fishery-level list down to a single data.table
@@ -219,7 +273,18 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
   # annual_fishery_status_holder<-c(annual_fishery_status_holder,econtype)
   fishery_output_holder[[yearitercounter]]<-annual_fishery_status_holder
 # We probably want to contract this down further to a data.table of "hullnum","spstock2","exp_rev_total","targeted"
+
+  setorderv(annual_fishery_status_holder, c("spstock2","doffy"))
+  annual_fishery_status_holder[,daily_pounds_caught :=cumul_catch_pounds-shift(cumul_catch_pounds,1,fill=0,type="lag"), by=spstock2]
   
+  
+  # Compute the within-season Gini for each modeled stock and put it in 'stock'
+  for(i in 1:nstock){
+      stock[[i]]$Gini_stock_within_season_BKS[y]<-get_gini_subset(dataset=annual_fishery_status_holder, y="daily_pounds_caught", filter_var="spstock2", filter_value=stock[[i]]$stockName)
+  }
+  
+  #Gini_stock_within_season_BKS<-lapply(stockNames, get_gini_subset, dataset=annual_fishery_status_holder, y="daily_pounds_caught", filter_var="spstock2")
+  #names(Gini_stock_within_season_BKS)<-stockNames
   
   
 #subset fishery_holder to have just things that have a biological model. send it to a list?
@@ -232,8 +297,14 @@ for(i in 1:nstock){
   stock[[i]]$econCW[y]<-bio_output$removals_mt[bio_output$stocklist_index==i]
 
     stock[[i]]<-within(stock[[i]], {
-    F_full[y]<- get_F(econCW[y],J1N[y,],slxC[y,],M,waa[y,])
+    F_full[y]<- get_F(x=econCW[y],
+                      Nv=J1N[y,],
+                      slxCv=slxC[y,],
+                      M=M,
+                      waav=waa[y,])
   }) 
 }
+
+
 
 
