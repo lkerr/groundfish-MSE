@@ -1,4 +1,17 @@
-Here is the methods section
+We construct closed-loop operating model for five stocks of groundfish: Georges Bank cod, Georges Bank haddock, Georges Bank yellowtail flounder, Gulf of Maine Cod, and pollock.
+These stocks are managed jointly and many are caught jointly.  
+We couple those models with an individual-based model of fishing grounded in economic principles. 
+We apply an HCR to get target *F*s and catch limits for the modeled stocks.  
+
+We then conduct three sets of “matched” simulations for a moderate number of years:
+
+Simulation 1 - A multispecies bioeconomic model :  If the aggregate quotas are reached for a stock, fishing for all regulated groundfish by vessels in the groundfish fishery in that area ceases.  Vessels that want to fish in that area could "declare out" of groundfish, but they cannot land groundfish and their catch does not count against the groundfish catch limits.  This scenario closely mimics the current catch share system for multispecies.  We use the target and realized values of $F$ to estimate two parameters  - a systematic difference parameter ($\hat{ie}_{bias}$) and a noise parameter $\hat{ie}_{F}$ for each of the stocks.      
+
+Simulation 2: apply a traditional fisheries model where the implementation errors come from the Simulation 1B.
+
+Simulation 3: apply a traditional fisheries model where the implementation errors come from historical data.
+
+Differences between Simulations 1 and 3 illustrate the differences that arise from using a mechanistic (structural) economic model for fishery removals instead of an phenomenological model of $F$.  These differences could arise because  
 
 
 ## A structural economic model of targeting 
