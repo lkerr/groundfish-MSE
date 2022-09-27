@@ -9,8 +9,8 @@ simpleTemperature <- FALSE
 # Which management procedures csv do you want to read:
 #mprocfile<-"mproc.csv"
 #mprocfile<-"mprocTest.csv"
-mprocfile<-"mprocEcon.csv"
-#mprocfile<-"mprocEconT.csv"
+#mprocfile<-"mprocEcon.csv"
+mprocfile<-"mprocEconT.csv"
 
 #### Stock parameters ####
 
@@ -32,7 +32,7 @@ histAssess <- FALSE
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 4
+nrep <- 50
 
 # First year to begin actual management
 fmyear <- 2019
