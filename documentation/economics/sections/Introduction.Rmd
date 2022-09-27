@@ -2,10 +2,10 @@
 Many of the complex simulation models used to inform fisheries managers take a phenomenological (reduced-form) approach [@Fenichel2013] to the process by which humans kill fish.
 This relatively abstract representation of fishing fleets allow for intense focus on biological and ecosystem complexities. 
 For example, @Wiedenmann2015,@Wiedenmann2017,@Ulrich2017,@Deroba2019, @Kritzer2019, and @Sun2019 assume the fishing mortality rate (F) is set directly by managers.
-@punt2008evaluation, @Deroba2012Evaluating, @Li2018,@Hennen2018 , @Thorpe2019b,  @Deroba2019,@Siddeek2020 , @Sun2021, @OFarrell2021, @Surma2021 assume that the actual fishing mortality rate is equal to the target fishing mortality rate modified by an idiosyncratic error term.
+@punt2008evaluation, @Deroba2012Evaluating, @Li2018,@Hennen2018, @Thorpe2019b,@Deroba2019, @Siddeek2020, @Sun2021, @OFarrell2021, @Surma2021 assume that the actual fishing mortality rate is equal to the target fishing mortality rate modified by an idiosyncratic error term.
 The distribution of this error term is approximated from historical data, although justification for the parameterization is typically scant.
-@Holsman2020 takes a more sophisticated approach by estimating a set of reduced form equations that explain aggregate total catch as a function of catch limits, catch limits of jointly caught stocks, and other parameters.
-The drawback of the reduced form approaches is that they suffer from the Lucas Critique [-@Lucas1976]: they will only be policy relevant to the extent that future conditions are similar to current conditions [@Fenichel2013].  
+@Holsman2020 takes a more sophisticated phenomenological approach by estimating a set of reduced form equations that explain aggregate total catch as a function of catch limits, catch limits of jointly caught stocks, and other parameters.
+The drawback of the all phenomenological approaches to implementation error is that they suffer from the Lucas Critique [-@Lucas1976]: they will only be policy relevant to the extent that future conditions are similar to current conditions [@Fenichel2013].  
 @Fulton2011a note that implementation error encompasses three distinct processes: (1) decisions where scientific advice on stock status is subordinated; (2) lack of direct regulatory control of fishing mortality due to inadequate enforcement or a lack of a direct link between controls (regulations) and harvest; and (3) unexpected behavioural responses of resource users.
 
 Single species (or single stock) management is common in the US.
@@ -25,7 +25,7 @@ Finally, when catch limits are "high" catch will be less than the limit; this mi
 It may also occur if output prices are too low or input prices are too high to incentivize firms to enter or catch fish. 
 These processes are difficult to model mechanistically and phenomenological approaches are often used to model F [@Fenichel2013; @Abbott2013]. 
 
-We aim to address the second and third of these processes (not the first) in the context of the Northeast United States multispecies fishery, commonly referred to as groundfish. 
+We aim to address the second and third of these processes identified by @Fulton2011a (not the first) in the context of the Northeast United States multispecies fishery, commonly referred to as groundfish. 
 Participants in this fishery target a collection of demersal fish in the Northwest Atlantic Ocean.  
 Production is joint.  
 We pair a mechanistic (structural) model of production in a multispecies fishery with stock dynamics and assessment models.
@@ -104,7 +104,13 @@ We're going to need stylized facts about the groundfish fishery
 ## Related Literature
 <!---We're not actually going to have a related literature section -->
 
-Construction of complex simulation models with many sources of uncertainty is standard in the fisheries literature [c.f. @Smith1999; @Punt2016].  Our model is similar to that of @Ono2018, which models three principal groundfish stocks (Pacific Cod, Alaska Pollock, and Yellowfin Sole) and one bycatch species (Pacific Halibut).  Fishing vessels are assigned to metiers and assigned a baseline catch level based on historical data.  The fishery manager *selects* total allowable catch for each metier-species combination. SSB will scale the baseline catch. It's unclear how/why the fishery stops fishing. But it's also quasi-behavioral, there's an "adjustment" to the scaling that accounts for adaptation.
+Construction of complex simulation models with many sources of uncertainty is standard in the fisheries literature [c.f. @Smith1999; @Punt2016]. 
+Our model is similar to that of @Ono2018, which models three principal groundfish stocks (Pacific Cod, Alaska Pollock, and Yellowfin Sole) and one bycatch species (Pacific Halibut).
+Fishing vessels are assigned to metiers and assigned a baseline catch level based on historical data.  
+The fishery manager *selects* total allowable catch for each metier-species combination. 
+SSB will scale the baseline catch. 
+It's unclear how/why the fishery stops fishing. 
+But it's also quasi-behavioral, there's an "adjustment" to the scaling that accounts for adaptation.
 
 Here is a partial list of single-species or independent models applied to  a fishery with techincal interactions (joint).
 
@@ -114,14 +120,18 @@ Here is a partial list of single-species or independent models applied to  a fis
 
 @Sun2019 examines Gulf of Maine Atlantic Cod.  These are caught with other groundfish [@Squires1987;@Scheld2018] 
 
-@Needle2008 examines North Sea haddock. These are also caught with other groundfish.
-@Amar2009 and @Ianelli2011 examine Gulf of Alaska Walleye Pollock. These are also caught with other groundfish [@Ono2018].
+@Needle2008 examines North Sea haddock.
+These are also caught with other groundfish.
+@Amar2009 and @Ianelli2011 examine Gulf of Alaska Walleye Pollock. 
+These are also caught with other groundfish [@Ono2018].
 
-@Prellozo2016 examine the multispecies fishery in the Bay of Biscay.  A metier-stock approach is taken: each metier has it's own catchability coefficient estimated from Increasing Returns to Scale production fucntion 
+@Prellozo2016 examine the multispecies fishery in the Bay of Biscay.  
+A metier-stock approach is taken: each metier has it's own catchability coefficient estimated from Increasing Returns to Scale production fucntion 
 $$
 h=qE^\alpha X^\beta
 $$
-where $\alpha=\beta=1$. @Prellozo2016 builds upon @Ulrich2011's FCUBE, which in turn, builds up on @Kell2007's FLR.
+where $\alpha=\beta=1$. 
+@Prellozo2016 builds upon @Ulrich2011's FCUBE, which in turn, builds up on @Kell2007's FLR.
 
 @Thorpe2017a; @Thorpe2019; @Thorpe2019a examines a multispecies fishery using a metier based approach.
 
