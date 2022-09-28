@@ -263,7 +263,7 @@ get_plots <- function(x, stockEnv, dirIn, dirOut, boxnames, rpnames, trajnames){
         }
         
         # Make the plot
-        jpeg(file.path(dirOut, "Traj", PMname, paste0(stockNames,"_MPMeanTraj.jpg")),
+        jpeg(file.path(dirOut, "Traj", PMname, paste0(stockName,"_MPMeanTraj.jpg")),
              width=480*1.75, height=480, pointsize=12*1.5)
           par(mar=c(4,4,1,1))
           
