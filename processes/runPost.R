@@ -26,12 +26,12 @@ for(i in 1:length(fl)){
 
 
 
-boxplot_these<-c("SSB", "R", "F_full", "sumCW", "annPercentChange", 
+boxplot_these<-c("SSB", "SSB_cur", "R", "F_full", "sumCW", "annPercentChange", 
   "meanSizeCN", "meanSizeIN", "OFdStatus", "OFgStatus" ,
   "mxGradCAA", "sumEconIW","Gini_stock_within_season_BKS")
 rp_these<-c("FPROXY", "SSBPROXY")
 
-traj_these <- c("SSB", "R", "F_full", "sumCW", 
+traj_these <- c("SSB", "SSB_cur", "R", "F_full", "sumCW", 
               "ginipaaCN", "ginipaaIN", "OFdStatus",
               "mxGradCAA",
               "relE_qI", "relE_qC", "relE_selCs0", "relE_selCs1",
