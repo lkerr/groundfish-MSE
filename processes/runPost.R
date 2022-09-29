@@ -23,17 +23,6 @@ for(i in 1:length(fl)){
   names(flLst[[i]]) <- names(omvalGlobal)
 }
 
-# Load in the aggregate simulation results
-sl <- list.files(file.path(ResultDirectory, 'sim'), pattern="simlevelresults", full.names=TRUE)
-
-simlevel <-list()
-
-if(length(sl)>=1){
-  for(i in 1:length(sl)){
-    simlevel[[i]]<-readRDS(sl[i])
-  }
-}
-
 
 boxplot_these<-c("SSB", "SSB_cur", "R", "F_full", "sumCW", "annPercentChange", 
   "meanSizeCN", "meanSizeIN", "OFdStatus", "OFgStatus" ,
@@ -48,6 +37,11 @@ traj_these <- c("SSB", "SSB_cur", "R", "F_full", "sumCW",
               "relE_R_dev", "relE_SSB", "relE_N","relE_CW", "relE_IN",
               "relE_R", "relE_F", "OFgStatus",   #AEW
               "FPROXY", "SSBPROXY","sumEconIW","Gini_stock_within_season_BKS")
+
+SIMboxplot_these<-c("HHI_fleet","Shannon_fleet","Gini_fleet", 
+                  "Gini_fleet_bioecon_stocks", "total_rev", "total_modeled_rev", "total_groundfish_rev")
+SIMrp_these<-SIMboxplot_these
+SIMtraj_these <-SIMboxplot_these
 
 
 for(i in 1:length(flLst[[1]])){
@@ -76,29 +70,22 @@ for(i in 1:length(flLst[[1]])){
 sl <- list.files(file.path(ResultDirectory, 'sim'), pattern="simlevelresults", full.names=TRUE)
 #assumes there is just 1 file that matches pattern. Don't know how to stack the results together.
 simlevel <-list()
-simlevel<-readRDS(sl)
-#simlevel$YEAR<-tt
 
-simlevel[['YEAR']] <- simlevel[['YEAR']][1:(length(simlevel[['YEAR']])/length(simlevel))]
+if(length(sl)>=1){
+  dirOut <- file.path(ResultDirectory, "fig", "simulation")
+  dir.create(file.path(dirOut), showWarnings=FALSE)
+  
+  simlevel<-readRDS(sl)
+  simlevel[['YEAR']] <- simlevel[['YEAR']][1:(length(simlevel[['YEAR']])/length(simlevel))]
+  plotRP<-FALSE
+  plotDrivers<-FALSE
+  plotTrajInd<-TRUE
+  plotTrajBox<-TRUE
+  get_SimLevelplots(x=simlevel, dirIn=file.path(ResultDirectory, "sim"), dirOut=dirOut, 
+                    boxnames=SIMboxplot_these, rpnames=SIMrp_these, trajnames=SIMtraj_these)
 
-dirOut <- file.path(ResultDirectory, "fig", "simulation")
-dir.create(file.path(dirOut), showWarnings=FALSE)
+}
 
-
-
-
-
-
-SIMboxplot_these<-c("HHI_fleet","Shannon_fleet","Gini_fleet", "Gini_fleet_bioecon_stocks", "total_rev", "total_modeled_rev", "total_groundfish_rev")
-SIMrp_these<-SIMboxplot_these
-SIMtraj_these <-SIMboxplot_these
-
-plotRP<-FALSE
-plotDrivers<-FALSE
-plotTrajInd<-TRUE
-plotTrajBox<-TRUE
-get_SimLevelplots(x=simlevel, dirIn=file.path(ResultDirectory, "sim"), dirOut=dirOut, 
-          boxnames=SIMboxplot_these, rpnames=SIMrp_these, trajnames=SIMtraj_these)
 
 
 
