@@ -28,10 +28,12 @@ for(i in 1:length(fl)){
 sl <- list.files(file.path(ResultDirectory, 'sim'), pattern="simlevelresults", full.names=TRUE)
 
 simlevel <-list()
-for(i in 1:length(sl)){
-  simlevel[[i]]<-readRDS(sl[i])
-}
 
+if(length(sl)>=1){
+  for(i in 1:length(sl)){
+    simlevel[[i]]<-readRDS(sl[i])
+  }
+}
 
 for(i in 1:length(flLst[[1]])){
 
