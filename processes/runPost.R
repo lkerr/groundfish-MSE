@@ -35,6 +35,22 @@ if(length(sl)>=1){
   }
 }
 
+
+
+boxplot_these<-c("SSB", "SSB_cur", "R", "F_full", "sumCW", "annPercentChange", 
+  "meanSizeCN", "meanSizeIN", "OFdStatus", "OFgStatus" ,
+  "mxGradCAA", "sumEconIW")
+rp_these<-c("FPROXY", "SSBPROXY")
+
+traj_these <- c("SSB", "SSB_cur", "R", "F_full", "sumCW", 
+              "ginipaaCN", "ginipaaIN", "OFdStatus",
+              "mxGradCAA",
+              "relE_qI", "relE_qC", "relE_selCs0", "relE_selCs1",
+              "relE_ipop_mean", "relE_ipop_dev",
+              "relE_R_dev", "relE_SSB", "relE_N","relE_CW", "relE_IN",
+              "relE_R", "relE_F", "OFgStatus",   #AEW
+              "FPROXY", "SSBPROXY","sumEconIW")
+
 for(i in 1:length(flLst[[1]])){
 
   omval <- get_simcat(x=lapply(flLst, '[[', i))
@@ -50,7 +66,8 @@ for(i in 1:length(flLst[[1]])){
   dirOut <- paste0(ResultDirectory, '/fig/', stknm, '/')
 
   get_plots(x=omval, stockEnv = stockPar[[i]], 
-            dirIn=paste0(ResultDirectory, '/sim/'), dirOut=dirOut)
+            dirIn=file.path(ResultDirectory, "sim"), dirOut=dirOut, 
+            boxnames=boxplot_these, rpnames=rp_these, trajnames=traj_these)
 }
 
 # Output the management procedures text file in the figure directory

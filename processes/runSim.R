@@ -118,18 +118,23 @@ for(r in 1:nrep){
           #Add a warning about invalid ImplementationClass
         }
 
-        for(i in 1:nstock){
-          if (y == nyear){
-            stock[[i]] <- get_TermrelError(stock = stock[[i]])
-          }
-          stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
-        }
-      } #End of burn-in loop
+
+      } # End of the if "burn-in period is over and fishery management has started" clause 
+      
       for(i in 1:nstock){
         stock[[i]] <- get_mortality(stock = stock[[i]])
         stock[[i]] <- get_indexData(stock = stock[[i]])
       } #End killing fish loop
-
+      
+      # Store results
+      for(i in 1:nstock){
+        if (y == nyear){
+          stock[[i]] <- get_TermrelError(stock = stock[[i]])
+        }
+        if(y>=fmyearIdx){
+          stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
+        }
+      } 
       end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
 
           #Save economic results once in a while to a csv file.
