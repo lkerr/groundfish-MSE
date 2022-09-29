@@ -23,7 +23,16 @@ for(i in 1:length(fl)){
   names(flLst[[i]]) <- names(omvalGlobal)
 }
 
+# Load in the aggregate simulation results
+sl <- list.files(file.path(ResultDirectory, 'sim'), pattern="simlevelresults", full.names=TRUE)
 
+simlevel <-list()
+
+if(length(sl)>=1){
+  for(i in 1:length(sl)){
+    simlevel[[i]]<-readRDS(sl[i])
+  }
+}
 
 
 boxplot_these<-c("SSB", "SSB_cur", "R", "F_full", "sumCW", "annPercentChange", 
