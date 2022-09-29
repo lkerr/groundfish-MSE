@@ -136,8 +136,7 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
           if (type2=="True"){
             assess_vals <- get_HistAssess(stock = stock[[i]])
             pred<-remp(1,tail(as.numeric(assess_vals$assessdat$R,20)))
-            
-          }
+           }
           else{
             pred <- remp(1, as.numeric(R_est))
           }
@@ -174,9 +173,8 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
   out <- list(Rhat = unname(Rhat), R = unname(R))
 
   return(out)
-  
-  })
-}
+  })}
+
 
 
 

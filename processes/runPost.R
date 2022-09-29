@@ -7,16 +7,15 @@ source('processes/identifyResultDirectory.R')
 # source('processes/get_runinfo.R')
 source('processes/runSetup.R')
 
-
-# Load in the stock-level simulation results
-fl <- list.files(file.path(ResultDirectory, 'sim'), pattern="omvalGlobal", full.names=TRUE)
-
 # load all the functions
 ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
 invisible(sapply(ffiles, source))
 
 # load the required libraries
 source('processes/loadLibs.R')
+
+# Load in the stock-level simulation results
+fl <- list.files(file.path(ResultDirectory, 'sim'), pattern="omvalGlobal", full.names=TRUE)
 flLst <- list()
 for(i in 1:length(fl)){
   load(fl[i])
@@ -35,6 +34,22 @@ if(length(sl)>=1){
   }
 }
 
+
+
+boxplot_these<-c("SSB", "SSB_cur", "R", "F_full", "sumCW", "annPercentChange", 
+  "meanSizeCN", "meanSizeIN", "OFdStatus", "OFgStatus" ,
+  "mxGradCAA", "sumEconIW","Gini_stock_within_season_BKS")
+rp_these<-c("FPROXY", "SSBPROXY")
+
+traj_these <- c("SSB", "SSB_cur", "R", "F_full", "sumCW", 
+              "ginipaaCN", "ginipaaIN", "OFdStatus",
+              "mxGradCAA",
+              "relE_qI", "relE_qC", "relE_selCs0", "relE_selCs1",
+              "relE_ipop_mean", "relE_ipop_dev",
+              "relE_R_dev", "relE_SSB", "relE_N","relE_CW", "relE_IN",
+              "relE_R", "relE_F", "OFgStatus",   #AEW
+              "FPROXY", "SSBPROXY","sumEconIW","Gini_stock_within_season_BKS")
+
 for(i in 1:length(flLst[[1]])){
 
   omval <- get_simcat(x=lapply(flLst, '[[', i))
@@ -50,8 +65,43 @@ for(i in 1:length(flLst[[1]])){
   dirOut <- paste0(ResultDirectory, '/fig/', stknm, '/')
 
   get_plots(x=omval, stockEnv = stockPar[[i]], 
-            dirIn=paste0(ResultDirectory, '/sim/'), dirOut=dirOut)
+            dirIn=file.path(ResultDirectory, "sim"), dirOut=dirOut, 
+            boxnames=boxplot_these, rpnames=rp_these, trajnames=traj_these)
 }
+
+
+
+
+# Load in the aggregate simulation results
+sl <- list.files(file.path(ResultDirectory, 'sim'), pattern="simlevelresults", full.names=TRUE)
+#assumes there is just 1 file that matches pattern. Don't know how to stack the results together.
+simlevel <-list()
+simlevel<-readRDS(sl)
+#simlevel$YEAR<-tt
+
+simlevel[['YEAR']] <- simlevel[['YEAR']][1:(length(simlevel[['YEAR']])/length(simlevel))]
+
+dirOut <- file.path(ResultDirectory, "fig", "simulation")
+dir.create(file.path(dirOut), showWarnings=FALSE)
+
+
+
+
+
+
+SIMboxplot_these<-c("HHI_fleet","Shannon_fleet","Gini_fleet", "Gini_fleet_bioecon_stocks", "total_rev", "total_modeled_rev", "total_groundfish_rev")
+SIMrp_these<-SIMboxplot_these
+SIMtraj_these <-SIMboxplot_these
+
+plotRP<-FALSE
+plotDrivers<-FALSE
+plotTrajInd<-TRUE
+plotTrajBox<-TRUE
+get_SimLevelplots(x=simlevel, dirIn=file.path(ResultDirectory, "sim"), dirOut=dirOut, 
+          boxnames=SIMboxplot_these, rpnames=SIMrp_these, trajnames=SIMtraj_these)
+
+
+
 
 # Output the management procedures text file in the figure directory
 get_catdf(df = mproc, file = paste0(ResultDirectory,'/fig/',mprocfile))
