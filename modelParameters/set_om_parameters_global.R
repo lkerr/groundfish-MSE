@@ -22,12 +22,16 @@ mprocfile<-"mprocEconT.csv"
 # Available stocks: haddockGB, codGOM, codGB, pollock, yellowtailflounderGB
 #stockExclude <- c('haddockGB', 'codGOM','codGB', 'pollock','yellowtailflounderGB')
 stockExclude<-NULL
+#stockExclude <- c('pollock','yellowtailflounderGB', 'codGB', 'codGOM') #just GBhaddock
+#stockExclude <- c('pollock','yellowtailflounderGB', 'codGB', 'haddockGB') #just GOMcod
+#stockExclude <- c('pollock','yellowtailflounderGB', 'haddockGB', 'codGOM') #just GBcod
+#stockExclude <- c('haddockGB', 'codGOM','codGB', 'yellowtailflounderGB') #just pollock
 stockExclude <- c('yellowtailflounderGB')
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data
 # just fishing mortality for now
 
-histAssess <- FALSE
+histAssess <- TRUE
 
 #### Structural parameters ####
 
