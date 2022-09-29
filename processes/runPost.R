@@ -8,8 +8,8 @@ source('processes/identifyResultDirectory.R')
 source('processes/runSetup.R')
 
 
-# Load in the simulation results
-fl <- list.files(file.path(ResultDirectory, 'sim'), full.names=TRUE)
+# Load in the stock-level simulation results
+fl <- list.files(file.path(ResultDirectory, 'sim'), pattern="omvalGlobal", full.names=TRUE)
 
 # load all the functions
 ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
@@ -24,6 +24,16 @@ for(i in 1:length(fl)){
   names(flLst[[i]]) <- names(omvalGlobal)
 }
 
+# Load in the aggregate simulation results
+sl <- list.files(file.path(ResultDirectory, 'sim'), pattern="simlevelresults", full.names=TRUE)
+
+simlevel <-list()
+
+if(length(sl)>=1){
+  for(i in 1:length(sl)){
+    simlevel[[i]]<-readRDS(sl[i])
+  }
+}
 
 
 
@@ -40,7 +50,6 @@ traj_these <- c("SSB", "SSB_cur", "R", "F_full", "sumCW",
               "relE_R_dev", "relE_SSB", "relE_N","relE_CW", "relE_IN",
               "relE_R", "relE_F", "OFgStatus",   #AEW
               "FPROXY", "SSBPROXY","sumEconIW")
-
 
 for(i in 1:length(flLst[[1]])){
 
