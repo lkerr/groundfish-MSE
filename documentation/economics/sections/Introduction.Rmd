@@ -38,6 +38,17 @@ Participants in this fishery have been observed to change their  behavior in res
 
 [^diffs]: We're doing something pretty different from @Ono2018.  Structural model instead of metier model. No "expansion factor" hacks for behavioral changes.  Fish stock model is fine.  
 
+
+
+Another approach to implementation error is to model catch and effort phenomenologically.  
+For example, the Fcube or FLBEIA derived models [@Garcia2021; @Garcia2017; @Prellozo2016;  @Ulrich2011] allow for sensitivity analysis into how the total effort of the fleet is partitioned metiers with different costs and catchability. 
+Different rules for effort (fishing occurs until any quota is reached, a specific quota is reaches, or until all quotas are hit) and the allocation of effort across fleet segments (historical effort patterns or based on a "share" of value) can be investigated.
+The FcubEcon model in @Hoff2010 allocates effort across metiers in a way that maximizes aggregate profits.
+This provides a useful benchmark as it embeds the economic assumption of full and perfect markets.
+A drawback is pointed out by @Weninger2019: these are analyst specified rules that are not grounded in models of human or firm behavior.
+For example, a policy in which a catch limit is reduced by 90% for a constraining stock would simply see effort scaled down proportionally when simulated under the "when any quota is reached" rule.
+Interesting behavioral adaptations that change either the types of effort or the way that effort is deployed are precluded.
+
 When subsets of fishing vessels can be assumed homogeneous, the metier based approach [cf:@Merzereaud2011;@Guillen2014; @Ono2018] can be applied. 
 The downside is ZZZZ.  
 Metier based approaches often classify, in part, on outcome variables (catch composition, gear-area fished, etc.)
