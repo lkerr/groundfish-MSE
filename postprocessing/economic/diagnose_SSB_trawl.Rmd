@@ -1,0 +1,216 @@
+---
+title: "Untitled"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+library(here)
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+I simulated from 2019-2040 using an economic model and a fisheries model. I'm only looking at model calibration data (through 2015), so I just pulled the means from one of the mprocs (I think the econ model, but it shouldn't matter).
+
+I believe the simulated trawl-survey units are mt/tow, but they may be kg/tow. I believe these 'inherit' the units of the weights-at-age vector(waa). I have not modified any of the outputs.
+
+The units that I have from the actual trawl survey are in kg/tow. They are an average of the spring and fall bottom trawl survey and they feed into the economic catch equations.
+
+
+```{r readin_data, include=TRUE}
+yrs <- 1851:2040
+
+#read in stata dataset containing mean (over spring/fall) trawl survey, stock name, year, and TAC.
+
+actuals<-haven::read_dta(here("data","data_processed", "econ","trawl_survey_weights_TACs.dta"))
+
+
+# Read in results for omvalGlobal
+resNames <- grep(pattern = 'results', # look for files containing this
+                 x = list.files(here(), full.names=TRUE),    # all files in the working directory
+                 value = TRUE)        # pring out the actual folder names
+
+ResultDirectory <- tail(sort(resNames), 1) # ID the most recent folder
+
+# Load in the stock-level simulation results
+fl <- list.files(file.path(ResultDirectory, 'sim'), pattern="omvalGlobal", full.names=TRUE)
+flLst <- list()
+for(i in 1:length(fl)){
+  load(fl[i])
+  flLst[[i]] <- omvalGlobal
+  names(flLst[[i]]) <- names(omvalGlobal)
+}
+
+# slice omvalGlobal
+ds<-NULL
+
+for(i in 1:length(omvalGlobal)){
+  #Just pick the index from one of the model runs
+  sumEconIW<-unlist(omvalGlobal[[i]]$sumEconIW[,1,])
+  sumEconIW<-as_tibble(sumEconIW)
+  sumEconIW$rep<-as.numeric(rownames(sumEconIW)) 
+  Econlong<-tidyr::pivot_longer(sumEconIW,1:ncol(sumEconIW)-1, names_to="yr", values_to="Index") 
+  
+  
+  SSB<-unlist(omvalGlobal[[i]]$SSB[,1,])
+  SSB<-as_tibble(SSB)
+  SSB$rep<-as.numeric(rownames(SSB)) 
+  SSB<-tidyr::pivot_longer(SSB,1:ncol(SSB)-1, names_to="yr", values_to="Simulated_SSB") 
+  
+  extracted <-dplyr::inner_join(Econlong, SSB, by=c("rep", "yr"))
+  extracted$stock<-names(omvalGlobal[i])
+  
+  ds<-rbind(ds,extracted)
+}
+
+#strip off the nyear prefix
+ds$yr<-as.numeric(str_replace_all(ds$yr, "nyear",""))
+
+#Create year column with 'real' years
+ds$year<-yrs[ds$yr]
+
+#group (stock-year) means over the replicates. Join to actual data.
+means<-ds %>%
+  group_by(stock,year) %>%
+  summarise(Index=mean(Index),
+            Simulated_SSB=mean(Simulated_SSB)) %>%
+  left_join(actuals, by = c("stock" = "spstock2", "year" = "gffishingyear"))
+
+
+#scaling SSB by 10000 to get axis nice
+scaling<-10000
+
+
+```
+
+# Georges Bank Cod
+
+```{r codGB}
+
+
+#codGB 
+ggplot(data=means %>%
+         dplyr::filter(stock=="codGB") %>%
+         dplyr::filter(year>=2004 & year<=2020), aes(x=year)) + 
+      geom_line(aes(y = Simulated_SSB/scaling), color = "darkred")  + 
+      geom_line(aes(y = Index), color="steelblue", linetype="twodash") +
+      geom_line(aes(y = trawl_survey_weight), color="black" ) +
+  
+scale_y_continuous(
+  
+  # Features of the first axis
+  name = "Survey Index (?/tow)",
+  
+  # Add a second axis and specify its features
+  sec.axis = sec_axis( ~.*scaling, name="SSB(mt)")  
+) + 
+  labs(title="codGB", caption="Simulated SSB(red) and Trawl Survey (blue).  Actual Trawl Survey (Black)"
+  )
+
+means %>%
+  dplyr::filter(stock=="codGB") %>%
+  dplyr::filter(year>=2004 & year<=2020)
+
+```
+
+The simulated trawl survey is approx 3x larger than the average of the "spring and fall" bottomtrawl surveys in the actual data for Georges Bank Cod.
+
+# Pollock 
+
+```{r Pollock}
+
+#Pollock 
+ggplot(data=means %>%
+         dplyr::filter(stock=="pollock") %>%
+         dplyr::filter(year>=2004 & year<=2020), aes(x=year)) + 
+  geom_line(aes(y = Simulated_SSB/scaling), color = "darkred")  + 
+  geom_line(aes(y = Index), color="steelblue", linetype="twodash") +
+  geom_line(aes(y = trawl_survey_weight), color="black" ) +
+
+    scale_y_continuous(
+    
+    # Features of the first axis
+    name = "Survey Index (?/tow)",
+    
+    # Add a second axis and specify its features
+    sec.axis = sec_axis( ~.*scaling, name="SSB(mt)")  
+  ) + 
+  labs(title="Pollock", caption="Simulated SSB(red) and Trawl Survey (blue).  Actual Trawl Survey (Black)"
+  )
+
+
+means %>%
+  dplyr::filter(stock=="pollock") %>%
+  dplyr::filter(year>=2004 & year<=2020)
+
+```
+
+The simulated pollock survey index is 6-10 times larger than the average of the spring and fall surveys.
+
+# Georges Bank haddock
+
+You can also embed plots, for example:
+
+```{r haddockGB, echo=FALSE}
+
+
+#haddockGB 
+ggplot(data=means %>%
+         dplyr::filter(stock=="haddockGB") %>%
+         dplyr::filter(year>=2004 & year<=2020), aes(x=year)) + 
+  geom_line(aes(y = Simulated_SSB/scaling), color = "darkred")  + 
+  geom_line(aes(y = Index), color="steelblue", linetype="twodash") +
+  geom_line(aes(y = trawl_survey_weight), color="black" ) +
+  scale_y_continuous(
+    
+    # Features of the first axis
+    name = "Survey Index (?/tow)",
+    
+    # Add a second axis and specify its features
+    sec.axis = sec_axis( ~.*scaling, name="SSB(mt)")  
+  ) + 
+  labs(title="haddockGB", caption="Simulated SSB(red) and Trawl Survey (blue).  Actual Trawl Survey (Black)"
+  )
+
+
+means %>%
+  dplyr::filter(stock=="haddockGB") %>%
+  dplyr::filter(year>=2004 & year<=2020)
+
+```
+The GB haddock simulated survey is much smaller (a few orders of magnitude lower) than the economic 
+
+# Gulf of Maine Cod
+
+You can also embed plots, for example:
+
+```{r codGOM}
+
+
+#codGOM 
+ggplot(data=means %>%
+         dplyr::filter(stock=="codGOM") %>%
+         dplyr::filter(year>=2004 & year<=2020), aes(x=year)) + 
+  geom_line(aes(y = Simulated_SSB/scaling), color = "darkred")  + 
+  geom_line(aes(y = Index), color="steelblue", linetype="twodash") +
+  geom_line(aes(y = trawl_survey_weight), color="black" ) +
+  scale_y_continuous(
+    
+    # Features of the first axis
+    name = "Survey Index (?/tow)",
+    
+    # Add a second axis and specify its features
+    sec.axis = sec_axis( ~.*scaling, name="SSB(mt)")  
+  ) + 
+  labs(title="codGOM", caption="Simulated SSB(red) and Trawl Survey (blue).  Actual Trawl Survey (Black)"
+  )
+
+
+
+
+
+means %>%
+  dplyr::filter(stock=="codGOM") %>%
+  dplyr::filter(year>=2004 & year<=2020)
+```
