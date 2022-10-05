@@ -1,3 +1,5 @@
+#historical data for YT is from the 2013 TRAC working papers (last year an analytical assessment was used)
+#Used the split series version (tables 15a, 16a)
 # Fmsy scalar and sd for F before the management period begins. Distribution is lognormal. SD is lognormal SD.                                              
 burnFmsyScalar <- 1.5
 burnFsd <- 0.5
