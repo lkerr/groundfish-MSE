@@ -58,23 +58,32 @@ for(r in 1:nrep){
           
          source('processes/setupEconType.R')
         }
+       
+       #### get historic assessment info if there is any
+       for (i in 1:nstock){
+         #assess_vals <- get_HistAssess(stock = stock[[i]])
+         #stock[[i]]<-assess_vals
+         
+         stock[[i]] <- within(stock[[i]], {
+           assess_vals <- get_HistAssess(stock = stock[[i]])
+           
+         })
+       }       
+       browser()
     # Initialize stocks and determine burn-in F
     for(i in 1:nstock){
-      stock[[i]] <- get_popInit(stock[[i]])
+      stock[[i]] <- get_popInit(stock=stock[[i]])
+    
     }
-    #### get historic assessment info if there is any
-    if (histAssess == TRUE) {
-      for (i in 1:nstock){
-      assess_vals <- get_HistAssess(stock = stock[[i]])
-      }
-    }
-
+    
+       
+       
     #### Top year loop ####
     for(y in fyear:nyear){
       for(i in 1:nstock){
         stock[[i]] <- get_J1Updates(stock = stock[[i]])
       }
-
+      
       source('processes/withinYearAdmin.R')
       begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
 
@@ -87,6 +96,7 @@ for(r in 1:nrep){
           stock[[i]] <- get_advice(stock = stock[[i]])
           #stock[[i]] <- get_relError(stock = stock[[i]])
         }
+        
           #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
 
         if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
@@ -118,22 +128,23 @@ for(r in 1:nrep){
           #Add a warning about invalid ImplementationClass
         }
 
-
       } # End of the if "burn-in period is over and fishery management has started" clause 
       
       for(i in 1:nstock){
         stock[[i]] <- get_mortality(stock = stock[[i]])
         stock[[i]] <- get_indexData(stock = stock[[i]])
       } #End killing fish loop
-      
+
       # Store results
       for(i in 1:nstock){
         if (y == nyear){
           stock[[i]] <- get_TermrelError(stock = stock[[i]])
         }
+        
         if(y>=fmyearIdx){
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         }
+      
       } 
       end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
 
@@ -154,8 +165,6 @@ for(r in 1:nrep){
     }
        #End of year loop
   } #End of mproc loop
-
-
 
 } #End rep loop
 
@@ -181,7 +190,6 @@ big_loop
     pth <- paste0(ResultDirectory,'/fig/', sapply(stock, '[[', 'stockName')[i])
     dir.create(pth, showWarnings = FALSE)
   }
-
 
   #### save results ####
   omvalGlobal <- sapply(1:nstock, function(x) stock[[x]]['omval'])
