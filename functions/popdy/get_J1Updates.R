@@ -27,13 +27,14 @@ get_J1Updates <- function(stock){
     #The late block indicates that the last 20 years of recruitment will be used in
     #the cdf. The late block is used for recruitment during the management procedure
     #period.
+  
     if (y < fmyearIdx){
-    Rout <- get_recruits(type=R_typ, type2='True', par=Rpar, S=SSB[y], block = 'early',
+    Rout <- get_recruits(type=R_typ, type2='True', par=Rpar, SSB=SSB[y], block = 'early',
                          TAnom=Tanom[y], pe_R = pe_R, R_ym1 = R[y-1],
                          Rhat_ym1 = Rhat[y-1],R_est=parpop$R)
     }
     if (y >= fmyearIdx){
-      Rout <- get_recruits(type=R_typ, type2='True', par=Rpar, S=SSB[y], block = 'late',
+      Rout <- get_recruits(type=R_typ, type2='True', par=Rpar, SSB=SSB[y], block = 'late',
                            TAnom=Tanom[y], pe_R = pe_R, R_ym1 = R[y-1],
                            Rhat_ym1 = Rhat[y-1],R_est=parpop$R)
     }
@@ -55,8 +56,8 @@ get_J1Updates <- function(stock){
       # option to overwrite calculated values with historic assessment input values for each year
     if (histAssess == TRUE) {
       for(i in 1:nstock){
-        if(y %in% assess_vals$assessdat$MSEyr){
-        rep_assess <- get_AssessVals()
+        if(y %in% stock$assess_vals$assessdat$MSEyr){
+        rep_assess <- get_AssessVals(stock=stock)
         F_full[y] <- rep_assess$fish_mort
         R[y] <- rep_assess$rec
         natM[y] <- rep_assess$nat_mort
