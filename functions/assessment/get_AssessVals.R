@@ -1,8 +1,8 @@
 # match stock assessment data year with MSE year (pre-management period)
 # replace calculated values 
 
-get_AssessVals <- function(){
-replacement <- assess_vals$assessdat[assess_vals$assessdat$MSEyr == y,]
+get_AssessVals <- function(stock){
+replacement <- stock$assess_vals$assessdat[stock$assess_vals$assessdat$MSEyr == y,]
 fish_mort <- replacement$F
 rec <- replacement$R
 nat_mort <- replacement$M
