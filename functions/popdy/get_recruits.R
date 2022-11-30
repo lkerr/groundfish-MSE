@@ -41,13 +41,13 @@
 # Rhat_ym1: predicted recruitment from previous year
 
 get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
-                         R_ym1=NULL, Rhat_ym1=NULL, stockEnv=stock, R_est){
+                         R_ym1=NULL, Rhat_ym1=NULL, stockEnv=stock[i], R_est){
 
   if(!type %in% c('BH', 'BHSteep', 'HS')){
     stop(paste('get_recruits: check spelling of R_typ in individual stock 
                parameter file for', stockNames[i]))
   }
-  
+
   with(stockEnv, {
 
   if('rho' %in% names(par)){
@@ -127,15 +127,17 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
       return(z)
     })
     
-  
+
   }
     
     else if (type == 'HS'){ 
       if(stock[[i]]$stockName=='haddockGB'){
         Rhat <- with(as.list(par),{
           if (type2=="True"){
-            assess_vals <- get_HistAssess(stock = stock[[i]])
-            pred<-remp(1,tail(as.numeric(assess_vals$assessdat$R,20)))
+            #stock[[i]] <- within(stock[[i]], {
+            #assess_vals <- get_HistAssess(stock = stock[[i]])
+            #})
+            pred<-remp(1,tail(as.numeric(stock[[i]]$assess_vals$assessdat$R,20)))
             
           }
           else{
@@ -147,11 +149,14 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
         Rhat <- with(as.list(par),{
           SSBhinge<-SSB_star
           if (type2=="True"){
-            assess_vals <- get_HistAssess(stock = stock[[i]])
+            #stock[[i]] <- within(stock[[i]], {
+            #assess_vals <- get_HistAssess(stock = stock[[i]])
+            #})
+            
             if (SSB >= SSBhinge) {
-              pred <- cR * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
+              pred <- cR * remp(1, tail(as.numeric(stock[[i]]$assess_vals$assessdat$R), Rnyr))
             } else if (SSB < SSBhinge){
-              pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
+              pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(stock[[i]]$assess_vals$assessdat$R), Rnyr))
             }
           }
           else{
