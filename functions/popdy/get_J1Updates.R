@@ -29,14 +29,14 @@ get_J1Updates <- function(stock){
     #period.
   
     if (y < fmyearIdx){
-    Rout <- get_recruits(type=R_typ, type2='True', par=Rpar, SSB=SSB[y], block = 'early',
+    Rout <- get_recruits(type=R_typ, type2='True', par=Rpar, inputSSB=SSB[y], block = 'early',
                          TAnom=Tanom[y], pe_R = pe_R, R_ym1 = R[y-1],
-                         Rhat_ym1 = Rhat[y-1],R_est=parpop$R)
+                         Rhat_ym1 = Rhat[y-1],R_est=parpop$R, stockEnv = stock)
     }
     if (y >= fmyearIdx){
-      Rout <- get_recruits(type=R_typ, type2='True', par=Rpar, SSB=SSB[y], block = 'late',
+      Rout <- get_recruits(type=R_typ, type2='True', par=Rpar, inputSSB=SSB[y], block = 'late',
                            TAnom=Tanom[y], pe_R = pe_R, R_ym1 = R[y-1],
-                           Rhat_ym1 = Rhat[y-1],R_est=parpop$R)
+                           Rhat_ym1 = Rhat[y-1],R_est=parpop$R, stockEnv = stock)
     }
     R[y] <- Rout[['R']]
     Rhat[y] <- Rout[['Rhat']]

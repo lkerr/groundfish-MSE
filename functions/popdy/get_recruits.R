@@ -39,13 +39,15 @@
 # R_ym1: observed recruitment from previous year
 #       
 # Rhat_ym1: predicted recruitment from previous year
+# stockEnv is for one species object
+# issue with SSB being called from stockEnv instead of argument input when changing to run multiple stocks -11/30/22 JJ
 
-get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
-                         R_ym1=NULL, Rhat_ym1=NULL, stockEnv=stock[i], R_est){
+get_recruits <- function(type, type2, par, inputSSB, TAnom_y, pe_R, block,
+                         R_ym1=NULL, Rhat_ym1=NULL, stockEnv=NULL, R_est){
 
   if(!type %in% c('BH', 'BHSteep', 'HS')){
     stop(paste('get_recruits: check spelling of R_typ in individual stock 
-               parameter file for', stockNames[i]))
+               parameter file for', stockEnv$stockName))
   }
 
   with(stockEnv, {
@@ -91,7 +93,7 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
   if(type == 'BH'){
  
     # Expected value
-    Rhat <- (par['a']*SSB)/(1+(par['b']*SSB))*exp(par['g']*TAnom_y)
+    Rhat <- (par['a']*inputSSB)/(1+(par['b']*inputSSB))*exp(par['g']*TAnom_y)
     Rhat <- Rhat*1000
 
   }
@@ -121,8 +123,8 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
       gamma <- -0.5 * log( (1 - 0.2) / (h - 0.2) - 1) + beta1* TAnom_y
       hPrime <- 0.2 + (1 - 0.2) / (1 + exp(-2*gamma));
       R0Prime <- R0 * exp(beta2 * TAnom_y)
-      num <- 4 * hPrime * ( SSB / (SSBRF0) )
-      den <- ( (1 - hPrime) + (5*hPrime - 1) * ( SSB / (R0Prime * SSBRF0) ) )
+      num <- 4 * hPrime * ( inputSSB / (SSBRF0) )
+      den <- ( (1 - hPrime) + (5*hPrime - 1) * ( inputSSB / (R0Prime * SSBRF0) ) )
       z <-  num / den * exp(beta3 * TAnom_y)
       return(z)
     })
@@ -131,13 +133,13 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
   }
     
     else if (type == 'HS'){ 
-      if(stock[[i]]$stockName=='haddockGB'){
+      if(stockEnv$stockName=='haddockGB'){
         Rhat <- with(as.list(par),{
           if (type2=="True"){
-            #stock[[i]] <- within(stock[[i]], {
-            #assess_vals <- get_HistAssess(stock = stock[[i]])
+            #stockEnv <- within(stockEnv, {
+            #assess_vals <- get_HistAssess(stock = stockEnv)
             #})
-            pred<-remp(1,tail(as.numeric(stock[[i]]$assess_vals$assessdat$R,20)))
+            pred<-remp(1,tail(as.numeric(stockEnv$assess_vals$assessdat$R,20)))
             
           }
           else{
@@ -149,22 +151,22 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
         Rhat <- with(as.list(par),{
           SSBhinge<-SSB_star
           if (type2=="True"){
-            #stock[[i]] <- within(stock[[i]], {
-            #assess_vals <- get_HistAssess(stock = stock[[i]])
+            #stockEnv <- within(stockEnv, {
+            #assess_vals <- get_HistAssess(stock = stockEnv)
             #})
             
-            if (SSB >= SSBhinge) {
-              pred <- cR * remp(1, tail(as.numeric(stock[[i]]$assess_vals$assessdat$R), Rnyr))
-            } else if (SSB < SSBhinge){
-              pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(stock[[i]]$assess_vals$assessdat$R), Rnyr))
+            if (inputSSB >= SSBhinge) {
+              pred <- cR * remp(1, tail(as.numeric(stockEnv$assess_vals$assessdat$R), Rnyr))
+            } else if (inputSSB < SSBhinge){
+              pred <-  cR * (inputSSB/SSBhinge) * remp(1, tail(as.numeric(stockEnv$assess_vals$assessdat$R), Rnyr))
             }
           }
           else{
-            if (SSB >= SSBhinge) {
+            if (inputSSB >= SSBhinge) {
               pred <- cR * remp(1, tail(as.numeric(R_est), Rnyr))
             } 
-            else if (SSB < SSBhinge){
-              pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(R_est), Rnyr))
+            else if (inputSSB < SSBhinge){
+              pred <-  cR * (inputSSB/SSBhinge) * remp(1, tail(as.numeric(R_est), Rnyr))
             }
           }
           return(pred)
