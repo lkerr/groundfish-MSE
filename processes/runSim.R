@@ -44,7 +44,8 @@ top_loop_start<-Sys.time()
 #### Top rep Loop ####
 for(r in 1:nrep){
     oldseed_mproc <- .Random.seed
-
+  print(paste0("rep # ",r))
+  
   #### Top MP loop ####
   for(m in 1:nrow(mproc)){
 
@@ -59,24 +60,20 @@ for(r in 1:nrep){
          source('processes/setupEconType.R')
         }
        
-       #### get historic assessment info if there is any
-       for (i in 1:nstock){
-         #assess_vals <- get_HistAssess(stock = stock[[i]])
-         #stock[[i]]<-assess_vals
-         
-         stock[[i]] <- within(stock[[i]], {
-           assess_vals <- get_HistAssess(stock = stock[[i]])
-           
-         })
-       }       
-       browser()
+   #### get historic assessment info if there is any
+   for (i in 1:nstock){
+     #assess_vals <- get_HistAssess(stock = stock[[i]])
+      
+     stock[[i]] <- get_HistAssess(stock = stock[[i]])
+       
+     }      
+
     # Initialize stocks and determine burn-in F
     for(i in 1:nstock){
       stock[[i]] <- get_popInit(stock=stock[[i]])
     
     }
-    
-       
+
        
     #### Top year loop ####
     for(y in fyear:nyear){
@@ -140,12 +137,13 @@ for(r in 1:nrep){
         if (y == nyear){
           stock[[i]] <- get_TermrelError(stock = stock[[i]])
         }
-        
+      
         if(y>=fmyearIdx){
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         }
       
       } 
+    
       end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
 
           #Save economic results once in a while to a csv file.
@@ -162,10 +160,8 @@ for(r in 1:nrep){
         if(showProgBar==TRUE){
           setTxtProgressBar(iterpb, yearitercounter)
         }
-    }
-       #End of year loop
+    } #End of year loop 
   } #End of mproc loop
-
 } #End rep loop
 
 top_loop_end<-Sys.time()
