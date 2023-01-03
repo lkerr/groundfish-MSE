@@ -2,8 +2,8 @@ library('fmsb')
 library(matrixStats)
 library(dplyr)
 Scenarios<-c(20,21,22,23,24,25,26,27,28,10,11,12,13,14,15,16,17,18)
-wd<-"C:/Users/mmazur/Desktop/COCA_Sims"
-
+#wd<-"C:/Users/mmazur/Desktop/COCA_Sims"
+wd<-setwd("C:/Users/jjesse/Desktop/GMRI/MSE/Manuscript_Sims")
 setwd(paste(wd,"/Sim_",Scenarios[1],"/sim",sep=""))
 sims <- list.files()
 for (k in 1:length(sims)){
@@ -382,14 +382,14 @@ d$Bfreq<-as.numeric(d$Bfreq)
 
 d1<-d[d$Stock=='Overfished',]
 
-colors_fill2<-c(alpha("#000000",0.1),
-                alpha("#E69F00",0.1),
-                alpha("#56B4E9",0.1),
-                alpha("#009E73",0.1),
-                alpha("#F0E442",0.1),
-                alpha("#E69F00",0.1),
-                alpha("#56B4E9",0.1),
-                alpha("#009E73",0.1))
+colors_fill2<-c(alpha("#000000",0.2),
+                alpha("#E69F00",0.2),
+                alpha("#56B4E9",0.2),
+                alpha("#009E73",0.2),
+                alpha("#F0E442",0.2),
+                alpha("#E69F00",0.2),
+                alpha("#56B4E9",0.2),
+                alpha("#009E73",0.2))
 
 colors_line2<-c(alpha("#000000",0.9),
                 alpha("#E69F00",0.9),
@@ -401,6 +401,9 @@ colors_line2<-c(alpha("#000000",0.9),
                 alpha("#009E73",0.9))
 
 #colorblind
+setwd("C:/Users/jjesse/Desktop/GMRI/MSE/Manuscript_Sims")
+png("longradar_cod.png", res=300, height=60, width=50, units = "in")
+
 par(mar=rep(0.1,4))
 par(mfrow=c(3,2))
 d2<-d1[d1$Term=='Short-term',]
@@ -414,9 +417,9 @@ d2<-rbind(mins,d2)
 d2<-rbind(maxs,d2)
 rownames(d2)<-c('max','min',3:length(d2$HCR))
 radarchart(d2[1:5],seg=5,pcol=colors_line2,
-           pfcol=colors_fill2,plwd=2,
-           vlabels=c("SSB","Catch","Catch\nStability","Freq.\nNot\nOverfishing", "Freq.\nNot\nOverfished"), vlcex=1,
-           plty=c(rep(1,5),rep(2,5)))
+           pfcol=colors_fill2,plwd=5,
+           vlabels=c("SSB","Catch","Catch\nStability","      Freq.\nNot\nOverfishing", "Freq.\nNot\n          Overfished"), vlcex=10,
+           plty=c(rep(1,5),rep(2,5)), cglwd=5)
 
 d2<-d1[d1$Term=='Long-term',]
 d2$ShorttermSSB<-d2$ShorttermSSB/max(d2$ShorttermSSB)
@@ -429,9 +432,9 @@ d2<-rbind(mins,d2)
 d2<-rbind(maxs,d2)
 rownames(d2)<-c('max','min',3:length(d2$HCR))
 radarchart(d2[1:5],seg=5,pcol=colors_line2,
-           pfcol=colors_fill2,plwd=2,
-           vlabels=c("SSB","Catch","Catch\nStability","Freq.\nNot\nOverfishing", "Freq.\nNot\nOverfished"), vlcex=1,
-           plty=c(rep(1,5),rep(2,5)))
+           pfcol=colors_fill2,plwd=5,
+           vlabels=c("SSB","Catch","Catch\nStability","      Freq.\nNot\nOverfishing", "Freq.\nNot\n          Overfished"), vlcex=10,
+           plty=c(rep(1,5),rep(2,5)), cglwd=5)
 
 d2<-d1[d1$Term=='Short-term',]
 d2$ShorttermSSB<-d2$ShorttermSSB/max(d2$ShorttermSSB)
@@ -444,9 +447,9 @@ d2<-rbind(mins,d2)
 d2<-rbind(maxs,d2)
 rownames(d2)<-c('max','min',3:length(d2$HCR))
 radarchart(d2[1:5],seg=5,pcol=colors_line2,
-           pfcol=colors_fill2,plwd=2,
-           vlabels=c("SSB","Catch","Catch\nStability","Freq.\nNot\nOverfishing", "Freq.\nNot\nOverfished"), vlcex=1,
-           plty=c(rep(1,5),rep(2,5)))
+           pfcol=colors_fill2,plwd=5,
+           vlabels=c("SSB","Catch","Catch\nStability","      Freq.\nNot\nOverfishing", "Freq.\nNot\n          Overfished"), vlcex=10,
+           plty=c(rep(1,5),rep(2,5)), cglwd=5)
 
 d2<-d1[d1$Term=='Long-term',]
 d2$ShorttermSSB<-d2$ShorttermSSB/max(d2$ShorttermSSB)
@@ -459,9 +462,9 @@ d2<-rbind(mins,d2)
 d2<-rbind(maxs,d2)
 rownames(d2)<-c('max','min',3:length(d2$HCR))
 radarchart(d2[1:5],seg=5,pcol=colors_line2,
-           pfcol=colors_fill2,plwd=2,
-           vlabels=c("SSB","Catch","Catch\nStability","Freq.\nNot\nOverfishing", "Freq.\nNot\nOverfished"), vlcex=1,
-           plty=c(rep(1,5),rep(2,5)))
+           pfcol=colors_fill2,plwd=5,
+           vlabels=c("SSB","Catch","Catch\nStability","      Freq.\nNot\nOverfishing", "Freq.\nNot\n          Overfished"), vlcex=10,
+           plty=c(rep(1,5),rep(2,5)), cglwd=5)
 
 
 d2<-d1[d1$Term=='Short-term',]
@@ -475,9 +478,9 @@ d2<-rbind(mins,d2)
 d2<-rbind(maxs,d2)
 rownames(d2)<-c('max','min',3:length(d2$HCR))
 radarchart(d2[1:5],seg=5,pcol=colors_line2,
-           pfcol=colors_fill2,plwd=2,
-           vlabels=c("SSB","Catch","Catch\nStability","Freq.\nNot\nOverfishing", "Freq.\nNot\nOverfished"), vlcex=1,
-           plty=c(rep(1,5),rep(2,5)))
+           pfcol=colors_fill2,plwd=5,
+           vlabels=c("SSB","Catch","Catch\nStability","      Freq.\nNot\nOverfishing", "Freq.\nNot\n          Overfished"), vlcex=10,
+           plty=c(rep(1,5),rep(2,5)), cglwd=5)
 
 d2<-d1[d1$Term=='Long-term',]
 d2$ShorttermSSB<-d2$ShorttermSSB/max(d2$ShorttermSSB)
@@ -490,6 +493,7 @@ d2<-rbind(mins,d2)
 d2<-rbind(maxs,d2)
 rownames(d2)<-c('max','min',3:length(d2$HCR))
 radarchart(d2[1:5],seg=5,pcol=colors_line2,
-           pfcol=colors_fill2,plwd=2,
-           vlabels=c("SSB","Catch","Catch\nStability","Freq.\nNot\nOverfishing", "Freq.\nNot\nOverfished"), vlcex=1,
-           plty=c(rep(1,5),rep(2,5)))
+           pfcol=colors_fill2,plwd=5,
+           vlabels=c("SSB","Catch","Catch\nStability","      Freq.\nNot\nOverfishing", "Freq.\nNot\n          Overfished"), vlcex=10,
+           plty=c(rep(1,5),rep(2,5)), cglwd=5)
+dev.off()
