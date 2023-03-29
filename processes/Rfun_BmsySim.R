@@ -25,12 +25,13 @@ Rfun_BmsySim <- list(
     gr <- get_recruits(type = type, 
                  type2=type2,
                  par = Rpar, 
-                 SSB = SSB,
+                 inputSSB = SSB,
                  TAnom = TAnom,
                  pe_R = sdR,
                  R_ym1 = 1, block = 'late',
                  Rhat_ym1 = 1,
-                 R_est=parpop$R)
+                 R_est=parpop$R,
+                 stockEnv = stockEnv)
     return(gr[['Rhat']])
     },
   
