@@ -14,20 +14,21 @@ source('processes/identifyResultDirectory.R')
 source('modelParameters/set_om_parameters_global.R')
 
 
-# get the operating model parameters -- first search the space for every
-# version of the set_stock_parameters_xx files and put them in this list.
+
+#get the operating model parameters -- first search the space for every
+#version of the set_stock_parameters_xx files and put them in this list.
 fileList <- list.files('modelParameters/stockParameters', full.names=TRUE)
 if(!is.null(stockExclude)){
   stockExclude <- paste0(stockExclude, '.R')
   rem <- match(stockExclude, basename(fileList))
   if(any(is.na(rem))){
-    stop(paste('run_setup.R: check names of excluded stocks in', 
-          'set_om_parameters_global file and be sure they match the actual', 
+    stop(paste('run_setup.R: check names of excluded stocks in',
+          'set_om_parameters_global file and be sure they match the actual',
           'stock file names'))
   }
   fileList <- fileList[-rem]
   if(length(fileList) < 1){
-    stop(paste('run_setup.R: check names of excluded stocks in', 
+    stop(paste('run_setup.R: check names of excluded stocks in',
                'set_om_parameters_global file. It looks like you have',
                'removed all available stocks.'))
   }
@@ -55,7 +56,7 @@ for(i in 1:nstock){
 stockNames <- unname(sapply(fileList, function(x) 
                 strsplit(x, 'stockParameters/|\\.R')[[1]][2]))
 
-
+# skip above and just list stock names from hydra as hard code?
 
 # Get the run info so the functions work appropriately whether they are
 # on Windows or Linux and whether this is an HPCC run or not.

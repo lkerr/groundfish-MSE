@@ -60,52 +60,61 @@ for(r in 1:nrep){
          source('processes/setupEconType.R')
         }
        
-   #### get historic assessment info if there is any
+   #### get historic assessment info if there is any- NOT USING WITH HYDRA
    for (i in 1:nstock){
      #assess_vals <- get_HistAssess(stock = stock[[i]])
       
-     stock[[i]] <- get_HistAssess(stock = stock[[i]])
+     #stock[[i]] <- get_HistAssess(stock = stock[[i]])
        
-     }      
-
-    # Initialize stocks and determine burn-in F
+   }      
+ 
+       
+    # Initialize stocks and determine burn-in F- DO NOT NEED TO DO THIS WITH HYDRA
     for(i in 1:nstock){
-      stock[[i]] <- get_popInit(stock=stock[[i]])
-    
+     # stock[[i]] <- get_popInit(stock=stock[[i]]) 
+      # this runs initial survey/catch also- will need to replace this with hydra for first year
+  
     }
 
        
     #### Top year loop ####
     for(y in fyear:nyear){
+      
+      # PULL IN HYDRA DATA EACH YEAR HERE? OR BELOW WITH get_indexData?
+      hydraData<- get_hydra()
+
       for(i in 1:nstock){
-        stock[[i]] <- get_J1Updates(stock = stock[[i]])
+     # stock[[i]] <- get_J1Updates(stock = stock[[i]]) SKIP THIS WITH HYDRA
+        
+     # CONVERT TO AGES AND WRANGLE INTO CORRECT FORMAT
+        stock[[i]] <- get_lengthConvert(hydraData) # still working on a few things here
       }
       
       source('processes/withinYearAdmin.R')
       begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
 
-      # if burn-in period is over...
-      if(y >= fmyearIdx){
+      # if burn-in period is over... DON'T NEED THIS WITH HYDRA?
+     # if(y >= fmyearIdx){
 
         manage_counter<-manage_counter+1 #this only gets incremented when y>=fmyearIdx
 
         for(i in 1:nstock){
-          stock[[i]] <- get_advice(stock = stock[[i]])
-          #stock[[i]] <- get_relError(stock = stock[[i]])
+          stock[[i]] <- get_advice(stock = stock[[i]]) # RUNS MP
+          #stock[[i]] <- get_relError(stock = stock[[i]]) # this happens somewhere else now I think...
         }
         
           #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
+# NOT RUNNING ECONOMIC MODEL WITH HYDRA
+      if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
 
-        if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
-
-          for(i in 1:nstock){
-            # Specific "survey" meant to track the population on Jan1
-            # for use in the economic submodel. timeI=0 implies Jan1.
-            stock[[i]]<- within(stock[[i]], {
-              IJ1[y,] <- get_survey(F_full=0, M=0, N=J1N[y,], slxC[y,],
-                                slxI=selI, timeI=0, qI=qI)
-            })
-          } # End survey loop
+         for(i in 1:nstock){
+    # Specific "survey" meant to track the population on Jan1
+    # for use in the economic submodel. timeI=0 implies Jan1.
+           stock[[i]]<- within(stock[[i]], {
+           IJ1[y,] <- get_survey(F_full=0, M=0, N=J1N[y,], slxC[y,],
+                        slxI=selI, timeI=0, qI=qI)
+           })
+         } # End survey loop for economic model
 
 
           # ---- Run the economic model here ----
@@ -120,20 +129,28 @@ for(r in 1:nrep){
           for(i in 1:nstock){
             stock[[i]] <- get_implementationF(type = 'adviceWithError',
                                               stock = stock[[i]])
+            
           } # End implementation error in standard fisheries
         }else{
           #Add a warning about invalid ImplementationClass
         }
 
-      } # End of the if "burn-in period is over and fishery management has started" clause 
-      
+     # } # End of the if "burn-in period is over and fishery management has started" clause 
+        
+      # BRING IN HYDRA HERE INSTEAD? NEED SOMETHING FOR FIRST GET_ADVICE ABOVE?
+        
       for(i in 1:nstock){
-        stock[[i]] <- get_mortality(stock = stock[[i]])
-        stock[[i]] <- get_indexData(stock = stock[[i]])
+      #  stock[[i]] <- get_mortality(stock = stock[[i]]) # KILLS FISH 
+      #  stock[[i]] <- get_indexData(stock = stock[[i]]) # GENERATES INDEX 
+        
+      # WE'LL ADD IN THE ERROR WITH get_error_idx AND get_error_paa 
+        
       } #End killing fish loop
 
-      # Store results
-      for(i in 1:nstock){
+      # Store results- AM I SAVING THE RIGHT THING NOW? CHECK THESE FUNCTIONS
+        # we save after mortality and new index generated but that would be different in this case
+     
+         for(i in 1:nstock){
         if (y == nyear){
           stock[[i]] <- get_TermrelError(stock = stock[[i]])
         }
@@ -144,6 +161,7 @@ for(r in 1:nrep){
       
       } 
     
+        # what does this do?
       end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
 
           #Save economic results once in a while to a csv file.
@@ -160,6 +178,9 @@ for(r in 1:nrep){
         if(showProgBar==TRUE){
           setTxtProgressBar(iterpb, yearitercounter)
         }
+      
+      #### SEND F TO HYDRA HERE? RIGHT BEFORE END OF YEAR LOOP ####
+      
     } #End of year loop 
   } #End of mproc loop
 } #End rep loop

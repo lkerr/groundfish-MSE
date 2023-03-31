@@ -1,6 +1,6 @@
 get_advice <- function(stock){
   # prepare data for assessment
-  tempStock <- get_tmbSetup(stock = stock)
+  tempStock <- get_tmbSetup(stock = stock[[1]])
 
   #### Run assessment model####
 
