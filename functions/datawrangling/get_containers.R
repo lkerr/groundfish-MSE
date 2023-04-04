@@ -52,11 +52,11 @@ get_containers <- function(stockPar){
     # assessment model
     
     # catch weight
-    sumCW = yx0,
+    sumCW = list(),
     obs_sumCW = yx0,
     
     # total survey index in numbers
-    sumIN = yx0,
+    sumIN = list(),
     obs_sumIN = yx0,
     
     # total survey index in weight (if obs_sumIW is needed see note in
@@ -65,11 +65,11 @@ get_containers <- function(stockPar){
     obs_sumIW = yx0,
     
     # catch proportions-at-age
-    paaCN = yxage,
+    paaCN = list(),
     obs_paaCN = yxage,
     
     # survey proportions-at-age
-    paaIN = yxage,
+    paaIN = list(),
     obs_paaIN = yxage,
     
     # fishing effort
@@ -175,9 +175,9 @@ get_containers <- function(stockPar){
       Fest = est,
       Catchest = est,
       Rest = est
-    )
+    ),
     
-  )
+
   assess_vals = list(
     assess_dat=as.data.frame(list(
       Year=c(rep(999,nyear)),
@@ -187,6 +187,8 @@ get_containers <- function(stockPar){
       MSEyr=c(rep(999,nyear)))),
       assess_st_yr=999
   )
+  )
+  
   return(out)
 
 }

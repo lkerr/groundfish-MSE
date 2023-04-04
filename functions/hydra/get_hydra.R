@@ -2,7 +2,7 @@ get_hydra <- function(){
   #send hydra data to groundfish MSE?
   
   #for now load in data I already have for testing
-  load(here("hydraDataList_msk.rda"))
+  load(here("functions/hydra/hydraDataList_msk.rda")) # update R list annually 
   
   #rearrange to look like data that we need
   species <- data.frame(name=hydraDataList_msk$speciesList, species= c(1:10))
@@ -24,10 +24,10 @@ get_hydra <- function(){
     full_join(vonbert)
   
   sizebins <- as.data.frame(cbind(sizebin0,sizebin1, sizebin2, sizebin3, sizebin4, sizebin5, species))%>%
-    gather(bin,endbin, sizebin0:sizebin5)%>%
+    gather(bin, endbin, sizebin0:sizebin5)%>%
     group_by(species)%>%
-    mutate(startbin= lag(endbin))%>%
-    filter(bin!="sizebin0")
+    mutate(startbin= dplyr::lag(endbin))%>%
+   dplyr::filter(!bin %in% c('sizebin0'))
   
   
   # calculate the number of fish in each bin- Problem this is not an integer
@@ -55,9 +55,9 @@ get_hydra <- function(){
   CatchRep <- as.data.frame(lapply(Catchnew_end, rep, Catchnew_end$N))
   # some start bins are larger than Linf which will cause errors for calculating length
   SurvCheck <- SurvRep%>%
-    filter(startbin>end)
+    dplyr::filter(startbin>end)
   CatchCheck <- CatchRep%>%
-    filter(startbin>end)
+    dplyr::filter(startbin>end)
   
   Survey <- anti_join(SurvRep,SurvCheck) # leave out problem lengths
   Catch <- anti_join(CatchRep,CatchCheck)   

@@ -1,7 +1,7 @@
-get_lengthConvert <- function(hydraData){
-  
+get_lengthConvert <- function(stock, hydraData){
+
   # we want each species as a sub-list like stock object in groundfish MSE
-  with(hydraData, {
+   
   # assign length with random uniform distribution across bins
   Survlengths <- rowwise(hydraData$observedSurSize)%>%
     mutate(L=runif(1, min=startbin, max=end))
@@ -27,10 +27,8 @@ get_lengthConvert <- function(hydraData){
   # calculate proportions at age and bring annual total data back in
   paaSurv <-list()
   paaCN <-list()
-  stockName <- unique(Survage$name)
   
-  for (s in stockName) {
-    Survtemp <- filter(Survage,name==s)
+  Survtemp<- dplyr::filter(Survage, species==i)
     paaSurvtemp <-  Survtemp%>%
       select(survey, year,species, name, age)%>%
       group_by(survey, year, species, name, age)%>%
@@ -38,9 +36,10 @@ get_lengthConvert <- function(hydraData){
       group_by(survey, year, species, name)%>%
       mutate(total=sum(n), paa=n/total)%>%
       select(survey, year,species,name,age,paa)%>%
-      spread(age,paa)
+      spread(age,paa)%>%
+      ungroup()
     
-    CNtemp <- filter(Catchage,name=='Goosefish')
+    CNtemp <- dplyr::filter(Catchage, species==i)
     paaCNtemp <- CNtemp%>%
       select(fishery, year,species, name, age)%>%
       group_by(fishery, year, species, name, age)%>%
@@ -48,31 +47,33 @@ get_lengthConvert <- function(hydraData){
       group_by(fishery, year, species, name)%>%
       mutate(total=sum(n), paa=n/total)%>%
       select(fishery, year,species,name,age,paa)%>%
-      spread(age,paa)
+      spread(age,paa)%>%
+      ungroup()
     
      # fill in NA with zero
     paaSurvtemp[is.na(paaSurvtemp)]<-0
     paaCNtemp[is.na(paaCNtemp)]<- 0
     
-    #assign to list
-     paaSurv[[s]]<-paaSurvtemp
-     paaCN[[s]]<- paaCNtemp
-  }
+    #assign to list and filter survey
+     paaSurv <-dplyr::filter(paaSurvtemp, survey==1)
+     paaCatch <- paaCNtemp
+     sumSurv <- dplyr::filter(hydraData$observedBiomass, species==i, survey==1)
+     sumCatch <- dplyr::filter(hydraData$observedCatch, species==i)
+
+     
+ # hydrastock =list(paaIN=list(),
+ #                      paaCN=list(),
+ #                      sumIN=list(),
+ #                      sumCW=list())
  
 
+
+ out <- within(stock, { 
+   paaIN=paaSurv
+   paaCN=paaCatch
+   sumIN=sumSurv
+   sumCW=sumCatch
+ })
   
-  stock <- list()
-  for (i in 1:length(stockName)) {
-    stock[[i]] <- list(paaIN=filter(paaSurv[[i]], survey==1),
-                       paaCN=filter(paaCN[[i]]),
-                       sumIN=filter(hydraDataList_msk$observedBiomass, survey==1, species==i),
-                       sumCW=filter(hydraDataList_msk$observedCatch, species==i))
-    
-  }
-  names(stock)<- stockName
-  
- #saveRDS(stock,file= "stock.rdat")
-  
-})
-  return(stock)
+  return(out)
   }
