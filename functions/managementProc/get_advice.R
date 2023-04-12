@@ -1,7 +1,8 @@
 get_advice <- function(stock){
   # prepare data for assessment
-  tempStock <- get_tmbSetup(stock = stock)
-
+  #tempStock <- get_tmbSetup(stock = stock)
+  tempStock <- stock
+  
   #### Run assessment model####
 
   # Run the CAA assessment
