@@ -43,27 +43,29 @@ get_hydra <- function(){
     full_join(sizebins, by=c("species", "bin"))%>%
     full_join(vonbert)
   
-  Survnew_end<-SurvData%>%
+  Surv_newbin<-SurvData%>%
     rowwise()%>%
-    mutate(end = min(endbin, Linf)) #fix by choosing whichever is smallest?
-  Catchnew_end <- catchData%>%
+    mutate(end = min(endbin, Linf-1), start= min(startbin, Linf-1)) #fix by choosing whichever is smallest?
+  Catch_newbin <- catchData%>%
     rowwise()%>%
-    mutate(end = min(endbin, Linf)) 
+    mutate(end = min(endbin, Linf-1), start= min(startbin, Linf-1)) 
   
   #repeat rows based on N- each individual has its own row
-  SurvRep <- as.data.frame(lapply(Survnew_end, rep, Survnew_end$N))
-  CatchRep <- as.data.frame(lapply(Catchnew_end, rep, Catchnew_end$N))
+  SurvRep <- as.data.frame(lapply(Surv_newbin, rep, Surv_newbin$N))
+  CatchRep <- as.data.frame(lapply(Catch_newbin, rep, Catch_newbin$N))
+  
   # some start bins are larger than Linf which will cause errors for calculating length
-  SurvCheck <- SurvRep%>%
-    dplyr::filter(startbin>end)
-  CatchCheck <- CatchRep%>%
-    dplyr::filter(startbin>end)
+  # fixed this by forcing start to also be smaller than Linf
+  # SurvCheck <- SurvRep%>%
+  #   dplyr::filter(startbin>end)
+  # CatchCheck <- CatchRep%>%
+  #   dplyr::filter(startbin>end)
+  # 
+  # Survey <- anti_join(SurvRep,SurvCheck) # leave out problem lengths
+  # Catch <- anti_join(CatchRep,CatchCheck)   
   
-  Survey <- anti_join(SurvRep,SurvCheck) # leave out problem lengths
-  Catch <- anti_join(CatchRep,CatchCheck)   
-  
-  hydraData <- list(observedSurSize=Survey,
-                    observedCatchSize=Catch,
+  hydraData <- list(observedSurSize=SurvRep,
+                    observedCatchSize=CatchRep,
                     observedBiomass=hydraDataList_msk$observedBiomass,
                     observedCatch=hydraDataList_msk$observedCatch)
   return(hydraData)
