@@ -20,9 +20,9 @@ get_lengthConvert <- function(stock, hydraData){
     mutate(age=ceiling(((-log(1-L/Linf))/K+t0)))%>% #round up
     select(fishery, year,species, name, age)
   
-  # create plus group of 10 for now need to decide for different stocks
-  Survage$age[Survage$age>10]<- 10
-  Catchage$age[Catchage$age>10]<- 10  
+  # create plus group for now- better way to do this
+  Survage$age[Survage$age>stock$page]<- stock$page
+  Catchage$age[Catchage$age>stock$page]<- stock$page 
   
   # calculate proportions at age and bring annual total data back in
   
@@ -61,7 +61,7 @@ get_lengthConvert <- function(stock, hydraData){
        ungroup()%>%
        select(!c(fishery,year,species,name))
      
-     sumSurv <- dplyr::filter(hydraData$observedBiomass, species==i, survey==1)%>%
+     sumSurv <- dplyr::filter(hydraData$observedBiomass,species==i, survey==1)%>%
        full_join(year_gap, by="year")%>%
        arrange(year)
      
@@ -74,7 +74,7 @@ get_lengthConvert <- function(stock, hydraData){
      paaCatch[is.na(paaCatch)]<- 0
      sumSurv[is.na(sumSurv)]<- 0
      sumCatch[is.na(sumCatch)]<- 0
-     
+
     # rearrange paaSurv and paaCatch into matrix not list of ages
       paaSurv <- data.matrix(paaSurv)
       paaCatch <- data.matrix(paaCatch) 
@@ -97,7 +97,14 @@ get_lengthConvert <- function(stock, hydraData){
      # obs_paaSurv <- get_error_paa(type=oe_paaIN_typ, paa=paaSurv$biomass[y,], 
      #                                par=oe_paaIN)
      
-
+if (y==fyear) {
+  out <- within(stock, { 
+    paaIN[1:y,]<- paaSurv[1:y,]
+    paaCN[1:y,]<- paaCatch[1:y,]
+    sumIN[1:y]<- sumSurv$biomass[1:y]
+    sumCW[1:y]<- sumCatch$catch[1:y]
+  })
+}else{
  out <- within(stock, { 
    paaIN[y,]<- paaSurv[y,]
    paaCN[y,]<- paaCatch[y,]
@@ -109,6 +116,7 @@ get_lengthConvert <- function(stock, hydraData){
    #obs_sumIN[y]=obs_sumSurv
    #obs_sumCW[y]=obs_sunCatch
  })
+}
   
   return(out)
 }
