@@ -39,6 +39,7 @@ showProgBar<-TRUE
 
 
 source('processes/setupYearIndexing.R')
+
 top_loop_start<-Sys.time()
 
 #### Top rep Loop ####
@@ -69,7 +70,7 @@ for(r in 1:nrep){
    }      
  
        
-    # Initialize stocks and determine burn-in F- DO NOT NEED TO DO THIS WITH HYDRA
+    # Initialize stocks and determine burn-in F- DO NOT NEED TO DO THIS WITH HYDRA? 
     for(i in 1:nstock){
      # stock[[i]] <- get_popInit(stock=stock[[i]]) 
       # this runs initial survey/catch also- will need to replace this with hydra for first year
@@ -78,31 +79,30 @@ for(r in 1:nrep){
 
        
     #### Top year loop ####
-    for(y in fyear:nyear){
-      
+    for(y in fyear:fyear){
       # PULL IN HYDRA DATA EACH YEAR HERE? OR BELOW WITH get_indexData?
       hydraData<- get_hydra()
-
+      
       for(i in 1:nstock){
      # stock[[i]] <- get_J1Updates(stock = stock[[i]]) SKIP THIS WITH HYDRA
+        
         # CONVERT TO AGES AND WRANGLE INTO CORRECT FORMAT
         stock[[i]] <- get_lengthConvert(stock=stock[[i]], hydraData) 
       }
-      
       source('processes/withinYearAdmin.R')
-      #begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed) # what exactly is this doing? 
+      begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed) # what exactly is this doing? 
 
       # if burn-in period is over... DON'T NEED THIS WITH HYDRA?
-     # if(y >= fmyearIdx){
+      #if(y >= fmyearIdx){
       
       # MOVE THIS LATER??
         manage_counter<-manage_counter+1 #this only gets incremented when y>=fmyearIdx
-
+#browser()
         for(i in 1:nstock){
           stock[[i]] <- get_advice(stock = stock[[i]]) # RUNS MP
           #stock[[i]] <- get_relError(stock = stock[[i]]) # this happens somewhere else now I think...
         }
-    } # stop year loop here to check MP loop... delete later
+   } }} # stop year loop here to check MP loop... delete later
         
           #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
 # NOT RUNNING ECONOMIC MODEL WITH HYDRA
@@ -138,7 +138,7 @@ for(r in 1:nrep){
 
      # } # End of the if "burn-in period is over and fishery management has started" clause 
         
-      # BRING IN HYDRA HERE INSTEAD? NEED SOMETHING FOR FIRST GET_ADVICE ABOVE?
+      # BRING IN HYDRA HERE INSTEAD? NEED SOMETHING FOR FIRST GET_ADVICE ABOVE? OR MOVE YEAR INCREMENT?
         
       for(i in 1:nstock){
       #  stock[[i]] <- get_mortality(stock = stock[[i]]) # KILLS FISH 
