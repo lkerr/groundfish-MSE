@@ -48,7 +48,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
   # A general application of national standard 1 reference points. There
   # are different ways to grab the F reference point and the B reference
   # point and those will be implemented in get_FBRP
-
+  
   if(parmgt$ASSESSCLASS == 'CAA' || parmgt$ASSESSCLASS == 'ASAP'){
     
     parpopF<-parpop
@@ -65,61 +65,61 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
                      stockEnv = stockEnv)
     
-    #Determine True F reference point
-    parmgtT<-parmgt
-    parpopT<-parpop
-    
-    # for GOM cod, Mramp model uses M = 0.2 for status determination
-    if (stockEnv$stockName=='codGOM' & stockEnv$M_typ == 'ramp'){
-    parpopT$M<-rep(0.2,9)
-    }
-    
-    parpopT$switch<-TRUE
-    
-    #Use OM values
-    parpopT$J1N<-stockEnv$J1N[1:(y-1),]
-    parpopT$selC<-stockEnv$selC
-    parpopT$R<-stockEnv$R[1:(y-1)]
-    stockEnvT<-stockEnv
-    stockEnvT$R_mis<-FALSE
-    
-    FrefT <- get_FBRP(parmgt = parmgtT, parpop = parpopT, #Also calculate the true Fmsy
-                     parenv = parenv, Rfun_lst = Rfun_BmsySim, 
-                     stockEnv = stockEnvT)
+    # #Determine True F reference point
+    # parmgtT<-parmgt
+    # parpopT<-parpop
+    # 
+    # # for GOM cod, Mramp model uses M = 0.2 for status determination
+    # if (stockEnv$stockName=='codGOM' & stockEnv$M_typ == 'ramp'){
+    # parpopT$M<-rep(0.2,9)
+    # }
+    # 
+    # parpopT$switch<-TRUE
+    # 
+    # #Use OM values
+    # parpopT$J1N<-stockEnv$J1N[1:(y-1),]
+    # parpopT$selC<-stockEnv$selC
+    # parpopT$R<-stockEnv$R[1:(y-1)]
+    # stockEnvT<-stockEnv
+    # stockEnvT$R_mis<-FALSE
+    # 
+    # FrefT <- get_FBRP(parmgt = parmgtT, parpop = parpopT, #Also calculate the true Fmsy
+    #                  parenv = parenv, Rfun_lst = Rfun_BmsySim, 
+    #                  stockEnv = stockEnvT)
     
     # if using forecast start the BMSY initial population at the equilibrium
     # FMSY level (before any temperature projections). This is consistent
     # with how the Fmsy is calculated.
     parpopUpdate <- parpopF
-    parpopUpdateT <- parpopT
+    #parpopUpdateT <- parpopT
     if(parmgt$RFUN_NM == 'forecast'){
       parpopUpdate$J1N <- Fref$equiJ1N_MSY
     }
     
     #Estimate biomass reference point
-    stockEnvT$R_mis<-TRUE
+    #stockEnvT$R_mis<-TRUE
     Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
-    
+  
     #Determine true biomass reference point
-    stockEnvT<-stockEnv
-    stockEnvT$R_mis<-FALSE
-    BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT, #Also calculate the true Bmsy
-                     parenv = parenv, Rfun_lst = Rfun_BmsySim,
-                     FBRP = FrefT[['RPvalue']], stockEnv = stockEnvT)
+    # stockEnvT<-stockEnv
+    # stockEnvT$R_mis<-FALSE
+    # BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT, #Also calculate the true Bmsy
+    #                  parenv = parenv, Rfun_lst = Rfun_BmsySim,
+    #                  FBRP = FrefT[['RPvalue']], stockEnv = stockEnvT)
     
     #Save reference points if it is the correct year to do so or else use previous reference ponits in catch advice
     if(evalRP){
       FrefRPvalue <- Fref[['RPvalue']]
       BrefRPvalue <- Bref[['RPvalue']]
-      FrefTRPvalue <- FrefT[['RPvalue']]
-      BrefTRPvalue <- BrefT[['RPvalue']]
+      #FrefTRPvalue <- FrefT[['RPvalue']]
+      #BrefTRPvalue <- BrefT[['RPvalue']]
     }else{
       FrefRPvalue <- RPlast[1]
       BrefRPvalue <- RPlast[2]
-      FrefTRPvalue <- FrefT[['RPvalue']]
-      BrefTRPvalue <- BrefT[['RPvalue']]
+      #FrefTRPvalue <- FrefT[['RPvalue']]
+      #BrefTRPvalue <- BrefT[['RPvalue']]
     }
 
     #Determine overfished threshold and target fishing mortality
@@ -295,7 +295,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
   
     if (F>2){F<-2}#Not letting actual F go over 2
 
-    out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue,FrefTRPvalue, BrefTRPvalue), 
+    out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue), 
                 ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
                 OFgStatus = overfishing, catchproj=catchproj) #AEW
     
@@ -314,13 +314,13 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     # Calculate what the corresponding true F is that matches with
     # the actual biomass-at-age in the current year
-    trueF <- get_F(x = CWrec,
-                  Nv = parpop$Ntrue_y, 
-                  slxCv = parpop$slxCtrue_y, 
-                  M = parpop$Mtrue_y, 
-                  waav = parpop$waatrue_y)
+    # trueF <- get_F(x = CWrec,
+    #               Nv = parpop$Ntrue_y,
+    #               slxCv = parpop$slxCtrue_y,
+    #               M = parpop$Mtrue_y,
+    #               waav = parpop$waatrue_y)
     
-    out <- list(F = trueF, RPs = c(NA, NA), OFdStatus=NA,
+    out <- list(RPs = c(NA, NA), OFdStatus=NA,
                 OFgStatus = NA) #AEW
     
   }else{
