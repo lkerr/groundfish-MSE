@@ -15,7 +15,6 @@ laa_typ <- 'vonB'
 # weight-at-age parameters
 waa_par <- c(0.1774,0.4291,0.6939,0.8887,1.089,1.247,1.396,1.577,1.784) #Average of waa of last 5 years from 2019 assessment
 waa_typ <- 'dynamic'
-waa_mis <- FALSE
 
 # maturity-length parameters
 #mat_par <- c(0.21, 29.7) #AEW
@@ -26,8 +25,6 @@ mat_typ <- 'input'
 M <- 0.2
 M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
-M_mis<-FALSE
-M_mis_val<-0.4
 
 # initial numbers at-age parameters
 initN_par <- c(nage = page, N0 = 1e5, F_full = 0.99, M = M)
@@ -49,12 +46,9 @@ R_typ <- 'HS'
 #R_typ <- 'BH'
 #Rpar<-c(a=0.0004313,b=0.000002392,g=0)
 R_mis<-FALSE #If BRPs and projections assume a wrong SRR, set to TRUE. 
-R_mis_typ<-'HS'
 Rpar_mis <- c(cR = 1,
               Rnyr= 20)
-Rpar_mis <- c(SSB_star = 75000, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
-              cR = 1,
-              Rnyr= 20)
+
 #### Fishery parameters ####
 
 # fishery and survey catchabilities
@@ -79,7 +73,7 @@ timeI <- 0.5 # when is the survey (as a proportion of the year)
 #### Stock assessment model parameters ####
 
 # number of years in assessment model
-ncaayear <- 33
+ncaayear <- 37
 
 # Expansion range for setting limits on parameter bounds
 boundRgLev <- 1.5
@@ -91,6 +85,14 @@ startCV <- 1.5
 # for model fitting)
 caaInScalar <- 1000
 
+M_mis<-FALSE
+#M_mis_val<-0.4
+waa_mis <- TRUE
+R_mis<-TRUE#If BRPs and projections assume a wrong SRR, set to TRUE. 
+R_mis_typ<-'HS'
+Rpar_mis <- c(SSB_star = 75000, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
+              cR = 1,
+              Rnyr= 20)
 
 #### Error parameters ####
 

@@ -1,5 +1,3 @@
-#historical data for YT is from the 2013 TRAC working papers (last year an analytical assessment was used)
-#Used the split series version (tables 15a, 16a)
 # Fmsy scalar and sd for F before the management period begins. Distribution is lognormal. SD is lognormal SD.                                              
 burnFmsyScalar <- 1.5
 burnFsd <- 0.5
@@ -17,7 +15,6 @@ laa_typ <- 'vonB'
 # weight-length parameters
 waa_par <- c(exp(-12.91075), 3.38) 
 waa_typ <- 'aLb'
-waa_mis<- FALSE
 
 # maturity-length parameters
 mat_par <- c(0.587, 25.8) 
@@ -27,7 +24,6 @@ mat_typ <- 'logistic'
 M <- 0.2
 M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
-M_mis<- FALSE
 
 # initial numbers at-age parameters
 initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = 0.2)
@@ -42,14 +38,12 @@ Rpar <- c(h = 6.286813e-01,      #update all
           beta3 = -2.501400e-01)
 
 R_typ <- 'BHSteep'
-R_mis <- FALSE
-Rpar_mis <- c(h = 6.286813e-01,      #update all
-              R0 = 8.062700e+07,
-              c = -0.540,
-              SSBRF0 = 0.01972,
-              sigR = 0.56,
-              beta3 = -2.501400e-01)
-  
+
+R_mis<-TRUE #If BRPs and projections assume a wrong SRR, set to TRUE.
+Rpar_mis <- c(SSB_star = 6300, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
+              cR = 1,
+              Rnyr= 20)
+
 #### Fishery parameters ####
 
 # fishery and survey catchabilities
@@ -74,7 +68,7 @@ timeI <- 0.5 # when is the survey (as a proportion of the year)
 #### Stock assessment model parameters ####
 
 # number of years in assessment model
-ncaayear <- 30
+ncaayear <- 37
 
 # Expansion range for setting limits on parameter bounds
 boundRgLev <- 1.5
@@ -86,6 +80,7 @@ startCV <- 1.5
 # for model fitting)
 caaInScalar <- 1000  
 
+M_mis<- 'FALSE'
 
 #### Error parameters ####
 
@@ -103,8 +98,6 @@ oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
 pe_R <- 0.5
-pe_RSA <- 0.5 #from cod assessment, needs to be updated
-pe_IA <- 0.18
 
 # implementation error of fishing mortality
 ie_F <- 0
@@ -119,4 +112,4 @@ ob_sumIN <- 1
 if(1.0 %in% c(qI, qC)){
   stop('catchability (qI and qC) must not be exactly one (you can make it
         however close you want though')
-}
+  }
