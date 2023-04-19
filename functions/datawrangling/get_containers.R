@@ -199,7 +199,15 @@ get_containers <- function(stockPar){
     )
     
   )
-  
+  assess_vals = list(
+    assess_dat=as.data.frame(list(
+      Year=c(rep(999,nyear)),
+      F=c(rep(999,nyear)),
+      R=c(rep(999,nyear)),
+      M=c(rep(999,nyear)),
+      MSEyr=c(rep(999,nyear)))),
+      assess_st_yr=999
+  )
   return(out)
 
 }

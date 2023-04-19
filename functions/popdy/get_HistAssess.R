@@ -25,7 +25,11 @@ get_HistAssess <- function(stock) {
   assess_st_yr <- fmyearIdx-length(assessdat$Year)
   assessdat$MSEyr <- seq(assess_st_yr, (fmyearIdx-1))
 
-  return(list(
+  out <- within(stock, {
+    assess_vals<-list(
     assessdat = assessdat,
-    assess_st_yr = assess_st_yr))
-  }
+    assess_st_yr = assess_st_yr)
+  })
+  
+return(out)
+}

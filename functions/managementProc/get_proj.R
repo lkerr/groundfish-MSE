@@ -160,7 +160,8 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                      SSB = c(N[y-1,]) %*% c(parpop$waa* parpop$mat),
                      sdR = stockEnv$pe_R,
                      TAnom = Tanom[y],
-                     Rest = Rest)
+                     Rest = Rest,
+                     stockEnv=stockEnv)
       #if(type=='BREF'){N[y,1]<-7165447}
   }
   # Get weight-at-age
