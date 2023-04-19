@@ -7,10 +7,7 @@ simpleTemperature <- FALSE
 
 
 # Which management procedures csv do you want to read:
-mprocfile<-"mproc.csv"
-#mprocfile<-"mprocTest.csv"
-#mprocfile<-"mprocEcon.csv"
-#mprocfile<-"mprocEconT.csv"
+mprocfile<-"mprocT.csv"
 
 #### Stock parameters ####
 
@@ -20,12 +17,10 @@ mprocfile<-"mproc.csv"
 # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
 # Available stocks: haddockGB, codGOM, codGB, pollock, yellowtailflounderGB
-#stockExclude <- c('haddockGB', 'codGOM','codGB', 'pollock','yellowtailflounderGB')
+# stockExclude <- c('haddockGB', 'codGOM','codGB', 'pollock','yellowtailflounderGB')
 stockExclude<-NULL
-stockExclude <- c('pollock','yellowtailflounderGB', 'codGB', 'codGOM') #just GBhaddock
-#stockExclude <- c('pollock','yellowtailflounderGB', 'codGB', 'haddockGB') #just GOMcod
-#stockExclude <- c('pollock','yellowtailflounderGB', 'haddockGB', 'codGOM') #just GBcod
-#stockExclude <- c('haddockGB', 'codGOM','codGB', 'yellowtailflounderGB') #just pollock
+ stockExclude <- c('pollock','yellowtailflounderGB', 'codGB', 'codGOM') #just GBhaddock
+
 #stockExclude <- c('yellowtailflounderGB')
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data
