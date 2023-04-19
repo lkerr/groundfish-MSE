@@ -211,14 +211,20 @@ big_loop
 
 
 
-  # if(runClass != 'HPCC'){
-  #   # Note that runPost.R re-sets the containers; results have already been
-  #   # saved however.
-  #   source('processes/runPost.R')
-  # }
+   if(runClass != 'HPCC'){
+     # Note that runPost.R re-sets the containers; results have already been
+     # saved however.
+     source('processes/runPost.R')
+   }
 
 
   print(unique(warnings()))
   cat("You ran",r, "Replicates. You ran",m,"models. You ran from year", yrs[fmyearIdx], " to year", yrs[y],".\n ")
   top_loop_end-top_loop_start
   cat('\n ---- Successfully Completed ----\n')
+  
+  if(runClass=='neptune'){
+    system("mailme Min-Yang.Lee@noaa.gov \"runSim.R on neptune complete\" ")
+    
+  }
+  
