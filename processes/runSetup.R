@@ -166,11 +166,8 @@ if (platform == 'Linux'){
   }
   #Find the max dir.
   file_dirs<-list.dirs(path="./assessment/ASAP")
-  if(length(file_dirs)==0){
-      asap_model_num<-1
-    } else{
-  
-  file_dirs = do.call(rbind, lapply(file_dirs, function(xx) {
+
+    file_dirs = do.call(rbind, lapply(file_dirs, function(xx) {
     xx = as.data.frame(xx, stringsAsFactors=F)
     names(xx) = "dirname" 
     return(xx) }) )      
@@ -184,12 +181,16 @@ if (platform == 'Linux'){
   
   file_dirs<-file_dirs %>%
     mutate(stub=as.numeric(stringr::str_replace(stub,"Run_","")))
+  if(nrow(file_dirs)==0){
+    asap_model_num<-1
+  } else{
+    asap_model_num<-max(file_dirs$stub)+1
+  }
   
-  asap_model_num<-max(file_dirs$stub)+1
   file_dirs<-NULL
     }
   tempwd <- getwd()
-  rundir <- paste(tempwd, "/assessment/ASAP/Run", '_', asap_model_num, sep = "")
+  rundir <- paste(tempwd, "/assessment/ASAP/BRun", '_', asap_model_num, sep = "")
   
   
   dir.create(path = rundir)
