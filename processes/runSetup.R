@@ -177,7 +177,7 @@ if (platform == 'Linux'){
     return(temp[NCOL(temp)]) })
   
   file_dirs<-file_dirs %>%
-    dplyr::filter(stringr::str_detect(stub, 'Run_'))
+    dplyr::filter(stringr::str_detect(stub, "^Run_"))
   
   file_dirs<-file_dirs %>%
     mutate(stub=as.numeric(stringr::str_replace(stub,"Run_","")))
