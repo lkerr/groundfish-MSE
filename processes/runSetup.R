@@ -188,11 +188,11 @@ if (platform == 'Linux'){
     asap_model_num<-max(file_dirs$stub)+1
   }
   
-  file_dirs<-NULL
-    }
+    
   tempwd <- getwd()
-  rundir <- paste(tempwd, "/assessment/ASAP/BRun", '_', asap_model_num, sep = "")
-  
+  rundir <- paste(tempwd, "/assessment/ASAP/Run", '_', asap_model_num, sep = "")
+  file_dirs<-NULL
+  asap_model_num<-NULL
   
   dir.create(path = rundir)
   
