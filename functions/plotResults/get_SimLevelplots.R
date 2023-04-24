@@ -12,7 +12,7 @@
 
 
 
-get_SimLevelplots <- function(x, dirIn, dirOut, boxnames, rpnames, trajnames){
+get_SimLevelplots <- function(x, dirIn, dirOut, boxnames, rpnames, trajnames,breakyears=plotBrkYrs){
   
   with(x, {
     # load some of the necessary variables for plotting by running the
@@ -38,7 +38,7 @@ get_SimLevelplots <- function(x, dirIn, dirOut, boxnames, rpnames, trajnames){
 
     # Identify break points for selecting years to produce for each of the
     # boxplots and also names for each of the categories for printing
-    brkYrsIdx <- plotBrkYrs + fmyearIdx
+    brkYrsIdx <- breakyears + fmyearIdx
     brkYrsIdxExt <- c(0, brkYrsIdx, nyear)
     brkYrsNames <- yrs[c(1, brkYrsIdxExt)]
     brkYrsNames2 <- sapply(2:length(brkYrsNames), function(x) 

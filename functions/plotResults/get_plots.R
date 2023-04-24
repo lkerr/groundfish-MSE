@@ -8,10 +8,11 @@
 #        particular plots (e.g., temperature time series)
 
 # boxnames, rpnames, trajnames: performance measures you want to plot
+# breakyears are is a vector of breakpoints defined as years after fmyearIdx.
+    # breakyears=c(5,10,15) will divide the the plots into years 
 
 
-
-get_plots <- function(x, stockEnv, dirIn, dirOut, boxnames, rpnames, trajnames){
+get_plots <- function(x, stockEnv, dirIn, dirOut, boxnames, rpnames, trajnames, breakyears=plotBrkYrs){
   
   with(stockEnv, {
     # load some of the necessary variables for plotting by running the
@@ -42,7 +43,7 @@ get_plots <- function(x, stockEnv, dirIn, dirOut, boxnames, rpnames, trajnames){
 
     # Identify break points for selecting years to produce for each of the
     # boxplots and also names for each of the categories for printing
-    brkYrsIdx <- plotBrkYrs + fmyearIdx
+    brkYrsIdx <- breakyears + fmyearIdx
     brkYrsIdxExt <- c(0, brkYrsIdx, nyear)
     brkYrsNames <- yrs[c(1, brkYrsIdxExt)]
     brkYrsNames2 <- sapply(2:length(brkYrsNames), function(x) 

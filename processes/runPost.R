@@ -43,6 +43,9 @@ SIMboxplot_these<-c("HHI_fleet","Shannon_fleet","Gini_fleet",
 SIMrp_these<-SIMboxplot_these
 SIMtraj_these <-SIMboxplot_these
 
+newbreaks<-plotBrkYrs
+newbreaks<-c(5,10)
+
 
 for(i in 1:length(flLst[[1]])){
 
@@ -60,7 +63,7 @@ for(i in 1:length(flLst[[1]])){
 
   get_plots(x=omval, stockEnv = stockPar[[i]], 
             dirIn=file.path(ResultDirectory, "sim"), dirOut=dirOut, 
-            boxnames=boxplot_these, rpnames=rp_these, trajnames=traj_these)
+            boxnames=boxplot_these, rpnames=rp_these, trajnames=traj_these,breakyears=newbreaks)
 }
 
 
@@ -82,7 +85,7 @@ if(length(sl)>=1){
   plotTrajInd<-TRUE
   plotTrajBox<-TRUE
   get_SimLevelplots(x=simlevel, dirIn=file.path(ResultDirectory, "sim"), dirOut=dirOut, 
-                    boxnames=SIMboxplot_these, rpnames=SIMrp_these, trajnames=SIMtraj_these)
+                    boxnames=SIMboxplot_these, rpnames=SIMrp_these, trajnames=SIMtraj_these,breakyears=newbreaks)
 
 }
 
