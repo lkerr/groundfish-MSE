@@ -16,8 +16,7 @@ if(runClass != 'HPCC'){
 
 ####################These are temporary changes for testing ####################
 # mproc_bak<-mproc
-# mproc<-mproc_bak[1:1,] 
-# nrep<-2
+# mproc<-mproc_bak[2:2,] 
 # Don't set nrep smaller than the nrep in set_om_parameters_global.R 
 # yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
 # I want to start the economic model at fmyear=2010 and temporarily end it in 2011
@@ -92,6 +91,8 @@ for(r in 1:nrep){
     for(y in fyear:nyear){
    
       for(i in 1:nstock){
+       
+        
         stock[[i]] <- get_J1Updates(stock = stock[[i]])
         stock[[i]] <- get_EconSurvey(stock = stock[[i]])
   
@@ -104,8 +105,9 @@ for(r in 1:nrep){
       if(y >= fmyearIdx){
 
         manage_counter<-manage_counter+1 #this only gets incremented when y>=fmyearIdx
-
+        print(paste0("Year ",yrs[y], " of years ", yrs[nyear]))
         for(i in 1:nstock){
+          print(paste0("Year ",yrs[y], "working on catch advice for stock ", stock[[i]]$stockName))
           stock[[i]] <- get_advice(stock = stock[[i]])
           #stock[[i]] <- get_relError(stock = stock[[i]])
         }
@@ -119,7 +121,7 @@ for(r in 1:nrep){
 
           bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline_averages)
           # Print the status of the model.
-          cat("This is Replicate", r, "of", nrep, ". This is model", m, "of", nrow(mproc), ". This is year", yrs[y],"of", yrs[nyear], ".\n ")
+          cat("Working on Econ module. Replicate", r, "of", nrep, ". This is model", m, "of", nrow(mproc), ". This is year", yrs[y],"of", yrs[nyear], ".\n ")
           source('processes/runEcon_module.R')
 
           
