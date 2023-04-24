@@ -130,7 +130,7 @@ get_ASAP <- function(stock){
       if(runClass =="HPCC"){
         asapEst<- try(system("singularity exec $WINEIMG wine ASAP3.EXE", wait = TRUE))
       } else if (runClass =="neptune"){
-        asapEst<- try(system("./ASAP3", intern=TRUE, wait = TRUE))
+        asapEst<- try(system("./ASAP3", intern=TRUE, wait = TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE))
       }
       while (!file.exists('ASAP3.rdat')) {
         Sys.sleep(1)
