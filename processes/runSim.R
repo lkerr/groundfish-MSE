@@ -45,9 +45,11 @@ showProgBar<-TRUE # ProgBar less useful when stockassessment results are printed
 
 
 
+constant_econ_year<-2015
 # Should write an extra column into mproc.csv about this. 
-source('processes/setup_Random_YearIndexing.R')
+#source('processes/setup_Random_YearIndexing.R')
 #source('processes/setup_BlockRandom_YearIndexing.R')
+source('processes/setup_constant_YearIndexing.R')
 
 
 #source('processes/setup_BlockAlign_YearIndexing.R')
