@@ -17,7 +17,7 @@ get_plots <- function(x, stockEnv, dirIn, dirOut, boxnames, rpnames, trajnames, 
   with(stockEnv, {
     # load some of the necessary variables for plotting by running the
     # setup file.
-    source('modelParameters/set_om_parameters_global.R', local=TRUE)
+    source(file.path(ResultDirectory,"set_om_parameters_global.R"), local=TRUE)
     source('processes/genAnnStructure.R', local=TRUE)
     
     # Load one of the simulation environments
