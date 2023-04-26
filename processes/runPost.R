@@ -45,7 +45,8 @@ traj_these <- c("SSB", "SSB_cur", "R", "F_full", "sumCW",
               "relE_ipop_mean", "relE_ipop_dev",
               "relE_R_dev", "relE_SSB", "relE_N","relE_CW", "relE_IN",
               "relE_R", "relE_F", "OFgStatus",   #AEW
-              "FPROXY", "SSBPROXY","sumEconIW","Gini_stock_within_season_BKS")
+              "FPROXY", "SSBPROXY","sumEconIW","Gini_stock_within_season_BKS",
+              "ACL")
 
 SIMboxplot_these<-c("HHI_fleet","Shannon_fleet","Gini_fleet", 
                   "Gini_fleet_bioecon_stocks", "total_rev", "total_modeled_rev", "total_groundfish_rev")
