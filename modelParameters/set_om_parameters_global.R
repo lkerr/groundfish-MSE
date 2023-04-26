@@ -19,7 +19,7 @@ mprocfile<-"mprocEconT.csv"
 # Available stocks: haddockGB, codGOM, codGB, pollock, yellowtailflounderGB
 # stockExclude <- c('haddockGB', 'codGOM','codGB', 'pollock','yellowtailflounderGB')
 stockExclude<-NULL
- stockExclude <- c('pollock','yellowtailflounderGB', 'codGB', 'codGOM') #just GBhaddock
+# stockExclude <- c('pollock','yellowtailflounderGB','codGOM') #just GBhaddock and GBCod
 
 #stockExclude <- c('yellowtailflounderGB')
 #### historic assessment values #### AEW
@@ -31,10 +31,10 @@ histAssess <- TRUE
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 5
+nrep <- 20
 
 # First year to begin actual management
-fmyear <- 2019
+fmyear <- 2020
 
 # first year after the initial condition period. The initial condition period
 # simply fills up the arrays as necessary even before the burn-in period
@@ -43,7 +43,7 @@ fmyear <- 2019
 fyear <- 38
 
 # maximum year predicted into the future
-mxyear <- 2040
+mxyear <- 2035
 
 #### Burn-in parameters ####
 
@@ -168,7 +168,9 @@ quotaprice_coefs_loc<-"quotaprice_coefs_exponential.Rds"
 #### Output ####
 # Years after the management period begins to break up the results. For
 # example, c(10, 20) would result in plots from 0-10 years after the mgmnt
-# period begins, 10-20 years and 20 years to the end of the series.
+# period begins, 11-20 years and 21 years to the end of the series.
+# The intervals years are set up (lower, upper].
+
 plotBrkYrs <- c(5, 10, 15)
 
 # Which sets of plots should be created? Set these objects to T/F
