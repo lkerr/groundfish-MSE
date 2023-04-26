@@ -72,7 +72,8 @@ get_plots <- function(x, stockEnv, dirIn, dirOut, boxnames, rpnames, trajnames, 
             if(all(is.na(tempDat))){
               plot(0)
             }else{
-              get_box(x=tempDat)
+              working_ylab<-paste(nm[i],brkYrsNames2[j])
+              get_box(x=tempDat, ylab=working_ylab)
             }
           dev.off()
         }
