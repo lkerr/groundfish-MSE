@@ -206,7 +206,7 @@ big_loop
   
   
   # Output the management procedures text file in the figure directory
-  get_catdf(df = mproc, file = file.path(ResultDirectory,"fig",mprocfile))
+  write.csv(mproc, file=file.path(ResultDirectory,"fig",mprocfile), row.names=FALSE)
   
   # Copy set_om_parameters_global.R into the results folder
   file.copy('modelParameters/set_om_parameters_global.R', file.path(ResultDirectory,"set_om_parameters_global.R"))
