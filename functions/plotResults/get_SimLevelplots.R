@@ -17,7 +17,7 @@ get_SimLevelplots <- function(x, dirIn, dirOut, boxnames, rpnames, trajnames,bre
   with(x, {
     # load some of the necessary variables for plotting by running the
     # setup file.
-    source('modelParameters/set_om_parameters_global.R', local=TRUE)
+    source(file.path(ResultDirectory,"set_om_parameters_global.R"), local=TRUE)
     source('processes/genAnnStructure.R', local=TRUE)
     
 
