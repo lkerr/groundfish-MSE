@@ -190,10 +190,21 @@ if (platform == 'Linux'){
     
   tempwd <- getwd()
   rundir <- paste(tempwd, "/assessment/ASAP/Run", '_', asap_model_num, sep = "")
-  file_dirs<-NULL
-  asap_model_num<-NULL
+  # final error catch. Check if rundir exists. If it does, increment asap_model_num and try again.
+  
+  flag_dir<-dir.exists(rundir)
+  while(flag_dir==TRUE){
+   asap_model_num<-asap_model_num+1
+   rundir <- paste(tempwd, "/assessment/ASAP/Run", '_', asap_model_num, sep = "")
+   flag_dir<-dir.exists(rundir)
+  }
   
   dir.create(path = rundir)
+
+  asap_model_num<-NULL
+  file_dirs<-NULL
+  flag_dir<-NULL
+  
   from.path <- paste('../EXE/ASAP3.EXE', sep = "")
   to.path   <- paste(rundir, sep= "")
   file.copy(from = from.path, to = to.path)
