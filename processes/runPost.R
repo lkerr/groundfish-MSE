@@ -70,8 +70,8 @@ for(i in 1:length(flLst[[1]])){
             boxnames=boxplot_these, rpnames=rp_these, trajnames=traj_these)
 }
 
-# Output the management procedures text file in the figure directory
-get_catdf(df = mproc, file = paste0(ResultDirectory,'/fig/',mprocfile))
+
 
 # Output the memory usage
 get_memUsage(runClass = runClass)
+
