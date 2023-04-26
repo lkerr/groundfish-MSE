@@ -7,6 +7,14 @@ source('processes/identifyResultDirectory.R')
 # source('processes/get_runinfo.R')
 source('processes/runSetup.R')
 
+# Read in overall operating model parameters from the saved version
+source(file.path(ResultDirectory,"set_om_parameters_global.R"))
+
+
+#update mproc from the saved version
+
+mproc <- read.csv(file.path(ResultDirectory, "fig",mprocfile), header=TRUE,
+                  stringsAsFactors=FALSE)
 
 # Load in the stock-level simulation results
 fl <- list.files(file.path(ResultDirectory, 'sim'), pattern="omvalGlobal", full.names=TRUE)
