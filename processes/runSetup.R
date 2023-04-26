@@ -191,11 +191,17 @@ if (platform == 'Linux'){
     
   tempwd <- getwd()
   rundir <- paste(tempwd, "/assessment/ASAP/Run", '_', asap_model_num, sep = "")
-  file_dirs<-NULL
-  asap_model_num<-NULL
+  # final error catch. Check if rundir exists. If it does, increment asap_model_num and try again.
+  
+  flag_dir<-dir.exists(rundir)
+  while(flag_dir==TRUE){
+   asap_model_num<-asap_model_num+1
+   rundir <- paste(tempwd, "/assessment/ASAP/Run", '_', asap_model_num, sep = "")
+   flag_dir<-dir.exists(rundir)
+  }
   
   dir.create(path = rundir)
-  
+
   # setup command to run ASAP. For now, ASAP is located at /net/home2/mlee/admb-12.3/asap3/asap3
   if(runClass=='neptune'){
     full.path.to.asap<- "/net/home2/mlee/admb-12.3/ASAP3/ASAP3"
@@ -209,6 +215,11 @@ if (platform == 'Linux'){
                   'Modify runSetup.R', sep='\n', immediate.=TRUE))
   }   
   from.path <- full.path.to.asap
+
+  asap_model_num<-NULL
+  file_dirs<-NULL
+  flag_dir<-NULL
+  
   to.path   <- paste(rundir, sep= "")
   file.copy(from = from.path, to = to.path)
   
