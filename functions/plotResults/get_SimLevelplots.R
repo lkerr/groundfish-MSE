@@ -71,7 +71,8 @@ get_SimLevelplots <- function(x, dirIn, dirOut, boxnames, rpnames, trajnames,bre
             if(all(is.na(tempDat))){
               plot(0)
             }else{
-              get_box(x=tempDat)
+              working_ylab<-paste(nm[i],brkYrsNames2[j])
+              get_box(x=tempDat, ylab=working_ylab)
             }
           dev.off()
         }
