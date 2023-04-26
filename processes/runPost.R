@@ -7,6 +7,15 @@ source('processes/identifyResultDirectory.R')
 # source('processes/get_runinfo.R')
 source('processes/runSetup.R')
 
+# Read in overall operating model parameters from the saved version
+source(file.path(ResultDirectory,"set_om_parameters_global.R"))
+
+#update mproc from the saved version
+
+mproc <- read.csv(file.path(ResultDirectory, "fig",mprocfile), header=TRUE,
+                  stringsAsFactors=FALSE)
+
+
 # load all the functions
 ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
 invisible(sapply(ffiles, source))
