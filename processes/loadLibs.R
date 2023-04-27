@@ -28,7 +28,7 @@ if(runClass == 'HPCC'){
   require(data.table, lib.loc='../Rlib/')
   require(ASAPplots, lib.loc = '../Rlib')
   require(fishmethods, lib.loc = '../Rlib')
-  require(timeDate, lib.loc = '.../Rlib')
+  require(timeDate, lib.loc = '../Rlib')
   require(timeSeries, lib.loc = '../Rlib')
   require(fBasics, lib.loc = '../Rlib')
   require(fGarch, lib.loc = '../Rlib')
