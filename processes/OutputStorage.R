@@ -38,6 +38,12 @@ if(mproc$ImplementationClass[m]=="Economic"){
       afsh<-rbindlist(fishery_output_holder)
       write.table(afsh, file.path(econ_results_location, paste0("econ_fishery_status_",tda2, ".csv")), sep=",", row.names=FALSE)
       afsh<-list()
+      
+      quotaprices<-rbindlist(fishery_quota_price_holder)
+      write.table(quotaprices, file.path(econ_results_location, paste0("quota_prices_",tda2, ".csv")), sep=",", row.names=FALSE)
+      quotaprices<-list()
+      
+      
     }
   }
 }

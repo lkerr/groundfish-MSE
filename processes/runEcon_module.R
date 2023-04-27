@@ -25,6 +25,11 @@ fishery_holder$targeted<-0
 annual_revenue_holder<-list()
 #set up a list to hold the date, spstock2, and aggregate metrics, like open/closed status and cumulative catch
 annual_fishery_status_holder<-list()
+
+#set up a list to hold the quota prices
+
+annual_quota_price_holder<-list()
+
 # setup a list to hold the intraseason Gini ala Birkenbach, Kazcan, Smith nature.
 #Gini_stock_within_season_BKS<-list()
 
@@ -59,12 +64,12 @@ if(y == fmyearIdx){
 
 q_fy<-0
 for (day in 1:365){
-
   if (day==1 | day==91 | day==182 | day==273){
     q_fy<-q_fy+1
     #print(paste("It is quarter",q_fy))
     qp<-get_predict_quota_prices()
     qp_names<-colnames(qp)
+    annual_quota_price_holder[[q_fy]]<-qp
     qp$key<-1  
     
 }
@@ -276,6 +281,20 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
 
   setorderv(annual_fishery_status_holder, c("spstock2","doffy"))
   annual_fishery_status_holder[,daily_pounds_caught :=cumul_catch_pounds-shift(cumul_catch_pounds,1,fill=0,type="lag"), by=spstock2]
+  
+  
+  
+  #contract the quota_price list down to a single data.table
+  
+  annual_quota_price_holder<-rbindlist(annual_quota_price_holder) 
+  annual_quota_price_holder$r<-r
+  annual_quota_price_holder$m<-m
+  annual_quota_price_holder$y<-y
+  annual_quota_price_holder$year<-yrs[y]
+  
+  fishery_quota_price_holder[[yearitercounter]]<-annual_quota_price_holder
+  
+  
   
   
   # Compute the within-season Gini for each modeled stock and put it in 'stock'
