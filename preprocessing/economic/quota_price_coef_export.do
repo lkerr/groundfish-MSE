@@ -44,7 +44,7 @@ mat2txt, matrix(b) saving($linear_out) replace
 
 
 /* read in exponential model */
-est restore exp_P1NS
+est restore exp_P1Dproxy
 
 
 mat b=e(b)

@@ -61,6 +61,7 @@ qc_rownames<-gsub("_cons","constant",qc_rownames)
 qc_rownames<-gsub("__","_",qc_rownames)
 qc_rownames<-gsub("#","X",qc_rownames)
 qc_rownames<-gsub("c\\.","",qc_rownames)
+qc_rownames<-gsub("lag1Q_live_priceGDP","live_priceGDP",qc_rownames)
 
 quotaprice_coefs<-zero_out(quotaprice_coefs,thresh)
 quotaprice_coefs<-droppval(quotaprice_coefs)
