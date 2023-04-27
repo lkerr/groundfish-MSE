@@ -4,6 +4,8 @@
 
 # empty the environment
 # rm(list=ls())
+constant_econ_year<-2015
+
 source('processes/runSetup.R')
 
 # if on local machine (i.e., not hpcc) must compile the tmb code
@@ -45,7 +47,6 @@ showProgBar<-TRUE # ProgBar less useful when stockassessment results are printed
 
 
 
-constant_econ_year<-2015
 # Should write an extra column into mproc.csv about this. 
 #source('processes/setup_Random_YearIndexing.R')
 #source('processes/setup_BlockRandom_YearIndexing.R')

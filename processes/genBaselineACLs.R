@@ -26,8 +26,14 @@ non_sector_econ_baseline<-non_sector_econ_baseline[, ns_keep]
 
 
 
-# read in the estimated coefficients from txt files
+# read in the ACLs from csv files
 econ_baseline <- read.csv(file.path(sourcepath,acls), sep=",", header=TRUE,stringsAsFactors=FALSE)
+
+# filter to a single year of groundfish ACLs if desired.
+if (exists("constant_econ_year")==TRUE){
+econ_baseline <- econ_baseline %>%
+  dplyr::filter(gffishingyear==constant_econ_year)
+}  
 
 #set anything na to 1,000,000 mt
 econ_baseline$totalACL_mt[is.na(econ_baseline$totalACL_mt)] <- 1e6
