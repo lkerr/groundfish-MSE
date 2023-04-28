@@ -38,7 +38,7 @@ sim[ ,c("id","hullnum", "doffy", "y") := NULL]
 
 monthly_summary = sim[, lapply(.SD, sum, na.rm=TRUE), by=list(year, month, spstock2, gearcat, nreps, model)]
 
-write.csv(daily_summary, file.path(ResultDirectory,"summary","monthly_summary.csv"))
+write.csv(monthly_summary, file.path(ResultDirectory,"summary","monthly_summary.csv"))
 
 
 

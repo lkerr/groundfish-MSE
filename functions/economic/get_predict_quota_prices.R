@@ -10,6 +10,9 @@ get_predict_quota_prices <- function(){
   quarterly<-fishery_holder[,c("stocklist_index","stockName","spstock2","sectorACL","cumul_catch_pounds", "mults_allocated")]
   quarterly<-quarterly[which(mults_allocated==1),]
   quarterly$quota_remaining_BOQ<-quarterly$sectorACL-(quarterly$cumul_catch_pounds/(pounds_per_kg*kg_per_mt))
+
+  #replace negative quota remaining with zero for purposes of quota prices computation
+  quarterly$quota_remaining_BOQ[quarterly$quota_remaining_BOQ<=0]<-0
   quarterly$fraction_remaining_BOQ<-quarterly$quota_remaining_BOQ/quarterly$sectorACL
   
   #Scale to 1000s of mt
@@ -73,8 +76,12 @@ get_predict_quota_prices <- function(){
   # In stata: psel*ytrun
   quarterly[,ycen:= psel*ytrun]
   # Put an upper bound on quota prices
-  quarterly[,ub_qp :=max(1.5*live_priceGDP,6)]
+  quarterly[,ub_qp :=max(3*live_priceGDP,10)]
   quarterly[ycen >= ub_qp, ycen := ub_qp]
+  
+  # If there is less than 5% quota remaining, set the quota price to the max. 
+  quarterly[fraction_remaining_BOQ <= .05, ycen := ub_qp]
+  
   # And a lower bound of 1/2 of a cent
   quarterly[ycen <= 0.005, ycen := 0.005]
   
@@ -82,7 +89,6 @@ get_predict_quota_prices <- function(){
   keepcols<-c("spstock2","ycen")  
   quarterly<-quarterly[,..keepcols]
   quarterly$spstock2<-paste0("q_",quarterly$spstock2)
-  # upper bound of quota prices, the highest of 1.5x live price or $5. 
   # reshape
   quarterly$m<-1
   quarterly<-dcast(quarterly,  m~ spstock2, value.var="ycen")
