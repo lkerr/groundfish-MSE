@@ -15,6 +15,7 @@ Theil_managed_CtoB<-get_relTheil(cwdata,"catch","SSB")
 Theil_managed_Relative_C<-get_Theil(cwdata,"catch")
 
 
+#remove this like if you want to compute the HHI, shannon, and theil managed only for the Economic model.
 simlevelresults <- get_fillRepArraysSimLevel(simlevelresults)
 
 
@@ -25,8 +26,8 @@ if(mproc$ImplementationClass[m]=="Economic"){
   #If we have started management, put the economic results into their container
   if(y >= fmyearIdx){
     simlevelresults <- get_fillRepArraysEcon(simlevelresults)
-    # Write the raw data out sometimes.
-    if(chunk_flag==0 | yearitercounter==max_yiter){
+    # Write the raw data occasionally or if this is the last year of an econ model
+    if(chunk_flag==0 | y==nyear){
       revenue_holder<-rbindlist(revenue_holder)
       tda <- as.character(Sys.time())
       tda <- gsub(':', '', tda)
