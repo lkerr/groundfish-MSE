@@ -16,10 +16,18 @@ file_names = list.files(path=file.path(ResultDirectory,"econ", "raw"),
 #binding into a data.table
 simulations = (lapply(file_names, fread, stringsAsFactors = FALSE))
 sim = rbindlist(simulations)
-sim[, trips := 1]
+
+#sim[, trips := 1]
 
 setnames(sim, old="r", new="nreps")
 setnames(sim, old="m", new="model")
+
+
+sim <-sim %>%
+  dplyr::filter(year==2020) %>%
+  group_by(model, nreps, year, doffy,hullnum) %>%
+  dplyr::arrange(model, nreps, year, doffy,hullnum)
+
 
 #selecting one replicate for daily resolution 
 daily_summary = sim[sim$nreps==1]
@@ -27,6 +35,13 @@ daily_summary [ ,c("id","hullnum", "y") := NULL]
 daily_summary = daily_summary [, lapply(.SD, sum, na.rm=TRUE), by=list(year, doffy, spstock2, gearcat, nreps, model)]
 
 write.csv(daily_summary, file.path(ResultDirectory,"summary","daily_summary.csv"))
+
+
+setcolorder(daily_summary, c("year", "doffy","gearcat",  "spstock2", "trips","c_redfish", "c_codGOM","c_whitehake",
+                             "r_redfish", "r_codGOM", "r_whitehake"))
+
+
+
 
 #monthly resolution data 
 
