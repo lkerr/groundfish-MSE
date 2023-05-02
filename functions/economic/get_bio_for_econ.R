@@ -39,8 +39,8 @@ get_bio_for_econ=function(stock,basecase){
   biocontain$stockName<- as.character(biocontain$stockName)
   
   #convert trawlsurvery and obs_trawlsurvey from mt to kg and take logs
-  biocontain$trawlsurvey<-log(biocontain$trawlsurvey/kg_per_mt)
-  biocontain$obs_trawlsurvey<-log(biocontain$obs_trawlsurvey/kg_per_mt)
+  biocontain$trawlsurvey<-log(biocontain$trawlsurvey)
+  biocontain$obs_trawlsurvey<-log(biocontain$obs_trawlsurvey)
   #rename
   colnames(biocontain)[colnames(biocontain) %in% c("trawlsurvey", "obs_trawlsurvey")] <- c("ln_trawlsurvey", "ln_obs_trawlsurvey")
   
