@@ -63,15 +63,24 @@ if(y == fmyearIdx){
 
 
 q_fy<-0
+w_fy<-0
+
+qds <- c(1, 91,182,273)
+weeks <-seq(from = 1, to = 365, by = 7)
+
+
 for (day in 1:365){
-  if (day==1 | day==91 | day==182 | day==273){
+  if (day  %in% qds){
     q_fy<-q_fy+1
+  }
+  if (day  %in% weeks){
+    w_fy<-w_fy+1
     #print(paste("It is quarter",q_fy))
     qp<-get_predict_quota_prices()
     qp_names<-colnames(qp)
-    annual_quota_price_holder[[q_fy]]<-qp
+    annual_quota_price_holder[[w_fy]]<-qp
+    annual_quota_price_holder[[w_fy]]$w_fy<-w_fy
     qp$key<-1  
-    
 }
   # Subset for the day.  Add in production coeffients and construct some extra data.
 working_targeting<-copy(targeting_dataset[[day]])
@@ -179,8 +188,8 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
 
   fishery_holder<-get_fishery_next_period_areaclose(fishery_holder)
 
-  savelist<-c("id","hullnum","spstock2","doffy","exp_rev_total","exp_rev_total_das", "actual_rev_total", "gearcat","choice_prev_fish","OG_choice_prev_fish")
-  mm<-c(grep("^c_",colnames(trips), value=TRUE),grep("^l_",colnames(trips), value=TRUE),grep("^r_",colnames(trips), value=TRUE))
+  savelist<-c("id","hullnum","spstock2","doffy","exp_rev_total","exp_rev_total_das", "actual_rev_total", "gearcat","choice_prev_fish","OG_choice_prev_fish","quota_cost")
+  mm<-c(grep("^c_",colnames(trips), value=TRUE),grep("^l_",colnames(trips), value=TRUE),grep("^r_",colnames(trips), value=TRUE),grep("^q_",colnames(trips), value=TRUE))
   savelist=c(savelist,mm)
   # Drop trips corresponding to nofish. It's just alot of zeros.
   trips<-trips[spstock2!="nofish"]
