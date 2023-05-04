@@ -2,6 +2,8 @@ get_hydra <- function(){
   #send hydra data to groundfish MSE?
   
   #for now load in data I already have for testing
+  
+  #Emily, change this to actually pull new hydra file
   load(here("functions/hydra/hydraDataList_msk.rda")) # update R list annually 
   
   #rearrange to look like data that we need
