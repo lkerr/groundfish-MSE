@@ -4,6 +4,11 @@ get_hydra <- function(){
   #for now load in data I already have for testing
   
   #Emily, change this to actually pull new hydra file
+  #hydraDataList_msk.rda is input into hydra
+  #Change the nyears and the F information
+  #Run hydra
+  #read.report.R has function Rep2Rlist which should create data file I need
+  
   load(here("functions/hydra/hydraDataList_msk.rda")) # update R list annually 
   
   #rearrange to look like data that we need

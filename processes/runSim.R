@@ -56,26 +56,26 @@ for(r in 1:nrep){
        .Random.seed<-oldseed_mproc
 
         #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached, which sets of coefficients to use, and which prices to use
-        if(mproc$ImplementationClass[m]=="Economic"){
-          
-         source('processes/setupEconType.R')
-        }
+        # if(mproc$ImplementationClass[m]=="Economic"){
+        #   
+        #  source('processes/setupEconType.R')
+        # }
        
    #### get historic assessment info if there is any- NOT USING WITH HYDRA
-   for (i in 1:nstock){
+   # for (i in 1:nstock){
      #assess_vals <- get_HistAssess(stock = stock[[i]])
       
      #stock[[i]] <- get_HistAssess(stock = stock[[i]])
        
-   }      
+   # }      
  
        
     # Initialize stocks and determine burn-in F- DO NOT NEED TO DO THIS WITH HYDRA? 
-    for(i in 1:nstock){
+    # for(i in 1:nstock){
      # stock[[i]] <- get_popInit(stock=stock[[i]]) 
       # this runs initial survey/catch also- will need to replace this with hydra for first year
   
-    }
+    # }
 
        
     #### Top year loop ####
@@ -89,8 +89,8 @@ for(r in 1:nrep){
         # CONVERT TO AGES AND WRANGLE INTO CORRECT FORMAT
         stock[[i]] <- get_lengthConvert(stock=stock[[i]], hydraData) 
       }
-      source('processes/withinYearAdmin.R')
-      begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed) # what exactly is this doing? 
+      # source('processes/withinYearAdmin.R')
+      # begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed) # what exactly is this doing? 
 
       # if burn-in period is over... DON'T NEED THIS WITH HYDRA?
       #if(y >= fmyearIdx){
@@ -102,7 +102,7 @@ for(r in 1:nrep){
           stock[[i]] <- get_advice(stock = stock[[i]]) # RUNS MP
           #stock[[i]] <- get_relError(stock = stock[[i]]) # this happens somewhere else now I think...
         }
-   } }} # stop year loop here to check MP loop... delete later
+   # } }} # stop year loop here to check MP loop... delete later
         
           #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
 # NOT RUNNING ECONOMIC MODEL WITH HYDRA
