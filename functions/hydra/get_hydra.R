@@ -3,11 +3,13 @@ get_hydra <- function(){
   
   #for now load in data I already have for testing
   
-  #Emily, change this to actually pull new hydra file
-  #hydraDataList_msk.rda is input into hydra
-  #Change the nyears and the F information
-  #Run hydra
-  #read.report.R has function Rep2Rlist which should create data file I need
+  #Emily's pseudocode that'll replace the load hydradatalist_msk
+  #Start with hydraDataList object
+  #Make changes to number of years and F from the F advice from management model
+  #Generate .dat and .pin files using create_datpin_files()
+  #Run hydra.exe with -sim X and by pointing to the .dat and .pin files
+  #Process the hydra output with Rep2Rlist in read.report.R
+  #Name the hydra output "hydraDataList_msk" so it'll seamlessly integrate
   
   load(here("functions/hydra/hydraDataList_msk.rda")) # update R list annually 
   

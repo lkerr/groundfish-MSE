@@ -102,7 +102,7 @@ for(r in 1:nrep){
           stock[[i]] <- get_advice(stock = stock[[i]]) # RUNS MP
           #stock[[i]] <- get_relError(stock = stock[[i]]) # this happens somewhere else now I think...
         }
-   # } }} # stop year loop here to check MP loop... delete later
+    } }} # stop year loop here to check MP loop... delete later
         
           #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
 # NOT RUNNING ECONOMIC MODEL WITH HYDRA
