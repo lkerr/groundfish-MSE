@@ -75,6 +75,8 @@ for(i in 1:length(fl)){
 # slice omvalGlobal
 ds<-NULL
 
+#NOTE, this is a little weird, because I am reading things flLst, but then this loop goes over the most recent omvalGlobal. 
+
 for(i in 1:length(omvalGlobal)){
   #Just pick the index from one of the model runs
   sumEconIW<-unlist(omvalGlobal[[i]]$sumEconIW[,1,])
