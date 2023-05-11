@@ -54,91 +54,34 @@ for(r in 1:nrep){
 
        #Restore the rng state to the value of oldseed_mproc.  For the same values of r, all the management procedures to start from the same RNG state.
        .Random.seed<-oldseed_mproc
-
-        #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached, which sets of coefficients to use, and which prices to use
-        # if(mproc$ImplementationClass[m]=="Economic"){
-        #   
-        #  source('processes/setupEconType.R')
-        # }
-       
-   #### get historic assessment info if there is any- NOT USING WITH HYDRA
-   # for (i in 1:nstock){
-     #assess_vals <- get_HistAssess(stock = stock[[i]])
-      
-     #stock[[i]] <- get_HistAssess(stock = stock[[i]])
-       
-   # }      
- 
-       
-    # Initialize stocks and determine burn-in F- DO NOT NEED TO DO THIS WITH HYDRA? 
-    # for(i in 1:nstock){
-     # stock[[i]] <- get_popInit(stock=stock[[i]]) 
-      # this runs initial survey/catch also- will need to replace this with hydra for first year
-  
-    # }
-
        
     #### Top year loop ####
-    for(y in fyear:fyear){
+    for(y in fyear:nyear){
+      
+      manage_counter<-manage_counter+1 #keeps track of management year
+      
       # PULL IN HYDRA DATA EACH YEAR HERE? OR BELOW WITH get_indexData?
-      hydraData<- get_hydra()
-      
-      for(i in 1:nstock){
-     # stock[[i]] <- get_J1Updates(stock = stock[[i]]) SKIP THIS WITH HYDRA
+       hydraData<- get_hydra()
+       
+       # CONVERT TO AGES AND WRANGLE INTO CORRECT FORMAT
+        stock[[i]] <- get_lengthConvert(stock=stock[[i]], hydraData)
         
-        # CONVERT TO AGES AND WRANGLE INTO CORRECT FORMAT
-        stock[[i]] <- get_lengthConvert(stock=stock[[i]], hydraData) 
-      }
-      # source('processes/withinYearAdmin.R')
-      # begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed) # what exactly is this doing? 
-
-      # if burn-in period is over... DON'T NEED THIS WITH HYDRA?
-      #if(y >= fmyearIdx){
-      
-      # MOVE THIS LATER??
-        manage_counter<-manage_counter+1 #this only gets incremented when y>=fmyearIdx
-#browser()
+       source('processes/withinYearAdmin.R')
+       begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed) # what exactly is this doing? 
+        #browser()
+      #### RUN MP ####
         for(i in 1:nstock){
           stock[[i]] <- get_advice(stock = stock[[i]]) # RUNS MP
-          #stock[[i]] <- get_relError(stock = stock[[i]]) # this happens somewhere else now I think...
         }
-    } }} # stop year loop here to check MP loop... delete later
         
-          #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
-# NOT RUNNING ECONOMIC MODEL WITH HYDRA
-      if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
-
-         for(i in 1:nstock){
-    # Specific "survey" meant to track the population on Jan1
-    # for use in the economic submodel. timeI=0 implies Jan1.
-           stock[[i]]<- within(stock[[i]], {
-           IJ1[y,] <- get_survey(F_full=0, M=0, N=J1N[y,], slxC[y,],
-                        slxI=selI, timeI=0, qI=qI)
-           })
-         } # End survey loop for economic model
-
-
-          # ---- Run the economic model here ----
-          source('processes/loadEcon2.R')
-
-
-          bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline)
-
-          source('processes/runEcon_module.R')
-
-        }else if(mproc$ImplementationClass[m] == "StandardFisheries"){
+      #### ADD IMPLEMENTATION ERROR ####
           for(i in 1:nstock){
             stock[[i]] <- get_implementationF(type = 'adviceWithError',
                                               stock = stock[[i]])
-            
-          } # End implementation error in standard fisheries
-        }else{
-          #Add a warning about invalid ImplementationClass
-        }
+          } 
 
-     # } # End of the if "burn-in period is over and fishery management has started" clause 
-        
-      # BRING IN HYDRA HERE INSTEAD? NEED SOMETHING FOR FIRST GET_ADVICE ABOVE? OR MOVE YEAR INCREMENT?
+
+      # BRING IN HYDRA HERE INSTEAD? NEED SOMETHING FOR FIRST GET_ADVICE ABOVE? 
         
       for(i in 1:nstock){
       #  stock[[i]] <- get_mortality(stock = stock[[i]]) # KILLS FISH 
@@ -160,26 +103,15 @@ for(r in 1:nrep){
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         }
       
-      } 
     
         # what does this do?
       end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
 
-          #Save economic results once in a while to a csv file.
-        if(mproc$ImplementationClass[m]=="Economic" &(y >= fmyearIdx) & (chunk_flag==0 | yearitercounter==max_yiter)) {
-            revenue_holder<-rbindlist(revenue_holder)
-            tda <- as.character(Sys.time())
-            tda <- gsub(':', '', tda)
-            tda<-gsub(' ', '_', tda)
-            tda2 <- paste0(tda,"_", round(runif(1, 0, 10000)))
-            write.table(revenue_holder, file.path(econ_results_location, paste0("econ_",tda2, ".csv")), sep=",", row.names=FALSE)
-            revenue_holder<-list()
-        } #End save economic results if statement
 
         if(showProgBar==TRUE){
           setTxtProgressBar(iterpb, yearitercounter)
-        }
-      
+        }}
+         
       #### SEND F TO HYDRA HERE? RIGHT BEFORE END OF YEAR LOOP ####
       
     } #End of year loop 
@@ -189,7 +121,7 @@ for(r in 1:nrep){
 top_loop_end<-Sys.time()
 big_loop<-top_loop_end-top_loop_start
 big_loop
-#econ_timer
+
       # Output run time / date information and OM inputs. The random number is
   # just ensuring that no simulations will be overwritten because the hpcc
   # might finish some in the same second. td is used for uniquely naming the
