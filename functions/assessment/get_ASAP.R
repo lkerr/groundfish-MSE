@@ -11,21 +11,21 @@ get_ASAP <- function(stock){
     ### modify for each simulation/year
 
     #start year;
-     #dat_file$dat$year1 <- fmyearIdx - ncaayear
-     #styear <- fmyearIdx - ncaayear
-styear <- 1
+     dat_file$dat$year1 <- fmyearIdx - ncaayear
+     styear <- fmyearIdx - ncaayear
+    
     #Change start years below to use moving window
-    # dat_file$dat$year1 <- y - ncaayear
-    # styear <- y - ncaayear
+     # dat_file$dat$year1 <- y - ncaayear
+     # styear <- y - ncaayear
 
     #end year
-    # if(mproc[m,'Lag'] == 'TRUE'){
-    # endyear <- y-2
-    # }
-    # else if(mproc[m,'Lag'] == 'FALSE'){
-    # endyear <- y-1
-    # }
-endyear <- 37
+     if(mproc[m,'Lag'] == 'TRUE'){
+     endyear <- y-2
+     }
+     else if(mproc[m,'Lag'] == 'FALSE'){
+     endyear <- y-1
+     }
+
     #number of years in assessment
      N_rows <- length(styear:endyear)
      dat_file$dat$n_years <- N_rows
@@ -64,7 +64,7 @@ endyear <- 37
 
     #index data; sum index value, observation error, proportions-at-age, sample size
     #dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, N_rows), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN, N_rows)) #year, value, CV, by-age, sample size
-    dat_file$dat$IAA_mats <- cbind(seq(dat_file$dat$year1,(dat_file$dat$year1+36)), get_dwindow(sumIN, styear, endyear), rep(oe_sumIN, N_rows), get_dwindow(round(paaIN,3), styear, endyear), rep(oe_paaIN, N_rows)) #year, value, CV, by-age, sample size
+    dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(sumIN, styear, endyear), rep(oe_sumIN, N_rows), get_dwindow(round(paaIN,3), styear, endyear), rep(oe_paaIN, N_rows)) #year, value, CV, by-age, sample size
     
     #recruitment CV
     #dat_file$dat$recruit_cv <- matrix(pe_RSA, nrow = N_rows, 1)
