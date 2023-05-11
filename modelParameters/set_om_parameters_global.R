@@ -38,15 +38,15 @@ fmyear <- 2019
 # simply fills up the arrays as necessary even before the burn-in period
 # begins. This is rather arbitrary but should be larger than the number of
 # years in the assessment model and greater than the first age in the model.
-fyear <- 38
+fyear <- 119
 
 # maximum year predicted into the future
-mxyear <- 2040
+mxyear <- 2021
 
 #### Burn-in parameters ####
 
 # number of burn-in years (before the pre-2000 non-assessment period)
-nburn <- 50
+nburn <- 0
 
 
 #### Temperature information ####
@@ -132,12 +132,13 @@ production_vars_post=c("log_crew","log_trip_days","primary","secondary", "log_tr
 # Years after the management period begins to break up the results. For
 # example, c(10, 20) would result in plots from 0-10 years after the mgmnt
 # period begins, 10-20 years and 20 years to the end of the series.
-plotBrkYrs <- c(5, 10, 15)
+#plotBrkYrs <- c(5, 10, 15)
+plotBrkYrs <- c(1)
 
 # Which sets of plots should be created? Set these objects to T/F
 
 # Boxplots of performance measures
-plotBP <- TRUE
+plotBP <- FALSE
 
 # Extra folder of reference point plots
 plotRP <- FALSE
@@ -152,7 +153,7 @@ plotTrajBox <- FALSE     # boxplots of trajectories
 plotTrajSummary <- TRUE  # summary statistics
 
 #how many years before writing out the results to csv? 6 corresponds to 1 "econ" simulation (2010-2015).  Larger will go faster (less overhead) but you lose work if something crashes,
-savechunksize<-10
+savechunksize<-1
 
 #Set up a counter for every year that has been simulated
 yearcounter<-0

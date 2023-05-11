@@ -28,8 +28,7 @@ M_typ <- 'const'
 init_M <- 0.3
 #M <- 0.6
 #M_typ='ramp'
-M_mis<-FALSE #If there is a M misspecification, set to TRUE
-M_mis_val<-0.3 #The misspecified M value 
+
 
 # initial numbers at-age parameters
 initN_par <- c(13810, 21704,15683, 8440, 3016, 1897, 2066) #Jan-1 population- estimation results base run output
@@ -57,10 +56,7 @@ R_typ <- 'BHSteep'
 ##For BH SR with relationship with temperature###
 # R_typ <- 'BH'
 # Rpar<-c(a=5.1698169,b=0.0002892,g=-1.423)
-R_mis<-TRUE #If BRPs and projections assume a wrong SRR, set to TRUE.
-Rpar_mis <- c(SSB_star = 6300, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
-              cR = 1,
-              Rnyr= 20)
+
 
 #### Survey parameters ####
 
@@ -85,6 +81,15 @@ startCV <- 1.5
 # scalar to bring pop numbers closer to zero (necessary
 # for model fitting)
 caaInScalar <- 1 
+
+# stock assessment misspecifications
+M_mis<- FALSE
+M_mis_val<-0.3
+R_mis<- FALSE
+Rpar_mis <- c(SSB_star = 6300, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
+              cR = 1,
+              Rnyr= 20)
+waa_mis<- FALSE
 
 #### Error parameters ####
 

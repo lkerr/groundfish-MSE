@@ -87,8 +87,8 @@ caaInScalar <- 1000
 
 M_mis<-FALSE
 #M_mis_val<-0.4
-waa_mis <- TRUE
-R_mis<-TRUE#If BRPs and projections assume a wrong SRR, set to TRUE. 
+waa_mis <- FALSE
+R_mis<-FALSE#If BRPs and projections assume a wrong SRR, set to TRUE. 
 R_mis_typ<-'HS'
 Rpar_mis <- c(SSB_star = 75000, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
               cR = 1,
@@ -118,7 +118,7 @@ pe_IA<-0.378
 # implementation error of fishing mortality
 ie_F <- 0
 ie_typ <- 'lognorm'
-ie_bias <- 0 # % bias in implementation error
+ie_bias <- -0.1 # % bias in implementation error
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.) (sumCW*ob_sumCW) (range 0.01-1)
 ob_sumCW <- 1 #0.44 is bias

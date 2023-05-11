@@ -39,10 +39,6 @@ Rpar <- c(h = 6.286813e-01,      #update all
 
 R_typ <- 'BHSteep'
 
-R_mis<-TRUE #If BRPs and projections assume a wrong SRR, set to TRUE.
-Rpar_mis <- c(SSB_star = 6300, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
-              cR = 1,
-              Rnyr= 20)
 
 #### Fishery parameters ####
 
@@ -80,7 +76,15 @@ startCV <- 1.5
 # for model fitting)
 caaInScalar <- 1000  
 
-M_mis<- 'FALSE'
+# stock assessment misspecifications
+M_mis<- FALSE
+M_mis_val<-0.2
+R_mis<- FALSE
+Rpar_mis <- c(SSB_star = 6300, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
+              cR = 1,
+              Rnyr= 20)
+waa_mis<- FALSE
+
 
 #### Error parameters ####
 
@@ -98,6 +102,8 @@ oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
 pe_R <- 0.5
+pe_RSA<- 0.5 #recruitment process error assumed in the stock assessment
+pe_IA <- 0.18
 
 # implementation error of fishing mortality
 ie_F <- 0
