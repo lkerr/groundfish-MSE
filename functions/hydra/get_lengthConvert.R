@@ -46,8 +46,9 @@ get_lengthConvert <- function(stock, hydraData){
       select(fishery, year,species,name,age,paa)%>%
       spread(age,paa)
    
-   year_gap<- data.frame(year=seq(1:y))
-               
+   
+   year_gap<- data.frame(year=1:nyear)
+   
     #assign and filter survey
      paaSurv <-dplyr::filter(paaSurvtemp, survey==1, species==i)%>%
        full_join(year_gap, by="year")%>%
@@ -96,27 +97,18 @@ get_lengthConvert <- function(stock, hydraData){
      # 
      # obs_paaSurv <- get_error_paa(type=oe_paaIN_typ, paa=paaSurv$biomass[y,], 
      #                                par=oe_paaIN)
-     
-if (y==fyear) {
-  out <- within(stock, { 
-    paaIN[1:y,]<- paaSurv[1:y,]
-    paaCN[1:y,]<- paaCatch[1:y,]
-    sumIN[1:y]<- sumSurv$biomass[1:y]
-    sumCW[1:y]<- sumCatch$catch[1:y]
-  })
-}else{
- out <- within(stock, { 
-   paaIN[y,]<- paaSurv[y,]
-   paaCN[y,]<- paaCatch[y,]
-   sumIN[y]<- sumSurv$biomass[y]
-   sumCW[y]<- sumCatch$catch[y]
-   
-   #obs_paaIN[y,]=obs_paaSurv
-   #obs_paaCN[y,]=obs_paaCatch
-   #obs_sumIN[y]=obs_sumSurv
-   #obs_sumCW[y]=obs_sunCatch
- })
-}
+      
+      
+      out <- within(stock, { 
+        paaIN<- paaSurv
+        paaCN<- paaCatch
+        sumIN<- sumSurv$biomass
+        sumCW<- sumCatch$catch
+        
+      })
+      
+      
+
   
   return(out)
 }
