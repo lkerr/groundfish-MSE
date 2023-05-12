@@ -57,18 +57,21 @@ for(r in 1:nrep){
        
     #### Top year loop ####
     for(y in fyear:nyear){
+      source('processes/withinYearAdmin.R')
+      begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed) # what exactly is this doing? 
       
+      if(y >=fmyearIdx){
       manage_counter<-manage_counter+1 #keeps track of management year
       
       # PULL IN HYDRA DATA EACH YEAR HERE? OR BELOW WITH get_indexData?
        hydraData<- get_hydra()
        
        # CONVERT TO AGES AND WRANGLE INTO CORRECT FORMAT
+       for (i in 1:nstock) {
         stock[[i]] <- get_lengthConvert(stock=stock[[i]], hydraData)
-        
-       source('processes/withinYearAdmin.R')
-       begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed) # what exactly is this doing? 
-        #browser()
+       }
+    
+         
       #### RUN MP ####
         for(i in 1:nstock){
           stock[[i]] <- get_advice(stock = stock[[i]]) # RUNS MP
@@ -79,7 +82,7 @@ for(r in 1:nrep){
             stock[[i]] <- get_implementationF(type = 'adviceWithError',
                                               stock = stock[[i]])
           } 
-
+      } # end of fishery management has started clause
 
       # BRING IN HYDRA HERE INSTEAD? NEED SOMETHING FOR FIRST GET_ADVICE ABOVE? 
         
@@ -93,24 +96,24 @@ for(r in 1:nrep){
 
       # Store results- AM I SAVING THE RIGHT THING NOW? CHECK THESE FUNCTIONS
         # we save after mortality and new index generated but that would be different in this case
-     
+      
          for(i in 1:nstock){
         if (y == nyear){
           stock[[i]] <- get_TermrelError(stock = stock[[i]])
         }
-      
+        
         if(y>=fmyearIdx){
           stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         }
+         }
       
-    
         # what does this do?
       end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
 
 
         if(showProgBar==TRUE){
           setTxtProgressBar(iterpb, yearitercounter)
-        }}
+        }
          
       #### SEND F TO HYDRA HERE? RIGHT BEFORE END OF YEAR LOOP ####
       
