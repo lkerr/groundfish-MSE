@@ -61,7 +61,8 @@ for(r in 1:nrep){
       manage_counter<-manage_counter+1 #keeps track of management year
       
       # PULL IN HYDRA DATA EACH YEAR HERE? OR BELOW WITH get_indexData?
-       hydraData<- get_hydra()
+      # manage_counter informs how many extra years of hydra output get generated
+       hydraData<- get_hydra(manage_counter)
        
        # CONVERT TO AGES AND WRANGLE INTO CORRECT FORMAT
         stock[[i]] <- get_lengthConvert(stock=stock[[i]], hydraData)
