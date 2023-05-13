@@ -177,14 +177,14 @@
   colnames(obs_survey_biomass) <- c("survey","year","species","biomass","cv")
   Nsurvey_size_obs <- 833 
   obs_survey_size <- read.csv("functions/hydra/obs_survey_size.csv",sep=",",head=F)
-  colnames(obs_survey_size) <- c("survey","year","species","type","InpN","bin1","bin2","bin3","bin4","bin5")
+  colnames(obs_survey_size) <- c("survey","year","species","type","inpN","sizebin1","sizebin2","sizebin3","sizebin4","sizebin5")
   
   Ncatch_obs <- 420
   obs_catch_biomass <- read.csv("functions/hydra/obs_catch_biomass.csv",sep=",",head=F)
   colnames(obs_catch_biomass) <- c("fleet","area","year","species","catch","cv")
   Ncatch_size_obs <- 395
   obs_catch_size <- read.csv("functions/hydra/obs_catch_size.csv",sep=",",head=F)
-  colnames(obs_catch_size) <- c("fleet","area","year","species","type","InpN","bin1","bin2","bin3","bin4","bin5")
+  colnames(obs_catch_size) <- c("fleet","area","year","species","type","inpN","sizebin1","sizebin2","sizebin3","sizebin4","sizebin5")
   
   Ndietprop_obs <- 456
   obs_dietprop <- read.csv("functions/hydra/obs_dietprop.csv",sep=",",head=F)

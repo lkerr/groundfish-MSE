@@ -6,13 +6,19 @@ get_hydra <- function(manage_counter){
   
   #This is the number of years the MSE has gone on, will inform Nyears
   MSEyr = manage_counter
+  
+  # EMILY: ADD THE .PIN FILE INFO TO get_hydra_data AS WELL, AND DOWN BELOW
+  #Source the original hydra_data
   source(here("functions/hydra/get_hydra_data.R"))
   
+  #Update hydra data based on this iteration of the MSE
   Nyrs <- Nyrs + MSEyr
   bs_temp <- c(bs_temp,rnorm(MSEyr,mean(bs_temp),sd(bs_temp)))
   
+  # EMILY: UPDATE PIN FILE HERE TOO
+  
   #for now load in data I already have for testing
-  load(here("functions/hydra/hydraDataList_msk.rda")) # update R list annually
+  # load(here("functions/hydra/hydraDataList_msk.rda")) # update R list annually
   
   
   #############################################################################
@@ -85,9 +91,6 @@ get_hydra <- function(manage_counter){
   catchdata.df <- hydra_sim_rep$catch
   colnames(catchdata.df) <- c("fleet","area","year","species","catch","cv","predcatch","residual","NLL")
   
-  #End of Emily's code. Next step, replace subsequent code with items from hydra_sim_data and hydra_sim_rep
-  #############################################################################
-  
   #rearrange to look like data that we need
   species <- data.frame(name=speciesList, species= c(1:10))
   K <-as.numeric(vonB_k) 
@@ -122,15 +125,16 @@ get_hydra <- function(manage_counter){
     mutate(startbin= dplyr::lag(endbin))%>%
    dplyr::filter(!bin %in% c('sizebin0'))
   
-  # Start here
   # calculate the number of fish in each bin- Problem this is not an integer
-  observedSurvSize<- hydraDataList_msk$observedSurvSize
+  # observedSurvSize<- hydraDataList_msk$observedSurvSize
+  observedSurvSize<- obs_survey_size
   SurvData <- gather(observedSurvSize, bin, prop, sizebin1:sizebin5)%>%
     mutate(N= ceiling(inpN*prop))%>% #fix by rounding?
     full_join(sizebins, by=c("species", "bin"))%>%
     full_join(vonbert)
   
-  observedCatchSize <- hydraDataList_msk$observedCatchSize
+  # observedCatchSize <- hydraDataList_msk$observedCatchSize
+  observedCatchSize <- obs_catch_size
   catchData <- gather(observedCatchSize, bin, prop, sizebin1:sizebin5)%>%
     mutate(N= ceiling(inpN*prop))%>% #fix by rounding?
     full_join(sizebins, by=c("species", "bin"))%>%

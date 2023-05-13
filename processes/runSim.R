@@ -65,6 +65,7 @@ for(r in 1:nrep){
       
       # PULL IN HYDRA DATA EACH YEAR HERE? OR BELOW WITH get_indexData?
       # manage_counter informs how many extra years of hydra output get generated
+       source('functions/hydra/get_hydra.R')
        hydraData<- get_hydra(manage_counter)
        
        # CONVERT TO AGES AND WRANGLE INTO CORRECT FORMAT
