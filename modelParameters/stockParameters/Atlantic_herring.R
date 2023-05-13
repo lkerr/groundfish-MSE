@@ -4,7 +4,7 @@ burnFsd <- 0.3
 
 # first age and plus age
 fage <- 1
-page <- 10
+page <- 8
 
 #### Life history parameters ####
 
@@ -13,17 +13,17 @@ laa_par <- c(Linf=114.1, K=0.22, t0=0.17, beta1=0)
 laa_typ <- 'vonB'
 
 # weight-length parameters
-waa_par <- c(exp(-11.6913), 3.0219) #SAW 55 p.659
-waa_typ <- 'aLb'
+waa_par <- c(0.011, 0.041, 0.083, 0.11, 0.15, 0.18, 0.18, 0.19) # average last 5 years of dat file
+waa_typ <- 'input'
 
 # maturity-length parameters
-mat_par <- c(0.127, 38.8) # O'brien GB cod female
-mat_typ <- 'logistic'
+mat_par <- c(0,0.01,0.71,0.98,1,1,1,1) # average last 5 years of dat file
+mat_typ <- 'input'
 
 # natural mortality
-M <- 0.2
+M <- 0.35
 M_typ <- 'const'
-init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
+init_M <- 0.35
 
 # initial numbers at-age parameters
 initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = M)
@@ -100,13 +100,13 @@ oe_effort_typ <- 'lognorm'
 
 # process error levels 
 pe_R <- 5.839408e-01
-pe_RSA<- 0.5 #recruitment process error assumed in the stock assessment
+pe_RSA<- 0.5 
 pe_IA <- 0.18
 
 # implementation error of fishing mortality
 ie_F <- 0
 ie_typ <- 'lognorm'
-ie_bias <- -0.13 #0 #-0.1 # % bias in implementation error
+ie_bias <- -0.1 #0 #-0.1 # % bias in implementation error
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
 ob_sumCW <- 1

@@ -13,12 +13,12 @@ laa_par <- c(Linf=50, K=0.335, t0=0.26, beta1=5)
 laa_typ <- 'vonB'
 
 # weight-length parameters
-waa_par <- c(exp(-12.91075), 3.38) 
-waa_typ <- 'aLb'
+waa_par <- c(0.356,0.859,1.511,2.597,5.074,7.062) 
+waa_typ <- 'input'
 
 # maturity-length parameters
-mat_par <- c(0.587, 25.8) 
-mat_typ <- 'logistic'
+mat_par <- c(0.09,0.32,0.7,0.92,0.98,1) 
+mat_typ <- 'input'
 
 # natural mortality
 M <- 0.2

@@ -13,12 +13,12 @@ laa_par <- c(Linf=114.1, K=0.22, t0=0.17, beta1=0)
 laa_typ <- 'vonB'
 
 # weight-length parameters
-waa_par <- c(exp(-11.6913), 3.0219) #SAW 55 p.659
-waa_typ <- 'aLb'
+waa_par <- c(0.50, 1.40, 2.18,2.75,3.70,4.54,5.11,6.28,9.00,13.05) 
+waa_typ <- 'dynamic'
 
 # maturity-length parameters
-mat_par <- c(0.127, 38.8) # O'brien GB cod female
-mat_typ <- 'logistic'
+mat_par <- c(0.028, 0.318, 0.884, 0.99, 1,1,1,1,1,1)
+mat_typ <- 'input'
 
 # natural mortality
 M <- 0.2
@@ -106,7 +106,7 @@ pe_IA <- 0.18
 # implementation error of fishing mortality
 ie_F <- 0
 ie_typ <- 'lognorm'
-ie_bias <- -0.13 #0 #-0.1 # % bias in implementation error
+ie_bias <- -0.1 #0 #-0.1 # % bias in implementation error
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
 ob_sumCW <- 1
