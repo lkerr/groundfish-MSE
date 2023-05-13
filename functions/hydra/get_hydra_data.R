@@ -1,20 +1,18 @@
 #Hydra_Sim_Dat_R
-get_hydra_data <- function(MSEyr) 
-{
   
   speciesList <- c("Atlantic_cod","Atlantic_herring","Atlantic_mackerel",  
                    "Goosefish","Haddock","Silver_hake","Spiny_dogfish",
                    "Winter_flounder","Winter_skate","Yellowtail_flounder")
   
   debug <-0
-  Nyrs <- 42+MSEyr
+  Nyrs <- 42
   Nspecies <- 10
   Nsizebins <- 5
   Nareas <- 1
   Nfleets <- 2
   Nsurveys <- 2
   wtconv <- 1
-  datfilename <- "hydra_sim_GB_5bin_1978_inpN-ts.dat"
+  datfilename <- "hydra_sim_data-ts.dat"
   binwidth <- c(29, 29, 29, 29, 29, 
                 8, 8, 8, 8, 8, 
                12, 12, 12, 12, 12, 
@@ -54,14 +52,7 @@ get_hydra_data <- function(MSEyr)
                9.25267142857143, 9.30151111111111, 9.9935875, 8.71782222222222, 7.99782857142857, 
                8.4206, 9.3799, 8.41815, 8.95543333333333, 9.0541625, 9.2831125, 9.8491375, 
                10.4877555555556, 9.95232857142857, 9.671, 9.63732, 10.31192, 9.5166, 9.99688, 9.77481666666667)
-  # bs_temp <- c(8.69398, 9.08885, 8.74414285714286, 8.868, 8.55206666666667, 9.43436666666667, 
-  #              9.26516666666667, 9.69548, 9.1646, 8.274075, 8.52445, 8.32313333333333, 
-  #              8.99702857142857, 8.79641428571429, 8.26319, 8.48561666666667, 9.46302222222222, 
-  #              9.72635333333333, 8.42418666666667, 8.99431, 9.18441538461539, 9.96980714285714, 
-  #              9.25267142857143, 9.30151111111111, 9.9935875, 8.71782222222222, 7.99782857142857, 
-  #              8.4206, 9.3799, 8.41815, 8.95543333333333, 9.0541625, 9.2831125, 9.8491375, 
-  #              10.4877555555556, 9.95232857142857, 9.671, 9.63732, 10.31192, 9.5166, 9.99688, 9.77481666666667,
-  #              rnorm(MSEyr,mean(bs_temp),sd(bs_temp)))
+
   yr1Nphase <- -1           
   recphase <- -1			
   avg_rec_phase	<- 1
@@ -180,4 +171,25 @@ get_hydra_data <- function(MSEyr)
   areaMortality <- rep(0,Nareas*Nspecies)
   eof <- 54321
   
-}
+  #Start the other .dat file information:
+  Nsurvey_obs <- 833 
+  obs_survey_biomass <- read.csv("functions/hydra/obs_survey_biomass.csv",sep=",",head=F)
+  colnames(obs_survey_biomass) <- c("survey","year","species","biomass","cv")
+  Nsurvey_size_obs <- 833 
+  obs_survey_size <- read.csv("functions/hydra/obs_survey_size.csv",sep=",",head=F)
+  colnames(obs_survey_size) <- c("survey","year","species","type","InpN","bin1","bin2","bin3","bin4","bin5")
+  
+  Ncatch_obs <- 420
+  obs_catch_biomass <- read.csv("functions/hydra/obs_catch_biomass.csv",sep=",",head=F)
+  colnames(obs_catch_biomass) <- c("fleet","area","year","species","catch","cv")
+  Ncatch_size_obs <- 395
+  obs_catch_size <- read.csv("functions/hydra/obs_catch_size.csv",sep=",",head=F)
+  colnames(obs_catch_size) <- c("fleet","area","year","species","type","InpN","bin1","bin2","bin3","bin4","bin5")
+  
+  Ndietprop_obs <- 456
+  obs_dietprop <- read.csv("functions/hydra/obs_dietprop.csv",sep=",",head=F)
+  colnames(obs_dietprop) <- c("survey","year","predator","predator_size","InpN",
+                              "wt_prey_1","wt_prey_2","wt_prey_3","wt_prey_4",
+                              "wt_prey_5","wt_prey_6","wt_prey_7","wt_prey_8",
+                              "wt_prey_9","wt_prey_10","wt_prey_11")
+  

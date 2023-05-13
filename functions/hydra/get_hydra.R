@@ -7,7 +7,9 @@ get_hydra <- function(manage_counter){
   #This is the number of years the MSE has gone on, will inform Nyears
   MSEyr = manage_counter
   source(here("functions/hydra/get_hydra_data.R"))
-  get_hydra_data(MSEyr)
+  
+  Nyrs <- Nyrs + MSEyr
+  bs_temp <- c(bs_temp,rnorm(MSEyr,mean(bs_temp),sd(bs_temp)))
   
   #for now load in data I already have for testing
   load(here("functions/hydra/hydraDataList_msk.rda")) # update R list annually
@@ -51,6 +53,13 @@ get_hydra <- function(manage_counter){
                flagMSE, residentTime, areaMortality, eof)),fileConn)
   close(fileConn)
   
+  fileConn<-file("functions/hydra/hydra_sim_data-ts.dat")
+  writeLines(as.character(c(Nsurvey_obs,obs_survey_biomass,Nsurvey_size_obs,
+                            obs_survey_size,Ncatch_obs,obs_catch_biomass,
+                            Ncatch_size_obs,obs_catch_size,Ndietprop_obs,
+                            obs_dietprop)),fileConn)
+  close(fileConn)
+  
   # Random number to run the MSE
   randomnum <- 100
   # randomnum <- round(randu(1,100),1)
@@ -74,7 +83,7 @@ get_hydra <- function(manage_counter){
   surveydata.df <- hydra_sim_rep$survey
   colnames(surveydata.df) <- c("survey","year","species","biomass","cv","predbiomass","residual","NLL")
   catchdata.df <- hydra_sim_rep$catch
-  colnames(catchdata.df) <- c("fishery","area","year","species","catch","cv","predcatch","residual","NLL")
+  colnames(catchdata.df) <- c("fleet","area","year","species","catch","cv","predcatch","residual","NLL")
   
   #End of Emily's code. Next step, replace subsequent code with items from hydra_sim_data and hydra_sim_rep
   #############################################################################
