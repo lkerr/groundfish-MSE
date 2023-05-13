@@ -12,10 +12,23 @@ get_hydra <- function(manage_counter){
   source(here("functions/hydra/get_hydra_data.R"))
   
   #Update hydra data based on this iteration of the MSE
+  # Primary dat file items:
   Nyrs <- Nyrs + MSEyr
   bs_temp <- c(bs_temp,rnorm(MSEyr,mean(bs_temp),sd(bs_temp)))
   
+  # Secondary dat file items:
+  # obs_survey_biomass
+  # obs_survey_size
+  # obs_catch_biomass
+  # obs_catch_size
+  # obs_diet_prop
+  
+  # pin file items:
+  # recruitment_devs
+  # F_devs
+  
   # EMILY: UPDATE PIN FILE HERE TOO
+  #
   
   #for now load in data I already have for testing
   # load(here("functions/hydra/hydraDataList_msk.rda")) # update R list annually
@@ -66,6 +79,14 @@ get_hydra <- function(manage_counter){
                             obs_dietprop)),fileConn)
   close(fileConn)
   
+  fileConn<-file("functions/hydra/hydra_sim_data.pin")
+  writeLines(as.character(c(ln_yr1N, recruitment_alpha, recruitment_shape, 
+                            recruitment_beta, ln_avg_recruitment, recruitment_devs, 
+                            ln_recsigma, avg_F, F_devs, fishsel_pars, ln_fishery_q, 
+                            ln_survey_q, survey_selpars, ln_M1ann, ln_otherFood_base, 
+                            otherFood_dev)),fileConn)
+  close(fileConn)
+  
   # Random number to run the MSE
   randomnum <- 100
   # randomnum <- round(randu(1,100),1)
@@ -75,7 +96,7 @@ get_hydra <- function(manage_counter){
   setwd(paste0(originalwd,"/functions/hydra"))
   
   # Run the hydra code
-  runmod <- paste("hydra_sim.exe -sim ",randomnum, "-ind hydra_sim_data.dat -ainp hydra_sim_GB_5bin_1978_inpN_m1oF.pin -nohess -maxfn 1")
+  runmod <- paste("hydra_sim.exe -sim ",randomnum, "-ind hydra_sim_data.dat -ainp hydra_sim_data.pin -nohess -maxfn 1")
   out <- system(runmod, intern=T)
   
   # Reset the working directory to original

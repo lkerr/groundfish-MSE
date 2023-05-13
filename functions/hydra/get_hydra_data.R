@@ -193,3 +193,30 @@
                               "wt_prey_5","wt_prey_6","wt_prey_7","wt_prey_8",
                               "wt_prey_9","wt_prey_10","wt_prey_11")
   
+  #Start of the .pin file information:
+  ln_yr1N <- c(4.320719, 4.170631, 3.755749, 3.921926, 2.776405,
+               7.114145, 7.114145, 7.176080, 7.176080, 7.909972,
+               5.153246, 5.395981, 5.292695, 5.180995, 5.082370,
+               2.356080, 2.373466, 2.182834, 2.240743, 1.409347,
+               4.864227, 5.769418, 6.391626, 6.376833, 6.586802,
+               4.908024, 5.035344, 4.712493, 4.341122, 4.615205,
+               3.785003, 3.682979, 3.383073, 2.926285, 2.103726,
+               4.058581, 4.456441, 4.553273, 4.724987, 5.084422,
+               4.761059, 4.878398, 4.773043, 4.628072, 4.719693,
+               4.779360, 5.310661, 5.426917, 5.607626, 6.514726)
+  recruitment_alpha <- rep(0,Nspecies)
+  recruitment_shape <- rep(0,Nspecies)
+  recruitment_beta <- rep(0,Nspecies)
+  ln_avg_recruitment <- c(5, 10, 7.5, 4.5, 8, 6.5, 5, 6, 6, 7)
+  recruitment_devs <- rep(0,Nspecies*Nyrs)
+  ln_recsigma <- rep(-0.3011051,Nspecies)
+  avg_F <- c(-2.18165568210824,-0.228414010548921)
+  F_devs <-rep(0,Nfleets*Nyrs)
+  fishsel_pars <- rep(1,Nfleets*2)
+  ln_fishery_q <- rep(0,Nspecies-Nfleets*Nareas)
+  ln_survey_q <- rep(0,Nsurveys*Nspecies)
+  survey_selpars <-rep(0,Nsurveys*2)
+  ln_M1ann <- rep(-2.302585,Nspecies)
+  ln_otherFood_base <- 21
+  otherFood_dev <- rep(0,Nspecies-2)
+  
