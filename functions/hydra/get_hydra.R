@@ -8,26 +8,29 @@ get_hydra <- function(newdata=data.frame()){
   MSEyr = length(newdata$bs_temp)
   
   # EMILY: ADD THE .PIN FILE INFO TO get_hydra_data AS WELL, AND DOWN BELOW
-  #Source the original hydra_data
+  #Source the original hydra_data, with added lines for additional year
   source(here("functions/hydra/get_hydra_data.R"))
+  
+  hydra_data <- get_hydra_data()
+  Nyrs <- hydra_data$Nyrs + MSEyr
+  hydra_data <- get_hydra_data(Nyrs)
   
   #Update hydra data based on this iteration of the MSE
   # Primary dat file items:
-  Nyrs <- Nyrs + MSEyr
   # Randomly generates new year of bs_temp
-  # bs_temp <- c(bs_temp,rnorm(MSEyr,mean(bs_temp),sd(bs_temp)))
-  # bs_temp <- c(bs_temp,newdata$bs_temp)
+  # hydra_data$bs_temp <- c(hydra_data$bs_temp,rnorm(MSEyr,mean(bs_temp),sd(bs_temp)))
+  # hydra_data$bs_temp <- c(hydra_data$bs_temp,newdata$bs_temp)
   
   # Secondary dat file items:
-  # obs_survey_biomass <- rbind(obs_survey_biomass,newdata$obs_survey_biomass)
-  # obs_survey_size <- rbind(obs_survey_size,newdata$obs_survey_size)
-  # obs_catch_biomass <- rbind(obs_catch_biomass,newdata$obs_catch_biomass)
-  # obs_catch_size <- rbind(obs_catch_size,newdata$obs_catch_size)
-  # obs_diet_prop <- rbind(obs_diet_prop,newdata$obs_diet_prop)
+  # hydra_data$obs_survey_biomass <- rbind(hydra_data$obs_survey_biomass,newdata$obs_survey_biomass)
+  # hydra_data$obs_survey_size <- rbind(hydra_data$obs_survey_size,newdata$obs_survey_size)
+  # hydra_data$obs_catch_biomass <- rbind(hydra_data$obs_catch_biomass,newdata$obs_catch_biomass)
+  # hydra_data$obs_catch_size <- rbind(hydra_data$obs_catch_size,newdata$obs_catch_size)
+  # hydra_data$obs_diet_prop <- rbind(hydra_data$obs_diet_prop,newdata$obs_diet_prop)
   
   # pin file items:
-  # recruitment_devs <- c(recruitment_devs,newdata$recruitment_devs)
-  # F_devs <-c(F_devs,newdata$F_devs)
+  # hydra_data$recruitment_devs <- c(hydra_data$recruitment_devs,newdata$recruitment_devs)
+  # hydra_data$F_devs <-c(hydra_data$F_devs,newdata$F_devs)
   
   #############################################################################
   #Start of Emily's code, it runs hydra and pulls data files:
@@ -36,50 +39,51 @@ get_hydra <- function(newdata=data.frame()){
   
   #Write a new hydra sim file, changing anything before this line
   fileConn<-file("functions/hydra/hydra_sim_data.dat")
-  writeLines(as.character(c(debug, Nyrs, Nspecies, Nsizebins, Nareas, Nfleets, 
-               Nsurveys, wtconv,datfilename,binwidth, lenwt_a, lenwt_b, 
-               Nrecruitment_cov, Nmaturity_cov, Ngrowth_cov, 
-               recruitment_cov, maturity_cov, growth_cov, obs_effort, 
-               mean_stomwt, bs_temp,yr1Nphase, recphase, avg_rec_phase, 
-               recsigmaphase, avg_F_phase, dev_rec_phase, dev_F_phase, 
-               fqphase, fsphase, sqphase, ssphase, ssig_phase, sig_phase,
-               m1_phase, oF1_phase, oFdev_phase, vuln_phase, 
-               recGamma_alpha, recGamma_shape, recGamma_beta, 
-               recDS_alpha, recDS_shape, recDS_beta, recGamSSB_alpha, 
-               recGamSSB_shape, recGamSSB_beta, recRicker_alpha, 
-               recRicker_shape, recRicker_beta, recBH_alpha, recBH_shape,
-               recBH_beta, recShepherd_alpha, recShepherd_shape, 
-               recShepherd_beta, recHockey_alpha, recHockey_shape, 
-               recHockey_beta, recSegmented_alpha, recSegmented_shape, 
-               recSegmented_beta, rectype, stochrec, sexratio, 
-               recruitment_covwt, fecund_d, fecund_h, fecund_theta, 
-               maturity_nu, maturity_omega, maturity_covwt, growth_psi, 
-               growth_kappa, growth_covwt, vonB_LinF, vonB_k, growthtype,
-               phimax, intake_alpha, intake_beta, isprey,
-               preferred_wtratio, sd_sizepref, B0, Nguilds, guildMembers,
-               fleetMembers, AssessmentPeriod, flagRamp, minExploitation,
-               maxExploitation, minMaxExploitation, minMaxThreshold, 
-               Nthresholds, threshold_preportion, exploitation_levels, 
-               threshold_species, AssessmentOn, speciesDetection, 
-               LFI_size, scaleInitialN, effortScaled, discard_Coef, 
-               discardSurvival_Coef, predOrPrey, bandwidth_metric, 
-               baseline_threshold, indicator_fishery_q, AR_parameters, 
-               flagMSE, residentTime, areaMortality, eof)),fileConn)
+  writeLines(as.character(c(hydra_data$debug,hydra_data$Nyrs, hydra_data$Nspecies,hydra_data$Nsizebins,
+                            hydra_data$Nareas,hydra_data$Nfleets,hydra_data$Nsurveys,hydra_data$wtconv,
+                            hydra_data$datfilename,hydra_data$binwidth,hydra_data$lenwt_a,hydra_data$lenwt_b,
+                            hydra_data$Nrecruitment_cov,hydra_data$Nmaturity_cov,hydra_data$Ngrowth_cov,hydra_data$recruitment_cov,
+                            hydra_data$maturity_cov,hydra_data$growth_cov,hydra_data$obs_effort,hydra_data$mean_stomwt,
+                            hydra_data$bs_temp,hydra_data$yr1Nphase,hydra_data$recphase,hydra_data$avg_rec_phase,
+                            hydra_data$recsigmaphase,hydra_data$avg_F_phase,hydra_data$dev_rec_phase,hydra_data$dev_F_phase,
+                            hydra_data$fqphase,hydra_data$fsphase,hydra_data$sqphase,hydra_data$ssphase,
+                            hydra_data$ssig_phase,hydra_data$sig_phase,hydra_data$m1_phase,hydra_data$oF1_phase,
+                            hydra_data$oFdev_phase,hydra_data$vuln_phase,hydra_data$recGamma_alpha,hydra_data$recGamma_shape,
+                            hydra_data$recGamma_beta,hydra_data$recDS_alpha,hydra_data$recDS_shape,hydra_data$recDS_beta,
+                            hydra_data$recGamSSB_alpha, hydra_data$recGamSSB_shape,hydra_data$recGamSSB_beta,hydra_data$recRicker_alpha,
+                            hydra_data$recRicker_shape,hydra_data$recRicker_beta,hydra_data$recBH_alpha,hydra_data$recBH_shape,
+                            hydra_data$recBH_beta,hydra_data$recShepherd_alpha,hydra_data$recShepherd_shape,hydra_data$recShepherd_beta,
+                            hydra_data$recHockey_alpha,hydra_data$recHockey_shape,hydra_data$recHockey_beta,hydra_data$recSegmented_alpha,
+                            hydra_data$recSegmented_shape,hydra_data$recSegmented_beta,hydra_data$rectype,hydra_data$stochrec,
+                            hydra_data$sexratio,hydra_data$recruitment_covwt,hydra_data$fecund_d,hydra_data$fecund_h,
+                            hydra_data$fecund_theta,hydra_data$maturity_nu,hydra_data$maturity_omega,hydra_data$maturity_covwt,
+                            hydra_data$growth_psi,hydra_data$growth_kappa,hydra_data$growth_covwt,hydra_data$vonB_LinF,
+                            hydra_data$vonB_k,hydra_data$growthtype,hydra_data$phimax,hydra_data$intake_alpha,
+                            hydra_data$intake_beta,hydra_data$isprey,hydra_data$preferred_wtratio,hydra_data$sd_sizepref,
+                            hydra_data$B0,hydra_data$Nguilds,hydra_data$guildMembers,hydra_data$fleetMembers,
+                            hydra_data$AssessmentPeriod,hydra_data$flagRamp,hydra_data$minExploitation,hydra_data$maxExploitation,
+                            hydra_data$minMaxExploitation,hydra_data$minMaxThreshold,hydra_data$Nthresholds,hydra_data$threshold_preportion, 
+                            hydra_data$exploitation_levels, hydra_data$threshold_species, hydra_data$AssessmentOn, hydra_data$speciesDetection, 
+                            hydra_data$LFI_size, hydra_data$scaleInitialN, hydra_data$effortScaled, hydra_data$discard_Coef, 
+                            hydra_data$discardSurvival_Coef, hydra_data$predOrPrey, hydra_data$bandwidth_metric, hydra_data$baseline_threshold, 
+                            hydra_data$indicator_fishery_q, hydra_data$AR_parameters, hydra_data$flagMSE, hydra_data$residentTime, 
+                            hydra_data$areaMortality, hydra_data$eof)),fileConn)
   close(fileConn)
   
   fileConn<-file("functions/hydra/hydra_sim_data-ts.dat")
-  writeLines(as.character(c(Nsurvey_obs,obs_survey_biomass,Nsurvey_size_obs,
-                            obs_survey_size,Ncatch_obs,obs_catch_biomass,
-                            Ncatch_size_obs,obs_catch_size,Ndietprop_obs,
-                            obs_dietprop)),fileConn)
+  writeLines(as.character(c(hydra_data$Nsurvey_obs, as.list(t(as.matrix(hydra_data$obs_survey_biomass))), hydra_data$Nsurvey_size_obs,
+                            as.list(t(as.matrix(hydra_data$obs_survey_size))), hydra_data$Ncatch_obs, as.list(t(as.matrix(hydra_data$obs_catch_biomass))),
+                            hydra_data$Ncatch_size_obs, as.list(t(as.matrix(hydra_data$obs_catch_size))), hydra_data$Ndietprop_obs,
+                            hydra_data$obs_dietprop)),fileConn)
   close(fileConn)
   
   fileConn<-file("functions/hydra/hydra_sim_data.pin")
-  writeLines(as.character(c(ln_yr1N, recruitment_alpha, recruitment_shape, 
-                            recruitment_beta, ln_avg_recruitment, recruitment_devs, 
-                            ln_recsigma, avg_F, F_devs, fishsel_pars, ln_fishery_q, 
-                            ln_survey_q, survey_selpars, ln_M1ann, ln_otherFood_base, 
-                            otherFood_dev)),fileConn)
+  writeLines(as.character(c(hydra_data$ln_yr1N, hydra_data$recruitment_alpha, hydra_data$recruitment_shape, 
+                            hydra_data$recruitment_beta, hydra_data$ln_avg_recruitment, hydra_data$recruitment_devs, 
+                            hydra_data$ln_recsigma, hydra_data$avg_F, hydra_data$F_devs, 
+                            hydra_data$fishsel_pars, hydra_data$ln_fishery_q, hydra_data$ln_survey_q, 
+                            hydra_data$survey_selpars, hydra_data$ln_M1ann, hydra_data$ln_otherFood_base, 
+                            hydra_data$otherFood_dev)),fileConn)
   close(fileConn)
   
   # Random number to run the MSE
@@ -108,23 +112,23 @@ get_hydra <- function(newdata=data.frame()){
   colnames(catch.df) <- c("fleet","area","year","species","catch","cv","predcatch","residual","NLL")
   
   #rearrange to look like data that we need
-  species <- data.frame(name=speciesList, species= c(1:10))
-  K <-as.numeric(vonB_k) 
-  Linf <- as.numeric(vonB_LinF) 
+  species <- data.frame(name=hydra_data$speciesList, species= c(1:10))
+  K <-as.numeric(hydra_data$vonB_k) 
+  Linf <- as.numeric(hydra_data$vonB_LinF) 
   t0 <- 0 # is there something else I should be using here? t0 probably fine
   vonbert <- data.frame(species,K, Linf,t0)
   
   # size bins
   # binwidth <- hydraDataList_msk$binwidth%>%
   #   cbind(species)
-  binwidth <- data.frame(sizebin1=matrix(binwidth,nrow=10,ncol=5,byrow=T)[,1],
-                         sizebin2=matrix(binwidth,nrow=10,ncol=5,byrow=T)[,2],
-                         sizebin3=matrix(binwidth,nrow=10,ncol=5,byrow=T)[,3],
-                         sizebin4=matrix(binwidth,nrow=10,ncol=5,byrow=T)[,4],
-                         sizebin5=matrix(binwidth,nrow=10,ncol=5,byrow=T)[,5],
-                         name=speciesList,
-                         species=guildMembers)
-  row.names(binwidth) <- speciesList
+  binwidth <- data.frame(sizebin1=matrix(hydra_data$binwidth,nrow=10,ncol=5,byrow=T)[,1],
+                         sizebin2=matrix(hydra_data$binwidth,nrow=10,ncol=5,byrow=T)[,2],
+                         sizebin3=matrix(hydra_data$binwidth,nrow=10,ncol=5,byrow=T)[,3],
+                         sizebin4=matrix(hydra_data$binwidth,nrow=10,ncol=5,byrow=T)[,4],
+                         sizebin5=matrix(hydra_data$binwidth,nrow=10,ncol=5,byrow=T)[,5],
+                         name=hydra_data$speciesList,
+                         species=hydra_data$guildMembers)
+  row.names(binwidth) <- hydra_data$speciesList
   
   sizebin0 <- 0
   sizebin1 <- binwidth$sizebin1
@@ -145,8 +149,8 @@ get_hydra <- function(newdata=data.frame()){
   # observedSurvSize<- hydraDataList_msk$observedSurvSize
   # observedSurvSize<- obs_survey_size
   # for convenience, just overwrite the obs_survey_size with predicted values, since it is already formatted nicely in a df
-  predSurvSize <- obs_survey_size
-  predSurvSize[,6:10] <- matrix(hydra_sim_rep$pred_survey_size,ncol=5,nrow=Nsurvey_size_obs,byrow=T)
+  predSurvSize <- hydra_data$obs_survey_size
+  predSurvSize[,6:10] <- matrix(hydra_sim_rep$pred_survey_size,ncol=5,nrow=hydra_data$Nsurvey_size_obs,byrow=T)
   SurvData <- gather(predSurvSize, bin, prop, sizebin1:sizebin5)%>%
     mutate(N= ceiling(inpN*prop))%>% #fix by rounding?
     full_join(sizebins, by=c("species", "bin"))%>%
@@ -155,8 +159,8 @@ get_hydra <- function(newdata=data.frame()){
   # observedCatchSize <- hydraDataList_msk$observedCatchSize
   # observedCatchSize <- obs_catch_size
   # for convenience, just overwrite the obs_catch_size with predicted values, since it is already formatted nicely in a df
-  predCatchSize <- observedCatchSize
-  predCatchSize[,7:11] <- matrix(hydra_sim_rep$pred_catch_size,ncol=5,nrow=Ncatch_size_obs,byrow=T)
+  predCatchSize <- hydra_data$obs_catch_size
+  predCatchSize[,7:11] <- matrix(hydra_sim_rep$pred_catch_size,ncol=5,nrow=hydra_data$Ncatch_size_obs,byrow=T)
   catchData <- gather(predCatchSize, bin, prop, sizebin1:sizebin5)%>%
     mutate(N= ceiling(inpN*prop))%>% #fix by rounding?
     full_join(sizebins, by=c("species", "bin"))%>%
@@ -184,9 +188,9 @@ get_hydra <- function(newdata=data.frame()){
   # Catch <- anti_join(CatchRep,CatchCheck)   
   
   # it seems like all of this is ultimately coming from the 
-  hydraData <- list(predSurSize=SurvRep,
+  hydra_sim_data <- list(predSurSize=SurvRep,
                     predCatchSize=CatchRep,
-                    predBiomass=surveydata.df[,-c(4,7,8)],
-                    predCatch=catchdata.df[,-c(5,8,9)])
-  return(hydraData)
+                    predBiomass=survey.df[,-c(4,7,8)],
+                    predCatch=catch.df[,-c(5,8,9)])
+  return(hydra_sim_data)
 }

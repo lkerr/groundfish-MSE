@@ -1,11 +1,13 @@
 #Hydra_Sim_Dat_R
+get_hydra_data <- function(Nyrs=42)
+{
   
   speciesList <- c("Atlantic_cod","Atlantic_herring","Atlantic_mackerel",  
                    "Goosefish","Haddock","Silver_hake","Spiny_dogfish",
                    "Winter_flounder","Winter_skate","Yellowtail_flounder")
   
   debug <-0
-  Nyrs <- 42
+  Nyrs <- Nyrs
   Nspecies <- 10
   Nsizebins <- 5
   Nareas <- 1
@@ -220,3 +222,36 @@
   ln_otherFood_base <- 21
   otherFood_dev <- rep(0,Nspecies-2)
   
+  hydra_data <- list(speciesList=speciesList, debug=debug, Nyrs=Nyrs, Nspecies=Nspecies, Nsizebins=Nsizebins,
+                     Nareas=Nareas, Nfleets=Nfleets, Nsurveys=Nsurveys, wtconv=wtconv, datfilename=datfilename,
+                     binwidth=binwidth, lenwt_a=lenwt_a, lenwt_b=lenwt_b, Nrecruitment_cov=Nrecruitment_cov, Nmaturity_cov=Nmaturity_cov,
+                     Ngrowth_cov=Ngrowth_cov, recruitment_cov=recruitment_cov, maturity_cov=maturity_cov, growth_cov=growth_cov, obs_effort=obs_effort,
+                     mean_stomwt=mean_stomwt, bs_temp=bs_temp,yr1Nphase=yr1Nphase, recphase=recphase, avg_rec_phase=avg_rec_phase, 
+                     recsigmaphase=recsigmaphase, avg_F_phase=avg_F_phase, dev_rec_phase=dev_rec_phase, dev_F_phase=dev_F_phase, fqphase=fqphase, 
+                     fsphase=fsphase, sqphase=sqphase, ssphase=ssphase, ssig_phase=ssig_phase, sig_phase=sig_phase, 
+                     m1_phase=m1_phase, oF1_phase=oF1_phase, oFdev_phase=oFdev_phase, vuln_phase=vuln_phase, recGamma_alpha=recGamma_alpha, 
+                     recGamma_shape=recGamma_shape, recGamma_beta=recGamma_beta, recDS_alpha=recDS_alpha, recDS_shape=recDS_shape, recDS_beta=recDS_beta, 
+                     recGamSSB_alpha=recGamSSB_alpha, recGamSSB_shape=recGamSSB_shape, recGamSSB_beta=recGamSSB_beta, recRicker_alpha=recRicker_alpha, recRicker_shape=recRicker_shape, 
+                     recRicker_beta=recRicker_beta, recBH_alpha=recBH_alpha, recBH_shape=recBH_shape, recBH_beta=recBH_beta, recShepherd_alpha=recShepherd_alpha, 
+                     recShepherd_shape=recShepherd_shape, recShepherd_beta=recShepherd_beta, recHockey_alpha=recHockey_alpha, recHockey_shape=recHockey_shape, recHockey_beta=recHockey_beta, 
+                     recSegmented_alpha=recSegmented_alpha, recSegmented_shape=recSegmented_shape, recSegmented_beta=recSegmented_beta, rectype=rectype, stochrec=stochrec, 
+                     sexratio=sexratio, recruitment_covwt=recruitment_covwt, fecund_d=fecund_d, fecund_h=fecund_h, fecund_theta=fecund_theta, 
+                     maturity_nu=maturity_nu, maturity_omega=maturity_omega, maturity_covwt=maturity_covwt, growth_psi=growth_psi, growth_kappa=growth_kappa, 
+                     growth_covwt=growth_covwt, vonB_LinF=vonB_LinF, vonB_k=vonB_k, growthtype=growthtype, phimax=phimax, 
+                     intake_alpha=intake_alpha, intake_beta=intake_beta, isprey=isprey, preferred_wtratio=preferred_wtratio, sd_sizepref=sd_sizepref, 
+                     B0=B0, Nguilds=Nguilds, guildMembers=guildMembers, fleetMembers=fleetMembers, AssessmentPeriod=AssessmentPeriod, 
+                     flagRamp=flagRamp, minExploitation=minExploitation, maxExploitation=maxExploitation,
+                     minMaxExploitation=minMaxExploitation, minMaxThreshold=minMaxThreshold,
+                     Nthresholds=Nthresholds, threshold_preportion=threshold_preportion, exploitation_levels=exploitation_levels, threshold_species=threshold_species, AssessmentOn=AssessmentOn,
+                     speciesDetection=speciesDetection, LFI_size=LFI_size, scaleInitialN=scaleInitialN, effortScaled=effortScaled, discard_Coef=discard_Coef,
+                     discardSurvival_Coef=discardSurvival_Coef, predOrPrey=predOrPrey, bandwidth_metric=bandwidth_metric, baseline_threshold=baseline_threshold, indicator_fishery_q=indicator_fishery_q,
+                     AR_parameters=AR_parameters, flagMSE=flagMSE, residentTime=residentTime, areaMortality=areaMortality, eof=eof,
+                     Nsurvey_obs=Nsurvey_obs, obs_survey_biomass=obs_survey_biomass, Nsurvey_size_obs=Nsurvey_size_obs, obs_survey_size=obs_survey_size, Ncatch_obs=Ncatch_obs, obs_catch_biomass=obs_catch_biomass, 
+                     Ncatch_size_obs=Ncatch_size_obs, obs_catch_size=obs_catch_size, Ndietprop_obs=Ndietprop_obs, obs_dietprop=obs_dietprop, ln_yr1N=ln_yr1N, recruitment_alpha=recruitment_alpha, 
+                     recruitment_shape=recruitment_shape, recruitment_beta=recruitment_beta, ln_avg_recruitment=ln_avg_recruitment, recruitment_devs=recruitment_devs, ln_recsigma=ln_recsigma, avg_F=avg_F, 
+                     F_devs=F_devs, fishsel_pars=fishsel_pars, ln_fishery_q=ln_fishery_q, ln_survey_q=ln_survey_q, survey_selpars=survey_selpars, ln_M1ann=ln_M1ann, 
+                     ln_otherFood_base=ln_otherFood_base, otherFood_dev=otherFood_dev)
+
+  return(hydra_data)
+  
+}

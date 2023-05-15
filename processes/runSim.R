@@ -64,12 +64,10 @@ for(r in 1:nrep){
       manage_counter<-manage_counter+1 #keeps track of management year
       
       # PULL IN -PREDICTED VALUES- FROM HYDRA DATA
-      # may also need to read in the F (updates fdev) and new year of survey, catch, and diet data
-      # not currently set up to do so, but can do it easily
-      # may want to output the estimated N or SSB, to track how progresses over time?
        source('functions/hydra/get_hydra.R')
        # get_hydra will also incorporate a growing data frame called newdata that gets larger as the loop progresses
-       hydraData<- get_hydra(newdata)
+       # hydraData<- get_hydra(newdata)
+      hydraData<- get_hydra()
        
        # CONVERT TO AGES AND WRANGLE INTO CORRECT FORMAT
        # This function also has option to add additional observation noise, but
