@@ -3,6 +3,8 @@ get_hydra <- function(newdata=data.frame()){
   #Packages you need:
   #tidyr
   #here
+  #R2admb
+  compile_admb("functions/hydra/hydra_sim")
   
   #This is the number of years the MSE has gone on, will inform Nyears
   MSEyr = length(newdata$bs_temp)
