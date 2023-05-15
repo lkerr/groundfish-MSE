@@ -54,7 +54,7 @@ for(r in 1:nrep){
 
        #Restore the rng state to the value of oldseed_mproc.  For the same values of r, all the management procedures to start from the same RNG state.
        .Random.seed<-oldseed_mproc
-       
+    
     #### Top year loop ####
     for(y in fyear:nyear){
       source('processes/withinYearAdmin.R')
@@ -63,16 +63,21 @@ for(r in 1:nrep){
       if(y >=fmyearIdx){
       manage_counter<-manage_counter+1 #keeps track of management year
       
-      # PULL IN HYDRA DATA EACH YEAR HERE? OR BELOW WITH get_indexData?
-      # manage_counter informs how many extra years of hydra output get generated
+      # PULL IN -PREDICTED VALUES- FROM HYDRA DATA
+      # may also need to read in the F (updates fdev) and new year of survey, catch, and diet data
+      # not currently set up to do so, but can do it easily
+      # may want to output the estimated N or SSB, to track how progresses over time?
        source('functions/hydra/get_hydra.R')
-       hydraData<- get_hydra(manage_counter)
+       # get_hydra will also incorporate a growing data frame called newdata that gets larger as the loop progresses
+       hydraData<- get_hydra(newdata)
        
        # CONVERT TO AGES AND WRANGLE INTO CORRECT FORMAT
+       # This function also has option to add additional observation noise, but
+       # that is currently commented out
        for (i in 1:nstock) {
         stock[[i]] <- get_lengthConvert(stock=stock[[i]], hydraData)
        }
-    
+       
          
       #### RUN MP ####
         for(i in 1:nstock){

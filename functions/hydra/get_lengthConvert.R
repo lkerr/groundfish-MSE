@@ -3,10 +3,10 @@ get_lengthConvert <- function(stock, hydraData){
   # we want each species as a sub-list like stock object in groundfish MSE
    
   # assign length with random uniform distribution across bins
-  Survlengths <- rowwise(hydraData$observedSurSize)%>%
+  Survlengths <- rowwise(hydraData$predSurSize)%>%
     mutate(L=runif(1, min=start, max=end))
   
-  Catchlengths <- rowwise(hydraData$observedCatchSize)%>%
+  Catchlengths <- rowwise(hydraData$predCatchSize)%>%
     mutate(L=runif(1, min=start, max=end))
   
   # convert length at age using inverse Von Bert
@@ -18,7 +18,7 @@ get_lengthConvert <- function(stock, hydraData){
   Catchage <- Catchlengths%>%
     rowwise()%>%
     mutate(age=ceiling(((-log(1-L/Linf))/K+t0)))%>% #round up
-    select(fishery, year,species, name, age)
+    select(fleet, year,species, name, age)
   
   # create plus group for now- better way to do this
   Survage$age[Survage$age>stock$page]<- stock$page
@@ -38,12 +38,12 @@ get_lengthConvert <- function(stock, hydraData){
     
     CNtemp <- dplyr::filter(Catchage)
     paaCNtemp <- CNtemp%>%
-      select(fishery, year,species, name, age)%>%
-      group_by(fishery, year, species, name, age)%>%
+      select(fleet, year,species, name, age)%>%
+      group_by(fleet, year, species, name, age)%>%
       count()%>%
-      group_by(fishery, year, species, name)%>%
+      group_by(fleet, year, species, name)%>%
       mutate(total=sum(n), paa=n/total)%>%
-      select(fishery, year,species,name,age,paa)%>%
+      select(fleet, year,species,name,age,paa)%>%
       spread(age,paa)
    
    
@@ -60,13 +60,13 @@ get_lengthConvert <- function(stock, hydraData){
        full_join(year_gap, by="year")%>%
        arrange(year)%>%
        ungroup()%>%
-       select(!c(fishery,year,species,name))
+       select(!c(fleet,year,species,name))
      
-     sumSurv <- dplyr::filter(hydraData$observedBiomass,species==i, survey==1)%>%
+     sumSurv <- dplyr::filter(as.data.frame(hydraData$predBiomass),species==i, survey==1)%>%
        full_join(year_gap, by="year")%>%
        arrange(year)
      
-     sumCatch <- dplyr::filter(hydraData$observedCatch, species==i)%>%
+     sumCatch <- dplyr::filter(as.data.frame(hydraData$predCatch), species==i)%>%
        full_join(year_gap, by='year')%>%
        arrange(year)
 

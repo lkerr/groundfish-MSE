@@ -1,11 +1,11 @@
-get_hydra <- function(manage_counter){
+get_hydra <- function(newdata=data.frame()){
   #send hydra data to groundfish MSE?
   #Packages you need:
   #tidyr
   #here
   
   #This is the number of years the MSE has gone on, will inform Nyears
-  MSEyr = manage_counter
+  MSEyr = length(newdata$bs_temp)
   
   # EMILY: ADD THE .PIN FILE INFO TO get_hydra_data AS WELL, AND DOWN BELOW
   #Source the original hydra_data
@@ -14,25 +14,20 @@ get_hydra <- function(manage_counter){
   #Update hydra data based on this iteration of the MSE
   # Primary dat file items:
   Nyrs <- Nyrs + MSEyr
-  bs_temp <- c(bs_temp,rnorm(MSEyr,mean(bs_temp),sd(bs_temp)))
+  # Randomly generates new year of bs_temp
+  # bs_temp <- c(bs_temp,rnorm(MSEyr,mean(bs_temp),sd(bs_temp)))
+  # bs_temp <- c(bs_temp,newdata$bs_temp)
   
   # Secondary dat file items:
-  # obs_survey_biomass
-  # obs_survey_size
-  # obs_catch_biomass
-  # obs_catch_size
-  # obs_diet_prop
+  # obs_survey_biomass <- rbind(obs_survey_biomass,newdata$obs_survey_biomass)
+  # obs_survey_size <- rbind(obs_survey_size,newdata$obs_survey_size)
+  # obs_catch_biomass <- rbind(obs_catch_biomass,newdata$obs_catch_biomass)
+  # obs_catch_size <- rbind(obs_catch_size,newdata$obs_catch_size)
+  # obs_diet_prop <- rbind(obs_diet_prop,newdata$obs_diet_prop)
   
   # pin file items:
-  # recruitment_devs
-  # F_devs
-  
-  # EMILY: UPDATE PIN FILE HERE TOO
-  #
-  
-  #for now load in data I already have for testing
-  # load(here("functions/hydra/hydraDataList_msk.rda")) # update R list annually
-  
+  # recruitment_devs <- c(recruitment_devs,newdata$recruitment_devs)
+  # F_devs <-c(F_devs,newdata$F_devs)
   
   #############################################################################
   #Start of Emily's code, it runs hydra and pulls data files:
@@ -107,10 +102,10 @@ get_hydra <- function(manage_counter){
   hydra_sim_rep <- reptoRlist("functions/hydra/hydra_sim.rep")
   
   #Convert general report object into things to be fed back
-  surveydata.df <- hydra_sim_rep$survey
-  colnames(surveydata.df) <- c("survey","year","species","biomass","cv","predbiomass","residual","NLL")
-  catchdata.df <- hydra_sim_rep$catch
-  colnames(catchdata.df) <- c("fleet","area","year","species","catch","cv","predcatch","residual","NLL")
+  survey.df <- hydra_sim_rep$survey
+  colnames(survey.df) <- c("survey","year","species","biomass","cv","predbiomass","residual","NLL")
+  catch.df <- hydra_sim_rep$catch
+  colnames(catch.df) <- c("fleet","area","year","species","catch","cv","predcatch","residual","NLL")
   
   #rearrange to look like data that we need
   species <- data.frame(name=speciesList, species= c(1:10))
@@ -148,15 +143,21 @@ get_hydra <- function(manage_counter){
   
   # calculate the number of fish in each bin- Problem this is not an integer
   # observedSurvSize<- hydraDataList_msk$observedSurvSize
-  observedSurvSize<- obs_survey_size
-  SurvData <- gather(observedSurvSize, bin, prop, sizebin1:sizebin5)%>%
+  # observedSurvSize<- obs_survey_size
+  # for convenience, just overwrite the obs_survey_size with predicted values, since it is already formatted nicely in a df
+  predSurvSize <- obs_survey_size
+  predSurvSize[,6:10] <- matrix(hydra_sim_rep$pred_survey_size,ncol=5,nrow=Nsurvey_size_obs,byrow=T)
+  SurvData <- gather(predSurvSize, bin, prop, sizebin1:sizebin5)%>%
     mutate(N= ceiling(inpN*prop))%>% #fix by rounding?
     full_join(sizebins, by=c("species", "bin"))%>%
     full_join(vonbert)
   
   # observedCatchSize <- hydraDataList_msk$observedCatchSize
-  observedCatchSize <- obs_catch_size
-  catchData <- gather(observedCatchSize, bin, prop, sizebin1:sizebin5)%>%
+  # observedCatchSize <- obs_catch_size
+  # for convenience, just overwrite the obs_catch_size with predicted values, since it is already formatted nicely in a df
+  predCatchSize <- observedCatchSize
+  predCatchSize[,7:11] <- matrix(hydra_sim_rep$pred_catch_size,ncol=5,nrow=Ncatch_size_obs,byrow=T)
+  catchData <- gather(predCatchSize, bin, prop, sizebin1:sizebin5)%>%
     mutate(N= ceiling(inpN*prop))%>% #fix by rounding?
     full_join(sizebins, by=c("species", "bin"))%>%
     full_join(vonbert)
@@ -183,9 +184,9 @@ get_hydra <- function(manage_counter){
   # Catch <- anti_join(CatchRep,CatchCheck)   
   
   # it seems like all of this is ultimately coming from the 
-  hydraData <- list(observedSurSize=SurvRep,
-                    observedCatchSize=CatchRep,
-                    observedBiomass=surveydata.df[,1:5],
-                    observedCatch=catchdata.df[,1:6])
+  hydraData <- list(predSurSize=SurvRep,
+                    predCatchSize=CatchRep,
+                    predBiomass=surveydata.df[,-c(4,7,8)],
+                    predCatch=catchdata.df[,-c(5,8,9)])
   return(hydraData)
 }
