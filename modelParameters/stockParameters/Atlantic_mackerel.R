@@ -12,13 +12,13 @@ page <- 10
 laa_par <- c(Linf=114.1, K=0.22, t0=0.17, beta1=0)
 laa_typ <- 'vonB'
 
-# weight-length parameters
-waa_par <- c(exp(-11.6913), 3.0219) #SAW 55 p.659
-waa_typ <- 'aLb'
+# weight-length parameters- average of last 5 years of 2021 assessment
+waa_par <- c(0.143, 0.223, 0.321, 0.396, 0.481, 0.520, 0.615, 0.631, 0.704) 
+waa_typ <- 'input'
 
-# maturity-length parameters
-mat_par <- c(0.127, 38.8) # O'brien GB cod female
-mat_typ <- 'logistic'
+# maturity-length parameters- average of last 5 years
+mat_par <- c(0.184, 0.713, 0.938, 0.989, 0.998, 1,1,1,1,1) 
+mat_typ <- 'input'
 
 # natural mortality
 M <- 0.2
