@@ -121,6 +121,7 @@ for(r in 1:nrep){
         }
          
       #### SEND F TO HYDRA HERE? RIGHT BEFORE END OF YEAR LOOP ####
+      # you will need to pull stock[[i]]$F_full[y]
       
     } #End of year loop 
   } #End of mproc loop
