@@ -44,7 +44,7 @@ top_loop_start<-Sys.time()
 
 #### Top rep Loop ####
 for(r in 1:nrep){
-    oldseed_mproc <- .Random.seed
+  oldseed_mproc <- .Random.seed
   print(paste0("rep # ",r))
   
   #### Top MP loop ####
@@ -64,10 +64,11 @@ for(r in 1:nrep){
       manage_counter<-manage_counter+1 #keeps track of management year
       
       # PULL IN -PREDICTED VALUES- FROM HYDRA DATA
-       source('functions/hydra/get_hydra.R')
-       # get_hydra will also incorporate a growing data frame called newdata that gets larger as the loop progresses
-       # hydraData<- get_hydra(newdata)
-      hydraData<- get_hydra()
+      source('functions/hydra/get_hydra.R')
+      # get_hydra will also incorporate a growing data frame called newdata that gets larger as the loop progresses
+      if(y==fyear)hydraData<- get_hydra(oldseed_mproc[r])
+      if(y!=fyear) hydraData<- get_hydra(oldseed_mproc[r],newdata)
+       
        
        # CONVERT TO AGES AND WRANGLE INTO CORRECT FORMAT
        # This function also has option to add additional observation noise, but
@@ -89,15 +90,27 @@ for(r in 1:nrep){
           } 
       } # end of fishery management has started clause
 
-      # BRING IN HYDRA HERE INSTEAD? NEED SOMETHING FOR FIRST GET_ADVICE ABOVE? 
+      # KILL FISH AND MAKE NEW CATCH AND INDEX FOR HYDRA HERE?
+      # IS GENERATING NEW CATCH AND INDEX DATA GOING TO BE DEPENDENT ON FISH INTERACTIONS?
         
       for(i in 1:nstock){
-      #  stock[[i]] <- get_mortality(stock = stock[[i]]) # KILLS FISH 
-      #  stock[[i]] <- get_indexData(stock = stock[[i]]) # GENERATES INDEX 
+       # stock[[i]] <- get_mortality(stock = stock[[i]]) # KILLS FISH
+       # stock[[i]] <- get_indexData(stock = stock[[i]]) # GENERATES INDEX
         
       # WE'LL ADD IN THE ERROR WITH get_error_idx AND get_error_paa 
         
       } #End killing fish loop
+      
+      # After killing fish loop, make a list called newdata that will be added to hydra in next iteration
+      # newdata <-list()
+      # newdata$bs_temp 
+      # newdata$obs_survey_biomass 
+      # newdata$obs_survey_size 
+      # newdata$obs_catch_biomass 
+      # newdata$obs_catch_size 
+      # newdata$obs_diet_prop 
+      # newdata$recruitment_devs 
+      # newdata$F_devs 
 
       # Store results- AM I SAVING THE RIGHT THING NOW? CHECK THESE FUNCTIONS
         # we save after mortality and new index generated but that would be different in this case

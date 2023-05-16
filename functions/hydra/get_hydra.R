@@ -1,10 +1,10 @@
-get_hydra <- function(newdata=data.frame()){
+get_hydra <- function(newseed=404,newdata=data.frame()){
   #send hydra data to groundfish MSE?
   #Packages you need:
   #tidyr
   #here
   #R2admb
-  compile_admb("functions/hydra/hydra_sim")
+  # compile_admb("functions/hydra/hydra_sim")
   
   #This is the number of years the MSE has gone on, will inform Nyears
   MSEyr = length(newdata$bs_temp)
@@ -89,7 +89,7 @@ get_hydra <- function(newdata=data.frame()){
   close(fileConn)
   
   # Random number to run the MSE
-  randomnum <- 100
+  randomnum <- newseed
   # randomnum <- round(randu(1,100),1)
 
   # Set the working directory to where the hydra executable is
@@ -188,11 +188,18 @@ get_hydra <- function(newdata=data.frame()){
   # 
   # Survey <- anti_join(SurvRep,SurvCheck) # leave out problem lengths
   # Catch <- anti_join(CatchRep,CatchCheck)   
+  EstNsize <- as.data.frame(hydra_sim_rep$EstNsize)
+  year <- rep(1:Nyrs,hydra_data$Nspecies)
+  species <- rep(1:hydra_data$Nspecies,each=Nyrs)
+  EstNsize <- cbind(year,species,EstNsize) 
   
   # it seems like all of this is ultimately coming from the 
   hydra_sim_data <- list(predSurSize=SurvRep,
                     predCatchSize=CatchRep,
                     predBiomass=survey.df[,-c(4,7,8)],
-                    predCatch=catch.df[,-c(5,8,9)])
+                    predCatch=catch.df[,-c(5,8,9)],
+                    fishsel=hydra_sim_rep$fishsel,
+                    EstNsize=EstNsize,
+                    M=exp(hydra_data$ln_M1ann))
   return(hydra_sim_data)
 }
