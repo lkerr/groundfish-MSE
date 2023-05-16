@@ -102,8 +102,8 @@ get_lengthConvert <- function(stock, hydraData){
       out <- within(stock, { 
         paaIN<- paaSurv
         paaCN<- paaCatch
-        sumIN<- sumSurv$biomass
-        sumCW<- sumCatch$catch
+        sumIN<- sumSurv$predbiomass
+        sumCW<- sumCatch$predcatch
         
       })
       
