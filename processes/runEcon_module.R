@@ -328,7 +328,7 @@ for(i in 1:nstock){
     F_full[y]<- get_F(x=econCW[y],
                       Nv=J1N[y,],
                       slxCv=slxC[y,],
-                      M=M,
+                      M=natM[y],
                       waav=waa[y,])
   }) 
 }
