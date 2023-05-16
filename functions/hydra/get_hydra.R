@@ -1,4 +1,4 @@
-get_hydra <- function(newseed=404,newdata=data.frame()){
+get_hydra <- function(newseed=404,newdata=ls()){
   #send hydra data to groundfish MSE?
   #Packages you need:
   #tidyr
@@ -17,11 +17,13 @@ get_hydra <- function(newseed=404,newdata=data.frame()){
   Nyrs <- hydra_data$Nyrs + MSEyr
   hydra_data <- get_hydra_data(Nyrs)
   
+  hydra_data$debug <- 0
+  
   #Update hydra data based on this iteration of the MSE
   # Primary dat file items:
   # Randomly generates new year of bs_temp
   # hydra_data$bs_temp <- c(hydra_data$bs_temp,rnorm(MSEyr,mean(bs_temp),sd(bs_temp)))
-  # hydra_data$bs_temp <- c(hydra_data$bs_temp,newdata$bs_temp)
+  hydra_data$bs_temp <- c(hydra_data$bs_temp,newdata$bs_temp)
   
   # Secondary dat file items:
   # hydra_data$obs_survey_biomass <- rbind(hydra_data$obs_survey_biomass,newdata$obs_survey_biomass)
@@ -32,7 +34,7 @@ get_hydra <- function(newseed=404,newdata=data.frame()){
   
   # pin file items:
   # hydra_data$recruitment_devs <- c(hydra_data$recruitment_devs,newdata$recruitment_devs)
-  # hydra_data$F_devs <-c(hydra_data$F_devs,newdata$F_devs)
+  hydra_data$F_devs <-c(hydra_data$F_devs,newdata$F_devs)
   
   #############################################################################
   #Start of Emily's code, it runs hydra and pulls data files:
@@ -76,7 +78,7 @@ get_hydra <- function(newseed=404,newdata=data.frame()){
   writeLines(as.character(c(hydra_data$Nsurvey_obs, as.list(t(as.matrix(hydra_data$obs_survey_biomass))), hydra_data$Nsurvey_size_obs,
                             as.list(t(as.matrix(hydra_data$obs_survey_size))), hydra_data$Ncatch_obs, as.list(t(as.matrix(hydra_data$obs_catch_biomass))),
                             hydra_data$Ncatch_size_obs, as.list(t(as.matrix(hydra_data$obs_catch_size))), hydra_data$Ndietprop_obs,
-                            hydra_data$obs_dietprop)),fileConn)
+                            as.list(t(as.matrix(hydra_data$obs_dietprop))))),fileConn)
   close(fileConn)
   
   fileConn<-file("functions/hydra/hydra_sim_data.pin")

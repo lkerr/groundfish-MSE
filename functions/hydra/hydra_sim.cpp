@@ -524,6 +524,18 @@ cout << Nsurvey_obs << endl;
   Ndietprop_obs.allocate("Ndietprop_obs");
  ncol = Nspecies+6;
   obs_dietprop.allocate(1,Ndietprop_obs,1,ncol,"obs_dietprop");
+  if(debug==1){
+ cout<<"Nsurvey_obs: "<<endl<<Nsurvey_obs<<endl;
+ cout<<"obs_survey_biomass: "<<endl<<obs_survey_biomass<<endl;
+ cout<<"Nsurvey_size_obs: "<<endl<<Nsurvey_size_obs<<endl;
+ cout<<"obs_survey_size: "<<endl<<obs_survey_size<<endl;
+ cout<<"Ncatch_obs: "<<endl<<Ncatch_obs<<endl;
+ cout<<"obs_catch_biomass: "<<endl<<obs_catch_biomass<<endl;
+ cout<<"Ncatch_size_obs: "<<endl<<Ncatch_size_obs<<endl;
+ cout<<"obs_catch_size: "<<endl<<obs_catch_size<<endl;
+ cout<<"Ndietprop_obs: "<<endl<<Ndietprop_obs<<endl;
+ cout<<"obs_dietprop: "<<endl<<obs_dietprop<<endl;
+   }
   if (debug == 1)
     {
     cout<<"Nyrs\n"<<Nyrs<<endl;

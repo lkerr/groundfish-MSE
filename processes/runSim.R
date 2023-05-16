@@ -55,6 +55,9 @@ for(r in 1:nrep){
        #Restore the rng state to the value of oldseed_mproc.  For the same values of r, all the management procedures to start from the same RNG state.
        .Random.seed<-oldseed_mproc
     
+       bs_temp <- c()
+       F_devs <- c()
+       newdata <- list(bs_temp=bs_temp,F_devs=F_devs)
     #### Top year loop ####
     for(y in fyear:nyear){
       source('processes/withinYearAdmin.R')
@@ -66,8 +69,7 @@ for(r in 1:nrep){
       # PULL IN -PREDICTED VALUES- FROM HYDRA DATA
       source('functions/hydra/get_hydra.R')
       # get_hydra will also incorporate a growing data frame called newdata that gets larger as the loop progresses
-      if(y==fyear)hydraData<- get_hydra(oldseed_mproc[r])
-      if(y!=fyear) hydraData<- get_hydra(oldseed_mproc[r],newdata)
+      hydraData<- get_hydra(oldseed_mproc[r],newdata)
        
        
        # CONVERT TO AGES AND WRANGLE INTO CORRECT FORMAT
