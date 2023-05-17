@@ -12,30 +12,51 @@ get_hydra <- function(newseed=404,newdata=ls()){
   # EMILY: ADD THE .PIN FILE INFO TO get_hydra_data AS WELL, AND DOWN BELOW
   #Source the original hydra_data, with added lines for additional year
   source(here("functions/hydra/get_hydra_data.R"))
-  
-  hydra_data <- get_hydra_data()
-  Nyrs <- hydra_data$Nyrs + MSEyr
-  hydra_data <- get_hydra_data(Nyrs)
-  
+  hydra_data <- get_hydra_data(MSEyr)
+
+  # Turn on debugging, if needed:  
   hydra_data$debug <- 0
   
   #Update hydra data based on this iteration of the MSE
   # Primary dat file items:
-  # Randomly generates new year of bs_temp
-  # hydra_data$bs_temp <- c(hydra_data$bs_temp,rnorm(MSEyr,mean(bs_temp),sd(bs_temp)))
   hydra_data$bs_temp <- c(hydra_data$bs_temp,newdata$bs_temp)
   
-  # Secondary dat file items:
-  # hydra_data$obs_survey_biomass <- rbind(hydra_data$obs_survey_biomass,newdata$obs_survey_biomass)
-  # hydra_data$obs_survey_size <- rbind(hydra_data$obs_survey_size,newdata$obs_survey_size)
-  # hydra_data$obs_catch_biomass <- rbind(hydra_data$obs_catch_biomass,newdata$obs_catch_biomass)
-  # hydra_data$obs_catch_size <- rbind(hydra_data$obs_catch_size,newdata$obs_catch_size)
-  # hydra_data$obs_diet_prop <- rbind(hydra_data$obs_diet_prop,newdata$obs_diet_prop)
+  # ADD DUMMY DATA TO HYDRA INPUT FILE:
+  if(MSEyr>0)
+  {
+    for(i in (hydra_data$Nyrs-MSEyr+1):hydra_data$Nyrs)
+    {
+      for(k in 1:hydra_data$Nspecies)
+      {
+        for(j in 1:hydra_data$Nsurveys)
+        {
+          hydra_data$obs_survey_biomass <-rbind(hydra_data$obs_survey_biomass,c(j,i,k,100000,0.5))
+          hydra_data$obs_survey_size <- rbind(hydra_data$obs_survey_size,c(j,i,k,0,50,0.2,0.2,0.2,0.2,0.2))
+        }
+        for(j in 1:hydra_data$Nfleets)
+        {
+          for(l in 1:hydra_data$Nareas)
+          {
+            hydra_data$obs_catch_size <- rbind(hydra_data$obs_catch_size,c(j,l,i,k,0,50,0.2,0.2,0.2,0.2,0.2))
+            hydra_data$obs_catch_biomass <- rbind(hydra_data$obs_catch_biomass,c(j,l,i,k,30000,0.05))
+          }
+        }
+      }
+    }
+    hydra_data$Nsurvey_obs = nrow(hydra_data$obs_survey_biomass)
+    hydra_data$Nsurvey_size_obs = nrow(hydra_data$obs_survey_size)
+    hydra_data$Ncatch_obs = nrow(hydra_data$obs_catch_biomass)
+    hydra_data$Ncatch_size_obs = nrow(hydra_data$obs_catch_size)
+  }
   
-  # pin file items:
-  # hydra_data$recruitment_devs <- c(hydra_data$recruitment_devs,newdata$recruitment_devs)
-  hydra_data$F_devs <-c(hydra_data$F_devs,newdata$F_devs)
-  
+  # Add additional years of F data:
+  if(!is.null(newdata$F_full))
+  {
+    F_full <- matrix(newdata$F_full,nrow=MSEyr,ncol=hydra_data$Nfleets)
+    F_devs <- F_full*0
+    for(i in 1:MSEyr) F_devs[i,] <- log(F_full[i,])-hydra_data$avg_F
+    hydra_data$F_devs <- as.vector((rbind(t(matrix(hydra_data$F_devs,ncol=(hydra_data$Nyrs-MSEyr))),F_devs)))
+  }
   #############################################################################
   #Start of Emily's code, it runs hydra and pulls data files:
   #Source the baseline hydra sim data:
@@ -191,9 +212,9 @@ get_hydra <- function(newseed=404,newdata=ls()){
   # Survey <- anti_join(SurvRep,SurvCheck) # leave out problem lengths
   # Catch <- anti_join(CatchRep,CatchCheck)   
   EstNsize <- as.data.frame(hydra_sim_rep$EstNsize)
-  year <- rep(1:Nyrs,hydra_data$Nspecies)
-  species <- rep(1:hydra_data$Nspecies,each=Nyrs)
-  EstNsize <- cbind(year,species,EstNsize) 
+  year <- rep(1:hydra_data$Nyrs,hydra_data$Nspecies)
+  species <- rep(1:hydra_data$Nspecies,each=hydra_data$Nyrs)
+  EstNsize <- cbind(year,species,EstNsize)
   
   # it seems like all of this is ultimately coming from the 
   hydra_sim_data <- list(predSurSize=SurvRep,

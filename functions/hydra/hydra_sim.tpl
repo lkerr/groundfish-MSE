@@ -53,7 +53,7 @@ GLOBALS_SECTION
   #include "statsLib.h"
   #include <iostream>
   #include <math.h>
- // #include <cmath>
+  #include <cmath>
   #include <fstream>
   #include <string>
   #include <sstream>
@@ -1085,6 +1085,8 @@ PARAMETER_SECTION
   init_matrix survey_selpars(1,2,1,Nsurveys,ssphase)
   3darray survey_sel(1,Nsurveys,1,Nspecies,1,Nsizebins)
 
+//!!cout << "survey_sel: " << survey_sel << endl;
+
   // //survey obs error
   // init_matrix ln_surv_sigma(1,Nareas,1,Nspecies,ssig_phase)
   // matrix surv_sigma(1,Nareas,1,Nspecies)
@@ -1243,11 +1245,35 @@ PARAMETER_SECTION
 	END_CALCS
 
   init_matrix ln_M1ann(1,Nareas,1,Nspecies,m1_phase)
-  3darray M1(1,Nareas,1,Nspecies,1,Nsizebins) 
+  3darray M1(1,Nareas,1,Nspecies,1,Nsizebins)
 
   init_number ln_otherFood_base(oF1_phase) // amount of other food included in the M2 term for the base (predator 1)
   init_vector otherFood_dev(1,Npred-1,oFdev_phase)  //deviation from base other food for predators 2+  (same other food for all size classes of each predator)
   vector otherFood(1,Nspecies)   // vector of other food included in the M2 term
+
+
+!!      if (debug == 1)
+!!      {
+!!       cout<<"ln_yr1N: "<<ln_yr1N<<endl;
+!!       cout<<"recruitment_alpha: "<<recruitment_alpha<<endl;
+!!       cout<<"recruitment_shape: "<<recruitment_shape<<endl;
+!!       cout<<"recruitment_beta: "<<recruitment_beta<<endl;
+!!       cout<<"ln_avg_recruitment: "<<ln_avg_recruitment<<endl;
+!!       cout<<"recruitment_devs: "<<recruitment_devs<<endl;
+
+!!       cout<<"ln_recsigma: "<<ln_recsigma<<endl;
+!!       cout<<"avg_F: "<<avg_F<<endl;
+!!       cout<<"F_devs: "<<F_devs<<endl;
+!!       cout<<"fishsel_pars: "<<fishsel_pars<<endl;
+!!       cout<<"ln_fishery_q: "<<ln_fishery_q<<endl;
+!!       cout<<"ln_survey_q: "<<ln_survey_q<<endl;
+
+!!       cout<<"survey_selpars: "<<survey_selpars<<endl;
+!!       cout<<"ln_M1ann: "<<ln_M1ann<<endl;
+!!       cout<<"ln_otherFood_base: "<<ln_otherFood_base<<endl;
+!!       cout<<"otherFood_dev: "<<otherFood_dev<<endl;
+!!       exit(1);
+!!      }
 
 
 
@@ -1276,7 +1302,7 @@ PRELIMINARY_CALCS_SECTION
       }
   }
 
-
+//  cout << "covariates_M: " << covariates_M << endl;
 
 
 //=======================================================================================
@@ -1288,7 +1314,7 @@ PROCEDURE_SECTION
   for (area=1; area<=Nareas; area++){
    for(spp=1; spp<=Nspecies; spp++){
 //    //      M1(area, spp)  = 1.0 - pow((1.0 - M1ann(area, spp)), (1.0 / Nstepsyr)) ; //scale for steps per year to equal annual input from dat  
-          M1(area, spp)  = 1.0 - pow((1.0 - mfexp(ln_M1ann(area, spp))), (1.0 / Nstepsyr)) ; //scale for steps per year to equal annual input from dat  
+          M1(area, spp)  = 1.0 - pow((1.0 - mfexp(ln_M1ann(area, spp))), (1.0 / Nstepsyr)) ; //scale for steps per year to equal annual input from dat
 //    //        M1(area, spp) = mfexp(ln_M1ann(area, spp))/Nstepsyr;
     }
    }
@@ -1332,6 +1358,7 @@ PROCEDURE_SECTION
   calc_initial_states();  if (debug == 4) {cout<<"completed Initial States"<<endl;}
 
   yrct=1;
+
 
 
   for (t=1; t<=Tottimesteps; t++)
@@ -1495,9 +1522,9 @@ FUNCTION transform_parameters
      fishsel_d(species,ifleet) = mfexp(fishsel_pars(2,ifleet));
    }
   }
-  //cout << "fishery selectivit pars" << endl;
-  //cout << fishsel_c << endl;
-  //cout << fishsel_d << endl;
+ // cout << "fishery selectivit pars" << endl;
+ // cout << fishsel_c << endl;
+ // cout << fishsel_d << endl;
   //exit(-1);
   
   dvariable neglog19 = -1.*log(19.);
@@ -1528,10 +1555,10 @@ FUNCTION transform_parameters
 //      }
 //    }
 //  }
-  //cout << "vulnerability" << endl;
+//  cout << "vulnerability" << endl;
   //cout << logit_vuln << endl;
-  //cout << vulnerability << endl;
-  //exit(-1);
+//  cout << vulnerability << endl;
+//  exit(-1);
 
 
 
@@ -1660,6 +1687,12 @@ FUNCTION calc_initial_states
     }
   }
   }
+  //cout<<"fishery_q: "<<fishery_q<<endl;
+  //cout<<"avg_F: "<<avg_F<<endl;
+  //cout<<"F_devs: "<<F_devs<<endl;
+  //cout<<"Fyr: "<<Fyr<<endl;
+  //exit(1);
+  
   //exit(-1);
 //   cout << "HI GAVIN" << endl;
 // ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -3298,8 +3331,11 @@ FUNCTION evaluate_the_objective_function
 
   cout << "starting commercial catch nll" << endl;
 
+  //cout << "Ncatch_obs: "<<Ncatch_obs << endl;
+  //cout << "obs_catch_biomass(1,1): "<<obs_catch_biomass(1,1)<< endl;
+  //exit(1);
 //Commercial Catch
-    // Ncatch_obs
+//    Ncatch_obs=1;
     pred_catch_biomass.initialize();
     resid_catch.initialize();
     nll_catch.initialize(); 
@@ -3311,13 +3347,16 @@ FUNCTION evaluate_the_objective_function
       int spp = obs_catch_biomass(i,4);
       dvariable value = obs_catch_biomass(i,5)+eps;
       dvariable cv = obs_catch_biomass(i,6);
+      cout << "fleet "<<i<<": "<<fleet<< endl;
       // if (fleet==0) // add case when catch is aggregated over fleets (fleet = 0 in data file)
       pred_catch_biomass(i) = fleet_catch_biomass(area,spp,fleet,year); //predicted value for this data point
+      
       resid_catch(i) = log(value/(pred_catch_biomass(i)+eps));
       nll_catch(i) = dlnorm(value, log(pred_catch_biomass(i)+eps), cv);
     }
    
-  cout << "done commercial catch nll" << endl;
+  //cout << "done commercial catch nll" << endl;
+  //exit(1);
 
   cout << "starting commercial catch at length nll" << endl;
 
@@ -3540,6 +3579,7 @@ FUNCTION evaluate_the_objective_function
   // //cout<<"objfun_areaspp\n"<<objfun_areaspp<<endl;
 
   // objfun = sum(objfun_areaspp);
+
 
 // //=======================================================================================
 // RUNTIME_SECTION

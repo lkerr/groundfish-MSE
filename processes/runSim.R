@@ -55,9 +55,17 @@ for(r in 1:nrep){
        #Restore the rng state to the value of oldseed_mproc.  For the same values of r, all the management procedures to start from the same RNG state.
        .Random.seed<-oldseed_mproc
     
-       bs_temp <- c()
-       F_devs <- c()
-       newdata <- list(bs_temp=bs_temp,F_devs=F_devs)
+
+    bs_temp <- c()
+    F_full <- c()
+    newdata <- list(bs_temp=bs_temp,F_full=F_full)
+    
+    # This is here for testing:
+    # bs_temp <- c(9)
+    # F_full <- c(0.1,0.7)
+    # newdata <- list(bs_temp=bs_temp,F_full=F_full)
+    # END TESTING
+    
     #### Top year loop ####
     for(y in fyear:nyear){
       source('processes/withinYearAdmin.R')
@@ -102,17 +110,6 @@ for(r in 1:nrep){
       # WE'LL ADD IN THE ERROR WITH get_error_idx AND get_error_paa 
         
       } #End killing fish loop
-      
-      # After killing fish loop, make a list called newdata that will be added to hydra in next iteration
-      # newdata <-list()
-      # newdata$bs_temp 
-      # newdata$obs_survey_biomass 
-      # newdata$obs_survey_size 
-      # newdata$obs_catch_biomass 
-      # newdata$obs_catch_size 
-      # newdata$obs_diet_prop 
-      # newdata$recruitment_devs 
-      # newdata$F_devs 
 
       # Store results- AM I SAVING THE RIGHT THING NOW? CHECK THESE FUNCTIONS
         # we save after mortality and new index generated but that would be different in this case
@@ -137,6 +134,15 @@ for(r in 1:nrep){
          
       #### SEND F TO HYDRA HERE? RIGHT BEFORE END OF YEAR LOOP ####
       # you will need to pull stock[[i]]$F_full[y]
+      
+      # Here is where new bs_temp and F_full get added for the next hydra loop
+      # bs_temp just adds the average temperature from time series each year, can change to pull randomly
+      bs_temp <- c(bs_temp,9.643207)
+      # F_full reads in as Year: Fleet 1 Fleet 2, Next year: Fleet 1 Fleet 2
+      # F devs can only take one value for each fleet for each year...
+      # F_full <- c(F_full,stock[[i]]$F_full[y])
+      F_full <- c(F_full,c(0.1128545,0.7957947))
+      newdata <- list(bs_temp=bs_temp,F_full=F_full)
       
     } #End of year loop 
   } #End of mproc loop

@@ -8,7 +8,7 @@
   #include "statsLib.h"
   #include <iostream>
   #include <math.h>
- // #include <cmath>
+  #include <cmath>
   #include <fstream>
   #include <string>
   #include <sstream>
@@ -1108,6 +1108,26 @@ cout << "Nprey " << Nprey << endl;
   #ifndef NO_AD_INITIALIZE
     otherFood.initialize();
   #endif
+      if (debug == 1)
+      {
+       cout<<"ln_yr1N: "<<ln_yr1N<<endl;
+       cout<<"recruitment_alpha: "<<recruitment_alpha<<endl;
+       cout<<"recruitment_shape: "<<recruitment_shape<<endl;
+       cout<<"recruitment_beta: "<<recruitment_beta<<endl;
+       cout<<"ln_avg_recruitment: "<<ln_avg_recruitment<<endl;
+       cout<<"recruitment_devs: "<<recruitment_devs<<endl;
+       cout<<"ln_recsigma: "<<ln_recsigma<<endl;
+       cout<<"avg_F: "<<avg_F<<endl;
+       cout<<"F_devs: "<<F_devs<<endl;
+       cout<<"fishsel_pars: "<<fishsel_pars<<endl;
+       cout<<"ln_fishery_q: "<<ln_fishery_q<<endl;
+       cout<<"ln_survey_q: "<<ln_survey_q<<endl;
+       cout<<"survey_selpars: "<<survey_selpars<<endl;
+       cout<<"ln_M1ann: "<<ln_M1ann<<endl;
+       cout<<"ln_otherFood_base: "<<ln_otherFood_base<<endl;
+       cout<<"otherFood_dev: "<<otherFood_dev<<endl;
+       exit(1);
+      }
 }
 
 void model_parameters::preliminary_calculations(void)
@@ -1144,7 +1164,7 @@ void model_parameters::userfunction(void)
   transform_parameters(); if (debug == 4) {cout<<"completed parameter transform"<<endl;}
   for (area=1; area<=Nareas; area++){
    for(spp=1; spp<=Nspecies; spp++){
-          M1(area, spp)  = 1.0 - pow((1.0 - mfexp(ln_M1ann(area, spp))), (1.0 / Nstepsyr)) ; //scale for steps per year to equal annual input from dat  
+          M1(area, spp)  = 1.0 - pow((1.0 - mfexp(ln_M1ann(area, spp))), (1.0 / Nstepsyr)) ; //scale for steps per year to equal annual input from dat
     }
    }
   // Other Food - fill in the other food vector
@@ -1269,9 +1289,9 @@ void model_parameters::transform_parameters(void)
      fishsel_d(species,ifleet) = mfexp(fishsel_pars(2,ifleet));
    }
   }
-  //cout << "fishery selectivit pars" << endl;
-  //cout << fishsel_c << endl;
-  //cout << fishsel_d << endl;
+ // cout << "fishery selectivit pars" << endl;
+ // cout << fishsel_c << endl;
+ // cout << fishsel_d << endl;
   //exit(-1);
   dvariable neglog19 = -1.*log(19.);
   for (int i=1;i<=Nsurveys;i++)
@@ -1288,10 +1308,7 @@ void model_parameters::transform_parameters(void)
   // catch_sigma = mfexp(ln_catch_sigma);
   //vulnerabilities
   int iprey = 0;
-  //cout << "vulnerability" << endl;
   //cout << logit_vuln << endl;
-  //cout << vulnerability << endl;
-  //exit(-1);
 }
 
 void model_parameters::calc_initial_states(void)
@@ -1397,6 +1414,11 @@ void model_parameters::calc_initial_states(void)
     }
   }
   }
+  //cout<<"fishery_q: "<<fishery_q<<endl;
+  //cout<<"avg_F: "<<avg_F<<endl;
+  //cout<<"F_devs: "<<F_devs<<endl;
+  //cout<<"Fyr: "<<Fyr<<endl;
+  //exit(1);
   //exit(-1);
     // now given the distribution of errors for extreme events we calculate the error
     //sim_extreme_recruit_error
@@ -1895,7 +1917,9 @@ void model_parameters::evaluate_the_objective_function(void)
 {
   dvariable eps = 1.e-07;
   cout << "starting commercial catch nll" << endl;
-    // Ncatch_obs
+  //cout << "Ncatch_obs: "<<Ncatch_obs << endl;
+  //cout << "obs_catch_biomass(1,1): "<<obs_catch_biomass(1,1)<< endl;
+  //exit(1);
     pred_catch_biomass.initialize();
     resid_catch.initialize();
     nll_catch.initialize(); 
@@ -1907,12 +1931,14 @@ void model_parameters::evaluate_the_objective_function(void)
       int spp = obs_catch_biomass(i,4);
       dvariable value = obs_catch_biomass(i,5)+eps;
       dvariable cv = obs_catch_biomass(i,6);
+      cout << "fleet "<<i<<": "<<fleet<< endl;
       // if (fleet==0) // add case when catch is aggregated over fleets (fleet = 0 in data file)
       pred_catch_biomass(i) = fleet_catch_biomass(area,spp,fleet,year); //predicted value for this data point
       resid_catch(i) = log(value/(pred_catch_biomass(i)+eps));
       nll_catch(i) = dlnorm(value, log(pred_catch_biomass(i)+eps), cv);
     }
-  cout << "done commercial catch nll" << endl;
+  //cout << "done commercial catch nll" << endl;
+  //exit(1);
   cout << "starting commercial catch at length nll" << endl;
    //Ncatch_size_obs
   int j=0;

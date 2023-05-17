@@ -1,19 +1,23 @@
 #Hydra_Sim_Dat_R
-get_hydra_data <- function(Nyrs=42)
+get_hydra_data <- function(MSEyr=0)
 {
-  
   speciesList <- c("Atlantic_cod","Atlantic_herring","Atlantic_mackerel",  
                    "Goosefish","Haddock","Silver_hake","Spiny_dogfish",
                    "Winter_flounder","Winter_skate","Yellowtail_flounder")
   
   debug <-0
-  Nyrs <- Nyrs
+  Nyrs <- 42
   Nspecies <- 10
   Nsizebins <- 5
   Nareas <- 1
   Nfleets <- 2
   Nsurveys <- 2
   wtconv <- 1
+  
+  F_devs <-rep(0,Nfleets*Nyrs)
+  Nyrs <- Nyrs + MSEyr
+  
+
   datfilename <- "hydra_sim_data-ts.dat"
   binwidth <- c(29, 29, 29, 29, 29, 
                 8, 8, 8, 8, 8, 
@@ -183,6 +187,7 @@ get_hydra_data <- function(Nyrs=42)
   
   Ncatch_obs <- 420
   obs_catch_biomass <- read.csv("functions/hydra/obs_catch_biomass.csv",sep=",",head=F)
+  obs_catch_biomass[1,1] <- as.numeric(1)
   colnames(obs_catch_biomass) <- c("fleet","area","year","species","catch","cv")
   Ncatch_size_obs <- 395
   obs_catch_size <- read.csv("functions/hydra/obs_catch_size.csv",sep=",",head=F)
@@ -210,10 +215,10 @@ get_hydra_data <- function(Nyrs=42)
   recruitment_shape <- rep(0,Nspecies)
   recruitment_beta <- rep(0,Nspecies)
   ln_avg_recruitment <- c(5, 10, 7.5, 4.5, 8, 6.5, 5, 6, 6, 7)
-  recruitment_devs <- rep(0,Nspecies*Nyrs)
+  recruitment_devs <- rep(0,Nspecies*(Nyrs-1))
   ln_recsigma <- rep(-0.3011051,Nspecies)
   avg_F <- c(-2.18165568210824,-0.228414010548921)
-  F_devs <-rep(0,Nfleets*Nyrs)
+  
   fishsel_pars <- rep(1,Nfleets*2)
   ln_fishery_q <- rep(0,Nspecies-Nfleets*Nareas)
   ln_survey_q <- rep(0,Nsurveys*Nspecies)
