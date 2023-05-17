@@ -11,15 +11,19 @@ get_hydra <- function(newseed=404,newdata=ls()){
   
   # EMILY: ADD THE .PIN FILE INFO TO get_hydra_data AS WELL, AND DOWN BELOW
   #Source the original hydra_data, with added lines for additional year
-  source(here("functions/hydra/get_hydra_data.R"))
+  source(here("functions/hydra/get_hydra_data_new.R"))
   hydra_data <- get_hydra_data(MSEyr)
-
+  
   # Turn on debugging, if needed:  
   hydra_data$debug <- 0
   
   #Update hydra data based on this iteration of the MSE
   # Primary dat file items:
   hydra_data$bs_temp <- c(hydra_data$bs_temp,newdata$bs_temp)
+  
+  fleetdistribute <- list()
+  for(i in 1:hydra_data$Nfleets) fleetdistribute[[i]] <- unique(dplyr::filter(hydra_data$obs_catch_biomass, fleet==i)$species)
+  
   
   # ADD DUMMY DATA TO HYDRA INPUT FILE:
   if(MSEyr>0)
@@ -33,14 +37,18 @@ get_hydra <- function(newseed=404,newdata=ls()){
           hydra_data$obs_survey_biomass <-rbind(hydra_data$obs_survey_biomass,c(j,i,k,100000,0.5))
           hydra_data$obs_survey_size <- rbind(hydra_data$obs_survey_size,c(j,i,k,0,50,0.2,0.2,0.2,0.2,0.2))
         }
-        for(j in 1:hydra_data$Nfleets)
+        
+      }
+      for(j in 1:hydra_data$Nfleets)
+      {
+        for(k in 1:fleetdistribute[[j]])
         {
           for(l in 1:hydra_data$Nareas)
           {
             hydra_data$obs_catch_size <- rbind(hydra_data$obs_catch_size,c(j,l,i,k,0,50,0.2,0.2,0.2,0.2,0.2))
             hydra_data$obs_catch_biomass <- rbind(hydra_data$obs_catch_biomass,c(j,l,i,k,30000,0.05))
           }
-        }
+        } 
       }
     }
     hydra_data$Nsurvey_obs = nrow(hydra_data$obs_survey_biomass)
@@ -60,7 +68,7 @@ get_hydra <- function(newseed=404,newdata=ls()){
   #############################################################################
   #Start of Emily's code, it runs hydra and pulls data files:
   #Source the baseline hydra sim data:
-
+  
   
   #Write a new hydra sim file, changing anything before this line
   fileConn<-file("functions/hydra/hydra_sim_data.dat")
@@ -114,7 +122,7 @@ get_hydra <- function(newseed=404,newdata=ls()){
   # Random number to run the MSE
   randomnum <- newseed
   # randomnum <- round(randu(1,100),1)
-
+  
   # Set the working directory to where the hydra executable is
   originalwd <- getwd()
   setwd(paste0(originalwd,"/functions/hydra"))
@@ -168,7 +176,7 @@ get_hydra <- function(newseed=404,newdata=ls()){
     gather(bin, endbin, sizebin0:sizebin5)%>%
     group_by(species)%>%
     mutate(startbin= dplyr::lag(endbin))%>%
-   dplyr::filter(!bin %in% c('sizebin0'))
+    dplyr::filter(!bin %in% c('sizebin0'))
   
   # calculate the number of fish in each bin- Problem this is not an integer
   # observedSurvSize<- hydraDataList_msk$observedSurvSize
@@ -218,11 +226,11 @@ get_hydra <- function(newseed=404,newdata=ls()){
   
   # it seems like all of this is ultimately coming from the 
   hydra_sim_data <- list(predSurSize=SurvRep,
-                    predCatchSize=CatchRep,
-                    predBiomass=survey.df[,-c(4,7,8)],
-                    predCatch=catch.df[,-c(5,8,9)],
-                    fishsel=hydra_sim_rep$fishsel,
-                    EstNsize=EstNsize,
-                    M=exp(hydra_data$ln_M1ann))
+                         predCatchSize=CatchRep,
+                         predBiomass=survey.df[,-c(4,7,8)],
+                         predCatch=catch.df[,-c(5,8,9)],
+                         fishsel=hydra_sim_rep$fishsel,
+                         EstNsize=EstNsize,
+                         M=exp(hydra_data$ln_M1ann))
   return(hydra_sim_data)
-}
+} 
