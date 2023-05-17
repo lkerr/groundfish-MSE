@@ -13,7 +13,7 @@ fl <- list.files(file.path(ResultDirectory, 'sim'), pattern="omvalGlobal", full.
 
 # load all the functions
 ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
-invisible(sapply(ffiles, source))
+#invisible(sapply(ffiles, source))
 
 # load the required libraries
 source('processes/loadLibs.R')
