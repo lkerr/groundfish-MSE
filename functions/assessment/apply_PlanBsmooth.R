@@ -24,7 +24,7 @@ ApplyPlanBsmooth <- function(dat,
   
   # select data to use
   if(is.na(terminal.year)) terminal.year <- max(dat$Year, na.rm=T)
-  dat.use <- filter(dat, Year <= terminal.year, Year >= (terminal.year - nyears + 1)) %>%
+  dat.use <- dplyr::filter(dat, Year <= terminal.year, Year >= (terminal.year - nyears + 1)) %>%
     drop_na()  # removes years with missing index values
   nyears <- max(dat.use$Year) - min(dat.use$Year) + 1 # in case fewer years than (e.g., during retro)
 
@@ -37,7 +37,7 @@ ApplyPlanBsmooth <- function(dat,
   reg.dat <- data.frame(Year = dat.use$Year,
                         pred = pred_fit$fit)
   reg.years <- seq(terminal.year - 2, terminal.year)
-  reg.use <- filter(reg.dat, Year %in% reg.years, pred > 0)
+  reg.use <- dplyr::filter(reg.dat, Year %in% reg.years, pred > 0)
   
   # add warning message if recent three year regression has less than three years
   if(dim(reg.use)[1] != 3){

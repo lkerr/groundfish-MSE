@@ -49,7 +49,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
   # are different ways to grab the F reference point and the B reference
   # point and those will be implemented in get_FBRP
   
-  if(parmgt$ASSESSCLASS == 'CAA' || parmgt$ASSESSCLASS == 'ASAP'){
+  if(stockEnv$stockName %in% c('Atlantic_cod','Atlantic_herring', 'Atlantic_mackerel', "Haddock", 'Winter_flounder', 'Yellowtail_flounder')){
     
     parpopF<-parpop
     
@@ -300,7 +300,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                 OFgStatus = overfishing, catchproj=catchproj) #AEW
     
   #Plan B Approach
-  }else if(parmgt$ASSESSCLASS == 'PLANB'){
+  }else if(stockEnv$stockName %in% c('Goosefish','Silver_hake', 'Spiny_dogfish', "Winter_skate")){
     
     # Find the recommended level for catch in weight
     CWrec <- tail(parpop$obs_sumCW, 1) * parpop$mult
@@ -314,14 +314,14 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     # Calculate what the corresponding true F is that matches with
     # the actual biomass-at-age in the current year
-    # trueF <- get_F(x = CWrec,
-    #               Nv = parpop$Ntrue_y,
-    #               slxCv = parpop$slxCtrue_y,
-    #               M = parpop$Mtrue_y,
-    #               waav = parpop$waatrue_y)
+    F <- get_F(x = CWrec,
+                  Nv = parpop$Ntrue_y,
+                  slxCv = parpop$slxCtrue_y,
+                  M = parpop$Mtrue_y,
+                  waav = parpop$waatrue_y)
     
-    out <- list(RPs = c(NA, NA), OFdStatus=NA,
-                OFgStatus = NA) #AEW
+    out <- list(F = F, RPs = c(NA, NA), OFdStatus=NA,
+                OFgStatus = NA, catchproj=NA) #AEW
     
   }else{
     

@@ -16,9 +16,9 @@ mprocfile<-"mproc.csv"
 # want to include them in a run you can write them in here in the
 # stockExclude variable. Do not include the extension.R. For example,
 # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
- #stockExclude <- NULL #indludes all stocks.
+ stockExclude <- NULL #indludes all stocks.
 # Available stocks: Atlantic_cod, Atlantic_herring, Atlantic_mackerel, Goosefish, Haddock, Silver_hake, Spiny_dogfish, Winter_flounder, Winter_skate, Yellowtail_flounder
-stockExclude <- c('Atlantic_herring','Atlantic_mackerel', 'Goosefish', 'Silver_hake', 'Spiny_dogfish', 'Winter_skate')
+#stockExclude <- c('Atlantic_cod','Atlantic_herring','Atlantic_mackerel','Haddock','Winter_flounder', 'Yellowtail_flounder')
 
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data
@@ -38,7 +38,7 @@ fmyear <- 2019
 # simply fills up the arrays as necessary even before the burn-in period
 # begins. This is rather arbitrary but should be larger than the number of
 # years in the assessment model and greater than the first age in the model.
-fyear <- 38
+fyear <- 119
 
 # maximum year predicted into the future
 mxyear <- 2021
