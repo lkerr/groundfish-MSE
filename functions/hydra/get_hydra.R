@@ -21,6 +21,10 @@ get_hydra <- function(newseed=404,newdata=ls()){
   # Primary dat file items:
   hydra_data$bs_temp <- c(hydra_data$bs_temp,newdata$bs_temp)
   
+  fleetdistribute <- list()
+  for(i in 1:hydra_data$Nfleets) fleetdistribute[[i]] <- unique(dplyr::filter(hydra_data$obs_catch_biomass, fleet==i)$species)
+  
+  
   # ADD DUMMY DATA TO HYDRA INPUT FILE:
   if(MSEyr>0)
   {
@@ -33,14 +37,18 @@ get_hydra <- function(newseed=404,newdata=ls()){
           hydra_data$obs_survey_biomass <-rbind(hydra_data$obs_survey_biomass,c(j,i,k,100000,0.5))
           hydra_data$obs_survey_size <- rbind(hydra_data$obs_survey_size,c(j,i,k,0,50,0.2,0.2,0.2,0.2,0.2))
         }
-        for(j in 1:hydra_data$Nfleets)
+        
+      }
+      for(j in 1:hydra_data$Nfleets)
+      {
+        for(k in 1:fleetdistribute[[j]])
         {
           for(l in 1:hydra_data$Nareas)
           {
             hydra_data$obs_catch_size <- rbind(hydra_data$obs_catch_size,c(j,l,i,k,0,50,0.2,0.2,0.2,0.2,0.2))
             hydra_data$obs_catch_biomass <- rbind(hydra_data$obs_catch_biomass,c(j,l,i,k,30000,0.05))
           }
-        }
+        } 
       }
     }
     hydra_data$Nsurvey_obs = nrow(hydra_data$obs_survey_biomass)

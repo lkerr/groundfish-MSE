@@ -610,7 +610,7 @@ cout << Nsurvey_obs << endl;
     cout<<"eof\n"<<eof<<endl;
     }
   if(eof != 54321) {cout<<"Stop, data input failed"<<endl<<"eof: "<<eof<<endl; exit(1);}
-  if (debug == 1) {cout<<"\nManually exiting at end of data section..."<<endl;  exit(-1);}
+  if (debug == 1) {cout<<"\nManually exiting at end of data section..."<<endl;}
 }
 
 void model_parameters::initializationfunction(void)

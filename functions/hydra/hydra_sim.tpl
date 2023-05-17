@@ -938,7 +938,7 @@ DATA_SECTION
 
   if(eof != 54321) {cout<<"Stop, data input failed"<<endl<<"eof: "<<eof<<endl; exit(1);}
 
-  if (debug == 1) {cout<<"\nManually exiting at end of data section..."<<endl;  exit(-1);}
+  if (debug == 1) {cout<<"\nManually exiting at end of data section..."<<endl;}
 
 	END_CALCS
 

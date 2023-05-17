@@ -34,7 +34,7 @@
   0 0 0 0 0 0 0 0 0 0
 # ln_avg_recruitment, 1:Nspecies:
   5 10 7.5 4.5 8 6.5 5 6 6 7
-# recruitment_devs, rows 1:Nspecies, columns 1:Nyrs:
+# recruitment_devs, rows 1:Nspecies, columns 2:Nyrs:
   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
