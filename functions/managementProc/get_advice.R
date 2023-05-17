@@ -2,7 +2,7 @@ get_advice <- function(stock){
   # prepare data for assessment
   #tempStock <- get_tmbSetup(stock = stock)
   tempStock <- stock
-  
+
   #### Run assessment model####
 
   # Run the CAA assessment
@@ -13,14 +13,17 @@ get_advice <- function(stock){
   }
 
   # Run the PlanB assessment
-  if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
+  # calculate length-at-age in year y
+  #if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
+  if(tempStock$stockName %in% c('Goosefish','Silver_hake', 'Spiny_dogfish', "Winter_skate")){
   if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
   tempStock <- get_planB(stock = tempStock)}
   else{get_planB(stock = tempStock)}
   }
 
   # Run ASAP assessment
-  if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
+  #if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
+  if(tempStock$stockName %in% c('Atlantic_cod','Atlantic_herring', 'Atlantic_mackerel', "Haddock", 'Winter_flounder', 'Yellowtail_flounder')){
     if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
     tempStock <- get_ASAP(stock = tempStock)}
     else{
@@ -31,10 +34,10 @@ get_advice <- function(stock){
   tempStock <- within(tempStock, {
     conv_rate[y] <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' &&
                       class(opt) != 'try-error') ||
-                     (mproc[m,'ASSESSCLASS'] == 'PLANB' &&
+                     (tempStock$stockName %in% c('Goosefish','Silver_hake', 'Spiny_dogfish', "Winter_skate") &&
                         class(planBest) != 'try-error') ||
-                     (mproc[m, 'ASSESSCLASS'] == 'ASAP' &&
-                        asapEst == 0), 1, 0)
+                       (tempStock$stockName %in% c('Atlantic_cod','Atlantic_herring', 'Atlantic_mackerel', "Haddock", 'Winter_flounder', 'Yellowtail_flounder') && 
+                          asapEst == 0), 1, 0)
   })
 
   # Retrieve the estimated SSB (necessary for advice) &
@@ -56,18 +59,34 @@ get_advice <- function(stock){
       })
     }
 
-    if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
+
+    if(tempStock$stockName %in% c('Goosefish','Silver_hake', 'Spiny_dogfish', "Winter_skate")){
       tempStock <- within(tempStock, {
-        parpop <- list(obs_sumCW = tmb_dat$obs_sumCW,
+        #start year
+        styear <- fmyearIdx - ncaayear
+        
+        #end year
+        if(mproc[m,'Lag'] == 'TRUE'){
+          endyear <- y-2
+        }
+        else if(mproc[m,'Lag'] == 'FALSE'){
+          endyear <- y-1
+        }
+        N_rows <- length(styear:endyear)
+        
+        # calculate length-at-age in year y
+        laa[y,] <- get_lengthAtAge(type=laa_typ, par=laa_par, ages=fage:page)
+        slxC[y,] <- get_slx(type=selC_typ, par=selC, laa=laa[y,])
+        parpop <- list(obs_sumCW = sumCW[1:N_rows], #change back to obs later
                        mult = planBest$multiplier,
-                       waatrue_y = waa[y-1,],
-                       Ntrue_y = J1N[y-1,],
+                       waatrue_y = waa_par,
+                       Ntrue_y = stock$sumIN[N_rows] %*% stock$paaIN[N_rows,],
                        Mtrue_y = M,
-                       slxCtrue_y = slxC[y-1,])
+                       slxCtrue_y = slxC[y,])
       })
     }
 
-    if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
+    if(tempStock$stockName %in% c('Atlantic_cod','Atlantic_herring', 'Atlantic_mackerel', "Haddock", 'Winter_flounder', 'Yellowtail_flounder')){
       tempStock <- within(tempStock, {
         parpop <- list(waa = tail(res$WAA.mats$WAA.catch.fleet1, 1),
                        sel = tail(res$fleet.sel.mats$sel.m.fleet1, 1),
@@ -106,9 +125,8 @@ get_advice <- function(stock){
                    y = y-1)
 
     #### Get ref points & assign F & get catch advice ####
-
     if( y == fmyearIdx ||
-        mproc[m,'ASSESSCLASS'] == 'PLANB' ||
+        tempStock$stockName %in% c('Goosefish','Silver_hake', 'Spiny_dogfish', "Winter_skate") ||
         (y > fmyearIdx &
           (y-fmyearIdx) %% mproc[m,'RPInt'] == 0 ) ){
 
@@ -137,7 +155,7 @@ get_advice <- function(stock){
         #                  stock = tempStock)
         # tempStock$RPmat[y,] <- tempStock$RPmat[y-1,]
     }
-     
+    
     # Report overfished status (based on previous year's data)
     tempStock <- within(tempStock, {
       OFdStatus[y-1] <- gnF$OFdStatus
