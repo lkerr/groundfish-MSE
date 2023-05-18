@@ -27,8 +27,8 @@ annual_revenue_holder<-list()
 annual_fishery_status_holder<-list()
 
 #set up a list to hold the quota prices
-
 annual_quota_price_holder<-list()
+
 
 # setup a list to hold the intraseason Gini ala Birkenbach, Kazcan, Smith nature.
 #Gini_stock_within_season_BKS<-list()
@@ -260,7 +260,36 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
   annual_revenue_holder2<-annual_revenue_holder2[, lapply(.SD, sum),.SDcols = my_revenue_names]
   total_groundfish_rev<-rowSums(annual_revenue_holder2, na.rm=TRUE)
   
-  
+annual_revenue_holder2<-annual_revenue_holder2 %>%
+  tidyr::pivot_longer(starts_with("r_"), names_to="spstock2", values_to="revenue")%>%
+  mutate(spstock2=str_replace(spstock2,"r_",""))
+
+
+#Total landings
+my_landings_names<-paste0("l_",allocated_groundfish)
+annual_output_price_holder<-as.data.table(annual_revenue_holder)
+
+annual_output_price_holder<-annual_output_price_holder[, lapply(.SD, sum),.SDcols = my_landings_names]
+
+annual_output_price_holder<-annual_output_price_holder %>%
+  tidyr::pivot_longer(starts_with("l_"), names_to="spstock2", values_to="landings")%>%
+  mutate(spstock2=str_replace(spstock2,"l_","")) 
+
+#################################
+## might need to fiddle with the pivot_longer, probably need to subinstr("l_" on the species)
+##
+#################################
+
+
+# merge landings to revenues and create prices.  
+# this should be a data.frame with rows that have the stock level data and columns that have landings, prices, and revenue
+annual_output_price_holder<-inner_join(annual_output_price_holder, annual_revenue_holder2, by=c("spstock2")) 
+annual_output_price_holder <-annual_output_price_holder %>%
+  mutate(avgprice_per_lb=revenue/landings)%>%
+  select(spstock2, avgprice_per_lb)
+
+
+fishery_holder<-inner_join(fishery_holder,annual_output_price_holder, by="spstock2")
   
   # This is the place to do any fleet-level metrics that are sub-yearly. You can use annual_revenue_holder to to get 
   # Total rev, total rev from groundfish. revenue by species.
@@ -276,7 +305,7 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
   
   
   rm(annual_revenue_holder)
-
+  rm(annual_output_price_holder)
   #contract the fishery-level list down to a single data.table
   annual_fishery_status_holder<- rbindlist(annual_fishery_status_holder) 
   annual_fishery_status_holder$r<-r
@@ -304,8 +333,6 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
   fishery_quota_price_holder[[yearitercounter]]<-annual_quota_price_holder
   
   
-  
-  
   # Compute the within-season Gini for each modeled stock and put it in 'stock'
   for(i in 1:nstock){
       stock[[i]]$Gini_stock_within_season_BKS[y]<-get_gini_subset(dataset=annual_fishery_status_holder, y="daily_pounds_caught", filter_var="spstock2", filter_value=stock[[i]]$stockName)
@@ -323,7 +350,8 @@ bio_output<-fishery_holder[which(fishery_holder$bio_model==1),]
 # Put catch (mt) into the stock list, then compute F_full
 for(i in 1:nstock){
   stock[[i]]$econCW[y]<-bio_output$removals_mt[bio_output$stocklist_index==i]
-
+  stock[[i]]$avgprice_per_lb[y]<-bio_output$avgprice_per_lb[bio_output$stocklist_index==i]
+  
     stock[[i]]<-within(stock[[i]], {
     F_full[y]<- get_F(x=econCW[y],
                       Nv=J1N[y,],

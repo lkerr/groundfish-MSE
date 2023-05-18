@@ -122,8 +122,9 @@ get_containers <- function(stockPar){
     Rest = est,
     
     # Econ model containers
-    # Total Weight of catch, estimated ie_F, and estimated iebias
-    econCW= yx0, 
+    # Total Weight of catch, average price, estimated ie_F, and estimated iebias
+    econCW= yx0,
+    avgprice_per_lb=yx0,
     ie_F_hat = save_vector_replicate,
     iebias_hat = save_vector_replicate,
     
@@ -142,6 +143,7 @@ get_containers <- function(stockPar){
       F_fullAdvice = save_vector_ann,
       ACL = save_vector_ann,
       econCW= save_vector_ann, #catch weights from the econ model
+      avgprice_per_lb= save_vector_ann, #average prices from the econ model
       sumCW = save_vector_ann, # catch weights
       sumEconIW=save_vector_ann, #"economic" survey 
       annPercentChange = save_vector_ann, #cheap ... not really vector.

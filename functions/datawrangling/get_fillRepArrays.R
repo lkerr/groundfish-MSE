@@ -113,6 +113,7 @@ get_fillRepArrays <- function(stock){
       if(y >= fmyearIdx){
     omval$Gini_stock_within_season_BKS[r,m,y]<-Gini_stock_within_season_BKS[y] #Gini coefficient over the days of the fishing year
     omval$econCW[r,m,y]<-econCW[y] #"Economic" total catch in metric tons  
+    omval$avgprice_per_lb[r,m,y]<-avgprice_per_lb[y] #"Economic" total catch in metric tons  
     
       }
     }    
