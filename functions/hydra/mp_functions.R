@@ -150,7 +150,7 @@ gen_data <- function(om_long) {
            err = rnorm(nrow(om_long),0,data_sd),
            data = value*exp(err-0.5*data_sd*data_sd)) %>%
     mutate(t = ifelse(type=="catch",t-1,t)) %>%
-    filter(t != 0) %>%
+    dplyr::filter(t != 0) %>%
     mutate(isp = as.numeric(isp)) %>%
     I()
   #em_data
@@ -185,7 +185,7 @@ do_pseudo_assess <- function(data, isp, Nsp = 4) {
   #runs a logistic production model given a data frame with variable names
   # biomass -> time series of survey index
   # catch -> time series of catches
-  cpa2 <- readRDS("R/cpa2.rds")
+  cpa2 <- readRDS("functions/hydra/cpa2.rds")
   ini.parms <- log(c(5000, 0.6)) #log(1200), log(0.1), 0.3)
   # Fit the logistic model to data:  
   biomass <- as_vector(data$biomass)
