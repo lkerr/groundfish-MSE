@@ -10,10 +10,6 @@ library(tidyverse)
 rm(list=ls())
 source('processes/runSetup.R')
 
-# fyear=1
-# nyear=5
-# nrep = 5
-
 # if on local machine (i.e., not hpcc) must compile the tmb code
 # (HPCC runs have a separate call to compile this code). Keep out of
 # runSetup.R because it is really a separate process on the HPCC.
@@ -34,7 +30,7 @@ settings <- list(
   floorYrs = 1:40)
 
 #set up some dummy data
-#input <- get_om_pars()
+# input <- get_om_pars()
 input <- NULL
 input$Nsp = 10
 #om_long <- run_om(input)
@@ -45,6 +41,28 @@ gear_complexes <- tibble(isp = 1:10,
                          complex = c(1, 3, 3, 1, 1, 3, 1, 2, 1, 2))
 
 input$complex = feeding_complexes$complex
+
+# tsfile <- "functions/hydra/hydra_sim_GB_5bin_1978_10F-ts.dat"
+# index <- read_table(tsfile, skip = 8, n_max = 833, col_names = c("survey" ,"year", "spp", "value" ,"cv")) %>% 
+#   mutate(var = (value*cv)^2) %>% 
+#   filter(survey == 1) %>% 
+#   rename(t = year,
+#          isp = spp) %>% 
+#   mutate(type = "biomass") %>% 
+#   select(t, type, isp, value) %>% 
+#   left_join(feeding_complexes)
+# index <- dplyr::filter(index,survey==1)
+# #index
+# catch <- read_table(tsfile, skip = 1688, n_max = 420, col_names = c("fleet","area","year","spp","catch","cv")) %>% 
+#   mutate(var = (catch*cv)^2) %>% 
+#   rename(isp = spp,
+#          value = catch,
+#          t = year) %>% 
+#   mutate(type = "catch") %>% 
+#   select(t, type, isp, value) %>% 
+#   left_join(feeding_complexes)
+# #catch
+# om_long <- bind_rows(index, catch)
 
 
 ####################These are temporary changes for testing ####################
@@ -76,6 +94,8 @@ showProgBar<-TRUE
 
 top_loop_start<-Sys.time()
 
+True_Biomass <- list()
+True_Catch <- list()
 #### Top rep Loop ####
 for(r in 1:nrep){
   oldseed_mproc <- .Random.seed
@@ -102,11 +122,13 @@ for(r in 1:nrep){
     
     source('functions/hydra/get_hydra.R')
     # get_hydra will also incorporate a growing data frame called newdata that gets larger as the loop progresses
-    hydraData<- get_hydra(oldseed_mproc[r],newdata)
+    hydraData<- get_hydra(newseed=oldseed_mproc[r],newdata)
     
+    idxE <- rlnorm(1, meanlog = log(idx), # - par^2/2
+                   sdlog = par)
     # Adds observation error to the original data
-    hydraData_init_index <- exp(rnorm(nrow(hydraData$predBiomass),log(hydraData$predBiomass[,'predbiomass'],base=exp(1)),hydraData$predBiomass[,'cv']))
-    hydraData_init_catch <- exp(rnorm(nrow(hydraData$predCatch),log(hydraData$predCatch[,'predcatch'],base=exp(1)),hydraData$predCatch[,'cv']))
+    hydraData_init_index <- rlnorm(nrow(hydraData$predBiomass),meanlog=log(hydraData$predBiomass[,'predbiomass']),sdlog=hydraData$predBiomass[,'cv'])
+    hydraData_init_catch <- rlnorm(nrow(hydraData$predCatch),meanlog=log(hydraData$predCatch[,'predcatch']),sdlog=hydraData$predCatch[,'cv'])
     hydraData_growing_index <- cbind(hydraData$predBiomass,obsbiomass=hydraData_init_index)
     hydraData_growing_catch <- cbind(hydraData$predCatch,obscatch=hydraData_init_catch)
     
@@ -133,8 +155,8 @@ for(r in 1:nrep){
         hydraData_new_index.df <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year))
         hydraData_new_catch.df <- dplyr::filter(as.data.frame(hydraData$predCatch),year==max(year))
         
-        hydraData_new_index <- exp(rnorm(nrow(hydraData_new_index.df),log(hydraData_new_index.df[,'predbiomass'],base=exp(1)),hydraData_new_index.df[,'cv']))
-        hydraData_new_catch <- exp(rnorm(nrow(hydraData_new_catch.df),log(hydraData_new_catch.df[,'predcatch'],base=exp(1)),hydraData_new_catch.df[,'cv']))
+        hydraData_new_index <- rlnorm(nrow(hydraData_new_index.df),meanlog=log(hydraData_new_index.df[,'predbiomass']),sdlog=hydraData_new_index.df[,'cv'])
+        hydraData_new_catch <- rlnorm(nrow(hydraData_new_catch.df),meanlog=log(hydraData_new_catch.df[,'predcatch']),sdlog=hydraData_new_catch.df[,'cv'])
         hydraData_new_index.df <- cbind(hydraData_new_index.df,obsbiomass=hydraData_new_index)
         hydraData_new_catch.df <- cbind(hydraData_new_catch.df,obscatch=hydraData_new_catch)
         
@@ -154,14 +176,13 @@ for(r in 1:nrep){
       
       om_long <- bind_rows(index, catch)
       
-      #}}}
+      # }}}
       # NOT SURE ABOUT ANYTHING FROM HERE ON. BUT IT SHOULD:
       # -RUN ASSESSMENT
       # -GENERATE RESULTS FROM MP
       # -CREATE ADVICE (mp_results$out_table_advice)
       # -GRAB NEW VALUES OF F_full_new FROM THE ADVICE
       # 
-      
       
       assess_results <- run_pseudo_assessments(om_long)
       #this currently generates data from the predictions, we would want to change so doesn't create new survey/catch time series each application
@@ -172,94 +193,35 @@ for(r in 1:nrep){
         as_tibble()
 
       # #the catch advice, to be passed to get_f_from_advice()
-      # mp_results$out_table$advice
-      # 
-      # source("functions/hydra/get_f_from_advice")
-      # F_full_new <- get_f_from_advice(mp_results$out_table$advice)
+      mp_results$out_table$advice
+
+      source("functions/hydra/get_f_from_advice")
+      F_full_new <- get_f_from_advice(mp_results$out_table$advice)
       
       
+      # Set the new values for the next iteration of MSE
+      # F_full is based on the recommended management model output
+      # rec_devs are generated using the sigma value from the original hydra data
+      # bs_temp is just the average bs_temp from the original data
       F_full_new <- rep(0.1,2)
+      rec_devs_new <- rnorm(hydraData$inputdata$Nspecies,0,sd=exp(hydraData$inputdata$ln_recsigma))
+      bs_temp_new <-9.643207
       
-      rec_devs_new <- rep(0,10)
-      # Something with recsigma (exp(hydraData$inputdata$ln_recsigma))
-      # also avg_recruitment (exp(hydraData$inputdata$ln_avg_recruitment))
-       
-      #  # CONVERT TO AGES AND WRANGLE INTO CORRECT FORMAT
-      #  # This function also has option to add additional observation noise, but
-      #  # that is currently commented out
-      #  for (i in 1:nstock) {
-      #   stock[[i]] <- get_lengthConvert(stock=stock[[i]], hydraData)
-      #  }
-      #  
-      #    
-      # #### RUN MP ####
-      #   for(i in 1:nstock){
-      #     stock[[i]] <- get_advice(stock = stock[[i]]) # RUNS MP
-      #   }
-      #   
-      # #### ADD IMPLEMENTATION ERROR ####
-      #     for(i in 1:nstock){
-      #       stock[[i]] <- get_implementationF(type = 'adviceWithError',
-      #                                         stock = stock[[i]])
-      #     } 
-      # } # end of fishery management has started clause
-      # 
-      # # KILL FISH AND MAKE NEW CATCH AND INDEX FOR HYDRA HERE?
-      # # IS GENERATING NEW CATCH AND INDEX DATA GOING TO BE DEPENDENT ON FISH INTERACTIONS?
-      #   
-      # for(i in 1:nstock){
-      #  # stock[[i]] <- get_mortality(stock = stock[[i]]) # KILLS FISH
-      #  # stock[[i]] <- get_indexData(stock = stock[[i]]) # GENERATES INDEX
-      #   
-      # # WE'LL ADD IN THE ERROR WITH get_error_idx AND get_error_paa 
-      #   
-      # } #End killing fish loop
-      # 
-      # # Store results- AM I SAVING THE RIGHT THING NOW? CHECK THESE FUNCTIONS
-      #   # we save after mortality and new index generated but that would be different in this case
-      # 
-      #    for(i in 1:nstock){
-      #   if (y == nyear){
-      #     stock[[i]] <- get_TermrelError(stock = stock[[i]])
-      #   }
-      #   
-      #   if(y>=fmyearIdx){
-      #     stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
-      #   }
-      #    }
-      # 
-      #   # what does this do?
-      # end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
-      # 
-      # 
-      #   if(showProgBar==TRUE){
-      #     setTxtProgressBar(iterpb, yearitercounter)
-      #   }
-         
-      #### SEND F TO HYDRA HERE? RIGHT BEFORE END OF YEAR LOOP ####
-      # you will need to pull stock[[i]]$F_full[y]
-      
-      # Here is where new information is generated before adding into hydra loop
-      # bs_temp just adds the average temperature from time series each year, can change to pull randomly
-      bs_temp <- c(bs_temp,9.643207)
-      # recruitment devs
+      # Update the growing list of new data
+      bs_temp <- c(bs_temp,bs_temp_new)
       rec_devs <- c(rec_devs,rec_devs_new)
-      
-      # F_full reads in as Year: Fleet 1 Fleet 2, Next year: Fleet 1 Fleet 2
-      # F devs can only take one value for each fleet for each year...
-      # F_full_new <- rep(0.1,2)
       F_full <- c(F_full,F_full_new)
       newdata <- list(bs_temp=bs_temp,F_full=F_full,rec_devs=rec_devs)
       
     } #End of year loop 
   } #End of mproc loop
 
-  #SAVE THE RESULTS FROM THE ITERATION HERE IN LIST
-  #SOMETHING LIKE: N_results <- c(hydraData$EstNsize)
+  True_Biomass[[r]] <- hydraData$biomass
+  True_Catch[[r]] <- hydraData$predCatch
   
 } #End rep loop
 
-hydraData$EstNsize
+# USE GGPLOT HERE TO PLOT True_Biomass[[]] and True_Catch[[]]
 
 top_loop_end<-Sys.time()
 big_loop<-top_loop_end-top_loop_start
@@ -304,7 +266,6 @@ big_loop
           file=paste0(ResultDirectory,'/runInfo.txt'), sep='\n', append=TRUE)
     }
   }
-
 
 
   if(runClass != 'HPCC'){

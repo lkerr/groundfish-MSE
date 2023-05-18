@@ -147,6 +147,9 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
   source("functions/hydra/read.report.R")
   hydra_sim_rep <- reptoRlist("functions/hydra/hydra_sim.rep")
   
+  biomass <- data.frame(Species=rep(1:hydra_data$Nspecies,each=hydra_data$Nyrs),Year=rep(1:hydra_data$Nyrs,hydra_data$Nspecies),Biomass=apply(hydra_sim_rep$EstBsize,1,sum))
+  abundance <- data.frame(Species=rep(1:hydra_data$Nspecies,each=hydra_data$Nyrs),Year=rep(1:hydra_data$Nyrs,hydra_data$Nspecies),Abundance=apply(hydra_sim_rep$EstNsize,1,sum))
+  
   #Convert general report object into things to be fed back
   survey.df <- hydra_sim_rep$survey
   colnames(survey.df) <- c("survey","year","species","biomass","cv","predbiomass","residual","NLL")
@@ -238,9 +241,8 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
                          predCatchSize=CatchRep,
                          predBiomass=survey.df[,-c(4,7,8)],
                          predCatch=catch.df[,-c(5,8,9)],
-                         fishsel=hydra_sim_rep$fishsel,
-                         EstNsize=EstNsize,
-                         M=exp(hydra_data$ln_M1ann),
+                         abundance=abundance,
+                         biomass=biomass,
                          inputdata=hydra_data)
   return(hydra_sim_data)
 } 
