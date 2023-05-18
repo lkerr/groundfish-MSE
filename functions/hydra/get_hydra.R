@@ -1,4 +1,4 @@
-get_hydra <- function(newseed=404,newdata=ls()){
+get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c())){
   #send hydra data to groundfish MSE?
   #Packages you need:
   #tidyr
@@ -193,7 +193,7 @@ get_hydra <- function(newseed=404,newdata=ls()){
   # observedCatchSize <- obs_catch_size
   # for convenience, just overwrite the obs_catch_size with predicted values, since it is already formatted nicely in a df
   predCatchSize <- hydra_data$obs_catch_size
-  predCatchSize[,7:11] <- matrix(hydra_sim_rep$pred_catch_size,ncol=5,nrow=hydra_data$Ncatch_size_obs,byrow=T)
+  predCatchSize[,7:11] <- matrix(hydra_sim_rep$pred_catch_size,ncol=5,nrow=nrow(predCatchSize),byrow=T)
   catchData <- gather(predCatchSize, bin, prop, sizebin1:sizebin5)%>%
     mutate(N= ceiling(inpN*prop))%>% #fix by rounding?
     full_join(sizebins, by=c("species", "bin"))%>%

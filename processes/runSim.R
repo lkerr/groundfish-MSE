@@ -4,11 +4,15 @@ library(readr)
 library(tidyr)
 library(purrr)
 library(tidyverse)
+
 #### Set up environment ####
 
-# empty the environment
 rm(list=ls())
 source('processes/runSetup.R')
+
+# fyear=1
+# nyear=5
+# nrep = 5
 
 # if on local machine (i.e., not hpcc) must compile the tmb code
 # (HPCC runs have a separate call to compile this code). Keep out of
@@ -43,26 +47,6 @@ gear_complexes <- tibble(isp = 1:10,
 input$complex = feeding_complexes$complex
 
 
-tsfile <- "functions/hydra/hydra_sim_GB_5bin_1978_10F-ts.dat"
-index <- read_table(tsfile, skip = 8, n_max = 833, col_names = c("survey" ,"year", "spp", "value" ,"cv")) %>%
-  mutate(var = (value*cv)^2) %>%
-  filter(survey == 1) %>%
-  rename(t = year,
-         isp = spp) %>%
-  mutate(type = "biomass") %>%
-  select(t, type, isp, value) %>%
-  left_join(feeding_complexes)
-#index
-catch <- read_table(tsfile, skip = 1688, n_max = 420, col_names = c("fleet","area","year","spp","catch","cv")) %>%
-  mutate(var = (catch*cv)^2) %>%
-  rename(isp = spp,
-         value = catch,
-         t = year) %>%
-  mutate(type = "catch") %>%
-  select(t, type, isp, value) %>%
-  left_join(feeding_complexes)
-#catch
-om_long <- bind_rows(index, catch)
 ####################These are temporary changes for testing ####################
 # econ_timer<-0
 
@@ -88,7 +72,7 @@ showProgBar<-TRUE
   #This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
 
 
-source('processes/setupYearIndexing.R')
+# source('processes/setupYearIndexing.R')
 
 top_loop_start<-Sys.time()
 
@@ -109,36 +93,70 @@ for(r in 1:nrep){
     F_full <- c()
     newdata <- list(bs_temp=bs_temp,F_full=F_full)
     
-    # This is here for testing:
-    # bs_temp <- c(9)
+    # For testing purposes
+    # bs_temp <- c(9.1)
     # F_full <- rep(0.1,10)
     # newdata <- list(bs_temp=bs_temp,F_full=F_full)
-    # END TESTING
+    # End section for testing purposes
+    
+    source('functions/hydra/get_hydra.R')
+    # get_hydra will also incorporate a growing data frame called newdata that gets larger as the loop progresses
+    hydraData<- get_hydra(oldseed_mproc[r],newdata)
+    
+    # Adds observation error to the original data
+    hydraData_init_index <- exp(rnorm(nrow(hydraData$predBiomass),log(hydraData$predBiomass[,'predbiomass'],base=exp(1)),hydraData$predBiomass[,'cv']))
+    hydraData_init_catch <- exp(rnorm(nrow(hydraData$predCatch),log(hydraData$predCatch[,'predcatch'],base=exp(1)),hydraData$predCatch[,'cv']))
+    hydraData_growing_index <- cbind(hydraData$predBiomass,obsbiomass=hydraData_init_index)
+    hydraData_growing_catch <- cbind(hydraData$predCatch,obscatch=hydraData_init_catch)
     
     #### Top year loop ####
     for(y in fyear:nyear){
-      source('processes/withinYearAdmin.R')
+      # source('processes/withinYearAdmin.R')
       source("functions/hydra/mp_functions.R")
-      begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed) # what exactly is this doing? 
       
-      if(y >=fmyearIdx){
-      manage_counter<-manage_counter+1 #keeps track of management year
-      
+      # begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed) # what exactly is this doing? 
+      # 
+      # if(y >=fmyearIdx){
+      # manage_counter<-manage_counter+1 #keeps track of management year
+      # 
       # PULL IN -PREDICTED VALUES- FROM HYDRA DATA
+      
       source('functions/hydra/get_hydra.R')
       # get_hydra will also incorporate a growing data frame called newdata that gets larger as the loop progresses
       hydraData<- get_hydra(oldseed_mproc[r],newdata)
       
-      index <- dplyr::filter(as.data.frame(hydraData$predBiomass),survey==1)
-      index <- data.frame(t=index$year,type=rep("biomass",nrow(index)),isp=index$species,value=index$predbiomass)
+      # Add observation noise but only to the newest year of data, the updates the growing list
+      if(length(newdata$bs_temp)>0)
+      {
+        hydraData_new_index.df <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year))
+        hydraData_new_catch.df <- dplyr::filter(as.data.frame(hydraData$predCatch),year==max(year))
+        
+        hydraData_new_index <- exp(rnorm(nrow(hydraData_new_index.df),log(hydraData_new_index.df[,'predbiomass'],base=exp(1)),hydraData_new_index.df[,'cv']))
+        hydraData_new_catch <- exp(rnorm(nrow(hydraData_new_catch.df),log(hydraData_new_catch.df[,'predcatch'],base=exp(1)),hydraData_new_catch.df[,'cv']))
+        hydraData_new_index.df <- cbind(hydraData_new_index.df,obsbiomass=hydraData_new_index)
+        hydraData_new_catch.df <- cbind(hydraData_new_catch.df,obscatch=hydraData_new_catch)
+        
+        hydraData_growing_index <- rbind(hydraData_growing_index,hydraData_new_index.df)
+        hydraData_growing_catch <- rbind(hydraData_growing_catch,hydraData_new_catch.df)
+      }
+      
+      
+      index <- dplyr::filter(as.data.frame(hydraData_growing_index),survey==1)
+      index <- data.frame(t=index$year,type=rep("biomass",nrow(index)),isp=index$species,value=index$obsbiomass)
       index <- as.tibble(index) %>% left_join(feeding_complexes)
       
-      catch <- as.data.frame(hydraData$predCatch)
-      catch <- data.frame(t=catch$year,type=rep("catch",nrow(catch)),isp=catch$species,value=catch$predcatch)
+      catch <- as.data.frame(hydraData_growing_catch)
+      catch <- data.frame(t=catch$year,type=rep("catch",nrow(catch)),isp=catch$species,value=catch$obscatch)
       catch <- as.tibble(catch) %>% left_join(feeding_complexes)
       
       om_long <- bind_rows(index, catch)
       
+      # NOT SURE ABOUT ANYTHING FROM HERE ON. BUT IT SHOULD:
+      # -RUN ASSESSMENT
+      # -GENERATE RESULTS FROM MP
+      # -CREATE ADVICE (mp_results$out_table_advice)
+      # -GRAB 10 NEW VALUES OF F_full_new FROM THE ADVICE
+      # 
       assess_results <- run_pseudo_assessments(om_long) 
       #this currently generates data from the predictions, we would want to change so doesn't create new survey/catch time series each application
       

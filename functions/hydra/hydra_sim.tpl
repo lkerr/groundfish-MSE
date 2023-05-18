@@ -579,6 +579,7 @@ DATA_SECTION
   !!    growthprob_phi(area) /= phimax;  //rescale so no group has >1 prob growing out
   !!  }
 
+
   !!//  growthprob_phi /= phimax;   //rescale so no group has >1 prob growing out--not working on 4d array
   !!  Nstepsyr = round(phimax);            //set model timestep to phimax
   !!  Tottimesteps = Nstepsyr*Nyrs;        //for scaling state variable arrays
@@ -721,6 +722,7 @@ DATA_SECTION
   // GF March 2022 - modifying fishing for estimation
   init_3darray indicator_fishery_q(1,Nareas,1,Nfleets,1,Nspecies) // used to determin which species used to calculate updated effort under assessment
   //!! cout << indicator_fishery_q << endl;
+
   int Nqpars
   !! Nqpars = sum(indicator_fishery_q)-(Nfleets*Nareas);
   imatrix f_map(1,Nareas,1,Nfleets)  //primary species for each fleet (i.e. which species the F refers to)
