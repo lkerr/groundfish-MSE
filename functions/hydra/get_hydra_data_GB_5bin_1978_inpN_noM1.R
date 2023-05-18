@@ -15,6 +15,8 @@ get_hydra_data <- function(MSEyr=0)
   wtconv <- 1
   
   F_devs <-rep(0,Nfleets*Nyrs)
+  recruitment_devs <- rep(0,Nspecies*(Nyrs-1))
+  
   Nyrs <- Nyrs + MSEyr
   
 
@@ -215,7 +217,6 @@ get_hydra_data <- function(MSEyr=0)
   recruitment_shape <- rep(0,Nspecies)
   recruitment_beta <- rep(0,Nspecies)
   ln_avg_recruitment <- c(5, 10, 7.5, 4.5, 8, 6.5, 5, 6, 6, 7)
-  recruitment_devs <- rep(0,Nspecies*(Nyrs-1))
   ln_recsigma <- rep(-0.3011051,Nspecies)
   avg_F <- c(-2.18165568210824,-0.228414010548921)
   

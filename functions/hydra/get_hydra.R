@@ -1,4 +1,4 @@
-get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c())){
+get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c())){
   #send hydra data to groundfish MSE?
   #Packages you need:
   #tidyr
@@ -14,7 +14,7 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c())){
   #There are different functions for each set of data inputs
   # Option 1: get_hydra_data_GB_5bin_1978_inpN_noM1.R version
   # Option 2: get_hydra_data_10F.R version
-  source(here("functions/hydra/get_hydra_data_10F.R"))
+  source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1.R"))
   hydra_data <- get_hydra_data(MSEyr)
   
   # Turn on debugging, if needed:  
@@ -67,6 +67,12 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c())){
     F_devs <- F_full*0
     for(i in 1:MSEyr) F_devs[i,] <- log(F_full[i,])-hydra_data$avg_F
     hydra_data$F_devs <- as.vector((rbind(t(matrix(hydra_data$F_devs,ncol=(hydra_data$Nyrs-MSEyr))),F_devs)))
+  }
+  
+  if(!is.null(newdata$rec_devs))
+  {
+    rec_devs <- matrix(newdata$rec_devs,nrow=MSEyr,ncol=hydra_data$Nspecies)
+    hydra_data$recruitment_devs <- as.vector(cbind(matrix(hydra_data$recruitment_devs,nrow=(hydra_data$Nspecies)),t(rec_devs)))
   }
   #############################################################################
   #Start of Emily's code, it runs hydra and pulls data files:
@@ -234,6 +240,7 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c())){
                          predCatch=catch.df[,-c(5,8,9)],
                          fishsel=hydra_sim_rep$fishsel,
                          EstNsize=EstNsize,
-                         M=exp(hydra_data$ln_M1ann))
+                         M=exp(hydra_data$ln_M1ann),
+                         inputdata=hydra_data)
   return(hydra_sim_data)
 } 

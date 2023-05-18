@@ -91,7 +91,8 @@ for(r in 1:nrep){
 
     bs_temp <- c()
     F_full <- c()
-    newdata <- list(bs_temp=bs_temp,F_full=F_full)
+    rec_devs <- c()
+    newdata <- list(bs_temp=bs_temp,F_full=F_full,rec_devs=rec_devs)
     
     # For testing purposes
     # bs_temp <- c(9.1)
@@ -153,25 +154,35 @@ for(r in 1:nrep){
       
       om_long <- bind_rows(index, catch)
       
+      #}}}
       # NOT SURE ABOUT ANYTHING FROM HERE ON. BUT IT SHOULD:
       # -RUN ASSESSMENT
       # -GENERATE RESULTS FROM MP
       # -CREATE ADVICE (mp_results$out_table_advice)
-      # -GRAB 10 NEW VALUES OF F_full_new FROM THE ADVICE
+      # -GRAB NEW VALUES OF F_full_new FROM THE ADVICE
       # 
-      # assess_results <- run_pseudo_assessments(om_long) 
-      # #this currently generates data from the predictions, we would want to change so doesn't create new survey/catch time series each application
-      # 
-      # #call the MP
-      # mp_results <- do_ebfm_mp(settings, assess_results, input)
-      # mp_results$out_table %>% 
-      #   as_tibble()
-      # 
+      
+      
+      assess_results <- run_pseudo_assessments(om_long)
+      #this currently generates data from the predictions, we would want to change so doesn't create new survey/catch time series each application
+
+      #call the MP
+      mp_results <- do_ebfm_mp(settings, assess_results, input)
+      mp_results$out_table %>%
+        as_tibble()
+
       # #the catch advice, to be passed to get_f_from_advice()
       # mp_results$out_table$advice
       # 
       # source("functions/hydra/get_f_from_advice")
       # F_full_new <- get_f_from_advice(mp_results$out_table$advice)
+      
+      
+      F_full_new <- rep(0.1,2)
+      
+      rec_devs_new <- rep(0,10)
+      # Something with recsigma (exp(hydraData$inputdata$ln_recsigma))
+      # also avg_recruitment (exp(hydraData$inputdata$ln_avg_recruitment))
        
       #  # CONVERT TO AGES AND WRANGLE INTO CORRECT FORMAT
       #  # This function also has option to add additional observation noise, but
@@ -228,15 +239,17 @@ for(r in 1:nrep){
       #### SEND F TO HYDRA HERE? RIGHT BEFORE END OF YEAR LOOP ####
       # you will need to pull stock[[i]]$F_full[y]
       
-      # Here is where new bs_temp and F_full get added for the next hydra loop
+      # Here is where new information is generated before adding into hydra loop
       # bs_temp just adds the average temperature from time series each year, can change to pull randomly
       bs_temp <- c(bs_temp,9.643207)
+      # recruitment devs
+      rec_devs <- c(rec_devs,rec_devs_new)
+      
       # F_full reads in as Year: Fleet 1 Fleet 2, Next year: Fleet 1 Fleet 2
       # F devs can only take one value for each fleet for each year...
-      # F_full <- c(F_full,stock[[i]]$F_full[y])
-      F_full_new <- rep(0.1,10)
+      # F_full_new <- rep(0.1,2)
       F_full <- c(F_full,F_full_new)
-      newdata <- list(bs_temp=bs_temp,F_full=F_full)
+      newdata <- list(bs_temp=bs_temp,F_full=F_full,rec_devs=rec_devs)
       
     } #End of year loop 
   } #End of mproc loop
@@ -245,6 +258,7 @@ for(r in 1:nrep){
   #SOMETHING LIKE: N_results <- c(hydraData$EstNsize)
   
 } #End rep loop
+
 hydraData$EstNsize
 
 top_loop_end<-Sys.time()
