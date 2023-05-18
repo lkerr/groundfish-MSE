@@ -126,6 +126,7 @@ for(r in 1:nrep){
       hydraData<- get_hydra(oldseed_mproc[r],newdata)
       
       # Add observation noise but only to the newest year of data, the updates the growing list
+      # EMILY: TURN THIS INTO A FUNCTION
       if(length(newdata$bs_temp)>0)
       {
         hydraData_new_index.df <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year))
@@ -141,6 +142,7 @@ for(r in 1:nrep){
       }
       
       
+      #Turn the data into tibbles to be read into the next thing
       index <- dplyr::filter(as.data.frame(hydraData_growing_index),survey==1)
       index <- data.frame(t=index$year,type=rep("biomass",nrow(index)),isp=index$species,value=index$obsbiomass)
       index <- as.tibble(index) %>% left_join(feeding_complexes)
