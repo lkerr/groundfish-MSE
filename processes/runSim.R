@@ -159,19 +159,19 @@ for(r in 1:nrep){
       # -CREATE ADVICE (mp_results$out_table_advice)
       # -GRAB 10 NEW VALUES OF F_full_new FROM THE ADVICE
       # 
-      assess_results <- run_pseudo_assessments(om_long) 
-      #this currently generates data from the predictions, we would want to change so doesn't create new survey/catch time series each application
-      
-      #call the MP
-      mp_results <- do_ebfm_mp(settings, assess_results, input)
-      mp_results$out_table %>% 
-        as_tibble()
-      
-      #the catch advice, to be passed to get_f_from_advice()
-      mp_results$out_table$advice
-      
-      source("functions/hydra/get_f_from_advice")
-      F_full_new <- get_f_from_advice(mp_results$out_table$advice)
+      # assess_results <- run_pseudo_assessments(om_long) 
+      # #this currently generates data from the predictions, we would want to change so doesn't create new survey/catch time series each application
+      # 
+      # #call the MP
+      # mp_results <- do_ebfm_mp(settings, assess_results, input)
+      # mp_results$out_table %>% 
+      #   as_tibble()
+      # 
+      # #the catch advice, to be passed to get_f_from_advice()
+      # mp_results$out_table$advice
+      # 
+      # source("functions/hydra/get_f_from_advice")
+      # F_full_new <- get_f_from_advice(mp_results$out_table$advice)
        
       #  # CONVERT TO AGES AND WRANGLE INTO CORRECT FORMAT
       #  # This function also has option to add additional observation noise, but
@@ -234,12 +234,18 @@ for(r in 1:nrep){
       # F_full reads in as Year: Fleet 1 Fleet 2, Next year: Fleet 1 Fleet 2
       # F devs can only take one value for each fleet for each year...
       # F_full <- c(F_full,stock[[i]]$F_full[y])
+      F_full_new <- rep(0.1,10)
       F_full <- c(F_full,F_full_new)
       newdata <- list(bs_temp=bs_temp,F_full=F_full)
       
     } #End of year loop 
   } #End of mproc loop
+
+  #SAVE THE RESULTS FROM THE ITERATION HERE IN LIST
+  #SOMETHING LIKE: N_results <- c(hydraData$EstNsize)
+  
 } #End rep loop
+hydraData$EstNsize
 
 top_loop_end<-Sys.time()
 big_loop<-top_loop_end-top_loop_start
