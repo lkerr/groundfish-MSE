@@ -188,8 +188,8 @@ do_pseudo_assess <- function(data, isp, Nsp = 4) {
   cpa2 <- readRDS("functions/hydra/cpa2.rds")
   ini.parms <- log(c(5000, 0.6)) #log(1200), log(0.1), 0.3)
   # Fit the logistic model to data:  
-  biomass <- as_vector(data$biomass)
-  catch <- as_vector(data$catch)
+  biomass <- as.vector(data$biomass)
+  catch <- as.vector(data$catch)
   #single species, no assessment
   #  if (isp <= Nsp) {
   results <- NULL
@@ -264,8 +264,9 @@ run_assessments <- function(emdata) {
 
 run_pseudo_assessments <- function(emdata) {
   #this piece needed for the example, would not use this in the mse loop because the data is generated elsewhere
-  emdata <- gen_data(emdata) %>% 
+    emdata <- gen_data(emdata) %>% 
     #emdata <- gen_data(om_long) %>% 
+      ungroup()%>%
     group_by(isp) %>% 
     pivot_wider(names_from = type,
                 values_from = data) %>% 
