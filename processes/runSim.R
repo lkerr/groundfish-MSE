@@ -21,6 +21,7 @@ settings <- list(
   showTimeSeries = "No",
   useCeiling = "Yes",
   assessType = "stock complex",
+  #assessType = "single species",
   targetF = 0.75,
   floorB = 0.5,
   floorOption = "min status",
@@ -43,9 +44,13 @@ gear_complexes <- tibble(isp = 1:10,
 input$complex = feeding_complexes$complex
 
 input$docomplex = TRUE
+#input$docomplex = FALSE
 input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
               0,1,1,0,0,0,0,0,0,0),
             nrow=2,byrow=TRUE)
+input$q <- matrix(c(1,0,0,0.3,0.5,1.5,1,1,0.2,1,
+                    0,1,0.33,0,0,0,0,0,0,0),
+                  nrow=2,byrow=TRUE)
 
 # tsfile <- "functions/hydra/hydra_sim_GB_5bin_1978_10F-ts.dat"
 # index <- read_table(tsfile, skip = 8, n_max = 833, col_names = c("survey" ,"year", "spp", "value" ,"cv")) %>% 
@@ -189,7 +194,7 @@ for(r in 1:nrep){
       # -GRAB NEW VALUES OF F_full_new FROM THE ADVICE
       # 
       
-      assess_results <- run_pseudo_assessments(om_long)
+      assess_results <- run_pseudo_assessments(om_long, refyrs = 1:40)
       #this currently generates data from the predictions, we would want to change so doesn't create new survey/catch time series each application
 
       #call the MP
