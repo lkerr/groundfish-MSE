@@ -63,16 +63,16 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
   # Add additional years of F data:
   if(!is.null(newdata$F_full))
   {
-    F_full <- matrix(newdata$F_full,nrow=MSEyr,ncol=hydra_data$Nfleets)
+    F_full <- matrix(newdata$F_full,nrow=MSEyr,ncol=hydra_data$Nfleets, byrow = TRUE)
     F_devs <- F_full*0
     for(i in 1:MSEyr) F_devs[i,] <- log(F_full[i,])-hydra_data$avg_F
-    hydra_data$F_devs <- as.vector((rbind(t(matrix(hydra_data$F_devs,ncol=(hydra_data$Nyrs-MSEyr))),F_devs)))
+    hydra_data$F_devs <- as.vector(rbind(t(matrix(hydra_data$F_devs,ncol=(hydra_data$Nyrs-MSEyr), byrow = TRUE)),F_devs))
   }
   
   if(!is.null(newdata$rec_devs))
   {
     rec_devs <- matrix(newdata$rec_devs,nrow=MSEyr,ncol=hydra_data$Nspecies)
-    hydra_data$recruitment_devs <- as.vector(cbind(matrix(hydra_data$recruitment_devs,nrow=(hydra_data$Nspecies)),t(rec_devs)))
+    hydra_data$recruitment_devs <- as.vector(t(cbind(matrix(hydra_data$recruitment_devs,nrow=(hydra_data$Nspecies),byrow = TRUE),rec_devs)))
   }
   #############################################################################
   #Start of Emily's code, it runs hydra and pulls data files:

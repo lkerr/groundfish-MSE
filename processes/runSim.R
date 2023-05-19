@@ -106,6 +106,8 @@ top_loop_start<-Sys.time()
 
 True_Biomass <- list()
 True_Catch <- list()
+
+nrep <- 5
 #### Top rep Loop ####
 for(r in 1:nrep){
   oldseed_mproc <- .Random.seed
@@ -143,6 +145,8 @@ for(r in 1:nrep){
     hydraData_growing_catch <- cbind(hydraData$predCatch,obscatch=hydraData_init_catch)
     
     #### Top year loop ####
+    fyear = 1
+    nyear = 30
     for(y in fyear:nyear){
       # source('processes/withinYearAdmin.R')
       source("functions/hydra/mp_functions.R")
@@ -331,6 +335,12 @@ big_loop
   names(omvalGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
   save(omvalGlobal, file=paste0(ResultDirectory,'/sim/omvalGlobal', td2, '.Rdata'))
 
+  #GF added 05/19/2023 to save the hydra OM trajectories
+  mp_res <- NULL
+  mp_res$biomass <- True_Biomass
+  mp_res$catch <- True_Catch
+  saveRDS(mp_res, file=paste0(ResultDirectory,'/sim/mpres', td2, '.rds'))
+  
   if(runClass != 'HPCC'){
     omparGlobal <- readLines('modelParameters/set_om_parameters_global.R')
     cat('\n\nSuccess.\n\n',
