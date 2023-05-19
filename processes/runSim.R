@@ -295,10 +295,10 @@ for(r in 1:nrep){
   } #End of mproc loop
 
   True_Biomass[[r]] <- hydraData$biomass
-  True_Catch[[r]] <- hydraData$predCatch
-  
+  True_Catch[[r]] <- as.data.frame(hydraData$predCatch)
+   
 } #End rep loop
-
+#get_plots(True_Biomass, True_Catch)
 
 # USE GGPLOT HERE TO PLOT True_Biomass[[]] and True_Catch[[]]
 
