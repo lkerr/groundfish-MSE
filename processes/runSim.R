@@ -46,6 +46,10 @@ gear_complexes <- tibble(isp = 1:10,
 
 input$complex = feeding_complexes$complex
 
+input$docomplex = TRUE
+input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
+              0,1,1,0,0,0,0,0,0,0),
+            nrow=2,byrow=TRUE)
 
 ####################These are temporary changes for testing ####################
 # econ_timer<-0
@@ -174,13 +178,21 @@ for(r in 1:nrep){
       # #the catch advice, to be passed to get_f_from_advice()
       # mp_results$out_table$advice
       # 
-      # source("functions/hydra/get_f_from_advice")
-      # F_full_new <- get_f_from_advice(mp_results$out_table$advice)
+      source("functions/hydra/get_f_from_advice.R")
       
-      
-      F_full_new <- rep(0.1,2)
+      # biomass for the F calculation, replace with something sensible
+      f_calc_biomass <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>% 
+        arrange(species) %>% select(predbiomass) %>% t() %>% as.numeric()
+      #calculate new F
+      F_full_new <- get_f_from_advice(mp_results$out_table$advice,
+                                      f_calc_biomass, 
+                                      input$q, 
+                                      input$complex, 
+                                      input$docomplex)
+      #F_full_new <- rep(0.1,2)
       
       rec_devs_new <- rep(0,10)
+      rec_devs_new <- rnorm(10,0,sd = exp(hydraData$inputdata$ln_recsigma))
       # Something with recsigma (exp(hydraData$inputdata$ln_recsigma))
       # also avg_recruitment (exp(hydraData$inputdata$ln_avg_recruitment))
        

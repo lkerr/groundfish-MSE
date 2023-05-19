@@ -265,7 +265,7 @@ get_hydra_data <- function(MSEyr=0)
                      Nsurvey_obs=Nsurvey_obs, obs_survey_biomass=obs_survey_biomass, Nsurvey_size_obs=Nsurvey_size_obs, obs_survey_size=obs_survey_size, Ncatch_obs=Ncatch_obs, obs_catch_biomass=obs_catch_biomass, 
                      Ncatch_size_obs=Ncatch_size_obs, obs_catch_size=obs_catch_size, Ndietprop_obs=Ndietprop_obs, obs_dietprop=obs_dietprop, ln_yr1N=ln_yr1N, recruitment_alpha=recruitment_alpha, 
                      recruitment_shape=recruitment_shape, recruitment_beta=recruitment_beta, ln_avg_recruitment=ln_avg_recruitment, recruitment_devs=recruitment_devs, ln_recsigma=ln_recsigma, avg_F=avg_F, 
-                     F_devs=F_devs, fishsel_pars=fishsel_pars, ln_fishery_q=ln_fishery_q, ln_survey_q=ln_survey_q, survey_selpars=survey_selpars, ln_M1ann=ln_M1ann, 
+                     F_devs=F_devs, logit_vuln = logit_vuln, fishsel_pars=fishsel_pars, ln_fishery_q=ln_fishery_q, ln_survey_q=ln_survey_q, survey_selpars=survey_selpars, ln_M1ann=ln_M1ann, 
                      ln_otherFood_base=ln_otherFood_base, otherFood_dev=otherFood_dev)
 
   return(hydra_data)

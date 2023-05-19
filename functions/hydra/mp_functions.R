@@ -194,9 +194,9 @@ do_pseudo_assess <- function(data, isp, Nsp = 4) {
   #  if (isp <= Nsp) {
   results <- NULL
   results$biomass <- biomass
-  if (isp == 11) results$biomass <- cpa2$bio[cpa2$complex==1]
-  if (isp == 12) results$biomass <- cpa2$bio[cpa2$complex==2]
-  if (isp == 13) results$biomass <- cpa2$bio[cpa2$complex==3]
+  # if (isp == 11) results$biomass <- cpa2$bio[cpa2$complex==1]
+  # if (isp == 12) results$biomass <- cpa2$bio[cpa2$complex==2]
+  # if (isp == 13) results$biomass <- cpa2$bio[cpa2$complex==3]
   results$catch <- catch
   results$pars <- c(NA,NA)
   results$q <- 1
@@ -267,7 +267,7 @@ run_pseudo_assessments <- function(emdata) {
     emdata <- gen_data(emdata) %>% 
     #emdata <- gen_data(om_long) %>% 
       ungroup()%>%
-    group_by(isp) %>% 
+    #group_by(isp) %>% 
     pivot_wider(names_from = type,
                 values_from = data) %>% 
     arrange(t) %>% 
@@ -432,7 +432,7 @@ do_ebfm_mp <- function(settings, assess_results, input) {
   #refs
   complex_res <- refs %>% 
     ungroup() %>% 
-    filter(isp <= input$Nsp) %>% 
+    dplyr::filter(isp <= input$Nsp) %>% 
     mutate(complex = input$complex) %>% 
     group_by(complex) %>% 
     summarize(floor_mean = mean(bfloor),
@@ -446,7 +446,7 @@ do_ebfm_mp <- function(settings, assess_results, input) {
   
   if (settings$assessType == "single species") {
     ss_maxcat <- refs %>% 
-      filter(isp <= input$Nsp) %>% 
+      dplyr::filter(isp <= input$Nsp) %>% 
       summarize(totcat = sum(cfuse),
                 ceiling = mean(ceiling)) %>% 
       mutate(ceiling_mult = ifelse(totcat/ceiling>1,ceiling/totcat,1)) %>% 
@@ -456,7 +456,7 @@ do_ebfm_mp <- function(settings, assess_results, input) {
       mutate(advice = ss_maxcat$ceiling_mult*cfuse) %>% 
       select(isp, fmsy, bmsy, blast, ffmsy, bbmsy, cfmsy, fuse, cfuse, ceiling, advice) %>% 
       #select(isp, fmsy, bmsy, blast, ffmsy, bbmsy, cfmsy) %>% 
-      filter(isp <= input$Nsp)
+      dplyr::filter(isp <= input$Nsp)
     if(settings$useCeiling == "No")
       out_table <- select(out_table, -ceiling)
   }
@@ -466,7 +466,7 @@ do_ebfm_mp <- function(settings, assess_results, input) {
     #refs$bfloor
     sc_refs <- refs %>%
       ungroup() %>% 
-      filter(isp > input$Nsp & isp < sysspp) %>% 
+      dplyr::filter(isp > input$Nsp & isp < sysspp) %>% 
       mutate(bfloor = case_when(
         settings$floorOption == "avg status" ~ complex_res$floor_mean,
         settings$floorOption == "min status" ~ complex_res$floor_min),

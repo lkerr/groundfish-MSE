@@ -122,7 +122,8 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
   fileConn<-file("functions/hydra/hydra_sim_data.pin")
   writeLines(as.character(c(hydra_data$ln_yr1N, hydra_data$recruitment_alpha, hydra_data$recruitment_shape, 
                             hydra_data$recruitment_beta, hydra_data$ln_avg_recruitment, hydra_data$recruitment_devs, 
-                            hydra_data$ln_recsigma, hydra_data$avg_F, hydra_data$F_devs, 
+                            hydra_data$ln_recsigma, hydra_data$avg_F, hydra_data$F_devs,
+                            hydra_data$logit_vuln,
                             hydra_data$fishsel_pars, hydra_data$ln_fishery_q, hydra_data$ln_survey_q, 
                             hydra_data$survey_selpars, hydra_data$ln_M1ann, hydra_data$ln_otherFood_base, 
                             hydra_data$otherFood_dev)),fileConn)
@@ -137,7 +138,10 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
   setwd(paste0(originalwd,"/functions/hydra"))
   
   # Run the hydra code
-  runmod <- paste("hydra_sim.exe -sim ",randomnum, "-ind hydra_sim_data.dat -ainp hydra_sim_data.pin -nohess -maxfn 1")
+  if(platform == 'Windows')
+   runmod <- paste("hydra_sim.exe -sim ",randomnum, "-ind hydra_sim_data.dat -ainp hydra_sim_data.pin -nohess -maxfn 1")
+  if(platform != 'Windows')
+   runmod <- paste("./hydra_sim -sim ",randomnum, "-ind hydra_sim_data.dat -ainp hydra_sim_data.pin -nohess -maxfn 1")
   out <- system(runmod, intern=T)
   
   # Reset the working directory to original

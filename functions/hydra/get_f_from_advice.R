@@ -53,15 +53,15 @@ get_f_from_advice <- function(advice, biomass, q, complex, docomplex=TRUE) {
   
 }
 
-
-#testing
-docomplex = TRUE
-advice <- c(8142,13495,4692)
-complex = c(1, 3, 3, 1, 2, 1, 1, 2, 1, 2)
-biomass <- c(2353.929 ,2485.127, 620.7602, 749.2529, 29301.07, 3359.718, 172096.6, 1625.388,39008.29, 608.7064)
-if (!docomplex) advice <- biomass/10 
-q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
-              0,1,1,0,0,0,0,0,0,0),
-            nrow=2,byrow=TRUE)
-new_f <- get_f_from_advice(advice, biomass, q, complex, docomplex)
+# 
+# #testing
+# docomplex = TRUE
+# advice <- c(8142,13495,4692)
+# complex = c(1, 3, 3, 1, 2, 1, 1, 2, 1, 2)
+# biomass <- c(2353.929 ,2485.127, 620.7602, 749.2529, 29301.07, 3359.718, 172096.6, 1625.388,39008.29, 608.7064)
+# if (!docomplex) advice <- biomass/10 
+# q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
+#               0,1,1,0,0,0,0,0,0,0),
+#             nrow=2,byrow=TRUE)
+# new_f <- get_f_from_advice(advice, biomass, q, complex, docomplex)
 
