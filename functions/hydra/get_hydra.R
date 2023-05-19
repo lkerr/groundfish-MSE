@@ -44,12 +44,12 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
       }
       for(j in 1:hydra_data$Nfleets)
       {
-        for(k in 1:fleetdistribute[[j]])
+        for(k in 1:length(as.numeric(fleetdistribute[[j]])))
         {
           for(l in 1:hydra_data$Nareas)
           {
-            hydra_data$obs_catch_size <- rbind(hydra_data$obs_catch_size,c(j,l,i,k,0,50,0.2,0.2,0.2,0.2,0.2))
-            hydra_data$obs_catch_biomass <- rbind(hydra_data$obs_catch_biomass,c(j,l,i,k,30000,0.05))
+            hydra_data$obs_catch_size <- rbind(hydra_data$obs_catch_size,c(j,l,i,fleetdistribute[[j]][k],0,50,0.2,0.2,0.2,0.2,0.2))
+            hydra_data$obs_catch_biomass <- rbind(hydra_data$obs_catch_biomass,c(j,l,i,fleetdistribute[[j]][k],30000,0.05))
           }
         } 
       }
