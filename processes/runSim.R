@@ -135,9 +135,7 @@ for(r in 1:nrep){
     source('functions/hydra/get_hydra.R')
     # get_hydra will also incorporate a growing data frame called newdata that gets larger as the loop progresses
     hydraData<- get_hydra(newseed=oldseed_mproc[r],newdata)
-    
-    #idxE <- rlnorm(1, meanlog = log(idx), # - par^2/2
-    #               sdlog = par)
+
     # Adds observation error to the original data
     hydraData_init_index <- rlnorm(nrow(hydraData$predBiomass),meanlog=log(hydraData$predBiomass[,'predbiomass']),sdlog=hydraData$predBiomass[,'cv'])
     hydraData_init_catch <- rlnorm(nrow(hydraData$predCatch),meanlog=log(hydraData$predCatch[,'predcatch']),sdlog=hydraData$predCatch[,'cv'])
@@ -301,9 +299,11 @@ for(r in 1:nrep){
   } #End of mproc loop
 
   True_Biomass[[r]] <- hydraData$biomass
-  True_Catch[[r]] <- hydraData$predCatch
-  
+  True_Catch[[r]] <- as.data.frame(hydraData$predCatch)
+   
 } #End rep loop
+    source('functions/hydra/get_plots.R')
+    get_plots(True_Biomass, True_Catch)
 
 # USE GGPLOT HERE TO PLOT True_Biomass[[]] and True_Catch[[]]
 

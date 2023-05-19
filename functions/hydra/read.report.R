@@ -6,6 +6,7 @@ reptoRlist = function(fn){
  nv=length(vnam) 
  A=list()
  ir=0
+ dum=NA
  for(i in 1:nv){
   ir=match(vnam[i],ifile)
   if(i!=nv){

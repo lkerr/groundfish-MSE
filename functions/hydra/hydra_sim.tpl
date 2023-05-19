@@ -3247,7 +3247,7 @@ FUNCTION evaluate_the_objective_function
     }
    
   cout << "done survey abundance nll" << endl;
-  if(isinf(value(sum(nll_survey)))) {
+  if(std::isinf(value(sum(nll_survey)))) {
     cout << " INFINITE OBJ FUN" << endl;
     gavjunk << survey_q << endl;
     gavjunk << ln_survey_q << endl;
