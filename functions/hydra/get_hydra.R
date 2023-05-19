@@ -155,10 +155,16 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
   abundance <- data.frame(Species=rep(1:hydra_data$Nspecies,each=hydra_data$Nyrs),Year=rep(1:hydra_data$Nyrs,hydra_data$Nspecies),Abundance=apply(hydra_sim_rep$EstNsize,1,sum))
   
   #Convert general report object into things to be fed back
-  survey.df <- hydra_sim_rep$survey
-  colnames(survey.df) <- c("survey","year","species","biomass","cv","predbiomass","residual","NLL")
-  catch.df <- hydra_sim_rep$catch
-  colnames(catch.df) <- c("fleet","area","year","species","catch","cv","predcatch","residual","NLL")
+  # survey.df <- hydra_sim_rep$survey
+  # colnames(survey.df) <- c("survey","year","species","biomass","cv","predbiomass","residual","NLL")
+  # catch.df <- hydra_sim_rep$catch
+  # colnames(catch.df) <- c("fleet","area","year","species","catch","cv","predcatch","residual","NLL")
+  survey.df <- as.data.frame(hydra_sim_rep$survey_full)
+  colnames(survey.df) <- c("survey","year","species","area", "predbiomass") #,"residual","NLL")
+  catch.df <- as.data.frame(hydra_sim_rep$fleet_full)
+  colnames(catch.df) <- c("fleet","year","species","area","predcatch") #,"cv","predcatch","residual","NLL")  
+  survey.df$cv <- rep(0.3,nrow(survey.df))
+  catch.df$cv <- rep(0.05,nrow(catch.df))
   
   #rearrange to look like data that we need
   species <- data.frame(name=hydra_data$speciesList, species= c(1:10))
@@ -243,8 +249,8 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
   # it seems like all of this is ultimately coming from the 
   hydra_sim_data <- list(predSurSize=SurvRep,
                          predCatchSize=CatchRep,
-                         predBiomass=survey.df[,-c(4,7,8)],
-                         predCatch=catch.df[,-c(5,8,9)],
+                         predBiomass=survey.df, #[,-c(4,7,8)],
+                         predCatch=catch.df, #[,-c(5,8,9)],
                          abundance=abundance,
                          biomass=biomass,
                          inputdata=hydra_data)

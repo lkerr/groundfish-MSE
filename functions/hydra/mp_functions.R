@@ -264,12 +264,12 @@ run_assessments <- function(emdata) {
 
 run_pseudo_assessments <- function(emdata) {
   #this piece needed for the example, would not use this in the mse loop because the data is generated elsewhere
-    # emdata <- gen_data(emdata) %>% 
-    emdata <- emdata %>%
+    emdata <- gen_data(emdata) %>% 
+    #emdata <- emdata %>%
       ungroup()%>%
     group_by(isp) %>% 
     pivot_wider(names_from = type,
-                values_from = value) %>%
+                values_from = data) %>%
     arrange(t) %>%
     nest() %>%
     I()
@@ -289,9 +289,9 @@ run_pseudo_assessments <- function(emdata) {
            q = map_dbl(results, "q") #extracts estiamted catchability
     ) %>% 
     I()
-  # results$bmsy[11:14] <- c(147586, 39557, 44059, 277117)
-  # results$msy[11:14] <- c(62401, 20350, 20286, 73446)  
-  # results$fmsy[11:14] <- c(0.211, 0.257, 0.230, 0.265)
+  results$bmsy[11:14] <- c(147586, 39557, 44059, 277117)
+  results$msy[11:14] <- c(62401, 20350, 20286, 73446)
+  results$fmsy[11:14] <- c(0.211, 0.257, 0.230, 0.265)
   return(results)
 }
 
