@@ -298,7 +298,8 @@ for(r in 1:nrep){
   True_Catch[[r]] <- as.data.frame(hydraData$predCatch)
    
 } #End rep loop
-#get_plots(True_Biomass, True_Catch)
+    source('functions/hydra/get_plots.R')
+    get_plots(True_Biomass, True_Catch)
 
 # USE GGPLOT HERE TO PLOT True_Biomass[[]] and True_Catch[[]]
 
