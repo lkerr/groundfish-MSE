@@ -262,18 +262,17 @@ run_assessments <- function(emdata) {
     I()
 }
 
-run_pseudo_assessments <- function(emdata) {
+run_pseudo_assessments <- function(emdata, refyrs = 1:40) {
   #this piece needed for the example, would not use this in the mse loop because the data is generated elsewhere
-    emdata <- gen_data(emdata) %>% 
-    #emdata <- emdata %>%
-      ungroup()%>%
+  emdata <- gen_data(emdata) %>% 
+    #emdata <- gen_data(om_long) %>% 
     group_by(isp) %>% 
     pivot_wider(names_from = type,
-                values_from = data) %>%
-    arrange(t) %>%
-    nest() %>%
+                values_from = data) %>% 
+    arrange(t) %>% 
+    nest() %>% 
     I()
-    # 
+  
   ## runs a set of assessments and extracts results
   # emdata is a nested tibble with each row being the assessment to be run
   # emdata has variables
@@ -286,12 +285,16 @@ run_pseudo_assessments <- function(emdata) {
            bmsy = exp(map_dbl(pars, 1))/2,  #extracts estimated reference points
            msy = exp(map_dbl(pars, 2))*bmsy/2,
            fmsy = exp(map_dbl(pars, 2))/2,
-           q = map_dbl(results, "q") #extracts estiamted catchability
+           q = map_dbl(results, "q"), #extracts estiamted catchability
+           bmsy = map(results, "biomass"),
+           bmsy = map_dbl(bmsy, ~mean(.[refyrs], na.rm=TRUE)),
+           fmsy = rep(0.2, nrow(.)),
+           msy = fmsy*bmsy
     ) %>% 
     I()
-  results$bmsy[11:14] <- c(147586, 39557, 44059, 277117)
-  results$msy[11:14] <- c(62401, 20350, 20286, 73446)
-  results$fmsy[11:14] <- c(0.211, 0.257, 0.230, 0.265)
+  # results$bmsy[11:14] <- c(147586, 39557, 44059, 277117)
+  # results$msy[11:14] <- c(62401, 20350, 20286, 73446)  
+  # results$fmsy[11:14] <- c(0.211, 0.257, 0.230, 0.265)
   return(results)
 }
 
