@@ -452,7 +452,7 @@ do_ebfm_mp <- function(settings, assess_results, input) {
       dplyr::filter(isp <= input$Nsp) %>% 
       summarize(totcat = sum(cfuse),
                 ceiling = mean(ceiling)) %>% 
-      mutate(ceiling_mult = ifelse(totcat/ceiling>1,ceiling/totcat,1)) %>% 
+      mutate(ceiling_mult = ifelse(totcat/ceiling>1,ceiling/totcat,1)) %>%
       I()
     if (settings$useCeiling == "No") ss_maxcat$ceiling_mult <- 1
     out_table <- refs %>% 
@@ -494,8 +494,8 @@ do_ebfm_mp <- function(settings, assess_results, input) {
   }
   
   results <- NULL
-  results$refs <- refs
-  results$out_table <- out_table
+  results$refs <- refs %>% arrange(isp)
+  results$out_table <- out_table %>% arrange(isp)
   return(results)  
   
 }
