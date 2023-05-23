@@ -18,20 +18,24 @@
 
 ie_internal_param_override <- function(stock, replicate, from_model){
   
-  stock$ie_F_OG<- stock$ie_F
-  stock$ie_bias_OG<- stock$ie_bias
+  out <- within(stock, {
+    ie_F_OG<- ie_F
+    ie_bias_OG<- ie_bias
+    
+    #Replace ie_F and ie_bias with their values from the the internal source model
+    if(is.na(omval$ie_F_hat[replicate, from_model])==TRUE){
+      warning(paste0("ie_F_hat is NA in rep", replicate))
+    } else {
+      ie_F<-omval$ie_F_hat[replicate, from_model]
+    }
+    
+    if(is.na(omval$iebias_hat[replicate, from_model])==TRUE){
+      warning(paste0("iebias_hat is NA in rep", replicate))
+    } else{
+      ie_bias<-omval$iebias_hat[replicate, from_model]
+    }
+
+  })
   
-  #Replace ie_F and ie_bias with their values from the the internal source model
-  if(is.na(stock$omval$ie_F_hat[replicate, from_model])==TRUE){
-    warning(paste0("ie_F_hat is NA in rep", replicate))
-  } else {
-    stock$ie_F<-stock$omval$ie_F_hat[replicate, from_model]
-  }
-  
-  if(is.na(stock$omval$iebias_hat[replicate, from_model])==TRUE){
-    warning(paste0("iebias_hat is NA in rep", replicate))
-  } else{
-    stock$ie_bias<-stock$omval$iebias_hat[replicate, from_model]
-  }
-  return(stock)
+  return(out)
 }

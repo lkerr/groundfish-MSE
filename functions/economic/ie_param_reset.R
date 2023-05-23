@@ -9,8 +9,10 @@
 
 
 ie_param_reset <- function(stock){
-
-    stock$ie_F<-stock$ie_F_OG
-    stock$ie_bias<-stock$ie_bias_OG
-  return(stock)
+  out <- within(stock, {
+    ie_F<-ie_F_OG
+    ie_bias<-ie_bias_OG
+  })
+  
+  return(out)
 }
