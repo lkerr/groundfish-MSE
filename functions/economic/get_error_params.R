@@ -25,8 +25,8 @@ get_error_params <- function(stock, fit_ie,firstyear, lastyear){
       iefit_mx <- mean(iefit_lx)
       
       #ieF_hat is simply the sdlog term.
-      omval$ie_F_hat[r,m]<-ie_F_hat[r,m] <- sqrt((iefit_n - 1)/iefit_n) * sd(iefit_lx)
-      omval$iebias_hat[r,m]<-  iebias_hat[r,m]<- exp(iefit_mx)-1
+      omval$ie_F_hat[r,m]<-ie_F_hat <- sqrt((iefit_n - 1)/iefit_n) * sd(iefit_lx)
+      omval$iebias_hat[r,m]<-  iebias_hat<- exp(iefit_mx)-1
 
     }else {
       stop("function get_error_params() can only recover parameters of a lognormal distribution. ")
