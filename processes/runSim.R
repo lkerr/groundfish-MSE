@@ -7,6 +7,8 @@
 constant_econ_year<-2015
 
 source('processes/runSetup.R')
+here::i_am("processes/runSim.R")
+source('processes/readin_previous_omval.R')
 
 # if on local machine (i.e., not hpcc) must compile the tmb code
 # (HPCC runs have a separate call to compile this code). Keep out of
@@ -36,7 +38,7 @@ if(runClass != 'HPCC'){
 #set the rng state based on system time.  Store the random state.
 # if we use a plain old date (seconds since Jan 1, 1970), the number is actually too large, but we can just rebase to seconds since Jan 1, 2018.
 
-start<-difftime(Sys.time(), as.POSIXct("2018-01-01 00:00:00", "%Y-%m-%d %H:%M:%S"), units="secs")
+start<-as.integer(difftime(Sys.time(), as.POSIXct("2018-01-01 00:00:00", "%Y-%m-%d %H:%M:%S"), units="secs")) 
 set.seed(start)
 
 oldseed_ALL <- .Random.seed
@@ -73,7 +75,17 @@ for(r in 1:nrep){
           
          source('processes/setupEconType.R')
         }
-       
+    
+    if(mproc$ImplementationClass[m]=="StandardFisheries" & mproc$ie_override[m]=="TRUE"){
+      for (i in 1:nstock){
+        if(mproc$ie_source[m]=="Internal"){  
+          stock[[i]] <- ie_internal_param_override(stock=stock[[i]], replicate=r, from_model=1)
+        }
+        if(mproc$ie_source[m]!="Internal"){  
+          stock[[i]]<-ie_static_param_override(stock=stock[[i]],replicate=r, from_model=1, stocknum=i)
+        }      
+      }
+    }
    #### get historic assessment info if there is any
    for (i in 1:nstock){
      #assess_vals <- get_HistAssess(stock = stock[[i]])
@@ -168,9 +180,21 @@ for(r in 1:nrep){
   
     # Estimate the implementation error parameters
     for(i in 1:nstock){
+      if(mproc$ImplementationClass[m]=="Economic"){
       stock[[i]] <- get_error_params(stock[[i]],fit_ie='lognorm',firstyear=fmyearIdx, lastyear=nyear)
     }
 
+      # also store the ie_F and ie_bias
+      stock[[i]]$omval$ie_F[r,m] <-  stock[[i]]$ie_F 
+      stock[[i]]$omval$ie_bias[r,m] <-  stock[[i]]$ie_bias
+    }
+    
+    #Reset ieparams
+    # if(mproc$ImplementationClass[m]=="StandardFisheries" & mproc$ie_override[m]=="TRUE"){
+    #   for (i in 1:nstock){
+    #     stock[[i]]<-ie_param_reset(stock=stock[[i]])
+    #   }
+    # }
         
   } #End of mproc loop
 } #End rep loop
