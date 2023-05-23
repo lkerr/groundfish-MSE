@@ -56,10 +56,16 @@ if(runClass == 'HPCC'){
   require(tidyverse)
   require(dplyr)
   require(data.table)
-  require(simASAP)
+  if(runClass=='neptune'){
+    library(simASAP, lib.loc="/net/home2/mlee/R/x86_64_pc-linux-gnu-library")
+  }
+  else{
+    require(simASAP)
+  }
   require(fishmethods)
   require(timeSeries)
   require(fBasics)
   require(fGarch)
+  require(here)
 
 }
