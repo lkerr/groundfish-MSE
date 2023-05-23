@@ -216,8 +216,9 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
   most_recent_target<-most_recent_target[, ..keepcols]
   
 }
+  fishery_holder[, modeled_fleet_removals_mt:=cumul_catch_pounds/(pounds_per_kg*kg_per_mt)]
 
-  fishery_holder[, removals_mt:=cumul_catch_pounds/(pounds_per_kg*kg_per_mt)+nonsector_catch_mt]
+  fishery_holder[, removals_mt:=modeled_fleet_removals_mt+nonsector_catch_mt]
  
 #contract that list down to a single data.table
   annual_revenue_holder<-rbindlist(annual_revenue_holder) 
@@ -349,6 +350,7 @@ bio_output<-fishery_holder[which(fishery_holder$bio_model==1),]
 
 # Put catch (mt) into the stock list, then compute F_full
 for(i in 1:nstock){
+  stock[[i]]$modeled_fleet_removals_mt[y]<-bio_output$modeled_fleet_removals_mt[bio_output$stocklist_index==i]
   stock[[i]]$econCW[y]<-bio_output$removals_mt[bio_output$stocklist_index==i]
   stock[[i]]$avgprice_per_lb[y]<-bio_output$avgprice_per_lb[bio_output$stocklist_index==i]
   
