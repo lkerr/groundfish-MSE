@@ -25,6 +25,7 @@ get_fillRepArrays <- function(stock){
     omval$SSB_cur[r,m,] <- SSB_cur #AEW
     omval$natM[r,m,] <- natM #AEW
     
+    
     omval$sumEconIW[r,m,y]<-sumEconIW[y] # "Economic" trawl survey biomass, metric tons per tow.
     
     # annPercentChange not true vector -- just repeated values. This needs
@@ -114,6 +115,7 @@ get_fillRepArrays <- function(stock){
     omval$Gini_stock_within_season_BKS[r,m,y]<-Gini_stock_within_season_BKS[y] #Gini coefficient over the days of the fishing year
     omval$econCW[r,m,y]<-econCW[y] #"Economic" total catch in metric tons  
     omval$avgprice_per_lb[r,m,y]<-avgprice_per_lb[y] #"Economic" total catch in metric tons  
+    omval$modeled_fleet_removals_mt[r,m,y]<-modeled_fleet_removals_mt[y] #"Economic" total catch in metric tons  
     
       }
     }    
