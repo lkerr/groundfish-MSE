@@ -124,10 +124,15 @@ get_containers <- function(stockPar){
     # Econ model containers
     # Total Weight of catch, average price, estimated ie_F, and estimated iebias
     econCW= yx0,
+    modeled_fleet_removals_mt=yx0,
     avgprice_per_lb=yx0,
-    ie_F_hat = save_vector_replicate,
-    iebias_hat = save_vector_replicate,
+    ie_F_hat = as.numeric(NA),
+    iebias_hat = as.numeric(NA),
+    #useful to save ie_F and ie_bias
+    ie_F = as.numeric(NA),
+    ie_bias = as.numeric(NA),
     
+        
     # container to hold operating/assessment model results
     # (operating model-assessment model comparison)
     
@@ -143,6 +148,7 @@ get_containers <- function(stockPar){
       F_fullAdvice = save_vector_ann,
       ACL = save_vector_ann,
       econCW= save_vector_ann, #catch weights from the econ model
+      modeled_fleet_removals_mt=save_vector_ann, #catch from the modeled fleet in the econ model
       avgprice_per_lb= save_vector_ann, #average prices from the econ model
       sumCW = save_vector_ann, # catch weights
       sumEconIW=save_vector_ann, #"economic" survey 
@@ -196,8 +202,9 @@ get_containers <- function(stockPar){
       Rest = est,
       iebias_hat= save_vector_replicate, # An estimate of average difference between F_full and F_fullAdvice
       ie_F_hat = save_vector_replicate, # An estimate of the sdlog parameter for the implementation error distribution  
-      Gini_stock_within_season_BKS=save_vector_ann # Gini coefficient for within season timing. Only filled for economic models.
-
+      Gini_stock_within_season_BKS=save_vector_ann, # Gini coefficient for within season timing. Only filled for economic models.
+      ie_F = save_vector_replicate,
+      ie_bias = save_vector_replicate
     )
     
   )
