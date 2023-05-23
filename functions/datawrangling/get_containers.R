@@ -126,12 +126,9 @@ get_containers <- function(stockPar){
     econCW= yx0,
     modeled_fleet_removals_mt=yx0,
     avgprice_per_lb=yx0,
-    ie_F_hat = as.numeric(NA),
-    iebias_hat = as.numeric(NA),
-    #useful to save ie_F and ie_bias
-    ie_F = as.numeric(NA),
-    ie_bias = as.numeric(NA),
-    
+    ie_F_hat = NA,
+    iebias_hat = NA,
+
         
     # container to hold operating/assessment model results
     # (operating model-assessment model comparison)
