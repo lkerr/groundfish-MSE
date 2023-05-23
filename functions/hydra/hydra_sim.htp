@@ -246,6 +246,7 @@ private:
   param_init_d3array F_devs;
   param_4array Fyr;
   param_4array suitpreybio;
+  param_init_vector logit_vuln;
   param_3array vulnerability;
   param_4array suitability;
   param_5array biomass_prey_avail_no_size;

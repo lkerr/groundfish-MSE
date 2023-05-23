@@ -7,7 +7,6 @@
   //Including C++ libraries
   #include "statsLib.h"
   #include <iostream>
-  #include <math.h>
   #include <cmath>
   #include <fstream>
   #include <string>
@@ -17,6 +16,7 @@
   clock_t startTime = clock();
   // ofstream test("test.csv"); // for debugging only
   ofstream gavjunk("gav.junk");
+  ofstream pmse_predvals("pmse_predvals.out");
 #include <admodel.h>
 #include <contrib.h>
 
@@ -51,7 +51,6 @@ model_data::model_data(int argc,char * argv[]) : ad_comm(argc,argv)
   o = 0.001;         //small number to add before taking logs in objective function calcs
   wtconv.allocate("wtconv");
   datfilename.allocate("datfilename");
-  cout<<datfilename<<endl;
   binwidth.allocate(1,Nspecies,1,Nsizebins,"binwidth");
   lenwt_a.allocate(1,Nspecies,"lenwt_a");
   lenwt_b.allocate(1,Nspecies,"lenwt_b");
@@ -132,74 +131,6 @@ model_data::model_data(int argc,char * argv[]) : ad_comm(argc,argv)
   rec_alpha.allocate(1,Nareas,1,Nspecies);
   rec_shape.allocate(1,Nareas,1,Nspecies);
   rec_beta.allocate(1,Nareas,1,Nspecies);
-  if(debug==1){
-  cout<<"debug: "<<endl<<debug<<endl;
-  cout<<"Nyrs: "<<endl<<Nyrs<<endl;
-  cout<<"Nspecies: "<<endl<<Nspecies<<endl;
-  cout<<"Nsizebins: "<<endl<<Nsizebins<<endl;
-  cout<<"Nareas: "<<endl<<Nareas<<endl;
-  cout<<"Nfleets: "<<endl<<Nfleets<<endl;
-  cout<<"Nsurveys: "<<endl<<Nsurveys<<endl;
-  cout<<"wtconv: "<<endl<<wtconv<<endl;
-  cout<<"datfilename: "<<endl<<datfilename<<endl;
-  cout<<"binwidth: "<<endl<<binwidth<<endl;
-  cout<<"lenwt_a: "<<endl<<lenwt_a<<endl;
-  cout<<"lenwt_b: "<<endl<<lenwt_b<<endl;
- cout<<"Nrecruitment_cov: "<<endl<<Nrecruitment_cov<<endl;
- cout<<"Nmaturity_cov: "<<endl<<Nmaturity_cov<<endl;
- cout<<"Ngrowth_cov: "<<endl<<Ngrowth_cov<<endl;
- cout<<"recruitment_cov: "<<endl<<recruitment_cov<<endl;
- cout<<"maturity_cov: "<<endl<<maturity_cov<<endl;
- cout<<"growth_cov: "<<endl<<growth_cov<<endl;
- cout<<"obs_effort: "<<endl<<obs_effort<<endl;
- cout<<"mean_stomwt: "<<endl<<mean_stomwt<<endl;
- cout<<"obs_temp: "<<endl<<obs_temp<<endl;
- cout<<"yr1Nphase: "<<endl<<yr1Nphase<<endl;
- cout<<"recphase: "<<endl<<recphase<<endl;
- cout<<"avg_rec_phase: "<<endl<<avg_rec_phase<<endl;
- cout<<"recsigmaphase: "<<endl<<recsigmaphase<<endl;
- cout<<"avg_F_phase: "<<endl<<avg_F_phase<<endl;
- cout<<"dev_rec_phase: "<<endl<<dev_rec_phase<<endl;
- cout<<"dev_F_phase: "<<endl<<dev_F_phase<<endl;
- cout<<"fqphase: "<<endl<<fqphase<<endl;
- cout<<"fsphase: "<<endl<<fsphase<<endl;
- cout<<"sqphase: "<<endl<<sqphase<<endl;
- cout<<"ssphase: "<<endl<<ssphase<<endl;
- cout<<"ssig_phase: "<<endl<<ssig_phase<<endl;
- cout<<"m1_phase: "<<endl<<m1_phase<<endl;
- cout<<"oF1_phase: "<<endl<<oF1_phase<<endl;
- cout<<"oFdev_phase: "<<endl<<oFdev_phase<<endl;
- cout<<"vuln_phase: "<<endl<<vuln_phase<<endl;
- cout<<"recGamma_alpha: "<<endl<<recGamma_alpha<<endl;
- cout<<"recGamma_shape: "<<endl<<recGamma_shape<<endl;
- cout<<"recGamma_beta: "<<endl<<recGamma_beta<<endl;
- cout<<"recDS_alpha: "<<endl<<recDS_alpha<<endl;
- cout<<"recDS_shape: "<<endl<<recDS_shape<<endl;
- cout<<"recDS_beta: "<<endl<<recDS_beta<<endl;
- cout<<"recGamSSB_alpha: "<<endl<<recGamSSB_alpha<<endl;
- cout<<"recGamSSB_shape: "<<endl<<recGamSSB_shape<<endl;
- cout<<"recGamSSB_beta: "<<endl<<recGamSSB_beta<<endl;
- cout<<"recRicker_alpha: "<<endl<<recRicker_alpha<<endl;
- cout<<"recRicker_shape: "<<endl<<recRicker_shape<<endl;
- cout<<"recRicker_beta: "<<endl<<recRicker_beta<<endl;
- cout<<"recBH_alpha: "<<endl<<recBH_alpha<<endl;
- cout<<"recBH_shape: "<<endl<<recBH_shape<<endl;
- cout<<"recBH_beta: "<<endl<<recBH_beta<<endl;
- cout<<"recShepherd_alpha: "<<endl<<recShepherd_alpha<<endl;
- cout<<"recShepherd_shape: "<<endl<<recShepherd_shape<<endl;
- cout<<"recShepherd_beta: "<<endl<<recShepherd_beta<<endl;
- cout<<"recHockey_alpha: "<<endl<<recHockey_alpha<<endl;
- cout<<"recHockey_shape: "<<endl<<recHockey_shape<<endl;
- cout<<"recHockey_beta: "<<endl<<recHockey_beta<<endl;
- cout<<"recSegmented_alpha: "<<endl<<recSegmented_alpha<<endl;
- cout<<"recSegmented_shape: "<<endl<<recSegmented_shape<<endl;
- cout<<"recSegmented_beta: "<<endl<<recSegmented_beta<<endl;
- cout<<"rectype: "<<endl<<rectype<<endl;
- cout<<"stochrec: "<<endl<<stochrec<<endl;
- cout<<"rec_alpha: "<<endl<<rec_alpha<<endl;
- cout<<"rec_shape: "<<endl<<rec_shape<<endl;
- cout<<"rec_beta: "<<endl<<rec_beta<<endl;
-  }
   for (area=1; area<=Nareas; area++){
 	for(spp=1; spp<=Nspecies; spp++){
 	  switch (rectype (spp)){
@@ -281,23 +212,6 @@ model_data::model_data(int argc,char * argv[]) : ad_comm(argc,argv)
   growthprob_phi.allocate(1,Nareas,1,Nspecies,1,Nyrs,1,Nsizebins);
   delta_t.allocate(1,Nsizebins);
   lmax_test.allocate(1,2);
-  if(debug==1){
- cout<<"sexratio: "<<endl<<sexratio<<endl;
- cout<<"recruitment_covwt: "<<endl<<recruitment_covwt<<endl;
- cout<<"fecund_d: "<<endl<<fecund_d<<endl;
- cout<<"fecund_h: "<<endl<<fecund_h<<endl;
- cout<<"fecund_theta: "<<endl<<fecund_theta<<endl;
- cout<<"maturity_nu: "<<endl<<maturity_nu<<endl;
- cout<<"maturity_omega: "<<endl<<maturity_omega<<endl;
- cout<<"maturity_covwt: "<<endl<<maturity_covwt<<endl;
- cout<<"growth_psi: "<<endl<<growth_psi<<endl;
- cout<<"growth_kappa: "<<endl<<growth_kappa<<endl;
- cout<<"growth_covwt: "<<endl<<growth_covwt<<endl;
- cout<<"vonB_Linf: "<<endl<<vonB_Linf<<endl;
- cout<<"vonB_k: "<<endl<<vonB_k<<endl;
- cout<<"growthtype: "<<endl<<growthtype<<endl;
- cout<<"phimax: "<<endl<<phimax<<endl;
-  }
   for (area=1; area<=Nareas; area++){
 	for(spp=1; spp<=Nspecies; spp++){
      for(yr=1; yr<=Nyrs; yr++){
@@ -482,33 +396,6 @@ model_data::model_data(int argc,char * argv[]) : ad_comm(argc,argv)
   residentTime.allocate(1,Nareas,1,Nspecies,"residentTime");
   areaMortality.allocate(1,Nareas,1,Nspecies,"areaMortality");
   eof.allocate("eof");
-  if(debug==1){
- cout<<"flagRamp: "<<endl<<flagRamp<<endl;
- cout<<"minExploitation: "<<endl<<minExploitation<<endl;
- cout<<"maxExploitation: "<<endl<<maxExploitation<<endl;
- cout<<"minMaxExploitation: "<<endl<<minMaxExploitation<<endl;
- cout<<"minMaxThreshold: "<<endl<<minMaxThreshold<<endl;
- cout<<"Nthresholds: "<<endl<<Nthresholds<<endl;
- cout<<"threshold_proportion: "<<endl<<threshold_proportion<<endl;
- cout<<"exploitation_levels: "<<endl<<exploitation_levels<<endl;
- cout<<"threshold_species: "<<endl<<threshold_species<<endl;
- cout<<"AssessmentOn: "<<endl<<AssessmentOn<<endl;
- cout<<"speciesDetection: "<<endl<<speciesDetection<<endl;
- cout<<"LFI_size: "<<endl<<LFI_size<<endl;
- cout<<"scaleInitialN: "<<endl<<scaleInitialN<<endl;
- cout<<"effortScaled: "<<endl<<effortScaled<<endl;
- cout<<"discard_Coef: "<<endl<<discard_Coef<<endl;
- cout<<"discardSurvival_Coef: "<<endl<<discardSurvival_Coef<<endl;
- cout<<"predOrPrey: "<<endl<<predOrPrey<<endl;
- cout<<"bandwidth_metric: "<<endl<<bandwidth_metric<<endl;
- cout<<"baseline_threshold: "<<endl<<baseline_threshold<<endl;
- cout<<"indicator_fishery_q: "<<endl<<indicator_fishery_q<<endl;
- cout<<"AR_parameters: "<<endl<<AR_parameters<<endl;
- cout<<"flagMSE: "<<endl<<flagMSE<<endl;
- cout<<"residentTime: "<<endl<<residentTime<<endl;
- cout<<"areaMortality: "<<endl<<areaMortality<<endl;
- cout<<"eof: "<<endl<<eof<<endl;
-   }
 ad_comm::change_datafile_name(datfilename);
   Nsurvey_obs.allocate("Nsurvey_obs");
 cout << Nsurvey_obs << endl;
@@ -524,18 +411,6 @@ cout << Nsurvey_obs << endl;
   Ndietprop_obs.allocate("Ndietprop_obs");
  ncol = Nspecies+6;
   obs_dietprop.allocate(1,Ndietprop_obs,1,ncol,"obs_dietprop");
-  if(debug==1){
- cout<<"Nsurvey_obs: "<<endl<<Nsurvey_obs<<endl;
- cout<<"obs_survey_biomass: "<<endl<<obs_survey_biomass<<endl;
- cout<<"Nsurvey_size_obs: "<<endl<<Nsurvey_size_obs<<endl;
- cout<<"obs_survey_size: "<<endl<<obs_survey_size<<endl;
- cout<<"Ncatch_obs: "<<endl<<Ncatch_obs<<endl;
- cout<<"obs_catch_biomass: "<<endl<<obs_catch_biomass<<endl;
- cout<<"Ncatch_size_obs: "<<endl<<Ncatch_size_obs<<endl;
- cout<<"obs_catch_size: "<<endl<<obs_catch_size<<endl;
- cout<<"Ndietprop_obs: "<<endl<<Ndietprop_obs<<endl;
- cout<<"obs_dietprop: "<<endl<<obs_dietprop<<endl;
-   }
   if (debug == 1)
     {
     cout<<"Nyrs\n"<<Nyrs<<endl;
@@ -610,7 +485,7 @@ cout << Nsurvey_obs << endl;
     cout<<"eof\n"<<eof<<endl;
     }
   if(eof != 54321) {cout<<"Stop, data input failed"<<endl<<"eof: "<<eof<<endl; exit(1);}
-  if (debug == 1) {cout<<"\nManually exiting at end of data section..."<<endl;}
+  if (debug == 1) {cout<<"\nManually exiting at end of data section..."<<endl;  exit(-1);}
 }
 
 void model_parameters::initializationfunction(void)
@@ -676,6 +551,7 @@ obs_effortAssess = obs_effort;
     suitpreybio.initialize();
   #endif
 cout << "Nprey " << Nprey << endl;
+  logit_vuln.allocate(1,Npreypar,vuln_phase,"logit_vuln");
   vulnerability.allocate(1,Nareas,1,Nspecies,1,Nspecies,"vulnerability");
   #ifndef NO_AD_INITIALIZE
     vulnerability.initialize();
@@ -1108,26 +984,6 @@ cout << "Nprey " << Nprey << endl;
   #ifndef NO_AD_INITIALIZE
     otherFood.initialize();
   #endif
-      if (debug == 1)
-      {
-       cout<<"ln_yr1N: "<<ln_yr1N<<endl;
-       cout<<"recruitment_alpha: "<<recruitment_alpha<<endl;
-       cout<<"recruitment_shape: "<<recruitment_shape<<endl;
-       cout<<"recruitment_beta: "<<recruitment_beta<<endl;
-       cout<<"ln_avg_recruitment: "<<ln_avg_recruitment<<endl;
-       cout<<"recruitment_devs: "<<recruitment_devs<<endl;
-       cout<<"ln_recsigma: "<<ln_recsigma<<endl;
-       cout<<"avg_F: "<<avg_F<<endl;
-       cout<<"F_devs: "<<F_devs<<endl;
-       cout<<"fishsel_pars: "<<fishsel_pars<<endl;
-       cout<<"ln_fishery_q: "<<ln_fishery_q<<endl;
-       cout<<"ln_survey_q: "<<ln_survey_q<<endl;
-       cout<<"survey_selpars: "<<survey_selpars<<endl;
-       cout<<"ln_M1ann: "<<ln_M1ann<<endl;
-       cout<<"ln_otherFood_base: "<<ln_otherFood_base<<endl;
-       cout<<"otherFood_dev: "<<otherFood_dev<<endl;
-       exit(1);
-      }
 }
 
 void model_parameters::preliminary_calculations(void)
@@ -1164,7 +1020,7 @@ void model_parameters::userfunction(void)
   transform_parameters(); if (debug == 4) {cout<<"completed parameter transform"<<endl;}
   for (area=1; area<=Nareas; area++){
    for(spp=1; spp<=Nspecies; spp++){
-          M1(area, spp)  = 1.0 - pow((1.0 - mfexp(ln_M1ann(area, spp))), (1.0 / Nstepsyr)) ; //scale for steps per year to equal annual input from dat
+          M1(area, spp)  = 1.0 - pow((1.0 - mfexp(ln_M1ann(area, spp))), (1.0 / Nstepsyr)) ; //scale for steps per year to equal annual input from dat  
     }
    }
   // Other Food - fill in the other food vector
@@ -1289,9 +1145,9 @@ void model_parameters::transform_parameters(void)
      fishsel_d(species,ifleet) = mfexp(fishsel_pars(2,ifleet));
    }
   }
- // cout << "fishery selectivit pars" << endl;
- // cout << fishsel_c << endl;
- // cout << fishsel_d << endl;
+  //cout << "fishery selectivit pars" << endl;
+  //cout << fishsel_c << endl;
+  //cout << fishsel_d << endl;
   //exit(-1);
   dvariable neglog19 = -1.*log(19.);
   for (int i=1;i<=Nsurveys;i++)
@@ -1308,7 +1164,21 @@ void model_parameters::transform_parameters(void)
   // catch_sigma = mfexp(ln_catch_sigma);
   //vulnerabilities
   int iprey = 0;
+  vulnerability.initialize();
+  for (area=1; area<=Nareas; area++){
+    for (pred=1; pred<=Nspecies; pred++){
+      for(prey=1; prey<=Nspecies; prey++){
+        if (isprey(area,prey,pred)==1) {
+         iprey+=1;
+         vulnerability(area,prey,pred) = mfexp(logit_vuln(iprey))/(1.+mfexp(logit_vuln(iprey)));
+        }
+      }
+    }
+  }
+  //cout << "vulnerability" << endl;
   //cout << logit_vuln << endl;
+  //cout << vulnerability << endl;
+  //exit(-1);
 }
 
 void model_parameters::calc_initial_states(void)
@@ -1409,16 +1279,12 @@ void model_parameters::calc_initial_states(void)
           //fill Fyr array with area, species, fleet, year specific Fs
           // Fyr(area,spp,fleet) = avg_F(area,spp,fleet) + F_devs(spp,fleet); //WARNING ONLY WORKS WITH 1 AREA:REDO
             Fyr(area,spp,fleet,iyr) = fishery_q(area,spp,fleet)*mfexp(avg_F(area,fleet)+F_devs(area,fleet,iyr));  //gavinfay March 2022 - modding for F
+            //Fyr(area,spp,fleet,iyr) = fishery_q(area,spp,fleet)*mfexp(F_devs(area,fleet,iyr));  //gavinfay March 2022 - modding for F
             //cout << iyr << " " << area << " " << spp << " " << fleet << " " << Fyr(area,spp,fleet,iyr) << endl;
       }
     }
   }
   }
-  //cout<<"fishery_q: "<<fishery_q<<endl;
-  //cout<<"avg_F: "<<avg_F<<endl;
-  //cout<<"F_devs: "<<F_devs<<endl;
-  //cout<<"Fyr: "<<Fyr<<endl;
-  //exit(1);
   //exit(-1);
     // now given the distribution of errors for extreme events we calculate the error
     //sim_extreme_recruit_error
@@ -1917,9 +1783,7 @@ void model_parameters::evaluate_the_objective_function(void)
 {
   dvariable eps = 1.e-07;
   cout << "starting commercial catch nll" << endl;
-  //cout << "Ncatch_obs: "<<Ncatch_obs << endl;
-  //cout << "obs_catch_biomass(1,1): "<<obs_catch_biomass(1,1)<< endl;
-  //exit(1);
+    // Ncatch_obs
     pred_catch_biomass.initialize();
     resid_catch.initialize();
     nll_catch.initialize(); 
@@ -1931,14 +1795,12 @@ void model_parameters::evaluate_the_objective_function(void)
       int spp = obs_catch_biomass(i,4);
       dvariable value = obs_catch_biomass(i,5)+eps;
       dvariable cv = obs_catch_biomass(i,6);
-      cout << "fleet "<<i<<": "<<fleet<< endl;
       // if (fleet==0) // add case when catch is aggregated over fleets (fleet = 0 in data file)
       pred_catch_biomass(i) = fleet_catch_biomass(area,spp,fleet,year); //predicted value for this data point
       resid_catch(i) = log(value/(pred_catch_biomass(i)+eps));
       nll_catch(i) = dlnorm(value, log(pred_catch_biomass(i)+eps), cv);
     }
-  //cout << "done commercial catch nll" << endl;
-  //exit(1);
+  cout << "done commercial catch nll" << endl;
   cout << "starting commercial catch at length nll" << endl;
    //Ncatch_size_obs
   int j=0;
@@ -2144,6 +2006,7 @@ void model_parameters::report(const dvector& gradients)
   report << F << endl;
   report << "EstM2size Estimated predation mortality " << endl;
   report << M2 << endl;
+  //report << "table of fits to survey" << endl;
   report << "survey biomass data, predicted, residual, nll" << endl;
   for (int i=1;i<=Nsurvey_obs;i++)
     report << obs_survey_biomass(i) << " " << pred_survey_index(i) << " " << resid_survey(i) << " " << nll_survey(i) << endl;
@@ -2151,6 +2014,7 @@ void model_parameters::report(const dvector& gradients)
   // report << est_survey_biomass << endl;
   // report << "ObsSurvB Observed survey biomass of fish " << endl;
   // report << obs_survey_biomass << endl;
+  //report << "table of fits to catch" << endl;
   report << "catch data, predicted, residual, nll" << endl;
   for (int i=1;i<=Ncatch_obs;i++)
     report << obs_catch_biomass(i) << " " << pred_catch_biomass(i) << " " << resid_catch(i) << " " << nll_catch(i) << endl;
@@ -2187,6 +2051,54 @@ void model_parameters::report(const dvector& gradients)
    for (int j=1;j<=Nfleets;j++) {
      report << i << " " << j << " " << Fyr(1,i,j) << endl;
   }}
+    pmse_predvals << "full time series of predicted survey index" << endl;
+    pmse_predvals << "survey year spp area pred_survey" << endl;
+      dvariable pred_survey_index2;
+      for (int survey=1; survey<=Nsurveys;survey++) {
+      for (int year=1;year<=Nyrs;year++) {
+      for (int spp=1;spp<=Nspecies;spp++) {
+      for (int area=1; area<=Nareas; area++){
+        pred_survey_index2 = 0.;
+        for (int ilen=1;ilen<=Nsizebins;ilen++) {
+            //pred_survey_index2 +=  B_tot(area,spp,year,ilen)*survey_sel(survey,spp,ilen)*survey_q(survey,spp)/Nstepsyr; 
+            pred_survey_index2 +=  B_tot(area,spp,year,ilen)*survey_sel(survey,spp,ilen)/Nstepsyr; 
+        }
+        pmse_predvals << survey << " " << year << " " << spp << " " << area << " " << pred_survey_index2 << endl;
+      }}}}       
+    pmse_predvals << "full time series of predicted catch" << endl;
+    pmse_predvals << "fleet year spp area pred_catch" << endl;
+      for (int fleet=1; fleet<=Nfleets;fleet++) {
+      for (int year=1;year<=Nyrs;year++) {
+      for (int spp=1;spp<=Nspecies;spp++) {
+      for (int area=1; area<=Nareas; area++){
+        if (indicator_fishery_q(area,fleet,spp) == 1)
+         pmse_predvals << fleet << " " << year << " " << spp << " " << area << " " << fleet_catch_biomass(area,spp,fleet,year) << endl;
+      }}}}       
+ //full table of survey length composition
+    pmse_predvals << "full time series of survey length comp" << endl;
+    pmse_predvals << "survey year spp area catch-at-size" << endl;
+     dvar_vector Lpred(1,Nsizebins);
+      for (int survey=1; survey<=Nsurveys;survey++) {
+      for (int year=1;year<=Nyrs;year++) {
+      for (int spp=1;spp<=Nspecies;spp++) {
+      Lpred.initialize();
+      for (int area=1;area<=Nareas;area++)
+       Lpred += N_tot(area,spp,year);
+      Lpred = survey_q(survey,spp)*elem_prod(survey_sel(survey,spp),Lpred)/Nstepsyr; //est_survey_size(survey, year, spp, ilen);// 
+        pmse_predvals << survey << " " << year << " " << spp << " " << area << " " << Lpred << endl;
+      }}}
+ //full table of survey length composition
+    pmse_predvals << "full time series of fishery length comp" << endl;
+    pmse_predvals << "fleet year spp area catch-at-size" << endl;
+      for (int fleet=1; fleet<=Nfleets;fleet++) {
+      for (int year=1;year<=Nyrs;year++) {
+      for (int spp=1;spp<=Nspecies;spp++) {
+      for (int area=1;area<=Nareas;area++) {
+      Lpred.initialize();
+      for (int ilen=1;ilen<=Nsizebins;ilen++)
+       Lpred(ilen) = Cfl_tot(area,spp,fleet,year,ilen);
+        pmse_predvals << fleet << " " << year << " " << spp << " " << area << " " << Lpred << endl;
+      }}}}
 }
 
 model_data::~model_data()
