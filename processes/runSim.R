@@ -168,7 +168,26 @@ for(r in 1:nrep){
          
       #### SEND F TO HYDRA HERE? RIGHT BEFORE END OF YEAR LOOP ####
       # you will need to pull stock[[i]]$F_full[y]
+      #call the MP
+      source("functions/hydra/mp_functions.R")
+      mp_results <- do_ebfm_mp(settings, assess_results, input)
+      mp_results$out_table %>%
+        as_tibble()
       
+      # #the catch advice, to be passed to get_f_from_advice()
+      # mp_results$out_table$advice
+      # 
+      source("functions/hydra/get_f_from_advice.R")
+      
+      # biomass for the F calculation, replace with something sensible
+      f_calc_biomass <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>% 
+        arrange(species) %>% select(predbiomass) %>% t() %>% as.numeric()
+      #calculate new F
+      F_full_new <- get_f_from_advice(mp_results$out_table$advice,
+                                      f_calc_biomass, 
+                                      input$q, 
+                                      input$complex, 
+                                      input$docomplex)
       
       
       # Set the new values for the next iteration of MSE
