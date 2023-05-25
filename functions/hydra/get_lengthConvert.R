@@ -69,7 +69,10 @@ get_lengthConvert <- function(stock, hydraData){
      sumCatch <- dplyr::filter(as.data.frame(hydraData$predCatch), species==i)%>%
        full_join(year_gap, by='year')%>%
        arrange(year)
-
+     
+     abundance <- dplyr::filter(as.data.frame(hydraData$abundance), Species==i)
+     biomass <- dplyr::filter(as.data.frame(hydraData$biomass), Species==i)
+     
      # fill in NA with zero
      paaSurv[is.na(paaSurv)]<- 0
      paaCatch[is.na(paaCatch)]<- 0
@@ -104,7 +107,8 @@ get_lengthConvert <- function(stock, hydraData){
         paaCN<- paaCatch
         sumIN<- sumSurv$predbiomass
         sumCW<- sumCatch$predcatch
-        
+        N<- abundance$Abundance
+        Biomass <- biomass$Biomass
       })
       
       
