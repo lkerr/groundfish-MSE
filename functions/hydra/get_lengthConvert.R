@@ -1,4 +1,4 @@
-get_lengthConvert <- function(stock, hydraData){
+get_lengthConvert <- function(stock,hydraData){
 
   # we want each species as a sub-list like stock object in groundfish MSE
    
@@ -18,70 +18,75 @@ get_lengthConvert <- function(stock, hydraData){
   Catchage <- Catchlengths%>%
     rowwise()%>%
     mutate(age=ceiling(((-log(1-L/Linf))/K+t0)))%>% #round up
-    select(fleet, year,species, name, age)
+    select(fleet, year,species,inpN, name, age)
   
   # create plus group for now- better way to do this
-  Survage$age[Survage$age>stock$page]<- stock$page
-  Catchage$age[Catchage$age>stock$page]<- stock$page 
+  for(i in 1:length(stock))
+  {
+    Survage$age[Survage$age>stock[[i]]$page & Survage$species==i]<- stock[[i]]$page
+    Catchage$age[Catchage$age>stock[[i]]$page & Catchage$species==i]<- stock[[i]]$page 
+  }
   
   # calculate proportions at age and bring annual total data back in
   
   Survtemp<- dplyr::filter(Survage)
     paaSurvtemp <-  Survtemp%>%
-      select(survey, year,species, name, age)%>%
-      group_by(survey, year, species, name, age)%>%
+      select(survey, year,inpN,species, name, age)%>%
+      group_by(survey, year,inpN, species, name, age)%>%
       count()%>%
-      group_by(survey, year, species, name)%>%
+      group_by(survey, year,inpN, species, name)%>%
       mutate(total=sum(n), paa=n/total)%>%
-      select(survey, year,species,name,age,paa)%>%
+      select(survey, year,inpN,species,name,age,paa)%>%
       spread(age,paa)
     
     CNtemp <- dplyr::filter(Catchage)
     paaCNtemp <- CNtemp%>%
-      select(fleet, year,species, name, age)%>%
-      group_by(fleet, year, species, name, age)%>%
+      select(fleet, year,inpN,species, name, age)%>%
+      group_by(fleet, year,inpN, species, name, age)%>%
       count()%>%
-      group_by(fleet, year, species, name)%>%
+      group_by(fleet, year,inpN, species, name)%>%
       mutate(total=sum(n), paa=n/total)%>%
-      select(fleet, year,species,name,age,paa)%>%
+      select(fleet, year,inpN,species,name,age,paa)%>%
       spread(age,paa)
    
-   
-   year_gap<- data.frame(year=1:nyear)
+    year_gap<- data.frame(year=1:nyear)
    
     #assign and filter survey
-     paaSurv <-dplyr::filter(paaSurvtemp, survey==1, species==i)%>%
+     paaSurv <-dplyr::filter(paaSurvtemp, survey==1)%>%
        full_join(year_gap, by="year")%>%
-       arrange(year)%>%
-       ungroup()%>%
-       select(!c(year,survey,species,name))
-     
-     paaCatch <- dplyr::filter(paaCNtemp, species==i)%>%
-       full_join(year_gap, by="year")%>%
-       arrange(year)%>%
-       ungroup()%>%
-       select(!c(fleet,year,species,name))
-     
-     sumSurv <- dplyr::filter(as.data.frame(hydraData$predBiomass),species==i, survey==1)%>%
-       full_join(year_gap, by="year")%>%
+       arrange(species)%>%
        arrange(year)
+       
+       # ungroup()%>%
+       # select(!c(year,survey,species,name))
      
-     sumCatch <- dplyr::filter(as.data.frame(hydraData$predCatch), species==i)%>%
-       full_join(year_gap, by='year')%>%
+     paaCatch <- dplyr::filter(paaCNtemp)%>%
+       full_join(year_gap, by="year")%>%
+       arrange(species)%>%
        arrange(year)
+       # ungroup()%>%
+       # select(!c(fleet,year,species,name))
      
-     abundance <- dplyr::filter(as.data.frame(hydraData$abundance), Species==i)
-     biomass <- dplyr::filter(as.data.frame(hydraData$biomass), Species==i)
+     # sumSurv <- dplyr::filter(as.data.frame(hydraData$predBiomass),species==i, survey==1)%>%
+     #   full_join(year_gap, by="year")%>%
+     #   arrange(year)
+     # 
+     # sumCatch <- dplyr::filter(as.data.frame(hydraData$predCatch), species==i)%>%
+     #   full_join(year_gap, by='year')%>%
+     #   arrange(year)
+     # 
+     # abundance <- dplyr::filter(as.data.frame(hydraData$abundance), Species==i)
+     # biomass <- dplyr::filter(as.data.frame(hydraData$biomass), Species==i)
      
      # fill in NA with zero
      paaSurv[is.na(paaSurv)]<- 0
      paaCatch[is.na(paaCatch)]<- 0
-     sumSurv[is.na(sumSurv)]<- 0
-     sumCatch[is.na(sumCatch)]<- 0
+     # sumSurv[is.na(sumSurv)]<- 0
+     # sumCatch[is.na(sumCatch)]<- 0
 
     # rearrange paaSurv and paaCatch into matrix not list of ages
-      paaSurv <- data.matrix(paaSurv)
-      paaCatch <- data.matrix(paaCatch) 
+      # paaSurv <- data.matrix(paaSurv)
+      # paaCatch <- data.matrix(paaCatch) 
                   
      
     # add error to index and catch (usually happens in get_indexData)
@@ -102,13 +107,9 @@ get_lengthConvert <- function(stock, hydraData){
      #                                par=oe_paaIN)
       
       
-      out <- within(stock, { 
+      out <- within(hydraData, { 
         paaIN<- paaSurv
         paaCN<- paaCatch
-        sumIN<- sumSurv$predbiomass
-        sumCW<- sumCatch$predcatch
-        N<- abundance$Abundance
-        Biomass <- biomass$Biomass
       })
       
       

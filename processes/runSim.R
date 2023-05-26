@@ -88,16 +88,19 @@ for(r in 1:nrep){
       source('processes/withinYearAdmin.R')
       begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed) # what exactly is this doing? 
       
-      if(y >=fmyearIdx){
-      manage_counter<-manage_counter+1 #keeps track of management year
+      # if(y >=fmyearIdx){
+      # manage_counter<-manage_counter+1 #keeps track of management year
       
       # PULL IN -PREDICTED VALUES- FROM HYDRA DATA
       source('functions/hydra/get_hydra.R')
       # get_hydra will also incorporate a growing data frame called newdata that gets larger as the loop progresses
       hydraData<- get_hydra(oldseed_mproc[r],newdata)
       
+      # Adds two objects to hydraData, paaIN and paaCN, the proportions AT AGE of the index and catch
+      hydraData<- get_lengthConvert(stock,hydraData)
+      
       # Add observation noise but only to the newest year of data, the updates the growing list
-      # EMILY: TURN THIS INTO A FUNCTION
+      # EMILY: TURN THIS INTO A FUNCTION AND DO IT TO PROPORTIONS AS WELL
       if(length(newdata$bs_temp)>0)
       {
         hydraData_new_index.df <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year))
@@ -110,6 +113,8 @@ for(r in 1:nrep){
         
         hydraData_growing_index <- rbind(hydraData_growing_index,hydraData_new_index.df)
         hydraData_growing_catch <- rbind(hydraData_growing_catch,hydraData_new_catch.df)
+        
+        
       }
        
       #EMILY: Change how data is being read into get_lengthConvert
@@ -117,9 +122,14 @@ for(r in 1:nrep){
        # CONVERT TO AGES AND WRANGLE INTO CORRECT FORMAT
        # This function also has option to add additional observation noise, but
        # that is currently commented out
-       for (i in 1:nstock) {
-        stock[[i]] <- get_lengthConvert(stock=stock[[i]], hydraData)
-       }
+
+      # Make a function here to overwrite stock values
+      # stock[[]]$paaIN<- paaSurv
+      # stock[[]]$paaCN<- paaCatch
+      # stock[[]]$sumIN<- sumSurv$predbiomass
+      # stock[[]]$sumCW<- sumCatch$predcatch
+      # stock[[]]$N<- hydraData$abundance
+      # stock[[]]$Biomass <- hydraData$biomass
        
          
       #### RUN MP ####
@@ -132,7 +142,8 @@ for(r in 1:nrep){
             stock[[i]] <- get_implementationF(type = 'adviceWithError',
                                               stock = stock[[i]])
           } 
-      } # end of fishery management has started clause
+      
+      # } # end of fishery management has started clause
 
       # KILL FISH AND MAKE NEW CATCH AND INDEX FOR HYDRA HERE?
       # IS GENERATING NEW CATCH AND INDEX DATA GOING TO BE DEPENDENT ON FISH INTERACTIONS?
@@ -194,7 +205,7 @@ for(r in 1:nrep){
       # F_full is based on the recommended management model output
       # rec_devs are generated using the sigma value from the original hydra data
       # bs_temp is just the average bs_temp from the original data
-      rec_devs_new <- rnorm(hydraData$inputdata$Nspecies,0,sd=exp(hydraData$inputdata$ln_recsigma))
+      rec_devs_new <- rnorm(hydraData$Nspecies,0,sd=exp(hydraData$ln_recsigma))
       bs_temp_new <-9.643207
       
       # Update the growing list of new data

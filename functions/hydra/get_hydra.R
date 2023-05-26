@@ -38,7 +38,10 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
         for(j in 1:hydra_data$Nsurveys)
         {
           hydra_data$obs_survey_biomass <-rbind(hydra_data$obs_survey_biomass,c(j,i,k,100000,0.5))
-          hydra_data$obs_survey_size <- rbind(hydra_data$obs_survey_size,c(j,i,k,0,50,0.2,0.2,0.2,0.2,0.2))
+          
+          # Because inpN has an influence on how the simulated age compositions, get the survey and species specific average inpN in dummy data:
+          newinpN <- round(mean(dplyr::filter(hydra_data$obs_survey_size,species==k,survey==j,year<=(hydra_data$Nyrs-MSEyr))[,'inpN']))
+          hydra_data$obs_survey_size <- rbind(hydra_data$obs_survey_size,c(j,i,k,0,newinpN,0.2,0.2,0.2,0.2,0.2))
         }
         
       }
@@ -48,8 +51,10 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
         {
           for(l in 1:hydra_data$Nareas)
           {
-            hydra_data$obs_catch_size <- rbind(hydra_data$obs_catch_size,c(j,l,i,fleetdistribute[[j]][k],0,50,0.2,0.2,0.2,0.2,0.2))
             hydra_data$obs_catch_biomass <- rbind(hydra_data$obs_catch_biomass,c(j,l,i,fleetdistribute[[j]][k],30000,0.05))
+            
+            newinpN <- round(mean(dplyr::filter(hydra_data$obs_catch_size,species==k,fleet==j,year<=(hydra_data$Nyrs-MSEyr))[,'inpN']))
+            hydra_data$obs_catch_size <- rbind(hydra_data$obs_catch_size,c(j,l,i,fleetdistribute[[j]][k],0,newinpN,0.2,0.2,0.2,0.2,0.2))
           }
         } 
       }
@@ -254,6 +259,7 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
                          predCatch=catch.df, #[,-c(5,8,9)],
                          abundance=abundance,
                          biomass=biomass,
-                         inputdata=hydra_data)
+                         Nspecies=hydra_data$Nspecies,
+                         ln_recsigma=hydra_data$ln_recsigma)
   return(hydra_sim_data)
 } 
