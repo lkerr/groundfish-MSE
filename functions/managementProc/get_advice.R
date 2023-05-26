@@ -37,18 +37,27 @@ get_advice <- function(stock){
     }else{ # end of if assessment year
       get_WHAM(stock = tempStock)
     } # end of not assessment year
-    
-    ## WHAM results HERE ## 
+    ## WHAM results HERE ## - Currently assumes the full fit model object is returned, may be revised slightly if this is not the case
+    tempStock <- within(tempStock, {
+      parpop <- list(waa = tail(res$WAA.mats$WAA.catch.fleet1, 1),
+                     sel = tail(fit$rep$selAA[[1]], n=1), # This pulls the first selectivity block so we should check that this is the correct selectivity to pull
+                     M = tail(fit$rep$MAA, n=1), # Done
+                     mat = res$maturity[1,],
+                     R = fit$rep$NAA[1,], # Check that this should be a vector not a single number, should these be recruitment residuals?
+                     SSBhat = fit$rep$SSB, # Done
+                     J1N = tail(fit$rep$NAA, n=1), # Done                 
+                     Rpar = Rpar,
+                     Rpar_mis= Rpar_mis,
+                     Fhat = tail(fit$rep$F[,1], n=1)) # Done
+    })
   } # end of WHAM assessment 
 
 # Was the assessment successful?
   tempStock <- within(tempStock, {
-    conv_rate[y] <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' &&
-                      class(opt) != 'try-error') ||
-                     (mproc[m,'ASSESSCLASS'] == 'PLANB' &&
-                        class(planBest) != 'try-error') ||
-                     (mproc[m, 'ASSESSCLASS'] == 'ASAP' &&
-                        asapEst == 0), 1, 0)
+    conv_rate[y] <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' && class(opt) != 'try-error') || # Check convergence for CAA
+                           (mproc[m,'ASSESSCLASS'] == 'PLANB' && class(planBest) != 'try-error') || # Check convergence for PlanB
+                           (mproc[m,'ASSESSCLASS'] == 'ASAP' && asapEst == 0) || # Check convergence for ASAP
+                           (mproc[m,'ASSESSCLASS'] == "WHAM" && WHAMConverge == 0), 1, 0) # Check convergence for WHAM !!! should double check this (1 means converged from ifelse statement?)
   }) # ADD WHAM CONVERGENCE
 
   # Retrieve the estimated SSB (necessary for advice) &
