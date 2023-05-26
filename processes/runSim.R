@@ -106,7 +106,8 @@ for(r in 1:nrep){
     # This is here for testing:
     # bs_temp <- c(9)
     # F_full <- c(0.1,0.7)
-    # newdata <- list(bs_temp=bs_temp,F_full=F_full)
+    # rec_devs <- rep(0,10)
+    # newdata <- list(bs_temp=bs_temp,F_full=F_full,rec_devs=rec_devs)
     # END TESTING
     
     source('functions/hydra/get_hydra.R')
