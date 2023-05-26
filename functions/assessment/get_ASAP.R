@@ -93,12 +93,13 @@ get_ASAP <- function(stock){
       WriteASAP3DatFile(fname = paste('assessment/ASAP/', stockName, '_', r, '_', y,'.dat', sep = ''),
                         dat.object = dat_file,
                         header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
-
+# if ASAP here
       # write .dat file needs to have same name as exe file
       WriteASAP3DatFile(fname = paste('assessment/ASAP/ASAP3.dat', sep = ''),
                         dat.object = dat_file,
                         header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
 
+      ### BREAK POINT FOR NEW FUNCTION ###
       # Run the ASAP assessment model
       asapEst <- try(system('assessment/ASAP/ASAP3.exe', show.output.on.console = FALSE))
 

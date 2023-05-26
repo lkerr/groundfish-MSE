@@ -21,10 +21,25 @@ get_advice <- function(stock){
   # Run ASAP assessment
   if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
     if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
-    tempStock <- get_ASAP(stock = tempStock)}
-    else{
-      get_ASAP(stock = tempStock)}
-  }
+      get_ASAP_file(stock = tempStock) #creates ASAP dat file
+        tempStock<- get_ASAP(stock = tempStock) #run ASAP assessment
+    }else{ # end of if assessment year
+     get_ASAP(stock = tempStock)
+      } # end of not ASAP assessment year
+    ## MOVE ASSESSMENT RESULTS HERE WITHIN ASAP IF STATEMENT
+    
+    
+    #### WHAM STARTS HERE ####
+  }else if( mproc[m,'ASSESSCLASS'] == 'WHAM'){ 
+    if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
+      get_ASAP_file(stock = tempStock) #creates ASAP dat file
+        tempStock <- get_WHAM(stock=tempStock) #run WHAM assessment
+    }else{ # end of if assessment year
+      get_WHAM(stock = tempStock)
+    } # end of not assessment year
+    
+    ## WHAM results HERE ## 
+  } # end of WHAM assessment 
 
 # Was the assessment successful?
   tempStock <- within(tempStock, {
@@ -34,7 +49,7 @@ get_advice <- function(stock){
                         class(planBest) != 'try-error') ||
                      (mproc[m, 'ASSESSCLASS'] == 'ASAP' &&
                         asapEst == 0), 1, 0)
-  })
+  }) # ADD WHAM CONVERGENCE
 
   # Retrieve the estimated SSB (necessary for advice) &
   # Vary the parpop depending on the type of assessment model.
@@ -79,7 +94,7 @@ get_advice <- function(stock){
                        Rpar_mis= Rpar_mis,
                        Fhat = tail(res$F.report, 1))
       })
-    }
+     }
 
 # Calculate Mohn's Rho values
   
