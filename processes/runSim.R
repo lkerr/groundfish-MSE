@@ -13,6 +13,44 @@ if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
+#Additional settings and input that may be useful depending on how do_ebfm_mp and
+# get_f_from_advice end up getting used
+
+settings <- list(
+  showTimeSeries = "No",
+  useCeiling = "Yes",
+  assessType = "stock complex",
+  #assessType = "single species",
+  targetF = 0.75,
+  floorB = 0.5,
+  floorOption = "min status",
+  bramp = 0.5,
+  blim = 0.1,
+  fmin = 0.01,
+  floorYrs = 1:40)
+
+#set up some dummy data
+# input <- get_om_pars()
+input <- NULL
+input$Nsp = 10
+#om_long <- run_om(input)
+
+feeding_complexes <- tibble(isp = 1:10,
+                            complex = c(1, 3, 3, 1, 2, 1, 1, 2, 1, 2))
+gear_complexes <- tibble(isp = 1:10,
+                         complex = c(1, 3, 3, 1, 1, 3, 1, 2, 1, 2))
+
+input$complex = feeding_complexes$complex
+
+input$docomplex = TRUE
+#input$docomplex = FALSE
+input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
+                    0,1,1,0,0,0,0,0,0,0),
+                  nrow=2,byrow=TRUE)
+input$q <- matrix(c(1,0,0,0.3,0.5,1.5,1,1,0.2,1,
+                    0,1,0.33,0,0,0,0,0,0,0),
+                  nrow=2,byrow=TRUE)
+
 ####################These are temporary changes for testing ####################
 # econ_timer<-0
 
