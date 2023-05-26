@@ -111,13 +111,18 @@ for(r in 1:nrep){
     
     source('functions/hydra/get_hydra.R')
     # get_hydra will also incorporate a growing data frame called newdata that gets larger as the loop progresses
+    # had to call get_hydra outside the loop to add observation error to just the initital time series
     hydraData<- get_hydra(newseed=oldseed_mproc[r],newdata)
     
-    # Adds observation error to the original data
+    # Adds observation error to the original data (before entering MSE)
     hydraData_init_index <- rlnorm(nrow(hydraData$predBiomass),meanlog=log(hydraData$predBiomass[,'predbiomass']),sdlog=hydraData$predBiomass[,'cv'])
     hydraData_init_catch <- rlnorm(nrow(hydraData$predCatch),meanlog=log(hydraData$predCatch[,'predcatch']),sdlog=hydraData$predCatch[,'cv'])
     hydraData_growing_index <- cbind(hydraData$predBiomass,obsbiomass=hydraData_init_index)
     hydraData_growing_catch <- cbind(hydraData$predCatch,obscatch=hydraData_init_catch)
+    
+    # Attach the catch and index data WITH observation error to the hydraData object
+    hydraData$IN <- hydraData_growing_index
+    hydraData$CN <- hydraData_growing_catch
     
     #### Top year loop ####
     fyear=1
@@ -151,24 +156,18 @@ for(r in 1:nrep){
         
         hydraData_growing_index <- rbind(hydraData_growing_index,hydraData_new_index.df)
         hydraData_growing_catch <- rbind(hydraData_growing_catch,hydraData_new_catch.df)
-        
-        
       }
-       
-      #EMILY: Change how data is being read into get_lengthConvert
-       
-       # CONVERT TO AGES AND WRANGLE INTO CORRECT FORMAT
-       # This function also has option to add additional observation noise, but
-       # that is currently commented out
-
-      # Make a function here to overwrite stock values
-      # stock[[]]$paaIN<- paaSurv
-      # stock[[]]$paaCN<- paaCatch
-      # stock[[]]$sumIN<- sumSurv$predbiomass
-      # stock[[]]$sumCW<- sumCatch$predcatch
-      # stock[[]]$N<- hydraData$abundance
-      # stock[[]]$Biomass <- hydraData$biomass
-       
+      
+      # Attach the catch and index data WITH observation error to the hydraData object
+      hydraData$IN <- hydraData_growing_index
+      hydraData$CN <- hydraData_growing_catch
+      
+      source('functions/hydra/update_stock_data.R')
+      # Attach new catch and index data to stock object
+      # for(i in 1:nstock){
+      for(i in 1:nstock){
+        stock[[i]] <- update_stock_data(i,hydraData) # RUNS MP
+      }
          
       #### RUN MP ####
         for(i in 1:nstock){

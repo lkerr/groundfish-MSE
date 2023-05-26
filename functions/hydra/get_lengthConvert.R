@@ -49,23 +49,35 @@ get_lengthConvert <- function(stock,hydraData){
       select(fleet, year,inpN,species,name,age,paa)%>%
       spread(age,paa)
    
-    year_gap<- data.frame(year=1:nyear)
+    year_gap<- data.frame(year=1:length(unique(paaSurvtemp$year)))
    
     #assign and filter survey
-     paaSurv <-dplyr::filter(paaSurvtemp, survey==1)%>%
+    paaSurv <- dplyr::data_frame()
+    for(i in 1:hydraData$Nspecies)
+    {
+     paaSurv_temp <-dplyr::filter(paaSurvtemp, survey==1,species==i)%>%
        full_join(year_gap, by="year")%>%
        arrange(species)%>%
        arrange(year)
-       
-       # ungroup()%>%
-       # select(!c(year,survey,species,name))
      
-     paaCatch <- dplyr::filter(paaCNtemp)%>%
-       full_join(year_gap, by="year")%>%
-       arrange(species)%>%
-       arrange(year)
-       # ungroup()%>%
-       # select(!c(fleet,year,species,name))
+     paaSurv_temp[,6:(5+stock[[i]]$page)][is.na(paaSurv_temp[,6:(5+stock[[i]]$page)])] <- 0
+     paaSurv_temp$species <- rep(i,nrow(paaSurv_temp))
+     paaSurv <- dplyr::bind_rows(paaSurv,paaSurv_temp)
+    }
+     
+     paaCatch<-dplyr::data_frame()
+     for(i in 1:hydraData$Nspecies)
+     {
+       paaCatch_temp <- dplyr::filter(paaCNtemp,species==i)%>%
+         full_join(year_gap, by="year")%>%
+         arrange(species)%>%
+         arrange(year)
+         
+       paaCatch_temp[,6:(5+stock[[i]]$page)][is.na(paaCatch_temp[,6:(5+stock[[i]]$page)])] <- 0
+       paaCatch_temp$species <- rep(i,nrow(paaCatch_temp))
+       paaCatch <- dplyr::bind_rows(paaCatch,paaCatch_temp)
+     }
+
      
      # sumSurv <- dplyr::filter(as.data.frame(hydraData$predBiomass),species==i, survey==1)%>%
      #   full_join(year_gap, by="year")%>%
@@ -79,8 +91,8 @@ get_lengthConvert <- function(stock,hydraData){
      # biomass <- dplyr::filter(as.data.frame(hydraData$biomass), Species==i)
      
      # fill in NA with zero
-     paaSurv[is.na(paaSurv)]<- 0
-     paaCatch[is.na(paaCatch)]<- 0
+     # paaSurv[is.na(paaSurv)]<- 0
+     # paaCatch[is.na(paaCatch)]<- 0
      # sumSurv[is.na(sumSurv)]<- 0
      # sumCatch[is.na(sumCatch)]<- 0
 
