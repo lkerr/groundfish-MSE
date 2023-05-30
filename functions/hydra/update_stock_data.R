@@ -34,12 +34,12 @@ update_stock_data <- function(i,hydraData){
   # })
   
   out<-stock
-  out$paaIN <- as.vector(t(paaIN.matrix))
-  out$paaCN<- as.vector(t(paaCN.matrix))
+  out$paaIN <- matrix(paaIN.matrix, ncol = stock$page)
+  out$paaCN<- matrix(paaCN.matrix, ncol=stock$page)
   out$sumIN <- as.vector(sumIN)
   out$sumCW <- as.vector(sumCW)
   out$N <- as.vector(N)
-  out$Biomass <- Biomass
+  out$SSB <- Biomass
   
   return(out)
 }
