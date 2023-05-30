@@ -76,6 +76,12 @@ for(r in 1:nrep){
          source('processes/setupEconType.R')
         }
     
+    
+    #Store the ie_F and ie_bias terms
+    for (i in 1:nstock){
+        stock[[i]] <- ie_param_save(stock=stock[[i]])
+      }
+    
     if(mproc$ImplementationClass[m]=="StandardFisheries" & mproc$ie_override[m]=="TRUE"){
       for (i in 1:nstock){
         if(mproc$ie_source[m]=="Internal"){  
@@ -189,12 +195,10 @@ for(r in 1:nrep){
       stock[[i]]$omval$ie_bias[r,m] <-  stock[[i]]$ie_bias
     }
     
-    #Reset ieparams
-    # if(mproc$ImplementationClass[m]=="StandardFisheries" & mproc$ie_override[m]=="TRUE"){
-    #   for (i in 1:nstock){
-    #     stock[[i]]<-ie_param_reset(stock=stock[[i]])
-    #   }
-    # }
+    # ReStore the ie_F and ie_bias terms
+    for (i in 1:nstock){
+        stock[[i]]<-ie_param_reset(stock=stock[[i]])
+    }
         
   } #End of mproc loop
 } #End rep loop

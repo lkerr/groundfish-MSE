@@ -18,12 +18,7 @@
 
 ie_static_param_override <- function(stock, replicate, from_model, stocknum){
   
-  stock$ie_F_OG<- stock$ie_F
-  stock$ie_bias_OG<- stock$ie_bias
-  
-  
-  
-  
+
   # Here is the code to read in ie_F and ie_bias "externally", from an economic simulation that was run a while ago.    
   
   if(is.na(old_omvalGlobal[[stocknum]]$ie_F_hat[replicate, from_model])==TRUE){

@@ -19,9 +19,6 @@
 ie_internal_param_override <- function(stock, replicate, from_model){
   
   out <- within(stock, {
-    ie_F_OG<- ie_F
-    ie_bias_OG<- ie_bias
-    
     #Replace ie_F and ie_bias with their values from the the internal source model
     if(is.na(omval$ie_F_hat[replicate, from_model])==TRUE){
       warning(paste0("ie_F_hat is NA in rep", replicate))
