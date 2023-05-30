@@ -53,12 +53,16 @@ write.csv(tAnomOut, 'data/data_processed/tAnomOut.csv', row.names = FALSE)
 
 # Determine the actual years based on the available temperature data
 # (and the burn-in period which 'temp' has already incorporated)
+# 
+# firstYear <- max(cmip5$year) - length(temp) + 1
+# yrs <- firstYear:mxyear
+# nyear <- length(yrs)
+# 
+# yrs_temp <- firstYear:max(cmip5$year)
 
-firstYear <- max(cmip5$year) - length(temp) + 1
+firstYear <- 1978
 yrs <- firstYear:mxyear
 nyear <- length(yrs)
-
 yrs_temp <- firstYear:max(cmip5$year)
-
 # The first year that actual management will begin
 fmyearIdx <- which(yrs == fmyear)
