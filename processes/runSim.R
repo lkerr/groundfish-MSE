@@ -217,6 +217,8 @@ for(r in 1:nrep){
          
       #### SEND F TO HYDRA HERE? RIGHT BEFORE END OF YEAR LOOP ####
       # you will need to pull stock[[i]]$F_full[y]
+      # try to shape the results from the assessments into "assess_results"
+      # assess_results is tibble with: isp, data, results, pars, bmsy, msy, fmsy, q
       #call the MP
       source("functions/hydra/mp_functions.R")
       mp_results <- do_ebfm_mp(settings, assess_results, input)
@@ -254,8 +256,12 @@ for(r in 1:nrep){
       
     } #End of year loop 
   } #End of mproc loop
-  True_Biomass[[r]] <- hydraData$biomass
-  True_Catch[[r]] <- as.data.frame(hydraData$predCatch)
+  
+  # Save the output from this finished MSE:
+  # Output the real biomass from the operating model
+  OM_Biomass[[r]] <- hydraData$biomass
+  # Output the real catch ("predcatch") and observed catch ("obscatch") from the operating model, removing unnecessary columns to save space
+  OM_Catch[[r]] <- as.data.frame(hydraData$CN)[,-c(5,6,8,9)]
 } #End rep loop
 
 top_loop_end<-Sys.time()
