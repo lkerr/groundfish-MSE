@@ -63,7 +63,7 @@ timeI <- 0.5 # when is the survey (as a proportion of the year)
 #### Stock assessment model parameters ####
 
 # number of years in assessment model
-ncaayear <- 37
+ncaayear <-42
 
 # Expansion range for setting limits on parameter bounds
 boundRgLev <- 1.5

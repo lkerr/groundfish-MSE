@@ -126,13 +126,14 @@ for(r in 1:nrep){
     hydraData$CN <- hydraData_growing_catch
     
     #### Top year loop ####
-    fyear=1
-    nyear=30
+    #fyear=1
+    #nyear=30
     for(y in fyear:nyear){
+      
       source('processes/withinYearAdmin.R')
       begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed) # what exactly is this doing? 
       
-      # if(y >=fmyearIdx){
+       if(y >=fmyearIdx){
       # manage_counter<-manage_counter+1 #keeps track of management year
       
       # PULL IN -PREDICTED VALUES- FROM HYDRA DATA
@@ -203,7 +204,7 @@ for(r in 1:nrep){
         }
         
         if(y>=fmyearIdx){
-          stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
+          #stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
         }
          }
       
@@ -254,7 +255,7 @@ for(r in 1:nrep){
       F_full <- c(F_full,F_full_new)
       newdata <- list(bs_temp=bs_temp,F_full=F_full,rec_devs=rec_devs)
       
-    } #End of year loop 
+    }} #End of year loop 
   } #End of mproc loop
   
   # Save the output from this finished MSE:

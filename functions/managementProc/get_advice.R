@@ -59,7 +59,7 @@ get_advice <- function(stock){
       })
     }
 
-
+    # Plan B
     if(tempStock$stockName %in% c('Goosefish','Silver_hake', 'Spiny_dogfish', "Winter_skate")){
       tempStock <- within(tempStock, {
         #start year
@@ -80,7 +80,7 @@ get_advice <- function(stock){
         parpop <- list(obs_sumCW = sumCW[1:N_rows], #change back to obs later
                        mult = planBest$multiplier,
                        waatrue_y = waa_par,
-                       Ntrue_y = stock$sumIN[N_rows] %*% stock$paaIN[N_rows,],
+                       Ntrue_y = N,
                        Mtrue_y = M,
                        slxCtrue_y = slxC[y,])
       })
