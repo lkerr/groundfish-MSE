@@ -215,12 +215,13 @@ for(r in 1:nrep){
         if(showProgBar==TRUE){
           setTxtProgressBar(iterpb, yearitercounter)
         }
-         
-      #### SEND F TO HYDRA HERE? RIGHT BEFORE END OF YEAR LOOP ####
-      # you will need to pull stock[[i]]$F_full[y]
-      # try to shape the results from the assessments into "assess_results"
-      # assess_results is tibble with: isp, data, results, pars, bmsy, msy, fmsy, q
-      #call the MP
+      
+      # assess_results needs the 4 extra rows (for piscivores, benthivores, planktivores, ecosystem??)
+      # for now the assess_results just puts a fixed bmsy msy and fmsy
+      source('functions/hydra/get_assess_results.R')
+      assess_results <- get_assess_results(stock)
+      
+      
       source("functions/hydra/mp_functions.R")
       mp_results <- do_ebfm_mp(settings, assess_results, input)
       mp_results$out_table %>%
