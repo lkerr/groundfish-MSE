@@ -218,7 +218,7 @@ for(r in 1:nrep){
       
       # assess_results needs the 4 extra rows (for piscivores, benthivores, planktivores, ecosystem??)
       # for now the assess_results just puts a fixed bmsy msy and fmsy
-      source('functions/hydra/get_assess_results.R')
+      source('functions/processes/get_assess_results.R')
       assess_results <- get_assess_results(stock)
       
       
