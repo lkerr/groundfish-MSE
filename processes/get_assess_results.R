@@ -1,8 +1,10 @@
 get_assess_results <- function(stock)
 {
+  # Initalize the assess_results object
   assess_results <- data.frame(matrix(nrow=length(stock),ncol=8))
   names(assess_results) <- c("isp","data","results","pars","bmsy","msy","fmsy","q")
   assess_results <- tibble(assess_results)
+  
   for(i in 1:length(stock))
   {
     # NOT SURE WHAT PLAN B SMOOTH PRODUCES FOR EXPECTED CATCH, FOR NOW JUST USING OBSERVED CATCH
@@ -34,10 +36,19 @@ get_assess_results <- function(stock)
     pars <- list(c(NA,NA))
     assess_results$pars[i] <- pars
     
+    if(stock[[i]]$stockName %in% c('Goosefish','Silver_hake', 'Spiny_dogfish', "Winter_skate")){
+      bmsy <- 10000 
+      fmsy <- 0.2
+    }
+    if(stock[[i]]$stockName %in% c('Atlantic_cod','Atlantic_herring', 'Atlantic_mackerel', "Haddock", 'Winter_flounder', 'Yellowtail_flounder')){
+      bmsy <- stock[[i]]$RPmat[y,2]
+      fmsy <- stock[[i]]$RPmat[y,1]
+    }
     # Temporarily put in bmsy, msy, fmsy for each species
-    assess_results$bmsy[i] <- 100000
-    assess_results$msy[i] <- 1000
-    assess_results$fmsy[i] <- 0.2
+    assess_results$bmsy[i] <- bmsy
+    assess_results$fmsy[i] <- fmsy
+    assess_results$msy[i] <- bmsy * fmsy
+
     
     assess_results$q[i] <- 1
     
