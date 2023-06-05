@@ -51,6 +51,8 @@ input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
 input$q <- matrix(c(1,0,0,0.3,0.5,1.5,1,1,0.2,1,
                     0,1,0.33,0,0,0,0,0,0,0),
                   nrow=2,byrow=TRUE)
+PlanBstocks <-c("Goosefish", "Silver_hake", "Spiny_dogfish", "Winter_skate", "Yellowtail_flounder")
+ASAPstocks <-c("Atlantic_cod", "Atlantic_herring", "Atlantic_mackerel", "Haddock", "Winter_flounder")
 
 ####################These are temporary changes for testing ####################
 # econ_timer<-0
@@ -163,13 +165,13 @@ for(r in 1:nrep){
       
       # Attach the catch and index data WITH observation error to the hydraData object
       hydraData$IN <- hydraData_growing_index
-      hydraData$CN <- hydraData_growing_catch
+      hydraData$CN <- hydraData_growing_catch # ?? can this be named obs_sumIN and obs_sumCW for stock object??
       
       source('functions/hydra/update_stock_data.R')
       # Attach new catch and index data to stock object
       # for(i in 1:nstock){
       for(i in 1:nstock){
-        stock[[i]] <- update_stock_data(i,hydraData) # RUNS MP
+        stock[[i]] <- update_stock_data(i,hydraData) 
       }
          
       #### RUN MP ####
@@ -178,36 +180,36 @@ for(r in 1:nrep){
         }
         
       #### ADD IMPLEMENTATION ERROR ####
-          for(i in 1:nstock){
-            stock[[i]] <- get_implementationF(type = 'adviceWithError',
-                                              stock = stock[[i]])
-          } 
+          # for(i in 1:nstock){
+          #   stock[[i]] <- get_implementationF(type = 'adviceWithError',
+          #                                     stock = stock[[i]])
+          # } 
       
       # } # end of fishery management has started clause
 
       # KILL FISH AND MAKE NEW CATCH AND INDEX FOR HYDRA HERE?
       # IS GENERATING NEW CATCH AND INDEX DATA GOING TO BE DEPENDENT ON FISH INTERACTIONS?
         
-      for(i in 1:nstock){
+     # for(i in 1:nstock){
        # stock[[i]] <- get_mortality(stock = stock[[i]]) # KILLS FISH
        # stock[[i]] <- get_indexData(stock = stock[[i]]) # GENERATES INDEX
         
       # WE'LL ADD IN THE ERROR WITH get_error_idx AND get_error_paa 
         
-      } #End killing fish loop
+      #} #End killing fish loop
 
       # Store results- AM I SAVING THE RIGHT THING NOW? CHECK THESE FUNCTIONS
         # we save after mortality and new index generated but that would be different in this case
       
-         for(i in 1:nstock){
-        if (y == nyear){
-          stock[[i]] <- get_TermrelError(stock = stock[[i]])
-        }
-        
-        if(y>=fmyearIdx){
-          #stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
-        }
-         }
+        #  for(i in 1:nstock){
+        # if (y == nyear){
+        #   stock[[i]] <- get_TermrelError(stock = stock[[i]])
+        # }
+        # 
+        # if(y>=fmyearIdx){
+        #   stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
+        # }
+        #  }
       
         # what does this do?
       end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
@@ -221,7 +223,6 @@ for(r in 1:nrep){
       # for now the assess_results just puts a fixed bmsy msy and fmsy
       source('processes/get_assess_results.R')
       assess_results <- get_assess_results(stock)
-      
       
       source("functions/hydra/mp_functions.R")
       mp_results <- do_ebfm_mp(settings, assess_results, input)

@@ -21,7 +21,7 @@ mat_par <- c(0.127, 38.8) # O'brien GB cod female
 mat_typ <- 'logistic'
 
 # natural mortality
-M <- 0.2
+M <- 0.3
 M_typ <- 'const'
 init_M <- 0.2 #same for M = 0.2 and M-ramp scenarios
 
@@ -49,7 +49,7 @@ qI <- 0.0001
 DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE.
 
 # fishery selectivity
-selC <- c(s0=5, s1=0.08)
+selC <- c(s0=5, s1=0.08) #alpha= 48.7 beta=014 Table 21 2013 monkfish assessment
 selC_typ <- 'Logistic'
 
 #### Survey parameters ####

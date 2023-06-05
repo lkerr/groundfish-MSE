@@ -186,7 +186,10 @@ get_containers <- function(stockPar){
       M=c(rep(999,nyear)),
       MSEyr=c(rep(999,nyear)))),
       assess_st_yr=999
-  )
+  ),
+  styear <- NA,
+  endyear <- NA,
+  N_rows <- NA
   )
   
   return(out)

@@ -13,10 +13,10 @@ get_assess_results <- function(stock)
     assess_results$isp[i] <- as.double(i)
     
     # Make "data" object based on if its from a planB smooth or ASAP run
-    if(stock[[i]]$stockName %in% c('Goosefish','Silver_hake', 'Spiny_dogfish', "Winter_skate")){
+    if(stock[[i]]$stockName %in% PlanBstocks){                                          #this should be recCW
       data.df <- data.frame(t=c(1:length(stock[[i]]$planBest$pred_fit$fit)),biomass=c(stock[[i]]$planBest$pred_fit$fit),catch=c(stock[[i]]$sumCW[1:length(stock[[i]]$planBest$pred_fit$fit)]))
     }
-    if(stock[[i]]$stockName %in% c('Atlantic_cod','Atlantic_herring', 'Atlantic_mackerel', "Haddock", 'Winter_flounder', 'Yellowtail_flounder')){
+    if(stock[[i]]$stockName %in% ASAPstocks){
       data.df <- data.frame(t=c(1:length(stock[[i]]$res$SSB)),biomass=c(stock[[i]]$res$SSB),catch=c(stock[[i]]$res$catch.pred))
     }
     
@@ -24,10 +24,10 @@ get_assess_results <- function(stock)
     assess_results$data[i] <- list(data.df)
     
     # Make "results" object based on if its from a planB smooth or ASAP run
-    if(stock[[i]]$stockName %in% c('Goosefish','Silver_hake', 'Spiny_dogfish', "Winter_skate")){
+    if(stock[[i]]$stockName %in% PlanBstocks){
       results <- list("biomass"=c(stock[[i]]$planBest$pred_fit$fit),"catch"=c(stock[[i]]$sumCW[1:length(stock[[i]]$planBest$pred_fit$fit)]),"pars"=c(NA,NA),"q"=c(1))
     }
-    if(stock[[i]]$stockName %in% c('Atlantic_cod','Atlantic_herring', 'Atlantic_mackerel', "Haddock", 'Winter_flounder', 'Yellowtail_flounder')){
+    if(stock[[i]]$stockName %in% ASAPstocks){
       results <- list("biomass"=c(stock[[i]]$res$SSB),"catch"=c(stock[[i]]$res$catch.pred),"pars"=c(NA,NA),"q"=c(1))
     }
     
@@ -36,11 +36,18 @@ get_assess_results <- function(stock)
     pars <- list(c(NA,NA))
     assess_results$pars[i] <- pars
     
+#<<<<<<< HEAD
     if(stock[[i]]$stockName %in% c('Goosefish','Silver_hake', 'Spiny_dogfish', "Winter_skate")){
       bmsy <- NA
       fmsy <- NA
     }
-    if(stock[[i]]$stockName %in% c('Atlantic_cod','Atlantic_herring', 'Atlantic_mackerel', "Haddock", 'Winter_flounder', 'Yellowtail_flounder')){
+#=======
+    if(stock[[i]]$stockName %in% PlanBstocks){
+      bmsy <- 10000 
+      fmsy <- 0.2
+#>>>>>>> 50d1495a61d64801e518cedcedb1df7d051c357a
+    }
+    if(stock[[i]]$stockName %in% ASAPstocks){
       bmsy <- stock[[i]]$RPmat[y,2]
       fmsy <- stock[[i]]$RPmat[y,1]
     }

@@ -14,7 +14,7 @@ laa_typ <- 'vonB'
 
 # weight-length parameters
 waa_par <- c(0.50, 1.40, 2.18,2.75,3.70,4.54,5.11,6.28,9.00,13.05) 
-waa_typ <- 'dynamic'
+waa_typ <- 'input'
 
 # maturity-length parameters
 mat_par <- c(0.028, 0.318, 0.884, 0.99, 1,1,1,1,1,1)
