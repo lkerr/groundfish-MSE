@@ -37,8 +37,8 @@ get_assess_results <- function(stock)
     assess_results$pars[i] <- pars
     
     if(stock[[i]]$stockName %in% c('Goosefish','Silver_hake', 'Spiny_dogfish', "Winter_skate")){
-      bmsy <- 10000 
-      fmsy <- 0.2
+      bmsy <- NA
+      fmsy <- NA
     }
     if(stock[[i]]$stockName %in% c('Atlantic_cod','Atlantic_herring', 'Atlantic_mackerel', "Haddock", 'Winter_flounder', 'Yellowtail_flounder')){
       bmsy <- stock[[i]]$RPmat[y,2]

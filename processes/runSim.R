@@ -19,8 +19,8 @@ if(runClass != 'HPCC'){
 settings <- list(
   showTimeSeries = "No",
   useCeiling = "Yes",
-  assessType = "stock complex",
-  #assessType = "single species",
+  # assessType = "stock complex",
+  assessType = "single species",
   targetF = 0.75,
   floorB = 0.5,
   floorOption = "min status",
@@ -41,9 +41,10 @@ gear_complexes <- tibble(isp = 1:10,
                          complex = c(1, 3, 3, 1, 1, 3, 1, 2, 1, 2))
 
 input$complex = feeding_complexes$complex
+# input$complex = gear_complexes$complex
 
-input$docomplex = TRUE
-#input$docomplex = FALSE
+# input$docomplex = TRUE
+input$docomplex = FALSE
 input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
                     0,1,1,0,0,0,0,0,0,0),
                   nrow=2,byrow=TRUE)
