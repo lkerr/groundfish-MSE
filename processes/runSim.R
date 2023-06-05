@@ -83,10 +83,10 @@ source('processes/setupYearIndexing.R')
 
 top_loop_start<-Sys.time()
 
-True_Biomass <- list()
-True_Catch <- list()
+OM_Biomass <- list()
+OM_Catch <- list()
 
-nrep <- 5
+
 #### Top rep Loop ####
 for(r in 1:nrep){
   oldseed_mproc <- .Random.seed
@@ -229,9 +229,23 @@ for(r in 1:nrep){
       mp_results$out_table %>%
         as_tibble()
       
+      # The advice doesn't reliably fill in after running do_ebfm_mp, 
+      # so this overwrites the advice column with cfuse for ASAP stock and
+      # the catch advice from planB for those stocks
+      if(settings$assessType == "single species")
+      {
+        for(i in 1:length(stock))
+        {
+          if(stock[[i]]$stockName %in% ASAPstocks) mp_results$out_table$advice[i] <- mp_results$out_table$cfuse[i]
+          if(stock[[i]]$stockName %in% PlanBstocks) mp_results$out_table$advice[i] <- stock[[i]]$gnF$CWrec
+        }
+        
+      }
+
+      
       # #the catch advice, to be passed to get_f_from_advice()
       # mp_results$out_table$advice
-      # 
+      
       source("functions/hydra/get_f_from_advice.R")
       
       # biomass for the F calculation, replace with something sensible

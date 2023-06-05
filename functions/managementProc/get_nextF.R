@@ -322,7 +322,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                   waav = parpop$waatrue_y)
     
     out <- list(F = F, RPs = c(NA, NA), OFdStatus=NA,
-                OFgStatus = NA, catchproj=NA) #AEW
+                OFgStatus = NA, catchproj=NA, CWrec = CWrec) #AEW
     
   }else{
     

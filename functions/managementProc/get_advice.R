@@ -145,6 +145,7 @@ get_advice <- function(stock){
 
       tempStock$RPmat[y,] <- gnF$RPs
       tempStock$catchproj <- gnF$catchproj
+      tempStock$gnF <- gnF
 
     }else{
       # Otherwise use old reference points to calculate stock status
@@ -155,6 +156,7 @@ get_advice <- function(stock){
 
       tempStock$RPmat[y,] <- gnF$RPs
       tempStock$catchproj <- gnF$catchproj
+      tempStock$gnF <- gnF
 
 
         # gnF <- get_nextF(parmgt = mproc[m,], parpop = tempStock$parpop,
