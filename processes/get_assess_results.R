@@ -36,17 +36,11 @@ get_assess_results <- function(stock)
     pars <- list(c(NA,NA))
     assess_results$pars[i] <- pars
     
-#<<<<<<< HEAD
-    if(stock[[i]]$stockName %in% c('Goosefish','Silver_hake', 'Spiny_dogfish', "Winter_skate")){
+    if(stock[[i]]$stockName %in% PlanBstocks){
       bmsy <- NA
       fmsy <- NA
     }
-#=======
-    if(stock[[i]]$stockName %in% PlanBstocks){
-      bmsy <- 10000 
-      fmsy <- 0.2
-#>>>>>>> 50d1495a61d64801e518cedcedb1df7d051c357a
-    }
+
     if(stock[[i]]$stockName %in% ASAPstocks){
       bmsy <- stock[[i]]$RPmat[y,2]
       fmsy <- stock[[i]]$RPmat[y,1]
