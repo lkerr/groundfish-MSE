@@ -219,7 +219,7 @@ for(r in 1:nrep){
       
       # assess_results needs the 4 extra rows (for piscivores, benthivores, planktivores, ecosystem??)
       # for now the assess_results just puts a fixed bmsy msy and fmsy
-      source('functions/processes/get_assess_results.R')
+      source('processes/get_assess_results.R')
       assess_results <- get_assess_results(stock)
       
       
@@ -234,9 +234,11 @@ for(r in 1:nrep){
       source("functions/hydra/get_f_from_advice.R")
       
       # biomass for the F calculation, replace with something sensible
-      f_calc_biomass <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>% 
-        arrange(species) %>% select(predbiomass) %>% t() %>% as.numeric()
+      # f_calc_biomass <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>% 
+      #   arrange(species) %>% select(predbiomass) %>% t() %>% as.numeric()
       #calculate new F
+      f_calc_biomass <- c()
+      for(i in 1:10) f_calc_biomass <- c(f_calc_biomass,assess_results$data[[i]]$biomass[length(assess_results$data[[i]]$biomass)])
       F_full_new <- get_f_from_advice(mp_results$out_table$advice,
                                       f_calc_biomass, 
                                       input$q, 
