@@ -41,7 +41,7 @@ fmyear <- 2020
 fyear <- 43
 
 # maximum year predicted into the future
-mxyear <- 2021
+mxyear <- 2040
 
 #### Burn-in parameters ####
 
@@ -132,8 +132,8 @@ production_vars_post=c("log_crew","log_trip_days","primary","secondary", "log_tr
 # Years after the management period begins to break up the results. For
 # example, c(10, 20) would result in plots from 0-10 years after the mgmnt
 # period begins, 10-20 years and 20 years to the end of the series.
-#plotBrkYrs <- c(5, 10, 15)
-plotBrkYrs <- c(1)
+plotBrkYrs <- c(5, 10, 15)
+#plotBrkYrs <- c(1)
 
 # Which sets of plots should be created? Set these objects to T/F
 
