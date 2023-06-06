@@ -19,6 +19,7 @@ source('functions/hydra/update_stock_data.R')
 source("functions/hydra/get_f_from_advice.R")
 #source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1.R"))
 source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1_lowB.R"))
+source('processes/get_assess_results.R')
 
 #Additional settings and input that may be useful depending on how do_ebfm_mp and
 # get_f_from_advice end up getting used
@@ -26,8 +27,8 @@ source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1_lowB.R"))
 settings <- list(
   showTimeSeries = "No",
   useCeiling = "Yes",
-  assessType = "stock complex",
-  #assessType = "single species",
+  # assessType = "stock complex",
+  assessType = "single species",
   targetF = 0.75,
   floorB = 0.5,
   floorOption = "min status",
@@ -48,15 +49,18 @@ gear_complexes <- tibble(isp = 1:10,
                          complex = c(1, 3, 3, 1, 1, 3, 1, 2, 1, 2))
 
 input$complex = feeding_complexes$complex
+# input$complex = gear_complexes$complex
 
-input$docomplex = TRUE
-#input$docomplex = FALSE
+# input$docomplex = TRUE
+input$docomplex = FALSE
 input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
                     0,1,1,0,0,0,0,0,0,0),
                   nrow=2,byrow=TRUE)
 input$q <- matrix(c(1,0,0,0.3,0.5,1.5,1,1,0.2,1,
                     0,1,0.33,0,0,0,0,0,0,0),
                   nrow=2,byrow=TRUE)
+PlanBstocks <-c("Goosefish", "Silver_hake", "Spiny_dogfish", "Winter_skate", "Yellowtail_flounder")
+ASAPstocks <-c("Atlantic_cod", "Atlantic_herring", "Atlantic_mackerel", "Haddock", "Winter_flounder")
 
 ####################These are temporary changes for testing ####################
 # econ_timer<-0
@@ -87,10 +91,10 @@ source('processes/setupYearIndexing.R')
 
 top_loop_start<-Sys.time()
 
-True_Biomass <- list()
-True_Catch <- list()
+OM_Biomass <- list()
+OM_Catch <- list()
 
-nrep <- 5
+
 #### Top rep Loop ####
 for(r in 1:nrep){
   oldseed_mproc <- .Random.seed
@@ -168,13 +172,13 @@ for(r in 1:nrep){
       
       # Attach the catch and index data WITH observation error to the hydraData object
       hydraData$IN <- hydraData_growing_index
-      hydraData$CN <- hydraData_growing_catch
+      hydraData$CN <- hydraData_growing_catch # ?? can this be named obs_sumIN and obs_sumCW for stock object??
       
       
       # Attach new catch and index data to stock object
       # for(i in 1:nstock){
       for(i in 1:nstock){
-        stock[[i]] <- update_stock_data(i,hydraData) # RUNS MP
+        stock[[i]] <- update_stock_data(i,hydraData) 
       }
          
       #### RUN MP ####
@@ -183,36 +187,36 @@ for(r in 1:nrep){
         }
         
       #### ADD IMPLEMENTATION ERROR ####
-          for(i in 1:nstock){
-            stock[[i]] <- get_implementationF(type = 'adviceWithError',
-                                              stock = stock[[i]])
-          } 
+          # for(i in 1:nstock){
+          #   stock[[i]] <- get_implementationF(type = 'adviceWithError',
+          #                                     stock = stock[[i]])
+          # } 
       
       # } # end of fishery management has started clause
 
       # KILL FISH AND MAKE NEW CATCH AND INDEX FOR HYDRA HERE?
       # IS GENERATING NEW CATCH AND INDEX DATA GOING TO BE DEPENDENT ON FISH INTERACTIONS?
         
-      for(i in 1:nstock){
+     # for(i in 1:nstock){
        # stock[[i]] <- get_mortality(stock = stock[[i]]) # KILLS FISH
        # stock[[i]] <- get_indexData(stock = stock[[i]]) # GENERATES INDEX
         
       # WE'LL ADD IN THE ERROR WITH get_error_idx AND get_error_paa 
         
-      } #End killing fish loop
+      #} #End killing fish loop
 
       # Store results- AM I SAVING THE RIGHT THING NOW? CHECK THESE FUNCTIONS
         # we save after mortality and new index generated but that would be different in this case
       
-         for(i in 1:nstock){
-        if (y == nyear){
-          stock[[i]] <- get_TermrelError(stock = stock[[i]])
-        }
-        
-        if(y>=fmyearIdx){
-          #stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
-        }
-         }
+        #  for(i in 1:nstock){
+        # if (y == nyear){
+        #   stock[[i]] <- get_TermrelError(stock = stock[[i]])
+        # }
+        # 
+        # if(y>=fmyearIdx){
+        #   stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
+        # }
+        #  }
       
         # what does this do?
       end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
@@ -222,7 +226,10 @@ for(r in 1:nrep){
           setTxtProgressBar(iterpb, yearitercounter)
         }
       
-      
+      # assess_results needs the 4 extra rows (for piscivores, benthivores, planktivores, ecosystem??)
+      # for now the assess_results just puts a fixed bmsy msy and fmsy
+      assess_results <- get_assess_results(stock)
+
       ### GF 2023/06/05
       ### This is the call to do the stock complex assessments if that is what is after
       ### need some kind of switch dependent on MP, don't need to do any of the above single species assessments if doing the stock complex MP
@@ -231,22 +238,34 @@ for(r in 1:nrep){
       assess_results <- run_complex_assessments(om_long, refyrs = 1:40). #ref yrs are dummy, can get rid.    
       ###    
       
-      
-      #### SEND F TO HYDRA HERE? RIGHT BEFORE END OF YEAR LOOP ####
-      # you will need to pull stock[[i]]$F_full[y]
-      #call the MP
+            
       mp_results <- do_ebfm_mp(settings, assess_results, input)
       #mp_results$out_table %>%
       #  as_tibble()
       
+      # The advice doesn't reliably fill in after running do_ebfm_mp, 
+      # so this overwrites the advice column with cfuse for ASAP stock and
+      # the catch advice from planB for those stocks
+      if(settings$assessType == "single species")
+      {
+        for(i in 1:length(stock))
+        {
+          if(stock[[i]]$stockName %in% ASAPstocks) mp_results$out_table$advice[i] <- mp_results$out_table$cfuse[i]
+          if(stock[[i]]$stockName %in% PlanBstocks) mp_results$out_table$advice[i] <- stock[[i]]$gnF$CWrec
+        }
+        
+      }
+
+      
       # #the catch advice, to be passed to get_f_from_advice()
       # mp_results$out_table$advice
-      # 
-      
+
       # biomass for the F calculation, replace with something sensible
-      f_calc_biomass <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>% 
-        arrange(species) %>% select(predbiomass) %>% t() %>% as.numeric()
+      # f_calc_biomass <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>% 
+      #   arrange(species) %>% select(predbiomass) %>% t() %>% as.numeric()
       #calculate new F
+      f_calc_biomass <- c()
+      for(i in 1:10) f_calc_biomass <- c(f_calc_biomass,assess_results$data[[i]]$biomass[length(assess_results$data[[i]]$biomass)])
       F_full_new <- get_f_from_advice(mp_results$out_table$advice,
                                       f_calc_biomass, 
                                       input$q, 
@@ -269,8 +288,12 @@ for(r in 1:nrep){
       
     }} #End of year loop 
   } #End of mproc loop
-  True_Biomass[[r]] <- hydraData$biomass
-  True_Catch[[r]] <- as.data.frame(hydraData$predCatch)
+  
+  # Save the output from this finished MSE:
+  # Output the real biomass from the operating model
+  OM_Biomass[[r]] <- hydraData$biomass
+  # Output the real catch ("predcatch") and observed catch ("obscatch") from the operating model, removing unnecessary columns to save space
+  OM_Catch[[r]] <- as.data.frame(hydraData$CN)[,-c(5,6,8,9)]
 } #End rep loop
 
 top_loop_end<-Sys.time()

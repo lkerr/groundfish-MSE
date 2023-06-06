@@ -1,7 +1,30 @@
 get_advice <- function(stock){
   # prepare data for assessment
   #tempStock <- get_tmbSetup(stock = stock)
+  
+  # set up biological/year info for assessments?
+  #(usually happens in get_J1Updates but that code isn't run in EBFM pMSE)
   tempStock <- stock
+  tempStock <- within(tempStock,{
+    #start year
+    styear <- fmyearIdx - ncaayear
+    
+    #end year
+    if(mproc[m,'Lag'] == 'TRUE'){
+      endyear <- y-2
+    }
+    else if(mproc[m,'Lag'] == 'FALSE'){
+      endyear <- y-1
+    }
+    N_rows <- length(styear:endyear)
+    
+    # # calculate length, selectivity, weight at age in year y
+    # laa[y,] <- get_lengthAtAge(type=laa_typ, par=laa_par, ages=fage:page)
+    # slxC[y,] <- get_slx(type=selC_typ, par=selC, laa=laa[y,])
+    # waa[y,] <- get_weightAtAge(type=waa_typ, par=waa_par,
+    #                            laa=laa[y,], inputUnit='kg',y=y,fmyearIdx=fmyearIdx)
+  })
+
 
   #### Run assessment model####
 
@@ -15,7 +38,7 @@ get_advice <- function(stock){
   # Run the PlanB assessment
   # calculate length-at-age in year y
   #if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
-  if(tempStock$stockName %in% c('Goosefish','Silver_hake', 'Spiny_dogfish', "Winter_skate")){
+  if(tempStock$stockName %in% PlanBstocks){
   if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
   tempStock <- get_planB(stock = tempStock)}
   else{get_planB(stock = tempStock)}
@@ -23,7 +46,7 @@ get_advice <- function(stock){
 
   # Run ASAP assessment
   #if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
-  if(tempStock$stockName %in% c('Atlantic_cod','Atlantic_herring', 'Atlantic_mackerel', "Haddock", 'Winter_flounder', 'Yellowtail_flounder')){
+  if(tempStock$stockName %in% ASAPstocks){
     if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
     tempStock <- get_ASAP(stock = tempStock)}
     else{
@@ -34,9 +57,9 @@ get_advice <- function(stock){
   tempStock <- within(tempStock, {
     conv_rate[y] <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' &&
                       class(opt) != 'try-error') ||
-                     (tempStock$stockName %in% c('Goosefish','Silver_hake', 'Spiny_dogfish', "Winter_skate") &&
+                     (tempStock$stockName %in% PlanBstocks &&
                         class(planBest) != 'try-error') ||
-                       (tempStock$stockName %in% c('Atlantic_cod','Atlantic_herring', 'Atlantic_mackerel', "Haddock", 'Winter_flounder', 'Yellowtail_flounder') && 
+                       (tempStock$stockName %in% ASAPstocks && 
                           asapEst == 0), 1, 0)
   })
 
@@ -60,23 +83,8 @@ get_advice <- function(stock){
     }
 
     # Plan B
-    if(tempStock$stockName %in% c('Goosefish','Silver_hake', 'Spiny_dogfish', "Winter_skate")){
+    if(tempStock$stockName %in% PlanBstocks){
       tempStock <- within(tempStock, {
-        #start year
-        styear <- fmyearIdx - ncaayear
-        
-        #end year
-        if(mproc[m,'Lag'] == 'TRUE'){
-          endyear <- y-2
-        }
-        else if(mproc[m,'Lag'] == 'FALSE'){
-          endyear <- y-1
-        }
-        N_rows <- length(styear:endyear)
-        
-        # calculate length-at-age in year y
-        laa[y,] <- get_lengthAtAge(type=laa_typ, par=laa_par, ages=fage:page)
-        slxC[y,] <- get_slx(type=selC_typ, par=selC, laa=laa[y,])
         parpop <- list(obs_sumCW = sumCW[1:N_rows], #change back to obs later
                        mult = planBest$multiplier,
                        waatrue_y = waa_par,
@@ -85,8 +93,8 @@ get_advice <- function(stock){
                        slxCtrue_y = slxC[y,])
       })
     }
-
-    if(tempStock$stockName %in% c('Atlantic_cod','Atlantic_herring', 'Atlantic_mackerel', "Haddock", 'Winter_flounder', 'Yellowtail_flounder')){
+    #ASAP
+    if(tempStock$stockName %in% ASAPstocks){
       tempStock <- within(tempStock, {
         parpop <- list(waa = tail(res$WAA.mats$WAA.catch.fleet1, 1),
                        sel = tail(res$fleet.sel.mats$sel.m.fleet1, 1),
@@ -126,7 +134,7 @@ get_advice <- function(stock){
 
     #### Get ref points & assign F & get catch advice ####
     if( y == fmyearIdx ||
-        tempStock$stockName %in% c('Goosefish','Silver_hake', 'Spiny_dogfish', "Winter_skate") ||
+        tempStock$stockName %in% PlanBstocks ||
         (y > fmyearIdx &
           (y-fmyearIdx) %% mproc[m,'RPInt'] == 0 ) ){
 
@@ -137,6 +145,7 @@ get_advice <- function(stock){
 
       tempStock$RPmat[y,] <- gnF$RPs
       tempStock$catchproj <- gnF$catchproj
+      tempStock$gnF <- gnF
 
     }else{
       # Otherwise use old reference points to calculate stock status
@@ -147,6 +156,7 @@ get_advice <- function(stock){
 
       tempStock$RPmat[y,] <- gnF$RPs
       tempStock$catchproj <- gnF$catchproj
+      tempStock$gnF <- gnF
 
 
         # gnF <- get_nextF(parmgt = mproc[m,], parpop = tempStock$parpop,

@@ -79,6 +79,7 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
     rec_devs <- matrix(newdata$rec_devs,nrow=MSEyr,ncol=hydra_data$Nspecies)
     hydra_data$recruitment_devs <- as.vector(t(cbind(matrix(hydra_data$recruitment_devs,nrow=(hydra_data$Nspecies),byrow = TRUE),t(rec_devs))))
   }
+  
   #############################################################################
   #Start of Emily's code, it runs hydra and pulls data files:
   #Source the baseline hydra sim data:
@@ -252,6 +253,22 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
   species <- rep(1:hydra_data$Nspecies,each=hydra_data$Nyrs)
   EstNsize <- cbind(year,species,EstNsize)
   
+  # Extract only the fishing mortality rate for fleet/species combinations specified
+  Fyr <- list()
+  colnames(hydra_sim_rep$Fyr)[1:2] <- c("species","fleet")
+  for(i in 1:length(fleetdistribute))
+  {
+    Fyr[[i]] <- dplyr::filter(as.data.frame(hydra_sim_rep$Fyr),species %in% as.vector(fleetdistribute[[i]]),fleet==i)
+  }
+  
+  Fyr.df <- data.frame(matrix(ncol=ncol(hydra_sim_rep$Fyr),nrow=0))
+  colnames(Fyr.df) <- colnames(as.data.frame(hydra_sim_rep$Fyr))
+  for(i in 1:length(fleetdistribute))
+  {
+    Fyr.df <- rbind(Fyr.df,Fyr[[i]])
+  }
+
+  
   # it seems like all of this is ultimately coming from the 
   hydra_sim_data <- list(predSurSize=SurvRep,
                          predCatchSize=CatchRep,
@@ -260,6 +277,7 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
                          abundance=abundance,
                          biomass=biomass,
                          Nspecies=hydra_data$Nspecies,
-                         ln_recsigma=hydra_data$ln_recsigma)
+                         ln_recsigma=hydra_data$ln_recsigma,
+                         Fyr=Fyr.df)
   return(hydra_sim_data)
 } 
