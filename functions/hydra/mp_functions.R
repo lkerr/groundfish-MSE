@@ -271,19 +271,19 @@ run_complex_assessments <- function(emdata,  refyrs = 1:40) {
     nest() %>% 
     I()
   
-  
-  floor_data <- emdata %>% ungroup() %>% dplyr::filter(isp<=10)
-  results1 <- floor_data %>% 
-    tibble() %>% 
-    mutate(results = map(data, do_floor_assess),
-            q = map_dbl(results, "q"), 
-           bmsy = map(results, "biomass"),
-           bmsy = map_dbl(bmsy, ~mean(.[refyrs], na.rm=TRUE)),
-           fmsy = NA,
-           msy = NA
-    ) %>% 
-    arrange(isp) %>% 
-    I()
+
+    floor_data <- emdata %>% ungroup() %>% dplyr::filter(isp<=10)
+    results1 <- floor_data %>% 
+      tibble() %>% 
+      mutate(results = map(data, do_floor_assess),
+              q = map_dbl(results, "q"), 
+             bmsy = map(results, "biomass"),
+             bmsy = map_dbl(bmsy, ~mean(.[refyrs], na.rm=TRUE)),
+             fmsy = NA,
+             msy = NA
+      ) %>% 
+      arrange(isp) %>% 
+      I()
   ## runs a set of complex assessments and extracts results
   # emdata is a nested tibble with each row being the assessment to be run
   # emdata has variables
@@ -298,7 +298,7 @@ run_complex_assessments <- function(emdata,  refyrs = 1:40) {
                          fixdep = FALSE,
                          #type = y, #"Schaefer", #"Fox", #
                          depinit = 0.4)),  #runs the assessments
-           #pars = map(results, "pars"),   #extracts parameter estimates
+           pars = map(results, "pars"),   #extracts parameter estimates
            bmsy = map_dbl(results, function(x) x@TMB_report$BMSY),  #extracts estimated reference points
            msy = map_dbl(results, function(x) x@TMB_report$MSY),
            fmsy = map_dbl(results, function(x) x@TMB_report$FMSY),
@@ -592,6 +592,7 @@ do_prodmodel_assess <- function(input_dat,
   # "Schaefer" (n fixed at 2)
   # "PT" Pella-Tomlinson (n estimated)
   # "State-Space" SS P-T
+  input_dat <- data.frame(input_dat)
   
   input_dat <- input_dat %>% 
     dplyr::rename(index = biomass) %>% 
