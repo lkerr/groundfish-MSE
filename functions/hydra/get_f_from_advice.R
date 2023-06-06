@@ -1,6 +1,6 @@
 get_f_from_advice <- function(advice, biomass, q, complex, docomplex=TRUE) {
   
-  library(lpSolve)
+  #library(lpSolve)
   # get the Fs by fleet given the catch advice
   # 2 fleet model
   

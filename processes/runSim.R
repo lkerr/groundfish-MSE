@@ -4,6 +4,9 @@ library(readr)
 library(tidyr)
 library(purrr)
 library(tidyverse)
+library(SAMtool)
+library(lpSolve)
+
 
 #### Set up environment ####
 
@@ -17,6 +20,15 @@ if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
+#profvis::profvis({
+  
+  source('functions/hydra/get_hydra.R')
+  source("functions/hydra/mp_functions.R")
+  source("functions/hydra/read.report.R")
+  source("functions/hydra/get_f_from_advice.R")
+  #source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1.R"))
+  source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1_lowB.R"))
+  
 settings <- list(
   showTimeSeries = "No",
   useCeiling = "Yes",
@@ -51,6 +63,9 @@ input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
 input$q <- matrix(c(1,0,0,0.3,0.5,1.5,1,1,0.2,1,
                     0,1,0.33,0,0,0,0,0,0,0),
                   nrow=2,byrow=TRUE)
+# input$q <- matrix(c(c(1, 0, 0, 0.54, 0.6866667, 0.5720000, 0.3280000, 0.9466667, 0.1253333, 0.9466667, 
+#   0, 1.0000000, 3.3460000), rep(0, 7)),
+#   nrow=2, byrow=TRUE)
 
 # tsfile <- "functions/hydra/hydra_sim_GB_5bin_1978_10F-ts.dat"
 # index <- read_table(tsfile, skip = 8, n_max = 833, col_names = c("survey" ,"year", "spp", "value" ,"cv")) %>% 
@@ -107,7 +122,7 @@ top_loop_start<-Sys.time()
 True_Biomass <- list()
 True_Catch <- list()
 
-nrep <- 5
+nrep <- 2 #10
 #### Top rep Loop ####
 for(r in 1:nrep){
   oldseed_mproc <- .Random.seed
@@ -132,7 +147,7 @@ for(r in 1:nrep){
     # newdata <- list(bs_temp=bs_temp,F_full=F_full)
     # End section for testing purposes
     
-    source('functions/hydra/get_hydra.R')
+    #source('functions/hydra/get_hydra.R')
     # get_hydra will also incorporate a growing data frame called newdata that gets larger as the loop progresses
     hydraData<- get_hydra(newseed=oldseed_mproc[r],newdata)
 
@@ -147,7 +162,7 @@ for(r in 1:nrep){
     nyear = 30
     for(y in fyear:nyear){
       # source('processes/withinYearAdmin.R')
-      source("functions/hydra/mp_functions.R")
+      #source("functions/hydra/mp_functions.R")
       
       # begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed) # what exactly is this doing? 
       # 
@@ -156,7 +171,7 @@ for(r in 1:nrep){
       # 
       # PULL IN -PREDICTED VALUES- FROM HYDRA DATA
       
-      source('functions/hydra/get_hydra.R')
+      #source('functions/hydra/get_hydra.R')
       # get_hydra will also incorporate a growing data frame called newdata that gets larger as the loop progresses
       hydraData<- get_hydra(oldseed_mproc[r],newdata)
       
@@ -197,17 +212,18 @@ for(r in 1:nrep){
       # 
       
       assess_results <- run_pseudo_assessments(om_long, refyrs = 1:40)
+      assess_results <- run_complex_assessments(om_long, refyrs = 1:40)
       #this currently generates data from the predictions, we would want to change so doesn't create new survey/catch time series each application
 
       #call the MP
       mp_results <- do_ebfm_mp(settings, assess_results, input)
-      mp_results$out_table %>%
-        as_tibble()
+      #mp_results$out_table %>%
+      #  as_tibble()
 
       # #the catch advice, to be passed to get_f_from_advice()
       # mp_results$out_table$advice
       # 
-      source("functions/hydra/get_f_from_advice.R")
+      #source("functions/hydra/get_f_from_advice.R")
       
       # biomass for the F calculation, replace with something sensible
       f_calc_biomass <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>% 
@@ -302,8 +318,9 @@ for(r in 1:nrep){
   True_Catch[[r]] <- as.data.frame(hydraData$predCatch)
    
 } #End rep loop
-    source('functions/hydra/get_plots.R')
-    get_plots(True_Biomass, True_Catch)
+#})
+    #source('functions/hydra/get_plots.R')
+    #get_plots(True_Biomass, True_Catch)
 
 # USE GGPLOT HERE TO PLOT True_Biomass[[]] and True_Catch[[]]
 
@@ -368,3 +385,5 @@ big_loop
   print(unique(warnings()))
 
   cat('\n ---- Successfully Completed ----\n')
+  
+
