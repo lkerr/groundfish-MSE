@@ -231,11 +231,21 @@ for(r in 1:nrep){
       assess_results <- get_assess_results(stock)
 
       ### GF 2023/06/05
+      #Turn the data into tibbles to be read into the next thing
+      index <- dplyr::filter(as.data.frame(hydraData$IN),survey==1)
+      index <- data.frame(t=index$year,type=rep("biomass",nrow(index)),isp=index$species,value=index$obsbiomass)
+      index <- as.tibble(index) %>% left_join(feeding_complexes)
+      
+      catch <- as.data.frame(as.data.frame(hydraData$CN))
+      catch <- data.frame(t=catch$year,type=rep("catch",nrow(catch)),isp=catch$species,value=catch$obscatch)
+      catch <- as.tibble(catch) %>% left_join(feeding_complexes)
+      
+      om_long <- bind_rows(index, catch)
       ### This is the call to do the stock complex assessments if that is what is after
       ### need some kind of switch dependent on MP, don't need to do any of the above single species assessments if doing the stock complex MP
       ### - but do need to creeate the data objects by stock. run_complex_assessments does the aggregation by complex.
       ### I don't see the om_long object any more so that needs to be recreated from the data (perhaps can be checkedout from the JJ-EBFM-simple branch version)
-      assess_results <- run_complex_assessments(om_long, refyrs = 1:40). #ref yrs are dummy, can get rid.    
+      assess_results <- run_complex_assessments(om_long, refyrs = 1:40) #ref yrs are dummy, can get rid.    
       ###    
       
             
