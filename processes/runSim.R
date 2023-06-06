@@ -13,6 +13,13 @@ if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
+source("functions/hydra/mp_functions.R")
+source('functions/hydra/get_hydra.R')
+source('functions/hydra/update_stock_data.R')
+source("functions/hydra/get_f_from_advice.R")
+#source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1.R"))
+source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1_lowB.R"))
+
 #Additional settings and input that may be useful depending on how do_ebfm_mp and
 # get_f_from_advice end up getting used
 
@@ -110,7 +117,7 @@ for(r in 1:nrep){
     # newdata <- list(bs_temp=bs_temp,F_full=F_full,rec_devs=rec_devs)
     # END TESTING
     
-    source('functions/hydra/get_hydra.R')
+
     # get_hydra will also incorporate a growing data frame called newdata that gets larger as the loop progresses
     # had to call get_hydra outside the loop to add observation error to just the initital time series
     hydraData<- get_hydra(newseed=oldseed_mproc[r],newdata)
@@ -137,7 +144,6 @@ for(r in 1:nrep){
       # manage_counter<-manage_counter+1 #keeps track of management year
       
       # PULL IN -PREDICTED VALUES- FROM HYDRA DATA
-      source('functions/hydra/get_hydra.R')
       # get_hydra will also incorporate a growing data frame called newdata that gets larger as the loop progresses
       hydraData<- get_hydra(oldseed_mproc[r],newdata)
       
@@ -164,7 +170,7 @@ for(r in 1:nrep){
       hydraData$IN <- hydraData_growing_index
       hydraData$CN <- hydraData_growing_catch
       
-      source('functions/hydra/update_stock_data.R')
+      
       # Attach new catch and index data to stock object
       # for(i in 1:nstock){
       for(i in 1:nstock){
@@ -215,19 +221,27 @@ for(r in 1:nrep){
         if(showProgBar==TRUE){
           setTxtProgressBar(iterpb, yearitercounter)
         }
-         
+      
+      
+      ### GF 2023/06/05
+      ### This is the call to do the stock complex assessments if that is what is after
+      ### need some kind of switch dependent on MP, don't need to do any of the above single species assessments if doing the stock complex MP
+      ### - but do need to creeate the data objects by stock. run_complex_assessments does the aggregation by complex.
+      ### I don't see the om_long object any more so that needs to be recreated from the data (perhaps can be checkedout from the JJ-EBFM-simple branch version)
+      assess_results <- run_complex_assessments(om_long, refyrs = 1:40). #ref yrs are dummy, can get rid.    
+      ###    
+      
+      
       #### SEND F TO HYDRA HERE? RIGHT BEFORE END OF YEAR LOOP ####
       # you will need to pull stock[[i]]$F_full[y]
       #call the MP
-      source("functions/hydra/mp_functions.R")
       mp_results <- do_ebfm_mp(settings, assess_results, input)
-      mp_results$out_table %>%
-        as_tibble()
+      #mp_results$out_table %>%
+      #  as_tibble()
       
       # #the catch advice, to be passed to get_f_from_advice()
       # mp_results$out_table$advice
       # 
-      source("functions/hydra/get_f_from_advice.R")
       
       # biomass for the F calculation, replace with something sensible
       f_calc_biomass <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>% 

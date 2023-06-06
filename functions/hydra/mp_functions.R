@@ -143,12 +143,13 @@ run_om <- function(input) {
 
 gen_data <- function(om_long) {
   #set.seed(365)
-  sigma_b <- 0.001 #0.35
-  sigma_c <- 0.001 #0.05
+#  sigma_b <- 0.001 #0.35
+#  sigma_c <- 0.001 #0.05
   em_data <- om_long %>%
-    mutate(data_sd = ifelse(type == "biomass",sigma_b,sigma_c),
-           err = rnorm(nrow(om_long),0,data_sd),
-           data = value*exp(err-0.5*data_sd*data_sd)) %>%
+#    mutate(data_sd = ifelse(type == "biomass",sigma_b,sigma_c),
+#           err = rnorm(nrow(om_long),0,data_sd),
+#           data = value*exp(err-0.5*data_sd*data_sd)) %>%
+    mutate(data = value) %>% 
     mutate(t = ifelse(type=="catch",t-1,t)) %>%
     dplyr::filter(t != 0) %>%
     mutate(isp = as.numeric(isp)) %>%
@@ -179,6 +180,32 @@ gen_data <- function(om_long) {
   #                  complex_data = complex_data,
   #                 system_data = system_data)
   return(gendata)
+}
+
+do_floor_assess <- function(data) {
+  # biomass -> time series of survey index
+  # catch -> time series of catches
+  
+  biomass <- as.vector(data$biomass)
+  catch <- as.vector(data$catch)
+  #single species, no assessment
+  results <- NULL
+  results$biomass <- biomass
+  # if (isp == 11) results$biomass <- cpa2$bio[cpa2$complex==1]
+  # if (isp == 12) results$biomass <- cpa2$bio[cpa2$complex==2]
+  # if (isp == 13) results$biomass <- cpa2$bio[cpa2$complex==3]
+  results$catch <- catch
+  #results$pars <- c(NA,NA)
+  results$q <- 1
+  # }
+  #  if (isp > Nsp) {
+  #  results <- assess(catch,biomass,calc.vcov=FALSE,ini.parms)
+  #  }
+  # results <- optim(c(0.6, -0.001), get_preds, 
+  #       biomass = as_vector(data$biomass),
+  #       catch = as_vector(data$catch),
+  #       method = "BFGS")
+  return(results)
 }
 
 do_pseudo_assess <- function(data, isp, Nsp = 4) {
@@ -232,6 +259,51 @@ get_preds <- function(beta, biomass, catch) {
   obs_asp <- catch + diff(biomass)
   rss <- sum((obs_asp - pred_asp)^2,na.rm=TRUE)
   return(rss)
+}
+
+run_complex_assessments <- function(emdata,  refyrs = 1:40) {
+  #this piece needed for the example, would not use this in the mse loop because the data is generated elsewhere
+  emdata <- gen_data(emdata) %>% 
+    group_by(isp) %>% 
+    pivot_wider(names_from = type,
+                values_from = data) %>% 
+    arrange(t) %>% 
+    nest() %>% 
+    I()
+  
+  
+  floor_data <- emdata %>% ungroup() %>% dplyr::filter(isp<=10)
+  results1 <- floor_data %>% 
+    tibble() %>% 
+    mutate(results = map(data, do_floor_assess),
+            q = map_dbl(results, "q"), 
+           bmsy = map(results, "biomass"),
+           bmsy = map_dbl(bmsy, ~mean(.[refyrs], na.rm=TRUE)),
+           fmsy = NA,
+           msy = NA
+    ) %>% 
+    arrange(isp) %>% 
+    I()
+  ## runs a set of complex assessments and extracts results
+  # emdata is a nested tibble with each row being the assessment to be run
+  # emdata has variables
+  #. isp -> an indicator (doesn't have to be species)
+  # data -> a dataframe with variables t (time, not used), biomass (survey index), catch
+  complex_data <- emdata %>% ungroup() %>% dplyr::filter(isp>10)
+  results2 <- complex_data %>%
+    tibble() %>% 
+    mutate(results = map(data, ~do_prodmodel_assess(.,
+                         fixdep = FALSE,
+                         type = "Schaefer",
+                         depinit = 0.3)),  #runs the assessments
+           #pars = map(results, "pars"),   #extracts parameter estimates
+           bmsy = map_dbl(results, function(x) x@TMB_report$BMSY),  #extracts estimated reference points
+           msy = map_dbl(results, function(x) x@TMB_report$MSY),
+           fmsy = map_dbl(results, function(x) x@TMB_report$FMSY),
+           q = map_dbl(results,  function(x) x@TMB_report$q), #extracts estiamted catchability
+    ) %>% 
+    I()
+  results <- bind_rows(results1, results2)
 }
 
 run_assessments <- function(emdata) {
@@ -407,7 +479,13 @@ do_ebfm_mp <- function(settings, assess_results, input) {
   sysspp <- input$Nsp + max(input$complex, na.rm=TRUE) + 1 #this function potentiall uses results of assessments for all levels (singlespecies, complex, and ecosystem)
   refs <- assess_results %>%   #unpack assessment results
     ungroup() %>% 
-    mutate(estbio = map(results, "biomass"),
+    mutate(#estbio = map(results, "biomass"),
+           res_type = map_chr(results, typeof),
+           estbio = map2(results, res_type, function (x, y) {
+             if (y == "list") z <- x$biomass
+             if (y != "list") z <- x@TMB_report$B
+             return(z)
+           }),
            estbio = map(estbio, ~.[-length(.)]),
            blast = map_dbl(estbio, ~.[length(.)]),
            cfmsy = blast * fmsy,
@@ -495,7 +573,74 @@ do_ebfm_mp <- function(settings, assess_results, input) {
   
   results <- NULL
   results$refs <- refs %>% arrange(isp)
-  results$out_table <- out_table %>% arrange(isp)
+  if (settings$assessType == "stock complex") results$out_table <- out_table %>% arrange(complex)
+  if (settings$assessType == "single species") results$out_table <- out_table %>% arrange(isp)
   return(results)  
   
 }
+
+#### fit surplus production models for the stock complex assessments
+do_prodmodel_assess <- function(input_dat,
+                                fixdep = TRUE,
+                                type = "Fox",
+                                depinit = 0.4,
+                                ...) {
+  #type details what production model is fit
+  # "Fox" 
+  # "Schaefer" (n fixed at 2)
+  # "PT" Pella-Tomlinson (n estimated)
+  # "State-Space" SS P-T
+  
+  input_dat <- input_dat %>% 
+    dplyr::rename(index = biomass) %>% 
+    mutate(cv = 0.3) %>% 
+    slice(-nrow(.))
+  
+  #prepare the data for the assessment call
+  sp_data <- new("Data") #need to figure out how to access this without loading whole SAMtool namespace, need help with S4.
+  
+  sp_data@Ind = matrix(input_dat$index, nrow = 1)
+  sp_data@Cat = matrix(input_dat$catch, nrow = 1)
+  sp_data@CV_Ind = matrix(input_dat$cv, nrow = 1)
+  
+  #fit the production model
+  if (type == "Fox") model_fit <- SAMtool::SP_Fox(Data = sp_data,
+                                                  fix_dep = fixdep,
+                                                  start = list(dep = depinit))
+  if (type == "Schaefer") model_fit <- SAMtool::SP(Data = sp_data,
+                                                   fix_dep = fixdep,
+                                                   start = list(dep = depinit,
+                                                                n=2,
+                                                                q=1),
+                                                   prior = list(r = c(0.2, 0.10),
+                                                                MSY = c(50000, 0.2)))
+  if (type == "PT") model_fit <- SAMtool::SP(Data = sp_data,
+                                             fix_dep = fixdep,
+                                             fix_n = FALSE, 
+                                             start = list(dep = depinit,
+                                                          n=2))
+  if (type == "State-Space") model_fit <- SAMtool::SP_SS(Data = sp_data,
+                                                         fix_dep = fixdep,
+                                                         fix_n = TRUE, 
+                                                         fix_sigma = TRUE,
+                                                         fix_tau = TRUE,
+                                                         start = list(dep = depinit,
+                                                                      n=2, q=1))
+  #return the results
+  return(model_fit)
+}
+
+# ### EXAMPLE
+# library(SAMtool)
+# data("swordfish")
+# testdata <- data.frame(index = as.vector(swordfish@Ind[1,]),
+#                        catch = as.vector(swordfish@Cat[1,]),
+#                        cv = as.vector(swordfish@CV_Ind[1,]))
+# mod1 <- do_prodmodel_assess(testdata,
+#                             fixdep = FALSE,
+#                             type = "Fox")
+#                             #type = "State-Space")
+# mod2 <- do_prodmodel_assess(testdata,
+#                            fixdep = FALSE,
+#                            #type = "Fox")
+#                            type = "State-Space")
