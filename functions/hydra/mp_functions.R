@@ -289,13 +289,15 @@ run_complex_assessments <- function(emdata,  refyrs = 1:40) {
   # emdata has variables
   #. isp -> an indicator (doesn't have to be species)
   # data -> a dataframe with variables t (time, not used), biomass (survey index), catch
+  types <- c("Schaefer", "Schaefer", "Fox", "Schaefer")
   complex_data <- emdata %>% ungroup() %>% dplyr::filter(isp>10)
   results2 <- complex_data %>%
     tibble() %>% 
-    mutate(results = map(data, ~do_prodmodel_assess(.,
+    mutate(results = map2(data, types, ~do_prodmodel_assess(.x,
+                         .y,
                          fixdep = FALSE,
-                         type = "Schaefer",
-                         depinit = 0.3)),  #runs the assessments
+                         #type = y, #"Schaefer", #"Fox", #
+                         depinit = 0.4)),  #runs the assessments
            #pars = map(results, "pars"),   #extracts parameter estimates
            bmsy = map_dbl(results, function(x) x@TMB_report$BMSY),  #extracts estimated reference points
            msy = map_dbl(results, function(x) x@TMB_report$MSY),
@@ -581,8 +583,8 @@ do_ebfm_mp <- function(settings, assess_results, input) {
 
 #### fit surplus production models for the stock complex assessments
 do_prodmodel_assess <- function(input_dat,
-                                fixdep = TRUE,
                                 type = "Fox",
+                                fixdep = TRUE,
                                 depinit = 0.4,
                                 ...) {
   #type details what production model is fit
@@ -593,7 +595,8 @@ do_prodmodel_assess <- function(input_dat,
   
   input_dat <- input_dat %>% 
     dplyr::rename(index = biomass) %>% 
-    mutate(cv = 0.3) %>% 
+    mutate(cv = 0.3,
+           index = index/1000) %>% 
     slice(-nrow(.))
   
   #prepare the data for the assessment call
