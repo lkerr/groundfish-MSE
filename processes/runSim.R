@@ -27,8 +27,8 @@ source('processes/get_assess_results.R')
 settings <- list(
   showTimeSeries = "No",
   useCeiling = "Yes",
-  # assessType = "stock complex",
-  assessType = "single species",
+  assessType = "stock complex",
+  # assessType = "single species",
   targetF = 0.75,
   floorB = 0.5,
   floorOption = "min status",
@@ -51,8 +51,8 @@ gear_complexes <- tibble(isp = 1:10,
 input$complex = feeding_complexes$complex
 # input$complex = gear_complexes$complex
 
-# input$docomplex = TRUE
-input$docomplex = FALSE
+input$docomplex = TRUE
+# input$docomplex = FALSE
 input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
                     0,1,1,0,0,0,0,0,0,0),
                   nrow=2,byrow=TRUE)
@@ -228,7 +228,7 @@ for(r in 1:nrep){
       
       # assess_results needs the 4 extra rows (for piscivores, benthivores, planktivores, ecosystem??)
       # for now the assess_results just puts a fixed bmsy msy and fmsy
-      assess_results <- get_assess_results(stock)
+      assess_results_ss <- get_assess_results(stock)
 
       ### GF 2023/06/05
       #Turn the data into tibbles to be read into the next thing
@@ -245,8 +245,9 @@ for(r in 1:nrep){
       ### need some kind of switch dependent on MP, don't need to do any of the above single species assessments if doing the stock complex MP
       ### - but do need to creeate the data objects by stock. run_complex_assessments does the aggregation by complex.
       ### I don't see the om_long object any more so that needs to be recreated from the data (perhaps can be checkedout from the JJ-EBFM-simple branch version)
-      assess_results <- run_complex_assessments(om_long, refyrs = 1:40) #ref yrs are dummy, can get rid.    
-      ###    
+      assess_results_com <- run_complex_assessments(om_long, refyrs = 1:40) #ref yrs are dummy, can get rid.    
+      ###
+      assess_results <- rbind(assess_results_ss[1:10,],assess_results_com[11:14,])
       
             
       mp_results <- do_ebfm_mp(settings, assess_results, input)
