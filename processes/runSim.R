@@ -122,7 +122,7 @@ top_loop_start<-Sys.time()
 True_Biomass <- list()
 True_Catch <- list()
 
-nrep <- 2 #10
+nrep <- 1 #10
 #### Top rep Loop ####
 for(r in 1:nrep){
   oldseed_mproc <- .Random.seed
@@ -159,7 +159,7 @@ for(r in 1:nrep){
     
     #### Top year loop ####
     fyear = 1
-    nyear = 30
+    nyear = 1 #30
     for(y in fyear:nyear){
       # source('processes/withinYearAdmin.R')
       #source("functions/hydra/mp_functions.R")
