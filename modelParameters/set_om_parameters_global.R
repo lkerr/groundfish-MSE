@@ -41,7 +41,11 @@ fmyear <- 2020
 fyear <- 43
 
 # maximum year predicted into the future
+<<<<<<< HEAD
+mxyear <- 2050
+=======
 mxyear <- 2040
+>>>>>>> 59a364554844a10713c1cadaf60e70893d5ad781
 
 #### Burn-in parameters ####
 
