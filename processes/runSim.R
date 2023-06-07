@@ -339,6 +339,13 @@ big_loop
     mp_res$catch <- OM_Catch
     saveRDS(mp_res, file=paste0(ResultDirectory,'/sim/mpres', td2, '.rds'))
     
+    #save run options
+    run_options <- NULL
+    run_options$settings <- settings
+    run_options$input <- input
+    run_options$assess<-list(PlanB=PlanBstocks, ASAP=ASAPstocks)
+   saveRDS(run_options, file=paste0(ResultDirectory,'/sim/options', td2,'.rds'))
+    
   omvalGlobal <- sapply(1:nstock, function(x) stock[[x]]['omval'])
   names(omvalGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
   save(omvalGlobal, file=paste0(ResultDirectory,'/sim/omvalGlobal', td2, '.Rdata'))
