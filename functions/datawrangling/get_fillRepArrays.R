@@ -12,12 +12,12 @@
 get_fillRepArrays <- function(stock){
 
   out <- within(stock, {
-   
+    if(y==nyear){
     # omval$N[r,m,] <- rowSums(J1N)
-    # omval$SSB[r,m,] <- SSB
+     omval$SSB[r,m,1:length(SSB)] <- SSB
     # omval$R[r,m,] <- R
     # omval$F_full[r,m,] <- F_full
-    # omval$sumCW[r,m,] <- sumCW
+     omval$sumCW[r,m,1:length(sumCW)] <- sumCW
     # omval$OFdStatus[r,m,] <- OFdStatus
     # omval$mxGradCAA[r,m,] <- mxGradCAA
     # omval$F_fullAdvice[r,m,] <- F_fullAdvice #AEW
@@ -25,7 +25,7 @@ get_fillRepArrays <- function(stock){
     # omval$OFgStatus[r,m,] <- OFgStatus #AEW
     # omval$SSB_cur[r,m,] <- SSB_cur #AEW
     # omval$natM[r,m,] <- natM #AEW
-    
+    }
     # annPercentChange not true vector -- just repeated values. This needs
     # to be calculated after the run so that the appropriate time windows
     # can be used.
