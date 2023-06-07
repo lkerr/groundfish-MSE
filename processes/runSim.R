@@ -208,15 +208,16 @@ for(r in 1:nrep){
       # Store results- AM I SAVING THE RIGHT THING NOW? CHECK THESE FUNCTIONS
         # we save after mortality and new index generated but that would be different in this case
       
-        #  for(i in 1:nstock){
+        for(i in 1:nstock){
         # if (y == nyear){
         #   stock[[i]] <- get_TermrelError(stock = stock[[i]])
         # }
-        # 
-        # if(y>=fmyearIdx){
-        #   stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
-        # }
-        #  }
+
+        if(y>=fmyearIdx){
+          stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
+        }
+        }
+
       
         # what does this do?
       end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
@@ -245,8 +246,9 @@ for(r in 1:nrep){
       ### need some kind of switch dependent on MP, don't need to do any of the above single species assessments if doing the stock complex MP
       ### - but do need to creeate the data objects by stock. run_complex_assessments does the aggregation by complex.
       ### I don't see the om_long object any more so that needs to be recreated from the data (perhaps can be checkedout from the JJ-EBFM-simple branch version)
+
       assess_results_com <- run_complex_assessments(om_long, refyrs = 1:40) #ref yrs are dummy, can get rid.    
-      ###
+      
       assess_results <- rbind(assess_results_ss[1:10,],assess_results_com[11:14,])
             
       mp_results <- do_ebfm_mp(settings, assess_results, input)
@@ -304,6 +306,8 @@ for(r in 1:nrep){
   OM_Biomass[[r]] <- hydraData$biomass
   # Output the real catch ("predcatch") and observed catch ("obscatch") from the operating model, removing unnecessary columns to save space
   OM_Catch[[r]] <- as.data.frame(hydraData$CN)[,-c(5,6,8,9)]
+
+  
 } #End rep loop
 
 top_loop_end<-Sys.time()
@@ -330,6 +334,11 @@ big_loop
   }
 
   #### save results ####
+    mp_res <- NULL  
+    mp_res$biomass <- OM_Biomass  
+    mp_res$catch <- OM_Catch
+    saveRDS(mp_res, file=paste0(ResultDirectory,'/sim/mpres', td2, '.rds'))
+    
   omvalGlobal <- sapply(1:nstock, function(x) stock[[x]]['omval'])
   names(omvalGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
   save(omvalGlobal, file=paste0(ResultDirectory,'/sim/omvalGlobal', td2, '.Rdata'))

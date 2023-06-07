@@ -3,9 +3,9 @@
 
 get_containers <- function(stockPar){
   
-  yxage = matrix(NA, nrow=nyear, ncol=stockPar$nage)
-  yx0 = rep(NA, nyear)
-  est = matrix(NA,nyear,54)
+  yxage = matrix(NA,nrow=nyear, ncol=stockPar$nage)
+  yx0 = rep(NA,nyear)
+  est = matrix(NA,nyear,63)
   
   nomyear = nyear - (stockPar$ncaayear + fyear + nburn)
   nmproc = nrow(mproc)
