@@ -108,7 +108,7 @@ oe_effort_typ <- 'lognorm'
 # process error levels  ###################################  
 pe_R <- 0.5 # cannot be zero #0.5 for Beverton Holt
 pe_RSA<- 0.5 #recruitment process error assumed in the stock assessment 
-pe_IA <- 0.18 
+pe_IA <- 0.1 
 
 # implementation error of fishing mortality
 ie_F <- 0

@@ -99,14 +99,14 @@ oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
 # process error levels 
-pe_R <- 5.839408e-01
+pe_R <- 0.5
 pe_RSA<- 0.5 #recruitment process error assumed in the stock assessment
-pe_IA <- 0.18
+pe_IA <- 0.1
 
 # implementation error of fishing mortality
 ie_F <- 0
 ie_typ <- 'lognorm'
-ie_bias <- -0.1 #0 #-0.1 # % bias in implementation error
+ie_bias <- 0 #0 #-0.1 # % bias in implementation error
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
 ob_sumCW <- 1

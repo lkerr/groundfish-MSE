@@ -111,14 +111,14 @@ oe_effort_typ <- 'lognorm'
 highobserrec<-FALSE
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 0.01
-pe_RSA<-1.0
-pe_IA<-0.378
+pe_R <- 0.5
+pe_RSA<-0.5
+pe_IA<-0.1
 
 # implementation error of fishing mortality
 ie_F <- 0
 ie_typ <- 'lognorm'
-ie_bias <- -0.1 # % bias in implementation error
+ie_bias <- 0 # % bias in implementation error
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.) (sumCW*ob_sumCW) (range 0.01-1)
 ob_sumCW <- 1 #0.44 is bias
