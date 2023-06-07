@@ -27,8 +27,8 @@ source('processes/get_assess_results.R')
 settings <- list(
   showTimeSeries = "No",
   useCeiling = "Yes",
-  assessType = "stock complex",
-  # assessType = "single species",
+  # assessType = "stock complex",
+  assessType = "single species",
   targetF = 0.75,
   floorB = 0.5,
   floorOption = "min status",
@@ -51,8 +51,8 @@ gear_complexes <- tibble(isp = 1:10,
 input$complex = feeding_complexes$complex
 # input$complex = gear_complexes$complex
 
-input$docomplex = TRUE
-# input$docomplex = FALSE
+# input$docomplex = TRUE
+input$docomplex = FALSE
 input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
                     0,1,1,0,0,0,0,0,0,0),
                   nrow=2,byrow=TRUE)
@@ -248,7 +248,6 @@ for(r in 1:nrep){
       assess_results_com <- run_complex_assessments(om_long, refyrs = 1:40) #ref yrs are dummy, can get rid.    
       ###
       assess_results <- rbind(assess_results_ss[1:10,],assess_results_com[11:14,])
-      
             
       mp_results <- do_ebfm_mp(settings, assess_results, input)
       #mp_results$out_table %>%
@@ -272,8 +271,8 @@ for(r in 1:nrep){
       # mp_results$out_table$advice
 
       # biomass for the F calculation, replace with something sensible
-      # f_calc_biomass <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>% 
-      #   arrange(species) %>% select(predbiomass) %>% t() %>% as.numeric()
+      f_calc_biomass_old <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>%
+        arrange(species) %>% select(predbiomass) %>% t() %>% as.numeric()
       #calculate new F
       f_calc_biomass <- c()
       for(i in 1:10) f_calc_biomass <- c(f_calc_biomass,assess_results$data[[i]]$biomass[length(assess_results$data[[i]]$biomass)])
