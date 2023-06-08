@@ -94,7 +94,7 @@ top_loop_start<-Sys.time()
 OM_Biomass <- list()
 OM_Catch <- list()
 OM_Fyr <- list()
-EM_Fyr <- list()
+MP_Fyr <- list()
 MP_advice <- list()
 
 #### Top rep Loop ####
@@ -350,7 +350,7 @@ big_loop
     mp_res$Fyrspecies <- OM_Fyr
     mp_res$Fyrfleets <- MP_Fyr
     mp_res$catchadvice <- MP_advice
-    saveRDS(mp_res, file=paste0(ResultDirectory,'/sim/mpres', td2, '.rds'))
+    saveRDS(mp_res, file=paste0(ResultDirectory,'/sim/mpres', settings$assessType, '.rds'))
     
     #save run options
     run_options <- NULL
