@@ -26,8 +26,9 @@ results1 <- biomass %>%
 
 #ss_results <- readRDS("~/research/groundfish-MSE/results_2023-05-19-16-08-04/sim/mpres2023-05-19_163236_5129.rds")
 #ss_results <- readRDS("~/research/groundfish-MSE/functions/hydra/plots/ss-2023-05-19.rds")
-ss_results <- readRDS("~/research/groundfish-MSE/functions/hydra/plots/ss-2023-05-20.rds")
-ss_results <- `mpres2023-06-07_114718_841`
+# ss_results <- readRDS("~/research/groundfish-MSE/functions/hydra/plots/ss-2023-05-20.rds")
+# ss_results <- readRDS("/results_2023-06-08-11-50-09/sim/mpressinglespecies.rds")
+ss_results <- `mpressingle species`
 biomass <- map_dfr(ss_results$biomass,I,.id = "rep") %>% 
   janitor::clean_names()
 
