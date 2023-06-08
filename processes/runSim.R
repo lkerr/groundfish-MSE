@@ -347,6 +347,9 @@ big_loop
     mp_res <- NULL  
     mp_res$biomass <- OM_Biomass  
     mp_res$catch <- OM_Catch
+    mp_res$Fyrspecies <- OM_Fyr
+    mp_res$Fyrfleets <- MP_Fyr
+    mp_res$catchadvice <- MP_advice
     saveRDS(mp_res, file=paste0(ResultDirectory,'/sim/mpres', td2, '.rds'))
     
     #save run options
