@@ -183,14 +183,12 @@ for(r in 1:nrep){
         
         # Attach new catch and index data to stock object
         # for(i in 1:nstock){
-        for(i in 1:nstock){
-          stock[[i]] <- update_stock_data(i,hydraData) 
-        }
+
         
-        #### RUN MP ####
-        for(i in 1:nstock){
-          stock[[i]] <- get_advice(stock = stock[[i]]) # RUNS MP
-        }
+        # #### RUN MP ####
+        # for(i in 1:nstock){
+        #   stock[[i]] <- get_advice(stock = stock[[i]]) # RUNS MP
+        # }
         
         #### ADD IMPLEMENTATION ERROR ####
         # for(i in 1:nstock){
@@ -214,15 +212,15 @@ for(r in 1:nrep){
         # Store results- AM I SAVING THE RIGHT THING NOW? CHECK THESE FUNCTIONS
         # we save after mortality and new index generated but that would be different in this case
         
-        for(i in 1:nstock){
-          # if (y == nyear){
-          #   stock[[i]] <- get_TermrelError(stock = stock[[i]])
-          # }
-          
-          if(y>=fmyearIdx){
-            stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
-          }
-        }
+        # for(i in 1:nstock){
+        #   # if (y == nyear){
+        #   #   stock[[i]] <- get_TermrelError(stock = stock[[i]])
+        #   # }
+        #   
+        #   if(y>=fmyearIdx){
+        #     stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
+        #   }
+        # }
         
         
         # what does this do?
@@ -235,55 +233,71 @@ for(r in 1:nrep){
         
         # assess_results needs the 4 extra rows (for piscivores, benthivores, planktivores, ecosystem??)
         # for now the assess_results just puts a fixed bmsy msy and fmsy
-        assess_results_ss <- get_assess_results(stock)
         
-        ### GF 2023/06/05
-        #Turn the data into tibbles to be read into the next thing
-        index <- dplyr::filter(as.data.frame(hydraData$IN),survey==1)
-        index <- data.frame(t=index$year,type=rep("biomass",nrow(index)),isp=index$species,value=index$obsbiomass)
-        index <- as.tibble(index) %>% left_join(feeding_complexes)
-        
-        catch <- as.data.frame(as.data.frame(hydraData$CN))
-        catch <- data.frame(t=catch$year,type=rep("catch",nrow(catch)),isp=catch$species,value=catch$obscatch)
-        catch <- as.tibble(catch) %>% left_join(feeding_complexes)
-        
-        om_long <- bind_rows(index, catch)
-        ### This is the call to do the stock complex assessments if that is what is after
-        ### need some kind of switch dependent on MP, don't need to do any of the above single species assessments if doing the stock complex MP
-        ### - but do need to creeate the data objects by stock. run_complex_assessments does the aggregation by complex.
-        ### I don't see the om_long object any more so that needs to be recreated from the data (perhaps can be checkedout from the JJ-EBFM-simple branch version)
-        
-        assess_results_com <- run_complex_assessments(om_long, refyrs = 1:40) #ref yrs are dummy, can get rid.    
-        
-        assess_results <- rbind(assess_results_ss[1:10,],assess_results_com[11:14,])
-        
-        mp_results <- do_ebfm_mp(settings, assess_results, input)
-        #mp_results$out_table %>%
-        #  as_tibble()
-        
-        # The advice doesn't reliably fill in after running do_ebfm_mp, 
-        # so this overwrites the advice column with cfuse for ASAP stock and
-        # the catch advice from planB for those stocks
+        # Single Species Approach
         if(settings$assessType == "single species")
         {
-          for(i in 1:length(stock))
-          {
+          for(i in 1:nstock){
+            stock[[i]] <- update_stock_data(i,hydraData) 
+          }
+          for(i in 1:nstock){
+            stock[[i]] <- get_advice(stock = stock[[i]]) # RUNS MP
+          }
+
+          for(i in 1:nstock){
+            if(y>=fmyearIdx){
+              stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
+            }
+          }
+          
+          assess_results <- get_assess_results(stock)
+          mp_results <- do_ebfm_mp(settings, assess_results, input)
+        
+          # Overwrite cfuse in PlanBstocks
+          for(i in 1:nstock){
             if(stock[[i]]$stockName %in% ASAPstocks) mp_results$out_table$advice[i] <- mp_results$out_table$cfuse[i]
             if(stock[[i]]$stockName %in% PlanBstocks) mp_results$out_table$advice[i] <- stock[[i]]$gnF$CWrec
           }
-          
         }
+        
+        if(settings$assessType == "stock complex")
+        {
+          ### GF 2023/06/05
+          #Turn the data into tibbles to be read into the next thing
+          index <- dplyr::filter(as.data.frame(hydraData$IN),survey==1)
+          index <- data.frame(t=index$year,type=rep("biomass",nrow(index)),isp=index$species,value=index$obsbiomass)
+          index <- as.tibble(index) %>% left_join(feeding_complexes)
+          
+          catch <- as.data.frame(as.data.frame(hydraData$CN))
+          catch <- data.frame(t=catch$year,type=rep("catch",nrow(catch)),isp=catch$species,value=catch$obscatch)
+          catch <- as.tibble(catch) %>% left_join(feeding_complexes)
+          
+          om_long <- bind_rows(index, catch)
+         
+          assess_results <- run_complex_assessments(om_long, refyrs = 1:40) #ref yrs are dummy, can get rid.
+          mp_results <- do_ebfm_mp(settings, assess_results, input)
+        }
+        
+        # assess_results <- rbind(assess_results_ss[1:10,],assess_results_com[11:14,])
+        
+        
+        # mp_results <- do_ebfm_mp(settings, assess_results_com, input)
+        #mp_results$out_table %>%
+        #  as_tibble()
+        
+
         
         
         # #the catch advice, to be passed to get_f_from_advice()
         # mp_results$out_table$advice
         
         # biomass for the F calculation, replace with something sensible
-        f_calc_biomass_old <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>%
-          arrange(species) %>% select(predbiomass) %>% t() %>% as.numeric()
+        # f_calc_biomass_old <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>%
+        #   arrange(species) %>% select(predbiomass) %>% t() %>% as.numeric()
         #calculate new F
         f_calc_biomass <- c()
-        for(i in 1:10) f_calc_biomass <- c(f_calc_biomass,assess_results$data[[i]]$biomass[length(assess_results$data[[i]]$biomass)])
+        if(settings$assessType == "stock complex") for(i in 11:13) f_calc_biomass <- c(f_calc_biomass,assess_results$data[[i]]$biomass[length(assess_results$data[[i]]$biomass)])
+        if(settings$assessType == "single species") for(i in 1:10) f_calc_biomass <- c(f_calc_biomass,assess_results$data[[i]]$biomass[length(assess_results$data[[i]]$biomass)])
         F_full_new <- get_f_from_advice(mp_results$out_table$advice,
                                         f_calc_biomass, 
                                         input$q, 
@@ -304,7 +318,8 @@ for(r in 1:nrep){
         newdata <- list(bs_temp=bs_temp,F_full=F_full,rec_devs=rec_devs)
         
       }} #End of year loop 
-    MP_advice_temp_new <- cbind(species=mp_results$out_table$complex,year=rep(y,length(mp_results$out_table$complex)),advice=mp_results$out_table$advice)
+    if(settings$assessType == "single species") MP_advice_temp_new <- cbind(species=mp_results$out_table$isp,year=rep(y,length(mp_results$out_table$isp)),advice=mp_results$out_table$advice)
+    if(settings$assessType == "stock complex") MP_advice_temp_new <- cbind(species=mp_results$out_table$complex,year=rep(y,length(mp_results$out_table$complex)),advice=mp_results$out_table$advice)
     MP_advice_temp <- rbind(MP_advice_temp,MP_advice_temp_new)
   } #End of mproc loop
   

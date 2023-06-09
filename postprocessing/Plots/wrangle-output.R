@@ -1,15 +1,20 @@
 library(tidyverse)
 library(ggdist)
+library(reshape2)
 
 #mp_results <- readRDS("~/research/groundfish-MSE/results_2023-05-19-16-39-54/sim/mpres2023-05-19_170353_6465.rds")
-mp_results <- readRDS("~/research/groundfish-MSE/functions/hydra/plots/sc-res-20230519.rds")
-mp_results <- `mpres2023-06-07_144819_4015`
+# mp_results <- readRDS("~/research/groundfish-MSE/functions/hydra/plots/sc-res-20230519.rds")
+mp_results <- `mpresstock complex`
 feeding_complexes <- tibble(isp = 1:10,
                             complex = c(1, 3, 3, 1, 2, 1, 1, 2, 1, 2))
 gear_complexes <- tibble(isp = 1:10,
                          complex = c(1, 3, 3, 1, 1, 3, 1, 2, 1, 2))
 
-
+Fyrspecies <- map_dfr(mp_results$Fyrspecies,I,.id="rep")
+names(Fyrspecies)[4:ncol(Fyrspecies)] <-seq(1,ncol(Fyrspecies)-3)
+Fyrspecies <- reshape2::melt(Fyrspecies,id=1:3)
+names(Fyrspecies)[4:ncol(Fyrspecies)] <- c("year","Fyr")
+Fyrspecies$year <- as.double(Fyrspecies$year)
 
 biomass <- map_dfr(mp_results$biomass,I,.id = "rep") %>% 
   janitor::clean_names()
@@ -21,6 +26,7 @@ catch <- map_dfr(mp_results$catch,I,.id = "rep") %>%
 
 results1 <- biomass %>% 
   left_join(catch) %>% 
+  left_join(Fyrspecies) %>%
   left_join(feeding_complexes, by = c("species" = "isp")) %>% 
   mutate(mp = "stock complex MA") 
 
@@ -28,7 +34,14 @@ results1 <- biomass %>%
 #ss_results <- readRDS("~/research/groundfish-MSE/functions/hydra/plots/ss-2023-05-19.rds")
 # ss_results <- readRDS("~/research/groundfish-MSE/functions/hydra/plots/ss-2023-05-20.rds")
 # ss_results <- readRDS("/results_2023-06-08-11-50-09/sim/mpressinglespecies.rds")
-ss_results <- `mpressingle species`
+ss_results <- `mpressinglespecies`
+
+Fyrspecies <- map_dfr(ss_results$Fyrspecies,I,.id="rep")
+names(Fyrspecies)[4:ncol(Fyrspecies)] <-seq(1,ncol(Fyrspecies)-3)
+Fyrspecies <- reshape2::melt(Fyrspecies,id=1:3)
+names(Fyrspecies)[4:ncol(Fyrspecies)] <- c("year","Fyr")
+Fyrspecies$year <- as.double(Fyrspecies$year)
+
 biomass <- map_dfr(ss_results$biomass,I,.id = "rep") %>% 
   janitor::clean_names()
 
@@ -39,6 +52,7 @@ catch <- map_dfr(ss_results$catch,I,.id = "rep") %>%
 
 results2 <- biomass %>% 
   left_join(catch) %>% 
+  left_join(Fyrspecies) %>%
   left_join(feeding_complexes, by = c("species" = "isp")) %>% 
   mutate(mp = "single species MA")
 
@@ -61,7 +75,7 @@ eco_res <- results %>%
 results <- results %>% 
   bind_rows(complex_res) %>%
   bind_rows(eco_res) %>% 
-  pivot_longer(cols = c("biomass","catch"), names_to = "type")
+  pivot_longer(cols = c("biomass","catch","Fyr"), names_to = "type")
 
 sp_names <- tibble(species = 1:14, species_name=factor(c(
   "Atlantic_cod",
@@ -194,3 +208,18 @@ p5 <- summary_metrics %>%
   theme(axis.text.y = element_blank(),
         legend.position = "bottom")
 ggsave("output/cat_boxplots.png", p5)
+
+p6 <- perf_metrics %>% 
+  dplyr::filter(type == "Fyr",
+                year > 40) %>% 
+  ggplot() +
+  aes(x = year, y = value, fill = mp, col = mp) +
+  stat_lineribbon(
+    #show.legend = FALSE,
+    alpha = 0.35) +
+  ylim(0,NA) +
+  labs(y = "Fyr") +
+  facet_wrap(~species_name, scales = "free_y") +
+  theme(axis.text.y = element_blank(),
+        legend.position = "bottom")
+ggsave("output/Fyr.png", p6)
