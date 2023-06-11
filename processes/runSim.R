@@ -97,6 +97,7 @@ OM_Fyr <- list()
 MP_Fyr <- list()
 MP_advice <- list()
 
+#nrep=1
 #### Top rep Loop ####
 for(r in 1:nrep){
   oldseed_mproc <- .Random.seed
@@ -141,7 +142,7 @@ for(r in 1:nrep){
     
     #### Top year loop ####
     #fyear=1
-    #nyear=30
+    #nyear=45
     for(y in fyear:nyear){
       
       source('processes/withinYearAdmin.R')
@@ -292,14 +293,14 @@ for(r in 1:nrep){
         # mp_results$out_table$advice
         
         # biomass for the F calculation, replace with something sensible
-        # f_calc_biomass_old <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>%
-        #   arrange(species) %>% select(predbiomass) %>% t() %>% as.numeric()
-        #calculate new F
-        f_calc_biomass <- c()
-        if(settings$assessType == "stock complex") for(i in 11:13) f_calc_biomass <- c(f_calc_biomass,assess_results$data[[i]]$biomass[length(assess_results$data[[i]]$biomass)])
-        if(settings$assessType == "single species") for(i in 1:10) f_calc_biomass <- c(f_calc_biomass,assess_results$data[[i]]$biomass[length(assess_results$data[[i]]$biomass)])
+         f_calc_biomass_old <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>%
+           arrange(species) %>% select(predbiomass) %>% t() %>% as.numeric()
+        # #calculate new F
+        # f_calc_biomass <- c()
+        # if(settings$assessType == "stock complex") for(i in 11:13) f_calc_biomass <- c(f_calc_biomass,assess_results$data[[i]]$biomass[length(assess_results$data[[i]]$biomass)])
+        # if(settings$assessType == "single species") for(i in 1:10) f_calc_biomass <- c(f_calc_biomass,assess_results$data[[i]]$biomass[length(assess_results$data[[i]]$biomass)])
         F_full_new <- get_f_from_advice(mp_results$out_table$advice,
-                                        f_calc_biomass, 
+                                        f_calc_biomass_old, 
                                         input$q, 
                                         input$complex, 
                                         input$docomplex)
