@@ -29,8 +29,8 @@ settings <- list(
   showTimeSeries = "No",
   useCeiling = "Yes",
   #useCeiling = "No",
-  assessType = "stock complex",
-  #assessType = "single species",
+  # assessType = "stock complex",
+  assessType = "single species",
   targetF = 0.75,
   floorB = 0.5,
   floorOption = "min status",
@@ -55,8 +55,8 @@ input$complex = feeding_complexes$complex
 # input$complexes = gear_complexes
 # input$complex = gear_complexes$complex
 
-input$docomplex = TRUE
-# input$docomplex = FALSE
+# input$docomplex = TRUE
+input$docomplex = FALSE
 input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
                     0,1,1,0,0,0,0,0,0,0),
                   nrow=2,byrow=TRUE)
@@ -333,10 +333,12 @@ for(r in 1:nrep){
         F_full <- c(F_full,F_full_new)
         newdata <- list(bs_temp=bs_temp,F_full=F_full,rec_devs=rec_devs)
         
+        if(settings$assessType == "single species") MP_advice_temp_new <- cbind(species=mp_results$out_table$isp,year=rep(y,length(mp_results$out_table$isp)),advice=mp_results$out_table$advice)
+        if(settings$assessType == "stock complex") MP_advice_temp_new <- cbind(species=mp_results$out_table$complex,year=rep(y,length(mp_results$out_table$complex)),advice=mp_results$out_table$advice)
+        MP_advice_temp <- rbind(MP_advice_temp,MP_advice_temp_new)
+        
       }} #End of year loop 
-    if(settings$assessType == "single species") MP_advice_temp_new <- cbind(species=mp_results$out_table$isp,year=rep(y,length(mp_results$out_table$isp)),advice=mp_results$out_table$advice)
-    if(settings$assessType == "stock complex") MP_advice_temp_new <- cbind(species=mp_results$out_table$complex,year=rep(y,length(mp_results$out_table$complex)),advice=mp_results$out_table$advice)
-    MP_advice_temp <- rbind(MP_advice_temp,MP_advice_temp_new)
+
   } #End of mproc loop
 
   # Save the output from this finished MSE:

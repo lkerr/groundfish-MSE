@@ -34,7 +34,7 @@ results1 <- biomass %>%
 #ss_results <- readRDS("~/research/groundfish-MSE/functions/hydra/plots/ss-2023-05-19.rds")
 # ss_results <- readRDS("~/research/groundfish-MSE/functions/hydra/plots/ss-2023-05-20.rds")
 # ss_results <- readRDS("/results_2023-06-08-11-50-09/sim/mpressinglespecies.rds")
-ss_results <- `mpressinglespecies`
+ss_results <- `mpressingle species`
 
 Fyrspecies <- map_dfr(ss_results$Fyrspecies,I,.id="rep")
 names(Fyrspecies)[4:ncol(Fyrspecies)] <-seq(1,ncol(Fyrspecies)-3)
