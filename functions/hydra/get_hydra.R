@@ -76,7 +76,7 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
   
   if(!is.null(newdata$rec_devs))
   {
-    rec_devs <- matrix(newdata$rec_devs,nrow=MSEyr,ncol=hydra_data$Nspecies)
+    rec_devs <- matrix(newdata$rec_devs,nrow=MSEyr,ncol=hydra_data$Nspecies, byrow = TRUE)
     hydra_data$recruitment_devs <- as.vector(t(cbind(matrix(hydra_data$recruitment_devs,nrow=(hydra_data$Nspecies),byrow = TRUE),t(rec_devs))))
   }
   
