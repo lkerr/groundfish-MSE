@@ -99,13 +99,16 @@ OM_Catch <- list()
 OM_Fyr <- list()
 MP_Fyr <- list()
 MP_advice <- list()
-#profvis::profvis({
-#nrep=1
+MP_results <- list()
+# profvis::profvis({
+# nrep=2
 #### Top rep Loop ####
 for(r in 1:nrep){
   oldseed_mproc <- .Random.seed
   print(paste0("rep # ",r))
   MP_advice_temp <- data.frame(isp=c(),year=c(),advice=c())
+  
+  MP_results[[r]] <- list()
   
   #### Top MP loop ####
   for(m in 1:nrow(mproc)){
@@ -145,7 +148,7 @@ for(r in 1:nrep){
     
     #### Top year loop ####
     #fyear=1
-    nyear=48
+    #nyear=48
     for(y in fyear:nyear){
       
       source('processes/withinYearAdmin.R')
@@ -309,6 +312,13 @@ for(r in 1:nrep){
                                         input$complex, 
                                         input$docomplex)
         
+        #save the assessment results and MP outcome
+        y_store <- y-fyear+1
+        to_store <- NULL
+        to_store$refs <- mp_results$refs %>% select(-data,-results)
+        to_store$out_table <- mp_results$out_table
+        MP_results[[r]][[y_store]] <- to_store
+        
         # Set the new values for the next iteration of MSE
         # F_full is based on the recommended management model output
         # rec_devs are generated using the sigma value from the original hydra data
@@ -338,7 +348,7 @@ for(r in 1:nrep){
   MP_advice[[r]] <- MP_advice_temp
   
 } #End rep loop
-#})#end profvis
+})#end profvis
 
 top_loop_end<-Sys.time()
 big_loop<-top_loop_end-top_loop_start
@@ -370,7 +380,8 @@ big_loop
     mp_res$Fyrspecies <- OM_Fyr
     mp_res$Fyrfleets <- MP_Fyr
     mp_res$catchadvice <- MP_advice
-    saveRDS(mp_res, file=paste0(ResultDirectory,'/sim/mpres', settings$assessType, '.rds'))
+    mp_res$mp_results <- MP_results
+    saveRDS(mp_res, file=paste0(ResultDirectory,'/sim/mpres_', gsub(" ","_",settings$assessType), '.rds'))
     
     #save run options
     run_options <- NULL
