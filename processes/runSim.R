@@ -20,6 +20,7 @@ source("functions/hydra/get_f_from_advice.R")
 #source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1.R"))
 source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1_lowB.R"))
 source('processes/get_assess_results.R')
+source("functions/hydra/read.report.R")
 
 #Additional settings and input that may be useful depending on how do_ebfm_mp and
 # get_f_from_advice end up getting used
@@ -48,7 +49,9 @@ feeding_complexes <- tibble(isp = 1:10,
 gear_complexes <- tibble(isp = 1:10,
                          complex = c(1, 3, 3, 1, 1, 3, 1, 2, 1, 2))
 
+input$complexes <- feeding_complexes
 input$complex = feeding_complexes$complex
+# input$complexes = gear_complexes
 # input$complex = gear_complexes$complex
 
 input$docomplex = TRUE
@@ -96,7 +99,7 @@ OM_Catch <- list()
 OM_Fyr <- list()
 MP_Fyr <- list()
 MP_advice <- list()
-
+#profvis::profvis({
 #nrep=1
 #### Top rep Loop ####
 for(r in 1:nrep){
@@ -142,7 +145,7 @@ for(r in 1:nrep){
     
     #### Top year loop ####
     #fyear=1
-    #nyear=45
+    nyear=48
     for(y in fyear:nyear){
       
       source('processes/withinYearAdmin.R')
@@ -159,7 +162,8 @@ for(r in 1:nrep){
         hydraData<- get_hydra(oldseed_mproc[r],newdata)
         
         # Adds two objects to hydraData, paaIN and paaCN, the proportions AT AGE of the index and catch
-        hydraData<- get_lengthConvert(stock,hydraData)
+        # GF 06/11/23 adds flag to only generate comp data when MP requires it
+        if (settings$assessType == "single species") hydraData<- get_lengthConvert(stock,hydraData)
         
         # Add observation noise but only to the newest year of data, the updates the growing list
         # EMILY: TURN THIS INTO A FUNCTION AND DO IT TO PROPORTIONS AS WELL
@@ -267,11 +271,11 @@ for(r in 1:nrep){
           #Turn the data into tibbles to be read into the next thing
           index <- dplyr::filter(as.data.frame(hydraData$IN),survey==1)
           index <- data.frame(t=index$year,type=rep("biomass",nrow(index)),isp=index$species,value=index$obsbiomass)
-          index <- as.tibble(index) %>% left_join(feeding_complexes)
+          index <- as.tibble(index) %>% left_join(input$complexes)
           
           catch <- as.data.frame(as.data.frame(hydraData$CN))
           catch <- data.frame(t=catch$year,type=rep("catch",nrow(catch)),isp=catch$species,value=catch$obscatch)
-          catch <- as.tibble(catch) %>% left_join(feeding_complexes)
+          catch <- as.tibble(catch) %>% left_join(input$complexes)
           
           om_long <- bind_rows(index, catch)
          
@@ -323,7 +327,7 @@ for(r in 1:nrep){
     if(settings$assessType == "stock complex") MP_advice_temp_new <- cbind(species=mp_results$out_table$complex,year=rep(y,length(mp_results$out_table$complex)),advice=mp_results$out_table$advice)
     MP_advice_temp <- rbind(MP_advice_temp,MP_advice_temp_new)
   } #End of mproc loop
-  
+
   # Save the output from this finished MSE:
   # Output the real biomass from the operating model
   OM_Biomass[[r]] <- hydraData$biomass
@@ -334,7 +338,7 @@ for(r in 1:nrep){
   MP_advice[[r]] <- MP_advice_temp
   
 } #End rep loop
-
+#})#end profvis
 
 top_loop_end<-Sys.time()
 big_loop<-top_loop_end-top_loop_start
