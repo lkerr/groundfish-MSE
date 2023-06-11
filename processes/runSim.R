@@ -28,8 +28,9 @@ source("functions/hydra/read.report.R")
 settings <- list(
   showTimeSeries = "No",
   useCeiling = "Yes",
+  #useCeiling = "No",
   assessType = "stock complex",
-  # assessType = "single species",
+  #assessType = "single species",
   targetF = 0.75,
   floorB = 0.5,
   floorOption = "min status",
@@ -148,7 +149,7 @@ for(r in 1:nrep){
     
     #### Top year loop ####
     #fyear=1
-    #nyear=48
+    #nyear=45
     for(y in fyear:nyear){
       
       source('processes/withinYearAdmin.R')
@@ -348,7 +349,7 @@ for(r in 1:nrep){
   MP_advice[[r]] <- MP_advice_temp
   
 } #End rep loop
-})#end profvis
+#})#end profvis
 
 top_loop_end<-Sys.time()
 big_loop<-top_loop_end-top_loop_start
