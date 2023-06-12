@@ -25,7 +25,7 @@ Rec is allocated
 27.5% GOM haddock ACL.  
 See the last full paragraph of page 18359 of the  Framework 44 federal register.  75 FR 68 page 18356-18375 .
 Other stocks do not have a rec allocation.  Since the other rec stocks don't have a sub-ACL, the rec mortality is binnedinto "other"
-
+The primary source for these data are https://www.greateratlantic.fisheries.noaa.gov/ro/fso/reports/h/groundfish_catch_accounting
 */
 
 version 15.1
