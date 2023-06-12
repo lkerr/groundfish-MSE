@@ -50,7 +50,8 @@ do_small_radar_plot <- function(metrics) {
                    # "near_btarg_Piscivores" = c(1,0),
                    # "near_btarg_Benthivores" = c(1,0),
                    # "near_btarg_Planktivores" = c(1,0),
-                   "f_reduced" = c(1,0))
+                   "f_reduced" = c(1,0),
+                   "foregone_yield" = c(1,0))
   
   #"prop_female" = c(1,0),
   #"ntrips" = c(1,0)) #,
