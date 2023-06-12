@@ -4,7 +4,7 @@ library(reshape2)
 
 #mp_results <- readRDS("~/research/groundfish-MSE/results_2023-05-19-16-39-54/sim/mpres2023-05-19_170353_6465.rds")
 # mp_results <- readRDS("~/research/groundfish-MSE/functions/hydra/plots/sc-res-20230519.rds")
-mp_results <- `mpresstock complex`
+mp_results <- `mpres_stock_complex`
 feeding_complexes <- tibble(isp = 1:10,
                             complex = c(1, 3, 3, 1, 2, 1, 1, 2, 1, 2))
 gear_complexes <- tibble(isp = 1:10,
@@ -34,7 +34,7 @@ results1 <- biomass %>%
 #ss_results <- readRDS("~/research/groundfish-MSE/functions/hydra/plots/ss-2023-05-19.rds")
 # ss_results <- readRDS("~/research/groundfish-MSE/functions/hydra/plots/ss-2023-05-20.rds")
 # ss_results <- readRDS("/results_2023-06-08-11-50-09/sim/mpressinglespecies.rds")
-ss_results <- `mpressingle species`
+ss_results <- `mpres_single_species`
 
 Fyrspecies <- map_dfr(ss_results$Fyrspecies,I,.id="rep")
 names(Fyrspecies)[4:ncol(Fyrspecies)] <-seq(1,ncol(Fyrspecies)-3)
@@ -112,9 +112,9 @@ perf_metrics <- results %>%
   left_join(sp_names)
 
 bmsy <- perf_metrics %>% 
-  dplyr::filter(year <= 40, type == "biomass") %>% 
+  dplyr::filter(year <= 40, type == "biomass") %>%
   group_by(species, rep, mp) %>% 
-  summarize(bmsy = mean(value, na.rm=TRUE)) %>% 
+  summarize(bmsy = mean(value, na.rm=TRUE)) %>%
   ungroup()
 
 perf_metrics <- perf_metrics %>% 

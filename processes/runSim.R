@@ -29,8 +29,8 @@ settings <- list(
   showTimeSeries = "No",
   useCeiling = "Yes",
   #useCeiling = "No",
-  # assessType = "stock complex",
-  assessType = "single species",
+  assessType = "stock complex",
+  # assessType = "single species",
   targetF = 0.75,
   floorB = 0.5,
   floorOption = "min status",
@@ -55,8 +55,8 @@ input$complex = feeding_complexes$complex
 # input$complexes = gear_complexes
 # input$complex = gear_complexes$complex
 
-# input$docomplex = TRUE
-input$docomplex = FALSE
+input$docomplex = TRUE
+# input$docomplex = FALSE
 input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
                     0,1,1,0,0,0,0,0,0,0),
                   nrow=2,byrow=TRUE)
@@ -242,6 +242,8 @@ for(r in 1:nrep){
         
         # assess_results needs the 4 extra rows (for piscivores, benthivores, planktivores, ecosystem??)
         # for now the assess_results just puts a fixed bmsy msy and fmsy
+        
+        if(settings$pseudoassess == "T")
         
         # Single Species Approach
         if(settings$assessType == "single species")
