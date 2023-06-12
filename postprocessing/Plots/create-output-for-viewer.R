@@ -114,7 +114,8 @@ key_metrics <- c("cat_yield_Ecosystem",
                  "near_btarg_Piscivores",
                  "near_btarg_Benthivores",
                  "near_btarg_Planktivores",
-                 "f_reduced")
+                 "f_reduced",
+                 "foregone_yield")
 
 
 # box plots for key metrics
@@ -287,7 +288,8 @@ key_metrics <- c("cat_yield_Ecosystem",
                  # "near_btarg_Piscivores",
                  # "near_btarg_Benthivores",
                  # "near_btarg_Planktivores",
-                 "f_reduced")
+                 "f_reduced",
+                 "foregone_yield")
 png(filename ="output/2023-06-11/radar_plot.png")
 radar_p1 <- median_metrics %>% 
   filter(metric %in% key_metrics,
