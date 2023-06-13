@@ -23,6 +23,8 @@ file_to_readin<-"results_2023-06-02-14-12-47"
 #This depends on something in  
 yr1<- 1851 
 
+ffiles <- list.files(path=here("functions"), pattern="^.*\\.R$",full.names=TRUE, recursive=TRUE)
+invisible(sapply(ffiles, source))
 
 ```
 
@@ -109,130 +111,76 @@ for(i in 1:length(omvalGlobal_filename)){
 
 
 ds<-NULL
-# Entries in OMVAL are stored in ARRAYS.  The first indexes replicates i=1:nrep. The second indexes mproc, m=1:nrow(mproc). THe 3rd indexes years y=yr1:mxyear.
-
-dim1<-1:nrep
-dim2<-1:nrow(mproc)
-dim3<-yr1:mxyear
 
 
+
+
+
+
+
+sim_level_mets<-c("ie_F_hat", "ie_F", "ie_bias", "iebias_hat")
+year_level_mets<-c("F_fullAdvice", "F_full", "SSB", "ACL", "sumCW","OFdStatus","OFgStatus")
+
+out_sim<-list()
+out_year<-list()
+
+
+# A terrible loop  -- loop over the entries in omvalGlobal to extract yearly results and put them into a rectangular dataset. 
 for(i in 1:length(omvalGlobal)){
+  out_yeart<-list()
   
-  ie_F_hat<-omvalGlobal[[i]]$ie_F_hat
-  ie_F_hat<-as_tibble(cbind(expand.grid(dim1,  dim2), ie_F_hat = as.vector(ie_F_hat)))
-  ie_F_hat<-ie_F_hat %>%
-  dplyr::rename(replicate=Var1,
-                mproc=Var2) 
-
-  ie_F<-omvalGlobal[[i]]$ie_F
-  ie_F<-as_tibble(cbind(expand.grid(dim1,  dim2), ie_F = as.vector(ie_F)))
-  ie_F<-ie_F %>%
-  dplyr::rename(replicate=Var1,
-                mproc=Var2) 
-
-  ie_bias<-omvalGlobal[[i]]$ie_bias
-  ie_bias<-as_tibble(cbind(expand.grid(dim1,  dim2), ie_bias = as.vector(ie_bias)))
-  ie_bias<-ie_bias %>%
-  dplyr::rename(replicate=Var1,
-                mproc=Var2) 
-
-  iebias_hat<-omvalGlobal[[i]]$iebias_hat
-  iebias_hat<-as_tibble(cbind(expand.grid(dim1,  dim2), iebias_hat = as.vector(iebias_hat)))
-  iebias_hat<-iebias_hat %>%
-  dplyr::rename(replicate=Var1,
-                mproc=Var2) 
-
-  
-  #Just pick the index from one of the model runs
-  ACL<-omvalGlobal[[i]]$ACL
-  ACL<-as_tibble(cbind(expand.grid(dim1,  dim2, dim3), ACL = as.vector(ACL)))
-  
-  ACL<-ACL %>%
-  dplyr::rename(replicate=Var1,
-                mproc=Var2,
-                year=Var3) 
-
-  
-  SSB<-omvalGlobal[[i]]$SSB
-  SSB<-as_tibble(cbind(expand.grid(dim1,  dim2, dim3), Simulated_SSB = as.vector(SSB)))
-  
-  SSB<-SSB %>%
-  dplyr::rename(replicate=Var1,
-                mproc=Var2,
-                year=Var3) 
-
-  F_fullAdvice<-omvalGlobal[[i]]$F_fullAdvice
-  F_fullAdvice<-as_tibble(cbind(expand.grid(dim1,  dim2, dim3), F_fullAdvice = as.vector(F_fullAdvice)))
-  
-  F_fullAdvice<-F_fullAdvice %>%
-  dplyr::rename(replicate=Var1,
-                mproc=Var2,
-                year=Var3) 
-
-  
-  F_full<-omvalGlobal[[i]]$F_full
-  F_full<-as_tibble(cbind(expand.grid(dim1,  dim2, dim3), F_full = as.vector(F_full)))
-  
-  F_full<-F_full %>%
-  dplyr::rename(replicate=Var1,
-                mproc=Var2,
-                year=Var3) 
-
-  sumCW<-omvalGlobal[[i]]$sumCW
-  sumCW<-as_tibble(cbind(expand.grid(dim1,  dim2, dim3), sumCW = as.vector(sumCW)))
-  
-  sumCW<-sumCW %>%
-  dplyr::rename(replicate=Var1,
-                mproc=Var2,
-                year=Var3) 
-  
-  
-  
-  
-  OFdStatus<-omvalGlobal[[i]]$OFdStatus
-  OFdStatus<-as_tibble(cbind(expand.grid(dim1,  dim2, dim3), OFdStatus = as.vector(OFdStatus)))
-  
-  OFdStatus<-OFdStatus %>%
-  dplyr::rename(replicate=Var1,
-                mproc=Var2,
-                year=Var3) 
-
-  
-  
-  OFgStatus<-omvalGlobal[[i]]$OFgStatus
-  OFgStatus<-as_tibble(cbind(expand.grid(dim1,  dim2, dim3), OFgStatus = as.vector(OFgStatus)))
-  
-  OFgStatus<-OFgStatus %>%
-  dplyr::rename(replicate=Var1,
-                mproc=Var2,
-                year=Var3) 
-  
-  extracted <-dplyr::inner_join(ACL, SSB, by=c("replicate", "mproc", "year"))
-  extracted <-dplyr::inner_join(extracted, F_fullAdvice, by=c("replicate", "mproc", "year"))
-  extracted <-dplyr::inner_join(extracted, F_full, by=c("replicate", "mproc", "year"))
-  extracted <-dplyr::inner_join(extracted, sumCW, by=c("replicate", "mproc", "year"))
-  extracted <-dplyr::inner_join(extracted, OFdStatus, by=c("replicate", "mproc", "year")) 
-  extracted <-dplyr::inner_join(extracted, OFgStatus, by=c("replicate", "mproc", "year")) 
-
-  extracted$stock<-names(omvalGlobal[i])
-  
-  ds<-rbind(ds,extracted)
-  extracted<-NULL
-
+  for(m in 1:length(year_level_mets)){
+    out_yeart[[m]]<-get_yearly_results(metric=year_level_mets[m], stocknum=i)
+    temp<-do.call(rbind,out_yeart)
+    out_year[[i]]<-temp %>%
+      tidyr::pivot_wider(names_from=metric, values_from=value)
+    }
 }
 
+ds<-do.call(rbind,out_year)
+
 ds<-ds %>%
+  mutate(year=yrs[year])%>%
   mutate(stock=str_replace(stock,"american",""))%>%
   mutate(stock=str_replace(stock,"flounder","")) %>%
   mutate(ACL=ACL/1000) %>%
-  mutate(Simulated_SSB=Simulated_SSB/1000) %>%
+  mutate(SSB=SSB/1000) %>%
   mutate(sumCW=sumCW/1000) %>%
  #dplyr::filter(mproc==1) %>%
  #dplyr::filter(stock=="codGB") %>%
   dplyr::filter(year>=2018) %>%
   mutate(mproc=as_factor(mproc)) %>%
+  rename(Simulated_SSB=SSB) %>%
   arrange(stock,mproc, replicate, year)
 
+# A terrible loop  -- loop over the entries in omvalGlobal to extract simulation results and put them into a rectangular dataset. 
+
+for(i in 1:length(omvalGlobal)){
+  out_simt<-list()
+  
+  for(m in 1:length(sim_level_mets)){
+    out_simt[[m]]<-get_simlevel_results(metric=sim_level_mets[m], stocknum=i)
+    temp<-do.call(rbind,out_simt)
+    out_sim[[i]]<-temp %>%
+      tidyr::pivot_wider(names_from=metric, values_from=value)
+    }
+}
+
+ml<-do.call(rbind,out_sim)
+
+# Process the model-level results a little differently. Smash together the ie_F and ie_bias.
+  m1<-ml %>%
+    dplyr::filter(mproc==1)%>%
+    select(replicate, mproc, stock, ie_F=ie_F_hat, ie_bias=iebias_hat)
+  
+  m23<-ml %>%
+    dplyr::filter(mproc %in% c(2,3))%>%
+    select(replicate, mproc, stock, ie_F, ie_bias)
+
+  m123<-rbind(m1,m23)
+
+  m1<-NULL
+  m23<-NULL
 
 
 
@@ -257,67 +205,7 @@ summary_stats <-ds %>%
 summary_stats
 
 
-```
 
-
-```{r model_level_statistics}
-
-
-ml<-NULL
-
-for(i in 1:length(omvalGlobal)){
-  
-  ie_F_hat<-omvalGlobal[[i]]$ie_F_hat
-  ie_F_hat<-as_tibble(cbind(expand.grid(dim1,  dim2), ie_F_hat = as.vector(ie_F_hat)))
-  ie_F_hat<-ie_F_hat %>%
-  dplyr::rename(replicate=Var1,
-                mproc=Var2) 
-
-  ie_F<-omvalGlobal[[i]]$ie_F
-  ie_F<-as_tibble(cbind(expand.grid(dim1,  dim2), ie_F = as.vector(ie_F)))
-  ie_F<-ie_F %>%
-  dplyr::rename(replicate=Var1,
-                mproc=Var2) 
-
-  ie_bias<-omvalGlobal[[i]]$ie_bias
-  ie_bias<-as_tibble(cbind(expand.grid(dim1,  dim2), ie_bias = as.vector(ie_bias)))
-  ie_bias<-ie_bias %>%
-  dplyr::rename(replicate=Var1,
-                mproc=Var2) 
-
-  iebias_hat<-omvalGlobal[[i]]$iebias_hat
-  iebias_hat<-as_tibble(cbind(expand.grid(dim1,  dim2), iebias_hat = as.vector(iebias_hat)))
-  iebias_hat<-iebias_hat %>%
-  dplyr::rename(replicate=Var1,
-                mproc=Var2) 
-
-
-  
-  model_level <-dplyr::inner_join(ie_F_hat, ie_F, by=c("replicate", "mproc")) 
-  model_level <-dplyr::inner_join(model_level, ie_bias, by=c("replicate", "mproc")) 
-  model_level <-dplyr::inner_join(model_level, iebias_hat, by=c("replicate", "mproc")) 
-  model_level$stock<-names(omvalGlobal[i])
-
-  ml<-rbind(ml, model_level)
-  model_level<-NULL
-}  
-  # not automated, but 
-  
-  
-  m1<-ml %>%
-    dplyr::filter(mproc==1)%>%
-    select(replicate, mproc, stock, ie_F=ie_F_hat, ie_bias=iebias_hat)
-  
-  m23<-ml %>%
-    dplyr::filter(mproc %in% c(2,3))%>%
-    select(replicate, mproc, stock, ie_F, ie_bias)
-
-  m123<-rbind(m1,m23)
-
-  m1<-NULL
-  m23<-NULL
-  
-    
 # Note, the Economic model has a ie_bias and ie_F, but those are not used. An "internal" model will get the ie_F_hat from the previous model.  So, you only need to look at ie_bias , ie_f, iebias_hat, and ie_F_hat from mproc=1  
   
 # Get   
