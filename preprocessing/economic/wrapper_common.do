@@ -84,6 +84,10 @@ do "$codedir/asclogit_coef_export.do"
 /*construct prices, reshape multipliers, and bring both into the targeting dataset */
 global catch_hist_file "catchHist.csv"
 
+global canadian_catch_hist_file "Canadian_catchHist.csv"
+
+
+
 /*name of multiplier file*/
 
 global multiplier_file "multipliers.dta"

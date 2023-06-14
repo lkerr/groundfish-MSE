@@ -31,14 +31,59 @@ The primary source for these data are https://www.greateratlantic.fisheries.noaa
 version 15.1
 clear
 
-import delimited "$bio_data/$catch_hist_file", stringcols(_all)
+
+import delimited "$bio_data/$canadian_catch_hist_file"
+
+keep stock year canadacatch canadaquota
+rename canadacatch catch
+rename canadaquota ACL
+
+
+preserve
+
+keep stock year catch
+rename catch canada
+gen data_type = "Catch"
+
+tempfile catch
+save `catch', replace
+
+restore
+
+
+
+keep stock year ACL
+rename ACL canada
+gen data_type = "ACL"
+merge 1:1 stock year using `catch', keep (1 3)
+assert _merge==3
+drop _merge
+
+
+
+
+tempfile canada
+save `canada'
+
+
+
+
+
+
+
+
+
+import delimited "$bio_data/$catch_hist_file", stringcols(_all) clear
 
 foreach var of varlist commercial sector smallmesh commonpool herringfishery recreational scallopfishery statewater other{
 replace `var'="0" if strmatch(`var',"NA")
 }
 destring, replace
-
 keep if inlist(data_type,"Catch","ACL")
+
+merge 1:1 stock year data_type using `canada', keep(1 3)
+replace canada=0 if _merge==1
+drop _merge
 replace stock=lower(stock)
 gen str30 spstock2=""
 
@@ -72,7 +117,7 @@ replace spstock2="witchflounder" if strmatch(stock,"witch flounder")
 
 /* data entry fix*/
 replace total=6700 if year==2012 & spstock2=="codGOM" & data_type=="ACL"
-gen nsnr= commonpool+ herringfishery+ statewater+ scallopfishery+ other+ smallmesh
+gen nsnr= commonpool+ herringfishery+ statewater+ scallopfishery+ other+ smallmesh+canada
 
 preserve
 
