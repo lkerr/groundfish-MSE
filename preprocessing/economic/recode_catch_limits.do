@@ -55,10 +55,7 @@ restore
 keep stock year ACL
 rename ACL canada
 gen data_type = "ACL"
-merge 1:1 stock year using `catch', keep (1 3)
-assert _merge==3
-drop _merge
-
+append using `catch'
 
 
 
@@ -117,6 +114,13 @@ replace spstock2="witchflounder" if strmatch(stock,"witch flounder")
 
 /* data entry fix*/
 replace total=6700 if year==2012 & spstock2=="codGOM" & data_type=="ACL"
+
+/* more approriate to rename "total" to US catch */
+rename total US
+
+gen total=US+canada
+
+
 gen nsnr= commonpool+ herringfishery+ statewater+ scallopfishery+ other+ smallmesh+canada
 
 preserve
