@@ -261,8 +261,8 @@ get_preds <- function(beta, biomass, catch) {
   return(rss)
 }
 
-run_complex_assessments <- function(emdata,  refyrs = 1:40) {
-  #this piece needed for the example, would not use this in the mse loop because the data is generated elsewhere
+run_complex_assessments <- function(emdata,  refyrs = 1:40, complex_ids = 1:4) {
+  #
   emdata <- gen_data(emdata) %>% 
     group_by(isp) %>% 
     pivot_wider(names_from = type,
@@ -289,12 +289,15 @@ run_complex_assessments <- function(emdata,  refyrs = 1:40) {
   # emdata has variables
   #. isp -> an indicator (doesn't have to be species)
   # data -> a dataframe with variables t (time, not used), biomass (survey index), catch
-  types <- c("Schaefer", "Schaefer", "Fox", "Schaefer")
+  #types <- c("Schaefer", "Schaefer", "Fox", "Schaefer")
+  types <- NULL
+  for (i in 1:4) #need to change this for the gear complex...
+   types[[i]] <- list("State-Space", i)
+  
   complex_data <- emdata %>% ungroup() %>% dplyr::filter(isp>10)
   results2 <- complex_data %>%
     tibble() %>% 
-    mutate(results = map2(data, types, ~do_prodmodel_assess(.x,
-                         .y,
+    mutate(results = map2(complex_data$data, types, ~do_prodmodel_assess(.x, .y,
                          fixdep = FALSE,
                          #type = y, #"Schaefer", #"Fox", #
                          depinit = 0.4)),  #runs the assessments
@@ -584,21 +587,55 @@ do_ebfm_mp <- function(settings, assess_results, input) {
 #### fit surplus production models for the stock complex assessments
 do_prodmodel_assess <- function(input_dat,
                                 type = "Fox",
+                                #complex_id = 1,
                                 fixdep = TRUE,
-                                depinit = 0.4,
-                                ...) {
+                                depinit = 0.4) {
   #type details what production model is fit
   # "Fox" 
   # "Schaefer" (n fixed at 2)
   # "PT" Pella-Tomlinson (n estimated)
   # "State-Space" SS P-T
+  #print(type)
+  complex_id <- as.integer(type[[2]])
+  type <- type[[1]]
+  
+  # complex_id is a coded variable to pull the appropriate prior
+  # 1 - Feeding based grouping, Piscivores
+  # 2 - Feeding based grouping, Benthivores
+  # 3 - Feeding based grouping, Planktivores
+  # 4 - ecosystem
+  # 5 - gear based grouping, demersal trawl (e.g. Haddock and cod)
+  # 6 - gear based grouping, flounders
+  # 7 - gear based grouping, pelagics (including silver hake)
+  #print(complex_id)
+  sp_priors <- tibble(id = 1:4) %>% 
+    mutate(r = c(0.408,0.623,0.896,0.530),
+           msy = c(81689,26865,22198,73446))
+    # mutate(r = case_when(
+    #   complex_id == 1 ~ 0.408, #piscivores
+    #   complex_id == 2 ~ 0.623, #benthivores
+    #   complex_id == 3 ~ 0.896, #plantivores
+    #   complex_id == 4 ~ 0.530, #ecosystem
+    #   TRUE ~ NA), #slots to add the gear based elements
+    # #),
+    # msy = case_when(
+    #   complex_id == 1 ~ 81689, #piscivores
+    #   complex_id == 2 ~ 26865, #benthivores
+    #   complex_id == 3 ~ 22198, #planktivores
+    #   complex_id == 4 ~ 73446, #ecosystem
+    #   TRUE ~ NA), #slots to add the gear based elements
+    # )
+  
+  
+  
   input_dat <- data.frame(input_dat)
   
   input_dat <- input_dat %>% 
     dplyr::rename(index = biomass) %>% 
     mutate(cv = 0.3,
-           index = index/1000) %>% 
-    slice(-nrow(.))
+           index = index/1000
+           ) %>% 
+    slice(-c(1,nrow(.)))
   
   #prepare the data for the assessment call
   sp_data <- new("Data") #need to figure out how to access this without loading whole SAMtool namespace, need help with S4.
@@ -615,9 +652,9 @@ do_prodmodel_assess <- function(input_dat,
                                                    fix_dep = fixdep,
                                                    start = list(dep = depinit,
                                                                 n=2,
-                                                                q=1),
-                                                   prior = list(r = c(0.2, 0.10),
-                                                                MSY = c(50000, 0.2)))
+                                                                q=1))
+                                                   #prior = list(r = c(0.2, 0.10),
+                                                  #              MSY = c(50000, 0.2)))
   if (type == "PT") model_fit <- SAMtool::SP(Data = sp_data,
                                              fix_dep = fixdep,
                                              fix_n = FALSE, 
@@ -629,7 +666,10 @@ do_prodmodel_assess <- function(input_dat,
                                                          fix_sigma = TRUE,
                                                          fix_tau = TRUE,
                                                          start = list(dep = depinit,
-                                                                      n=2, q=1))
+                                                                      n=2, q=1),
+                                                         #prior = list(r = c(0.4,0.2), MSY = c(82000,0.2)))
+                                                         prior = list(r = c(as.numeric(sp_priors$r[complex_id]), 0.2),
+                                                                      MSY = c(as.numeric(sp_priors$msy[complex_id]), 0.2)))
   #return the results
   return(model_fit)
 }

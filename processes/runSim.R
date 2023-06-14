@@ -17,8 +17,8 @@ source("functions/hydra/mp_functions.R")
 source('functions/hydra/get_hydra.R')
 source('functions/hydra/update_stock_data.R')
 source("functions/hydra/get_f_from_advice.R")
-#source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1.R"))
-source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1_lowB.R"))
+source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1.R"))
+#source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1_lowB.R"))
 source('processes/get_assess_results.R')
 source("functions/hydra/read.report.R")
 
@@ -31,7 +31,7 @@ settings <- list(
   #useCeiling = "No",
   assessType = "stock complex",
   # assessType = "single species",
-  pseudoassess = TRUE,
+  pseudoassess = FALSE,
   targetF = 0.75,
   floorB = 0.5,
   floorOption = "min status",
@@ -74,6 +74,7 @@ ASAPstocks <-c("Atlantic_cod", "Atlantic_herring", "Atlantic_mackerel", "Haddock
 #
 # mproc<-mproc_bak[5:5,]
 # nrep<-1
+# nyear <- 65
 # nyear<-200
 ## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
 ####################End Temporary changes for testing ####################
@@ -247,7 +248,7 @@ for(r in 1:nrep){
           
           if(settings$assessType == "stock complex")
           {
-            assess_results <- run_complex_assessments(om_long, refyrs = 1:40) #ref yrs are dummy, can get rid.
+            assess_results <- run_complex_assessments(om_long, refyrs = 1:40, complex_ids = 1:4) #ref yrs are dummy, can get rid.
             mp_results <- do_ebfm_mp(settings, assess_results, input)
           }
         }
