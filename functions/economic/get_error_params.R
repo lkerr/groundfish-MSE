@@ -17,9 +17,9 @@ get_error_params <- function(stock, fit_ie,firstyear, lastyear){
     # Fit the lognormal 
     if (fit_ie== 'lognorm'){
       
-      if (any(errs <= 0)) 
+      if (any(errs <= 0)){ 
         stop("need positive values to fit a log-Normal")
-      
+      }
       iefit_n <- length(errs)
       iefit_lx <- log(errs)
       iefit_mx <- mean(iefit_lx)
