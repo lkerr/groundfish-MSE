@@ -4,7 +4,6 @@
 
 # empty the environment
 # rm(list=ls())
-constant_econ_year<-2015
 
 source('processes/runSetup.R')
 here::i_am("processes/runSim.R")
@@ -47,14 +46,6 @@ showProgBar<-TRUE # ProgBar less useful when stockassessment results are printed
   #This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
 
 
-
-# Should write an extra column into mproc.csv about this. 
-#source('processes/setup_Random_YearIndexing.R')
-#source('processes/setup_BlockRandom_YearIndexing.R')
-source('processes/setup_constant_YearIndexing.R')
-
-
-#source('processes/setup_BlockAlign_YearIndexing.R')
 top_loop_start<-Sys.time()
 
 #### Top rep Loop ####
@@ -72,7 +63,7 @@ for(r in 1:nrep){
     
         #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached, which sets of coefficients to use, and which prices to use
         if(mproc$ImplementationClass[m]=="Economic"){
-          
+         source('processes/setup_Year_Indexing.R')
          source('processes/setupEconType.R')
         }
     

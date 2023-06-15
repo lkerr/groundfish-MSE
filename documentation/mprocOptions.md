@@ -211,5 +211,27 @@ The MSE will use the postnc2.
 This column is used to declare the choice equation in ``/processes/setupEconType.R`` This is also in the economic model documentation.
 
 
+## econ_year_style
+This determines how we are passing in years of economic data
+1. A year (YYYY, like 2015 or 2013). Every MSE year will use economic data from a single year
+2. Randomly select a year  - each year of the MSE gets randomly matched with a year of economic data. This is done with replacement.
+3. Block Randomly select a year - each year of the MSE gets randomly matched with a year of economic data. Each replicate will have the same economic year.
+    # In Rep 1, if cal_year=2011 matches to econ_year=2012, then in Rep 2, cal_year=2011 will match to econ_year=2012.
+4. Align. We align the 2010 economic data to the 2010 year of the simulation. We align 2011 economic data to the 2011 year of the simulation.  Once we run out of years of economic data, we start over at 2010.    
+
+
+
+
+## ie_override
+ A True or False column determines whether we will  override the ``ie_F`` and ``ie_bias`` parameters in the  defined in ``/stock/stockname.R`` and stored in ``stock[[N]]ie_F``
+
+
+## ie_source
+
+If ie_override=TRUE, this determines where to find updated parameters. This can either 
+1.  "Internal" this reads in an internally estimated ie_F_hat and ie_bias_hat from a previously run model. 
+2.  "results_YYYY-MM-DD-HH-MM-SS"  This reads in results from the omvalGlobal file in that folder. 
+
+
 
 [Return to Wiki Home](https://github.com/lkerr/groundfish-MSE/wiki)
