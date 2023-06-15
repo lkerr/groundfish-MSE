@@ -1,17 +1,17 @@
 # Code to assign years of economic data based on mproc$econ_year_style[m].  This code runs 1 time every time runSim.R is run, so it is not particuarly important to optimize for speed
 # So far, there are 4 options:
 # 1. Randomly select a year  - each year of the MSE gets randomly matched with a year of economic data. This is done with replacement.
-# 2. Block Randomly select a year - each year of the MSE gets randomly matched with a year of economic data. Each replicate will have the same economic year.
+# 2. BlockRandom.  each year of the MSE gets randomly matched with a year of economic data. Each replicate will have the same economic year.
     # In Rep 1, if cal_year=2011 matches to econ_year=2012, then in Rep 2, cal_year=2011 will match to econ_year=2012.
-# 3. Block Align
+# 3. Align - We align the 2010 economic data to the 2010 year of the simulation. We align 2011 economic data to the 2011 year of the simulation.  Once we run out of years of economic data, we start over at 2010.   
 # 4. A single year 
 
 
-constant_year<-as.numeric(mproc$econ_year_style[m])
+constant_year<-suppressWarnings(as.numeric(mproc$econ_year_style[m]))
 
 # Error check econ_year_style
 econ_year_error<-1
-if (mproc$econ_year_style[m] %in% c("Random", "BlockRandom","BlockAlign")){
+if (mproc$econ_year_style[m] %in% c("Random", "BlockRandom","Align")){
   econ_year_error<-0 
 } else if(is.na(constant_year)==FALSE){
     if(constant_year>=econ_data_start & constant_year<=econ_data_end){
@@ -43,7 +43,7 @@ random_sim_draw<-as_tibble(yrs) %>%
   dplyr::filter(sim_year_idx >=fyear & sim_year_idx<=nyear)# %>%
 
 
-# Handle the "Constant, BlockRandom, and BlockAlign" versions
+# Handle the "Constant, BlockRandom, and Align" versions
 # Blocked is done before the "expansion"
 if(is.na(constant_year)==FALSE){
   # Constant year. If the column in mproc is a numeric, then put that into the matching dataframe.
@@ -53,7 +53,7 @@ if(is.na(constant_year)==FALSE){
   # Randomly draw an economic year and cbind it to the random_sim_draw dataframe
   join_econbase_yr=sample(econ_data_start:econ_data_end, size=nrow(random_sim_draw),replace=TRUE)
   random_sim_draw<-cbind(random_sim_draw, join_econbase_yr)
-}  else  if (mproc$econ_year_style[m]=="BlockAlign"){
+}  else  if (mproc$econ_year_style[m]=="Align"){
   # This is some pretty weird code, but it seems to work.
   # Align so that cal_year==econ_data_start <--> join_econbase_yr==econ_data_start
   # Look up how far offset things are
