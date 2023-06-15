@@ -17,9 +17,7 @@ mprocfile<-"mprocEconT.csv"
 # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
 # Available stocks: haddockGB, codGOM, codGB, pollock, yellowtailflounderGB
-# stockExclude <- c('haddockGB', 'codGOM','codGB', 'pollock','yellowtailflounderGB')
 stockExclude<-NULL
-# stockExclude <- c('pollock','yellowtailflounderGB','codGOM') #just GBhaddock and GBCod
 
 #stockExclude <- c('yellowtailflounderGB')
 #### historic assessment values #### AEW
@@ -43,7 +41,7 @@ fmyear <- 2020
 fyear <- 38
 
 # maximum year predicted into the future
-mxyear <- 2035
+mxyear <- 2040
 
 #### Burn-in parameters ####
 
