@@ -264,7 +264,7 @@ for(r in 1:nrep){
             for(i in 1:nstock){
               if(stock[[i]]$stockName %in% ASAPstocks){
                 AS_TBiomass[[r]][[y]][[i]] <- (last(stock[[i]]$res$tot.jan1.B)-last(dplyr::filter(hydraData$biomass,Species==i)$Biomass))/last(dplyr::filter(hydraData$biomass,Species==i)$Biomass)
-                AS_TF[[r]][[y]][[i]] <- (stock[[i]]$res$Fref$Fcurrent-last(dplyr::filter(hydraData$Fyr,species==i)))/last(dplyr::filter(hydraData$Fyr,species==i))
+                AS_TF[[r]][[y]][[i]] <- (stock[[i]]$res$Fref$Fcurrent-last(as.numeric(dplyr::filter(hydraData$Fyr,species==i))))/last(as.numeric(dplyr::filter(hydraData$Fyr,species==i)))
                 AS_TRec[[r]][[y]][[i]] <- (mean(tail(stock[[i]]$res$N.age)[4:6,1])-mean(tail(as.numeric(hydraData$recruitment[i,]))[4:6]))/mean(tail(as.numeric(hydraData$recruitment[i,]))[4:6])
               }
             }
