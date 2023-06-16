@@ -204,8 +204,10 @@ if (platform == 'Linux'){
 
   # setup command to run ASAP. For now, ASAP is located at /net/home2/mlee/admb-12.3/asap3/asap3
   if(runClass=='neptune'){
-    full.path.to.asap<- "/net/home2/mlee/admb-12.3/ASAP3/ASAP3"
-  } else if(runClass=='mleeLocal'){
+    full.path.to.asap<- "/net/home2/mlee/admb-12.3/ASAP3/asap3"
+  } else if(runClass=='mleeContainer'){
+    full.path.to.asap<-"/home/mlee/mlee_net/admb-12.3/ASAP3/asap3"
+  }else if(runClass=='mleeLocal'){
     full.path.to.asap<- "placeholder/path/to/ASAP3"
   } else if(runClass=='HPCC'){
     full.path.to.asap<- paste('../EXE/ASAP3.EXE', sep = "")

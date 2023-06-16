@@ -20,7 +20,9 @@ if(platform == 'Linux'){
     runClass<-'neptune'
   }else if(servername=='mlee-linux-pc'){
     runClass<-'mleeLocal'
-  }else{
+  }else if(servername=='40418545ea70'){
+    runClass<-'mleeContainer'
+  } else{
     runClass <- 'Local'
   }
 }else{
