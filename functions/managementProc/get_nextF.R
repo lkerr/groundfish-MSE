@@ -304,6 +304,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     # Find the recommended level for catch in weight
     CWrec <- tail(parpop$obs_sumCW, 1) * parpop$mult
+    # CWrec <- mean(tail(parpop$obs_sumCW)) * parpop$mult
     
     #### NEXT MIGRATE THE WEIGHT TO A FISHING MORTALITY
     #### you know what the selectivity is going to be 

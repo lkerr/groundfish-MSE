@@ -2,8 +2,8 @@ library(tidyverse)
 library(ggdist)
 library(fmsb)
 
-source("R/radar_chart.R")
-source("R/get_perfmetrics.R")
+source("postprocessing/Plots/radar_chart.R")
+source("postprocessing/Plots/get_perfmetrics.R")
 
 settings <- NULL
 settings$assessType = "stock complex"
@@ -22,9 +22,9 @@ settings = list(settings2, settings),
 complexes = list(complexes, complexes),
 mp = c("single species", "stock complex"),
 scenario = c("lowB","lowB"),
-files = c("~/research/groundfish-MSE/results_2023-06-11-18-45-34/sim/mpres_single_species.rds",
+files = c("results_2023-06-14-18-21-41/sim/mpres_single_species.rds",
                   #"~/research/groundfish-MSE/results_2023-06-11-13-20-09/sim/mpres_stock_complex.rds",  # 2 replicates, stock complex, lowB
-          "~/research/groundfish-MSE/results_2023-06-11-18-23-49/sim/mpres_stock_complex.rds"), # 10 replicates, stock complex, lowB
+          "results_2023-06-14-16-35-38/sim/mpres_stock_complex.rds"), # 10 replicates, stock complex, lowB
 )
 
 
@@ -120,7 +120,7 @@ key_metrics <- c("cat_yield_Ecosystem",
 
 # box plots for key metrics
 bxp1 <- metrics %>% 
-  filter(metric %in% key_metrics,
+        dplyr::filter(metric %in% key_metrics,
          time == "long") %>% 
   ggplot() +
   aes(x = mp, y = value, fill = scenario) +
@@ -134,11 +134,11 @@ bxp1 <- metrics %>%
   theme(axis.text.y = element_blank(),
         legend.position = "bottom")
 bxp1
-ggsave("output/2023-06-11/metric_long_boxplots.png", bxp1)
+ggsave("output/2023-06-11/metric_long_boxplots.png", bxp1, width=12, height=8)
 
 # box plots for key metrics, short-term
 bxp2 <- metrics %>% 
-  filter(metric %in% key_metrics,
+  dplyr::filter(metric %in% key_metrics,
          time == "short") %>% 
   ggplot() +
   aes(x = mp, y = value, fill = scenario) +
@@ -152,11 +152,11 @@ bxp2 <- metrics %>%
   theme(axis.text.y = element_blank(),
         legend.position = "bottom")
 bxp2
-ggsave("output/2023-06-11/metric_short_boxplots.png", bxp2)
+ggsave("output/2023-06-11/metric_short_boxplots.png", bxp2, width=12, height=8)
 
 # box plots for key metrics, single OM, both time horizons
 bxp3 <- metrics %>% 
-  filter(metric %in% key_metrics,
+  dplyr::filter(metric %in% key_metrics,
          scenario == "lowB") %>% 
   mutate(time = factor(time, levels=c("short","long"))) %>% 
   ggplot() +
@@ -171,12 +171,12 @@ bxp3 <- metrics %>%
   theme(axis.text.y = element_blank(),
         legend.position = "bottom")
 bxp3
-ggsave("output/2023-06-11/metric_long_boxplots.png", bxp3)
+ggsave("output/2023-06-11/metric_long_boxplots.png", bxp3, width=12, height=8)
 
 
 # dot plots for medians of key metrics - long-term
 dotp1 <- median_metrics %>% 
-  filter(metric %in% key_metrics,
+  dplyr::filter(metric %in% key_metrics,
          time == "long") %>% 
   ggplot() +
   aes(x = mp, y = value, col = mp, shape = scenario) +
@@ -197,11 +197,11 @@ dotp1 <- median_metrics %>%
   guides(col = guide_legend(nrow = 2),
          shape = guide_legend(nrow = 2))
 dotp1  
-ggsave("output/2023-06-11/metric_long_dotplots.png", dotp1)
+ggsave("output/2023-06-11/metric_long_dotplots.png", dotp1, width=12, height=8)
 
 # dot plots for medians of key metrics - long-term
 dotp2 <- median_metrics %>% 
-  filter(metric %in% key_metrics,
+  dplyr::filter(metric %in% key_metrics,
          time == "short") %>% 
   ggplot() +
   aes(x = mp, y = value, col = mp, shape = scenario) +
@@ -222,7 +222,7 @@ dotp2 <- median_metrics %>%
   guides(col = guide_legend(nrow = 2),
          shape = guide_legend(nrow = 2))
 dotp1  
-ggsave("output/2023-06-11/metric_short_dotplots.png", dotp2)
+ggsave("output/2023-06-11/metric_short_dotplots.png", dotp2, width=12, height=8)
 
 
 # time series of OM biomass
@@ -240,7 +240,7 @@ om_plot1 <- sp_timeseries %>%
   facet_wrap(~species_name, scales = "free_y") +
   theme(axis.text.y = element_blank(),
         legend.position = "bottom")
-ggsave("output/2023-06-11/biomass_timeseries.png", om_plot1)
+ggsave("output/2023-06-11/biomass_timeseries.png", om_plot1, width=12, height=8)
 
 # time series of catch
 om_plot2 <- sp_timeseries %>% 
@@ -257,7 +257,7 @@ om_plot2 <- sp_timeseries %>%
   facet_wrap(~species_name, scales = "free_y") +
   theme(axis.text.y = element_blank(),
         legend.position = "bottom")
-ggsave("output/2023-06-11/catch_timeseries.png", om_plot2)
+ggsave("output/2023-06-11/catch_timeseries.png", om_plot2, width=12, height=8)
 
 # time series of b/bmsy
 om_plot3 <- sp_timeseries %>% 
@@ -275,7 +275,7 @@ om_plot3 <- sp_timeseries %>%
   facet_wrap(~species_name, scales = "free_y") +
   theme(axis.text.y = element_blank(),
         legend.position = "bottom")
-ggsave("output/2023-06-11/bbmsy_timeseries.png", om_plot3)
+ggsave("output/2023-06-11/bbmsy_timeseries.png", om_plot3, width=12, height=8)
 
 # radar chart of tradeoffs among key metrics for the Base operating model scenario
 # radar chart - not sure how to save this to file automagically
@@ -292,7 +292,7 @@ key_metrics <- c("cat_yield_Ecosystem",
                  "foregone_yield")
 png(filename ="output/2023-06-11/radar_plot.png")
 radar_p1 <- median_metrics %>% 
-  filter(metric %in% key_metrics,
+  dplyr::filter(metric %in% key_metrics,
          time == "long") %>% 
   mutate(value = ifelse(metric=="prop_below_lim",1-value,value),
          metric = ifelse(metric=="prop_below_lim","prop_above_lim",metric),

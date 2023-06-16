@@ -27,10 +27,10 @@ source("functions/hydra/read.report.R")
 
 settings <- list(
   showTimeSeries = "No",
-  useCeiling = "Yes",
-  #useCeiling = "No",
-  assessType = "stock complex",
-  # assessType = "single species",
+  # useCeiling = "Yes",
+  useCeiling = "No",
+  # assessType = "stock complex",
+  assessType = "single species",
   pseudoassess = FALSE,
   targetF = 0.75,
   floorB = 0.5,
@@ -56,8 +56,8 @@ input$complex = feeding_complexes$complex
 # input$complexes = gear_complexes
 # input$complex = gear_complexes$complex
 
-input$docomplex = TRUE
-# input$docomplex = FALSE
+# input$docomplex = TRUE
+input$docomplex = FALSE
 input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
                     0,1,1,0,0,0,0,0,0,0),
                   nrow=2,byrow=TRUE)
@@ -66,6 +66,10 @@ input$q <- matrix(c(1,0,0,0.3,0.5,1.5,1,1,0.2,1,
                   nrow=2,byrow=TRUE)
 PlanBstocks <-c("Goosefish", "Silver_hake", "Spiny_dogfish", "Winter_skate", "Yellowtail_flounder")
 ASAPstocks <-c("Atlantic_cod", "Atlantic_herring", "Atlantic_mackerel", "Haddock", "Winter_flounder")
+
+# PlanBstocks <-c("Atlantic_cod", "Atlantic_herring", "Atlantic_mackerel","Goosefish","Haddock", 
+#                 "Silver_hake", "Spiny_dogfish", "Winter_skate", "Yellowtail_flounder","Winter_flounder")
+# ASAPstocks <- c()
 
 ####################These are temporary changes for testing ####################
 # econ_timer<-0
@@ -97,9 +101,15 @@ source('processes/setupYearIndexing.R')
 
 top_loop_start<-Sys.time()
 
+# Operating model ("real") biomass, catch, and fishing mortality
 OM_Biomass <- list()
 OM_Catch <- list()
 OM_Fyr <- list()
+# Assessment model error metrics for ASAP, terminal year biomass, F estimate, and recruitment
+AS_TBiomass <- list()
+AS_TF <- list()
+AS_TRec <- list()
+# Management metrics, e.g., the recommended catch and fishing mortality
 MP_Fyr <- list()
 MP_advice <- list()
 MP_results <- list()
@@ -112,6 +122,9 @@ for(r in 1:nrep){
   MP_advice_temp <- data.frame(isp=c(),year=c(),advice=c())
   
   MP_results[[r]] <- list()
+  AS_TBiomass[[r]] <- list()
+  AS_TF[[r]] <-list()
+  AS_TRec[[r]] <-list()
   
   #### Top MP loop ####
   for(m in 1:nrow(mproc)){
@@ -151,12 +164,15 @@ for(r in 1:nrep){
     
     #### Top year loop ####
     for(y in fyear:nyear){
-      
+    # for(y in fyear:(fyear+15)){
       source('processes/withinYearAdmin.R')
       begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed) # what exactly is this doing? 
       
       MP_advice_temp <- as.data.frame(matrix(nrow=0,ncol=3))
       names(MP_advice_temp) <- c("species","year","advice")
+      AS_TBiomass[[r]][[y]] <- list()
+      AS_TF[[r]][[y]] <- list()
+      AS_TRec[[r]][[y]] <-list()
       
       if(y >=fmyearIdx){
         # manage_counter<-manage_counter+1 #keeps track of management year
@@ -244,6 +260,16 @@ for(r in 1:nrep){
               if(stock[[i]]$stockName %in% ASAPstocks) mp_results$out_table$advice[i] <- mp_results$out_table$cfuse[i]
               if(stock[[i]]$stockName %in% PlanBstocks) mp_results$out_table$advice[i] <- stock[[i]]$gnF$CWrec
             }
+            
+            for(i in 1:nstock){
+              if(stock[[i]]$stockName %in% ASAPstocks){
+                AS_TBiomass[[r]][[y]][[i]] <- (last(stock[[i]]$res$tot.jan1.B)-last(dplyr::filter(hydraData$biomass,Species==i)$Biomass))/last(dplyr::filter(hydraData$biomass,Species==i)$Biomass)
+                AS_TF[[r]][[y]][[i]] <- (stock[[i]]$res$Fref$Fcurrent-last(dplyr::filter(hydraData$Fyr,species==i)))/last(dplyr::filter(hydraData$Fyr,species==i))
+                AS_TRec[[r]][[y]][[i]] <- (mean(tail(stock[[i]]$res$N.age)[4:6,1])-mean(tail(as.numeric(hydraData$recruitment[i,]))[4:6]))/mean(tail(as.numeric(hydraData$recruitment[i,]))[4:6])
+              }
+            }
+            
+            
           }
           
           if(settings$assessType == "stock complex")
@@ -256,6 +282,8 @@ for(r in 1:nrep){
         # biomass for the F calculation, replace with something sensible
         f_calc_biomass <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>%
            arrange(species) %>% select(predbiomass) %>% t() %>% as.numeric()
+        f_calc_biomass <- c()
+        for(i in 1:10) f_calc_biomass <- c(f_calc_biomass,as.numeric(assess_results$data[[i]][nrow(assess_results$data[[i]]),2]))
         F_full_new <- get_f_from_advice(mp_results$out_table$advice,
                                         f_calc_biomass, 
                                         input$q, 
@@ -333,6 +361,9 @@ big_loop
     mp_res$Fyrfleets <- MP_Fyr
     mp_res$catchadvice <- MP_advice
     mp_res$mp_results <- MP_results
+    mp_res$biomassRE <- AS_TBiomass
+    mp_res$FRE <- AS_TF
+    mp_res$RecRE <- AS_TRec
     saveRDS(mp_res, file=paste0(ResultDirectory,'/sim/mpres_', gsub(" ","_",settings$assessType), '.rds'))
     
     #save run options

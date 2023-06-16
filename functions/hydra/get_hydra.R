@@ -70,7 +70,7 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
   {
     F_full <- matrix(newdata$F_full,nrow=MSEyr,ncol=hydra_data$Nfleets, byrow = TRUE)
     F_devs <- F_full*0
-    for(i in 1:MSEyr) F_devs[i,] <- log(F_full[i,]+0.00001)-hydra_data$avg_F
+    for(i in 1:MSEyr) F_devs[i,] <- log(F_full[i,])-hydra_data$avg_F
     hydra_data$F_devs <- as.vector(rbind(t(matrix(hydra_data$F_devs,ncol=(hydra_data$Nyrs-MSEyr), byrow = TRUE)),F_devs))
   }
   
@@ -275,6 +275,7 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
                          predCatch=catch.df, #[,-c(5,8,9)],
                          abundance=abundance,
                          biomass=biomass,
+                         recruitment=hydra_sim_rep$EstRec,
                          Nspecies=hydra_data$Nspecies,
                          ln_recsigma=hydra_data$ln_recsigma,
                          Fyr=Fyr.df)

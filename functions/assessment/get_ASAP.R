@@ -70,7 +70,8 @@ get_ASAP <- function(stock){
     dat_file$dat$recruit_cv <- matrix(pe_RSA, nrow = N_rows, 1)
 
     #catch CV
-   dat_file$dat$catch_cv <- matrix(0.05, nrow = N_rows, 1)
+   # dat_file$dat$catch_cv <- matrix(0.05, nrow = N_rows, 1)
+    dat_file$dat$catch_cv <- matrix(0.15, nrow = N_rows, 1)
 
     #discard CV - need additional years even if not using
    dat_file$dat$discard_cv <- matrix(0, nrow = N_rows, 1)

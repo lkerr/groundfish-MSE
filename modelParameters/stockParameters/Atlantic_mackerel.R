@@ -13,7 +13,7 @@ laa_par <- c(Linf=114.1, K=0.22, t0=0.17, beta1=0)
 laa_typ <- 'vonB'
 
 # weight-length parameters- average of last 5 years of 2021 assessment
-waa_par <- c(0.143, 0.223, 0.321, 0.396, 0.481, 0.520, 0.615, 0.631, 0.704) 
+waa_par <- c(0.143, 0.223, 0.321, 0.396, 0.481, 0.520, 0.5482, 0.615, 0.631, 0.704) 
 waa_typ <- 'input'
 
 # maturity-length parameters- average of last 5 years

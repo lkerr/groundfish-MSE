@@ -15,6 +15,7 @@ get_planB <- function(stock){
                                      my.title = 'planB',
                                      terminal.year = NA,
                                      nyears = ncaayear,
+                                     # nyears = nrow(planBdata),
                                      saveplots = FALSE,
                                      showplots = TRUE))
 
