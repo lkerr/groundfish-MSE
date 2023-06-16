@@ -59,7 +59,10 @@ if(runClass == 'HPCC'){
   if(runClass=='neptune'){
     library(simASAP, lib.loc="/net/home2/mlee/R/x86_64_pc-linux-gnu-library")
   }
-  else{
+  else if (runClass=='mleeContainer'){
+    library(simASAP, lib.loc="/home/mlee/mlee_net/R/x86_64_pc-linux-gnu-library")
+  }
+{
     require(simASAP)
   }
   require(fishmethods)
