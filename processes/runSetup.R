@@ -203,6 +203,7 @@ if (platform == 'Linux'){
   dir.create(path = rundir)
 
   # setup command to run ASAP. For now, ASAP is located at /net/home2/mlee/admb-12.3/asap3/asap3
+  # may need to deal with caps for asap
   if(runClass=='neptune'){
     full.path.to.asap<- "/net/home2/mlee/admb-12.3/ASAP3/asap3"
   } else if(runClass=='mleeContainer'){
