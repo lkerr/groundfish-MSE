@@ -60,7 +60,7 @@ if(runClass == 'HPCC'){
     library(simASAP, lib.loc="/net/home2/mlee/R/x86_64_pc-linux-gnu-library")
   }
   else if (runClass=='mleeContainer'){
-    library(simASAP, lib.loc="/home/mlee/mlee_net/R/x86_64_pc-linux-gnu-library")
+    library(simASAP, lib.loc="/home/mlee/R/x86_64-pc-linux-gnu-library")
   }
 {
     require(simASAP)
