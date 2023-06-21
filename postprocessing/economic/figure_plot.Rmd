@@ -17,8 +17,9 @@ library("data.table")
 options(knitr.kable.NA = '')
 knitr::opts_chunk$set(echo = TRUE)
 
+mprocfile<-"mprocEcon1.csv"
 
-file_to_readin<-"results_2023-06-02-14-12-47"
+file_to_readin<-"results_2023-06-16-14-03-14"
 
 #This depends on something in  
 yr1<- 1851 
@@ -695,7 +696,7 @@ OFgStatus
 ```{r plot_manySSB,  fig.cap="SSB. Stocks in the Columns, Replicates in the Rows"}
 
 
-ds2 %>%dplyr::filter(replicate>60)%>%dplyr::filter(mproc!=3) %>% ggplot(data=., aes(x=year, y=Simulated_SSB, group=mproc, color=mproc)) +
+ds2 %>%dplyr::filter(mproc!=3) %>% ggplot(data=., aes(x=year, y=Simulated_SSB, group=mproc, color=mproc)) +
   geom_line() + 
   facet_wrap(vars(replicate,stock), scales="free_y", ncol=5)+
     theme(axis.text.y=element_blank(),  #remove y axis labels
@@ -712,7 +713,7 @@ ds2 %>%dplyr::filter(replicate>60)%>%dplyr::filter(mproc!=3) %>% ggplot(data=., 
 
 
 ```{r plot_manycatch,  fig.cap="Catch. Stocks in the Columns, Replicates in the Rows"}
-ds2 %>%dplyr::filter(replicate>60)%>%dplyr::filter(mproc!=3) %>% ggplot(data=., aes(x=year, y=sumCW, group=mproc, color=mproc)) +
+ds2 %>%dplyr::filter(mproc!=3) %>% ggplot(data=., aes(x=year, y=sumCW, group=mproc, color=mproc)) +
   geom_line() + 
   facet_wrap(vars(replicate,stock), scales="free_y", ncol=5)+
     theme(axis.text.y=element_blank(),  #remove y axis labels
@@ -731,7 +732,7 @@ ds2 %>%dplyr::filter(replicate>60)%>%dplyr::filter(mproc!=3) %>% ggplot(data=., 
 ```{r plot_manyACL,  fig.cap="ACLs. Stocks in the Columns, Replicates in the Rows"}
 
 
-ds2 %>%dplyr::filter(replicate>60)%>%dplyr::filter(mproc!=3) %>% ggplot(data=., aes(x=year, y=ACL, group=mproc, color=mproc)) +
+ds2 %>%dplyr::filter(mproc!=3) %>% ggplot(data=., aes(x=year, y=ACL, group=mproc, color=mproc)) +
   geom_line() + 
   facet_wrap(vars(replicate,stock), scales="free_y", ncol=5)+
     theme(axis.text.y=element_blank(),  #remove y axis labels
@@ -749,7 +750,7 @@ ds2 %>%dplyr::filter(replicate>60)%>%dplyr::filter(mproc!=3) %>% ggplot(data=., 
 ```{r plot_manyF_Full,  fig.cap="F Full.  Stocks in the Columns, Replicates in the Rows"}
 
 
-ds2 %>%dplyr::filter(replicate>60)%>%dplyr::filter(mproc!=3) %>% ggplot(data=., aes(x=year, y=F_full, group=mproc, color=mproc)) +
+ds2 %>%dplyr::filter(mproc!=3) %>% ggplot(data=., aes(x=year, y=F_full, group=mproc, color=mproc)) +
   geom_line() + 
   facet_wrap(vars(replicate,stock), scales="free_y", ncol=5)+
     theme(axis.text.y=element_blank(),  #remove y axis labels
@@ -768,7 +769,7 @@ ds2 %>%dplyr::filter(replicate>60)%>%dplyr::filter(mproc!=3) %>% ggplot(data=., 
 ```{r plot_many,  fig.cap="many ACLs", eval=FALSE}
 # Need to make the y_scales free, but that cannot be handled in facet_grid. Need to use facet_wrap instead. 
 
-ds2 %>%dplyr::filter(replicate>60) %>% dplyr::filter(mproc!=3) %>% ggplot(data=., aes(x=year, y=Simulated_SSB, group=mproc, color=mproc)) +
+ds2 %>% dplyr::filter(mproc!=3) %>% ggplot(data=., aes(x=year, y=Simulated_SSB, group=mproc, color=mproc)) +
   geom_line() + 
   facet_grid(scales="free", rows = vars(replicate), cols = vars(stock))+
     theme(axis.text.y=element_blank(),  #remove y axis labels
