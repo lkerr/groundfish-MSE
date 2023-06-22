@@ -238,7 +238,7 @@ get_hydra_data <- function(MSEyr=0)
   avg_F <- c(-1.69, -1.69)
   logit_vuln <- rep(10,sum(isprey)) 
   fishsel_pars <- c(3.69,2.89,2.71,2.48) # rep(1,Nfleets*2)
-  ln_fishery_q <- c(-1.203972804, -0.693147181, 0.405465108, 0, 0, -1.609437912, 0, -1.108662625) #rep(0,Nspecies-Nfleets*Nareas)
+  ln_fishery_q <- rep(c(-1.203972804, -0.693147181, 0.405465108, 0, 0, -1.609437912, 0, -1.108662625),Nyrs) #rep(0,Nspecies-Nfleets*Nareas)
   #ln_fishery_q <- c(-0.61618614,-0.37590631,-0.55861629,-1.11474167,-0.05480824,-2.07677842,-0.05480824,1.20776560) #price based q
   ln_survey_q <- rep(0,Nsurveys*Nspecies)
   survey_selpars <-rep(-1,Nsurveys*2)

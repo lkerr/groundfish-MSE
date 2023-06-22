@@ -905,8 +905,8 @@ PARAMETER_SECTION
   5darray Ffl(1,Nareas,1,Nspecies,1,Nfleets,1,Tottimesteps,1,Nsizebins) //fleet specific  Fs
   5darray Dfl(1,Nareas,1,Nspecies,1,Nfleets,1,Tottimesteps,1,Nsizebins) //fleet specific Discard mortaliy s
   5darray Cfl(1,Nareas,1,Nspecies,1,Nfleets,1,Tottimesteps,1,Nsizebins) //fleet specific Catch in numbers
-  init_vector ln_fishery_q(1,Nqpars,fqphase) //Nareas,1,Nspecies,1,Nfleets,fqphase)
-  3darray fishery_q(1,Nareas,1,Nspecies,1,Nfleets)
+  init_matrix ln_fishery_q(1,Nyrs,1,Nqpars,fqphase) //Nareas,1,Nspecies,1,Nfleets,fqphase)
+  4darray fishery_q(1,Nareas,1,Nspecies,1,Nfleets,1,Nyrs)
   3darray  mean_guild_fishery_q(1,Nareas,1,Nguilds,1,Nfleets) // mean q for guild and fleet// andybeet
 //  matrix  mean_fishery_q(1,Nareas,1,Nfleets) // mean q for fleet. ignore values of zero //andybeet
 
@@ -1377,15 +1377,17 @@ FUNCTION transform_parameters
   //fishery_q = mfexp(ln_fishery_q);
   fishery_q.initialize();
   // fishery catchabilities  //gavinfay March 2022
+  for (yr=1;yr<=Nyrs;yr++) {
   for (area=1;area<=Nareas;area++) {
     for (int ifleet=1;ifleet<=Nfleets;ifleet++) {
-      for (int species=1;species<=Nspecies;species++) fishery_q(area,species,ifleet) = 1e-15; //0.;
-      fishery_q(area,f_map(area,ifleet),ifleet) = 1.;
+      for (int species=1;species<=Nspecies;species++) fishery_q(area,species,ifleet,yr) = 1e-15; //0.;
+      fishery_q(area,f_map(area,ifleet),ifleet,yr) = 1.;
     }
    }
   if (Nqpars > 0) {
   for (int ipar=1;ipar<=Nqpars;ipar++) {
-    fishery_q(q_map(ipar,1),q_map(ipar,2),q_map(ipar,3)) = mfexp(ln_fishery_q(ipar));
+    fishery_q(q_map(ipar,1),q_map(ipar,2),q_map(ipar,3),yr) = mfexp(ln_fishery_q(yr,ipar));
+  }
   }
   }
   //cout << "fishery q" << endl;
@@ -1558,7 +1560,7 @@ FUNCTION calc_initial_states
 //            effordScaled redundant. we now use proportion of GB effort to shelf effort rather than assume constant scaling
 //            Fyr(area,spp,fleet) = fishery_q(area,spp,fleet)*obs_effort(area,fleet)*effortScaled(area,spp); //Andy Beet
 //                  Fyr(area,spp,fleet) = fishery_q(area,spp,fleet)*obs_effort(area,fleet); //Andy Beet
-            Fyr(area,spp,fleet,iyr) = fishery_q(area,spp,fleet)*mfexp(avg_F(area,fleet)+F_devs(area,fleet,iyr));  //gavinfay March 2022 - modding for F
+            Fyr(area,spp,fleet,iyr) = fishery_q(area,spp,fleet,iyr)*mfexp(avg_F(area,fleet)+F_devs(area,fleet,iyr));  //gavinfay March 2022 - modding for F
             //Fyr(area,spp,fleet,iyr) = fishery_q(area,spp,fleet)*mfexp(F_devs(area,fleet,iyr));  //gavinfay March 2022 - modding for F
             //cout << iyr << " " << area << " " << spp << " " << fleet << " " << Fyr(area,spp,fleet,iyr) << endl;
       }
