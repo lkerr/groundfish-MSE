@@ -80,6 +80,11 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
     hydra_data$recruitment_devs <- as.vector(t(cbind(matrix(hydra_data$recruitment_devs,nrow=(hydra_data$Nspecies),byrow = TRUE),t(rec_devs))))
   }
   
+  if(!is.null(newdata$ln_fishery_q))
+  {
+   hydra_data$ln_fishery_q <- c(hydra_data$ln_fishery_q, newdata$ln_fishery_q)
+  }
+  
   #############################################################################
   #Start of Emily's code, it runs hydra and pulls data files:
   #Source the baseline hydra sim data:

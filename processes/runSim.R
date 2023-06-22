@@ -75,6 +75,7 @@ input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
 input$q <- matrix(c(1,0,0,0.3,0.5,1.5,1,1,0.2,1,
                     0,1,0.33,0,0,0,0,0,0,0),
                   nrow=2,byrow=TRUE)
+input$ln_fishery_q <- c(-1.203972804, -0.693147181, 0.405465108, 0, 0, -1.609437912, 0, -1.108662625)
 PlanBstocks <-c("Goosefish", "Silver_hake", "Spiny_dogfish", "Winter_skate", "Yellowtail_flounder")
 ASAPstocks <-c("Atlantic_cod", "Atlantic_herring", "Atlantic_mackerel", "Haddock", "Winter_flounder")
 
@@ -149,7 +150,8 @@ for(r in 1:nrep){
     bs_temp <- c()
     F_full <- c()
     rec_devs <- c()
-    newdata <- list(bs_temp=bs_temp,F_full=F_full,rec_devs=rec_devs)
+    ln_fishery_q <- c()
+    newdata <- list(bs_temp=bs_temp,F_full=F_full,rec_devs=rec_devs,ln_fishery_q=ln_fishery_q)
     
     # This is here for testing:
     # bs_temp <- c(9)
@@ -314,12 +316,14 @@ for(r in 1:nrep){
         # bs_temp is just the average bs_temp from the original data
         rec_devs_new <- rnorm(hydraData$Nspecies,0,sd=exp(hydraData$ln_recsigma))
         bs_temp_new <-9.643207
+        ln_fishery_q_new <- input$ln_fishery_q
         
         # Update the growing list of new data
         bs_temp <- c(bs_temp,bs_temp_new)
         rec_devs <- c(rec_devs,rec_devs_new)
         F_full <- c(F_full,F_full_new)
-        newdata <- list(bs_temp=bs_temp,F_full=F_full,rec_devs=rec_devs)
+        ln_fishery_q <- c(ln_fishery_q, ln_fishery_q_new)
+        newdata <- list(bs_temp=bs_temp,F_full=F_full,rec_devs=rec_devs,ln_fishery_q=ln_fishery_q)
         
         if(settings$assessType == "single species") MP_advice_temp_new <- cbind(species=mp_results$out_table$isp,year=rep(y,length(mp_results$out_table$isp)),advice=mp_results$out_table$advice)
         if(settings$assessType == "stock complex") MP_advice_temp_new <- cbind(species=mp_results$out_table$complex,year=rep(y,length(mp_results$out_table$complex)),advice=mp_results$out_table$advice)
