@@ -53,7 +53,7 @@ traj_these <- c("SSB", "SSB_cur", "R", "F_full", "sumCW",
 
 for(i in 1:length(flLst[[1]])){
 
-  omval <- get_simcat(x=lapply(flLst, '[[', i))
+  omval <- get_simcat(x=lapply(flLst, '[[', i ), along_dim=1)
   names(omval) <- names(flLst[[1]][[i]])
   stknm <- names(flLst[[1]])[i]
   
