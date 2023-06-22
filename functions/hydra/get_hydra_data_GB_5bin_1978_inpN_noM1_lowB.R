@@ -187,6 +187,10 @@ get_hydra_data <- function(MSEyr=0)
   flagMSE <- 0
   residentTime <- rep(1,Nareas*Nspecies)
   areaMortality <- rep(0,Nareas*Nspecies)
+  m1_change_yr <- 43
+  m1_multiplier <- 1
+  of_change_yr <- 43
+  of_multiplier <- 1  
   eof <- 54321
   
   #Start the other .dat file information:
@@ -293,7 +297,12 @@ get_hydra_data <- function(MSEyr=0)
                      Nthresholds=Nthresholds, threshold_preportion=threshold_preportion, exploitation_levels=exploitation_levels, threshold_species=threshold_species, AssessmentOn=AssessmentOn,
                      speciesDetection=speciesDetection, LFI_size=LFI_size, scaleInitialN=scaleInitialN, effortScaled=effortScaled, discard_Coef=discard_Coef,
                      discardSurvival_Coef=discardSurvival_Coef, predOrPrey=predOrPrey, bandwidth_metric=bandwidth_metric, baseline_threshold=baseline_threshold, indicator_fishery_q=indicator_fishery_q,
-                     AR_parameters=AR_parameters, flagMSE=flagMSE, residentTime=residentTime, areaMortality=areaMortality, eof=eof,
+                     AR_parameters=AR_parameters, flagMSE=flagMSE, residentTime=residentTime, areaMortality=areaMortality, 
+                     m1_change_yr=m1_change_yr,
+                     m1_multiplier=m1_multiplier,
+                     of_change_yr=of_change_yr,
+                     of_multiplier=of_multiplier,
+                     eof=eof,
                      Nsurvey_obs=Nsurvey_obs, obs_survey_biomass=obs_survey_biomass, Nsurvey_size_obs=Nsurvey_size_obs, obs_survey_size=obs_survey_size, Ncatch_obs=Ncatch_obs, obs_catch_biomass=obs_catch_biomass, 
                      Ncatch_size_obs=Ncatch_size_obs, obs_catch_size=obs_catch_size, Ndietprop_obs=Ndietprop_obs, obs_dietprop=obs_dietprop, ln_yr1N=ln_yr1N, recruitment_alpha=recruitment_alpha, 
                      recruitment_shape=recruitment_shape, recruitment_beta=recruitment_beta, ln_avg_recruitment=ln_avg_recruitment, recruitment_devs=recruitment_devs, ln_recsigma=ln_recsigma, avg_F=avg_F, 

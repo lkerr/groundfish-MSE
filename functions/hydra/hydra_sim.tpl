@@ -687,6 +687,16 @@ DATA_SECTION
   // 3darray catch_sigma(1,Nareas,1,Nspecies,1,Nfleets)
   // 4darray catch_obsError(1,Nareas,1,Nspecies,1,Nfleets,1,Nyrs)
 
+  
+  // time varying mortality (fixed multiplier for prey items)
+  init_int m1_change_yr  // yr to implement change, if -99 no change applied
+  init_number m1_multiplier // value to scale M1 by
+
+  // time varying other food (fixed multiplier, same for all)
+  init_int of_change_yr  // yr to implement change, if -99 no change applied
+  init_number of_multiplier  // value to scale oF by
+
+
  //flag marking end of file for data input
   init_int eof;
 
@@ -1108,11 +1118,12 @@ PARAMETER_SECTION
 	END_CALCS
 
   init_matrix ln_M1ann(1,Nareas,1,Nspecies,m1_phase)
-  3darray M1(1,Nareas,1,Nspecies,1,Nsizebins) 
+  //3darray M1(1,Nareas,1,Nspecies,1,Nsizebins)
+  4darray M1(1,Nareas,1,Nspecies,1,Tottimesteps,1,Nsizebins) 
 
   init_number ln_otherFood_base(oF1_phase) // amount of other food included in the M2 term for the base (predator 1)
   init_vector otherFood_dev(1,Npred-1,oFdev_phase)  //deviation from base other food for predators 2+  (same other food for all size classes of each predator)
-  vector otherFood(1,Nspecies)   // vector of other food included in the M2 term
+  matrix otherFood(1,Nspecies,1,Nyrs)   // vector of other food included in the M2 term
 
 
 
@@ -1150,12 +1161,14 @@ PROCEDURE_SECTION
 
   transform_parameters(); if (debug == 4) {cout<<"completed parameter transform"<<endl;}
 
+  for (t=1;t<=Tottimesteps;t++){
   for (area=1; area<=Nareas; area++){
    for(spp=1; spp<=Nspecies; spp++){
 //    //      M1(area, spp)  = 1.0 - pow((1.0 - M1ann(area, spp)), (1.0 / Nstepsyr)) ; //scale for steps per year to equal annual input from dat  
-          M1(area, spp)  = 1.0 - pow((1.0 - mfexp(ln_M1ann(area, spp))), (1.0 / Nstepsyr)) ; //scale for steps per year to equal annual input from dat  
+          M1(area, spp, t)  = 1.0 - pow((1.0 - mfexp(ln_M1ann(area, spp))), (1.0 / Nstepsyr)) ; //scale for steps per year to equal annual input from dat  
 //    //        M1(area, spp) = mfexp(ln_M1ann(area, spp))/Nstepsyr;
     }
+   }
    }
 
   // Other Food - fill in the other food vector
@@ -1170,6 +1183,13 @@ PROCEDURE_SECTION
     else
     {otherFood(spp) = mfexp(ln_otherFood_base);}   //GF 11/14/22 added trap to avoid 0 other food for non-predators, need to check full implications of why this is needed [nans in M2 calcs otherwise but want to check it's not using this info and this is just a product of looping over all species]
    }
+   for(spp=1; spp<=Nspecies; spp++){
+    for (yr=1;yr<=Nyrs;yr++) {
+     if (of_change_yr !=-99 && yr >= of_change_yr) 
+       otherFood(spp,yr) = otherFood(spp,yr)*of_multiplier;;
+    }
+   }
+    
   //cout << "other food" << endl;
   //cout << otherFood << endl;
 
@@ -1204,6 +1224,8 @@ PROCEDURE_SECTION
 
 		//if (debug == 3) {cout<<yrct<<" "<<t<<endl;}
                 if (t>1 && (Nstepsyr == 1 || t % Nstepsyr == 1)) {yrct++;} // first time step in new year = > increment year
+
+                if (t>1 && m1_change_yr !=-99 && yrct >= m1_change_yr) calc_tv_m1();
 
                 if (t>1) calc_update_N(); // N(t) = N(t-1)
 
@@ -1327,6 +1349,23 @@ PROCEDURE_SECTION
  //          }
  // }
 
+//----------------------------------------------------------------------------------------
+FUNCTION calc_tv_m1
+//----------------------------------------------------------------------------------------
+
+  for (area=1; area<=Nareas; area++){
+   //for(spp=1; spp<=Nspecies; spp++){
+          M1(area, 1, t, 1) = M1(area, 1, t, 1)*m1_multiplier;
+          M1(area, 2, t)  = M1(area, 2, t)*m1_multiplier;
+          M1(area, 3, t)  = M1(area, 3, t)*m1_multiplier;
+          M1(area, 5, t, 1) = M1(area, 5, t, 1)*m1_multiplier;
+          M1(area, 5, t, 2) = M1(area, 5, t, 2)*m1_multiplier;
+          M1(area, 6, t, 1) = M1(area, 6, t, 1)*m1_multiplier;
+          M1(area, 6, t, 2) = M1(area, 6, t, 2)*m1_multiplier;
+          M1(area, 10, t, 1) = M1(area, 10, t, 1)*m1_multiplier;
+          M1(area, 10, t, 2) = M1(area, 10, t, 2)*m1_multiplier;          
+   // }
+   }
 
 //----------------------------------------------------------------------------------------
 FUNCTION transform_parameters
@@ -1671,7 +1710,7 @@ FUNCTION calc_recruitment
     for (area=1; area<=Nareas; area++){
   	for(spp=1; spp<=Nspecies; spp++){
 
-		// switch (rectype(spp)){
+	//	 switch (rectype(spp)){
   //         case 1:	  				//egg production based recruitment, 3 par gamma (Ricker-ish)
 		// 	eggprod(area,spp)(yrct-1) /= Nstepsyr; //average egg production for a single "spawning" timestep
 		// 	//eggprod(area,spp)(yrct) = recruitment_shape(area,spp)/recruitment_beta(area,spp);
@@ -1852,7 +1891,7 @@ FUNCTION calc_pred_mortality
           biomass_prey_avail_no_size(area,pred,yrct,ipredsize,prey) += sum(elem_prod(elem_prod(binavgwt(prey),Narea(area,prey,t)), column(suittemp,ipredsize)));
              }
         for (int ipredsize=1;ipredsize<=Nsizebins;ipredsize++)     
-          biomass_prey_avail_no_size(area,pred,yrct,ipredsize,Nprey) += otherFood(pred); //suitability of other food needed?  //mod GF 11/14/22 to allow for predator-specific other food
+          biomass_prey_avail_no_size(area,pred,yrct,ipredsize,Nprey) += otherFood(pred,yrct); //suitability of other food needed?  //mod GF 11/14/22 to allow for predator-specific other food
         }
   } //ok
 
@@ -1878,7 +1917,7 @@ FUNCTION calc_pred_mortality
                   for (int ipreysize =1; ipreysize<=Nsizebins; ipreysize++) {
                    for (int ipredsize =1; ipredsize<=Nsizebins; ipredsize++) {                     
                      M2(area,prey,t,ipreysize) += (intake(area,pred,yrct,ipredsize)*Narea(area,pred,t,ipredsize) * suittemp2(ipreysize,ipredsize)) /
-                           (suitpreybio(area,pred,t,ipredsize) + otherFood(pred));    //Hall et al 2006 other prey too high
+                           (suitpreybio(area,pred,t,ipredsize) + otherFood(pred,yrct));    //Hall et al 2006 other prey too high
                      //if (prey ==1) cout << "M2 " << pred << " " << ipreysize << " " << ipredsize << " " << M2(area,prey,t,ipreysize) << " " << intake(1,pred,yrct,ipredsize) << " " << suittemp2(ipreysize,ipredsize) << " " << suitpreybio(1,pred,t,ipredsize) << endl;
                     }
                   }
@@ -1944,7 +1983,7 @@ FUNCTION calc_total_mortality
        //mort components, with all fleets already in F and D
        // F is mortality due to Fishing - landed species, D is discard mortality
        // Split F up in calc_catch_etc. Catch = F (landings) + D (discards)
-       Z(area,spp,t) = M1(area,spp) +  M2(area,spp,t) +  F(area,spp,t) + D(area,spp,t);
+       Z(area,spp,t) = M1(area,spp,t) +  M2(area,spp,t) +  F(area,spp,t) + D(area,spp,t);
 
      }
  }
@@ -1960,7 +1999,7 @@ FUNCTION calc_catch_etc
       //temp vectors for holding proportions
       dvar_vector Fprop = elem_div(F(area,spp,t),Z(area,spp,t)); //prop of death due to fishing of each size class
       dvar_vector M2prop = elem_div(M2(area,spp,t),Z(area,spp,t)); //prop of death due to predation of each size class
-      dvar_vector M1prop = elem_div(M1(area,spp),Z(area,spp,t)); // prop of death due to other mortality. M1 read in from Data file
+      dvar_vector M1prop = elem_div(M1(area,spp,t),Z(area,spp,t)); // prop of death due to other mortality. M1 read in from Data file
       dvar_vector Dprop = elem_div(D(area,spp,t),Z(area,spp,t)); // prop of death due to Discards of each size class
       dvar_vector Ndeadtmp = elem_prod((1-exp(-Z(area,spp,t))),Narea(area,spp,t));// total number dead in each size class
       // note: Z = total mortality
@@ -3247,15 +3286,15 @@ FUNCTION evaluate_the_objective_function
     }
    
   cout << "done survey abundance nll" << endl;
-  if(std::isinf(value(sum(nll_survey)))) {
-    cout << " INFINITE OBJ FUN" << endl;
-    gavjunk << survey_q << endl;
-    gavjunk << ln_survey_q << endl;
-    gavjunk << "survey biomass data, predicted, residual, nll" << endl;
-  for (int i=1;i<=Nsurvey_obs;i++)
-    gavjunk << obs_survey_biomass(i) << " " << pred_survey_index(i) << " " << resid_survey(i) << " " << nll_survey(i) << endl;
-  exit(-1);
-  }
+//  if(isinf(value(sum(nll_survey)))) {
+//    cout << " INFINITE OBJ FUN" << endl;
+//    gavjunk << survey_q << endl;
+//    gavjunk << ln_survey_q << endl;
+//    gavjunk << "survey biomass data, predicted, residual, nll" << endl;
+//  for (int i=1;i<=Nsurvey_obs;i++)
+//    gavjunk << obs_survey_biomass(i) << " " << pred_survey_index(i) << " " << resid_survey(i) << " " << nll_survey(i) << endl;
+//  exit(-1);
+//  }
   //
 
  //Survey Catch-at-length
@@ -3440,6 +3479,10 @@ REPORT_SECTION
   report << F << endl;
   report << "EstM2size Estimated predation mortality " << endl;
   report << M2 << endl;
+  report << "EstM1size Estimated residual mortality " << endl;
+  report << M1 << endl;  
+  report << "EstOtherFood Estimated other food " << endl;
+  report << otherFood << endl;    
   //report << "table of fits to survey" << endl;
   report << "survey biomass data, predicted, residual, nll" << endl;
   for (int i=1;i<=Nsurvey_obs;i++)
@@ -3543,3 +3586,32 @@ REPORT_SECTION
        Lpred(ilen) = Cfl_tot(area,spp,fleet,year,ilen);
         pmse_predvals << fleet << " " << year << " " << spp << " " << area << " " << Lpred << endl;
       }}}}
+
+
+//////// full table of predicted survey index
+    
+    report << "survey_full year spp area pred_survey" << endl;
+      //dvariable pred_survey_index2;
+      for (int survey=1; survey<=Nsurveys;survey++) {
+      for (int year=1;year<=Nyrs;year++) {
+      for (int spp=1;spp<=Nspecies;spp++) {
+      for (int area=1; area<=Nareas; area++){
+        pred_survey_index2 = 0.;
+        for (int ilen=1;ilen<=Nsizebins;ilen++) {
+            //pred_survey_index2 +=  B_tot(area,spp,year,ilen)*survey_sel(survey,spp,ilen)*survey_q(survey,spp)/Nstepsyr; 
+            pred_survey_index2 +=  B_tot(area,spp,year,ilen)*survey_sel(survey,spp,ilen)/Nstepsyr; 
+        }
+        report << survey << " " << year << " " << spp << " " << area << " " << pred_survey_index2 << endl;
+      }}}}       
+
+//////// full table of predicted catch
+    
+    report << "fleet_full year spp area pred_catch" << endl;
+      for (int fleet=1; fleet<=Nfleets;fleet++) {
+      for (int year=1;year<=Nyrs;year++) {
+      for (int spp=1;spp<=Nspecies;spp++) {
+      for (int area=1; area<=Nareas; area++){
+        if (indicator_fishery_q(area,fleet,spp) == 1)
+         report << fleet << " " << year << " " << spp << " " << area << " " << fleet_catch_biomass(area,spp,fleet,year) << endl;
+      }}}}       
+

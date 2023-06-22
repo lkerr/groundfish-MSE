@@ -115,7 +115,12 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
                             hydra_data$LFI_size, hydra_data$scaleInitialN, hydra_data$effortScaled, hydra_data$discard_Coef, 
                             hydra_data$discardSurvival_Coef, hydra_data$predOrPrey, hydra_data$bandwidth_metric, hydra_data$baseline_threshold, 
                             hydra_data$indicator_fishery_q, hydra_data$AR_parameters, hydra_data$flagMSE, hydra_data$residentTime, 
-                            hydra_data$areaMortality, hydra_data$eof)),fileConn)
+                            hydra_data$areaMortality, 
+                            hydra_data$m1_change_yr,
+                            hydra_data$m1_multiplier,
+                            hydra_data$of_change_yr,
+                            hydra_data$of_multiplier,
+                            hydra_data$eof)),fileConn)
   close(fileConn)
   
   fileConn<-file("functions/hydra/hydra_sim_data-ts.dat")
