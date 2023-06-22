@@ -32,17 +32,25 @@ source("functions/hydra/read.report.R")
 # change the hydra data file to the below
 # source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_highOF.R"))
 
+###
+#OM scenario with the price-based fleet dynamics
+# change the input$q and input$ln_fishery_q objects to the price lines currently commented out
+
+###
+# MP alternative with the other (gear) based complex groupings
+# change the input$complex and input$complexes objects to read in the gear_complexes values
+
 
 #Additional settings and input that may be useful depending on how do_ebfm_mp and
 # get_f_from_advice end up getting used
 
 settings <- list(
   showTimeSeries = "No",
-  # useCeiling = "Yes",
-  useCeiling = "No",
-  # assessType = "stock complex",
-  assessType = "single species",
-  pseudoassess = FALSE,
+  useCeiling = "Yes",
+  #useCeiling = "No",
+  assessType = "stock complex",
+  #assessType = "single species",
+  pseudoassess = TRUE,
   targetF = 0.75,
   floorB = 0.5,
   floorOption = "min status",
@@ -67,8 +75,8 @@ input$complex = feeding_complexes$complex
 # input$complexes = gear_complexes
 # input$complex = gear_complexes$complex
 
-# input$docomplex = TRUE
-input$docomplex = FALSE
+ input$docomplex = TRUE
+#input$docomplex = FALSE
 input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
                     0,1,1,0,0,0,0,0,0,0),
                   nrow=2,byrow=TRUE)
@@ -76,6 +84,13 @@ input$q <- matrix(c(1,0,0,0.3,0.5,1.5,1,1,0.2,1,
                     0,1,0.33,0,0,0,0,0,0,0),
                   nrow=2,byrow=TRUE)
 input$ln_fishery_q <- c(-1.203972804, -0.693147181, 0.405465108, 0, 0, -1.609437912, 0, -1.108662625)
+
+#price-based q deets
+#input$q <- matrix(c(1,0,0,0.54,0.687,0.572,0.328,0.947,0.125,0.947,
+#                    0,1,3.346,0,0,0,0,0,0,0),
+#                  nrow=2,byrow=TRUE)
+#inpout$ln_fishery_q <- c(-0.61618614,-0.37590631,-0.55861629,-1.11474167,-0.05480824,-2.07677842,-0.05480824,1.20776560) #price based q
+
 PlanBstocks <-c("Goosefish", "Silver_hake", "Spiny_dogfish", "Winter_skate", "Yellowtail_flounder")
 ASAPstocks <-c("Atlantic_cod", "Atlantic_herring", "Atlantic_mackerel", "Haddock", "Winter_flounder")
 
@@ -90,7 +105,7 @@ ASAPstocks <-c("Atlantic_cod", "Atlantic_herring", "Atlantic_mackerel", "Haddock
 #
 # mproc<-mproc_bak[5:5,]
 # nrep<-1
-# nyear <- 65
+# nyear <- 45
 # nyear<-200
 ## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
 ####################End Temporary changes for testing ####################
