@@ -22,6 +22,17 @@ source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1.R"))
 source('processes/get_assess_results.R')
 source("functions/hydra/read.report.R")
 
+####
+#OM scenario with higher abundance of non-modeled predators (increase M1)
+# change the hydra data file to the below
+# source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_highM1.R"))
+
+####
+#OM scenario with higher abundance of non-modeled prey (increase other food)
+# change the hydra data file to the below
+# source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_highOF.R"))
+
+
 #Additional settings and input that may be useful depending on how do_ebfm_mp and
 # get_f_from_advice end up getting used
 
