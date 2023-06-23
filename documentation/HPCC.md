@@ -22,23 +22,16 @@ To use the HPCC:
 click ‘Login’. 
 5. Enter ‘bsub<run.sh’ on PuTTY. 
 
-documentation/hpccUMASS_intro.md
--introduction to the HPCC
+-introduction to the HPCC (https://github.com/lkerr/groundfish-MSE/blob/master/documentation/hpccUMASS_intro.md) 
 
-documentation/hpccUMASS_getLibs.md
--documentation on installing R libraries on your HPCC account
+-documentation on installing R libraries on your HPCC account (https://github.com/lkerr/groundfish-MSE/blob/master/documentation/hpccUMASS_getLibs.md) 
 
-documentation/hpccUMASS_batchJobs.md
--documentation on running scripts in sequence using batch jobs
+-documentation on running scripts in sequence using batch jobs (https://github.com/lkerr/groundfish-MSE/blob/master/documentation/hpccUMASS_batchJobs.md) 
 
-run.sh
--shell file to run simulation setup, simulations, and output
+-shell file to run simulation setup, simulations, and output (https://github.com/lkerr/groundfish-MSE/blob/master/run.sh) 
 
-runPre.sh
--shell file to prepare files for simulations
+-shell file to prepare files for simulations (https://github.com/lkerr/groundfish-MSE/blob/master/runPre.sh) 
 
-runSim.sh
--shell file to run simulations
+-shell file to run simulations (https://github.com/lkerr/groundfish-MSE/blob/master/runSim.sh) 
 
-runPost.sh
--shell file to get output from simulations
+-shell file to get output from simulations (https://github.com/lkerr/groundfish-MSE/blob/master/runPost.sh) 
