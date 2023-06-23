@@ -16,20 +16,7 @@ if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
-
 ####################These are temporary changes for testing ####################
-# mproc_bak<-mproc
-# mproc<-mproc_bak[2:2,] 
-# Don't set nrep smaller than the nrep in set_om_parameters_global.R 
-# yrs contains the calendar years, the calendar year corresponding to y is yrs[y].  we want to go 'indexwise' through the year loop.
-# I want to start the economic model at fmyear=2010 and temporarily end it in 2011
-# management starts this year:
-#start_managmement<-2010
-#Simulation ends in this year:
-#end_managmement<-2015
-#This is overwriting fmyearIdx. Not sure where that is set.
-#fmyearIdx<-which(yrs == start_managmement)
-#nyear<-which(yrs == end_managmement)
 
 ####################End Temporary changes for testing ####################
 
@@ -41,7 +28,7 @@ start<-as.integer(difftime(Sys.time(), as.POSIXct("2018-01-01 00:00:00", "%Y-%m-
 set.seed(start)
 
 oldseed_ALL <- .Random.seed
-showProgBar<-TRUE # ProgBar less useful when stockassessment results are printed to screen. 
+showProgBar<-TRUE
 ####################End Parameter and storage Setup ####################
   #This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
 
