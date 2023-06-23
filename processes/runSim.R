@@ -12,7 +12,7 @@ source('processes/readin_previous_omval.R')
 # if on local machine (i.e., not hpcc) must compile the tmb code
 # (HPCC runs have a separate call to compile this code). Keep out of
 # runSetup.R because it is really a separate process on the HPCC.
-if(runClass != 'HPCC'){
+if (runClass %in% c("HPCC","neptune", "mleeContainer")==FALSE) {
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
@@ -211,16 +211,15 @@ big_loop
   saveRDS(simlevelresults, file=paste0(ResultDirectory,'/sim/simlevelresults', td2, '.Rds'))
   
   
-  # Output the management procedures text file in the figure directory
-  write.csv(mproc, file=file.path(ResultDirectory,"fig",mprocfile), row.names=FALSE)
-  
-  # Copy set_om_parameters_global.R into the results folder
-  file.copy('modelParameters/set_om_parameters_global.R', file.path(ResultDirectory,"set_om_parameters_global.R"))
+
   
   
   
-  
-  if(runClass != 'HPCC'){
+  if(runClass %in% c("HPCC","neptune", "mleeContainer")==FALSE){
+    write.csv(mproc, file=file.path(ResultDirectory,"fig",mprocfile), row.names=FALSE)
+    # Copy set_om_parameters_global.R into the results folder
+    file.copy('modelParameters/set_om_parameters_global.R', file.path(ResultDirectory,"set_om_parameters_global.R"))
+    
     omparGlobal <- readLines('modelParameters/set_om_parameters_global.R')
     cat('\n\nSuccess.\n\n',
         'Completion at: ',
@@ -238,7 +237,7 @@ big_loop
 
 
 
-   if(runClass != 'HPCC'){
+   if(runClass %in% c("HPCC","neptune", "mleeContainer")==FALSE){
      # Note that runPost.R re-sets the containers; results have already been
      # saved however.
      source('processes/runPost.R')
@@ -250,8 +249,8 @@ big_loop
   top_loop_end-top_loop_start
   cat('\n ---- Successfully Completed ----\n')
   
-  if(runClass=='neptune'){
-    system("mailme Min-Yang.Lee@noaa.gov \"runSim.R on neptune complete\" ")
-    
-  }
+#  if(runClass=='neptune'){
+#    system("mailme Min-Yang.Lee@noaa.gov \"runSim.R on neptune complete\" ")
+#    
+#  }
   

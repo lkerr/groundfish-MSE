@@ -110,7 +110,7 @@ pe_IA <- 0.18
 ie_F <- 0
 ie_typ <- 'lognorm'
 ie_bias <- -0.13 #0 #-0.1 # % bias in implementation error
-
+ie_bias <- -0 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
 ob_sumCW <- 1
 ob_sumIN <- 1
