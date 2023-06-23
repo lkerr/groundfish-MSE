@@ -17,9 +17,10 @@ library("data.table")
 options(knitr.kable.NA = '')
 knitr::opts_chunk$set(echo = TRUE)
 
-mprocfile<-"mprocEcon1.csv"
+mprocfile<-"mprocEcon.csv"
 
 file_to_readin<-"results_2023-06-16-14-03-14"
+file_to_readin<-"results_2023-06-02-14-12-47"
 
 #This depends on something in  
 yr1<- 1851 
@@ -120,7 +121,7 @@ ds<-NULL
 
 
 sim_level_mets<-c("ie_F_hat", "ie_F", "ie_bias", "iebias_hat")
-year_level_mets<-c("F_fullAdvice", "F_full", "SSB", "ACL", "sumCW","OFdStatus","OFgStatus")
+year_level_mets<-c("F_fullAdvice", "F_full", "SSB", "ACL", "sumCW","OFdStatus","OFgStatus", "SSBest", "SSBPROXY")
 
 out_sim<-list()
 out_year<-list()
