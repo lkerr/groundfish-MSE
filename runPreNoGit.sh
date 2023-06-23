@@ -29,9 +29,7 @@ rm -r -f groundfish-MSE/results/
 module load git/2.1.3
 
 # clone the current repository
-#git clone https://samtruesdell:17d3b37aa4080198a25fe421470b97f92af26794@github.com/COCA-NEgroundfishMSE/groundfish-MSE
-#git clone -b SBT-editPM https://samtruesdell:17d3b37aa4080198a25fe421470b97f92af26794@github.com/COCA-NEgroundfishMSE/groundfish-MSE
-#git clone -b  multiStock2ForMerge https://samtruesdell:17d3b37aa4080198a25fe421470b97f92af26794@github.com/COCA-NEgroundfishMSE/groundfish-MSE
+#git clone -b master https://github.com/lkerr/groundfish-MSE
 
 # load the gcc module for compilation
 module load gcc/5.1.0
