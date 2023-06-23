@@ -21,6 +21,16 @@ fishery_holder$stockarea_open<-as.logical("TRUE")
 fishery_holder$cumul_catch_pounds<-0
 fishery_holder$targeted<-0
 
+
+# Subset the fishery_holder to rows that have a biological model, and keep the spstock2 and ln_trawl_survey columns
+ts<-fishery_holder[bio_model==1, c('spstock2','ln_trawlsurvey','ln_obs_trawlsurvey','sectorACL')]
+#Sanity check. The actual values in the trawl survey have never been higher than 5. So, set a max at 7, just in case, which is nearly an order of magnitude higher.
+ts[ln_trawlsurvey>=7, ln_trawlsurvey:=7]
+ts[ln_obs_trawlsurvey>=7, ln_obs_trawlsurvey:=7]
+ts[, ln_sector_acl:=log(sectorACL)]
+ts[,sectorACL:=NULL]
+
+
 #set up a list to hold the expected revenue by date, hullnum, and target spstock2
 annual_revenue_holder<-list()
 #set up a list to hold the date, spstock2, and aggregate metrics, like open/closed status and cumulative catch
@@ -105,13 +115,6 @@ q_yellowtailflounderSNEMA=i.q_yellowtailflounderSNEMA)
 ]
 working_targeting[,key:=NULL]
 
-# Subset the fishery_holder to rows that have a biological model, and keep the spstock2 and ln_trawl_survey columns
-ts<-fishery_holder[bio_model==1, c('spstock2','ln_trawlsurvey','ln_obs_trawlsurvey','sectorACL')]
-#Sanity check. The actual values in the trawl survey have never been higher than 5. So, set a max at 7, just in case, which is nearly an order of magnitude higher.
-ts[ln_trawlsurvey>=7, ln_trawlsurvey:=7]
-ts[ln_obs_trawlsurvey>=7, ln_obs_trawlsurvey:=7]
-ts[, ln_sector_acl:=log(sectorACL)]
-ts[,sectorACL:=NULL]
 # Merge-update working targeting. You can also switch this to ln_obs_trawlsurvey 
 working_targeting[ts,on="spstock2", `:=`(log_trawl_survey_weight=ln_trawlsurvey, 
                                          log_sector_acl=ln_sector_acl)]
