@@ -1,4 +1,4 @@
-
+library(here)
 # Get the result directory path
 source(here("processes","identifyResultDirectory.R"))
 
@@ -75,26 +75,51 @@ for(i in 1:length(flLst[[1]])){
 }
 
 
-
+#Directory Setups for Simulation level figures
+dirOut <- here(ResultDirectory, "fig", "simulation")
+dir.create(here(dirOut), showWarnings=FALSE)
 
 # Load in the aggregate simulation results
-sl <- list.files(file.path(ResultDirectory, 'sim'), pattern="simlevelresults", full.names=TRUE)
-#assumes there is just 1 file that matches pattern. Don't know how to stack the results together.
+sl <- list.files(here(ResultDirectory, "sim"), pattern="simlevelresults", full.names=TRUE)
+sl[2]<-sl[1]
 simlevel <-list()
 
 if(length(sl)==1){
-  dirOut <- file.path(ResultDirectory, "fig", "simulation")
-  dir.create(file.path(dirOut), showWarnings=FALSE)
-  
   simlevel<-readRDS(sl)
+} else if(length(sl)>1){
+  
+  slLst <- list()
+
+  for(i in 1:length(sl)){
+    slLst[[i]] <- readRDS(sl[[i]])
+  }
+  
+  for(i in 1:length(slLst[[1]])){
+    z <- lapply(slLst, '[[', i)
+    simlevel[[i]] <- do.call(abind, list(z, along=1))
+  }
+  
+  names(simlevel)<-names(slLst[[1]])
+  
+  tot_reps<-dim(simlevel[[1]])[1]
+  
+  for(i in 1:(length(simlevel)-1)){
+    dimnames(simlevel[[i]])[[1]]<-paste0('rep', 1:tot_reps)
+  } 
+  
+}  
+
+
+  # Fix YEAR.
   simlevel[['YEAR']] <- simlevel[['YEAR']][1:(length(simlevel[['YEAR']])/length(simlevel))]
+
   plotRP<-FALSE
   plotDrivers<-FALSE
   plotTrajInd<-TRUE
   plotTrajBox<-TRUE
-  get_SimLevelplots(x=simlevel, dirIn=file.path(ResultDirectory, "sim"), dirOut=dirOut, 
+  get_SimLevelplots(x=simlevel, dirIn=here(ResultDirectory, "sim"), dirOut=dirOut, 
                     boxnames=SIMboxplot_these, rpnames=SIMrp_these, trajnames=SIMtraj_these,breakyears=plotBrkYrs)
-}
+
 
 
 # Output the memory usage
