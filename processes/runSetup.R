@@ -82,10 +82,10 @@ source('processes/genBaselineACLs.R')
 econdatapath <- 'data/data_processed/econ'
 
 # Reults folders for economic models. Create them if necessary
-econ_results_location<-"results/econ/raw"
-dir.create('results/econ/raw', showWarnings = FALSE, recursive=TRUE)
-dir.create('results/sim', showWarnings = FALSE, recursive=TRUE)
-dir.create('results/fig', showWarnings = FALSE, recursive=TRUE)
+econ_results_location<-file.path(ResultDirectory,"econ","raw")
+dir.create(file.path(ResultDirectory,"econ", "raw"), showWarnings = FALSE, recursive=TRUE)
+dir.create(file.path(ResultDirectory,"econ", "sim"), showWarnings = FALSE, recursive=TRUE)
+dir.create(file.path(ResultDirectory,"econ", "fig"), showWarnings = FALSE, recursive=TRUE)
 
 # If running on a local machine, more than one repetition should be
 # used otherwise some plotting functions (e.g., boxplots) will fail
