@@ -34,7 +34,7 @@ showProgBar<-TRUE
 
 
 top_loop_start<-Sys.time()
-
+top_loop_start
 #### Top rep Loop ####
 for(r in 1:nrep){
     oldseed_mproc <- .Random.seed
@@ -248,7 +248,7 @@ big_loop
   cat("You ran",r, "Replicates. You ran",m,"models. You ran from year", yrs[fmyearIdx], " to year", yrs[y],".\n ")
   top_loop_end-top_loop_start
   cat('\n ---- Successfully Completed ----\n')
-  
+  Sys.time()
 #  if(runClass=='neptune'){
 #    system("mailme Min-Yang.Lee@noaa.gov \"runSim.R on neptune complete\" ")
 #    
