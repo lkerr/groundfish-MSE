@@ -97,9 +97,6 @@ if(length(sl)==1){
 }
 
 
-
-
-
 # Output the memory usage
 get_memUsage(runClass = runClass)
 
