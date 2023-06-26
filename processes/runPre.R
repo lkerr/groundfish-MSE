@@ -56,6 +56,6 @@ source('modelParameters/set_om_parameters_global.R')
 
 # Copy set_om_parameters_global.R and mprocfile into the results folder
 
-file.copy(here("modelParameters",mprocfile), here(ResultDirectory,mprocfile))
-file.copy(here("modelParameters","set_om_parameters_global.R"), here(ResultDirectory,"set_om_parameters_global.R"))
+file.copy(file.path("modelParameters",mprocfile), file.path(ResultDirectory,mprocfile))
+file.copy(file.path("modelParameters","set_om_parameters_global.R"), file.path(ResultDirectory,"set_om_parameters_global.R"))
 
