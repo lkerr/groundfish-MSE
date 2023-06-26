@@ -12,7 +12,7 @@ source('processes/readin_previous_omval.R')
 # if on local machine (i.e., not hpcc) must compile the tmb code
 # (HPCC runs have a separate call to compile this code). Keep out of
 # runSetup.R because it is really a separate process on the HPCC.
-if (runClass %in% c("HPCC","neptune", "mleeContainer")==FALSE) {
+if (runClass == "Local") {
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
@@ -215,7 +215,7 @@ big_loop
   
   
   
-  if(runClass %in% c("HPCC","neptune", "mleeContainer")==FALSE){
+  if(runClass == "Local"){
     write.csv(mproc, file=file.path(ResultDirectory,"fig",mprocfile), row.names=FALSE)
     # Copy set_om_parameters_global.R into the results folder
     file.copy('modelParameters/set_om_parameters_global.R', file.path(ResultDirectory,"set_om_parameters_global.R"))
@@ -237,7 +237,7 @@ big_loop
 
 
 
-   if(runClass %in% c("HPCC","neptune", "mleeContainer")==FALSE){
+   if(runClass =="Local"){
      # Note that runPost.R re-sets the containers; results have already been
      # saved however.
      source('processes/runPost.R')
