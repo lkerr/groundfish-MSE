@@ -60,6 +60,9 @@ selI <- c(1)
 selI_typ <- 'const'
 timeI <- 0.5 # when is the survey (as a proportion of the year)
 
+#Rescale for the economic trawl survey. This is a scalar that is multiplies the simulated trawl survey so that it produces results comparable to the average of the spring and fall 2005-2019 bottom trawl survey.
+# This was eyeballed based on these parameters:  selI=1, selI_typ=const,qI = 0.0001. So if these change, the rescale parameter should also change.
+trawl_to_econ_multiplier<-1.5
 #### Stock assessment model parameters ####
 
 # number of years in assessment model
@@ -107,7 +110,7 @@ pe_IA <- 0.18
 ie_F <- 0
 ie_typ <- 'lognorm'
 ie_bias <- -0.13 #0 #-0.1 # % bias in implementation error
-
+ie_bias <- -0 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
 ob_sumCW <- 1
 ob_sumIN <- 1
