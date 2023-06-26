@@ -1,4 +1,4 @@
-# This process is designed to store results in a list. It does not save that list to the disk.
+# This process is stores some economic results in the list  It does not save that list to the disk.
 
 # Read in some information from stock to compute derived statistics
 cwdata<-NULL
