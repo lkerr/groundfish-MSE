@@ -1,18 +1,18 @@
 
 # Get the result directory path
-source('processes/identifyResultDirectory.R')
+source(here("processes","identifyResultDirectory.R"))
 
 # Get the run info so the functions work appropriately whether they are
 # on Windows or Linux and whether this is an HPCC run or not.
-# source('processes/get_runinfo.R')
-source('processes/runSetup.R')
+# source(here("processes","get_runinfo.R"))
+source(here("processes","runSetup.R"))
 
 # Read in overall operating model parameters from the saved version
-source(file.path(ResultDirectory,"set_om_parameters_global.R"))
+source(here(ResultDirectory,"set_om_parameters_global.R"))
 
 #update mproc from the saved version
 
-mproc <- read.csv(file.path(ResultDirectory, "fig",mprocfile), header=TRUE,
+mproc <- read.csv(here(ResultDirectory, "fig",mprocfile), header=TRUE,
                   stringsAsFactors=FALSE)
 
 
@@ -82,7 +82,7 @@ sl <- list.files(file.path(ResultDirectory, 'sim'), pattern="simlevelresults", f
 #assumes there is just 1 file that matches pattern. Don't know how to stack the results together.
 simlevel <-list()
 
-if(length(sl)>=1){
+if(length(sl)==1){
   dirOut <- file.path(ResultDirectory, "fig", "simulation")
   dir.create(file.path(dirOut), showWarnings=FALSE)
   
@@ -94,7 +94,6 @@ if(length(sl)>=1){
   plotTrajBox<-TRUE
   get_SimLevelplots(x=simlevel, dirIn=file.path(ResultDirectory, "sim"), dirOut=dirOut, 
                     boxnames=SIMboxplot_these, rpnames=SIMrp_these, trajnames=SIMtraj_these,breakyears=plotBrkYrs)
-
 }
 
 
