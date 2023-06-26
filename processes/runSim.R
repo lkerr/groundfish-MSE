@@ -193,17 +193,10 @@ big_loop
   save(omvalGlobal, file=paste0(ResultDirectory,'/sim/omvalGlobal', td2, '.Rdata'))
 
   
-  # Output the management procedures text file in the figure directory
-  write.csv(mproc, file=file.path(ResultDirectory,"fig",mprocfile), row.names=FALSE)
   
-  # Copy set_om_parameters_global.R into the results folder
-  file.copy('modelParameters/set_om_parameters_global.R', file.path(ResultDirectory,"set_om_parameters_global.R"))
-  
-  
-  
-  
-  if(runClass != 'HPCC'){
-    omparGlobal <- readLines('modelParameters/set_om_parameters_global.R')
+
+  if(runClass %in% c("HPCC","neptune")==FALSE){
+    omparGlobal <- readLines(here(ResultDirectory,"set_om_parameters_global.R"))
     cat('\n\nSuccess.\n\n',
         'Completion at: ',
         td,
