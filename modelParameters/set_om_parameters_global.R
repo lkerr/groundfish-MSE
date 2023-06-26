@@ -29,7 +29,7 @@ histAssess <- TRUE
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 50
+nrep <- 1
 
 # First year to begin actual management
 fmyear <- 2020
@@ -42,6 +42,7 @@ fyear <- 38
 
 # maximum year predicted into the future
 mxyear <- 2040
+mxyear <- 2023
 
 #### Burn-in parameters ####
 
@@ -170,6 +171,7 @@ quotaprice_coefs_loc<-"quotaprice_coefs_exponential.Rds"
 # The intervals years are set up (lower, upper].
 
 plotBrkYrs <- c(5, 10, 15)
+plotBrkYrs <- c(1,2)
 
 # Which sets of plots should be created? Set these objects to T/F
 
