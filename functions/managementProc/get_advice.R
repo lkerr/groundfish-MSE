@@ -21,9 +21,10 @@ get_advice <- function(stock){
   # Run ASAP assessment
   if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
     if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
-      get_ASAP_file(stock = tempStock) #creates ASAP dat file
+       get_ASAP_file(stock = tempStock) #creates ASAP dat file
         tempStock<- get_ASAP(stock = tempStock) #run ASAP assessment
     }else{ # end of if assessment year
+     get_ASAP_file(stock = tempStock) 
      get_ASAP(stock = tempStock)
       } # end of not ASAP assessment year
     ## MOVE ASSESSMENT RESULTS HERE WITHIN ASAP IF STATEMENT
@@ -35,6 +36,7 @@ get_advice <- function(stock){
       get_ASAP_file(stock = tempStock) #creates ASAP dat file
         tempStock <- get_WHAM(stock=tempStock) #run WHAM assessment
     }else{ # end of if assessment year
+      get_ASAP_file(stock = tempStock) 
       get_WHAM(stock = tempStock)
     } # end of not assessment year
     ## WHAM results HERE ## - Currently assumes the full fit model object is returned, may be revised slightly if this is not the case
