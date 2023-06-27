@@ -76,12 +76,11 @@ for(i in 1:length(flLst[[1]])){
 
 
 #Directory Setups for Simulation level figures
-dirOut <- here(ResultDirectory, "fig", "simulation")
+dirOut <- file.path(ResultDirectory, "fig", "simulation")
 dir.create(here(dirOut), showWarnings=FALSE)
 
 # Load in the aggregate simulation results
-sl <- list.files(here(ResultDirectory, "sim"), pattern="simlevelresults", full.names=TRUE)
-sl[2]<-sl[1]
+sl <- list.files(file.path(ResultDirectory, "sim"), pattern="simlevelresults", full.names=TRUE)
 simlevel <-list()
 
 if(length(sl)==1){
@@ -124,4 +123,5 @@ if(length(sl)==1){
 
 # Output the memory usage
 get_memUsage(runClass = runClass)
+cat('\n ---- runPost completed ----\n')
 
