@@ -48,7 +48,8 @@ for(r in 1:nrep){
     manage_counter<-0
     #Restore the rng state to the value of oldseed_mproc.  For the same values of r, all the management procedures to start from the same RNG state.  You probably want oldseed_mproc
     .Random.seed<-oldseed_mproc
-    
+    begin_rng_holder[[rng_counter]]<-c(r,m,fyear-1,yrs[fyear-1],.Random.seed)
+    rng_counter<-rng_counter+1
         #the econtype dataframe will pass a few things through to the econ model that govern how fishing is turned on/off when catch limits are reached, which sets of coefficients to use, and which prices to use
         if(mproc$ImplementationClass[m]=="Economic"){
          source('processes/setup_Year_Indexing.R')
@@ -88,7 +89,8 @@ for(r in 1:nrep){
        
     #### Top year loop ####
     for(y in fyear:nyear){
-   
+      begin_rng_holder[[rng_counter]]<-c(r,m,y,yrs[y],.Random.seed)
+      
       for(i in 1:nstock){
        
         
@@ -98,7 +100,6 @@ for(r in 1:nrep){
       }
       
       source('processes/withinYearAdmin.R')
-      begin_rng_holder[[rng_counter]]<-c(r,m,y,yrs[y],.Random.seed)
 
       # if burn-in period is over and fishery management has started
       if(y >= fmyearIdx){
