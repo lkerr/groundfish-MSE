@@ -65,10 +65,10 @@ for(r in 1:nrep){
     if(mproc$ImplementationClass[m]=="StandardFisheries" & mproc$ie_override[m]=="TRUE"){
       for (i in 1:nstock){
         if(mproc$ie_source[m]=="Internal"){  
-          stock[[i]] <- ie_internal_param_override(stock=stock[[i]], replicate=r, from_model=1)
+          stock[[i]] <- ie_internal_param_override(stock=stock[[i]], replicate=r, from_model=mproc$ie_from_model[m])
         }
         if(mproc$ie_source[m]!="Internal"){  
-          stock[[i]]<-ie_static_param_override(stock=stock[[i]],replicate=r, from_model=1, stocknum=i)
+          stock[[i]]<-ie_static_param_override(stock=stock[[i]],replicate=r, from_model=mproc$ie_from_model[m], stocknum=i)
         }      
       }
     }
