@@ -35,16 +35,17 @@ showProgBar<-TRUE
 
 top_loop_start<-Sys.time()
 top_loop_start
+rng_counter<-1
+
 #### Top rep Loop ####
 for(r in 1:nrep){
-    oldseed_mproc <- .Random.seed
+  oldseed_mproc <- .Random.seed
   print(paste0("rep # ",r))
   
   #### Top MP loop ####
   for(m in 1:nrow(mproc)){
     
     manage_counter<-0
-    
     #Restore the rng state to the value of oldseed_mproc.  For the same values of r, all the management procedures to start from the same RNG state.  You probably want oldseed_mproc
     .Random.seed<-oldseed_mproc
     
@@ -97,7 +98,7 @@ for(r in 1:nrep){
       }
       
       source('processes/withinYearAdmin.R')
-      begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
+      begin_rng_holder[[rng_counter]]<-c(r,m,y,yrs[y],.Random.seed)
 
       # if burn-in period is over and fishery management has started
       if(y >= fmyearIdx){
@@ -151,7 +152,8 @@ for(r in 1:nrep){
       
       } 
     
-      end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
+      end_rng_holder[[rng_counter]]<-c(r,m,y,yrs[y],.Random.seed)
+      rng_counter<-rng_counter+1
       
       # Compute Fleet level HHI and shannon index. Store fishery-year level results
       source('processes/OutputStorage.R')
@@ -194,7 +196,16 @@ big_loop
   td2 <- gsub(':', '', td)
   td2 <- paste(gsub(' ', '_', td2), round(runif(1, 0, 10000)), sep='_')
 
-
+  begin_rng_holder<-do.call(rbind,begin_rng_holder)
+  begin_rng_holder<-as.data.frame(begin_rng_holder)
+  colnames(begin_rng_holder)[1:4]<-c("rep","model","y", "year")
+  rownames(begin_rng_holder)<-NULL
+  
+  end_rng_holder<-do.call(rbind,end_rng_holder)
+  end_rng_holder<-as.data.frame(end_rng_holder)
+  colnames(end_rng_holder)[1:4]<-c("rep","model","y", "year")
+  rownames(end_rng_holder)<-NULL
+  
     saveRDS(begin_rng_holder, file.path(econ_results_location,  paste0("begin_rng_",td2, ".Rds")), compress=FALSE)
     saveRDS(end_rng_holder, file.path(econ_results_location,  paste0("end_rng_",td2, ".Rds")), compress=FALSE)
 
