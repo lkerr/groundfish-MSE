@@ -70,8 +70,8 @@ get_ASAP <- function(stock){
     dat_file$dat$recruit_cv <- matrix(pe_RSA, nrow = N_rows, 1)
 
     #catch CV
-   # dat_file$dat$catch_cv <- matrix(0.05, nrow = N_rows, 1)
-    dat_file$dat$catch_cv <- matrix(0.15, nrow = N_rows, 1)
+   dat_file$dat$catch_cv <- matrix(0.05, nrow = N_rows, 1)
+    # dat_file$dat$catch_cv <- matrix(0.15, nrow = N_rows, 1)
 
     #discard CV - need additional years even if not using
    dat_file$dat$discard_cv <- matrix(0, nrow = N_rows, 1)
@@ -92,6 +92,37 @@ get_ASAP <- function(stock){
     dat_file$dat$proj_ini <- c((y), -1, 3, -99, 1)
     dat_file$dat$R_avg_start <- styear
     dat_file$dat$R_avg_end <- endyear - 10
+    
+    # EML 06/28/23
+    # Many of the parameters were turned off, I think. This code tells the model to
+    # estimate certain values and deviations
+    # dat_file$dat$lambda_F1
+    # dat_file$dat$lambda_F_devs
+    # dat_file$dat$lambda_N1_devs
+    # dat_file$dat$lambda_q
+    # dat_file$dat$lambda_q_devs
+    # dat_file$dat$lambda_rec_devs
+    # dat_file$dat$lambda_SR_scalar
+    # dat_file$dat$lambda_steepness
+    # 
+    # dat_file$dat$phase_F1
+    # dat_file$dat$phase_F_devs
+    # dat_file$dat$phase_N1_devs
+    # dat_file$dat$phase_q
+    # dat_file$dat$phase_q_devs
+    # dat_file$dat$phase_rec_devs
+    # dat_file$dat$phase_SR_scalar
+    # dat_file$dat$phase_steepness
+    
+    dat_file$dat$lambda_F1 <- 1
+    dat_file$dat$lambda_F_devs <- 1
+    dat_file$dat$lambda_N1_devs <- 1
+    dat_file$dat$lambda_q <- 1
+    # dat_file$dat$lambda_q_devs <- 1
+    dat_file$dat$lambda_rec_devs <- 1
+    dat_file$dat$lambda_SR_scalar <- 1
+    # dat_file$dat$lambda_steepness <- 1
+
 
     if (Sys.info()['sysname'] == "Windows") {
 

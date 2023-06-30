@@ -18,7 +18,7 @@ source('functions/hydra/get_hydra.R')
 source('functions/hydra/update_stock_data.R')
 source("functions/hydra/get_f_from_advice.R")
 source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1.R"))
-#source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1_lowB.R"))
+# source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1_lowB.R"))
 source('processes/get_assess_results.R')
 source("functions/hydra/read.report.R")
 
@@ -46,11 +46,11 @@ source("functions/hydra/read.report.R")
 
 settings <- list(
   showTimeSeries = "No",
-  useCeiling = "Yes",
-  #useCeiling = "No",
+  # useCeiling = "Yes",
+  useCeiling = "No",
   assessType = "stock complex",
-  #assessType = "single species",
-  pseudoassess = TRUE,
+  # assessType = "single species",
+  pseudoassess = FALSE,
   targetF = 0.75,
   floorB = 0.5,
   floorOption = "min status",
@@ -76,7 +76,8 @@ input$complex = feeding_complexes$complex
 # input$complex = gear_complexes$complex
 
  input$docomplex = TRUE
-#input$docomplex = FALSE
+# input$docomplex = FALSE
+
 input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
                     0,1,1,0,0,0,0,0,0,0),
                   nrow=2,byrow=TRUE)
@@ -86,10 +87,10 @@ input$q <- matrix(c(1,0,0,0.3,0.5,1.5,1,1,0.2,1,
 input$ln_fishery_q <- c(-1.203972804, -0.693147181, 0.405465108, 0, 0, -1.609437912, 0, -1.108662625)
 
 #price-based q deets
-#input$q <- matrix(c(1,0,0,0.54,0.687,0.572,0.328,0.947,0.125,0.947,
+# input$q <- matrix(c(1,0,0,0.54,0.687,0.572,0.328,0.947,0.125,0.947,
 #                    0,1,3.346,0,0,0,0,0,0,0),
 #                  nrow=2,byrow=TRUE)
-#inpout$ln_fishery_q <- c(-0.61618614,-0.37590631,-0.55861629,-1.11474167,-0.05480824,-2.07677842,-0.05480824,1.20776560) #price based q
+# input$ln_fishery_q <- c(-0.61618614,-0.37590631,-0.55861629,-1.11474167,-0.05480824,-2.07677842,-0.05480824,1.20776560) #price based q
 
 PlanBstocks <-c("Goosefish", "Silver_hake", "Spiny_dogfish", "Winter_skate", "Yellowtail_flounder")
 ASAPstocks <-c("Atlantic_cod", "Atlantic_herring", "Atlantic_mackerel", "Haddock", "Winter_flounder")
@@ -190,14 +191,16 @@ for(r in 1:nrep){
     hydraData$IN <- hydraData_growing_index
     hydraData$CN <- hydraData_growing_catch
     
+    MP_advice_temp <- as.data.frame(matrix(nrow=0,ncol=3))
+    names(MP_advice_temp) <- c("species","year","advice")
+    
     #### Top year loop ####
     for(y in fyear:nyear){
     # for(y in fyear:(fyear+15)){
       source('processes/withinYearAdmin.R')
       begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed) # what exactly is this doing? 
       
-      MP_advice_temp <- as.data.frame(matrix(nrow=0,ncol=3))
-      names(MP_advice_temp) <- c("species","year","advice")
+
       AS_TBiomass[[r]][[y]] <- list()
       AS_TF[[r]][[y]] <- list()
       AS_TRec[[r]][[y]] <-list()
@@ -310,13 +313,15 @@ for(r in 1:nrep){
         # biomass for the F calculation, replace with something sensible
         f_calc_biomass <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>%
            arrange(species) %>% select(predbiomass) %>% t() %>% as.numeric()
-        f_calc_biomass <- c()
-        for(i in 1:10) f_calc_biomass <- c(f_calc_biomass,as.numeric(assess_results$data[[i]][nrow(assess_results$data[[i]]),2]))
+        # f_calc_biomass <- c()
+        # for(i in 1:10) f_calc_biomass <- c(f_calc_biomass,as.numeric(assess_results$data[[i]][nrow(assess_results$data[[i]]),2]))
         F_full_new <- get_f_from_advice(mp_results$out_table$advice,
                                         f_calc_biomass, 
                                         input$q, 
                                         input$complex, 
                                         input$docomplex)
+        
+        # if(F_full_new[2]==0) F_full_new[2]<- 0.05
         
         #save the assessment results and MP outcome
         y_store <- y-fyear+1
@@ -364,6 +369,35 @@ top_loop_end<-Sys.time()
 big_loop<-top_loop_end-top_loop_start
 big_loop
 
+# EML 06/25/23 
+# This commented out section is to look at how well the ASAP models estimate biomass, fishing mortality, recruitment
+# Also wanting to look at the MP_results object
+
+# AS_TBiomass_matrix <- matrix(nrow=(nyear-fyear+1),ncol=length(stock))
+# # rownames(AS_TBiomass_matrix)<- fyear:nyear
+# for(i in fyear:nyear){
+#   for(j in 1:8){
+#     if(!is.null(AS_TBiomass[[1]][[i]][[j]])) AS_TBiomass_matrix[(i-fyear+1),j] <- AS_TBiomass[[1]][[i]][[j]]
+#   }
+# }
+# 
+# AS_TF_matrix <- matrix(nrow=(nyear-fyear+1),ncol=length(stock))
+# # rownames(AS_TBiomass_matrix)<- fyear:nyear
+# for(i in fyear:nyear){
+#   for(j in 1:8){
+#     if(!is.null(AS_TF[[1]][[i]][[j]])) AS_TF_matrix[(i-fyear+1),j] <- AS_TF[[1]][[i]][[j]]
+#   }
+# }
+# 
+# AS_TRec_matrix <- matrix(nrow=(nyear-fyear+1),ncol=length(stock))
+# # rownames(AS_TBiomass_matrix)<- fyear:nyear
+# for(i in fyear:nyear){
+#   for(j in 1:8){
+#     if(!is.null(AS_TRec[[1]][[i]][[j]])) AS_TRec_matrix[(i-fyear+1),j] <- AS_TRec[[1]][[i]][[j]]
+#   }
+# }
+
+# MP_results[[2]][[31]]
       # Output run time / date information and OM inputs. The random number is
   # just ensuring that no simulations will be overwritten because the hpcc
   # might finish some in the same second. td is used for uniquely naming the

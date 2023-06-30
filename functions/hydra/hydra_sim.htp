@@ -174,6 +174,10 @@ class model_data : public ad_comm{
   data_int flagMSE;
   data_matrix residentTime;
   data_matrix areaMortality;
+  data_int m1_change_yr;
+  data_number m1_multiplier;
+  data_int of_change_yr;
+  data_number of_multiplier;
   data_int eof;
   data_int Nsurvey_obs;
   data_matrix obs_survey_biomass;
@@ -269,8 +273,8 @@ private:
   param_5array Ffl;
   param_5array Dfl;
   param_5array Cfl;
-  param_init_vector ln_fishery_q;
-  param_3array fishery_q;
+  param_init_matrix ln_fishery_q;
+  param_4array fishery_q;
   param_3array mean_guild_fishery_q;
   param_init_bounded_matrix ln_survey_q;
   param_matrix survey_q;
@@ -350,16 +354,17 @@ private:
   param_number likelihood_function_value;
   objective_function_value objfun;
   param_init_matrix ln_M1ann;
-  param_3array M1;
+  param_4array M1;
   param_init_number ln_otherFood_base;
   param_init_vector otherFood_dev;
-  param_vector otherFood;
+  param_matrix otherFood;
 public:
   virtual void userfunction(void);
   virtual void report(const dvector& gradients);
   virtual void final_calcs(void);
   model_parameters(int sz,int argc, char * argv[]);
   virtual void initializationfunction(void);
+  void calc_tv_m1(void);
   void transform_parameters(void);
   void calc_initial_states(void);
   void calc_update_N(void);

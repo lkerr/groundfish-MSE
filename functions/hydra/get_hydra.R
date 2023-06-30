@@ -15,6 +15,14 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
   # Option 1: get_hydra_data_GB_5bin_1978_inpN_noM1.R version
   # Option 2: get_hydra_data_10F.R version
   
+  #This needs dummy variables to start the while loop
+  #the while loop is needed because sometimes there is indexing issues
+  #due to the hydra model not running successfully
+  Species <- c(1)
+  Biomass <- c(1,2)
+  while(length(Species)!=length(Biomass))
+  {
+  
   hydra_data <- get_hydra_data(MSEyr)
   
   # Turn on debugging, if needed:  
@@ -70,7 +78,7 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
   {
     F_full <- matrix(newdata$F_full,nrow=MSEyr,ncol=hydra_data$Nfleets, byrow = TRUE)
     F_devs <- F_full*0
-    for(i in 1:MSEyr) F_devs[i,] <- log(F_full[i,])-hydra_data$avg_F
+    for(i in 1:MSEyr) F_devs[i,] <- log(F_full[i,]+0.001)-hydra_data$avg_F
     hydra_data$F_devs <- as.vector(rbind(t(matrix(hydra_data$F_devs,ncol=(hydra_data$Nyrs-MSEyr), byrow = TRUE)),F_devs))
   }
   
@@ -167,9 +175,12 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
   hydra_sim_rep <- reptoRlist("functions/hydra/hydra_sim.rep")
   # hydra_sim_rep_df <- reptoRlist("functions/hydra/pmse_predvals.out")
   
+  Species=rep(1:hydra_data$Nspecies,each=hydra_data$Nyrs)
+  Biomass=apply(hydra_sim_rep$EstBsize,1,sum)
+  }
+
   biomass <- data.frame(Species=rep(1:hydra_data$Nspecies,each=hydra_data$Nyrs),Year=rep(1:hydra_data$Nyrs,hydra_data$Nspecies),Biomass=apply(hydra_sim_rep$EstBsize,1,sum))
   abundance <- data.frame(Species=rep(1:hydra_data$Nspecies,each=hydra_data$Nyrs),Year=rep(1:hydra_data$Nyrs,hydra_data$Nspecies),Abundance=apply(hydra_sim_rep$EstNsize,1,sum))
-  
   #Convert general report object into things to be fed back
   survey.df <- hydra_sim_rep$survey
   colnames(survey.df) <- c("survey","year","species","biomass","cv","predbiomass","residual","NLL")
