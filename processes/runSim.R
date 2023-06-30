@@ -311,10 +311,10 @@ for(r in 1:nrep){
         }
         
         # biomass for the F calculation, replace with something sensible
-        f_calc_biomass <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>%
-           arrange(species) %>% select(predbiomass) %>% t() %>% as.numeric()
-        # f_calc_biomass <- c()
-        # for(i in 1:10) f_calc_biomass <- c(f_calc_biomass,as.numeric(assess_results$data[[i]][nrow(assess_results$data[[i]]),2]))
+        #f_calc_biomass <- dplyr::filter(as.data.frame(hydraData$predBiomass),year==max(year), survey==1) %>%
+        #   arrange(species) %>% select(predbiomass) %>% t() %>% as.numeric()
+         f_calc_biomass <- c()
+         for(i in 1:10) f_calc_biomass <- c(f_calc_biomass,as.numeric(assess_results$data[[i]][nrow(assess_results$data[[i]]),2]))
         F_full_new <- get_f_from_advice(mp_results$out_table$advice,
                                         f_calc_biomass, 
                                         input$q, 
