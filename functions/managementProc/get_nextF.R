@@ -306,6 +306,21 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     CWrec <- tail(parpop$obs_sumCW, 1) * parpop$mult
     # CWrec <- mean(tail(parpop$obs_sumCW)) * parpop$mult
     
+    #Plan B constraint
+    Bmsyfloor<- mean(stockEnv$SSB[(y-41):(y-2)])
+
+    if(stockEnv$SSB[y-1] > Bmsyfloor & CWrec < stockEnv$SSB[y-1]*0.2){
+       CWrec <- stockEnv$SSB[y-1]*0.2
+      }
+    
+    # if(((CWrec-stockEnv$sumCW[y-1])/CWrec)*100<(-20)){
+    #   CWrec<- stockEnv$sumCW[y-1]-(stockEnv$sumCW[y-1]*.2)}
+    # 
+    # if(((CWrec-stockEnv$sumCW[y-1])/CWrec)*100>20){
+    #   CWrec<- stockEnv$sumCW[y-1]+(stockEnv$sumCW[y-1]*.2)}
+    
+
+    
     #### NEXT MIGRATE THE WEIGHT TO A FISHING MORTALITY
     #### you know what the selectivity is going to be 
     #### (use the real one here) and you know what the weight is
@@ -316,6 +331,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     # Calculate what the corresponding true F is that matches with
     # the actual biomass-at-age in the current year
     #?? don't need for EBFM ??
+    
     F <- get_F(x = CWrec,
                   Nv = parpop$Ntrue_y,
                   slxCv = parpop$slxCtrue_y,
@@ -332,7 +348,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
   }
   
 }
-
 
 
 
