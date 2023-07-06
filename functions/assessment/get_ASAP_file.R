@@ -6,7 +6,7 @@
 #' @return dat_file object as this object is written to a .dat file and updated within the provided stock data object it need not be referenced directly in get_advice.
 
 get_ASAP_file <- function(stock){
-  
+ 
   out <- within(stock, {
     
     # read in assessment .dat file and modify accordingly
@@ -119,6 +119,6 @@ get_ASAP_file <- function(stock){
     
   }) # Close stock object
   
-  return(dat_file)
+  return(out)
   
 }
