@@ -307,10 +307,16 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     # CWrec <- mean(tail(parpop$obs_sumCW)) * parpop$mult
     
     #Plan B constraint
+    # Bmsyfloor<- mean(stockEnv$SSB[(y-41):(y-2)])
+    # if(stockEnv$SSB[y-1] > Bmsyfloor & CWrec < stockEnv$SSB[y-1]*0.2){
+    #    CWrec <- stockEnv$SSB[y-1]*0.2
+    #   }
+    
     Bmsyfloor<- mean(stockEnv$SSB[(y-41):(y-2)])
-
-    if(stockEnv$SSB[y-1] > Bmsyfloor & CWrec < stockEnv$SSB[y-1]*0.2){
-       CWrec <- stockEnv$SSB[y-1]*0.2
+    catchmin <- as.numeric(summary(stockEnv$sumCW[1:42])[2])
+    if(stockEnv$SSB[y-1] > Bmsyfloor & CWrec < catchmin){
+       CWrec <- catchmin
+       stockEnv$planBtrigger <- stockEnv$planBtrigger+1
       }
     
     # if(((CWrec-stockEnv$sumCW[y-1])/CWrec)*100<(-20)){

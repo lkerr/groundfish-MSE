@@ -22,9 +22,9 @@ settings = list(settings2, settings),
 complexes = list(complexes, complexes),
 mp = c("single species", "stock complex"),
 scenario = c("lowB","lowB"),
-files = c("results_2023-06-29-08-02-31/sim/mpres_single_species.rds",
+files = c("results_2023-07-06-16-49-05/sim/mpres_single_species.rds",
                   #"~/research/groundfish-MSE/results_2023-06-11-13-20-09/sim/mpres_stock_complex.rds",  # 2 replicates, stock complex, lowB
-          "results_2023-06-29-14-10-07/sim/mpres_stock_complex.rds"), # 10 replicates, stock complex, lowB
+          "results_2023-07-06-16-30-09/sim/mpres_stock_complex.rds"), # 10 replicates, stock complex, lowB
 )
 
 

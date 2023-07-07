@@ -40,6 +40,7 @@ update_stock_data <- function(i,hydraData){
   out$sumCW <- as.vector(sumCW)
   out$N <- as.vector(N)
   out$SSB <- Biomass
+  out$planBtrigger <- 0
   
   return(out)
 }

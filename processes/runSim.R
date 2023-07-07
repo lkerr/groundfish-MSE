@@ -48,8 +48,8 @@ settings <- list(
   showTimeSeries = "No",
   # useCeiling = "Yes",
   useCeiling = "No",
-  assessType = "stock complex",
-  # assessType = "single species",
+  # assessType = "stock complex",
+  assessType = "single species",
   pseudoassess = FALSE,
   targetF = 0.75,
   floorB = 0.5,
@@ -85,6 +85,8 @@ input$q <- matrix(c(1,0,0,0.3,0.5,1.5,1,1,0.2,1,
                     0,1,0.33,0,0,0,0,0,0,0),
                   nrow=2,byrow=TRUE)
 input$ln_fishery_q <- c(-1.203972804, -0.693147181, 0.405465108, 0, 0, -1.609437912, 0, -1.108662625)
+
+input$forageminimum <- 30
 
 #price-based q deets
 # input$q <- matrix(c(1,0,0,0.54,0.687,0.572,0.328,0.947,0.125,0.947,
@@ -131,6 +133,7 @@ top_loop_start<-Sys.time()
 
 # Operating model ("real") biomass, catch, and fishing mortality
 OM_Biomass <- list()
+OM_Foragebiomass <- list()
 OM_Catch <- list()
 OM_Fyr <- list()
 # Assessment model error metrics for ASAP, terminal year biomass, F estimate, and recruitment
@@ -356,6 +359,7 @@ for(r in 1:nrep){
   # Save the output from this finished MSE:
   # Output the real biomass from the operating model
   OM_Biomass[[r]] <- hydraData$biomass
+  OM_Foragebiomass[[r]] <- hydraData$foragebiomass
   # Output the real catch ("predcatch") and observed catch ("obscatch") from the operating model, removing unnecessary columns to save space
   OM_Catch[[r]] <- as.data.frame(hydraData$CN)[,-c(5,6,8,9)]
   OM_Fyr[[r]] <- as.data.frame(hydraData$Fyr)
@@ -420,6 +424,7 @@ big_loop
   #### save results ####
     mp_res <- NULL  
     mp_res$biomass <- OM_Biomass  
+    mp_res$foragebiomass <- OM_Foragebiomass
     mp_res$catch <- OM_Catch
     mp_res$Fyrspecies <- OM_Fyr
     mp_res$Fyrfleets <- MP_Fyr

@@ -180,6 +180,8 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
   }
 
   biomass <- data.frame(Species=rep(1:hydra_data$Nspecies,each=hydra_data$Nyrs),Year=rep(1:hydra_data$Nyrs,hydra_data$Nspecies),Biomass=apply(hydra_sim_rep$EstBsize,1,sum))
+  biomass <- cbind(biomass,hydra_sim_rep$EstBsize)
+  colnames(biomass)[4:8]<- c("size1","size2","size3","size4","size5")
   abundance <- data.frame(Species=rep(1:hydra_data$Nspecies,each=hydra_data$Nyrs),Year=rep(1:hydra_data$Nyrs,hydra_data$Nspecies),Abundance=apply(hydra_sim_rep$EstNsize,1,sum))
   #Convert general report object into things to be fed back
   survey.df <- hydra_sim_rep$survey
@@ -192,6 +194,27 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
   # colnames(catch.df) <- c("fleet","year","species","area","predcatch") #,"cv","predcatch","residual","NLL")  
   survey.df[,"cv"] <- rep(0.3,nrow(survey.df))
   catch.df[,"cv"] <- rep(0.05,nrow(catch.df))
+  
+  # Calculate the amount of forage biomass
+  foragebiomass <- data.frame(Year= c(1:hydra_data$Nyrs),Biomass=rep(0,hydra_data$Nyrs))
+  for(i in 1:nrow(biomass))
+  {
+    tempspecies <- biomass$Species[i]
+    if(tempspecies==2||tempspecies==3)
+    {
+      foragebiomass$Biomass[biomass$Year[i]] <- foragebiomass$Biomass[biomass$Year[i]]+biomass$Biomass[i]
+    }
+    if(tempspecies!=2&&tempspecies!=3)
+    {
+      for(j in c(1:5))
+      {
+        binmax <- hydra_data$binwidth[(tempspecies-1)*5+1]*j
+        binmin <- hydra_data$binwidth[(tempspecies-1)*5+1]*(j-1)+1
+        if(binmax<=input$forageminimum) foragebiomass$Biomass[biomass$Year[i]] <- foragebiomass$Biomass[biomass$Year[i]]+biomass[i,(j+3)]
+        if(binmax>input$forageminimum && binmin<=input$forageminimum) foragebiomass$Biomass[biomass$Year[i]]<- foragebiomass$Biomass[biomass$Year[i]]+(biomass[i,(j+3)]*(input$forageminimum-binmin)/hydra_data$binwidth[(tempspecies-1)*5+1])
+      }
+    }
+  }
   
   #rearrange to look like data that we need
   species <- data.frame(name=hydra_data$speciesList, species= c(1:10))
@@ -296,6 +319,7 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
                          predCatch=catch.df, #[,-c(5,8,9)],
                          abundance=abundance,
                          biomass=biomass,
+                         foragebiomass=foragebiomass,
                          recruitment=hydra_sim_rep$EstRec,
                          Nspecies=hydra_data$Nspecies,
                          ln_recsigma=hydra_data$ln_recsigma,
