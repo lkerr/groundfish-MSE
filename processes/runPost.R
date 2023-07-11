@@ -1,4 +1,5 @@
 library(here)
+here::i_am("processes/runPost.R")
 # Get the result directory path
 source(here("processes","identifyResultDirectory.R"))
 
