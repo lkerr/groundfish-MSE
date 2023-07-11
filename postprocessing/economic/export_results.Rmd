@@ -12,6 +12,9 @@ This is just code to pull things out of omvalGlobal and save as a dataset, so I 
 ```{r setup, include=FALSE}
 library("here")
 here::i_am("postprocessing/economic/export_results.Rmd")
+source(here("processes","get_runinfo.R"))
+
+source(here("processes","loadLibs.R"))
 
 library("knitr")
 library("viridis")
@@ -22,13 +25,15 @@ library("haven")
 options(knitr.kable.NA = '')
 knitr::opts_chunk$set(echo = TRUE)
 
+mprocfile<-"mprocEcon.csv"
 
-file_to_readin<-"results_2023-06-02-14-12-47"
+file_to_readin<-"results_2023-06-27-16-57-45"
 
 #This depends on something in  
 yr1<- 1851 
 
-ffiles <- list.files(path=here("functions"), pattern="^.*\\.R$",full.names=TRUE, recursive=TRUE)
+# load all the functions
+ffiles <- list.files(path=here("functions"), full.names=TRUE, recursive=TRUE)
 invisible(sapply(ffiles, source))
 
 ```
@@ -78,7 +83,7 @@ fmyearIdx<-which(yrs==fmyear)
 mproc <- read.csv(here(st,"fig",mprocfile), header=TRUE,
                     stringsAsFactors=FALSE)
 mproc<-cbind(1:nrow(mproc), mproc)
-colnames(mproc)[1] <- "Model Number"
+colnames(mproc)[1] <- "Model_Number"
 mproc<-cbind(mproc,st)
 colnames(mproc)[ncol(mproc)] <- "ResultFile"
 
@@ -88,15 +93,40 @@ omvalGlobal_filename<-list.files(path=here(st,"sim"), pattern="^omvalGlobal", re
 
 flLst <- list()
 
+omvalGlobal_stack<-list()
+# If there is just one omvalGlobal, read it into the object omvalGlobal_stack
+if(length(omvalGlobal_filename)==1){
+  load(here(st,"sim", omvalGlobal_filename[i]))
+
+} else if(length(omvalGlobal_filename)>1){ 
+# If there is more than one  omvalGlobal, you have to stack them together.
+
 for(i in 1:length(omvalGlobal_filename)){
   load(here(st,"sim", omvalGlobal_filename[i]))
   flLst[[i]] <- omvalGlobal
-  names(flLst[[i]]) <- names(omvalGlobal)
+#  names(flLst[[i]]) <- names(omvalGlobal)
+  omvalGlobal<-NULL
 }
+for(i in 1:length(flLst[[1]])){
 
-
-# This will be trouble if length(omvalGlobal_filename)>1
-
+  omval <- get_simcat(x=lapply(flLst, '[[', i ), along_dim=1)
+  names(omval) <- names(flLst[[1]][[i]])
+  stknm <- names(flLst[[1]])[i]
+  
+  # The "year" list element in omval is for plotting and needs to be
+  # only the length of the number of years -- unlike the other categories
+  # this doesn't change. So plotting doesn't get result in errors, change
+  # the dimensions of this list element
+  omval[['YEAR']] <- omval[['YEAR']][1:(length(omval[['YEAR']])/length(flLst))]
+  
+  omvalGlobal_stack[[i]]<-omval
+  omval<-NULL
+  
+}
+omvalGlobal<-omvalGlobal_stack
+omvalGlobal_stack<-NULL
+names(omvalGlobal)<-names(flLst[[1]])
+}
 
 ds<-NULL
 
@@ -107,7 +137,7 @@ ds<-NULL
 
 
 sim_level_mets<-c("ie_F_hat", "ie_F", "ie_bias", "iebias_hat")
-year_level_mets<-c("F_fullAdvice", "F_full", "SSB", "ACL", "sumCW","modeled_fleet_removals_mt", "avgprice_per_lb", "OFgStatus", "OFdStatus", "Gini_stock_within_season_BKS","Mohns_Rho_SSB","R")
+year_level_mets<-c("F_fullAdvice", "F_full", "SSB", "ACL", "sumCW", "OFdStatus","OFgStatus", "SSBPROXY", "modeled_fleet_removals_mt", "avgprice_per_lb", "Gini_stock_within_season_BKS","Mohns_Rho_SSB","R")
 
 out_sim<-list()
 out_year<-list()
@@ -129,6 +159,8 @@ ds<-do.call(rbind,out_year)
 
 ds<-ds %>%
   mutate(year=yrs[year])%>%
+  mutate(stock=str_replace(stock,"american",""))%>%
+  mutate(stock=str_replace(stock,"flounder","")) %>%
  #dplyr::filter(mproc==1) %>%
  #dplyr::filter(stock=="codGB") %>%
   mutate(mproc=as_factor(mproc),
@@ -159,6 +191,7 @@ ml<-ml %>%
 
 write_dta(ds, path=here(st,"yearly_results.dta"))
 write_dta(ml, path=here(st,"model_level_results.dta"))
+write_dta(mproc, path=here(st,"management_procedures.dta"))
 
     
 # Note, the Economic model has a ie_bias and ie_F, but those are not used. An "internal" model will get the ie_F_hat from the previous model.  So, you only need to look at ie_bias , ie_f, iebias_hat, and ie_F_hat from mproc=1  
