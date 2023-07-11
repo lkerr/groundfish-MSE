@@ -62,3 +62,4 @@ gradfil2.tmp
 variance
 varssave.tmp
 *.log
+.Rprofile
