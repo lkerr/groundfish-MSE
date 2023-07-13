@@ -81,9 +81,9 @@ input$complex = feeding_complexes$complex
 input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
                     0,1,1,0,0,0,0,0,0,0),
                   nrow=2,byrow=TRUE)
-input$q <- matrix(c(1,0,0,0.3,0.5,1.5,1,1,0.2,1,
-                    0,1,0.33,0,0,0,0,0,0,0),
-                  nrow=2,byrow=TRUE)
+# input$q <- matrix(c(1,0,0,0.3,0.5,1.5,1,1,0.2,1,
+#                     0,1,0.33,0,0,0,0,0,0,0),
+#                   nrow=2,byrow=TRUE)
 input$ln_fishery_q <- c(-1.203972804, -0.693147181, 0.405465108, 0, 0, -1.609437912, 0, -1.108662625)
 
 input$forageminimum <- 30
@@ -97,9 +97,16 @@ input$forageminimum <- 30
 PlanBstocks <-c("Goosefish", "Silver_hake", "Spiny_dogfish", "Winter_skate", "Yellowtail_flounder")
 ASAPstocks <-c("Atlantic_cod", "Atlantic_herring", "Atlantic_mackerel", "Haddock", "Winter_flounder")
 
+# PlanBstocks <-c("Goosefish", "Silver_hake", "Spiny_dogfish", "Winter_flounder","Winter_skate", "Yellowtail_flounder")
+# ASAPstocks <-c("Atlantic_cod", "Atlantic_herring", "Atlantic_mackerel", "Haddock")
+
 # PlanBstocks <-c("Atlantic_cod", "Atlantic_herring", "Atlantic_mackerel","Goosefish","Haddock", 
 #                 "Silver_hake", "Spiny_dogfish", "Winter_skate", "Yellowtail_flounder","Winter_flounder")
 # ASAPstocks <- c()
+
+for(i in 1:nstock){
+  if(stock[[i]]$stockName %in% PlanBstocks) stock[[i]]$planBtrigger <- 0
+}
 
 ####################These are temporary changes for testing ####################
 # econ_timer<-0

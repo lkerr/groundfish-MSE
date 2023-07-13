@@ -122,7 +122,24 @@ get_ASAP <- function(stock){
     dat_file$dat$lambda_rec_devs <- 1
     dat_file$dat$lambda_SR_scalar <- 1
     # dat_file$dat$lambda_steepness <- 1
+    
+    if(stockName=="Atlantic_mackerel")
+    {
+      dat_file$dat$lambda_q_devs <- 1
+      dat_file$dat$phase_q_devs <- 3
+      dat_file$dat$lambda_steepness <- 1
+      dat_file$dat$phase_steepness <- 3
+    }
 
+    # if(stockName=="Haddock")
+    # {
+    #   dat_file$dat$cv_N1_devs <- 0.3
+    # }
+    #         
+    # if(stockName=="Winter_flounder")
+    # {
+    #   dat_file$dat$cv_N1_devs <- 0.3
+    # }
 
     if (Sys.info()['sysname'] == "Windows") {
 

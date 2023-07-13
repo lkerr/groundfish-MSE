@@ -314,7 +314,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     #    CWrec <- stockEnv$SSB[y-1]*0.2
     #   }
     #Default is that the fix to the planB wasn't triggered, but will change to 1 if it is
-    planBtrigger <- 0
     Bmsyfloor<- mean(stockEnv$SSB[(y-41):(y-2)])
     #25% quantile as the catch minimum
     catchmin <- as.numeric(summary(stockEnv$sumCW[1:42])[2])
@@ -326,7 +325,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
 
     if(CWrec < catchmin){
        CWrec <- catchmin
-       planBtrigger <- planBtrigger+1
+       stockEnv$planBtrigger <- stockEnv$planBtrigger+1
       }
     
     # if(((CWrec-stockEnv$sumCW[y-1])/CWrec)*100<(-20)){
@@ -355,7 +354,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                   waav = parpop$waatrue_y)
     
     out <- list(F = F, RPs = c(NA, NA), OFdStatus=NA,
-                OFgStatus = NA, catchproj=NA, CWrec = CWrec, planBtrigger=planBtrigger) #AEW
+                OFgStatus = NA, catchproj=NA, CWrec = CWrec) #AEW
     
   }else{
     
