@@ -156,17 +156,17 @@ gen_data <- function(om_long) {
     I()
   #em_data
   ss_data <- em_data %>%
-    select(t, isp, type, data) %>%
+    dplyr::select(t, isp, type, data) %>%
     ungroup() %>%
     I()
   Nsp <- max(ss_data$isp)
   complex_data <- em_data %>%
-    select(t, isp, type, data, complex) %>%
+    dplyr::select(t, isp, type, data, complex) %>%
     group_by(t, complex, type) %>%
     summarize(data = sum(data)) %>%
     ungroup() %>%
     mutate(isp = complex+Nsp) %>%
-    select(-complex) %>%
+    dplyr::select(-complex) %>%
     I()
   Nsp <- max(complex_data$isp)
   system_data <- em_data %>%
@@ -540,11 +540,11 @@ do_ebfm_mp <- function(settings, assess_results, input) {
     if (settings$useCeiling == "No") ss_maxcat$ceiling_mult <- 1
     out_table <- refs %>% 
       mutate(advice = ss_maxcat$ceiling_mult*cfuse) %>% 
-      select(isp, fmsy, bmsy, blast, ffmsy, bbmsy, cfmsy, fuse, cfuse, ceiling, advice) %>% 
+      dplyr::select(isp, fmsy, bmsy, blast, ffmsy, bbmsy, cfmsy, fuse, cfuse, ceiling, advice) %>% 
       #select(isp, fmsy, bmsy, blast, ffmsy, bbmsy, cfmsy) %>% 
       dplyr::filter(isp <= input$Nsp)
     if(settings$useCeiling == "No")
-      out_table <- select(out_table, -ceiling)
+      out_table <- dplyr::select(out_table, -ceiling)
   }
   
   
@@ -570,10 +570,10 @@ do_ebfm_mp <- function(settings, assess_results, input) {
     out_table <- sc_refs %>% 
       mutate(advice = sc_maxcat$ceiling_mult*cfuse,
              complex = isp - input$Nsp) %>% 
-      select(complex, fmsy, bmsy, blast, ffmsy, bbmsy, cfmsy, bfloor, fuse, cfuse, ceiling, advice)
+      dplyr::select(complex, fmsy, bmsy, blast, ffmsy, bbmsy, cfmsy, bfloor, fuse, cfuse, ceiling, advice)
     #select(isp, fmsy, bmsy, blast, ffmsy, bbmsy, cfmsy) %>% 
     if(settings$useCeiling == "No")
-      out_table <- select(out_table, -ceiling)
+      out_table <- dplyr::select(out_table, -ceiling)
   }
   
   results <- NULL

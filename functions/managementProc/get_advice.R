@@ -109,6 +109,7 @@ get_advice <- function(stock){
       })
     }
   
+  
 # Calculate Mohn's Rho values
   # 
   # if(y > fmyearIdx){

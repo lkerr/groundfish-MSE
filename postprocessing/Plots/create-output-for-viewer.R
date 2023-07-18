@@ -22,7 +22,7 @@ settings = list(settings2, settings),
 complexes = list(complexes, complexes),
 mp = c("single species", "stock complex"),
 scenario = c("lowB","lowB"),
-files = c("results_2023-07-07-13-15-15/sim/mpres_single_species.rds",
+files = c("results_2023-07-18-17-13-10/sim/mpres_single_species.rds",
                   #"~/research/groundfish-MSE/results_2023-06-11-13-20-09/sim/mpres_stock_complex.rds",  # 2 replicates, stock complex, lowB
           "results_2023-07-06-16-30-09/sim/mpres_stock_complex.rds"), # 10 replicates, stock complex, lowB
 )
@@ -36,7 +36,7 @@ res_metrics <- res_metrics %>%
                                    settings = res_setup$settings),
                               #list(results, complexes, settings),
                               get_perfmetrics)) %>% 
-  select(mp, scenario, metric_bundle) %>% 
+  dplyr::select(mp, scenario, metric_bundle) %>% 
   # mutate(metrics = map(metric_bundle, "metrics"),
   #        median_metrics = map(metric_bundle, "median_metrics"),
   #        sp_timeseries = map(metric_bundle, "sp_timeseries"),
@@ -56,21 +56,21 @@ res_metrics <- readRDS("output/res_metrics.rds") %>%
 
 # metrics (by replicate)
 metrics <- res_metrics %>% 
-  select(mp, scenario, metrics) %>% 
+  dplyr::select(mp, scenario, metrics) %>% 
   unnest(metrics)
 #metrics
 
 # median_metrics (summarized over replicates)
 median_metrics <- res_metrics %>% 
-  select(mp, scenario, median_metrics) %>% 
+  dplyr::select(mp, scenario, median_metrics) %>% 
   unnest(median_metrics)
 #median_metrics
 
 # metrics (by replicate)
 sp_timeseries <- res_metrics %>% 
-  select(mp, scenario, sp_timeseries) %>% 
+  dplyr::select(mp, scenario, sp_timeseries) %>% 
   unnest(sp_timeseries) %>% 
-  select(-species) %>% 
+  dplyr::select(-species) %>% 
   I()
 
 
@@ -299,6 +299,7 @@ radar_p1 <- median_metrics %>%
          scenario = factor(scenario),
          #om = fct_recode(om, "Base" = "1","MRIP Bias" = "2","Shift" = "3"),
          ) %>% 
+  mutate(value= ifelse(is.na(value),1,value)) %>%
   #filter(scenario == "lowB") %>% 
   # mutate(mp = fct_recode(mp,
   #                        "status quo" = "MP 1",

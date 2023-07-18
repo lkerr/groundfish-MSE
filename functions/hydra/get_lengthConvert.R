@@ -18,7 +18,7 @@ get_lengthConvert <- function(stock,hydraData){
   Catchage <- Catchlengths%>%
     rowwise()%>%
     mutate(age=ceiling(((-log(1-L/Linf))/K+t0)))%>% #round up
-    select(fleet, year,species,inpN, name, age)
+    dplyr::select(fleet, year,species,inpN, name, age)
   
   # create plus group for now- better way to do this
   for(i in 1:length(stock))
@@ -31,22 +31,22 @@ get_lengthConvert <- function(stock,hydraData){
   
   Survtemp<- dplyr::filter(Survage)
     paaSurvtemp <-  Survtemp%>%
-      select(survey, year,inpN,species, name, age)%>%
+      dplyr::select(survey, year,inpN,species, name, age)%>%
       group_by(survey, year,inpN, species, name, age)%>%
       count()%>%
       group_by(survey, year,inpN, species, name)%>%
       mutate(total=sum(n), paa=n/total)%>%
-      select(survey, year,inpN,species,name,age,paa)%>%
+      dplyr::select(survey, year,inpN,species,name,age,paa)%>%
       spread(age,paa)
     
     CNtemp <- dplyr::filter(Catchage)
     paaCNtemp <- CNtemp%>%
-      select(fleet, year,inpN,species, name, age)%>%
+      dplyr::select(fleet, year,inpN,species, name, age)%>%
       group_by(fleet, year,inpN, species, name, age)%>%
       count()%>%
       group_by(fleet, year,inpN, species, name)%>%
       mutate(total=sum(n), paa=n/total)%>%
-      select(fleet, year,inpN,species,name,age,paa)%>%
+      dplyr::select(fleet, year,inpN,species,name,age,paa)%>%
       spread(age,paa)
    
     year_gap<- data.frame(year=1:length(unique(paaSurvtemp$year)))
