@@ -51,7 +51,7 @@
     # assessType = "stock complex",
     assessType = "single species",
     pseudoassess = FALSE,
-    dynamicRP = FALSE,
+    dynamicRP = TRUE,
     targetF = 0.75,
     floorB = 0.5,
     floorOption = "min status",
@@ -87,21 +87,23 @@
                     nrow=2,byrow=TRUE)
   input$ln_fishery_q <- c(-1.203972804, -0.693147181, 0.405465108, 0, 0, -1.609437912, 0, -1.108662625)
   
-  input$forageminimum <- 30
-  input$recdevcor <- 1
-  
   #price-based q deets
   # input$q <- matrix(c(1,0,0,0.54,0.687,0.572,0.328,0.947,0.125,0.947,
   #                    0,1,3.346,0,0,0,0,0,0,0),
   #                  nrow=2,byrow=TRUE)
   # input$ln_fishery_q <- c(-0.61618614,-0.37590631,-0.55861629,-1.11474167,-0.05480824,-2.07677842,-0.05480824,1.20776560) #price based q
   
+  input$forageminimum <- 30
+  input$recdevcor <- 0
+  
   PlanBstocks <-c("Goosefish", "Silver_hake", "Spiny_dogfish", "Winter_skate", "Yellowtail_flounder")
   ASAPstocks <-c("Atlantic_cod", "Atlantic_herring", "Atlantic_mackerel", "Haddock", "Winter_flounder")
   
+  # Option where Haddock and Winter flounder are planB stocks:
   # PlanBstocks <-c("Goosefish", "Haddock","Silver_hake", "Spiny_dogfish", "Winter_flounder","Winter_skate", "Yellowtail_flounder")
   # ASAPstocks <-c("Atlantic_cod", "Atlantic_herring", "Atlantic_mackerel" )
   
+  # Option where everything is a planB stock:
   # PlanBstocks <-c("Atlantic_cod", "Atlantic_herring", "Atlantic_mackerel","Goosefish","Haddock", 
   #                 "Silver_hake", "Spiny_dogfish", "Winter_skate", "Yellowtail_flounder","Winter_flounder")
   # ASAPstocks <- c()
@@ -153,6 +155,7 @@
   MP_Fyr <- list()
   MP_advice <- list()
   MP_results <- list()
+  PlanBTriggertot <- list()
   # profvis::profvis({
   # nrep=2
   #### Top rep Loop ####
@@ -385,6 +388,8 @@
     OM_Fyr[[r]] <- as.data.frame(hydraData$Fyr)
     MP_Fyr[[r]] <- F_full
     MP_advice[[r]] <- MP_advice_temp
+    # Hard coded for now, fix later
+    PlanBTriggertot[[r]] <- c(stock[[4]]$planBtrigger,stock[[6]]$planBtrigger,stock[[7]]$planBtrigger,stock[[9]]$planBtriggerstock[[10]]$planBtrigger)
     
   } #End rep loop
   #})#end profvis
@@ -396,30 +401,32 @@
   # EML 06/25/23 
   # This commented out section is to look at how well the ASAP models estimate biomass, fishing mortality, recruitment
   # Also wanting to look at the MP_results object
+  if(settings$assessType == "single species")
+  {
+    AS_TBiomass_matrix <- matrix(nrow=(nyear-fyear+1),ncol=length(stock))
+    # rownames(AS_TBiomass_matrix)<- fyear:nyear
+    for(i in fyear:nyear){
+      for(j in 1:8){
+        if(!is.null(AS_TBiomass[[1]][[i]][[j]])) AS_TBiomass_matrix[(i-fyear+1),j] <- AS_TBiomass[[1]][[i]][[j]]
+      }
+    }
   
-  # AS_TBiomass_matrix <- matrix(nrow=(nyear-fyear+1),ncol=length(stock))
-  # # rownames(AS_TBiomass_matrix)<- fyear:nyear
-  # for(i in fyear:nyear){
-  #   for(j in 1:8){
-  #     if(!is.null(AS_TBiomass[[1]][[i]][[j]])) AS_TBiomass_matrix[(i-fyear+1),j] <- AS_TBiomass[[1]][[i]][[j]]
-  #   }
-  # }
-  # 
-  # AS_TF_matrix <- matrix(nrow=(nyear-fyear+1),ncol=length(stock))
-  # # rownames(AS_TBiomass_matrix)<- fyear:nyear
-  # for(i in fyear:nyear){
-  #   for(j in 1:8){
-  #     if(!is.null(AS_TF[[1]][[i]][[j]])) AS_TF_matrix[(i-fyear+1),j] <- AS_TF[[1]][[i]][[j]]
-  #   }
-  # }
-  # 
-  # AS_TRec_matrix <- matrix(nrow=(nyear-fyear+1),ncol=length(stock))
-  # # rownames(AS_TBiomass_matrix)<- fyear:nyear
-  # for(i in fyear:nyear){
-  #   for(j in 1:8){
-  #     if(!is.null(AS_TRec[[1]][[i]][[j]])) AS_TRec_matrix[(i-fyear+1),j] <- AS_TRec[[1]][[i]][[j]]
-  #   }
-  # }
+    AS_TF_matrix <- matrix(nrow=(nyear-fyear+1),ncol=length(stock))
+    # rownames(AS_TBiomass_matrix)<- fyear:nyear
+    for(i in fyear:nyear){
+      for(j in 1:8){
+        if(!is.null(AS_TF[[1]][[i]][[j]])) AS_TF_matrix[(i-fyear+1),j] <- AS_TF[[1]][[i]][[j]]
+      }
+    }
+  
+    AS_TRec_matrix <- matrix(nrow=(nyear-fyear+1),ncol=length(stock))
+    # rownames(AS_TBiomass_matrix)<- fyear:nyear
+    for(i in fyear:nyear){
+      for(j in 1:8){
+        if(!is.null(AS_TRec[[1]][[i]][[j]])) AS_TRec_matrix[(i-fyear+1),j] <- AS_TRec[[1]][[i]][[j]]
+      }
+    }
+  }
   
   # MP_results[[2]][[31]]
         # Output run time / date information and OM inputs. The random number is
@@ -450,9 +457,13 @@
       mp_res$Fyrfleets <- MP_Fyr
       mp_res$catchadvice <- MP_advice
       mp_res$mp_results <- MP_results
-      mp_res$biomassRE <- AS_TBiomass
-      mp_res$FRE <- AS_TF
-      mp_res$RecRE <- AS_TRec
+      if(settings$assessType == "single species")
+      {
+        mp_res$biomassRE <- AS_TBiomass
+        mp_res$FRE <- AS_TF
+        mp_res$RecRE <- AS_TRec
+        mp_res$planBtrigger <- PlanBTriggertot
+      }
       saveRDS(mp_res, file=paste0(ResultDirectory,'/sim/mpres_', gsub(" ","_",settings$assessType), '.rds'))
       
       #save run options

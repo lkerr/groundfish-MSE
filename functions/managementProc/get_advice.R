@@ -159,6 +159,7 @@ get_advice <- function(stock){
       tempStock$RPmat[y,] <- gnF$RPs
       tempStock$catchproj <- gnF$catchproj
       tempStock$gnF <- gnF
+      tempStock$planBtrigger <- tempStock$planBtrigger+gnF$planBtrigger
 
 
         # gnF <- get_nextF(parmgt = mproc[m,], parpop = tempStock$parpop,

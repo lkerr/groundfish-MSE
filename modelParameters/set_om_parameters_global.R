@@ -29,7 +29,7 @@ histAssess <- FALSE
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 2
+nrep <- 50
 
 # First year to begin actual management
 fmyear <- 2020
