@@ -17,8 +17,8 @@
   source('functions/hydra/get_hydra.R')
   source('functions/hydra/update_stock_data.R')
   source("functions/hydra/get_f_from_advice.R")
-  source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1.R"))
-  # source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1_lowB.R"))
+  # source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1.R")) # Baseline
+  source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1_lowB.R")) #Low Biomass
   source('processes/get_assess_results.R')
   source("functions/hydra/read.report.R")
   
@@ -45,13 +45,14 @@
   # get_f_from_advice end up getting used
   
   settings <- list(
-    showTimeSeries = "No",
+    # showTimeSeries = "No",
     # useCeiling = "Yes",
     useCeiling = "No",
     # assessType = "stock complex",
     assessType = "single species",
     pseudoassess = FALSE,
     dynamicRP = TRUE,
+    dynamicRPlength=10,
     targetF = 0.75,
     floorB = 0.5,
     floorOption = "min status",
@@ -321,7 +322,7 @@
             if(settings$assessType == "stock complex")
             {
               if(settings$dynamicRP==F) assess_results <- run_complex_assessments(om_long, refyrs = 1:40, complex_ids = 1:4) #ref yrs are dummy, can get rid.
-              if(settings$dynamicRP==T) assess_results <- run_complex_assessments(om_long, refyrs = ((y-fyear)+1):((y-fyear)+1+39), complex_ids = 1:4) #ref yrs are dummy, can get rid.
+              if(settings$dynamicRP==T) assess_results <- run_complex_assessments(om_long, refyrs = (y-settings$dynamicRPlength):y, complex_ids = 1:4) #ref yrs are dummy, can get rid.
               mp_results <- do_ebfm_mp(settings, assess_results, input)
             }
           }
@@ -389,7 +390,7 @@
     MP_Fyr[[r]] <- F_full
     MP_advice[[r]] <- MP_advice_temp
     # Hard coded for now, fix later
-    PlanBTriggertot[[r]] <- c(stock[[4]]$planBtrigger,stock[[6]]$planBtrigger,stock[[7]]$planBtrigger,stock[[9]]$planBtriggerstock[[10]]$planBtrigger)
+    PlanBTriggertot[[r]] <- c(stock[[4]]$planBtrigger,stock[[6]]$planBtrigger,stock[[7]]$planBtrigger,stock[[9]]$planBtrigger,stock[[10]]$planBtrigger)
     
   } #End rep loop
   #})#end profvis

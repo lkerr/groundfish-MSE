@@ -29,6 +29,12 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                         start = unlist(nR- (-startHCM) + 1),
                         end = unlist(nR - (-endHCM) + 1))
     }
+    if(settings$dynamicRP==TRUE)
+    {
+      Rest <- get_dwindow(parpop$R,
+                          start = y-settings$dynamicRPlength,
+                          end = y)
+    }
     if(settings$dynamicRP==FALSE)
     {
     Rest <- get_dwindow(parpop$R,
