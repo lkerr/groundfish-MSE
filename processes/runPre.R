@@ -45,8 +45,9 @@ dir.create(file.path(ResultDirectory,"sim"), showWarnings = FALSE, recursive=TRU
 dir.create(file.path(ResultDirectory,"fig"), showWarnings = FALSE, recursive=TRUE)
 
 # load the required libraries
-source('processes/loadLibs.R')
-
+#source('processes/loadLibs.R')
+#source('getUserDLL.R') # loading modified version to resolve DLL conflict when using WHAM- AH & JJ
+                      # fishmethods package has TMB code that messes with WHAM
 # compile the c++ file and make available to R
 TMB::compile("assessment/caa.cpp")
 
