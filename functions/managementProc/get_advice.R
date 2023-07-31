@@ -3,7 +3,7 @@ get_advice <- function(stock){
   tempStock <- get_tmbSetup(stock = stock)
 
   #### Run assessment model####
-
+  
   # Run the CAA assessment
   if(mproc[m,'ASSESSCLASS'] == 'CAA'){
   if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
@@ -31,13 +31,13 @@ get_advice <- function(stock){
     
     
     #### WHAM STARTS HERE ####
-  }else if( mproc[m,'ASSESSCLASS'] == 'WHAM'){ 
+  }else if(mproc[m,'ASSESSCLASS'] == 'WHAM'){ 
     if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
       get_ASAP_file(stock = tempStock) #creates ASAP dat file
         tempStock <- get_WHAM(stock=tempStock) #run WHAM assessment
     }else{ # end of if assessment year
       get_ASAP_file(stock = tempStock) 
-      get_WHAM(stock = tempStock)
+      get_WHAM(stock = tempStock, wham_settings)
     } # end of not assessment year
     ## WHAM results HERE ## - Currently assumes the full fit model object is returned, may be revised slightly if this is not the case
     tempStock <- within(tempStock, {
