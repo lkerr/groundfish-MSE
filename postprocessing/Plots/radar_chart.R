@@ -108,10 +108,21 @@ do_small_radar_plot <- function(metrics) {
                   alpha("#a6761d",0.9),
                   alpha("#d95f02",0.9))
   
+  vlabels <- c("cat_yield_Ecosystem"="Ecosystem yield",
+              "fleet_yield_1"="Fleet 1 Yield",
+              "fleet_yield_2"="Fleet 2 Yield",
+              "iav_catch_Ecosystem"="Interannual variability\nin ecosystem catch",
+              "prop_below_lim"="Proportion below limit",
+              "eco_above_bmsy"= "Ecosystem above Bmsy",
+              "f_reduced"="F reduced",
+              "foregone_yield"="Underutilized quota")
+  
+  
   #colorblind
   radarchart(dd[,-1],seg=5,pcol=colors_line2,
              pfcol=colors_fill2,plwd=2,
-             vlabels=names(dd)[-1], vlcex=0.8,
+             vlabels=vlabels,vlcex = 0.8,
+             #=names(dd)[-1], vlcex=0.8,
              plty=c(rep(1,7),rep(2,7)),
              pdensity=0)
   rows<<-rownames(dd[-c(1,2),])
