@@ -114,8 +114,19 @@ get_ASAP_file <- function(stock){
       WriteASAP3DatFile(fname = paste(rundir, '/ASAP3.dat', sep = ''),
                         dat.object = dat_file,
                         header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
-      
-    } # End Linux file setup
+      # End Linux file setup 
+    } else{ # For other operating systems 
+        
+        # save copy of .dat file by stock name, nrep, and sim year
+        WriteASAP3DatFile(fname = paste('assessment/ASAP/', stockName, '_', r, '_', y,'.dat', sep = ''),
+                          dat.object = dat_file,
+                          header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
+        # if ASAP here
+        # write .dat file needs to have same name as exe file
+        WriteASAP3DatFile(fname = paste('assessment/ASAP/ASAP3.dat', sep = ''),
+                          dat.object = dat_file,
+                          header.text = paste(stockName, 'Simulation', r, 'Year', y, sep = '_'))
+    } # End setup for local runs on other operating systems (e.g. macs)
     
   }) # Close stock object
   

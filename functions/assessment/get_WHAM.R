@@ -18,7 +18,9 @@ get_WHAM <- function(stock, ...){
     wham_dat_file <- read_asap3_dat('assessment/ASAP/ASAP3.dat')
   } else if (Sys.info()['sysname'] == "Linux") {
     wham_dat_file <- read_asap3_dat(paste(rundir, '/ASAP3.dat', sep = ''))
-  } 
+  } else { # Other operating systems (e.g. mac)
+    wham_dat_file <- read_asap3_dat('assessment/ASAP/ASAP3.dat')
+  }
   
    ###### Urgent questions to finish this piece ??? !!!
   # What pieces of ASAP3.rdat are used elsewhere in MSE framework? - need to make sure we save same info from WHAM & connect those pieces
@@ -27,14 +29,15 @@ get_WHAM <- function(stock, ...){
   # Look at catchability tie-in
   
   # Prepare wham input
-  wham_settings <- list(model_name = "test", selectivity = list(model = c(rep("logistic",5)),
-                                           initial_pars = list(c(2,0.4), c(2,0.4), c(2,0.4), c(2,0.4), c(2,0.4)),
-                                           fix_pars = list(NULL, NULL, c(1,2),NULL,NULL))) # !!! add this to the function arguments
+  wham_settings <- list(model_name = "test") #, selectivity = list(model = c(rep("logistic",5)),
+                                             # initial_pars = list(c(2,0.4), c(2,0.4), c(2,0.4), c(2,0.4), c(2,0.4)),
+                                             # fix_pars = list(NULL, NULL, c(1,2),NULL,NULL))) # !!! add this to the function arguments
   input <- do.call(prepare_wham_input, c(list(asap3 = wham_dat_file), wham_settings)) # need to set up a wham-settings object to pull these from - make it a list so that only list objects that matter get added - only source the wham-settings object once at the start of the file & only if using WHAM
   
   # Fit wham model
-  whamEst <- fit_wham(input, do.osa=T)
-    
+  print("before wham fit")
+  whamEst <- fit_wham(input, do.osa=T, MakeADFun.silent = TRUE)
+    print("after_wham_fit")
   #save results from wham
   saveRDS(whamEst, file = paste("Assessment/WHAM/", stock,'_', t, '_', y, '.rdat', sep = '')) #??? probably don't want to save this, save a subset of results 
   
