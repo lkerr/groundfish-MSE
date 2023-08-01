@@ -62,7 +62,11 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
 
   # The initial population is the estimates in the last year
   init <- tail(parpop$J1N,1)
-
+  print("parpop get_proj")
+  print(tail(parpop$J1N,1))
+  print("init")
+  print(init) # Issue only in last year when parpop$J1N == NULL is not available
+  
   if(type=='current'){
     suminit<-sum(init)
     suminit<-get_error_idx(type=stockEnv$oe_sumIN_typ, idx=suminit, par=stockEnv$pe_IA)
