@@ -1,12 +1,12 @@
 #' @title get_WHAM
 #' @description Run Woods Hole Assessment Model (WHAM) executable and produce results object
 #' 
-#' @param stock
+#' @param stock Data storage object for stock
 #' @param ... Additional stock parameters used in WHAM setup that are not otherwise specified in the .Dat file
 #' 
 #' @return
 
-get_WHAM <- function(stock...){
+get_WHAM <- function(stock,...){
   
   
     # Run the wham model
@@ -57,11 +57,13 @@ get_WHAM <- function(stock...){
   input <- do.call(prepare_wham_input, c(list(asap3 = wham_dat_file), wham_settings)) # need to set up a wham-settings object to pull these from - make it a list so that only list objects that matter get added - only source the wham-settings object once at the start of the file & only if using WHAM
    
    # Fit wham model
-   whamEst <- fit_wham(input, do.osa=T, MakeADFun.silent = T)
-    
+  print("before wham fit")
+   whamEst <- fit_wham(input, do.osa=F, MakeADFun.silent = T, do.retro = F) # Setting do.osa = TRUE results in "Error in getUserDLL() Multiple TMB models loaded" which is likely an issue with what model TMB is used by make_osa_residuals() - make_osa_resiudals() probably calls TMB::MakeADFun without specifying DLL = "wham"
+    print("after wham fit")
+    print(head(whamEst))
    #save results from wham
-   saveRDS(whamEst, file = paste("Assessment/WHAM/", stockName,'_', r, '_', y, '.rdat', sep = '')) #??? probably don't want to save this, save a subset of results 
-
+   # saveRDS(whamEst, file = paste("Assessment/WHAM/", stockName,'_', r, '_', y, '.rdat', sep = '')) #??? probably don't want to save this, save a subset of results 
+   
     
    # Example of convergence check for wham
    check <- check_convergence(whamEst, ret=TRUE) # May want to suppress printing to screen using sink()
@@ -71,10 +73,10 @@ get_WHAM <- function(stock...){
    
     # Read in results
     res <- list(
-      waa.fleet= head(waa,1),
+      waa.fleet= whamEst$input$data$waa[1,1,], # First row of fleet WAA, !!! only works with a single fleet
       sel.fleet=whamEst$rep$selAA[[1]],
       M=tail(whamEst$rep$MAA,1),
-      mat=head(mat,1),
+      maturity=whamEst$input$data$mature[nrow(whamEst$input$data$mature),], # Last row of maturity input, !!! only works if maturity constant over time
       R=whamEst$rep$NAA[,1],
       SSB=whamEst$rep$SSB,
       J1N=tail(whamEst$rep$NAA,1),
