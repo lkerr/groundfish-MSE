@@ -41,16 +41,16 @@ get_advice <- function(stock){
     } # end of not assessment year
     ## WHAM results HERE ## - Currently assumes the full fit model object is returned, may be revised slightly if this is not the case
     tempStock <- within(tempStock, {
-      parpop <- list(waa = tail(res$WAA.mats$WAA.catch.fleet1, 1), # ??? JJ checking This should be same WAA as last year???
-                     sel = tail(fit$rep$selAA[[1]], n=1), # This pulls the first selectivity block so we should check that this is the correct selectivity to pull, !!! check that this is fleet
-                     M = tail(fit$rep$MAA, n=1), # Done
-                     mat = res$maturity[1,], # JJ checking that this should be same as last year!!!
-                     R = fit$rep$NAA[1,], # Check that this should be a vector not a single number, should these be recruitment residuals?
-                     SSBhat = fit$rep$SSB, # Done
-                     J1N = tail(fit$rep$NAA, n=1), # Done                 
-                     Rpar = Rpar, # Done
-                     Rpar_mis= Rpar_mis, # Done
-                     Fhat = tail(fit$rep$F[,1], n=1)) # Done
+      parpop <- list(waa = res$waa.fleet , # ??? JJ checking This should be same WAA as last year???
+                     sel = tail(res$sel.fleet, n=1), # Done
+                     M = res$MAA, # Done
+                     mat = res$maturity, # JJ checking that this should be same as last year!!!
+                     R = res$R, # Check that this should be a vector not a single number, should these be recruitment residuals?
+                     SSBhat = res$SSB, # Done
+                     J1N = res$J1N, # Done                 
+                     Rpar = Rpar, # Done # Within stockPar[[istock]] if debugging
+                     Rpar_mis= Rpar_mis, # Done # Within stockPar[[istock]] if debugging
+                     Fhat = tail(res$Fhat, n=1)) # Done
     })
   } # end of WHAM assessment 
 
@@ -59,8 +59,8 @@ get_advice <- function(stock){
     conv_rate[y] <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' && class(opt) != 'try-error') || # Check convergence for CAA
                            (mproc[m,'ASSESSCLASS'] == 'PLANB' && class(planBest) != 'try-error') || # Check convergence for PlanB
                            (mproc[m,'ASSESSCLASS'] == 'ASAP' && asapEst == 0) || # Check convergence for ASAP
-                           (mproc[m,'ASSESSCLASS'] == "WHAM" && WHAMConverge == 0), 1, 0) # Check convergence for WHAM !!! should double check this (1 means converged from ifelse statement?)
-  }) # ADD WHAM CONVERGENCE
+                           (mproc[m,'ASSESSCLASS'] == "WHAM" && whamConverge == TRUE), 1, 0) # Check convergence for WHAM !!! should double check this (1 means converged from ifelse statement?)
+  }) 
 
   # Retrieve the estimated SSB (necessary for advice) &
   # Vary the parpop depending on the type of assessment model.
