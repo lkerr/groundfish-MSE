@@ -61,11 +61,11 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   # init <- meanR * exp(-ages * F_val*parpop$sel - as.numeric(parpop$M))
 
   # The initial population is the estimates in the last year
-  init <- tail(parpop$J1N,1)
-  print("parpop get_proj")
-  print(tail(parpop$J1N,1))
-  print("init")
-  print(init) # Issue only in last year when parpop$J1N == NULL is not available
+   init <- tail(parpop$J1N,1)
+  # print("parpop get_proj")
+  # print(tail(parpop$J1N,1))
+  # print("init")
+  # print(init) # Issue only in last year when parpop$J1N == NULL is not available
   
   if(type=='current'){
     suminit<-sum(init)
