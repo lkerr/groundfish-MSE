@@ -13,7 +13,6 @@ source('processes/identifyResultDirectory.R')
 # Load the overall operating model parameters
 source('modelParameters/set_om_parameters_global.R')
 
-
 # get the operating model parameters -- first search the space for every
 # version of the set_stock_parameters_xx files and put them in this list.
 fileList <- list.files('modelParameters/stockParameters', full.names=TRUE)
@@ -82,7 +81,7 @@ source('processes/genBaselineACLs.R')
 #Input data location for economic models
 econdatapath <- 'data/data_processed/econ'
 
-                            # Reults folders for economic models. Create them if necessary
+                            # Results folders for economic models. Create them if necessary
 econ_results_location<-"results/econ/raw"
 dir.create('results/econ/raw', showWarnings = FALSE, recursive=TRUE)
 dir.create('results/sim', showWarnings = FALSE, recursive=TRUE)
@@ -173,5 +172,10 @@ if (platform == 'Linux'){
   to.path   <- paste(rundir, sep= "")
   file.copy(from = from.path, to = to.path)
   
+}
+
+# If a WHAM assessment is run (check mproc) then also load wham settings
+if ('WHAM' %in% mproc[,'ASSESSCLASS']) {
+  wham_settings <- source('modelParameters/wham_settings.R')
 }
 
