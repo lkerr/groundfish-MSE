@@ -61,9 +61,14 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     parpopF$switch<-FALSE
     
     #Estimate F reference point
-    Fref <- get_FBRP(parmgt = parmgt, parpop = parpopF, 
-                     parenv = parenv, Rfun_lst = Rfun_BmsySim, 
-                     stockEnv = stockEnv)
+    if(parmgt$ASSESSCLASS == 'WHAM'){ # Use wham F40% as FMSY proxy
+      Fref <- list(RPvalue = stockEnv$wham_storage$FMSY[[r]][[y]])
+    } else{
+      Fref <- get_FBRP(parmgt = parmgt, parpop = parpopF, 
+                       parenv = parenv, Rfun_lst = Rfun_BmsySim, 
+                       stockEnv = stockEnv)
+    }
+    
     
     #Determine True F reference point
     parmgtT<-parmgt
@@ -97,10 +102,14 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     }
     
     #Estimate biomass reference point
-    stockEnvT$R_mis<-TRUE
-    Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
-                     parenv = parenv, Rfun_lst = Rfun_BmsySim,
-                     FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
+    if(parmgt$ASSESSCLASS == 'WHAM'){ # Use wham SSB_F40% as SSBMSY proxy
+      Bref <- list(RPvalue = stockEnv$wham_storage$SSBMSY[[r]][[y]])
+    } else{
+      stockEnvT$R_mis<-TRUE
+      Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
+                       parenv = parenv, Rfun_lst = Rfun_BmsySim,
+                       FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
+    }
     
     #Determine true biomass reference point
     stockEnvT<-stockEnv
@@ -109,12 +118,12 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = FrefT[['RPvalue']], stockEnv = stockEnvT)
     
-    #Save reference points if it is the correct year to do so or else use previous reference ponits in catch advice
+    #Save reference points if it is the correct year to do so or else use previous reference points in catch advice
     if(evalRP){
-      FrefRPvalue <- Fref[['RPvalue']]
-      BrefRPvalue <- Bref[['RPvalue']]
-      FrefTRPvalue <- FrefT[['RPvalue']]
-      BrefTRPvalue <- BrefT[['RPvalue']]
+      FrefRPvalue <- Fref[['RPvalue']] # Fproxy
+      BrefRPvalue <- Bref[['RPvalue']] # SSBproxy
+      FrefTRPvalue <- FrefT[['RPvalue']] # OM Fproxy
+      BrefTRPvalue <- BrefT[['RPvalue']] # OM SSBproxy
     }else{
       FrefRPvalue <- RPlast[1]
       BrefRPvalue <- RPlast[2]
@@ -299,7 +308,77 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                 ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
                 OFgStatus = overfishing, catchproj=catchproj) #AEW
     
-  #Plan B Approach
+  # WHAM assessment
+  } else if(parmgt$ASSESSCLASS == 'WHAM'){
+    #Save reference points if it is the correct year to do so or else use previous reference points in catch advice
+    if(evalRP){
+      FrefRPvalue <- Fref[['RPvalue']] # Fproxy
+      BrefRPvalue <- Bref[['RPvalue']] # SSBproxy
+      FrefTRPvalue <- FrefT[['RPvalue']] # True OM F
+      BrefTRPvalue <- BrefT[['RPvalue']] # True OM SSB
+    }else{
+      FrefRPvalue <- RPlast[1]
+      BrefRPvalue <- RPlast[2]
+      FrefTRPvalue <- FrefT[['RPvalue']]
+      BrefTRPvalue <- BrefT[['RPvalue']]
+    }
+    
+    #Determine overfished threshold and target fishing mortality
+    BThresh <- BrefScalar * BrefRPvalue
+    FThresh <- FrefScalar * FrefRPvalue
+    
+    # Determine whether the population is perceived to be overfished and whether 
+    # overfishing is perceived to be occurring
+    
+    overfished <- ifelse(tail(parpop$SSBhat,1) < BThresh, 1, 0)
+    
+    overfishing <- ifelse(tail(parpop$Fhat,1) > FrefRPvalue, 1, 0) #MDM
+    
+    #Ramp HCR
+    if(tolower(parmgt$HCR) == 'slide'){
+      F <- get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)['Fadvice']
+    }
+    
+    #Threshold HCR
+    else if(tolower(parmgt$HCR) == 'simplethresh'){
+      # added small value to F because F = 0 causes some estimation errors
+      F <- ifelse(tail(parpop$SSBhat, 1) < BThresh, 0, FThresh)+1e-4
+    }
+    
+    #Constant fishing mortality HCR
+    else if(tolower(parmgt$HCR) == 'constf'){
+      F <- FThresh
+    }
+    
+    #Step in fishing mortality HCR
+    else if(tolower(parmgt$HCR) == 'step'){
+      if (y==fmyearIdx & overfished== 1){F<-FrefRPvalue*0.7}
+      else if (y==fmyearIdx & overfished== 0){F<-FThresh}
+      else if (y>fmyearIdx & overfished== 1){F<-FrefRPvalue*0.7}
+      else if (y>fmyearIdx & overfished== 0){
+        if(any(stockEnv$OFdStatus==1,na.rm=T)& tail(parpop$SSBhat,1)<BrefRPvalue){F<-FrefRPvalue*0.7}
+        else{F<-FThresh}}
+    }
+    
+    
+    #No projections (no projected catch advice)
+    if(tolower(parmgt$projections) == 'false'){catchproj<-NA}
+    
+    if (F>2){F<-2}#Not letting actual F go over 2
+    
+    out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue,FrefTRPvalue, BrefTRPvalue), 
+                ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
+                OFgStatus = overfishing, catchproj=catchproj) #AEW
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  # Plan B Approach
   }else if(parmgt$ASSESSCLASS == 'PLANB'){
     
     # Find the recommended level for catch in weight
@@ -329,6 +408,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
   }
   
+  return(out)
 }
 
 
