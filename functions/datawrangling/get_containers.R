@@ -175,9 +175,12 @@ get_containers <- function(stockPar){
       Fest = est,
       Catchest = est,
       Rest = est
-    )
+    ),
     
-  )
+    wham_storage = NULL
+    
+  ) # End definition of "out" (returned object)
+  
   assess_vals = list(
     assess_dat=as.data.frame(list(
       Year=c(rep(999,nyear)),
@@ -187,6 +190,59 @@ get_containers <- function(stockPar){
       MSEyr=c(rep(999,nyear)))),
       assess_st_yr=999
   )
+  
+  # If one of the assessment models is WHAM this storage container will be created for each stock but only populated for those stocks using WHAM
+  # All items in this list can be indexed by wham_storage$listObjects[[irep]][[iyr]]
+  if("WHAM" %in% mproc[,'ASSESSCLASS']){
+    store_SSB = vector(mode='list', length = nrep)
+    store_F = vector(mode='list', length = nrep)
+    store_FAA = vector(mode='list', length = nrep)
+    store_R = vector(mode='list', length = nrep)
+    store_NAA = vector(mode='list', length = nrep)
+    store_Catch = vector(mode='list', length = nrep)
+    store_CAA = vector(mode='list', length = nrep)
+    store_FMSY = vector(mode='list', length = nrep)
+    store_SSBMSY = vector(mode='list', length = nrep)
+    store_MSY = vector(mode='list', length = nrep)
+    store_SelAA = vector(mode='list', length = nrep)
+    store_Convergence = vector(mode='list', length=nrep)
+    
+    for(irep in 1:nrep){
+      store_SSB[[irep]] <- vector(mode='list', length = nyear)
+      store_F[[irep]] <- vector(mode='list', length = nyear)
+      store_FAA[[irep]] <- vector(mode='list', length = nyear)
+      store_R[[irep]] <- vector(mode='list', length = nyear)
+      store_NAA[[irep]] <- vector(mode='list', length = nyear)
+      store_Catch[[irep]] <- vector(mode='list', length = nyear)
+      store_CAA[[irep]] <- vector(mode='list', length = nyear)
+      store_FMSY[[irep]] <- rep(NA, nyear) # Single time series since a single value in each year
+      store_SSBMSY[[irep]]  <- rep(NA, nyear) # Single time series since a single value in each year
+      store_MSY[[irep]]  <- rep(NA, nyear) # Single time series since a single value in each year
+      store_SelAA[[irep]] <- vector(mode='list', length = nyear)
+      store_Convergence[[irep]] <- rep(NA, nyear) # Single time series, will only populate years where assessment run
+    }
+    
+    wham_storage_temp <- list(
+      SSB = store_SSB,
+      F = store_F,
+      FAA = store_FAA,
+      R = store_R,
+      NAA = store_NAA,
+      Catch = store_Catch,
+      CAA = store_CAA,
+      FMSY = store_FMSY,
+      SSBMSY = store_SSBMSY,
+      MSY = store_MSY,
+      SelAA = store_SelAA,
+      checkConvergence = store_Convergence
+    )
+    
+    # Replicate for each stock (only populated if assessment uses WHAM), rather than setting multiple rows as for other MSE results above
+    out$wham_storage <- wham_storage_temp # rep(list(rlang::duplicate(wham_storage_temp, shallow = FALSE)), nrow(mproc))
+  }
+  
+  
+  
   return(out)
 
 }
