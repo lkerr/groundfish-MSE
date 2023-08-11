@@ -42,7 +42,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     
     # If using a per-recruit F-based reference point paired with a forecast
     # simulation B-based reference point you will need an starting-point
-    # for the simulation -- calcaulte this assuming fishing at the F-based
+    # for the simulation -- calculate this assuming fishing at the F-based
     # reference point.
     
     if(parmgt$BREF_TYP == 'SIM' & parmgt$RFUN_NM == 'forecast'){
