@@ -39,7 +39,7 @@ get_advice <- function(stock){
       get_ASAP_file(stock = tempStock) 
       get_WHAM(stock = tempStock, wham_settings)
     } # end of not assessment year
-    ## WHAM results HERE ## - Currently assumes the full fit model object is returned, may be revised slightly if this is not the case
+    ## WHAM results 
     tempStock <- within(tempStock, {
       parpop <- list(waa = res$waa.fleet , # ??? JJ checking This should be same WAA as last year???
                      sel = tail(res$sel.fleet, n=1), # Done
@@ -50,7 +50,7 @@ get_advice <- function(stock){
                      J1N = res$J1N, # Done                 
                      Rpar = Rpar, # Done # Within stockPar[[istock]] if debugging
                      Rpar_mis= Rpar_mis, # Done # Within stockPar[[istock]] if debugging
-                     Fhat = tail(res$Fhat, n=1)) # Done
+                     Fhat = res$F.report[length(res$F.report)]) # Done
     })
   } # end of WHAM assessment 
 
