@@ -206,6 +206,10 @@ get_containers <- function(stockPar){
     store_MSY = vector(mode='list', length = nrep)
     store_SelAA = vector(mode='list', length = nrep)
     store_Convergence = vector(mode='list', length=nrep)
+    store_MohnsRho_SSB = vector(mode='list', length=nrep)
+    store_MohnsRho_F = vector(mode='list', length=nrep)
+    store_MohnsRho_R = vector(mode='list', length=nrep)
+    store_MohnsRho_N = vector(mode='list', length=nrep)
     
     for(irep in 1:nrep){
       store_SSB[[irep]] <- vector(mode='list', length = nyear)
@@ -220,6 +224,10 @@ get_containers <- function(stockPar){
       store_MSY[[irep]]  <- rep(NA, nyear) # Single time series since a single value in each year
       store_SelAA[[irep]] <- vector(mode='list', length = nyear)
       store_Convergence[[irep]] <- rep(NA, nyear) # Single time series, will only populate years where assessment run
+      store_MohnsRho_SSB[[irep]] <- rep(NA, nyear) # Single time series since a single value in each year
+      store_MohnsRho_F[[irep]] <- rep(NA, nyear) # Single time series since a single value in each year
+      store_MohnsRho_R[[irep]] <- rep(NA, nyear) # Single time series since a single value in each year
+      store_MohnsRho_N[[irep]] <- vector(mode='list', length = nyear)
     }
     
     wham_storage_temp <- list(
@@ -234,14 +242,16 @@ get_containers <- function(stockPar){
       SSBMSY = store_SSBMSY,
       MSY = store_MSY,
       SelAA = store_SelAA,
-      checkConvergence = store_Convergence
+      checkConvergence = store_Convergence,
+      MohnsRho_SSB = store_MohnsRho_SSB,
+      MohnsRho_F = store_MohnsRho_F,
+      MohnsRho_R = store_MohnsRho_R,
+      MohnsRho_N = store_MohnsRho_N
     )
     
     # Replicate for each stock (only populated if assessment uses WHAM), rather than setting multiple rows as for other MSE results above
     out$wham_storage <- wham_storage_temp # rep(list(rlang::duplicate(wham_storage_temp, shallow = FALSE)), nrow(mproc))
   }
-  
-  
   
   return(out)
 
