@@ -40,8 +40,8 @@ get_fillRepArrays <- function(stock){
     omval$SSBPROXY[r,m,] <- RPmat[,2]
     omval$FPROXYT[r,m,] <- RPmat[,3]
     omval$SSBPROXYT[r,m,] <- RPmat[,4]
-    omval$FRATIO[r,m,y] <- stock$res$F.report[length(stock$res$F.report)]/RPmat[,1][y]
-    omval$SSBRATIO[r,m,y] <- stock$res$SSB[length(stock$res$SSB)]/RPmat[,2][y]
+
+        omval$SSBRATIO[r,m,y] <- stock$res$SSB[length(stock$res$SSB)]/RPmat[,2][y]
     if(mproc[m,'rhoadjust'] == 'TRUE' & y>fmyearIdx & Mohns_Rho_SSB[y]>0.15){
     omval$FRATIO[r,m,y] <- (stock$res$F.report[length(stock$res$F.report)]/(Mohns_Rho_F[y]+1))/RPmat[,1][y]
     omval$SSBRATIO[r,m,y] <-(stock$res$SSB[length(stock$res$SSB)]/(Mohns_Rho_SSB[y]+1))/RPmat[,2][y]
@@ -63,6 +63,13 @@ get_fillRepArrays <- function(stock){
       omval$YEAR <- yrs
     }
     
+    if(mproc[m, 'ASSESSCLASS']=='ASAP'){
+      omval$FRATIO[r,m,y] <- stock$res$F.report[length(stock$res$F.report)]/RPmat[,1][y]
+      omval$Fest[y,1:length(stock$res$SSB)]<-stock$res$F.report
+      omval$Catchest[y,1:length(stock$res$SSB)]<-stock$res$catch.pred
+      omval$Rest[y,1:length(stock$res$SSB)]<-stock$res$N.age[,1]
+      
+    }
     
     # Assessment model diagnostics ... -1 gives 1 NA. Will change when I get
     # around to reporting all years for all metrics.

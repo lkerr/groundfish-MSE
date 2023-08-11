@@ -63,7 +63,7 @@ source('processes/get_runinfo.R')
 # load the required libraries
 source('processes/loadLibs.R')
 # source('getUserDLL.R') # loading modified version to resolve DLL conflict when using WHAM- AH & JJ
-# fishmethods package has TMB code that messes with WHAM
+# OSA residuals create second TMB model
 
 # load the list of management procedures
 source('processes/generateMP.R')

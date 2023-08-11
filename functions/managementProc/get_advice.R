@@ -41,9 +41,9 @@ get_advice <- function(stock){
     } # end of not assessment year
     ## WHAM results 
     tempStock <- within(tempStock, {
-      parpop <- list(waa = res$waa.fleet , # ??? JJ checking This should be same WAA as last year???
-                     sel = tail(res$sel.fleet, n=1), # Done
-                     M = res$MAA, # Done
+      parpop <- list(waa = matrix(res$waa.fleet, nrow=1), # ??? JJ checking This should be same WAA as last year???
+                     sel = tail(res$sel.fleet, 1), # Done
+                     M = res$M, # Done
                      mat = res$maturity, # JJ checking that this should be same as last year!!!
                      R = res$R, # Check that this should be a vector not a single number, should these be recruitment residuals?
                      SSBhat = res$SSB, # Done
@@ -51,7 +51,9 @@ get_advice <- function(stock){
                      Rpar = Rpar, # Done # Within stockPar[[istock]] if debugging
                      Rpar_mis= Rpar_mis, # Done # Within stockPar[[istock]] if debugging
                      Fhat = res$F.report[length(res$F.report)]) # Done
+
     })
+    #browser()
   } # end of WHAM assessment 
 
 # Was the assessment successful?
@@ -169,7 +171,7 @@ get_advice <- function(stock){
 
     # Tabulate advice (plus small constant)
       adviceF <- gnF$F + 1e-5
-
+#browser()
       # Calculate expected J1N using parameters from last year's assessment
       # model (i.e., this is Dec 31 of the previous year). Recruitment is
       # just recruitment from the previous year. This could be important
