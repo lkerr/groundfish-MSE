@@ -1,15 +1,12 @@
 get_MohnsRho <- function(stock){
   
   out <- within(stock, {
-    print("Mohns rho")
-    print(y)
-    print(wham_storage$Catch[[r]][[y]])
     
     if(mproc[m,'ASSESSCLASS'] == 'WHAM'){
-      Mohns_Rho_SSB[y] <- wham_storage$MohnsRho_SSB[[r]][[y-1]] # Indexing changes before this is calculated
-      Mohns_Rho_F[y] <- wham_storage$MohnsRho_F[[r]][[y-1]]
-      Mohns_Rho_R[y] <- wham_storage$MohnsRho_R[[r]][[y-1]]
-      Mohns_Rho_N[y] <- wham_storage$MohnsRho_N[[r]][[y-1]]
+      Mohns_Rho_SSB[y] <- wham_storage$MohnsRho_SSB[[r]][[y]] # Indexing changes before this is calculated
+      Mohns_Rho_F[y] <- wham_storage$MohnsRho_F[[r]][[y]]
+      Mohns_Rho_R[y] <- wham_storage$MohnsRho_R[[r]][[y]]
+      Mohns_Rho_N[y] <- wham_storage$MohnsRho_N[[r]][[y]]
     } else{
       peels<-y-fmyearIdx
       if(peels>7){peels<-7}
