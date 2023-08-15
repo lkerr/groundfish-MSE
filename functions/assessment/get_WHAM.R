@@ -38,8 +38,36 @@ get_WHAM <- function(stock,...){
     # Pull wham settings for this stock (loaded in runSetup from wham_settings.R)
     stock_wham_settings <- flatten(wham_settings[stockName])
     
-    # Prepare wham input
-    input <- do.call(prepare_wham_input, c(list(asap3 = wham_dat_file), stock_wham_settings)) # need to set up a wham-settings object to pull these from - make it a list so that only list objects that matter get added - only source the wham-settings object once at the start of the file & only if using WHAM
+    firstYR <- fmyear - ncaayear-1 # First year of assessment
+    currentYR <- (fmyear+y-fmyearIdx-1) # Last year of current assessment 
+    
+    # If ecov specified for the given stock, use only the data through the currentYR of the assessment
+    if("ecov" %in% names(stock_wham_settings)){
+      yr_index <- which(stock_wham_settings$ecov$year >= firstYR & stock_wham_settings$ecov$year <= currentYR)
+      
+      ecov <- NULL
+      ecov$label <- stock_wham_settings$ecov$label
+      ecov$process_model <- stock_wham_settings$ecov$proces_model
+      ecov$mean <- matrix(stock_wham_settings$ecov$mean[yr_index,], ncol = ncol(stock_wham_settings$ecov$mean))
+      ecov$logsigma <- stock_wham_settings$ecov$logsigma[yr_index]
+      ecov$year <- stock_wham_settings$ecov$year[yr_index,]
+      ecov$lag <- stock_wham_settings$ecov$lag
+      ecov$use_obs <- matrix(stock_wham_settings$ecov$use_obs[yr_index,], ncol = ncol(stock_wham_settings$ecov$use_obs))
+      ecov$where <- stock_wham_settings$ecov$where
+      ecov$indices <- list(stock_wham_settings$ecov$indices)
+      ecov$how <- stock_wham_settings$ecov$how
+      
+      temp_wham_settings <- append(stock_wham_settings[-which(names(stock_wham_settings)=="ecov")], list(ecov))
+      names(temp_wham_settings)[which(names(temp_wham_settings) == "")] <- "ecov"
+      
+      # Prepare wham input
+      input <- do.call(prepare_wham_input, c(list(asap3 = wham_dat_file), temp_wham_settings)) # need to set up a wham-settings object to pull these from - make it a list so that only list objects that matter get added - only source the wham-settings object once at the start of the file & only if using WHAM
+      
+    } else{
+      # Prepare wham input (no ecov need to be trimmed to current assessment length)
+      input <- do.call(prepare_wham_input, c(list(asap3 = wham_dat_file), stock_wham_settings)) # need to set up a wham-settings object to pull these from - make it a list so that only list objects that matter get added - only source the wham-settings object once at the start of the file & only if using WHAM
+    }
+    
     
     # Fit wham model
     whamEst <- fit_wham(input, do.osa=F, MakeADFun.silent = TRUE, do.retro = TRUE) # Setting do.osa = TRUE results in "Error in getUserDLL() Multiple TMB models loaded" which is likely an issue with what model TMB is used by make_osa_residuals() - make_osa_resiudals() probably calls TMB::MakeADFun without specifying DLL = "wham"
@@ -60,9 +88,6 @@ get_WHAM <- function(stock,...){
   wham_storage$R[[r]][[y]] <- whamEst$rep$NAA[,1]
   wham_storage$NAA[[r]][[y]] <- whamEst$rep$NAA
   wham_storage$Catch[[r]][[y]] <- c(whamEst$rep$pred_catch) # Not successfully saved in wham_storage for each assessment year
-  print("get_WHAM")
-  print(y)
-  print(wham_storage$Catch[[r]][[y]])
   wham_storage$CAA[[r]][[y]] <- whamEst$rep$pred_CAA[,1,] 
   wham_storage$FMSY[[r]][[y]] <- exp(whamEst$rep$log_FXSPR_static)
   wham_storage$SSBMSY[[r]][[y]] <- exp(whamEst$rep$log_SSB_FXSPR_static)
