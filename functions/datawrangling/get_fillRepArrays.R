@@ -95,15 +95,8 @@ get_fillRepArrays <- function(stock){
       # omval$Mohns_Rho_N[r,m,y] <- stock$wham_storage$MohnsRho_N[[r]][[y]] # I have a vector of at-age rho values, looks like asap saves single summary value
       omval$Mohns_Rho_F[r,m,y] <- stock$wham_storage$MohnsRho_F[[r]][[y]]
       omval$Mohns_Rho_R[r,m,y] <- stock$wham_storage$MohnsRho_R[[r]][[y]]
-      # browser()
-      # print(stock$res$SSB)
-      #print(omval$Catchest[y,1:length(stock$wham_storage$Catch[[r]][[y]])])
-      print("get_fillRepArrays")
-      print(y)
-      print(stock$wham_storage$Catch[[r]][[y]])
-      #browser()
-      omval$Catchest[y,1:length(stock$wham_storage$Catch[[r]][[y]])] <- stock$wham_storage$Catch[[r]][[y]]
-      omval$Rest[y,1:length(stock$res$SSB)] <- stock$wham_storage$R[[r]][[y]]
+      omval$Catchest[y,1:length(stock$wham_storage$Catch[[r]][[y]])] <- stock$wham_storage$Catch[[r]][[y]] # Causing errors
+      omval$Rest[y,1:length(stock$res$SSB)] <- stock$wham_storage$R[[r]][[y]] # Causing errors
     } else {
       omval$Mohns_Rho_SSB[r,m,]<-Mohns_Rho_SSB 
       omval$Mohns_Rho_N[r,m,]<-Mohns_Rho_N#MDM
