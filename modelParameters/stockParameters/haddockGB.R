@@ -58,10 +58,13 @@ Rpar_mis <- c(SSB_star = 75000, #the 'wrong' SRR parameters that will be used in
 #### Fishery parameters ####
 
 # fishery and survey catchabilities
-qC <- 0.0001
-qI <- 0.0001
+qC <- 0.00025 # based loosely on 2022 research track estimate for NEFSC spring index # 0.0001
+qI <- 0.00025 # based loosely on 2022 research track estimate for NEFSC spring index # 0.0001
 
-DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE. 
+## Change DecCatch to be an option in q_settings
+q_settings <- "SDM_sims"
+# q_settings <- "DecCatch" #If survey catchability decreases with temperature 
+# q_settings <- FALSE # This option will make no q adjustments (default setting)
 
 # fishery selectivity
 # ### change select to L50 paramaterization like maturity
