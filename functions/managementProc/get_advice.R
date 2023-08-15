@@ -35,25 +35,28 @@ get_advice <- function(stock){
     if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
       get_ASAP_file(stock = tempStock) #creates ASAP dat file
         tempStock <- get_WHAM(stock=tempStock) #run WHAM assessment
+        
+        ## Update advice 
+        tempStock <- within(tempStock, {
+          parpop <- list(waa = matrix(res$waa.fleet, nrow=1), # ??? JJ checking This should be same WAA as last year???
+                         sel = tail(res$sel.fleet, 1), # Done
+                         M = res$M, # Done
+                         mat = res$maturity, # JJ checking that this should be same as last year!!!
+                         R = res$R, # Check that this should be a vector not a single number, should these be recruitment residuals?
+                         SSBhat = res$SSB, # Done
+                         J1N = res$J1N, # Done                 
+                         Rpar = Rpar, # Done # Within stockPar[[istock]] if debugging
+                         Rpar_mis= Rpar_mis, # Done # Within stockPar[[istock]] if debugging
+                         Fhat = res$F.report[length(res$F.report)]) # Done
+          
+        })
     }else{ # end of if assessment year
       get_ASAP_file(stock = tempStock) 
-      get_WHAM(stock = tempStock, wham_settings)
+      tempStock <- get_WHAM(stock = tempStock, wham_settings) # Assessment run with updated data to get updated catch/outputs but doesn't impact management in non-assessment year
+      # parpop not updated in non-assessment year
+      
     } # end of not assessment year
-    ## WHAM results 
-    tempStock <- within(tempStock, {
-      parpop <- list(waa = matrix(res$waa.fleet, nrow=1), # ??? JJ checking This should be same WAA as last year???
-                     sel = tail(res$sel.fleet, 1), # Done
-                     M = res$M, # Done
-                     mat = res$maturity, # JJ checking that this should be same as last year!!!
-                     R = res$R, # Check that this should be a vector not a single number, should these be recruitment residuals?
-                     SSBhat = res$SSB, # Done
-                     J1N = res$J1N, # Done                 
-                     Rpar = Rpar, # Done # Within stockPar[[istock]] if debugging
-                     Rpar_mis= Rpar_mis, # Done # Within stockPar[[istock]] if debugging
-                     Fhat = res$F.report[length(res$F.report)]) # Done
-
-    })
-    #browser()
+    
   } # end of WHAM assessment 
 
 # Was the assessment successful?
@@ -67,7 +70,20 @@ get_advice <- function(stock){
   # Retrieve the estimated SSB (necessary for advice) &
   # Vary the parpop depending on the type of assessment model.
 
-    if(mproc[m,'ASSESSCLASS'] == 'CAA'){
+  if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
+    tempStock <- within(tempStock, {
+      parpop <- list(waa = tail(res$WAA.mats$WAA.catch.fleet1, 1),
+                     sel = tail(res$fleet.sel.mats$sel.m.fleet1, 1),
+                     M = tail(res$M.age, 1),
+                     mat = res$maturity[1,],
+                     R = res$SR.resids$recruits,
+                     SSBhat = res$SSB,
+                     J1N = tail(res$N.age,1),                 
+                     Rpar = Rpar,
+                     Rpar_mis= Rpar_mis,
+                     Fhat = tail(res$F.report, 1))
+    })
+  } else if(mproc[m,'ASSESSCLASS'] == 'CAA'){
       tempStock <- within(tempStock, {
         SSBaa <- rep$J1N * get_dwindow(waa, sty, y-1) * get_dwindow(mat, sty, y-1)
         SSBhat <- apply(SSBaa, 1, sum)
@@ -81,9 +97,7 @@ get_advice <- function(stock){
                        Rpar = Rpar,
                        Fhat = tail(rep$F_full, 1))
       })
-    }
-
-    if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
+    } else if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
       tempStock <- within(tempStock, {
         parpop <- list(obs_sumCW = tmb_dat$obs_sumCW,
                        mult = planBest$multiplier,
@@ -93,24 +107,9 @@ get_advice <- function(stock){
                        slxCtrue_y = slxC[y-1,])
       })
     }
-
-    if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
-      tempStock <- within(tempStock, {
-        parpop <- list(waa = tail(res$WAA.mats$WAA.catch.fleet1, 1),
-                       sel = tail(res$fleet.sel.mats$sel.m.fleet1, 1),
-                       M = tail(res$M.age, 1),
-                       mat = res$maturity[1,],
-                       R = res$SR.resids$recruits,
-                       SSBhat = res$SSB,
-                       J1N = tail(res$N.age,1),                 
-                       Rpar = Rpar,
-                       Rpar_mis= Rpar_mis,
-                       Fhat = tail(res$F.report, 1))
-      })
-     }
+    # This included in WHAM code above
 
 # Calculate Mohn's Rho values
-  
   if(y > fmyearIdx){
       tempStock <- get_MohnsRho(stock = tempStock)
       cat('Rho calculated.')
@@ -171,13 +170,11 @@ get_advice <- function(stock){
 
     # Tabulate advice (plus small constant)
       adviceF <- gnF$F + 1e-5
-#browser()
       # Calculate expected J1N using parameters from last year's assessment
       # model (i.e., this is Dec 31 of the previous year). Recruitment is
       # just recruitment from the previous year. This could be important
       # depending on what the selectivity pattern is, but if age-1s are
       # not very selected it won't matter much.
-      
       if(mproc$ASSESSCLASS[m] != 'PLANB'){ 
         J1Ny <- get_J1Ny(J1Ny0 = tail(parpop$J1N, 1),
                          Zy0 = parpop$Fhat * parpop$sel + parpop$M,
