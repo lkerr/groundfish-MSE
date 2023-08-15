@@ -1,5 +1,4 @@
 
-
 #### Set up environment ####
 
 # empty the environment
@@ -13,6 +12,12 @@ if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
+#### Project-specific settings ####
+source('SDM_MSE/Load_SDM_MSE_settings.R') # Only uncomment if taking advantage of SDM-adjusted catchability options (i.e. q_setting == "SDM_sims") in get_survey()
+
+
+
+
 ####################These are temporary changes for testing ####################
 # econ_timer<-0
 
@@ -24,6 +29,11 @@ if(runClass != 'HPCC'){
 ## For each mproc, I need to randomly pull in some simulation data (not quite right. I think I need something that is nrep*nyear long.  Across simulations, each replicate-year gets the same "econ data"
 ####################End Temporary changes for testing ####################
 
+#### Finish setup ####
+# If a WHAM assessment is run (check mproc) then also load wham settings
+if ('WHAM' %in% mproc[,'ASSESSCLASS']) {
+  wham_settings <- source('modelParameters/wham_settings.R')
+}
 
 #set the rng state based on system time.  Store the random state.
 # if we use a plain old date (seconds since Jan 1, 1970), the number is actually too large, but we can just rebase to seconds since Jan 1, 2018.
@@ -81,7 +91,7 @@ for(r in 1:nrep){
         stock[[i]] <- get_J1Updates(stock = stock[[i]])
       }
       
-      source('processes/withinYearAdmin.R')
+      source('processes/withinYearAdmin.R') # May not want to source this every simulation!!!
       begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
 
       # if burn-in period is over...

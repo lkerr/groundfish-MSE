@@ -174,8 +174,5 @@ if (platform == 'Linux'){
   
 }
 
-# If a WHAM assessment is run (check mproc) then also load wham settings
-if ('WHAM' %in% mproc[,'ASSESSCLASS']) {
-  wham_settings <- source('modelParameters/wham_settings.R')
-}
+
 
