@@ -16,7 +16,18 @@ wham_settings$codGB <- list(model_name = "codGB", selectivity = list(model = c(r
 wham_settings$codGOM <- list(model_name = "codGOM")
 
 # haddockGB
-wham_settings$haddockGB <- list(model_name = "haddockGB_model")
+wham_settings$haddockGB <- list(model_name = "haddockGB_model",
+                                ecov = list(label = "COG",
+                                            proces_model = "iid",
+                                            mean = matrix(SDManom$metricMean, ncol = 1),
+                                            logsigma = log(SDManom$SE),
+                                            year = matrix(SDManom$Year, ncol = 1),
+                                            lag = 0,
+                                            use_obs = matrix(1, ncol = 1, nrow = nrow(SDManom)),
+                                            where = "q",
+                                            indices = 1,
+                                            how = 1)) # Environmental covariate on spring survey catchability
+
 
 # pollock
 wham_settings$pollock <- list(model_name = "pollock")
