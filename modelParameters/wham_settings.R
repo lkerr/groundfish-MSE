@@ -16,17 +16,31 @@ wham_settings$codGB <- list(model_name = "codGB", selectivity = list(model = c(r
 wham_settings$codGOM <- list(model_name = "codGOM")
 
 # haddockGB
+
+# # Setting for the SDM-q linked model
+# wham_settings$haddockGB <- list(model_name = "haddockGB_model",
+#                                 ecov = list(label = "COG",
+#                                             proces_model = "rw",
+#                                             mean = matrix(SDManom$metricMean, ncol = 1),
+#                                             logsigma = log(SDManom$SE),
+#                                             year = matrix(SDManom$Year, ncol = 1),
+#                                             lag = 0,
+#                                             use_obs = matrix(1, ncol = 1, nrow = nrow(SDManom)),
+#                                             where = "q",
+#                                             indices = 1,
+#                                             how = 1)) # Environmental covariate on spring survey catchability
+# Model with no effect
 wham_settings$haddockGB <- list(model_name = "haddockGB_model",
                                 ecov = list(label = "COG",
-                                            proces_model = "iid",
+                                            proces_model = "none",
                                             mean = matrix(SDManom$metricMean, ncol = 1),
                                             logsigma = log(SDManom$SE),
                                             year = matrix(SDManom$Year, ncol = 1),
                                             lag = 0,
                                             use_obs = matrix(1, ncol = 1, nrow = nrow(SDManom)),
-                                            where = "q",
+                                            where = "none",
                                             indices = 1,
-                                            how = 1)) # Environmental covariate on spring survey catchability
+                                            how = 0)) 
 
 
 # pollock
