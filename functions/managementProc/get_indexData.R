@@ -1,7 +1,7 @@
 #Function to get survey index 
 get_indexData <- function(stock){
 
-  within(stock, {
+out <-  within(stock, {
 
     sumCW[y] <- CN[y,] %*% waa[y,]  # dot product
     
@@ -9,9 +9,13 @@ get_indexData <- function(stock){
    
     # calculate the predicted survey index in year y and the predicted
     # survey proportions-at-age
-    IN[y,] <- get_survey(F_full=F_full[y], M=natM[y], N=J1N[y,], slxC[y,], 
+
+    survey <- get_survey(F_full=F_full[y], M=natM[y], N=J1N[y,], slxC[y,], 
                            slxI=selI, timeI=timeI, qI=qI, 
                          q_settings=q_settings, Tanom=Tanom[y],y=y)
+    om_settings$om_qI[[r]][[y]] <- survey$qI_rev # !!! This deletes a list item every time it is run (only if you store the name wrong)
+    IN[y,] <- unlist(survey$I)
+    
     sumIN[y] <- sum(IN[y,])
     sumIW[y] <- IN[y,] %*% waa[y,]
     
@@ -51,6 +55,6 @@ get_indexData <- function(stock){
                                      par=oe_paaIN)
     })
 
-  
+  return(out)
 }
       
