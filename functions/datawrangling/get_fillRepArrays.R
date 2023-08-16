@@ -73,7 +73,7 @@ get_fillRepArrays <- function(stock){
     
     # Assessment model diagnostics ... -1 gives 1 NA. Will change when I get
     # around to reporting all years for all metrics.
-    omval$relE_qI[r,m,] <- relE_qI
+
     omval$relE_qC[r,m,] <- relE_qC
     omval$relE_selCs0[r,m,] <- relE_selCs0
     omval$relE_selCs1[r,m,] <- relE_selCs1
@@ -95,8 +95,9 @@ get_fillRepArrays <- function(stock){
       # omval$Mohns_Rho_N[r,m,y] <- stock$wham_storage$MohnsRho_N[[r]][[y]] # I have a vector of at-age rho values, looks like asap saves single summary value
       omval$Mohns_Rho_F[r,m,y] <- stock$wham_storage$MohnsRho_F[[r]][[y]]
       omval$Mohns_Rho_R[r,m,y] <- stock$wham_storage$MohnsRho_R[[r]][[y]]
-      omval$Catchest[y,1:length(stock$wham_storage$Catch[[r]][[y]])] <- stock$wham_storage$Catch[[r]][[y]] # Causing errors
-      omval$Rest[y,1:length(stock$res$SSB)] <- stock$wham_storage$R[[r]][[y]] # Causing errors
+      omval$Catchest[y,1:length(stock$wham_storage$Catch[[r]][[y]])] <- stock$wham_storage$Catch[[r]][[y]] 
+      omval$Rest[y,1:length(stock$res$SSB)] <- stock$wham_storage$R[[r]][[y]] 
+      omval$relE_qI[r,m,y] <- 100*(stock$wham_storage$pars_q[[r]][[y]]-om_settings$om_qI[[r]][[y]])/om_settings$om_qI[[r]][[y]] #!!! Relative error calculated here since get_relError currently run BEFORE q is adjusted by get_survey
     } else {
       omval$Mohns_Rho_SSB[r,m,]<-Mohns_Rho_SSB 
       omval$Mohns_Rho_N[r,m,]<-Mohns_Rho_N#MDM
@@ -104,6 +105,7 @@ get_fillRepArrays <- function(stock){
       omval$Mohns_Rho_R[r,m,]<-Mohns_Rho_R#MDM
       omval$Catchest[y,1:length(stock$res$SSB)]<-stock$res$catch.pred
       omval$Rest[y,1:length(stock$res$SSB)]<-stock$res$N.age[,1]
+      omval$relE_qI[r,m,] <- relE_qI
     }
     if (y == nyear){
     omval$relTermE_SSB[r,m,] <- relTermE_SSB #MDM
