@@ -11,6 +11,8 @@ source('processes/runSetup.R')
 if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
+# Load locally edited functions
+source('ReadASAP3DatFile.R') # Add quiet=TRUE to scan calls so output not printed every time an ASAP file is read in to be edited
 
 #### Project-specific settings ####
 source('SDM_MSE/Load_SDM_MSE_settings.R') # Only uncomment if taking advantage of SDM-adjusted catchability options (i.e. q_setting == "SDM_sims") in get_survey()
@@ -47,7 +49,6 @@ showProgBar<-TRUE
 ####################End Parameter and storage Setup ####################
   #This depends on mproc, fyear, and nyear. So it should be run *after* it is reset. I could be put in the runSetup.R script. But since I'm  adjusting fyear and nyear temporarily, I need it here (for now).
 
-
 source('processes/setupYearIndexing.R')
 top_loop_start<-Sys.time()
 
@@ -75,13 +76,12 @@ for(r in 1:nrep){
      #assess_vals <- get_HistAssess(stock = stock[[i]])
       
      stock[[i]] <- get_HistAssess(stock = stock[[i]])
-       
+    
      }      
 
     # Initialize stocks and determine burn-in F
     for(i in 1:nstock){
       stock[[i]] <- get_popInit(stock=stock[[i]])
-    
     }
 
        
@@ -112,8 +112,10 @@ for(r in 1:nrep){
             # Specific "survey" meant to track the population on Jan1
             # for use in the economic submodel. timeI=0 implies Jan1.
             stock[[i]]<- within(stock[[i]], {
-              IJ1[y,] <- get_survey(F_full=0, M=0, N=J1N[y,], slxC[y,],
-                                slxI=selI, timeI=0, qI=qI)
+              survey <- get_survey(F_full=0, M=0, N=J1N[y,], slxC[y,],
+                                slxI=selI, timeI=0, qI=qI, y=y)
+              om_settings$om_qI[[r]][[y]] <- survey$qI_rev # !!! should check that this is needed for economic runs
+              IJ1[y,] <- unlist(survey$I)
             })
           } # End survey loop
 
@@ -196,6 +198,25 @@ big_loop
     pth <- paste0(ResultDirectory,'/fig/', sapply(stock, '[[', 'stockName')[i])
     dir.create(pth, showWarnings = FALSE)
   }
+  
+  #### save sim settings ####
+  if ('WHAM' %in% mproc[,'ASSESSCLASS']) {
+    outfile <- paste0(ResultDirectory, '/simulation_settings.txt')
+    write("############### WHAM settings ###############", outfile)
+    sink(outfile, append = TRUE)
+    print(wham_settings)
+    sink()
+  }
+  write("############### OM global ###############", outfile, append = TRUE)
+  file.append(outfile, 'modelParameters/set_om_parameters_global.R')
+  write("############### Stock parameters ###############", outfile, append = TRUE)
+  for(istock in 1:nstock){
+    write(paste0("########## ", stockNameList[istock], " #########"), outfile, append = TRUE)
+    file.append(outfile, paste0('modelParameters/stockParameters/', stockNameList[istock], ".R"))
+  }
+  write("############### mproc ###############", outfile, append = TRUE)
+  file.append(outfile, 'modelParameters/mproc.csv')
+  
 
   #### save results ####
   omvalGlobal <- sapply(1:nstock, function(x) stock[[x]]['omval'])
