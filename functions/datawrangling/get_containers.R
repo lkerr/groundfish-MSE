@@ -16,6 +16,13 @@ get_containers <- function(stockPar){
                                           paste0('mproc', 1:nmproc),
                                           paste0('nyear', 1:nyear)))
   
+  # Revised container style (index by rep and year, repeated by mproc when stock object generated for each mproc)
+  rep_year_container = vector(mode='list', length = nrep)
+  for(irep in 1:nrep){
+    rep_year_container[[irep]] <- vector(mode='list', length = nyear)
+  }
+  
+  
   out <- list(
 
     # Containers that save the simulation data
@@ -177,9 +184,14 @@ get_containers <- function(stockPar){
       Rest = est
     ),
     
+    om_settings = NULL, # Empty storage for OM settings/values, fill below
     wham_storage = NULL
     
   ) # End definition of "out" (returned object)
+  
+  # Define om_settings structure 
+  out$om_settings <- list(om_qI = rep_year_container, # indexed by [[irep]][[iyear]]
+                        om_qC = rep_year_container)
   
   assess_vals = list(
     assess_dat=as.data.frame(list(
@@ -210,6 +222,9 @@ get_containers <- function(stockPar){
     store_MohnsRho_F = vector(mode='list', length=nrep)
     store_MohnsRho_R = vector(mode='list', length=nrep)
     store_MohnsRho_N = vector(mode='list', length=nrep)
+    store_pars_Ecovbeta = vector(mode='list', length=nrep)
+    store_pars_q = vector(mode='list', length=nrep)
+    store_pars_Ecov_process = vector(mode='list', length=nrep)
     
     for(irep in 1:nrep){
       store_SSB[[irep]] <- vector(mode='list', length = nyear)
@@ -228,6 +243,9 @@ get_containers <- function(stockPar){
       store_MohnsRho_F[[irep]] <- rep(NA, nyear) # Single time series since a single value in each year
       store_MohnsRho_R[[irep]] <- rep(NA, nyear) # Single time series since a single value in each year
       store_MohnsRho_N[[irep]] <- vector(mode='list', length = nyear)
+      store_pars_Ecovbeta[[irep]] <- vector(mode='list', length = nyear)
+      store_pars_q[[irep]] <- vector(mode='list', length = nyear)
+      store_pars_Ecov_process[[irep]] <- vector(mode='list', length = nyear)
     }
     
     wham_storage_temp <- list(
@@ -246,7 +264,10 @@ get_containers <- function(stockPar){
       MohnsRho_SSB = store_MohnsRho_SSB,
       MohnsRho_F = store_MohnsRho_F,
       MohnsRho_R = store_MohnsRho_R,
-      MohnsRho_N = store_MohnsRho_N
+      MohnsRho_N = store_MohnsRho_N,
+      pars_Ecov_beta = store_pars_Ecovbeta,
+      pars_Ecov_process = store_pars_Ecov_process,
+      pars_q = store_pars_q
     )
     
     # Replicate for each stock (only populated if assessment uses WHAM), rather than setting multiple rows as for other MSE results above
