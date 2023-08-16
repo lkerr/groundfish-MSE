@@ -27,6 +27,7 @@
 # Tanom: temperature anomaly
 #
 # y: year in simulation 
+#' @return A list including I the survey index and qI_rev the revised catchability
 
 get_survey <- function(F_full, M, N, slxF, slxI, timeI, qI, q_settings = NULL, Tanom, y){
   
@@ -56,7 +57,7 @@ get_survey <- function(F_full, M, N, slxF, slxI, timeI, qI, q_settings = NULL, T
 
   I <- slxI * qI_rev * N * exp(-Z * timeI)
   
-  return(I)
+  return(list(I=I, qI_rev=qI_rev))
   
 }
 
