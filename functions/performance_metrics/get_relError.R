@@ -1,5 +1,5 @@
 get_relError <- function(stock){
-
+#!!! Could run this as post-processing or right before get_fillRepArrays.R
   out <- within(stock, {
 
     #### Calculate rel errors ####
@@ -8,7 +8,7 @@ get_relError <- function(stock){
       relE_SSB[y-1] <- mean(get_relE(SSBhat, get_dwindow(SSB, sty, y-1)))
       relE_CW[y-1] <- mean(get_relE(rep$sumCW, get_dwindow(sumCW, sty, y-1)))
       relE_IN[y-1] <- mean(get_relE(rep$sumIN, get_dwindow(sumIN, sty, y-1)))
-      relE_qI[y-1] = get_relE(rep$log_qI, log(qI))
+      relE_qI[y-1] = get_relE(rep$log_qI, log(qI)) # Not calculated for wham since this function is run before get_survey adjusts q
       relE_qC[y-1] = get_relE(rep$log_qC, log(qC))
       relE_selCs0[y-1] = get_relE(rep$log_selC[1], log(selC['s0']))
       relE_selCs1[y-1] = get_relE(rep$log_selC[2], log(selC['s1']))
@@ -25,7 +25,8 @@ get_relError <- function(stock){
       relE_N[y-1] <- mean(get_relE(Nnew1,rowSums(J1N[(y-length(SSBnew1)):(y-1),])))
       relE_R[y-1] <- mean(get_relE(Rnew1, R[(y-length(SSBnew1)):(y-1)]))
       relE_F[y-1] <- mean(get_relE(Fnew1, F_full[(y-length(SSBnew1)):(y-1)]))
-    }
+      
+    } 
 
   })
 
