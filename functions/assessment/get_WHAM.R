@@ -10,7 +10,6 @@ get_WHAM <- function(stock,...){
   
   library.dynam(package = 'wham')
   
-  
     # Read in saved ASAP .Dat file with wham function based on operating system
   if (Sys.info()['sysname'] == "Windows") {
     wham_dat_file <- read_asap3_dat('assessment/ASAP/ASAP3.dat')
@@ -98,6 +97,9 @@ get_WHAM <- function(stock,...){
   wham_storage$MohnsRho_F[[r]][[y]] <- MohnsRho["Fbar"]
   wham_storage$MohnsRho_R[[r]][[y]] <- MohnsRho["R"]
   wham_storage$MohnsRho_N[[r]][[y]] <- MohnsRho[grep("N", names(MohnsRho))]
+  wham_storage$pars_Ecov_beta[[r]][[y]] <- whamEst$rep$Ecov_beta[3,,1,] # Should pull last row associated with index, may need to be revised in the future!!!
+  wham_storage$pars_Ecov_process[[r]][[y]] <- whamEst$rep$Ecov_process_pars
+  wham_storage$pars_q[[r]][[y]] <- tail(whamEst$rep$q, n=1) # Save only final q estimate, may revise in future but only a single value can be retained or get_fillRepArrays throws an error!!!
   
   # Read in results
   res <- list(
