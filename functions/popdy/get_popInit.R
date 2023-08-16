@@ -37,9 +37,11 @@ get_popInit <- function(stock){
                                          inputUnit='kg',y=1,fmyearIdx=fmyearIdx)
     
     paaCN[1:(fyear-1),] <- (CN[1:(fyear-1),]) / sum(CN[1:(fyear-1),])
-    IN[1:(fyear-1),] <- get_survey(F_full=F_full[1:(fyear-1)], M=init_M, 
+    survey <- get_survey(F_full=F_full[1:(fyear-1)], M=init_M, 
                                    N=J1N[1:(fyear-1),], slxC[1:(fyear-1),], 
                                    slxI=selI, timeI=timeI, qI=qI,q_settings=FALSE,Tanom=0,y=1)
+    IN[1:(fyear-1),] <- unlist(survey$I)
+    
     sumIN[1:(fyear-1)] <- sum(IN[1:(fyear-1),])
     sumIW[1:(fyear-1)] <- apply(IN[1:(fyear-1),] * waa[1:(fyear-1),], 1, sum)
     paaIN[1:(fyear-1),] <- IN[1:(fyear-1),] / sum(IN[1:(fyear-1),])
