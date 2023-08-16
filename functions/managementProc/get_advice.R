@@ -3,61 +3,66 @@ get_advice <- function(stock){
   tempStock <- get_tmbSetup(stock = stock)
 
   #### Run assessment model####
-  
-  # Run the CAA assessment
-  if(mproc[m,'ASSESSCLASS'] == 'CAA'){
-  if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
-  tempStock <- get_caa(stock = tempStock)}
-  else {get_caa(stock = tempStock)}
-  }
-
-  # Run the PlanB assessment
-  if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
-  if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
-  tempStock <- get_planB(stock = tempStock)}
-  else{get_planB(stock = tempStock)}
-  }
-
-  # Run ASAP assessment
+  #### ASAP assessment STARTS HERE ####
   if(mproc[m,'ASSESSCLASS'] == 'ASAP'){
     if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
-       get_ASAP_file(stock = tempStock) #creates ASAP dat file
-        tempStock<- get_ASAP(stock = tempStock) #run ASAP assessment
+      get_ASAP_file(stock = tempStock) #creates ASAP dat file
+      tempStock<- get_ASAP(stock = tempStock) #run ASAP assessment
     }else{ # end of if assessment year
-     get_ASAP_file(stock = tempStock) 
-     get_ASAP(stock = tempStock)
-      } # end of not ASAP assessment year
+      get_ASAP_file(stock = tempStock) 
+      get_ASAP(stock = tempStock)
+    } # end of not ASAP assessment year
     ## MOVE ASSESSMENT RESULTS HERE WITHIN ASAP IF STATEMENT
-    
     
     #### WHAM STARTS HERE ####
   }else if(mproc[m,'ASSESSCLASS'] == 'WHAM'){ 
     if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
       get_ASAP_file(stock = tempStock) #creates ASAP dat file
-        tempStock <- get_WHAM(stock=tempStock) #run WHAM assessment
+      tempStock <- get_WHAM(stock=tempStock) #run WHAM assessment
+      
+      ## Update advice 
+      tempStock <- within(tempStock, {
+        parpop <- list(waa = matrix(res$waa.fleet, nrow=1), # ??? JJ checking This should be same WAA as last year???
+                       sel = tail(res$sel.fleet, 1), # Done
+                       M = res$M, # Done
+                       mat = res$maturity, # JJ checking that this should be same as last year!!!
+                       R = res$R, # Check that this should be a vector not a single number, should these be recruitment residuals?
+                       SSBhat = res$SSB, # Done
+                       J1N = res$J1N, # Done                 
+                       Rpar = Rpar, # Done # Within stockPar[[istock]] if debugging
+                       Rpar_mis= Rpar_mis, # Done # Within stockPar[[istock]] if debugging
+                       Fhat = res$F.report[length(res$F.report)]) # Done
         
-        ## Update advice 
-        tempStock <- within(tempStock, {
-          parpop <- list(waa = matrix(res$waa.fleet, nrow=1), # ??? JJ checking This should be same WAA as last year???
-                         sel = tail(res$sel.fleet, 1), # Done
-                         M = res$M, # Done
-                         mat = res$maturity, # JJ checking that this should be same as last year!!!
-                         R = res$R, # Check that this should be a vector not a single number, should these be recruitment residuals?
-                         SSBhat = res$SSB, # Done
-                         J1N = res$J1N, # Done                 
-                         Rpar = Rpar, # Done # Within stockPar[[istock]] if debugging
-                         Rpar_mis= Rpar_mis, # Done # Within stockPar[[istock]] if debugging
-                         Fhat = res$F.report[length(res$F.report)]) # Done
-          
-        })
+      })
     }else{ # end of if assessment year
       get_ASAP_file(stock = tempStock) 
       tempStock <- get_WHAM(stock = tempStock, wham_settings) # Assessment run with updated data to get updated catch/outputs but doesn't impact management in non-assessment year
       # parpop not updated in non-assessment year
       
     } # end of not assessment year
+    # end of WHAM assessment
     
-  } # end of WHAM assessment 
+    
+    #### CAA assessment STARTS HERE ####
+  } else if(mproc[m,'ASSESSCLASS'] == 'CAA'){
+  if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
+    tempStock <- get_caa(stock = tempStock)
+  } else {
+    get_caa(stock = tempStock)
+  }
+    # end of CAA assessment
+    
+    
+    ####  PLANB assessment STARTS HERE ####
+  } else if(mproc[m,'ASSESSCLASS'] == 'PLANB'){
+  if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
+    tempStock <- get_planB(stock = tempStock)
+  }else{
+    get_planB(stock = tempStock)
+  }
+  }
+
+ 
 
 # Was the assessment successful?
   tempStock <- within(tempStock, {
