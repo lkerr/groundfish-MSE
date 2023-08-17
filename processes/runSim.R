@@ -46,12 +46,12 @@
   
   settings <- list(
     # showTimeSeries = "No",
-    # useCeiling = "Yes",
-    useCeiling = "No",
-    # assessType = "stock complex",
-    assessType = "single species",
+    useCeiling = "Yes",
+    # useCeiling = "No",
+    assessType = "stock complex",
+    # assessType = "single species",
     pseudoassess = FALSE,
-    dynamicRP = FALSE,
+    dynamicRP = TRUE,
     dynamicRPlength=10,
     targetF = 0.75,
     floorB = 0.5,
@@ -72,14 +72,14 @@
   gear_complexes <- tibble(isp = 1:10,
                            complex = c(1, 3, 3, 1, 1, 3, 1, 2, 1, 2))
   
-  input$complexes <- feeding_complexes
-  input$complex = feeding_complexes$complex
-  # input$complexes = gear_complexes
-  # input$complex = gear_complexes$complex
+  # input$complexes <- feeding_complexes
+  # input$complex = feeding_complexes$complex
+  input$complexes = gear_complexes
+  input$complex = gear_complexes$complex
   
-   # input$docomplex = TRUE
-  input$docomplex = FALSE
-  
+   input$docomplex = TRUE
+  # input$docomplex = FALSE
+  # 
   # input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
   #                     0,1,1,0,0,0,0,0,0,0),
   #                   nrow=2,byrow=TRUE)

@@ -127,11 +127,11 @@ do_small_radar_plot <- function(metrics) {
              pdensity=0)
   rows<<-rownames(dd[-c(1,2),])
   colors_line<<-colors_line2
-  legend(x=0.75,y=-0.75,inset=0,title ="",title.adj = 0.2,
+  legend(x=0.42,y=-0.90,inset=0,title ="",title.adj = 0.2,
          legend=unique(d$mp),
          pch=16,
          col=colors_line2[1:nmp],
-         lty=1, cex=0.8, bty= 'n', y.intersp=1)
+         lty=1, cex=0.75, bty= 'n', y.intersp=1)
   
 }
 
