@@ -1,7 +1,7 @@
 *.Rproj.user
 *.Rhistory
 *.RData
-*.Rds
+.Rds
 *.Ruserdata
 /background/*
 /manuscripts/*
