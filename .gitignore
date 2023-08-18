@@ -63,9 +63,9 @@ gradfil2.tmp
 variance
 varssave.tmp
 
-/functions/hydra/hydra_sim.b01
-/functions/hydra/hydra_sim.bar
-/functions/hydra/hydra_sim.p01
-/functions/hydra/hydra_sim.par
-/functions/hydra/hydra_sim.r01
-/functions/hydra/hydra_sim.rep
+hydra_sim.b01
+hydra_sim.bar
+hydra_sim.p01
+hydra_sim.par
+hydra_sim.r01
+hydra_sim.rep
