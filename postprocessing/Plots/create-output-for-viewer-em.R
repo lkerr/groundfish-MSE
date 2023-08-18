@@ -7,6 +7,12 @@ library(fmsb)
 source("postprocessing/Plots/radar_chart.R")
 source("postprocessing/Plots/get_perfmetrics.R")
 
+#How to save the file within "output"
+# foldername <- Sys.time() 
+# foldername <- Sys.data()
+foldername <- "Management Scenarios"
+if(!dir.exists(paste0("output/",foldername))) dir.create(paste0("output/",foldername))
+
 # settings <- NULL
 # settings$assessType = "stock complex"
 # settings2 <- NULL
@@ -28,6 +34,8 @@ settings4 <- NULL
 settings4$assessType = "stock complex"
 settings5 <- NULL
 settings5$assessType = "stock complex"
+settings6 <- NULL
+settings6$assessType = "stock complex"
 #results <- readRDS("~/research/groundfish-MSE/results_2023-06-11-13-20-09/sim/mpres_stock_complex.rds")
 complexes <- tibble(isp = 1:10,
                     complex = c(1, 3, 3, 1, 2, 1, 1, 2, 1, 2))
@@ -37,24 +45,38 @@ complexes <- tibble(isp = 1:10,
 # and the corresponding complexes & settings, & files with the results from the MSE
 #basically this is a main table that can be used to create the results tables for plots/tables/shiny viewer.
 res_setup <- tibble(
-settings = list(settings, settings2, settings3, settings4, settings5),
-complexes = list(complexes, complexes, complexes, complexes, complexes),
+settings = list(settings, settings2, settings3, settings4, settings5,settings6),
+complexes = list(complexes, complexes, complexes, complexes, complexes,complexes),
 # mp = c("stock complex", "stock complex", "stock complex", "stock complex", "stock complex"),
-mp = c("single species", "single species", "stock complex", "stock complex", "stock complex"),
-scenario = c("SS Static", "SS Dynamic", "Feeding Complex Static", "Feeding Complex Dynamic", "Gear Complex Static"),
+mp = c("single species", "single species", "stock complex", "stock complex", "stock complex","stock complex"),
+scenario = c("SS Static", "SS Dynamic", "Feeding Complex Static", "Feeding Complex Dynamic", "Gear Complex Static", "Gear Complex Dynamic"),
 # files = c("results_2023-07-21-13-09-41/sim/mpres_single_species.rds",
 #                   #"~/research/groundfish-MSE/results_2023-06-11-13-20-09/sim/mpres_stock_complex.rds",  # 2 replicates, stock complex, lowB
 #           "results_2023-07-06-16-30-09/sim/mpres_stock_complex.rds"), # 10 replicates, stock complex, lowB
-# )
-
 # Files on EML personal computer:
-files = c("C:/Users/emily/Documents/SMAST/Final rds Files/001.rds",
-          "C:/Users/emily/Documents/SMAST/Final rds Files/002.rds",
-          "C:/Users/emily/Documents/SMAST/Final rds Files/003.rds",
-          "C:/Users/emily/Documents/SMAST/Final rds Files/004.rds",
-          "C:/Users/emily/Documents/SMAST/Final rds Files/021.rds"), # 10 replicates, stock complex, lowB
+files = c("finalrdsfiles/001.rds",
+          "finalrdsfiles/002.rds",
+          "finalrdsfiles/003.rds",
+          "finalrdsfiles/004.rds",
+          "finalrdsfiles/021.rds",
+          "finalrdsfiles/022.rds")
 )
 
+
+
+foragebiomass <- data.frame(mp=c(),scenario=c(),rep=c(),year=c(),biomass=c())
+for(i in 1:length(res_setup$files))
+{
+  for(j in 1:length(readRDS(res_setup$files[i])$foragebiomass))
+  {
+    for(k in 1:nrow(readRDS(res_setup$files[i])$foragebiomass[[j]]))
+    {
+      foragebiomassnew <- data.frame(mp=res_setup$mp[i],scenario=res_setup$scenario[i],rep=j,year=k,biomass=readRDS(res_setup$files[i])$foragebiomass[[j]][k,2])
+      foragebiomass <- rbind(foragebiomass,foragebiomassnew)
+    }
+  }
+}
+foragebiomass <- distinct(foragebiomass)
 
 res_metrics <- res_setup %>% 
   mutate(results = map(files, readRDS))
@@ -70,13 +92,13 @@ res_metrics <- res_metrics %>%
   #        sp_timeseries = map(metric_bundle, "sp_timeseries"),
   #        fleet_catch = map(metric_bundle, "fleet_catch"))
   I()
-saveRDS(res_metrics, file = "output/res_metrics.rds")
+saveRDS(res_metrics, file = paste0("output/",foldername,"/res_metrics.rds"))
 #res_metrics
 
 
 ########## plotting #############
 
-res_metrics <- readRDS("output/res_metrics.rds") %>% 
+res_metrics <- readRDS(paste0("output/",foldername,"/res_metrics.rds")) %>% 
   mutate(metrics = map(metric_bundle, "metrics"),
          median_metrics = map(metric_bundle, "median_metrics"),
          sp_timeseries = map(metric_bundle, "sp_timeseries"),
@@ -184,7 +206,7 @@ bxp1 <- metrics %>%
   theme(axis.text.y = element_blank(),
         legend.position = "bottom")
 bxp1
-ggsave("output/2023-06-11/metric_long_boxplots.png", bxp1, width=12, height=8)
+ggsave(paste0("output/",foldername,"/metric_long_boxplots.png"), bxp1, width=12, height=8)
 
 # box plots for key metrics, short-term
 bxp2 <- metrics %>% 
@@ -209,7 +231,7 @@ bxp2 <- metrics %>%
   theme(axis.text.y = element_blank(),
         legend.position = "bottom")
 bxp2
-ggsave("output/2023-06-11/metric_short_boxplots.png", bxp2, width=12, height=8)
+ggsave(paste0("output/",foldername,"/metric_short_boxplots.png"), bxp2, width=12, height=8)
 
 
 # box plots for key metrics, single OM, both time horizons
@@ -260,7 +282,7 @@ dotp1 <- median_metrics %>%
   guides(col = guide_legend(nrow = 2),
          shape = guide_legend(nrow = 2))
 dotp1  
-ggsave("output/2023-06-11/metric_long_dotplots.png", dotp1, width=12, height=8)
+ggsave(paste0("output/",foldername,"/metric_long_dotplots.png"), dotp1, width=12, height=8)
 
 # dot plots for medians of key metrics - long-term
 dotp2 <- median_metrics %>% 
@@ -291,13 +313,40 @@ dotp2 <- median_metrics %>%
   guides(col = guide_legend(nrow = 2),
          shape = guide_legend(nrow = 2))
 dotp1  
-ggsave("output/2023-06-11/metric_short_dotplots.png", dotp2, width=12, height=8)
+ggsave(paste0("output/",foldername,"/metric_short_dotplots.png"), dotp2, width=12, height=8)
 
 sp_timeseries <- sp_timeseries %>%
-  mutate( scenario=factor(scenario,levels=c("SS Static", "SS Dynamic", "Feeding Complex Static", "Feeding Complex Dynamic", "Gear Complex Static")) )
+  mutate( scenario=factor(scenario,levels=c("SS Static", "SS Dynamic", "Feeding Complex Static", "Feeding Complex Dynamic", "Gear Complex Static","Gear Complex Dynamic")) )
 
 # time series of OM biomass
-om_plot1 <- sp_timeseries %>% 
+# make a sp_timeseries specific to biomass to include foragebiomass
+sp_timeseries_bio <- sp_timeseries
+sp_timeseries_bio[(nrow(sp_timeseries)+1):(nrow(sp_timeseries)+nrow(foragebiomass)),]<-NA
+sp_timeseries_bio[(nrow(sp_timeseries)+1):(nrow(sp_timeseries)+nrow(foragebiomass)),"mp"]<-foragebiomass$mp
+sp_timeseries_bio[(nrow(sp_timeseries)+1):(nrow(sp_timeseries)+nrow(foragebiomass)),"scenario"]<-foragebiomass$scenario
+sp_timeseries_bio[(nrow(sp_timeseries)+1):(nrow(sp_timeseries)+nrow(foragebiomass)),"rep"]<-as.character(as.numeric(foragebiomass$rep))
+sp_timeseries_bio[(nrow(sp_timeseries)+1):(nrow(sp_timeseries)+nrow(foragebiomass)),"year"]<-foragebiomass$year
+sp_timeseries_bio[(nrow(sp_timeseries)+1):(nrow(sp_timeseries)+nrow(foragebiomass)),"biomass"]<-foragebiomass$biomass
+sp_timeseries_bio$species_name <- as.character(sp_timeseries_bio$species_name)
+sp_timeseries_bio[(nrow(sp_timeseries)+1):(nrow(sp_timeseries)+nrow(foragebiomass)),"species_name"]<-rep(as.factor("Forage"),nrow(foragebiomass))
+sp_timeseries_bio$species_name <- factor(sp_timeseries_bio$species_name,levels = c(
+  "Atlantic_cod",
+  "Atlantic_herring",
+  "Atlantic_mackerel",
+  "Goosefish",
+  "Haddock",
+  "Silver_hake",
+  "Spiny_dogfish",
+  "Winter_flounder",
+  "Winter_skate",
+  "Yellowtail_flounder",
+  "Piscivores",
+  "Benthivores",
+  "Planktivores",
+  "Ecosystem",
+  "Forage"))
+
+om_plot1 <- sp_timeseries_bio %>% 
   dplyr::filter(year > 40) %>% 
   ggplot() +
   aes(x = year, y = biomass, fill = scenario, col = scenario) +
@@ -311,7 +360,7 @@ om_plot1 <- sp_timeseries %>%
   # facet_wrap(~metric, scales = "free_y", drop=F, labeller=as_labeller(labels)) +
   theme(axis.text.y = element_blank(),
         legend.position = "bottom")
-ggsave("output/2023-06-11/biomass_timeseries.png", om_plot1, width=12, height=8)
+ggsave(paste0("output/",foldername,"/biomass_timeseries.png"), om_plot1, width=12, height=8)
 
 # time series of catch
 om_plot2 <- sp_timeseries %>% 
@@ -328,7 +377,7 @@ om_plot2 <- sp_timeseries %>%
   # facet_wrap(~metric, scales = "free_y", drop=F, labeller=as_labeller(labels)) +
   theme(axis.text.y = element_blank(),
         legend.position = "bottom")
-ggsave("output/2023-06-11/catch_timeseries.png", om_plot2, width=12, height=8)
+ggsave(paste0("output/",foldername,"/catch_timeseries.png"), om_plot2, width=12, height=8)
 
 # time series of b/bmsy
 om_plot3 <- sp_timeseries %>% 
@@ -346,7 +395,7 @@ om_plot3 <- sp_timeseries %>%
   # facet_wrap(~metric, scales = "free_y", drop=F, labeller=as_labeller(labels)) +
   theme(axis.text.y = element_blank(),
         legend.position = "bottom")
-ggsave("output/2023-06-11/bbmsy_timeseries.png", om_plot3, width=12, height=8)
+ggsave(paste0("output/",foldername,"/bbmsy_timeseries.png"), om_plot3, width=12, height=8)
 
 
 
@@ -365,7 +414,7 @@ key_metrics <- c("cat_yield_Ecosystem",
                  # "near_btarg_Planktivores",
                  "f_reduced",
                  "foregone_yield")
-png(filename ="output/2023-06-11/radar_plot.png")
+png(filename =paste0("output/",foldername,"/radar_plot.png"),)
 radar_p1 <- median_metrics %>% 
   dplyr::filter(metric %in% key_metrics,
          time == "long") %>% 
