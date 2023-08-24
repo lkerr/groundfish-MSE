@@ -32,7 +32,7 @@ est dir
 
 
 /* read in linear model */
-est restore linear_P3NS
+est restore linear_P3proxy
 
 
 mat b=e(b)
