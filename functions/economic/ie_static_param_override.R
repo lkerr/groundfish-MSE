@@ -5,14 +5,14 @@
 #  Although I can't think of a use case for them yet.
 #  Arguments are
 #     stock (the list that holds all the stock parameters and results)
-#     from_model: The row from mproc that corresponds to the ie_F and ie_bias that you want to read in.  Only used when mproc$ie_source=="Internal" 
+#     replicate: The replicate you want to read in 
+#     from_model: The row from mproc that corresponds to the ie_F and ie_bias that you want to read in.  
 
 # Usage: 
 # if(mproc$ImplementationClass[m]=="StandardFisheries" & mproc$ie_override[m]=="TRUE"){
 #   for (i in 1:nstock){
 #  if(mproc$ie_source[m]!="Internal"){  
-#  
-#     stock[[i]]<-ie_static_param_override(stock=stock[[i]],replicate=r, from_model=1)
+#     stock[[i]]<-ie_static_param_override(stock=stock[[i]],replicate=r, from_model=mproc$ie_from_model[m], stocknum=i)
 #   }      
 # }
 
