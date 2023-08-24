@@ -12,7 +12,7 @@ source('processes/readin_previous_omval.R')
 # if on local machine (i.e., not hpcc) must compile the tmb code
 # (HPCC runs have a separate call to compile this code). Keep out of
 # runSetup.R because it is really a separate process on the HPCC.
-if (runClass == "Local") {
+if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
@@ -36,6 +36,7 @@ showProgBar<-TRUE
 top_loop_start<-Sys.time()
 top_loop_start
 rng_counter<-1
+yearitercounter<-0
 
 #### Top rep Loop ####
 for(r in 1:nrep){
@@ -44,6 +45,7 @@ for(r in 1:nrep){
   
   #### Top MP loop ####
   for(m in 1:nrow(mproc)){
+    print(paste0("rep # ",r, " and model #", m))
     
     manage_counter<-0
     #Restore the rng state to the value of oldseed_mproc.  For the same values of r, all the management procedures to start from the same RNG state.  You probably want oldseed_mproc
@@ -98,9 +100,9 @@ for(r in 1:nrep){
         stock[[i]] <- get_EconSurvey(stock = stock[[i]])
   
       }
-      
-      source('processes/withinYearAdmin.R')
-
+      if(mproc$ImplementationClass[m]=="Economic"){ #Run the economic model
+        source('processes/withinYearAdmin.R')
+      }
       # if burn-in period is over and fishery management has started
       if(y >= fmyearIdx){
 
@@ -181,6 +183,7 @@ for(r in 1:nrep){
         stock[[i]]<-ie_param_reset(stock=stock[[i]])
     }
         
+    print(paste0("Model", m, " of rep # ",r, "done."))
   } #End of mproc loop
 } #End rep loop
 
