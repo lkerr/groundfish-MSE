@@ -3,18 +3,18 @@
 econdatafile<-paste0(econ_data_stub,econ_base_draw,".Rds")
 targeting_dataset<-readRDS(file.path(econdatapath,econdatafile))
 
-wm<-multipliers[[econ_mult_idx_draw]]
-if ('gffishingyear' %in% colnames(wm)){
-  wm[, gffishingyear:=NULL]
-}
-wo<-outputprices[[econ_outputprice_idx_draw]]
-if ('gffishingyear' %in% colnames(wo)){
-  wo[, gffishingyear:=NULL]
-}
-wi<-inputprices[[econ_inputprice_idx_draw]]
-if ('gffishingyear' %in% colnames(wi)){
-  wi[, gffishingyear:=NULL]
-}
+# wm<-multipliers[[econ_mult_idx_draw]]
+# if ('gffishingyear' %in% colnames(wm)){
+#   wm[, gffishingyear:=NULL]
+# }
+#wo<-outputprices[[econ_outputprice_idx_draw]]
+#if ('gffishingyear' %in% colnames(wo)){
+#  wo[, gffishingyear:=NULL]
+#}
+#wi<-inputprices[[econ_inputprice_idx_draw]]
+#if ('gffishingyear' %in% colnames(wi)){
+#  wi[, gffishingyear:=NULL]
+#}
 
 quarterly_prices<-quarterly_output_prices[[econ_quarterlyprice_idx_draw]]
 if ('gffishingyear' %in% colnames(quarterly_prices)){

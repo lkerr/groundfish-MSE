@@ -19,9 +19,9 @@ production_vars<-get(paste0("production_vars_",econtype$ProdEqn))
 spstock_equation<-get(paste0("spstock_equation_",econtype$ChoiceEqn))
 choice_equation<-get(paste0("choice_equation_",econtype$ChoiceEqn))
 
-multipliers<-readRDS(file.path(econdatapath,multiplier_loc))
-outputprices<-readRDS(file.path(econdatapath,output_price_loc))
-inputprices<-readRDS(file.path(econdatapath,input_price_loc))
+#multipliers<-readRDS(file.path(econdatapath,multiplier_loc))
+#outputprices<-readRDS(file.path(econdatapath,output_price_loc))
+#inputprices<-readRDS(file.path(econdatapath,input_price_loc))
 
 
 #Quota price coefficients
