@@ -86,7 +86,6 @@ assert _merge==3
 drop _merge
 
 
-gen live_price_R=live_price_nom/fWPU0223
 drop WPU0223*
 drop fWPU0223*
 drop dateq
@@ -100,7 +99,6 @@ notes fGDPtoSFD: 2016 PPI Seafood prices divided by this produces 2010 GDPDEF pr
 
 
 
-pause
 
 
 *save "${MSEprojdir}/data/data_raw/econ/quarterly_prices_${vintage_string}.dta", replace
@@ -110,4 +108,4 @@ drop if inlist(stockcode,2,4)
 decode stockcode, gen(stock_string)
 rename fishing_year gffishingyear
 sort gffishingyear q_fy stockcode spstock2
-export delimited gffishingyear q_fy stockcode stock_string spstock2 live_priceGDP fGDPtoSFD proportion_observed using "${MSE_network}/Groundfish-MSE/data/data_processed/econ/quarterly_prices_${vintage_string}.csv", delimiter(",") nolabel replace
+export delimited gffishingyear q_fy stockcode stock_string spstock2 live_priceGDP fGDPtoSFD proportion_observed using "${MSE_network}/data/data_processed/econ/quarterly_prices_${vintage_string}.csv", delimiter(",") nolabel replace
