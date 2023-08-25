@@ -95,13 +95,13 @@ targeting_coefs<-inner_join(asc_coefs2,all_coefs, by="gearcat")
 
 
 #The "start of season" variable used to go slightly differently for gillnet and trawl
-targeting_coefs$beta_start_of_season.x[is.na(targeting_coefs$beta_start_of_season.x)] <- targeting_coefs$beta_start_of_season.y[is.na(targeting_coefs$beta_start_of_season.x)]
-targeting_coefs<-within(targeting_coefs, rm(beta_start_of_season.y))
+#targeting_coefs$beta_start_of_season.x[is.na(targeting_coefs$beta_start_of_season.x)] <- targeting_coefs$beta_start_of_season.y[is.na(targeting_coefs$beta_start_of_season.x)]
+#targeting_coefs<-within(targeting_coefs, rm(beta_start_of_season.y))
 
 
 
 
-colnames(targeting_coefs)[colnames(targeting_coefs)=="beta_start_of_season.x"] <- "beta_start_of_season"
+#colnames(targeting_coefs)[colnames(targeting_coefs)=="beta_start_of_season.x"] <- "beta_start_of_season"
 #colnames(targeting_coefs)[colnames(targeting_coefs)=="beta_exp_rev_total_das"] <- "beta_exp_rev_total"
 
 #Force NAs to zero. This is legit. I promise.
