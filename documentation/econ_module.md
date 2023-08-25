@@ -99,9 +99,9 @@ We can set some options using the mproc.csv file. Notably:
   FALSE --> catch of GB Cod happens even if GB cod is closed (but all catch would be discarded).
 * **EconName :** A short name for the scenario. "pre" or "post" in the naming conventions refers to the coefficients used ie (coefs1, coefs2, coefsnc1 and coefsnc2)
 * **EconData :** stub for which dataset to use (see data processing steps). 
-* **MultiplierFile :** Multiplier file to use  
-* **OutputPriceFile :** Output prices to use
-* **InputPriceFile :** Input prices to use, including quota prices.
+* **MultiplierFile :** Multiplier file to use.Currently unused.  
+* **OutputPriceFile :** Output prices to use. Currently unused.
+* **InputPriceFile :** Input prices to use, including quota prices. Currently unused.
 * **ProdEqn :** suffix for the production equation (see set_om_parameters_global.R for some examples).  Currently, the choices are just pre and post.
 * **ChoiceEqn :** suffix for the choice equation (see set_om_parameters_global.R for some examples). Currently, the choices are just pre and post.  But options for noconstant or something else could be set up.
 
