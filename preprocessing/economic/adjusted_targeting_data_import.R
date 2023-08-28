@@ -189,10 +189,12 @@ targeting<-wo[targeting, on=c("doffy", "gearcat")]
 targeting<-wi[targeting, on=c("hullnum","doffy","spstock2")]
 ##################################  JOINS END HERE ###############
 
+
+#####################################################################################
 #Simulate a 30% increase in fuel prices and a 30% increase in crew wages
 targeting[, fuelprice:=1.3*fuelprice]
 targeting[, wkly_crew_wage:=1.3*wkly_crew_wage]
-
+#####################################################################################
 
 targeting[, fuelprice_len:=fuelprice*len]
 targeting[, fuelprice_distance:=fuelprice*distance]
