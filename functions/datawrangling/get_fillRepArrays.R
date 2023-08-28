@@ -9,6 +9,17 @@
 ## management time-period so you can see the response. It is set pretty
 ## arbitrarily though.
 
+#' @title Store results
+#' 
+#' @param stock A storage object for a single species
+#'
+#' @return A revised storage object (out) with updated:
+#' \itemize{
+#'  \item{omval - Storage list for simulations}
+#'  
+#' }
+
+
 get_fillRepArrays <- function(stock){
 
   out <- within(stock, {

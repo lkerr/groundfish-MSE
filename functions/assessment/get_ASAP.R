@@ -1,9 +1,13 @@
 #' @title get_ASAP
 #' @description Run Age Structured Assessment Program (ASAP) executable and produce results object
 #' 
-#' @param stock Data storage object for stock
+#' @param stock A storage object for a single species
 #'
-#' @return out: A modified copy of stock containing updated asapEst and res data objects for assessment results
+#' @return #' @return A revised storage object (out) with updated:
+#' \itemize{
+#'  \item{asapEst}
+#'  \item{res - Assessment results, also saved in 'assessment/ASAP/stockNAME_rep_year.rdat' where stockName, rep, and year vary by simulation}
+#' }
 
 get_ASAP <- function(stock){
 

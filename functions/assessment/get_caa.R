@@ -1,5 +1,14 @@
+#' @description 
+#' 
+#' @param stock A storage object for a single species
+#' 
+#' @return A revised storage object (out) with updated:
+#' \itemize{
+#'  \item{}
+#' }
+
 get_caa <- function(stock){
-  
+
   out <- within(stock, {
     
     invisible(capture.output(dyn.load(dynlib("assessment/caa"))))

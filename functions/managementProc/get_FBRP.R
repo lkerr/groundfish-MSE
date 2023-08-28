@@ -1,31 +1,25 @@
-# Function to calculate F-based reference points
-# 
-# parmgt: a 1-row data frame of management parameters. The operational
-#         component of parmgt for this function is the (1-row) columns
-#         "FREF_TYP" and "FREF_PAR0". FREF_TYP indicates the type of model
-#         that should be used to calculate the F reference point and
-#         FREF_PAR0 is the associate F level (e.g., 0.4 for F40% if you are
-#         using SPR or 0.1 for F0.1 if you are using YPR. Options for
-#         FREF_TYP are:
-#     
-#     * YPR: yield-per-recruit-based reference point. See get_perRecruit.R.
-#            Basically the parameters (par) are just the reference point 
-#            level.
-#     
-#     * SPR: spawning potential ratio-based refence point. See 
-#            get_perRecruit.R. Basically the parameters (par) are just the 
-#            reference point level.
-#            
-#     * Mbased: natural mortality-based (data poor) option (see Gabriel and
-#               Mace (1999), p.42. In some cases M or some factor of M has
-#               been considered as a proxy for Fmsy.
-#               
-#     
-# parpop: named list of population parameters (vectors) needed for the 
-#         simulation including selectivity (sel), weight-at-age (waa),
-#         recruitment (R), maturity (mat) and natural mortality (M).
-#         Natural mortality can be a vector or a scalar. Vectors have
-#         one value per age class.
+#' @title Calculate F-based Reference points
+#' 
+#'@param parmgt a 1-row data frame of management parameters. The operational
+#'         component of parmgt for this function is the (1-row) columns
+#'         "FREF_TYP" and "FREF_PAR0". FREF_TYP indicates the type of model
+#'         that should be used to calculate the F reference point and
+#'         FREF_PAR0 is the associate F level (e.g., 0.4 for F40% if you are
+#'         using SPR or 0.1 for F0.1 if you are using YPR. Options for
+#'         FREF_TYP are:
+#' \itemize{
+#'  \item{YPR - yield-per-recruit-based reference point. The parameters (par) are just the reference point level, see get_perRecruit.R}
+#'  \item{SPR - spawning potential ratio-based reference point. The parameters (par) are the reference point level, see get_perRecruit.R}
+#'  \item{Mbased - natural mortality-based (data poor) option. See Gabriel and Mace (1999) p.42, in some cases M or some factor of M has been considered as a proxy for Fmsy}
+#' }   
+#' @param parpop A named list of population parameters (vectors, see get_Advice for details) needed for the simulation including:
+#' \itemize{
+#'  \item{selectivity (sel)}
+#'  \item{weight-at-age (waa)}
+#'  \item{recruitment (R)}
+#'  \item{maturity (mat)}
+#'  \item{natural mortality (M) - can be a vector (1 value per age class) or a scalar}
+#' }
 
 get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
 

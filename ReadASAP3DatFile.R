@@ -1,6 +1,7 @@
-#' ReadASAP3DatFile
+#' @title ReadASAP3DatFile
 #' 
-#' Read ASAP 3 dat file into R (thanks to Tim Miller for providing original version).
+#' @description Read ASAP 3 dat file into R (thanks to Tim Miller for providing original version), modified so scan has quiet=TRUE turned on (supresses printed statements).
+#' 
 #' @param datf full path and name of dat file (including .dat suffix)
 #' @export
 

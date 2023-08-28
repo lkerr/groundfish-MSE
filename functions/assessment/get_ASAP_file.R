@@ -1,17 +1,17 @@
 #' @title get_ASAP_file
 #' @description Function to modify Age Structured Assessment Program (ASAP) .dat file, for use in setting up either an ASAP or WHAM run
 #'
-#' @param stock Data storage object for stock
+#' @param stock A storage object for a single species
 #' 
 #' @return dat_file object as this object is written to a .dat file and updated within the provided stock data object it need not be referenced directly in get_advice.
 
 get_ASAP_file <- function(stock){
- 
+
   out <- within(stock, {
     
     # read in assessment .dat file and modify accordingly
     dat_file <- ReadASAP3DatFile(paste('assessment/ASAP/', stockName, ".dat", sep = ''))
-    
+
     ### modify for each simulation/year
     
     #start year;

@@ -1,3 +1,9 @@
+#' @title Calculate Mohn's Rho
+#' 
+#' @param stock A storage object for a single species
+#' 
+#' @return A revised storage object (out) with updated SSB, F, and R Mohn's rho values.
+
 get_MohnsRho <- function(stock){
   
   out <- within(stock, {

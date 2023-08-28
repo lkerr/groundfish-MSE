@@ -1,22 +1,23 @@
-# Function to calculate biomass-based reference points
-#
-# parmgt: a 1-row data frame of management parameters. The operational
-#         component of parmgt for this function are the (1-row) columns
-#         "BREF_TYP" and "BREF_PAR0". BREF_TYP refers to the type of biomass-
-#         based reference point you want to use and BREF_PAR0 refers to
-#         an associated level for that reference point. Options are:
-#
-#     * RSSBR: mean recruitment multiplied by SPR at Fmsy or some proxy of
-#             SPR at Fmsy
-#
-#             par[1]: SPR level for Fmsy proxy (e.g., 0.35 for F35%)
-#
-#     * dummy -- par is some scalar.
-#
-# parpop: list of population parameters needed to calculate the biomass-
-#         based reference point. See specific functions, e.g.
-#           get_perRecruit()
-#         to see what needs to be included in the list.
+#' @title Calculate Biomass-Based Reference Points
+#'
+#'@param parmgt A 1-row data frame of management parameters. The operational
+#'         component of parmgt for this function are the (1-row) columns
+#'         "BREF_TYP" and "BREF_PAR0". BREF_TYP refers to the type of biomass-
+#'         based reference point you want to use and BREF_PAR0 refers to
+#'         an associated level for that reference point. Options are:
+#' \itemize{
+#'   \item{RSSBR - mean recruitment multiplied by SPR at Fmsy or some proxy of SPR at Fmsy
+#'               - par is SPR level for Fmsy proxy (e.g. 0.35 for F35%)}
+#'   \item{dummy - par is some scalar}
+#' }
+#' @param parpop A list of population parameters needed to calculate the biomass-based reference point.
+#' See get_advice for specific items in parpop (updated by assessment functions e.g. get_WHAM, get_ASAP) 
+#' @param parenv
+#' @param Rfun_lst
+#' @param FBRP
+#' @param distillBmsy The name of a function (CANNOT be a string) to aggregate biomass under the particular F policy, default = mean. Since temperature can play a role there may be no equilibrium over the period, so a decision about what function to use for biomass needs to be made (mean, median or a quantile). @seealso \code{\link{get_BmsySim}}
+#' @param stockEnv
+
 
 get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
                      distillBmsy=mean, stockEnv){

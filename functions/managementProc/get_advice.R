@@ -1,3 +1,17 @@
+#' @title Get management advice
+#' 
+#' @param stock A storage object for a single species
+#' 
+#' @return A revised storage object (tempStock) with updated:
+#' \itemize{
+#'  \item{parpop}
+#'  \item{assessment results - See assessment-specific functions for details}
+#'  \item{conv_rate - Assessment convergence status}
+#'  \item{reference points - See get_nextF for details}
+#'  \item{advice and overfishing status}
+#' }
+#' For WHAM and ASAP assessments an updated .dat file is also saved
+
 get_advice <- function(stock){
   # prepare data for assessment
   tempStock <- get_tmbSetup(stock = stock)

@@ -1,4 +1,14 @@
-#Function to get survey index 
+#' @description Generate get survey index 
+#' 
+#' @param stock A storage object for a single species
+#' 
+#' @return A revised storage object (out) with updated:
+#' \itemize{
+#'  \item{Indices - OM (true) and observed (with error)}
+#'  \item{Proportions at age}
+#'  \item{Effort}
+#' }
+
 get_indexData <- function(stock){
 
 out <-  within(stock, {
