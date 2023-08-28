@@ -7,6 +7,14 @@ source('processes/identifyResultDirectory.R')
 # source('processes/get_runinfo.R')
 source('processes/runSetup.R')
 
+# Read in overall operating model parameters from the saved version
+source(file.path(ResultDirectory,"set_om_parameters_global.R"))
+
+
+#update mproc from the saved version
+
+mproc <- read.csv(file.path(ResultDirectory, "fig",mprocfile), header=TRUE,
+                  stringsAsFactors=FALSE)
 
 # Load in the stock-level simulation results
 fl <- list.files(file.path(ResultDirectory, 'sim'), pattern="omvalGlobal", full.names=TRUE)
@@ -70,8 +78,8 @@ for(i in 1:length(flLst[[1]])){
             boxnames=boxplot_these, rpnames=rp_these, trajnames=traj_these)
 }
 
-# Output the management procedures text file in the figure directory
-get_catdf(df = mproc, file = paste0(ResultDirectory,'/fig/',mprocfile))
+
 
 # Output the memory usage
 get_memUsage(runClass = runClass)
+

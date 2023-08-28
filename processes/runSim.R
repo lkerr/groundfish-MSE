@@ -192,8 +192,11 @@ big_loop
   names(omvalGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
   save(omvalGlobal, file=paste0(ResultDirectory,'/sim/omvalGlobal', td2, '.Rdata'))
 
-  if(runClass != 'HPCC'){
-    omparGlobal <- readLines('modelParameters/set_om_parameters_global.R')
+  
+  
+
+  if(runClass %in% c("HPCC","neptune")==FALSE){
+    omparGlobal <- readLines(here(ResultDirectory,"set_om_parameters_global.R"))
     cat('\n\nSuccess.\n\n',
         'Completion at: ',
         td,
