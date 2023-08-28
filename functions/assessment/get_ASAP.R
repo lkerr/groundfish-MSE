@@ -127,14 +127,17 @@ get_ASAP <- function(stock){
 
       tempwd <- getwd()
       setwd(rundir)
-      asapEst<- try(system("singularity exec $WINEIMG wine ASAP3.EXE", wait = TRUE))
-
-      while (!file.exists('asap3.rdat')) {
+      if(runClass =="HPCC"){
+        asapEst<- try(system("singularity exec $WINEIMG wine ASAP3.EXE", wait = TRUE))
+      } else if (runClass =="neptune"){
+        asapEst<- try(system("./ASAP3", intern=TRUE, wait = TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE))
+      }
+      while (!file.exists('ASAP3.rdat')) {
         Sys.sleep(1)
       }
 
       # Read in results
-      res <- dget('asap3.rdat')
+      res <- dget('ASAP3.rdat')
       
       # save .Rdata results from each run
       saveRDS(res, file = paste(rundir, '/', stockName, '_', r, '_', y,'.rdat', sep = ''))
