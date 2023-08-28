@@ -4,7 +4,7 @@
 #       Post-choice coefficients, 
 #       slightly adjusted data. 
 # 
-here::i_am("preprocessing/economic/pre_process_econ_MSE.R")
+here::i_am("preprocessing/economic/pre_process_MSE_parameter_sims.R")
 
 
 library(readstata13)
