@@ -37,6 +37,7 @@ top_loop_start<-Sys.time()
 top_loop_start
 rng_counter<-1
 yearitercounter<-0
+max_yiter<-nrep*nrow(mproc)*(nyear-fyear+1)
 
 #### Top rep Loop ####
 for(r in 1:nrep){
@@ -46,6 +47,8 @@ for(r in 1:nrep){
   #### Top MP loop ####
   for(m in 1:nrow(mproc)){
     print(paste0("rep # ",r, " and model #", m))
+    yearitercounter<-0
+    iterpb <- txtProgressBar(min = 1, max = max_yiter, style = 3)
     
     manage_counter<-0
     #Restore the rng state to the value of oldseed_mproc.  For the same values of r, all the management procedures to start from the same RNG state.  You probably want oldseed_mproc

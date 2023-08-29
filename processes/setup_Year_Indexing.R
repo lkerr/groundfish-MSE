@@ -100,11 +100,6 @@ random_sim_draw<-random_sim_draw %>%
          join_mult_idx=join_econbase_idx,
          join_quarterly_price_idx=join_econbase_idx)
 random_sim_draw<-as.data.table(random_sim_draw)
-yearitercounter<-0
-max_yiter<-nrep*nrow(mproc)*(nyear-fyear+1)
-
-
-iterpb <- txtProgressBar(min = 1, max = max_yiter, style = 3)
 # Am I using all of these columns?
 # colnames(random_sim_draw)<-c("econrd","price_gfy","other_gfy")
 
