@@ -13,6 +13,8 @@ source("postprocessing/Plots/get_perfmetrics.R")
 foldername <- "Management Scenarios"
 if(!dir.exists(paste0("output/",foldername))) dir.create(paste0("output/",foldername))
 
+doyaxis=T
+
 # settings <- NULL
 # settings$assessType = "stock complex"
 # settings2 <- NULL
@@ -180,7 +182,7 @@ labels <- c("cat_yield_Ecosystem"="Ecosystem yield",
             "foregone_yield"="Underutilized quota")
 
 metrics <- metrics %>%
-  mutate( scenario=factor(scenario,levels=c("SS Static", "SS Dynamic", "Feeding Complex Static", "Feeding Complex Dynamic", "Gear Complex Static")) ) %>%
+  mutate( scenario=factor(scenario,levels=c("SS Static", "SS Dynamic", "Feeding Complex Static", "Feeding Complex Dynamic", "Gear Complex Static", "Gear Complex Dynamic")) ) %>%
   mutate(value= ifelse(is.na(value),NA,value))
 
 # box plots for key metrics
@@ -191,7 +193,7 @@ bxp1 <- metrics %>%
   aes(x = scenario, y = value, fill = scenario) +
   geom_boxplot(outlier.shape=NA) +
   # scale_fill_brewer(type = "qual", palette = 2) +
-  scale_fill_manual(values=c("#f4f1de","#e07a5f", "#3d405b","#81b29a","#f2cc8f"))+
+  scale_fill_manual(values=c("#f4f1de","#e07a5f", "#3d405b","#81b29a","#f2cc8f","lightgrey"))+
   ylim(0,NA) +
   # facet_wrap(~metric, scales = "free_y", drop=F) +
   facet_wrap(~metric, scales = "free_y", drop=F, labeller=as_labeller(labels)) +
@@ -203,8 +205,8 @@ bxp1 <- metrics %>%
   # theme(axis.text.x = element_text(angle = 45, vjust=0.25))+
   labs(x = "management alternative", y = "value",
        title = "key metrics over the long-term") +
-  theme(axis.text.y = element_blank(),
-        legend.position = "bottom")
+  theme(legend.position= "bottom") +
+  if(doyaxis==F) theme(axis.text.y = element_blank())
 bxp1
 ggsave(paste0("output/",foldername,"/metric_long_boxplots.png"), bxp1, width=12, height=8)
 
@@ -216,7 +218,7 @@ bxp2 <- metrics %>%
   aes(x = scenario, y = value, fill = scenario) +
   geom_boxplot(outlier.shape=NA) +
   # scale_fill_brewer(type = "qual", palette = 2) +
-  scale_fill_manual(values=c("#f4f1de","#e07a5f", "#3d405b","#81b29a","#f2cc8f"))+
+  scale_fill_manual(values=c("#f4f1de","#e07a5f", "#3d405b","#81b29a","#f2cc8f","lightgrey"))+
   ylim(0,NA) +
   # facet_wrap(~metric, scales = "free_y", drop=F) +
   facet_wrap(~metric, scales = "free_y", drop=F, labeller=as_labeller(labels)) +
@@ -228,8 +230,8 @@ bxp2 <- metrics %>%
   # theme(axis.text.x = element_text(angle = 45, vjust=0.25))+
   labs(x = "management alternative", y = "value",
        title = "key metrics over the short-term") +
-  theme(axis.text.y = element_blank(),
-        legend.position = "bottom")
+  theme(legend.position= "bottom") +
+  if(doyaxis==F) theme(axis.text.y = element_blank())
 bxp2
 ggsave(paste0("output/",foldername,"/metric_short_boxplots.png"), bxp2, width=12, height=8)
 
@@ -274,8 +276,8 @@ dotp1 <- median_metrics %>%
   )+
   # theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))+
   # theme(axis.text.x = element_text(angle = 45, vjust=0.25))+
-  theme(legend.position = "bottom",
-        axis.text.x = element_blank()) +
+  theme(legend.position= "bottom") +
+  if(doyaxis==F) theme(axis.text.y = element_blank()) +
   labs(fill = "",
        col = "",
        title = "key metrics in the long-term over all operating model scenarios") +
@@ -305,8 +307,8 @@ dotp2 <- median_metrics %>%
   )+
   # theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))+
   # theme(axis.text.x = element_text(angle = 45, vjust=0.25))+
-  theme(legend.position = "bottom",
-        axis.text.x = element_blank()) +
+  theme(legend.position= "bottom") +
+  if(doyaxis==F) theme(axis.text.y = element_blank()) +
   labs(fill = "",
        col = "",
        title = "key metrics in the long-term over all operating model scenarios") +
@@ -358,8 +360,8 @@ om_plot1 <- sp_timeseries_bio %>%
        title = "true biomass for the lowB operating model scenario") +
   facet_wrap(~species_name, scales = "free_y") +
   # facet_wrap(~metric, scales = "free_y", drop=F, labeller=as_labeller(labels)) +
-  theme(axis.text.y = element_blank(),
-        legend.position = "bottom")
+  theme(legend.position= "bottom") +
+  if(doyaxis==F) theme(axis.text.y = element_blank())
 ggsave(paste0("output/",foldername,"/biomass_timeseries.png"), om_plot1, width=12, height=8)
 
 # time series of catch
@@ -375,8 +377,8 @@ om_plot2 <- sp_timeseries %>%
        title = "realized catch for the lowB operating model scenario") +
   facet_wrap(~species_name, scales = "free_y") +
   # facet_wrap(~metric, scales = "free_y", drop=F, labeller=as_labeller(labels)) +
-  theme(axis.text.y = element_blank(),
-        legend.position = "bottom")
+  theme(legend.position= "bottom") +
+  if(doyaxis==F) theme(axis.text.y = element_blank())
 ggsave(paste0("output/",foldername,"/catch_timeseries.png"), om_plot2, width=12, height=8)
 
 # time series of b/bmsy
@@ -393,8 +395,8 @@ om_plot3 <- sp_timeseries %>%
   geom_hline(yintercept = 1, lty=2) +
   facet_wrap(~species_name, scales = "free_y") +
   # facet_wrap(~metric, scales = "free_y", drop=F, labeller=as_labeller(labels)) +
-  theme(axis.text.y = element_blank(),
-        legend.position = "bottom")
+  theme(legend.position= "bottom") +
+  if(doyaxis==F) theme(axis.text.y = element_blank())
 ggsave(paste0("output/",foldername,"/bbmsy_timeseries.png"), om_plot3, width=12, height=8)
 
 

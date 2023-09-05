@@ -54,7 +54,7 @@
     dynamicRP = TRUE,
     dynamicRPlength=10,
     targetF = 0.75,
-    floorB = 0.5,
+    floorB = 0.2, # Default is 0.5
     floorOption = "min status",
     bramp = 0.5,
     blim = 0.1,
@@ -80,19 +80,19 @@
    input$docomplex = TRUE
   # input$docomplex = FALSE
   # 
-  # input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
-  #                     0,1,1,0,0,0,0,0,0,0),
-  #                   nrow=2,byrow=TRUE)
-  # input$q <- matrix(c(1,0,0,0.3,0.5,1.5,1,1,0.2,1,
-  #                     0,1,0.33,0,0,0,0,0,0,0),
-  #                   nrow=2,byrow=TRUE)
-  # input$ln_fishery_q <- c(-1.203972804, -0.693147181, 0.405465108, 0, 0, -1.609437912, 0, -1.108662625)
+  input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
+                      0,1,1,0,0,0,0,0,0,0),
+                    nrow=2,byrow=TRUE)
+  input$q <- matrix(c(1,0,0,0.3,0.5,1.5,1,1,0.2,1,
+                      0,1,0.33,0,0,0,0,0,0,0),
+                    nrow=2,byrow=TRUE)
+  input$ln_fishery_q <- c(-1.203972804, -0.693147181, 0.405465108, 0, 0, -1.609437912, 0, -1.108662625)
   
   #price-based q deets
-  input$q <- matrix(c(1,0,0,0.54,0.687,0.572,0.328,0.947,0.125,0.947,
-                     0,1,3.346,0,0,0,0,0,0,0),
-                   nrow=2,byrow=TRUE)
-  input$ln_fishery_q <- c(-0.61618614,-0.37590631,-0.55861629,-1.11474167,-0.05480824,-2.07677842,-0.05480824,1.20776560) #price based q
+  # input$q <- matrix(c(1,0,0,0.54,0.687,0.572,0.328,0.947,0.125,0.947,
+  #                    0,1,3.346,0,0,0,0,0,0,0),
+  #                  nrow=2,byrow=TRUE)
+  # input$ln_fishery_q <- c(-0.61618614,-0.37590631,-0.55861629,-1.11474167,-0.05480824,-2.07677842,-0.05480824,1.20776560) #price based q
   
   input$forageminimum <- 30
   input$recdevcor <- 0
