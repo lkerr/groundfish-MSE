@@ -13,14 +13,18 @@
     source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
   }
   
+  # source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1.R")) # Baseline
+  # source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1_lowB.R")) #Low Biomass
+  source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_3gearF.R")) # Three Fleet
+  
   source("functions/hydra/mp_functions.R")
   source('functions/hydra/get_hydra.R')
   source('functions/hydra/update_stock_data.R')
   source("functions/hydra/get_f_from_advice.R")
-  source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1.R")) # Baseline
-  # source(here("functions/hydra/get_hydra_data_GB_5bin_1978_inpN_noM1_lowB.R")) #Low Biomass
   source('processes/get_assess_results.R')
   source("functions/hydra/read.report.R")
+  
+
   
   ####
   #OM scenario with higher abundance of non-modeled predators (increase M1)
@@ -48,8 +52,8 @@
     # showTimeSeries = "No",
     useCeiling = "Yes",
     # useCeiling = "No",
-    assessType = "stock complex",
-    # assessType = "single species",
+    # assessType = "stock complex",
+    assessType = "single species",
     pseudoassess = FALSE,
     dynamicRP = TRUE,
     dynamicRPlength=10,

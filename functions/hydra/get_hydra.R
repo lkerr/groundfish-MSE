@@ -27,6 +27,7 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
   
   # Turn on debugging, if needed:  
   hydra_data$debug <- 0
+  # hydra_data$debug <- 1
   
   #Update hydra data based on this iteration of the MSE
   # Primary dat file items:
@@ -167,6 +168,7 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
   if(platform != 'Windows')
    runmod <- paste("./hydra_sim -sim ",randomnum, "-ind hydra_sim_data.dat -ainp hydra_sim_data.pin -nohess -maxfn 1")
   out <- system(runmod, intern=T)
+  # out <- system(runmod, intern=F)
   
   # Reset the working directory to original
   setwd(originalwd)

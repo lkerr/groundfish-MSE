@@ -263,6 +263,7 @@ get_preds <- function(beta, biomass, catch) {
 
 run_complex_assessments <- function(emdata,  refyrs = 1:40, complex_ids = 1:4) {
   #
+  library(purrr)
   emdata <- gen_data(emdata) %>% 
     group_by(isp) %>% 
     pivot_wider(names_from = type,
@@ -292,7 +293,8 @@ run_complex_assessments <- function(emdata,  refyrs = 1:40, complex_ids = 1:4) {
   #types <- c("Schaefer", "Schaefer", "Fox", "Schaefer")
   types <- NULL
   for (i in 1:4) #need to change this for the gear complex...
-   types[[i]] <- list("State-Space", i)
+    types[[i]] <- list("State-Space", i)
+   
   
   complex_data <- emdata %>% ungroup() %>% dplyr::filter(isp>10)
   results2 <- complex_data %>%
