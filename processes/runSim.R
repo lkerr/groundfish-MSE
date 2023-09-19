@@ -16,6 +16,7 @@ if(runClass == 'local'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
+source(here("processes","EconStorage.R")) 
 ####################These are temporary changes for testing ####################
 
 ####################End Temporary changes for testing ####################
