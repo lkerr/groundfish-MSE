@@ -5,8 +5,9 @@
 # empty the environment
 # rm(list=ls())
 
-source('processes/runSetup.R')
 here::i_am("processes/runSim.R")
+source('processes/runSetup.R')
+
 source('processes/readin_previous_omval.R')
 
 # if on local machine (i.e., not hpcc) must compile the tmb code
