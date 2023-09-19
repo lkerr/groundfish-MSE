@@ -18,6 +18,7 @@ if(runClass == 'local'){
 }
 
 source(here("processes","EconStorage.R")) 
+save_econ_raw<-FALSE
 ####################These are temporary changes for testing ####################
 
 ####################End Temporary changes for testing ####################
@@ -215,9 +216,11 @@ big_loop
   colnames(end_rng_holder)[1:4]<-c("rep","model","y", "year")
   rownames(end_rng_holder)<-NULL
   
+  if (save_econ_raw==TRUE){
     saveRDS(begin_rng_holder, file.path(econ_results_location,  paste0("begin_rng_",td2, ".Rds")), compress=FALSE)
     saveRDS(end_rng_holder, file.path(econ_results_location,  paste0("end_rng_",td2, ".Rds")), compress=FALSE)
 
+}
 
   for(i in 1:nstock){
     pth <- paste0(ResultDirectory,'/fig/', sapply(stock, '[[', 'stockName')[i])
