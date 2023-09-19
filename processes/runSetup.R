@@ -162,14 +162,14 @@ if (platform == 'Linux'){
   
   
   asap_model_num<-1
-  asap_model_path<-here("assessment","ASAP",paste0("Run_",asap_model_num))
+  rundir<-here("assessment","ASAP",paste0("Run_",asap_model_num))
   # if the folder Run_1 exists, increment by 1 and check again. When it does not exist, create the directory.
-  while(dir.exists(asap_model_path)==TRUE){
+  while(dir.exists(rundir)==TRUE){
     asap_model_num<-asap_model_num+1
-    asap_model_path<-here("assessment","ASAP",paste0("Run_",asap_model_num))
+    rundir<-here("assessment","ASAP",paste0("Run_",asap_model_num))
   }
   
-  dir.create(file.path(asap_model_path), showWarnings = FALSE, recursive=TRUE)
+  dir.create(file.path(rundir), showWarnings = FALSE, recursive=TRUE)
   
     
   # setup command to run ASAP. For now, ASAP is located at /net/home2/mlee/admb-12.3/ASAP3/ASAP3
@@ -183,7 +183,7 @@ if (platform == 'Linux'){
                   'Modify runSetup.R', sep='\n', immediate.=TRUE))
   }   
 
-  file.copy(from = from.path, to = asap_model_path)
+  file.copy(from = from.path, to = rundir)
 
 }
 
