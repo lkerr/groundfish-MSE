@@ -219,7 +219,6 @@ big_loop
   if (save_econ_raw==TRUE){
     saveRDS(begin_rng_holder, file.path(econ_results_location,  paste0("begin_rng_",td2, ".Rds")), compress=FALSE)
     saveRDS(end_rng_holder, file.path(econ_results_location,  paste0("end_rng_",td2, ".Rds")), compress=FALSE)
-
 }
 
   for(i in 1:nstock){
@@ -272,8 +271,4 @@ big_loop
   top_loop_end-top_loop_start
   cat('\n ---- Successfully Completed ----\n')
   Sys.time()
-#  if(runClass=='neptune'){
-#    system("mailme Min-Yang.Lee@noaa.gov \"runSim.R on neptune complete\" ")
-#    
-#  }
-  
+
