@@ -33,17 +33,20 @@ if(mproc$ImplementationClass[m]=="Economic"){
       tda <- gsub(':', '', tda)
       tda<-gsub(' ', '_', tda)
       tda2 <- paste0(tda,"_", round(runif(1, 0, 10000)))
+      
+      if (save_econ_raw==TRUE){
       write.table(revenue_holder, file.path(econ_results_location, paste0("econ_",tda2, ".csv")), sep=",", row.names=FALSE)
-      revenue_holder<-list()
       
       afsh<-rbindlist(fishery_output_holder)
       write.table(afsh, file.path(econ_results_location, paste0("econ_fishery_status_",tda2, ".csv")), sep=",", row.names=FALSE)
-      afsh<-list()
       
       quotaprices<-rbindlist(fishery_quota_price_holder)
       write.table(quotaprices, file.path(econ_results_location, paste0("quota_prices_",tda2, ".csv")), sep=",", row.names=FALSE)
+      }
+      #CLEANUP
+      revenue_holder<-list()
+      afsh<-list()
       quotaprices<-list()
-      
       
     }
   }
