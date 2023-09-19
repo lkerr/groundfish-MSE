@@ -159,65 +159,31 @@ if (platform == 'Linux'){
                'directory in the same directory as Rlib and EXE must contain',
                'ASAP3.EXE', sep='\n'))
   }
-  #Find the max dir.
-  file_dirs<-list.dirs(path="./assessment/ASAP")
-
-    file_dirs = do.call(rbind, lapply(file_dirs, function(xx) {
-    xx = as.data.frame(xx, stringsAsFactors=F)
-    names(xx) = "dirname" 
-    return(xx) }) )      
   
-  file_dirs$stub = sapply(file_dirs$dirname, USE.NAMES=F, function(zz) {
-    temp = do.call(rbind,strsplit(as.character(zz), split = "/"))
-    return(temp[NCOL(temp)]) })
   
-  file_dirs<-file_dirs %>%
-    dplyr::filter(stringr::str_detect(stub, "^Run_"))
-  
-  file_dirs<-file_dirs %>%
-    mutate(stub=as.numeric(stringr::str_replace(stub,"Run_","")))
-  if(nrow(file_dirs)==0){
-    asap_model_num<-1
-  } else{
-    asap_model_num<-max(file_dirs$stub)+1
+  asap_model_num<-1
+  asap_model_path<-here("assessment","ASAP",paste0("Run_",asap_model_num))
+  # if the folder Run_1 exists, increment by 1 and check again. When it does not exist, create the directory.
+  while(dir.exists(asap_model_path)==TRUE){
+    asap_model_num<-asap_model_num+1
+    asap_model_path<-here("assessment","ASAP",paste0("Run_",asap_model_num))
   }
+  
+  dir.create(file.path(asap_model_path), showWarnings = FALSE, recursive=TRUE)
   
     
-  tempwd <- getwd()
-  rundir <- paste(tempwd, "/assessment/ASAP/Run", '_', asap_model_num, sep = "")
-  # final error catch. Check if rundir exists. If it does, increment asap_model_num and try again.
-  
-  flag_dir<-dir.exists(rundir)
-  while(flag_dir==TRUE){
-   asap_model_num<-asap_model_num+1
-   rundir <- paste(tempwd, "/assessment/ASAP/Run", '_', asap_model_num, sep = "")
-   flag_dir<-dir.exists(rundir)
-  }
-  
-  dir.create(path = rundir)
-
   # setup command to run ASAP. For now, ASAP is located at /net/home2/mlee/admb-12.3/ASAP3/ASAP3
-  if(runClass=='neptune'){
-    full.path.to.asap<- "/net/home2/mlee/admb-12.3/ASAP3/ASAP3"
-  } else if(runClass=='mleeContainer'){
-    full.path.to.asap<-"/home/mlee/mlee_net/admb-12.3/ASAP3/ASAP3"
-  }else if(runClass=='mleeLocal'){
-    full.path.to.asap<- "placeholder/path/to/ASAP3"
+  if(runClass=='mleeContainer'){
+    from.path<-"/home/mlee/mlee_net/admb-12.3/ASAP3/ASAP3"
   } else if(runClass=='HPCC'){
-    full.path.to.asap<- paste('../EXE/ASAP3.EXE', sep = "")
+    from.path<- paste('../EXE/ASAP3.EXE', sep = "")
   } else{
     warning(paste('Unknown Linux runClass.',
                   'You will not be able to find ASAP',
                   'Modify runSetup.R', sep='\n', immediate.=TRUE))
   }   
-  from.path <- full.path.to.asap
 
-  asap_model_num<-NULL
-  file_dirs<-NULL
-  flag_dir<-NULL
-  
-  to.path   <- paste(rundir, sep= "")
-  file.copy(from = from.path, to = to.path)
-  
+  file.copy(from = from.path, to = asap_model_path)
+
 }
 
