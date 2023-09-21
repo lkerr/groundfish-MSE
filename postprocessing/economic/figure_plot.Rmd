@@ -24,8 +24,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 mprocfile<-"mprocEcon.csv"
 
-file_to_readin<-"results_2023-06-16-14-03-14"
-file_to_readin<-"results_2023-06-27-16-57-45"
+#file_to_readin<-"results_2023-06-16-14-03-14"
+#file_to_readin<-"results_2023-06-27-16-57-45"
 
 # This depends on something in  
 
@@ -203,13 +203,13 @@ for(i in 1:length(omvalGlobal)){
 
 ml<-do.call(rbind,out_sim)
 
-# Process the model-level results a little differently. Smash together the ie_F and ie_bias.
+# Process the model-level results a little differently. Smash together the ie_F and ie_bias. This depends on the entries of mproc, so take a look a that.
   m1<-ml %>%
-    dplyr::filter(mproc==1)%>%
+    dplyr::filter(mproc==5)%>%
     select(replicate, mproc, stock, ie_F=ie_F_hat, ie_bias=iebias_hat)
   
   m23<-ml %>%
-    dplyr::filter(mproc %in% c(2,3))%>%
+    dplyr::filter(mproc != 5)%>%
     select(replicate, mproc, stock, ie_F, ie_bias)
 
   m123<-rbind(m1,m23)
@@ -221,8 +221,8 @@ ml<-do.call(rbind,out_sim)
 
 ds2<-ds %>%
   dplyr::filter(replicate>=40)%>%
-  dplyr::filter(replicate<70)%>%
-  dplyr::filter(mproc %in%c(1,3,4,6))
+  dplyr::filter(replicate<70) #%>%
+#  dplyr::filter(mproc %in%c(1,3,4,6))
 
 
 
@@ -255,13 +255,6 @@ kable(t(mproc),caption =  "contents of mproc file.")
 ```
 I simulated from 2020-2040.  I think I have about 80 repliates.  Here is a short description of each of the Management procedures:
 
-1. MP1 - Slide HCR. Economic model with economic "years" randomly drawn from 2010 to 2015.  I draw a entire years.
-2. MP2 - Slide HCR.  Economic model with all economic parameters (prices, daily weather, catch limits and trawl index, costs) equal to their 2015 actual values.  
-3. MP3 -- Slide HCR.  Standard fisheries model with zero implementation error. 
-4. MP4 -- Slide HCR. Standard fisheries model with two implementation error parameters internally estimated from model 1.
-5. MP5 - Constant F HCR. Economic model with economic "years" randomly drawn from 2010 to 2015.  I draw a entire years.
-6. MP6 - Constant F HCR. Standard fisheries model with two implementation error parameters internally estimated from **model 1**.
-7. MP7 - Constant F HCR. Standard fisheries model with two implementation error parameters internally estimated from model 5.
 
 A note on the implementation error estimation: 
 To estimate the implementation error, I use the F_full and F_fullAdvice from an economic model for a single model run for the duration of the management regime, in this case from 2020-2040. I estimate the ie_bias parameter (intuitively, this is the average difference between F_full and F_fullAdvice) and the ie_F parameter (intuitively, this is the related to the variance left over) under the assumption of log-normally distributed errors.   I then pass these parameters to the standard fisheries models.
