@@ -35,9 +35,9 @@
     Gini_fleet = save_vector_ann,
     Gini_fleet_bioecon_stocks = save_vector_ann,
     #Gini_stock_within_season_BKS= save_vector_ann
-    total_rev=save_vector_ann,
-    total_modeled_rev=save_vector_ann,
-    total_groundfish_rev=save_vector_ann,
+    total_fleet_rev=save_vector_ann,
+    total_fleet_modeled_rev=save_vector_ann,
+    total_fleet_groundfish_rev=save_vector_ann,
     Theil_managed_CtoB = save_vector_ann,
     Theil_managed_Relative_C=save_vector_ann
     )
