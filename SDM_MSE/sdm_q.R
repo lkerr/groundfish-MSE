@@ -1,4 +1,4 @@
-#' @title 
+#' @title Format SDM data for SDM_sims catchability adjustment
 #' @description  Format SDM output for reference in SDM_sims catchability adjustment
 #' 
 #' @param METRIC A string indicating the SDM metric (result) to pull, no default. Options:
