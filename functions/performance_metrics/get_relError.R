@@ -1,5 +1,14 @@
+#' @title 
+#'
+#' @param stock A storage object for a single species
+#' 
+#' @return A revised storage object (out) with updated:
+#' \itemize{
+#'  \item{}
+#' }
+
 get_relError <- function(stock){
-#!!! Could run this as post-processing or right before get_fillRepArrays.R
+#!!! Could run this as post-processing or right before get_fillRepArrays.R, probably only want to do that if arrays are filled once, not if they are filled in each for loop 
   out <- within(stock, {
 
     #### Calculate rel errors ####

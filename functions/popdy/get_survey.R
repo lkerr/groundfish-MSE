@@ -1,33 +1,26 @@
 # function that returns survey index-at-age values
 # 
-# F_full: annual fishing mortality
-# 
-# M: annual natural mortality
-# 
-# N: vector of abundance by age (after growth and recruitment)
-# 
-# selF: vector of fishery selectivity by age
-# 
-# selI: vector of survey selectivity by age
-# 
-# timeI: survey timing as a proportion of the year that has elapsed
-#        (e.g., Jul 1 survey is 0.5 and Jan 1 survey is 0)
-#        
-# qI: survey catchability
-#
-# DecCatch: switch for if survey catchability decreases over time/temperature or not. If set to TRUE, survey catchability 
-#decreases at temperature increases. 
+#' @param F_full Annual fishing mortality
+#' @param M Annual natural mortality
+#' @param N Vector of abundance by age (after growth and recruitment)
+#' @param slxF Vector of fishery selectivity by age
+#' @param slxI Vector of survey selectivity by age
+#' @param timeI Survey timing as a proportion of the year that has elapsed (e.g., Jul 1 survey is 0.5 and Jan 1 survey is 0)
+#' @param qI Index catchability, default pulled from stock parameter files (in get_indexData) but may be adjusted here
 #' @param q_settings A string indicating how catchability should be adjusted, default = FALSE (no adjustment):
 #' \itemize{
 #'   \item("FALSE" = Default setting makes no adjustment to survey catchability)
 #'   \item("DecCatch" = Previously the name of the argument used to adjust catchability, this option adjusts q to decrease with temperature (Tanom))
 #'   \item("SDM_sims" = Adjust survey catchability based on SDM results)
 #' }
-#' @param qI Index catchability, default pulled from stock parameter files (in get_indexData) but may be adjusted here
-# Tanom: temperature anomaly
-#
-# y: year in simulation 
-#' @return A list including I the survey index and qI_rev the revised catchability
+#' @param Tanom Temperature anomaly used to adjust catchability when q_settings == "DecCatch"
+#' @param y Year index for simulation 
+#' 
+#' @return A list including:
+#' \itemize{
+#'  \item{I - survey index}
+#'  \item{qI_rev - revised catchability}
+#' } 
 
 get_survey <- function(F_full, M, N, slxF, slxI, timeI, qI, q_settings = NULL, Tanom, y){
   

@@ -1,6 +1,12 @@
-
-
-# Function to initialize the stocks
+#' @description Initialize the stocks
+#' 
+#' @param stock A storage object for a single species
+#' 
+#' @return A revised storage object (out) with updated:
+#' \itemize{
+#'  \item{}
+#'  \item{}
+#' }
 
 get_popInit <- function(stock){
 

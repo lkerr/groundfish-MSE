@@ -1,0 +1,33 @@
+---
+title: "Groundfish MSE WHAM Help Documentation"
+output: html_document
+date: "2023-08-01"
+---
+
+As of August 2023 the Woods Hole Assessment Model (WHAM) is an available stock assessment option in the groundfish MSE framework. The following outlines some guidelines for specifying custom WHAM models and limitations within the groundfish MSE framework.
+
+Limitations
+
+- The groundfish MSE only supports WHAM models with single fleet, to expand this in the future code would be needed to store selectivity for multiple fleets in get_WHAM.R res$sel.fleet (~ line 78) and its use in get_advice (~ line 45).
+- FAA is reported as the total FAA (FAA_tot in WHAM results) not by fleet 
+- CAA is reported for only the first fleet. To store for multiple fleets would need to revise storage in get_containers.R (~ line 199/212) and in get_WHAM.R (~ line 96).
+- Reference points based on prevailing conditions (generally default to average over 5 terminal years)
+
+
+
+User guidelines
+
+- To customize the WHAM model you can edit the "wham_settings.R" script which sets up a named list of prepare_wham_input arguments
+  - This list must always include a model_name
+ 
+Example 1
+```{r}
+wham_settings <- list(model_name = "test")
+``` 
+Example 2
+```{r}
+wham_settings <- list(model_name = "test", selectivity = list(model = c(rep("logistic",2)),                                         
+                                                              initial_pars = list(c(2,0.4), c(2,0.4)),
+                                                              fix_pars = list(NULL, c(1,2)))) 
+```
+
