@@ -257,19 +257,19 @@ working_targeting [, harvest_sim:= ifelse(is.na(dl_primary), harvest_sim, ifelse
   my_revenue_names<-grep("^r_",colnames(annual_revenue_holder) , value=TRUE)
   annual_revenue_holder2<-as.data.table(annual_revenue_holder)
   annual_revenue_holder2<-annual_revenue_holder2[, lapply(.SD, sum),.SDcols = my_revenue_names]
-  total_rev<-rowSums(annual_revenue_holder2, na.rm=TRUE)
+  total_fleet_rev<-rowSums(annual_revenue_holder2, na.rm=TRUE)
   
   #Total revenue for just the stocks with a biological model.
   my_revenue_names<-paste0("r_",stockNames)
   annual_revenue_holder2<-as.data.table(annual_revenue_holder)
   annual_revenue_holder2<-annual_revenue_holder2[, lapply(.SD, sum),.SDcols = my_revenue_names]
-  total_modeled_rev<-rowSums(annual_revenue_holder2, na.rm=TRUE)
+  total_fleet_modeled_rev<-rowSums(annual_revenue_holder2, na.rm=TRUE)
 
   #Total revenue for the allocated groundfish
   my_revenue_names<-paste0("r_",allocated_groundfish)
   annual_revenue_holder2<-as.data.table(annual_revenue_holder)
   annual_revenue_holder2<-annual_revenue_holder2[, lapply(.SD, sum),.SDcols = my_revenue_names]
-  total_groundfish_rev<-rowSums(annual_revenue_holder2, na.rm=TRUE)
+  total_fleet_groundfish_rev<-rowSums(annual_revenue_holder2, na.rm=TRUE)
   
 annual_revenue_holder2<-annual_revenue_holder2 %>%
   tidyr::pivot_longer(starts_with("r_"), names_to="spstock2", values_to="revenue")%>%

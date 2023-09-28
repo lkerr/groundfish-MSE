@@ -5,9 +5,9 @@
 get_fillRepArraysEcon <- function(simulation_container){
   simulation_container$Gini_fleet[r,m,y]<-Gini_fleet
   simulation_container$Gini_fleet_bioecon_stocks[r,m,y]<-Gini_fleet_bioecon_stocks
-  simulation_container$total_rev[r,m,y]<-total_rev
-  simulation_container$total_groundfish_rev[r,m,y]<-total_groundfish_rev
-  simulation_container$total_modeled_rev[r,m,y]<-total_modeled_rev
+  simulation_container$total_fleet_rev[r,m,y]<-total_fleet_rev
+  simulation_container$total_fleet_groundfish_rev[r,m,y]<-total_fleet_groundfish_rev
+  simulation_container$total_fleet_modeled_rev[r,m,y]<-total_fleet_modeled_rev
   
   return(simulation_container)
   

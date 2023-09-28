@@ -192,6 +192,9 @@ for(r in 1:nrep){
     for (i in 1:nstock){
         stock[[i]]<-ie_param_reset(stock=stock[[i]])
     }
+
+    #Reset econ_baselines
+    econ_baseline_averages<-econ_baseline_averages_backup  
     
     print(paste0("Model", m, " of rep # ",r, "done."))
   } #End of mproc loop

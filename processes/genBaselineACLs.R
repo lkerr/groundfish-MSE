@@ -88,3 +88,10 @@ groundfish <-econ_baseline_averages %>%
 
 groundfish<-pull(groundfish)
 
+
+
+econ_baseline_backup<-econ_baseline
+econ_baseline_averages_backup <-econ_baseline_averages
+
+
+
