@@ -24,6 +24,13 @@ fishery_holder$targeted<-0
 
 # Subset the fishery_holder to rows that have a biological model, and keep the spstock2 and ln_trawl_survey columns
 ts<-fishery_holder[bio_model==1, c('spstock2','ln_trawlsurvey','ln_obs_trawlsurvey','sectorACL')]
+
+if(mproc$EconName[m]=="MSE_rebuilt"){
+  source('processes/adjust_survey.R')
+}
+
+
+
 #Sanity check. The actual values in the trawl survey have never been higher than 5. So, set a max at 7, just in case, which is nearly an order of magnitude higher.
 ts[ln_trawlsurvey>=7, ln_trawlsurvey:=7]
 ts[ln_obs_trawlsurvey>=7, ln_obs_trawlsurvey:=7]
