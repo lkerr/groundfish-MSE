@@ -113,7 +113,8 @@ flLst <- list()
 omvalGlobal_stack<-list()
 # If there is just one omvalGlobal, read it into the object omvalGlobal_stack
 if(length(omvalGlobal_filename)==1){
-  load(here(st,"sim", omvalGlobal_filename[i]))
+  load(here(st,"sim", omvalGlobal_filename[1]))
+  flLst[[1]] <- omvalGlobal
 
 } else if(length(omvalGlobal_filename)>1){ 
 # If there is more than one  omvalGlobal, you have to stack them together.

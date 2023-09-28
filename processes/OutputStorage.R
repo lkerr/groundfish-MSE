@@ -26,8 +26,8 @@ if(mproc$ImplementationClass[m]=="Economic"){
   #If we have started management, put the economic results into their container
   if(y >= fmyearIdx){
     simlevelresults <- get_fillRepArraysEcon(simlevelresults)
-    # Write the raw data occasionally or if this is the last year of an econ model
-    if(chunk_flag==0 | y==nyear){
+    # Write the only in the last year of an econ model
+    if(y==nyear){
       revenue_holder<-rbindlist(revenue_holder)
       tda <- as.character(Sys.time())
       tda <- gsub(':', '', tda)
