@@ -13,12 +13,12 @@ source('processes/readin_previous_omval.R')
 # if on local machine (i.e., not hpcc) must compile the tmb code
 # (HPCC runs have a separate call to compile this code). Keep out of
 # runSetup.R because it is really a separate process on the HPCC.
-if(runClass == 'local'){
+if(runClass != 'HPCC'){
   source('processes/runPre.R', local=ifelse(exists('plotFlag'), TRUE, FALSE))
 }
 
 source(here("processes","EconStorage.R")) 
-save_econ_raw<-FALSE
+save_econ_raw<-TRUE
 ####################These are temporary changes for testing ####################
 
 ####################End Temporary changes for testing ####################
@@ -63,6 +63,7 @@ for(r in 1:nrep){
          source('processes/setup_Year_Indexing.R')
          source('processes/setupEconType.R')
         }
+    
     
     
     #Store the ie_F and ie_bias terms
@@ -126,7 +127,10 @@ for(r in 1:nrep){
           
           # Load economic data from disk, wrangle endogenous bio data to a format ready for econ model 
           source('processes/loadEcon2.R')
-
+          if(mproc$EconName[m]=="MSE_rebuilt"){
+            source('processes/adjust_ACLs.R')
+          } 
+          
           bio_params_for_econ <- get_bio_for_econ(stock,econ_baseline_averages)
           # Print the status of the model.
           cat("Working on Econ module. Replicate", r, "of", nrep, ". This is model", m, "of", nrow(mproc), ". This is year", yrs[y],"of", yrs[nyear], ".\n ")
@@ -188,7 +192,7 @@ for(r in 1:nrep){
     for (i in 1:nstock){
         stock[[i]]<-ie_param_reset(stock=stock[[i]])
     }
-        
+    
     print(paste0("Model", m, " of rep # ",r, "done."))
   } #End of mproc loop
 } #End rep loop
