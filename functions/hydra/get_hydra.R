@@ -9,12 +9,6 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
   #This is the number of years the MSE has gone on, will inform Nyears
   MSEyr = length(newdata$bs_temp)
   
-  # EMILY: ADD THE .PIN FILE INFO TO get_hydra_data AS WELL, AND DOWN BELOW
-  #Source the original hydra_data, with added lines for additional year
-  #There are different functions for each set of data inputs
-  # Option 1: get_hydra_data_GB_5bin_1978_inpN_noM1.R version
-  # Option 2: get_hydra_data_10F.R version
-  
   #This needs dummy variables to start the while loop
   #the while loop is needed because sometimes there is indexing issues
   #due to the hydra model not running successfully
