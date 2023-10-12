@@ -11,5 +11,17 @@ ts2<-fishery_holder[fishery_holder$spstock2=="codGOM", c('spstock2','ln_trawlsur
 # I'm going to assume that the trawl survey goes up by a factor of 4
 ts2[ts2$spstock2=="codGOM",]$ln_trawlsurvey<-1.657561+log(4)
 ts2[ts2$spstock2=="codGOM",]$ln_obs_trawlsurvey<-ts2[ts2$spstock2=="codGOM",]$ln_trawlsurvey
+
+
+ts3<-fishery_holder[fishery_holder$spstock2=="americanplaiceflounder", c('spstock2','ln_trawlsurvey','ln_obs_trawlsurvey','sectorACL')]
+
+#the 2015 value of log_trawl_survey is 1.657561.  un-logged value of trawl survey is 5.2465.  
+# I'm going to assume that the trawl survey goes up by a factor of 4
+ts2[ts2$spstock2=="americanplaiceflounder",]$ln_trawlsurvey<-ts2[ts2$spstock2=="americanplaiceflounder",]$ln_trawlsurvey+log(1.5)
+ts2[ts2$spstock2=="americanplaiceflounder",]$ln_obs_trawlsurvey<-ts2[ts2$spstock2=="americanplaiceflounder",]$ln_trawlsurvey
+
+
+
+
 ts<-rbind(ts,ts2)
 

@@ -5,4 +5,6 @@
 econ_baseline_averages[econ_baseline_averages$spstock2=="codGOM",]$mean_baselineACL_mt<-12000
 econ_baseline_averages[econ_baseline_averages$spstock2=="codGOM",]$mean_sectorACL_mt<-7000
   
+econ_baseline_averages[econ_baseline_averages$spstock2=="americanplaiceflounder",]$mean_baselineACL_mt<-3000
+econ_baseline_averages[econ_baseline_averages$spstock2=="americanplaiceflounder",]$mean_sectorACL_mt<-3000
 
