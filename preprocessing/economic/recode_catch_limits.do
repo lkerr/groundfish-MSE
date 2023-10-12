@@ -126,7 +126,9 @@ gen nsnr= commonpool+ herringfishery+ statewater+ scallopfishery+ other+ smallme
 preserve
 
 /* average over all years */
-
+qui summ year
+local first =r(min)
+local last =r(max)
 
 collapse (sum) total sector recreational nsnr , by(spstock2 data_type )
 reshape wide total sector nsnr recreational, i( spstock2) j(data_type) string
@@ -174,66 +176,70 @@ foreach var of varlist  nonsector_nonrec_fraction rec_fraction sector_frac {
 replace `var'=float(round(`var',0.0001))
 }
 compress
-export delimited using "$outdir/catch_limits_2010_2017.csv", replace datafmt
+export delimited using "$outdir/catch_limits_`first'_`last'.csv", replace datafmt
 restore
 
 /* just 2017 data */
 
-preserve
-keep if year==2017
+levelsof year, local(myyears)
 
-collapse (sum) total sector recreational nsnr , by(spstock2 data_type )
-reshape wide total sector nsnr recreational, i( spstock2) j(data_type) string
+foreach yr of local myyears{
+	preserve
+	keep if year==`yr'
 
-gen nonsector_nonrec_fraction=nsnrCatch/totalACL
-gen nsnr_CA=nsnrCatch/nsnrACL
-gen rec_fraction=0
-/*See the last full paragraph of page 18359 of the  Framework 44 federal register.  75 FR 68 page 18356-18375 .*/
-replace rec_fraction=.337 if spstock2=="codGOM"
-replace rec_fraction=.275 if spstock2=="haddockGOM"
-gen ns_frac=rec_fraction+nonsector_nonrec_fraction
+	collapse (sum) total sector recreational nsnr , by(spstock2 data_type )
+	reshape wide total sector nsnr recreational, i( spstock2) j(data_type) string
 
-gen sector_frac=1-ns_frac
+	gen nonsector_nonrec_fraction=nsnrCatch/totalACL
+	gen nsnr_CA=nsnrCatch/nsnrACL
+	gen rec_fraction=0
+	/*See the last full paragraph of page 18359 of the  Framework 44 federal register.  75 FR 68 page 18356-18375 .*/
+	replace rec_fraction=.337 if spstock2=="codGOM"
+	replace rec_fraction=.275 if spstock2=="haddockGOM"
+	gen ns_frac=rec_fraction+nonsector_nonrec_fraction
 
-order *ACL, after(spstock2)
-keep spstock2 totalACL sector_frac nonsector_nonrec_fraction rec_fraction 
-order spstock2 totalACL  nonsector_nonrec_fraction rec_fraction sector_frac 
-merge 1:1 spstock2 using "$outdir/stocks_in_choiceset.dta", nogenerate
+	gen sector_frac=1-ns_frac
 
-/* mark allocated multispecies, non-allocated multispecies, and non-multispecies */
-gen mults_allocated=inlist(spstock2,"americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","pollock","redfish","whitehake")
-replace mults_allocated=1 if inlist(spstock2,`"winterflounderGB"', `"yellowtailflounderCCGOM"',`"yellowtailflounderGB"',`"yellowtailflounderSNEMA"',`"winterflounderSNEMA"',`"winterflounderGOM"',`"witchflounder"')
+	order *ACL, after(spstock2)
+	keep spstock2 totalACL sector_frac nonsector_nonrec_fraction rec_fraction 
+	order spstock2 totalACL  nonsector_nonrec_fraction rec_fraction sector_frac 
+	merge 1:1 spstock2 using "$outdir/stocks_in_choiceset.dta", nogenerate
 
-gen mults_nonalloc=inlist(spstock2,`"windowpanen"',`"windowpanes"',`"wolffish"',`"halibut"',`"oceanpout"')
+	/* mark allocated multispecies, non-allocated multispecies, and non-multispecies */
+	gen mults_allocated=inlist(spstock2,"americanplaiceflounder","codGB","codGOM","haddockGB","haddockGOM","pollock","redfish","whitehake")
+	replace mults_allocated=1 if inlist(spstock2,`"winterflounderGB"', `"yellowtailflounderCCGOM"',`"yellowtailflounderGB"',`"yellowtailflounderSNEMA"',`"winterflounderSNEMA"',`"winterflounderGOM"',`"witchflounder"')
 
-gen non_mult=inlist(spstock2, `"americanlobster"',`"americanLobster"',`"monkfish"',`"other"',`"redsilveroffshorehake"',`"seascallop"',`"skates"')
-replace non_mult=1 if inlist(spstock2,`"spinydogfish"',`"squidmackerelbutterfishherring"',`"summerflounder"')
+	gen mults_nonalloc=inlist(spstock2,`"windowpanen"',`"windowpanes"',`"wolffish"',`"halibut"',`"oceanpout"')
 
-/* encode stock areas */
-gen stockarea="Unit"
-replace stockarea="GB" if inlist(spstock2,"codGB", "haddockGB", "winterflounderGB", "yellowtailflounderGB")
-replace stockarea="GOM" if inlist(spstock2,"codGOM", "haddockGOM", "winterflounderGOM")
-replace stockarea="SNEMA" if inlist(spstock2, "winterflounderSNEMA", "yellowtailflounderSNEMA")
-replace stockarea="CCGOM" if inlist(spstock2,"yellowtailflounderCCGOM")
+	gen non_mult=inlist(spstock2, `"americanlobster"',`"americanLobster"',`"monkfish"',`"other"',`"redsilveroffshorehake"',`"seascallop"',`"skates"')
+	replace non_mult=1 if inlist(spstock2,`"spinydogfish"',`"squidmackerelbutterfishherring"',`"summerflounder"')
+
+	/* encode stock areas */
+	gen stockarea="Unit"
+	replace stockarea="GB" if inlist(spstock2,"codGB", "haddockGB", "winterflounderGB", "yellowtailflounderGB")
+	replace stockarea="GOM" if inlist(spstock2,"codGOM", "haddockGOM", "winterflounderGOM")
+	replace stockarea="SNEMA" if inlist(spstock2, "winterflounderSNEMA", "yellowtailflounderSNEMA")
+	replace stockarea="CCGOM" if inlist(spstock2,"yellowtailflounderCCGOM")
 
 
 
-rename totalACL totalACL_mt
-sort spstock2
-replace sector_frac=1 if sector_frac==.
-replace nonsector_nonrec_fraction=0 if nonsector_nonrec_fraction==.
-replace rec_fraction=0 if rec_fraction==.
+	rename totalACL totalACL_mt
+	sort spstock2
+	replace sector_frac=1 if sector_frac==.
+	replace nonsector_nonrec_fraction=0 if nonsector_nonrec_fraction==.
+	replace rec_fraction=0 if rec_fraction==.
 
-foreach var of varlist  nonsector_nonrec_fraction rec_fraction sector_frac {
-replace `var'=float(round(`var',0.0001))
+	foreach var of varlist  nonsector_nonrec_fraction rec_fraction sector_frac {
+	replace `var'=float(round(`var',0.0001))
+	}
+
+	compress
+
+	export delimited using "$outdir/catch_limits_`yr'.csv", replace datafmt 
+
+
+	restore
 }
-
-compress
-
-export delimited using "$outdir/catch_limits_2017.csv", replace datafmt 
-
-
-restore
 
 
 /* year-by-years annual Sector ACLs data */

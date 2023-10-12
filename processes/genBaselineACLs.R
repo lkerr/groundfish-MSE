@@ -10,10 +10,10 @@
 
 
 # file paths for the raw and final directories
-sourcepath <- 'data/data_processed/econ/'
+sourcepath <- here("data","data_processed","econ")
 acls<-"annual_sector_catch_limits.csv"
 
-non_sector_data<-"catch_limits_2010_2017.csv" 
+non_sector_data<-"catch_limits_2010_2022.csv" 
 
 # Read in fraction of ACL that goes to the non-sector and rec fisheries
 # read in the non-sector info from from csv files
