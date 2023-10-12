@@ -49,4 +49,8 @@ replace Stock="SNE/MA Yellowtail Flounder" if Stock=="SNE Yellowtail Flounder"
 replace Stock="GB Cod" if Stock=="GB cod"
 replace Stock="GOM Cod" if Stock=="GOM cod"
 
+
+tostring Total, replace usedisplayformat force
+
+
 export delimited "${bio_data}\catchHist.csv", delimiter(",") replace
