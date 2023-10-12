@@ -232,6 +232,9 @@ If ie_override=TRUE, this determines where to find updated parameters. This can 
 1.  "Internal" this reads in an internally estimated ie_F_hat and ie_bias_hat from a previously run model. 
 2.  "results_YYYY-MM-DD-HH-MM-SS"  This reads in results from the omvalGlobal file in that folder. 
 
+## ie_from_model
+if ie_source=Internal, this determines the model number to use for updated parameters.
+
 
 
 [Return to Wiki Home](https://github.com/lkerr/groundfish-MSE/wiki)
