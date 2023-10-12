@@ -273,7 +273,7 @@ rename total totalACL_mt
 rename sector sectorACL_mt
 rename year gffishingyear
 
-expand 8 if gffishingyear==.
+expand 13 if gffishingyear==.
 
 sort spstock2 gffishingyear
 bysort spstock2: replace gffishingyear=2009+_n if gffishingyear==.
