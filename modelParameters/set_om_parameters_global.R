@@ -7,7 +7,7 @@ simpleTemperature <- FALSE
 
 
 # Which management procedures csv do you want to read:
-mprocfile<-"mprocEconT.csv"
+mprocfile<-"mprocEconR.csv"
 
 #### Stock parameters ####
 
@@ -17,9 +17,8 @@ mprocfile<-"mprocEconT.csv"
 # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
 # Available stocks: haddockGB, codGOM, codGB, pollock, yellowtailflounderGB
-stockExclude<-NULL
+stockExclude<-c('codGOM', 'codGB', 'pollock', 'yellowtailflounderGB')
 
-#stockExclude <- c('yellowtailflounderGB')
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data
 # just fishing mortality for now
@@ -29,7 +28,7 @@ histAssess <- TRUE
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 20
+nrep <- 2
 
 
 # First year to begin actual management
@@ -43,6 +42,7 @@ fyear <- 38
 
 # maximum year predicted into the future
 mxyear <- 2040
+mxyear <- 2028
 
 #### Burn-in parameters ####
 
@@ -171,6 +171,7 @@ quotaprice_coefs_loc<-"quotaprice_coefs_exponential.Rds"
 # The intervals years are set up (lower, upper].
 
 plotBrkYrs <- c(5, 10, 15)
+plotBrkYrs <- c(2, 4, 6)
 
 # Which sets of plots should be created? Set these objects to T/F
 
