@@ -307,8 +307,8 @@ get_hydra <- function(newseed=404,newdata=list(bs_temp=c(),F_full=c(),rec_devs=c
     Fyr.df <- rbind(Fyr.df,Fyr[[i]])
   }
 
+  # Here, combine the catches across the three fleets into a single catch vector
   
-  # it seems like all of this is ultimately coming from the 
   hydra_sim_data <- list(predSurSize=SurvRep,
                          predCatchSize=CatchRep,
                          predBiomass=survey.df, #[,-c(4,7,8)],

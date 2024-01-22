@@ -55,7 +55,7 @@
     # assessType = "stock complex",
     assessType = "single species",
     pseudoassess = FALSE,
-    dynamicRP = TRUE,
+    dynamicRP = FALSE,
     dynamicRPlength=10,
     targetF = 0.75,
     floorB = 0.2, # Default is 0.5
@@ -81,12 +81,14 @@
   input$complexes = gear_complexes
   input$complex = gear_complexes$complex
   
-   input$docomplex = TRUE
-  # input$docomplex = FALSE
+   # input$docomplex = TRUE
+  input$docomplex = FALSE
   # 
+  # ADD A 3 FLEET OPTION FOR THESE
   input$q <- matrix(c(1,0,0,1,1,1,1,1,1,1,
                       0,1,1,0,0,0,0,0,0,0),
                     nrow=2,byrow=TRUE)
+  # A way to use the real fleet data 
   input$q <- matrix(c(1,0,0,0.3,0.5,1.5,1,1,0.2,1,
                       0,1,0.33,0,0,0,0,0,0,0),
                     nrow=2,byrow=TRUE)
@@ -182,7 +184,6 @@
       #Restore the rng state to the value of oldseed_mproc.  For the same values of r, all the management procedures to start from the same RNG state.
       .Random.seed<-oldseed_mproc
       
-      
       bs_temp <- c()
       F_full <- c()
       rec_devs <- c()
@@ -207,9 +208,18 @@
       hydraData_growing_index <- cbind(hydraData$predBiomass,obsbiomass=hydraData_init_index)
       hydraData_growing_catch <- cbind(hydraData$predCatch,obscatch=hydraData_init_catch)
       
+      hydradata_growing_catch.df <- data.frame(hydraData_growing_catch[,c(3,4,10)])
+      hydradata_growing_catch.df.new <-data.frame(matrix(ncol = 3, nrow = 0))
+      # colnames(hydradata_growing_catch.df.new) <- c("year","obscatch","species")
+      for(i in 1:input$Nsp){ 
+        temp <- dplyr::filter(hydradata_growing_catch.df,species==i) %>% group_by(year) %>% summarise(obscatch = sum(obscatch))
+        temp <- cbind(temp,rep(i,nrow(temp)))
+        hydradata_growing_catch.df.new <- rbind(hydradata_growing_catch.df.new,temp)
+      }
+      colnames(hydradata_growing_catch.df.new) <- c("year","obscatch","species")
       # Attach the catch and index data WITH observation error to the hydraData object
       hydraData$IN <- hydraData_growing_index
-      hydraData$CN <- hydraData_growing_catch
+      hydraData$CN <- hydradata_growing_catch.df.new
       
       MP_advice_temp <- as.data.frame(matrix(nrow=0,ncol=3))
       names(MP_advice_temp) <- c("species","year","advice")
@@ -250,11 +260,22 @@
             
             hydraData_growing_index <- rbind(hydraData_growing_index,hydraData_new_index.df)
             hydraData_growing_catch <- rbind(hydraData_growing_catch,hydraData_new_catch.df)
+            
+            hydradata_growing_catch.df <- data.frame(hydraData_growing_catch[,c(3,4,10)])
+            hydradata_growing_catch.df.new <-data.frame(matrix(ncol = 3, nrow = 0))
+            # colnames(hydradata_growing_catch.df.new) <- c("year","obscatch","species")
+            for(i in 1:input$Nsp){ 
+              temp <- dplyr::filter(hydradata_growing_catch.df,species==i) %>% group_by(year) %>% summarise(obscatch = sum(obscatch))
+              temp <- cbind(temp,rep(i,nrow(temp)))
+              hydradata_growing_catch.df.new <- rbind(hydradata_growing_catch.df.new,temp)
+            }
+            colnames(hydradata_growing_catch.df.new) <- c("year","obscatch","species")
+            hydradata_growing_catch.df.new %>% relocate(species)
           }
           
           # Attach the catch and index data WITH observation error to the hydraData object
           hydraData$IN <- hydraData_growing_index
-          hydraData$CN <- hydraData_growing_catch # ?? can this be named obs_sumIN and obs_sumCW for stock object??
+          hydraData$CN <- hydradata_growing_catch.df.new # ?? can this be named obs_sumIN and obs_sumCW for stock object??
           
           # Collect index and catch information for all stocks into om_long
           index <- dplyr::filter(as.data.frame(hydraData$IN),survey==1)
@@ -312,13 +333,13 @@
                 if(stock[[i]]$stockName %in% PlanBstocks) mp_results$out_table$advice[i] <- stock[[i]]$gnF$CWrec
               }
               
-              for(i in 1:nstock){
-                if(stock[[i]]$stockName %in% ASAPstocks){
-                  AS_TBiomass[[r]][[y]][[i]] <- (last(stock[[i]]$res$tot.jan1.B)-last(dplyr::filter(hydraData$biomass,Species==i)$Biomass))/last(dplyr::filter(hydraData$biomass,Species==i)$Biomass)
-                  AS_TF[[r]][[y]][[i]] <- (stock[[i]]$res$Fref$Fcurrent-last(as.numeric(dplyr::filter(hydraData$Fyr,species==i))))/last(as.numeric(dplyr::filter(hydraData$Fyr,species==i)))
-                  AS_TRec[[r]][[y]][[i]] <- (mean(tail(stock[[i]]$res$N.age)[4:6,1])-mean(tail(as.numeric(hydraData$recruitment[i,]))[4:6]))/mean(tail(as.numeric(hydraData$recruitment[i,]))[4:6])
-                }
-              }
+              # for(i in 1:nstock){
+              #   if(stock[[i]]$stockName %in% ASAPstocks){
+              #     AS_TBiomass[[r]][[y]][[i]] <- (last(stock[[i]]$res$tot.jan1.B)-last(dplyr::filter(hydraData$biomass,Species==i)$Biomass))/last(dplyr::filter(hydraData$biomass,Species==i)$Biomass)
+              #     AS_TF[[r]][[y]][[i]] <- (stock[[i]]$res$Fref$Fcurrent-last(as.numeric(dplyr::filter(hydraData$Fyr,species==i))))/last(as.numeric(dplyr::filter(hydraData$Fyr,species==i)))
+              #     AS_TRec[[r]][[y]][[i]] <- (mean(tail(stock[[i]]$res$N.age)[4:6,1])-mean(tail(as.numeric(hydraData$recruitment[i,]))[4:6]))/mean(tail(as.numeric(hydraData$recruitment[i,]))[4:6])
+              #   }
+              # }
               
               
             }
@@ -406,32 +427,32 @@
   # EML 06/25/23 
   # This commented out section is to look at how well the ASAP models estimate biomass, fishing mortality, recruitment
   # Also wanting to look at the MP_results object
-  if(settings$assessType == "single species")
-  {
-    AS_TBiomass_matrix <- matrix(nrow=(nyear-fyear+1),ncol=length(stock))
+  # if(settings$assessType == "single species")
+  # {
+  #   AS_TBiomass_matrix <- matrix(nrow=(nyear-fyear+1),ncol=length(stock))
+  #   # rownames(AS_TBiomass_matrix)<- fyear:nyear
+  #   for(i in fyear:nyear){
+  #     for(j in 1:8){
+  #       if(!is.null(AS_TBiomass[[1]][[i]][[j]])) AS_TBiomass_matrix[(i-fyear+1),j] <- AS_TBiomass[[1]][[i]][[j]]
+  #     }
+  #   }
+  # 
+  #   AS_TF_matrix <- matrix(nrow=(nyear-fyear+1),ncol=length(stock))
     # rownames(AS_TBiomass_matrix)<- fyear:nyear
-    for(i in fyear:nyear){
-      for(j in 1:8){
-        if(!is.null(AS_TBiomass[[1]][[i]][[j]])) AS_TBiomass_matrix[(i-fyear+1),j] <- AS_TBiomass[[1]][[i]][[j]]
-      }
-    }
-  
-    AS_TF_matrix <- matrix(nrow=(nyear-fyear+1),ncol=length(stock))
-    # rownames(AS_TBiomass_matrix)<- fyear:nyear
-    for(i in fyear:nyear){
-      for(j in 1:8){
-        if(!is.null(AS_TF[[1]][[i]][[j]])) AS_TF_matrix[(i-fyear+1),j] <- AS_TF[[1]][[i]][[j]]
-      }
-    }
-  
-    AS_TRec_matrix <- matrix(nrow=(nyear-fyear+1),ncol=length(stock))
-    # rownames(AS_TBiomass_matrix)<- fyear:nyear
-    for(i in fyear:nyear){
-      for(j in 1:8){
-        if(!is.null(AS_TRec[[1]][[i]][[j]])) AS_TRec_matrix[(i-fyear+1),j] <- AS_TRec[[1]][[i]][[j]]
-      }
-    }
-  }
+  #   for(i in fyear:nyear){
+  #     for(j in 1:8){
+  #       if(!is.null(AS_TF[[1]][[i]][[j]])) AS_TF_matrix[(i-fyear+1),j] <- AS_TF[[1]][[i]][[j]]
+  #     }
+  #   }
+  # 
+  #   AS_TRec_matrix <- matrix(nrow=(nyear-fyear+1),ncol=length(stock))
+  #   # rownames(AS_TBiomass_matrix)<- fyear:nyear
+  #   for(i in fyear:nyear){
+  #     for(j in 1:8){
+  #       if(!is.null(AS_TRec[[1]][[i]][[j]])) AS_TRec_matrix[(i-fyear+1),j] <- AS_TRec[[1]][[i]][[j]]
+  #     }
+  #   }
+  # }
   
   # MP_results[[2]][[31]]
         # Output run time / date information and OM inputs. The random number is
