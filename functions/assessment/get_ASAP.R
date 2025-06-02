@@ -57,6 +57,13 @@ get_ASAP <- function(stock){
     
     #catch-at-age proportions and sum catch weight
     dat_file$dat$CAA_mats <- cbind(get_dwindow(obs_paaCN, styear, endyear), get_dwindow(obs_sumCW, styear, endyear))
+    if(gapinage==TRUE){
+      df1<-get_dwindow(obs_paaCN, styear, endyear)
+      df2<-matrix(0,nrow=N_rows,ncol=17)
+      for (i in seq(1,N_rows,5)){
+        df2[i,]<-df1[i,]
+      }
+      dat_file$dat$CAA_mats <- cbind(df2, get_dwindow(obs_sumCW, styear, endyear))}
     
     # discards - need additional rows even if not using
     dat_file$dat$DAA_mats <- matrix(0, nrow = N_rows, ncol = page + 1)
@@ -66,6 +73,20 @@ get_ASAP <- function(stock){
     
     # #index data; sum index value, observation error, proportions-at-age, sample size
     dat_file$dat$IAA_mats <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, N_rows), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN, N_rows)) #year, value, CV, by-age, sample size
+    
+    if(gapinage==TRUE){
+    df1<-get_dwindow(obs_paaIN, styear, endyear)
+    df2<-matrix(0,nrow=N_rows,ncol=17)
+    for (i in seq(1,N_rows,5)){
+      df2[i,]<-df1[i,]
+    }
+    df1<-rep(oe_paaIN, N_rows)
+    df3<-rep(0,N_rows)
+    for (i in seq(1,N_rows,5)){
+      df3[i]<-df1[i]
+    }
+    dat_file$dat$IAA_mats<-cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, N_rows), df2, df3) #year, value, CV, by-age, sample size
+    }
     
     # Recruitment CV
     dat_file$dat$recruit_cv <- matrix(pe_RSA, nrow = N_rows, 1)
@@ -78,6 +99,14 @@ get_ASAP <- function(stock){
     
     #catch effective sample size
     dat_file$dat$catch_Neff <- matrix(oe_paaCN, nrow = N_rows, 1)
+    if(gapinage==TRUE){
+      df1<-rep(oe_paaCN, N_rows)
+      df3<-rep(0,N_rows)
+      for (i in seq(1,N_rows,5)){
+        df3[i]<-df1[i]
+      }
+    dat_file$dat$catch_Neff<-matrix(df3, ncol=1)
+    }
     
     #discard ESS (even if not using)
     dat_file$dat$discard_Neff <- matrix(0, nrow = N_rows, 1)
@@ -96,7 +125,6 @@ get_ASAP <- function(stock){
     # 
     
     if (Sys.info()['sysname'] == "Windows") {
-      
       # save copy of .dat file by stock name, nrep, and sim year
       WriteASAP3DatFile(fname = paste('assessment/ASAP/', stockName, '_', r, '_', y,'.dat', sep = ''),
                         dat.object = dat_file,

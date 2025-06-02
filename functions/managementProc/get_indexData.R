@@ -3,14 +3,15 @@ get_indexData <- function(stock){
   within(stock, {
 
     sumCW[y] <- CN[y,] %*% waa[y,]    # (dot product)
-    
+
     paaCN[y,] <- (CN[y,]) / sum(CN[y,])
    
     # calculate the predicted survey index in year y and the predicted
     # survey proportions-at-age
+
     IN[y,] <- get_survey(F_full=F_full[y], M=natM[y], N=J1N[y,], slxC[y,], 
                            slxI=selI, timeI=timeI, qI=qI, 
-                         DecCatch=DecCatch, Tanom=Tanom[y],y=y)
+                         DecCatch=DecCatch, IncCatch= IncCatch, Tanom=Tanom[y],y=y)
     sumIN[y] <- sum(IN[y,])
     sumIW[y] <- IN[y,] %*% waa[y,]
     
@@ -26,6 +27,7 @@ get_indexData <- function(stock){
     # Get observation error data for the assessment model
     # change point where bias in catch is applied in 2015 before the start of
     # the projection period
+
      if (y < c(fmyearIdx)){
      obs_sumCW[y] <- sumCW[y]
      }
@@ -34,8 +36,8 @@ get_indexData <- function(stock){
                                     idx=sumCW[y] * ob_sumCW, 
                                     par=oe_sumCW)
      }
-    
-    obs_paaCN[y,] <- get_error_paa(type=oe_paaCN_typ, paa=paaCN[y,], 
+
+    obs_paaCN[y,] <- get_error_paa(paa=paaCN[y,], 
                                      par=oe_paaCN)
     
     obs_sumIN[y] <- get_error_idx(type=oe_sumIN_typ, 
@@ -47,7 +49,8 @@ get_indexData <- function(stock){
     # lognormal numbers-at-age are separate processes (which is consistent with
     # most assessment models)
     obs_sumIW[y] <- (obs_sumIN[y] * paaIN[y,]) %*% waa[y,]
-    obs_paaIN[y,] <- get_error_paa(type=oe_paaIN_typ, paa=paaIN[y,], 
+
+    obs_paaIN[y,] <- get_error_paa(paa=paaIN[y,], 
                                      par=oe_paaIN)
     })
 

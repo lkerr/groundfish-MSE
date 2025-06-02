@@ -435,6 +435,7 @@ sims <- list.files()
 
 relE_SSB <- matrix(NA, ncol = length(sims), nrow = 200)
 relE_REC <- matrix(NA, ncol = length(sims), nrow = 200)
+relE_CW <- matrix(NA, ncol = length(sims), nrow = 200)
 relE_F_mort <- matrix(NA, ncol = length(sims), nrow = 200)
 for (i in 1:length(sims)){
   load(sims[i])

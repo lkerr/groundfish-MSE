@@ -1,9 +1,8 @@
 get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                      F_val, stReportYr, ny=NULL, stockEnv, ...){
-
   if(parmgt$RFUN_NM == 'hindcastMean'){
     if(type == 'FREF'){
-      startHCM <- parmgt$FREF_PAR0
+      startHCM <- -parmgt$FREF_PAR0
       endHCM <- parmgt$FREF_PAR1
     }else if(type == 'BREF'){
       startHCM <- -parmgt$BREF_PAR0
@@ -21,7 +20,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     
     # length of recruitment time series
     nR <- length(parpop$R)
-    
+
     # historical R estimates over the time window specified in the file mprocfile (defined in set_om_parameters_global.R)
     Rest <- get_dwindow(parpop$R, 
                         start = unlist(nR- (-startHCM) + 1), 
@@ -50,7 +49,6 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     Tanom <- parenv$Tanom[startFCST:endFCST]
        
     ny <- length(Tanom)
-    
   }
   
  
@@ -66,7 +64,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   if(type=='current'){
     suminit<-sum(init)
     suminit<-get_error_idx(type=stockEnv$oe_sumIN_typ, idx=suminit, par=stockEnv$pe_IA)
-    initpaa<-get_error_paa(type=stockEnv$oe_paaIN_typ, paa=init, par=10000)
+    initpaa<-get_error_paa(paa=init, par=10000)
     init<-suminit*initpaa
   }
 

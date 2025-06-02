@@ -19,7 +19,7 @@ get_relError <- function(stock){
       relE_F[y-1] <- mean(get_relE(rep$F_full, get_dwindow(F_full, sty, y-1))) #AEW
     }
 
-    if(mproc[m,'ASSESSCLASS'] == 'ASAP' & y > fmyearIdx-1){
+    if(mproc[m,'ASSESSCLASS'] == 'WHAM' & y > fmyearIdx-1){
       # average over each assessment time series
       relE_SSB[y-1] <- mean(get_relE(SSBnew1, SSB[(y-length(SSBnew1)+1):y]))
       relE_N[y-1] <- mean(get_relE(Nnew1,rowSums(J1N[(y-length(SSBnew1)):(y-1),])))

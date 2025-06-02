@@ -29,7 +29,6 @@ get_tmbSetup <- function(stock){
     log_ipop_mean <- ipopInfo$lmean
     ipop_dev <- ipopInfo$lLMdevs
     
-
     tmb_dat <- list(
     
                       # index bounds

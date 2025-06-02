@@ -32,7 +32,6 @@
 
 
 get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
-
   # Load in the recruitment function (recruitment function index is
   # found in the parmgt data frame but the actual functions are from
   # the list Rfun_BmsySim which is created in the processes folder.
@@ -124,7 +123,6 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
       # temperature anomaly (FMSY)
       
       parpopTemp <- parpop
-    
       simAtF <- lapply(1:length(candF), function(x){
         parpopTemp$J1N <- equiJ1N_MSY[[x]]
         get_proj(type = 'FREF',

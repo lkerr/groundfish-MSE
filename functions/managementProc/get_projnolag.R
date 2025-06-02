@@ -1,6 +1,6 @@
 get_projnolag <- function(type, parmgt, parpop, parenv, Rfun,
                      F_val, stReportYr, ny=NULL, stockEnv, ...){
-  
+
   if(parmgt$RFUN_NM == 'hindcastMean'){
     if(type == 'FREF'){
       startHCM <- parmgt$FREF_PAR0
@@ -12,6 +12,8 @@ get_projnolag <- function(type, parmgt, parpop, parenv, Rfun,
     else if(type=='current'){#'current' being the current method for New England groundfish which uses projections in the catch advice 
       startFCST <- parenv$y
       endFCST <- parenv$y + 2
+      startHCM <- -parmgt$BREF_PAR0
+      endHCM <- parmgt$BREF_PAR1
     }
     
     # Tanom is unnecessary for hindcasts. Loop below is based on the length
@@ -21,10 +23,10 @@ get_projnolag <- function(type, parmgt, parpop, parenv, Rfun,
     
     # length of recruitment time series
     nR <- length(parpop$R)
-    
+
     # historical R estimates over the time window specified in the file mprocfile (defined in set_om_parameters_global.R)
     Rest <- get_dwindow(parpop$R, 
-                        start = unlist(nR- (-startHCM) + 1), 
+                        start = unlist(nR- (startHCM) + 1), 
                         end = unlist(nR - (-endHCM) + 1))
     
   }
@@ -51,6 +53,8 @@ get_projnolag <- function(type, parmgt, parpop, parenv, Rfun,
     
     ny <- length(Tanom)
     
+    # historical R estimates over the time window specified in the file mprocfile (defined in set_om_parameters_global.R
+    
   }
   
   # Get the initial population for the simulation -- assumes exponential 
@@ -65,7 +69,7 @@ get_projnolag <- function(type, parmgt, parpop, parenv, Rfun,
   if(type=='current'){
     suminit<-sum(init)
     suminit<-get_error_idx(type=stockEnv$oe_sumIN_typ, idx=suminit, par=stockEnv$pe_IA)
-    initpaa<-get_error_paa(type=stockEnv$oe_paaIN_typ, paa=init, par=10000)
+    initpaa<-get_error_paa(paa=init, par=10000)
     init<-suminit*initpaa
   }
   
@@ -83,7 +87,7 @@ get_projnolag <- function(type, parmgt, parpop, parenv, Rfun,
   }
   
   nage <- length(parpop$sel)
-  
+
   # if M is not given as a vector, make it one
   if(length(parpop$M) == 1){
     if(exists('y') & parpop$switch==TRUE){

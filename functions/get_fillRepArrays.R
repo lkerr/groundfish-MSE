@@ -10,9 +10,7 @@
 ## arbitrarily though.
 
 get_fillRepArrays <- function(stock){
-
   out <- within(stock, {
-    
     omval$N[r,m,] <- rowSums(J1N)
     omval$SSB[r,m,] <- SSB
     omval$R[r,m,] <- R
@@ -41,18 +39,14 @@ get_fillRepArrays <- function(stock){
     omval$SSBPROXY[r,m,] <- RPmat[,2]
     omval$FPROXYT[r,m,] <- RPmat[,3]
     omval$SSBPROXYT[r,m,] <- RPmat[,4]
-    omval$FPROXYT2[r,m,] <- RPmat[,5]
-    omval$SSBPROXYT2[r,m,] <- RPmat[,6]
-    omval$FRATIO[r,m,y] <- stock$res$F.report[length(stock$res$F.report)]/RPmat[,1][y]
+    
     omval$SSBRATIO[r,m,y] <- stock$res$SSB[length(stock$res$SSB)]/RPmat[,2][y]
     if(mproc[m,'rhoadjust'] == 'TRUE' & y>fmyearIdx & Mohns_Rho_SSB[y]>0.15){
-    omval$FRATIO[r,m,y] <- (stock$res$F.report[length(stock$res$F.report)]/(Mohns_Rho_F[y]+1))/RPmat[,1][y]
-    omval$SSBRATIO[r,m,y] <-(stock$res$SSB[length(stock$res$SSB)]/(Mohns_Rho_SSB[y]+1))/RPmat[,2][y]
+      omval$FRATIO[r,m,y] <- (stock$res$F.report[length(stock$res$F.report)]/(Mohns_Rho_F[y]+1))/RPmat[,1][y]
+      omval$SSBRATIO[r,m,y] <-(stock$res$SSB[length(stock$res$SSB)]/(Mohns_Rho_SSB[y]+1))/RPmat[,2][y]
     }
     omval$FRATIOT[r,m,y] <- stock$F_full[y]/RPmat[,3][y]
     omval$SSBRATIOT[r,m,y] <- stock$SSB[y]/RPmat[,4][y]
-    omval$FRATIOT2[r,m,y] <- stock$F_full[y]/RPmat[,5][y]
-    omval$SSBRATIOT2[r,m,y] <- stock$SSB[y]/RPmat[,6][y]
     if(y == nyear){
       # Determine whether additional years should be added on to the
       # beginning of the series
@@ -60,18 +54,23 @@ get_fillRepArrays <- function(stock){
         nprologueY <- nyear - length(cmip_dwn$YEAR)
         prologueY <- (cmip_dwn$YEAR[1]-nprologueY):(cmip_dwn$YEAR[1]-1)
         yrs <- c(prologueY, cmip_dwn$YEAR)
-      # If no additional years needed then just take them from the years
-      # time series.
+        # If no additional years needed then just take them from the years
+        # time series.
       }else{
         yrs <- rev(rev(cmip_dwn$YEAR)[1:nyear])
       }
       omval$YEAR <- yrs
     }
     
+    if(mproc[m, 'ASSESSCLASS']=='WHAM'){
+      omval$FRATIO[r,m,y] <- stock$res$F.report[length(stock$res$F.report)]/RPmat[,1][y]
+      omval$Fest[y,1:length(stock$res$SSB)]<-stock$res$F.report
+      omval$Catchest[y,1:length(stock$res$SSB)]<-stock$res$catch
+      omval$Rest[y,1:length(stock$res$SSB)]<-stock$res$J1N[,1]
+      
+    }
     
     # Assessment model diagnostics ... -1 gives 1 NA. Will change when I get
-    # around to reporting all years for all metrics.
-    omval$relE_qI[r,m,] <- relE_qI
     omval$relE_qC[r,m,] <- relE_qC
     omval$relE_selCs0[r,m,] <- relE_selCs0
     omval$relE_selCs1[r,m,] <- relE_selCs1
@@ -80,31 +79,41 @@ get_fillRepArrays <- function(stock){
     omval$relE_R_dev[r,m,] <- relE_R_dev
     omval$relE_SSB[r,m,] <- relE_SSB
     omval$relE_N[r,m,] <- relE_N
-    omval$relE_CW[r,m,] <- relE_CW
     omval$relE_IN[r,m,] <- relE_IN
+    omval$relE_CW[r,m,] <- relE_CW
     omval$relE_R[r,m,] <- relE_R #AEW
     omval$relE_F[r,m,] <- relE_F #AEW
     omval$conv_rate[r,m,]<-conv_rate #MDM
-    omval$Mohns_Rho_SSB[r,m,]<-Mohns_Rho_SSB 
-    omval$Mohns_Rho_N[r,m,]<-Mohns_Rho_N#MDM
-    omval$Mohns_Rho_F[r,m,]<-Mohns_Rho_F#MDM
-    omval$Mohns_Rho_R[r,m,]<-Mohns_Rho_R#MDM
+    
     omval$mincatchcon[r,m,]<-mincatchcon
     omval$SSBest[y,1:length(stock$res$SSB)]<-stock$res$SSB
     omval$Fest[y,1:length(stock$res$SSB)]<-stock$res$F.report
-    omval$Catchest[y,1:length(stock$res$SSB)]<-stock$res$catch.pred
-    omval$Rest[y,1:length(stock$res$SSB)]<-stock$res$N.age[,1]
+    
+    if(mproc[m,'ASSESSCLASS'] == 'WHAM' & !is.na(stock$wham_storage$MohnsRho_SSB[[r]][[y]])){
+      omval$Mohns_Rho_SSB[r,m,y] <- stock$wham_storage$MohnsRho_SSB[[r]][[y]]$SSB
+      # omval$Mohns_Rho_N[r,m,y] <- stock$wham_storage$MohnsRho_N[[r]][[y]] # I have a vector of at-age rho values, looks like asap saves single summary value
+      omval$Mohns_Rho_F[r,m,y] <- stock$wham_storage$MohnsRho_F[[r]][[y]]$Fbar
+      omval$Mohns_Rho_R[r,m,y] <- stock$wham_storage$MohnsRho_R[[r]][[y]]
+    } else {
+      omval$Mohns_Rho_SSB[r,m,]<-Mohns_Rho_SSB 
+      omval$Mohns_Rho_N[r,m,]<-Mohns_Rho_N#MDM
+      omval$Mohns_Rho_F[r,m,]<-Mohns_Rho_F#MDM
+      omval$Mohns_Rho_R[r,m,]<-Mohns_Rho_R#MDM
+      omval$Catchest[y,1:length(stock$res$SSB)]<-stock$res$catch
+      omval$Rest[y,1:length(stock$res$SSB)]<-stock$res$R
+      omval$relE_qI[r,m,] <- relE_qI
+    }
     if (y == nyear){
-    omval$relTermE_SSB[r,m,] <- relTermE_SSB #MDM
-    omval$relTermE_CW[r,m,] <- relTermE_CW #MDM
-    omval$relTermE_CW[r,m,] <- relTermE_CW #MDM
-    omval$relTermE_IN[r,m,] <- relTermE_IN #MDM
-    omval$relTermE_qI[r,m,] <- relTermE_qI #MDM
-    omval$relTermE_R[r,m,] <- relTermE_R #MDM
-    omval$relTermE_F[r,m,] <- relTermE_F #MDM
+      omval$relTermE_SSB[r,m,] <- relTermE_SSB #MDM
+      omval$relTermE_CW[r,m,] <- relTermE_CW #MDM
+      omval$relTermE_CW[r,m,] <- relTermE_CW #MDM
+      omval$relTermE_IN[r,m,] <- relTermE_IN #MDM
+      omval$relTermE_qI[r,m,] <- relTermE_qI #MDM
+      omval$relTermE_R[r,m,] <- relTermE_R #MDM
+      omval$relTermE_F[r,m,] <- relTermE_F #MDM
     }
   })
-
+  
   return(out)
   
 }
