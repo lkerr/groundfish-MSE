@@ -62,4 +62,5 @@ nyear <- length(yrs)
 yrs_temp <- firstYear:max(cmip5$year)
 
 # The first year that actual management will begin
+
 fmyearIdx <- which(yrs == fmyear)

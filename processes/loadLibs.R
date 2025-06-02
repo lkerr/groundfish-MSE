@@ -45,7 +45,7 @@ if(runClass == 'HPCC'){
     sapply(pkg, require, character.only = TRUE)
   }
 
-  pkg<-c("msm", "tmvtnorm", "TMB", "abind", "glue", "tidyverse", "dplyr", "data.table", "ASAPplots","timeSeries","fBasics","fGarch")
+  pkg<-c("msm", "tmvtnorm", "TMB", "abind", "glue", "tidyverse", "dplyr", "data.table", "timeSeries","fBasics","fGarch","wham")
   check.packages(pkg)
 
   require(msm)
@@ -56,10 +56,10 @@ if(runClass == 'HPCC'){
   require(tidyverse)
   require(dplyr)
   require(data.table)
-  require(ASAPplots)
   require(fishmethods)
   require(timeSeries)
   require(fBasics)
   require(fGarch)
+  require(wham)
 
 }
