@@ -27,7 +27,8 @@ get_J1Updates <- function(stock){
     #assessment history is not used for the historical time period. 
     #The late block indicates that the last 20 years of recruitment will be used in
     #the cdf. The late block is used for recruitment during the management procedure
-    #period. 
+    #period. \
+
     if (y < fmyearIdx){
     Rout <- get_recruits(type=R_typ, type2='True', par=Rpar, S=SSB[y], block = 'early',
                          TAnom=Tanom[y], pe_R = pe_R, R_ym1 = R[y-1],
@@ -73,10 +74,12 @@ get_J1Updates <- function(stock){
     # calculate what the Jan 1 population numbers are for year y, which
     # depend on the numbers and mortality rate in the previous year and
     # on the recruitment this year
+
     J1N[y,] <- get_J1Ny(J1Ny0=J1N[y-1,], Zy0=Z[y-1,], R[y])
 
     # calculate the predicted catch in year y, the catch weight and the
     # proportions of catch numbers-at-age. Add small number in case F=0
+
     CN[y,] <- get_catch(F_full=F_full[y], M=natM[y],
                         N=J1N[y,], selC=slxC[y,]) + 1e-3
 

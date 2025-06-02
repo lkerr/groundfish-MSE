@@ -10,13 +10,13 @@ get_popInit <- function(stock){
     # F_full[1:(ncaayear + fyear + nburn +1)] <- rlnorm(ncaayear + 
     #                                                   fyear + nburn + 1, 
     #                                                   log(0.2), 0.1)
-    F_full[1:fyear] <- rlnorm(fyear, log(0.2), burnFsd)
+    F_full[1:fyear] <- rlnorm(fyear, log(burnFmsyScalar), burnFsd)
 
     #### Initilizations ####
     # initialize the model with numbers and mortality rates
 
     # in the first n (fyear-1) years.
-   
+
     initN <- get_init(type = initN_type, par = initN_par)
 
     
@@ -37,9 +37,11 @@ get_popInit <- function(stock){
                                          inputUnit='kg',y=1,fmyearIdx=fmyearIdx)
     
     paaCN[1:(fyear-1),] <- (CN[1:(fyear-1),]) / sum(CN[1:(fyear-1),])
+
     IN[1:(fyear-1),] <- get_survey(F_full=F_full[1:(fyear-1)], M=init_M, 
                                    N=J1N[1:(fyear-1),], slxC[1:(fyear-1),], 
-                                   slxI=selI, timeI=timeI, qI=qI,DecCatch=FALSE,Tanom=0,y=1)
+                                   slxI=selI, timeI=timeI, qI=qI,DecCatch=FALSE,IncCatch=FALSE,Tanom=0,y=1)
+    
     sumIN[1:(fyear-1)] <- sum(IN[1:(fyear-1),])
     sumIW[1:(fyear-1)] <- apply(IN[1:(fyear-1),] * waa[1:(fyear-1),], 1, sum)
     paaIN[1:(fyear-1),] <- IN[1:(fyear-1),] / sum(IN[1:(fyear-1),])

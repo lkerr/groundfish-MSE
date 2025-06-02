@@ -18,7 +18,7 @@ mprocfile<-"mproc.csv"
 # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
 # Available stocks: haddockGB, codGOM, codGB_Error, pollock, yellowtailflounderGB
-stockExclude <- c('codGOM', 'codGB_Error', 'pollock', 'yellowtailflounderGB')
+stockExclude <- c('haddockGB','codGOM', 'codGB_Error', 'pollock', 'yellowtailflounderGB')
 
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data
@@ -29,19 +29,19 @@ histAssess <- TRUE
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 1
+nrep <- 10
 
 # First year to begin actual management
-fmyear <- 2019
+fmyear <- 2025
 
 # first year after the initial condition period. The initial condition period
 # simply fills up the arrays as necessary even before the burn-in period
 # begins. This is rather arbitrary but should be larger than the number of
 # years in the assessment model and greater than the first age in the model.
-fyear <- 38
+fyear <- 86
 
 # maximum year predicted into the future
-mxyear <- 2040
+mxyear <- 2045
 
 #### Burn-in parameters ####
 
@@ -87,8 +87,9 @@ anomFun <- median
 # Scalars to relate the calculated values of reference points to the
 # threshold values. Typically this will be 1/2 for Bmsy and 0.75 for F but
 # these can be changed to examine sensitivity.
-BrefScalar <- 0.5
-FrefScalar <- 0.75
+USRScalar<- 0.8
+BrefScalar <- 0.4
+FrefScalar <- 1
 
 #### Helpful parameters ####
 # Scalars to convert things

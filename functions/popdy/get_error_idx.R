@@ -18,7 +18,6 @@
 
 
 get_error_idx <- function(type, idx, par){
-     
       idxE <- rlnorm(1, meanlog = log(idx), # - par^2/2
                           sdlog = par)
   return(idxE)

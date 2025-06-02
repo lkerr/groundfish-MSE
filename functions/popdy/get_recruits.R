@@ -2,7 +2,7 @@
 
 # The function returns the recruits. 
 # Includes an AR1 process if desired -- for this option must include both
-# the desired level of correlation and the previous year's observed and
+# the desired level of correlation and the previous year's observed andRnyr
 # expected values (for a residual).
 
 # type: the type of recruitment function
@@ -42,14 +42,13 @@
 
 get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
                          R_ym1=NULL, Rhat_ym1=NULL, stockEnv=stock, R_est){
-
+  
   if(!type %in% c('BH', 'BHSteep', 'HS')){
     stop(paste('get_recruits: check spelling of R_typ in individual stock 
                parameter file for', stockNames[i]))
   }
   
   with(stockEnv, {
-  
   if('rho' %in% names(par)){
     
     # Check that values for rho are between -1 and 1 as they should be for
@@ -126,8 +125,6 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
       z <-  num / den * exp(beta3 * TAnom_y)
       return(z)
     })
-    
-  
   }
     
   else if (type == 'HS'){ 
@@ -152,19 +149,23 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
         }
         return(pred)
       })}
-      if(stock[[i]]$stockName=='haddockGB'){
+      if(stock[[i]]$stockName=='haddockGB' | stock[[i]]$stockName=='petraleBC'){
         Rhat <- with(as.list(par),{
+          # if (type=='HS' & type2=='Est'){browser()}
         if (type2=="True"){
           assess_vals <- get_HistAssess(stock = stock[[i]])
-          pred<-remp(1,tail(as.numeric(assess_vals$assessdat$R,20)))
+          pred<-remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
           
         }
         else{
-          pred <- remp(1, as.numeric(R_est))
+          if (y==fmyearIdx){pred<-tail(R_est,1)}
+          else{
+          pred<-remp(1, tail(as.numeric(stock[[1]]$res$R), Rnyr))}
         }
         return(pred)
         })}
   }
+
   # Autocorrelation component
   ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
   
@@ -172,7 +173,9 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
   rc<-rnorm(1,mean=0,sd=pe_R)
   R <- Rhat * exp(ac + rc)
   out <- list(Rhat = unname(Rhat), R = unname(R))
-
+  
+  # if (type2=='Est'){browser()}
+  # return(gr[['Rhat']])
   return(out)
   
   })

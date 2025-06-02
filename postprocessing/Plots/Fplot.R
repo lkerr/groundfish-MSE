@@ -1,49 +1,43 @@
-#####F_full Trajectory Plots####
-Scenarios<-c(1,2,3)
-RhoAdj<-FALSE
-Stock<-'codGOM'
+#####F_full REE Plot####
+#Scenarios<-c(6,32,58,116)
 ####First Sims####
 library(matrixStats)
 library(dplyr)
 library(ggplot2)
 library(ggthemes)
-wd<-getwd()
-setwd(paste(wd,"/Sim_",Scenarios[1],"/sim",sep=""))
+setwd("C:/Users/mazurm/Documents/groundfish-MSE/results_2023-03-08-11-16-44/sim")
+nrep=10
+assessfreq=2
+# setwd(paste("C:/Users/mmazur/Desktop/COCA_Sims/Sim_",Scenarios[1],"/sim",sep=""))
+#setwd(paste("C:/Users/jjesse/Box/HCR_Sims/Sim_",Scenarios[1],"/sim",sep=""))
+sims <- list.files()
+
+load(sims)
 
 sims <- list.files()
 
-for (k in 1:length(sims)){
-  if (file.size(sims[k])==0){
-    sims[k]<-NA}
-}
 sims<-na.omit(sims)
 
-Catchsim<-matrix(NA,nrow=52,ncol=length(sims))
+Catchsim<-matrix(NA,nrow=74,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Catchsim[,k]<-omvalGlobal[[1]]$F_full[136:187]
+  Catchsim[,k]<-omvalGlobal[[1]]$F_full[115:189]
 }
 
 Catchsim<-rowMedians(Catchsim,na.rm=T)
-Year<-1988:2039
+Year<-1966:2039
 df<-as.data.frame(cbind(Catchsim,Year))
-df$HCR<-Scenarios[1]
 
-####First Assessment####
-Fest<-matrix(NA,nrow=52,ncol=length(sims))
+Fest<-matrix(NA,nrow=74,ncol=length(sims))
 
 for (k in 1:length(sims)){
   load(sims[k])
-  Fest[,k]<-na.omit(omvalGlobal[[1]]$Fest[190,])
+  Fest[,k]<-na.omit(omvalGlobal[[1]]$Fest[k,,190,])
 }
 
 Fest<-rowMedians(Fest,na.rm=T)
 Fest<-na.omit(Fest)
-
-if (RhoAdj==TRUE){
-  Fest[length(Fest)]<-Fest[length(Fest)]/(Mohn+1)
-}
 
 df$Fest<-Fest
 
