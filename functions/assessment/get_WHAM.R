@@ -167,8 +167,10 @@ get_WHAM <- function(stock,...){
       initN <- get_init(type = initN_type, par = initN_par)
 
       wham_dat_file[[1]]$dat$N1_ini<-initN
-      # wham_dat_file[[1]]$dat$SR_scalar_ini<-sum(initN)
-      wham_dat_file[[1]]$dat$steepness_ini<-Rpar[[1]]
+
+      # wham_dat_file[[1]]$dat$SR_scalar_ini<-initN[1]
+
+      wham_dat_file[[1]]$dat$steepness_ini<-h
 
       if(mproc[m,'Lag'] == 'TRUE'){
         wham_dat_file[[1]]$dat$nfinalyear <- y-1
@@ -181,10 +183,11 @@ get_WHAM <- function(stock,...){
       # 
       wham_dat_file[[1]]$dat$R_avg_start <- styear
       wham_dat_file[[1]]$dat$R_avg_end <- endyear - 10
+
       if (stock$stockName=='petraleBC'){
       input <- prepare_wham_input(asap3 = wham_dat_file, selectivity=list(model=rep("age-specific",2),
                                                                           initial_pars=list(c(selC),c(selI)),
-                                                                          fix_pars=list(c(1:4,7:22),c(1:4,7:22))),
+                                                                          fix_pars=list(c(1:22),c(1:22))),
                                                                           # age_comp='multinomial',
                                                                           age_comp='logistic-normal-miss0',
                                                                           recruit_model=2,
@@ -205,6 +208,7 @@ get_WHAM <- function(stock,...){
 
     # Fit wham model
     whamEst <- fit_wham(input, do.osa=F, MakeADFun.silent = TRUE, do.retro = TRUE,do.check=TRUE)
+
     # Setting do.osa = TRUE results in "Error in getUserDLL() Multiple TMB models loaded" which is likely an issue with what model TMB is used by make_osa_residuals() - make_osa_resiudals() probably calls TMB::MakeADFun without specifying DLL = "wham"
 #save results from wham
     # saveRDS(whamEst, file = paste("Assessment/WHAM/", stockName,'_', r, '_', y, '.rdat', sep = '')) #??? probably don't want to save this, save a subset of results 
@@ -223,7 +227,7 @@ get_WHAM <- function(stock,...){
     wham_storage$F[[r]][[y]] <- exp(whamEst$rep$log_F_tot)
     wham_storage$FAA[[r]][[y]] <- exp(whamEst$rep$log_FAA_tot)
     wham_storage$R[[r]][[y]] <- whamEst$rep$NAA[,,,1]
-    wham_storage$NAA[[r]][[y]] <- whamEst$rep$NAA
+    wham_storage$NAA[[r]][[y]] <- whamEst$rep$NAA[,,,1:22]
     wham_storage$Catch[[r]][[y]] <- whamEst$rep$pred_catch # Not successfully saved in wham_storage for each assessment year
     wham_storage$CAA[[r]][[y]] <- whamEst$rep$pred_CAA[,1,] 
     wham_storage$FMSY[[r]][[y]] <- exp(whamEst$rep$log_FXSPR_static)

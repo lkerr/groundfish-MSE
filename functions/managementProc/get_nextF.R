@@ -55,6 +55,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     parpopF<-parpop
     parpopF$M<-rep(stockEnv$M,stock[[i]]$nage)
     parpopF$switch<-FALSE
+    
     Fref <- get_FBRP(parmgt = parmgt, parpop = parpopF, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
                      stockEnv = stockEnv)
@@ -81,6 +82,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parpopUpdate$J1N <- Fref$equiJ1N_MSY
       
     }
+
     Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
@@ -91,7 +93,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT, #Also calculate the true Bmsy
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = FrefT[['RPvalue']], stockEnv = stockEnvT)
-    
+
     if(evalRP){
       FrefRPvalue <- Fref[['RPvalue']]
       BrefRPvalue <- Bref[['RPvalue']]*USRScalar
@@ -157,7 +159,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       catchproj<-matrix(ncol=2,nrow=100)
       parpopproj<-parpop
       parpopproj$SSBhat<-stockEnv$res$SSB
-      parpopproj$R<-stockEnv$res$J1N[,1]
       parpopproj$J1N<-tail(stockEnv$res$J1N,1)
       parpopproj$catch<-stockEnv$res$catch.obs
       if(tolower(parmgt$HCR) == 'pstar'){F<-FrefRPvalue}
@@ -261,7 +262,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       if (Fest>FrefRPvalue){
         catchproj<-matrix(ncol=2,nrow=100)
         for (i in 1:100){
-            catchproj[i,]<-get_proj(type = 'current',
+            catchproj[i,]<-get_projnolag(type = 'current',
                                     parmgt = parmgtproj, 
                                     parpop = parpopproj, 
                                     parenv = parenv, 

@@ -157,11 +157,8 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
           pred<-remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
           
         }
-        else{
-          if (y==fmyearIdx){pred<-tail(R_est,1)}
           else{
-          pred<-remp(1, tail(as.numeric(stock[[1]]$res$R), Rnyr))}
-        }
+          pred<-remp(1, tail(R_est, Rnyr))}
         return(pred)
         })}
   }

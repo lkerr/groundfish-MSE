@@ -41,7 +41,7 @@ M_mis_val<-0.2 #The misspecified M value
 # initial numbers at-age parameters
 #initN_par <- c(15000, 17000, 6000, 3500, 2000, 200, 300, 150, 100)
 #initN_type <- 'input'
-initN_par <- c(nage = page, N0 = 9000000, F_full = 0.001, M = 0.154)
+initN_par <- c(nage = page, N0 = 8790530, F_full = 0.0013172, M = 0.154)
 initN_type <- 'expDecline'
 
 #### Fishery parameters ####
@@ -59,8 +59,8 @@ IncCatch<-FALSE
 #selC <- c(s0 = 3, s1 = 0.5)
 #selC_typ <- 'Logistic'
 #selC <- c(0.013, 0.066, 0.271, 0.663, 0.912, 0.982, 0.997, 1, 1) #GOM cod AGEPRO M=0.2
-selC <- c(4.613059e-08, 8.243083e-08, 2.274072e-07, 2.282561e-04, 5.734225e-02, 
-          6.555198e-01, 1, 1, 1, 1, 
+selC <- c(4.634206e-08, 8.296989e-08, 2.207619e-07, 2.033618e-04, 5.634182e-02, 
+          6.569636e-01, 1, 1, 1, 1, 
           1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) #Average of female and male fishery selectivities from stock assessment  
 selC_typ <- 'input'
 
@@ -82,10 +82,11 @@ R_typ <- 'HS'
 # R_typ <- 'BH'
 #Rpar<-c(a=5.1698169,b=0.0002892,g=-1.423)
 # Rpar<-c(a=5.1479515,b=0.0002547,g=-0.8996322)
-R_mis<-TRUE #If BRPs and projections assume a 'wrong' SRR, set to TRUE.
+R_mis<-FALSE #If BRPs and projections assume a 'wrong' SRR, set to TRUE.
 Rpar_mis <- c(h = 0.6,
           R0 = 10509.13,
           SSBRF0 = 1.722502)
+h<-0.6
 # Rpar_mis<-c(a=5.1479515,b=0.0002547,g=0)
 
 #### Survey parameters ####
@@ -93,8 +94,8 @@ Rpar_mis <- c(h = 0.6,
 ## Survey information
 #selI <- c(1)
 #selI_typ <- 'const'
-selI <- c(0.009200047, 0.042014815, 0.146836722, 0.384559418, 0.704200212, 0.868646366, 
-          0.946431951, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) #Average of estimated index selectivities 
+selI <- c(0.009196827, 0.041073348, 0.135529613, 0.327582173, 0.584906362, 0.864025186, 
+          0.946824331, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) #Average of estimated index selectivities 
 selI_typ <- 'input'
 timeI <- 0.5 # when is the survey (as a proportion of the year)
 
@@ -120,9 +121,9 @@ oe_sumCW <- 0.05
 oe_sumCW_typ <- 'lognorm'
 oe_paaCN <- 80 #base is 80
 oe_paaCN_typ <- 'multinomial'
-oe_sumIN <- 0.5
+oe_sumIN <- 0.13
 oe_sumIN_typ <- 'lognorm'
-oe_paaIN <- 100 #15  #base is 100
+oe_paaIN <- 230 #15  #base is 60
 oe_paaIN_typ <- 'multinomial'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'

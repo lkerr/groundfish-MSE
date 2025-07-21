@@ -35,10 +35,11 @@ get_fillRepArrays <- function(stock){
     meanSizeIN <- sapply(1:nrow(CN), 
                          function(x) laa[x,] %*% paaIN[x,])
     omval$meanSizeIN[r,m,] <- meanSizeIN
-    omval$FPROXY[r,m,] <- RPmat[,1]
-    omval$SSBPROXY[r,m,] <- RPmat[,2]
-    omval$FPROXYT[r,m,] <- RPmat[,3]
-    omval$SSBPROXYT[r,m,] <- RPmat[,4]
+
+    omval$FPROXY[r,m,] <- RPmat[y,1]
+    omval$SSBPROXY[r,m,] <- RPmat[y,2]
+    omval$FPROXYT[r,m,] <- RPmat[y,3]
+    omval$SSBPROXYT[r,m,] <- RPmat[y,4]
     
     omval$SSBRATIO[r,m,y] <- stock$res$SSB[length(stock$res$SSB)]/RPmat[,2][y]
     if(mproc[m,'rhoadjust'] == 'TRUE' & y>fmyearIdx & Mohns_Rho_SSB[y]>0.15){
@@ -64,9 +65,10 @@ get_fillRepArrays <- function(stock){
     
     if(mproc[m, 'ASSESSCLASS']=='WHAM'){
       omval$FRATIO[r,m,y] <- stock$res$F.report[length(stock$res$F.report)]/RPmat[,1][y]
-      omval$Fest[y,1:length(stock$res$SSB)]<-stock$res$F.report
-      omval$Catchest[y,1:length(stock$res$SSB)]<-stock$res$catch
-      omval$Rest[y,1:length(stock$res$SSB)]<-stock$res$J1N[,1]
+      omval$Fest[r,m,y,1:length(stock$res$SSB)]<-stock$res$F.report
+      omval$Catchest[r,m,y,1:length(stock$res$SSB)]<-stock$res$catch
+      omval$Rest[r,m,y,1:length(stock$res$SSB)]<-stock$res$J1N[,1]
+      omval$SSBest[r,m,y,1:length(stock$res$SSB)]<-stock$res$SSB
       
     }
     
@@ -86,8 +88,6 @@ get_fillRepArrays <- function(stock){
     omval$conv_rate[r,m,]<-conv_rate #MDM
     
     omval$mincatchcon[r,m,]<-mincatchcon
-    omval$SSBest[y,1:length(stock$res$SSB)]<-stock$res$SSB
-    omval$Fest[y,1:length(stock$res$SSB)]<-stock$res$F.report
     
     if(mproc[m,'ASSESSCLASS'] == 'WHAM' & !is.na(stock$wham_storage$MohnsRho_SSB[[r]][[y]])){
       omval$Mohns_Rho_SSB[r,m,y] <- stock$wham_storage$MohnsRho_SSB[[r]][[y]]$SSB
@@ -99,8 +99,6 @@ get_fillRepArrays <- function(stock){
       omval$Mohns_Rho_N[r,m,]<-Mohns_Rho_N#MDM
       omval$Mohns_Rho_F[r,m,]<-Mohns_Rho_F#MDM
       omval$Mohns_Rho_R[r,m,]<-Mohns_Rho_R#MDM
-      omval$Catchest[y,1:length(stock$res$SSB)]<-stock$res$catch
-      omval$Rest[y,1:length(stock$res$SSB)]<-stock$res$R
       omval$relE_qI[r,m,] <- relE_qI
     }
     if (y == nyear){

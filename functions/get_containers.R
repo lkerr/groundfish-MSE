@@ -16,6 +16,14 @@ get_containers <- function(stockPar){
                                           paste0('mproc', 1:nmproc),
                                           paste0('nyear', 1:nyear)))
   
+  save_vector_ann2 = array(data = NA,
+                          dim = c(nrep, nmproc, nyear,nyear),
+                          dimnames = list(paste0('rep', 1:nrep), 
+                                          paste0('mproc', 1:nmproc),
+                                          paste0('nyear', 1:nyear),
+                                          paste0('nyear', 1:nyear)))
+  
+  
   # Revised container style (index by rep and year, repeated by mproc when stock object generated for each mproc)
   rep_year_container = vector(mode='list', length = nrep)
   for(irep in 1:nrep){
@@ -108,10 +116,10 @@ get_containers <- function(stockPar){
     relTermE_qI = NA,#MDM
     relTermE_R = NA,#MDM
     relTermE_F = NA,
-    SSBest = est, 
-    Fest = est, 
-    Catchest = est, 
-    Rest = est,
+    SSBest = save_vector_ann2, 
+    Fest = save_vector_ann2, 
+    Catchest = save_vector_ann2, 
+    Rest = save_vector_ann2,
     
     # Econ model containers
     # Total Weight of catch
@@ -178,10 +186,10 @@ get_containers <- function(stockPar){
       relTermE_qI = save_vector_ann,#MDM
       relTermE_R = save_vector_ann,#MDM
       relTermE_F = save_vector_ann,
-      SSBest = est,
-      Fest = est,
-      Catchest = est,
-      Rest = est
+      SSBest = save_vector_ann2,
+      Fest = save_vector_ann2,
+      Catchest = save_vector_ann2,
+      Rest = save_vector_ann2
     ),
     
     om_settings = NULL, # Empty storage for OM settings/values, fill below
