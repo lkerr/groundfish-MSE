@@ -114,6 +114,9 @@ get_WHAM <- function(stock,...){
           df2[i,]<-df1[i,]
         }
         wham_dat_file[[1]]$dat$CAA_mats <- cbind(df2, get_dwindow(obs_sumCW, styear, endyear))}
+      if(norecentage==TRUE){
+        wham_dat_file[[1]]$dat$CAA_mats[[1]][(length(wham_dat_file[[1]]$dat$CAA_mats[[1]][,1])-4):length(wham_dat_file[[1]]$dat$CAA_mats[[1]][,1]),]<-0
+      }
       # discards - need additional rows even if not using
       wham_dat_file[[1]]$dat$DAA_mats[[1]] <- matrix(0, nrow = N_rows, ncol = page + 1)
 
@@ -140,7 +143,9 @@ get_WHAM <- function(stock,...){
         }
         wham_dat_file[[1]]$dat$IAA_mats<-cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, N_rows), df2, df3) #year, value, CV, by-age, sample size
       }
-      
+      if(norecentage==TRUE){
+        wham_dat_file[[1]]$dat$IAA_mats[[1]][(length(wham_dat_file[[1]]$dat$IAA_mats[[1]][,1])-4):length(wham_dat_file[[1]]$dat$IAA_mats[[1]][,1]),]<-0
+      }
       # Recruitment CV
       wham_dat_file[[1]]$dat$recruit_cv <- rep(pe_RSA, N_rows)
 
@@ -161,6 +166,9 @@ get_WHAM <- function(stock,...){
         wham_dat_file[[1]]$dat$catch_Neff<-matrix(df3, ncol=1)
       }
       
+      if(norecentage==TRUE){
+        wham_dat_file[[1]]$dat$catch_Neff[(length(wham_dat_file[[1]]$dat$catch_Neff)-4):length(wham_dat_file[[1]]$dat$catch_Neff),]<-0
+      }
       #discard ESS (even if not using)
       wham_dat_file[[1]]$dat$discard_Neff <- matrix(0, nrow = N_rows, 1)
       
@@ -217,17 +225,14 @@ get_WHAM <- function(stock,...){
     check <- check_convergence(whamEst, ret=TRUE) # May want to suppress printing to screen using sink()
     whamConverge <- ifelse((check$na_sdrep == FALSE & check$is_sdrep == TRUE & check$convergence == 0), TRUE, FALSE) # If no NAs in sdrep, hessian invertible and model thinks it is converged (small gradient) then model converged
     # Calculate Mohn's rho values
-    if (whamConverge==TRUE){
-    MohnsRho <- try(mohns_rho(whamEst))}
-    if (whamConverge==FALSE){
-    MohnsRho <- NA
-    }
+    MohnsRho<-NA
+    MohnsRho <- try(mohns_rho(whamEst))
     # Store WHAM results in final MSE output (indexed by stock i, rep r, and year y)
     wham_storage$SSB[[r]][[y]] <- whamEst$rep$SSB 
     wham_storage$F[[r]][[y]] <- exp(whamEst$rep$log_F_tot)
     wham_storage$FAA[[r]][[y]] <- exp(whamEst$rep$log_FAA_tot)
     wham_storage$R[[r]][[y]] <- whamEst$rep$NAA[,,,1]
-    wham_storage$NAA[[r]][[y]] <- whamEst$rep$NAA[,,,1:22]
+    wham_storage$NAA[[r]][[y]] <- whamEst$rep$NAA[,,,1:nage]
     wham_storage$Catch[[r]][[y]] <- whamEst$rep$pred_catch # Not successfully saved in wham_storage for each assessment year
     wham_storage$CAA[[r]][[y]] <- whamEst$rep$pred_CAA[,1,] 
     wham_storage$FMSY[[r]][[y]] <- exp(whamEst$rep$log_FXSPR_static)
@@ -237,10 +242,10 @@ get_WHAM <- function(stock,...){
     wham_storage$checkConvergence[[r]][[y]] <- whamConverge
     wham_storage$MohnsRho_SSB[[r]][[y]] <- MohnsRho["SSB"]
     wham_storage$MohnsRho_F[[r]][[y]] <- MohnsRho["Fbar"]
-    if (whamConverge==FALSE){
+    if (is.na(MohnsRho["SSB"])){
       wham_storage$MohnsRho_R[[r]][[y]] <- NA
     }
-    if (whamConverge==TRUE){
+    if (!is.na(MohnsRho["SSB"])){
       wham_storage$MohnsRho_R[[r]][[y]] <- MohnsRho$naa[,,1]
     }
     wham_storage$MohnsRho_N[[r]][[y]] <- MohnsRho[grep("N", names(MohnsRho))]
@@ -256,7 +261,7 @@ get_WHAM <- function(stock,...){
       maturity=whamEst$input$data$mature[,nrow(whamEst$input$data$mature),], # Last row of maturity input, !!! only works if maturity constant over time
       R=whamEst$rep$NAA[,,,1],
       SSB=whamEst$rep$SSB,
-      J1N=tail(whamEst$rep$NAA[,,,1:22],1),
+      J1N=tail(whamEst$rep$NAA[,,,1:nage],1),
       F.report= exp(whamEst$rep$log_F_tot),
       catch = whamEst$rep$pred_catch
     )

@@ -18,7 +18,7 @@ mprocfile<-"mproc.csv"
 # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
 # Available stocks: haddockGB, codGOM, codGB_Error, pollock, yellowtailflounderGB
-stockExclude <- c('haddockGB','codGOM', 'codGB_Error', 'pollock', 'yellowtailflounderGB')
+stockExclude <- c('haddockGB','petraleBC', 'codGB_Error', 'pollock', 'yellowtailflounderGB')
 
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data

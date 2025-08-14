@@ -80,6 +80,7 @@ R_mis<-FALSE #If BRPs and projections assume a wrong SRR, set to TRUE.
 Rpar_mis <- c(SSB_star = 6300, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
 cR = 1,
 Rnyr= 20)
+h<-0.6
 # Rpar_mis<-c(a=5.1479515,b=0.0002547,g=0)
 
 #### Survey parameters ####
@@ -120,6 +121,7 @@ oe_paaIN_typ <- 'multinomial'
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 gapinage<-FALSE
+norecentage<-FALSE
 
 # process error levels  #####o##############################  !!!!!!!!!!!!!!
 pe_R <- 0.5 # cannot be zero #0.5 for Beverton Holt

@@ -67,7 +67,7 @@ get_fillRepArrays <- function(stock){
       omval$FRATIO[r,m,y] <- stock$res$F.report[length(stock$res$F.report)]/RPmat[,1][y]
       omval$Fest[r,m,y,1:length(stock$res$SSB)]<-stock$res$F.report
       omval$Catchest[r,m,y,1:length(stock$res$SSB)]<-stock$res$catch
-      omval$Rest[r,m,y,1:length(stock$res$SSB)]<-stock$res$J1N[,1]
+      omval$Rest[r,m,y,1:length(stock$res$SSB)]<-stock$res$R
       omval$SSBest[r,m,y,1:length(stock$res$SSB)]<-stock$res$SSB
       
     }
@@ -95,11 +95,11 @@ get_fillRepArrays <- function(stock){
       omval$Mohns_Rho_F[r,m,y] <- stock$wham_storage$MohnsRho_F[[r]][[y]]$Fbar
       omval$Mohns_Rho_R[r,m,y] <- stock$wham_storage$MohnsRho_R[[r]][[y]]
     } else {
-      omval$Mohns_Rho_SSB[r,m,]<-Mohns_Rho_SSB 
-      omval$Mohns_Rho_N[r,m,]<-Mohns_Rho_N#MDM
-      omval$Mohns_Rho_F[r,m,]<-Mohns_Rho_F#MDM
-      omval$Mohns_Rho_R[r,m,]<-Mohns_Rho_R#MDM
-      omval$relE_qI[r,m,] <- relE_qI
+      omval$Mohns_Rho_SSB[r,m,y]<-Mohns_Rho_SSB[y] 
+      omval$Mohns_Rho_N[r,m,y]<-Mohns_Rho_N[y] #MDM
+      omval$Mohns_Rho_F[r,m,y]<-Mohns_Rho_F[y] #MDM
+      omval$Mohns_Rho_R[r,m,y]<-Mohns_Rho_R[y] #MDM
+      omval$relE_qI[r,m,y] <- relE_qI[y] 
     }
     if (y == nyear){
       omval$relTermE_SSB[r,m,] <- relTermE_SSB #MDM
