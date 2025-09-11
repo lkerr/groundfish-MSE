@@ -13,6 +13,7 @@ source('processes/identifyResultDirectory.R')
 # Load the overall operating model parameters
 source('modelParameters/set_om_parameters_global.R')
 
+source('modelParameters/wham_settings.R')
 
 # get the operating model parameters -- first search the space for every
 # version of the set_stock_parameters_xx files and put them in this list.

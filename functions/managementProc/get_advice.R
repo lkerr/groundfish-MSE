@@ -26,6 +26,15 @@ get_advice <- function(stock){
       get_ASAP(stock = tempStock)}
   }
 
+  # Run WHAM assessment
+  if(mproc[m,'ASSESSCLASS'] == 'WHAM'){
+    if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
+      tempStock <- get_WHAM(stock = tempStock)
+    }
+    else{
+      get_WHAM(stock = tempStock)}
+  }
+  
 # Was the assessment successful?
   tempStock <- within(tempStock, {
     conv_rate[y] <- ifelse((mproc[m,'ASSESSCLASS'] == 'CAA' &&
@@ -33,7 +42,9 @@ get_advice <- function(stock){
                      (mproc[m,'ASSESSCLASS'] == 'PLANB' &&
                         class(planBest) != 'try-error') ||
                      (mproc[m, 'ASSESSCLASS'] == 'ASAP' &&
-                        asapEst == 0), 1, 0)
+                        asapEst == 0) ||
+                       (mproc[m, 'ASSESSCLASS']=='WHAM' &&
+                          whamConverge ==TRUE), 1, 0)
   })
 
   # Retrieve the estimated SSB (necessary for advice) &
@@ -80,6 +91,21 @@ get_advice <- function(stock){
                        Fhat = tail(res$F.report, 1))
       })
     }
+  
+  if(mproc[m,'ASSESSCLASS'] == 'WHAM'){
+    tempStock <- within(tempStock, {
+      parpop <- list(waa = tail(res$waa.fleet, 1),           
+                     sel = tail(res$sel.fleet, 1),                      
+                     M = tail(res$M, 1), 
+                     mat = res$maturity,                               
+                     R = res$R,
+                     SSBhat = res$SSB,
+                     J1N = tail(res$J1N,1),                 ### or use J1B reported in biomass 
+                     Rpar = Rpar,
+                     Rpar_mis= Rpar_mis,
+                     Fhat = tail(res$F.report, 1))
+    })
+  }
 
 # Calculate Mohn's Rho values
   

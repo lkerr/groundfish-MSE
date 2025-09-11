@@ -49,13 +49,13 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
   # are different ways to grab the F reference point and the B reference
   # point and those will be implemented in get_FBRP
 
-  if(parmgt$ASSESSCLASS == 'CAA' || parmgt$ASSESSCLASS == 'ASAP'){
+  if(parmgt$ASSESSCLASS == 'CAA' || parmgt$ASSESSCLASS == 'ASAP' || parmgt$ASSESSCLASS == 'WHAM'){
     
     parpopF<-parpop
     
     # for GOM cod, Mramp model uses M = 0.2 for status determination
     if (stockEnv$stockName=='codGOM' & stockEnv$M_typ == 'ramp'){
-    parpopF$M<-rep(0.2,9)
+    parpopF$M<-rep(stockEnv$M, stock[[i]]$nage)
     }
     
     parpopF$switch<-FALSE
@@ -71,7 +71,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     # for GOM cod, Mramp model uses M = 0.2 for status determination
     if (stockEnv$stockName=='codGOM' & stockEnv$M_typ == 'ramp'){
-    parpopT$M<-rep(0.2,9)
+    parpopT$M<-rep(stockEnv$M, stock[[i]]$nage)
     }
     
     parpopT$switch<-TRUE
