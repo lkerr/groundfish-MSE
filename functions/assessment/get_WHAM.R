@@ -164,10 +164,10 @@ get_WHAM <- function(stock,...){
     MohnsRho <- try(mohns_rho(whamEst))
     # Store WHAM results in final MSE output (indexed by stock i, rep r, and year y)
     wham_storage$SSB[[r]][[y]] <- whamEst$rep$SSB 
-    wham_storage$F[[r]][[y]] <- exp(whamEst$rep$log_F_tot)
-    wham_storage$FAA[[r]][[y]] <- exp(whamEst$rep$log_FAA_tot)
-    wham_storage$R[[r]][[y]] <- whamEst$rep$NAA[,,,1]
-    wham_storage$NAA[[r]][[y]] <- whamEst$rep$NAA[,,,1:nage]
+    wham_storage$F[[r]][[y]] <- whamEst$rep$F
+    wham_storage$FAA[[r]][[y]] <- whamEst$rep$FAA_tot
+    wham_storage$R[[r]][[y]] <- whamEst$rep$NAA[,1]
+    wham_storage$NAA[[r]][[y]] <- whamEst$rep$NAA[,1:nage]
     wham_storage$Catch[[r]][[y]] <- whamEst$rep$pred_catch # Not successfully saved in wham_storage for each assessment year
     wham_storage$CAA[[r]][[y]] <- whamEst$rep$pred_CAA[,1,] 
     wham_storage$FMSY[[r]][[y]] <- exp(whamEst$rep$log_FXSPR_static)
@@ -177,12 +177,6 @@ get_WHAM <- function(stock,...){
     wham_storage$checkConvergence[[r]][[y]] <- whamConverge
     wham_storage$MohnsRho_SSB[[r]][[y]] <- MohnsRho["SSB"]
     wham_storage$MohnsRho_F[[r]][[y]] <- MohnsRho["Fbar"]
-    if (is.na(MohnsRho["SSB"])){
-      wham_storage$MohnsRho_R[[r]][[y]] <- NA
-    }
-    if (!is.na(MohnsRho["SSB"])){
-      wham_storage$MohnsRho_R[[r]][[y]] <- MohnsRho$naa[,,1]
-    }
     wham_storage$MohnsRho_N[[r]][[y]] <- MohnsRho[grep("N", names(MohnsRho))]
     wham_storage$pars_Ecov_beta[[r]][[y]] <- whamEst$rep$Ecov_beta[3,,1,] # Should pull last row associated with index, may need to be revised in the future!!!
     wham_storage$pars_Ecov_process[[r]][[y]] <- whamEst$rep$Ecov_process_pars
@@ -192,12 +186,12 @@ get_WHAM <- function(stock,...){
     res <- list(
       waa.fleet= matrix(whamEst$input$data$waa[1,1,], nrow = 1), # First row of fleet WAA, !!! only works with a single fleet
       sel.fleet=whamEst$rep$selAA[[1]],
-      M=tail(whamEst$rep$MAA[,,,1],1),
-      maturity=whamEst$input$data$mature[,nrow(whamEst$input$data$mature),], # Last row of maturity input, !!! only works if maturity constant over time
-      R=whamEst$rep$NAA[,,,1],
+      M=tail(whamEst$rep$MAA[,1],1),
+      maturity=tail(whamEst$input$data$mature,1), # Last row of maturity input, !!! only works if maturity constant over time
+      R=whamEst$rep$NAA[,1],
       SSB=whamEst$rep$SSB,
-      J1N=tail(whamEst$rep$NAA[,,,1:nage],1),
-      F.report= exp(whamEst$rep$log_F_tot),
+      J1N=tail(whamEst$rep$NAA[,1:nage],1),
+      F.report= whamEst$rep$F_tot,
       catch = whamEst$rep$pred_catch
     )
     

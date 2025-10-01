@@ -106,7 +106,7 @@ get_advice <- function(stock){
                      Fhat = tail(res$F.report, 1))
     })
   }
-
+#browser()
 # Calculate Mohn's Rho values
   
   if(y > fmyearIdx){
