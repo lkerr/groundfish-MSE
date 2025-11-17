@@ -59,11 +59,15 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     }
     
     parpopF$switch<-FALSE
-    
-    #Estimate F reference point
-    Fref <- get_FBRP(parmgt = parmgt, parpop = parpopF, 
+
+########################################### Reference points and stock status  
+  
+    # Estimate F reference point. If using WHAM assessment, use internal estimate
+    Fref <-   if(parmgt$ASSESSCLASS == 'WHAM'){
+      list(RPvalue = stockEnv$res$FMSY)}else{
+      get_FBRP(parmgt = parmgt, parpop = parpopF, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
-                     stockEnv = stockEnv)
+                     stockEnv = stockEnv)}
     
     #Determine True F reference point
     parmgtT<-parmgt
@@ -96,11 +100,13 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parpopUpdate$J1N <- Fref$equiJ1N_MSY
     }
     
-    #Estimate biomass reference point
+    #Estimate biomass reference point. If using WHAM assessment, use internal estimate 
     stockEnvT$R_mis<-TRUE
-    Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
+    Bref <- if(parmgt$ASSESSCLASS == 'WHAM'){
+      list(RPvalue = stockEnv$res$SSBMSY)
+    }else{get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
-                     FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
+                     FBRP = Fref[['RPvalue']], stockEnv = stockEnv)}
     
     #Determine true biomass reference point
     stockEnvT<-stockEnv
@@ -133,6 +139,9 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     overfishing <- ifelse(tail(parpop$Fhat,1) > FrefRPvalue, 1, 0) #MDM
 
+################################ Insert Risk Policy function here
+
+################################ Harvest Control Rules
     #Ramp HCR
     if(tolower(parmgt$HCR) == 'slide'){
       F <- get_slideHCR(parpop, Fmsy=FThresh, Bmsy=BThresh)['Fadvice']
@@ -159,9 +168,34 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
         else{F<-FThresh}}
     }
     
-    #Projections
+    
+    
+    
+######################################### Projections
+
     if(tolower(parmgt$projections) == 'true'){
       if ((y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) == 0){
+        
+        # if using a wham model run projections from that
+        if(parmgt$ASSESSCLASS == 'WHAM'){
+          if(mproc[m,'Lag'] == 'TRUE'){
+            # when there is a lag in the wham assessment
+            f_proj <- c(tail(stockEnv$res$F.report,1),F,F) # projected F: 1yr at last F, 2 yrs at target F
+            fmsy_proj<- c(tail(stockEnv$res$F.report,1),rep(stockEnv$res$FMSY,2))
+            catch_indices <- c(2,3)} else{ # yrs 2 and 3 are catch advice, yr1 is the bridge
+              # when there is not a lag in the wham assessment
+              f_proj <- rep(F,3) # projected F: 3 yrs at target F, there is no bridge
+              fmsy_proj <- rep(stockEnv$res$FMSY, 3)
+              catch_indices <- c(1,2)} # yrs 1 and 2 are catch advice, yr3 is not used
+          
+          # project from the wham model and extract the appropriate years of predicted catch
+          pwham <-  project_wham(stockEnv$whamEst, proj.opts = list(proj.F = f_proj))
+          catchproj <- tail(pwham$rep$pred_catch,3)[catch_indices]
+          poflwham <- project_wham(stockEnv$whamEst, proj.opts = list(proj.F = fmsy_proj))
+          oflproj <- tail(poflwham$rep$pred_catch,3)[catch_indices]
+        }else{ 
+          
+      # if not using a wham model
       parmgtproj<-parmgt
       parmgtproj$RFUN_NM<-"forecast"
       catchproj<-matrix(ncol=2,nrow=100)
@@ -216,6 +250,11 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
         catchproj[2]<-calc_ABC(catchproj[2],P,CV)
       }
       
+      
+      } # end of if wham else statement. all approaches should now have 2 yrs of projected catch
+
+################################# Constraints on projected catch        
+
       #If the minimum catch constraint is on, make sure catch advice is not below that constraint
       if(tolower(parmgt$mincatch) == 'true'){
       if (stockEnv$stockName=='codGOM'){
@@ -249,6 +288,13 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
           catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
       }
       
+      # Confirm expected catch is not higher than projected OFL
+        # for wham models we have a projected OFL already
+        if(parmgt$ASSESSCLASS == 'WHAM'){
+          ind <- which(catchproj>oflproj) # identify which year's catch are higher than the ofl
+          catchproj[ind]<- oflproj[ind] # replace them with that year's ofl
+        }else{
+      # for non-wham assessments would need to run an ofl projection
       #Estimate F to make sure catch advice is not over the perceived OFL
       Fest<-get_estF(catchproj=catchproj[1],parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv)
       
@@ -271,6 +317,9 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
             catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
         }
       }
+        }
+      
+######################################## Caclculate OM F values
       
       #Get F for the OM based on catch advice
       F <- get_F(x = catchproj[1],
@@ -290,7 +339,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       catchproj<-stockEnv$catchproj
       }
     }
-    
+
+########################################### No projections advice
     #No projections (no projected catch advice)
     if(tolower(parmgt$projections) == 'false'){catchproj<-NA}
   
@@ -299,6 +349,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue,FrefTRPvalue, BrefTRPvalue), 
                 ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
                 OFgStatus = overfishing, catchproj=catchproj) #AEW
+    
+
     
   #Plan B Approach
   }else if(parmgt$ASSESSCLASS == 'PLANB'){

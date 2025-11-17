@@ -36,6 +36,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
 
   Rfun <- Rfun_lst[[parmgt$RFUN_NM]]
   
+    # If not wham, use external approaches to estimating reference point
   if(parmgt$FREF_TYP == 'YPR' | parmgt$FREF_TYP == 'SPR'){
 
     F <- get_perRecruit(parmgt = parmgt, parpop = parpop)$RPvalue
