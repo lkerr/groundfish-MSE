@@ -91,10 +91,10 @@ get_fillRepArrays <- function(stock){
     omval$mincatchcon[r,m,]<-mincatchcon
     
     if(mproc[m,'ASSESSCLASS'] == 'WHAM' & !is.na(stock$wham_storage$MohnsRho_SSB[[r]][[y]])){
-      omval$Mohns_Rho_SSB[r,m,y] <- stock$wham_storage$MohnsRho_SSB[[r]][[y]]$SSB
+      omval$Mohns_Rho_SSB[r,m,y] <- stock$wham_storage$MohnsRho_SSB[[r]][[y]]
       # omval$Mohns_Rho_N[r,m,y] <- stock$wham_storage$MohnsRho_N[[r]][[y]] # I have a vector of at-age rho values, looks like asap saves single summary value
-      omval$Mohns_Rho_F[r,m,y] <- stock$wham_storage$MohnsRho_F[[r]][[y]]$Fbar
-      omval$Mohns_Rho_R[r,m,y] <- stock$wham_storage$MohnsRho_R[[r]][[y]]
+      omval$Mohns_Rho_F[r,m,y] <- stock$wham_storage$MohnsRho_F[[r]][[y]]
+      omval$Mohns_Rho_R[r,m,y] <- stock$wham_storage$MohnsRho_N[[r]][[y]][1]
     } else {
       omval$Mohns_Rho_SSB[r,m,y]<-Mohns_Rho_SSB[y] 
       omval$Mohns_Rho_N[r,m,y]<-Mohns_Rho_N[y] #MDM

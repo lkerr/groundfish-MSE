@@ -1,6 +1,10 @@
 get_WHAM <- function(stock,...){
   library.dynam(package = 'wham')
   
+
+  # Determine if using single- or multi-wham, which have different data structures 
+  whamversion <- if(unlist(packageVersion("wham"))[1]>1){"multi"}else{"single"}
+  
   # Read in saved ASAP .Dat file with wham function based on operating system
   if (Sys.info()['sysname'] == "Windows") {
     wham_dat_file<-read_asap3_dat(paste('assessment/ASAP/', stock$stockName, ".dat", sep = ''))
@@ -153,8 +157,9 @@ get_WHAM <- function(stock,...){
     whamEst <- fit_wham(input, do.osa=F, MakeADFun.silent = TRUE, do.retro = TRUE,do.check=TRUE)
 
     # Setting do.osa = TRUE results in "Error in getUserDLL() Multiple TMB models loaded" which is likely an issue with what model TMB is used by make_osa_residuals() - make_osa_resiudals() probably calls TMB::MakeADFun without specifying DLL = "wham"
-#save results from wham
+    #save results from wham
     # saveRDS(whamEst, file = paste("Assessment/WHAM/", stockName,'_', r, '_', y, '.rdat', sep = '')) #??? probably don't want to save this, save a subset of results 
+
     
     # Convergence check for wham
     check <- check_convergence(whamEst, ret=TRUE) # May want to suppress printing to screen using sink()
@@ -162,38 +167,59 @@ get_WHAM <- function(stock,...){
     # Calculate Mohn's rho values
     MohnsRho<-NA
     MohnsRho <- try(mohns_rho(whamEst))
+    
     # Store WHAM results in final MSE output (indexed by stock i, rep r, and year y)
     wham_storage$SSB[[r]][[y]] <- whamEst$rep$SSB 
-    wham_storage$F[[r]][[y]] <- whamEst$rep$F
-    wham_storage$FAA[[r]][[y]] <- whamEst$rep$FAA_tot
-    wham_storage$R[[r]][[y]] <- whamEst$rep$NAA[,1]
-    wham_storage$NAA[[r]][[y]] <- whamEst$rep$NAA[,1:nage]
+    wham_storage$F[[r]][[y]] <- exp(whamEst$rep$log_F_tot)
+    wham_storage$FAA[[r]][[y]] <- exp(whamEst$rep$log_FAA_tot)
     wham_storage$Catch[[r]][[y]] <- whamEst$rep$pred_catch # Not successfully saved in wham_storage for each assessment year
-    wham_storage$CAA[[r]][[y]] <- whamEst$rep$pred_CAA[,1,] 
     wham_storage$FMSY[[r]][[y]] <- exp(whamEst$rep$log_FXSPR_static)
     wham_storage$SSBMSY[[r]][[y]] <- exp(whamEst$rep$log_SSB_FXSPR_static)[1]
     wham_storage$MSY[[r]][[y]] <- exp(whamEst$rep$log_Y_FXSPR_static)[1]
     wham_storage$SelAA[[r]][[y]] <- whamEst$rep$selAA
     wham_storage$checkConvergence[[r]][[y]] <- whamConverge
-    wham_storage$MohnsRho_SSB[[r]][[y]] <- MohnsRho["SSB"]
-    wham_storage$MohnsRho_F[[r]][[y]] <- MohnsRho["Fbar"]
-    wham_storage$MohnsRho_N[[r]][[y]] <- MohnsRho[grep("N", names(MohnsRho))]
-    wham_storage$pars_Ecov_beta[[r]][[y]] <- whamEst$rep$Ecov_beta[3,,1,] # Should pull last row associated with index, may need to be revised in the future!!!
-    wham_storage$pars_Ecov_process[[r]][[y]] <- whamEst$rep$Ecov_process_pars
+    wham_storage$MohnsRho_SSB[[r]][[y]] <- MohnsRho$SSB
+    wham_storage$MohnsRho_F[[r]][[y]] <- MohnsRho$Fbar
+    wham_storage$MohnsRho_N[[r]][[y]] <- MohnsRho$naa[1,,]
     wham_storage$pars_q[[r]][[y]] <- tail(whamEst$rep$q, n=1) # Save only final q estimate, may revise in future but only a single value can be retained or get_fillRepArrays throws an error!!!
 
-    # Read in results
-    res <- list(
-      waa.fleet= matrix(whamEst$input$data$waa[1,1,], nrow = 1), # First row of fleet WAA, !!! only works with a single fleet
-      sel.fleet=whamEst$rep$selAA[[1]],
-      M=tail(whamEst$rep$MAA[,1],1),
-      maturity=tail(whamEst$input$data$mature,1), # Last row of maturity input, !!! only works if maturity constant over time
-      R=whamEst$rep$NAA[,1],
-      SSB=whamEst$rep$SSB,
-      J1N=tail(whamEst$rep$NAA[,1:nage],1),
-      F.report= whamEst$rep$F_tot,
-      catch = whamEst$rep$pred_catch
-    )
+    ### some things use different data structures in multi- or single-wham
+    if(whamversion == "multi"){
+      wham_storage$R[[r]][[y]] <- whamEst$rep$NAA[,,,1]
+      wham_storage$R[[r]][[y]] <- whamEst$rep$NAA[,,,1:nage]
+      wham_storage$CAA[[r]][[y]] <- whamEst$rep$pred_CAA[1,,]
+      
+      ####################### Need to figure out ECOV stuff for multi-wham
+      
+      # save results
+      res <- list(
+        FMSY = exp(whamEst$rep$log_FXSPR_static),
+        SSBMSY = exp(whamEst$rep$log_SSB_FXSPR_static)[1],
+        waa.fleet= matrix(whamEst$input$data$waa[1,1,], nrow = 1), # First row of fleet WAA, !!! only works with a single fleet
+        sel.fleet= whamEst$rep$selAA[[1]],
+        M=tail(whamEst$rep$MAA[1,,,1],1),  # assumes M is constant across ages and saves the most recent value
+        maturity=tail(whamEst$input$data$mature[1,,],1), # Last row of maturity input, !!! only works if maturity constant over time
+        R=whamEst$rep$NAA[1,,,1],
+        SSB=whamEst$rep$SSB,
+        J1N=tail(whamEst$rep$NAA[1,,,1:nage],1),
+        F.report= exp(whamEst$rep$log_F_tot),
+        catch = whamEst$rep$pred_catch
+        )}
+    
+    
+    if(whamversion == "single"){
+      wham_storage$R[[r]][[y]] <- whamEst$rep$NAA[,1]
+      wham_storage$NAA[[r]][[y]] <- whamEst$rep$NAA[,1:nage]
+      wham_storage$CAA[[r]][[y]] <- whamEst$rep$pred_CAA[,1,]
+      wham_storage$MohnsRho_SSB[[r]][[y]] <- MohnsRho["SSB"]
+      wham_storage$MohnsRho_F[[r]][[y]] <- MohnsRho["Fbar"]
+      wham_storage$MohnsRho_N[[r]][[y]] <- MohnsRho[grep("N", names(MohnsRho))]
+      
+      wham_storage$pars_Ecov_beta[[r]][[y]] <- whamEst$rep$Ecov_beta[3,,1,] # Should pull last row associated with index, may need to be revised in the future!!!
+      wham_storage$pars_Ecov_process[[r]][[y]] <- whamEst$rep$Ecov_process_pars
+      
+      ####################### Need to add res list for single-wham
+      }
     
     # !!! Maybe look at this code to pull together performance metrics/diagnostics to save
     # !!! Look at postprocessing/Plots, and functions/plotResults (auto generated) - get_plots function runs everything, prioritize this
