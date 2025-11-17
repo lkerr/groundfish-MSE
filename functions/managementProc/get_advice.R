@@ -32,8 +32,11 @@ get_advice <- function(stock){
       tempStock <- get_WHAM(stock = tempStock)
     }
     else{
-      get_WHAM(stock = tempStock)}
+      get_WHAM(stock = tempStock)}    ##### !!! this if else combination seems to run get_WHAM in all situations but only saves it sometimes...
   }
+  
+
+  
   
 # Was the assessment successful?
   tempStock <- within(tempStock, {
@@ -109,8 +112,10 @@ get_advice <- function(stock){
 #browser()
 # Calculate Mohn's Rho values
   
-  if(y > fmyearIdx){
-      tempStock <- get_MohnsRho(stock = tempStock)
+  if(y > fmyearIdx){ ### should this be y >= fyearIdx? as written this doesn't run for the first assessment year
+     
+    if(!mproc[m,'ASSESSCLASS'] == 'WHAM'){
+    tempStock <- get_MohnsRho(stock = tempStock)
       cat('Rho calculated.')
       
       #Rho-adjustment if that option is turned on
@@ -122,7 +127,13 @@ get_advice <- function(stock){
 
       #Calculate relative Error
       tempStock <- get_relError(stock = tempStock)}
+    
+    
+  }
 
+    
+    
+    
     # Environmental parameters
     parenv <- list(tempY = temp,
                    Tanom = Tanom,
