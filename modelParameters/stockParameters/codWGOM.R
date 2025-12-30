@@ -70,7 +70,7 @@ R_typ <- 'BH'
 Rpar<-c(a=1.24,b=0.00005679,g=0)
 
 # WGOM BH with temp:
-#Rpar<-c(a = 50.7074441, b = 0.00002080295, g = -0.778952)
+#Rpar<-c(a = 0.7074441, b = 0.00002080295, g = -0.778952)
 
 R_mis<-FALSE # If BRPs and projections assume a wrong SRR, set to TRUE.
 # these are place holders, because R_mis = FALSE
