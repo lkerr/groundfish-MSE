@@ -13,6 +13,8 @@ wham_settings$codGB <- list(model_name = "codGB")
 # GOM cod example using all default WHAM settings
 wham_settings$codGOM <- list(model_name = "codGOM")
 
+wham_settings$codWGOM <- list(model_name = "codWGOM")
+
 # haddockGB
 # # Setting for the SDM-q linked model
 # wham_settings$haddockGB <- list(model_name = "haddockGB_model",
