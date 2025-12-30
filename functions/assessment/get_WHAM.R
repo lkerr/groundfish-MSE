@@ -139,13 +139,32 @@ get_WHAM <- function(stock,...){
       wham_dat_file[[1]]$dat$R_avg_end <- endyear - 10
 
    # browser()
-      if (stock$stockName=='codGOM'){
-        input <- prepare_wham_input(asap3 = wham_dat_file, selectivity=list(model=rep("age-specific",2),
-                                                                            initial_pars=list(c(selC),c(selI)),
-                                                                            fix_pars=list(c(6:9),c(6:9))),
-                                                                             age_comp='multinomial',
-                                                                             recruit_model=2,
-                                                                            model_name=stock_wham_settings$model_name)
+      if (stock$stockName=='codWGOM'){
+        input <- prepare_wham_input(asap3 = wham_dat_file, 
+                                    selectivity=list(model=rep("age-specific",2),
+                                                     initial_pars=list(c(selC),c(selI)),
+                                                     fix_pars=list(c(5:7),c(8:9))),
+                                    age_comp='dir-mult',
+                                    recruit_model=3,
+                                    model_name=stock_wham_settings$model_name)
+      }
+      else if(stock$stockName=='codGOM') {
+        input <- prepare_wham_input(asap3 = wham_dat_file, 
+                                    selectivity=list(model=rep("age-specific",2),
+                                                     initial_pars=list(c(selC),c(selI)),
+                                                     fix_pars=list(c(6:9),c(6:9))),
+                                    age_comp='multinomial',
+                                    recruit_model=2,
+                                    model_name=stock_wham_settings$model_name)
+      }
+      else {
+        input <- prepare_wham_input(asap3 = wham_dat_file, 
+                                    selectivity=list(model=rep("age-specific",2),
+                                                     initial_pars=list(c(selC),c(selI)),
+                                                     fix_pars=list(c(6:9),c(6:9))),
+                                    age_comp='multinomial',
+                                    recruit_model=2,
+                                    model_name=stock_wham_settings$model_name)
       }
       # input <- prepare_wham_input(asap3 = wham_dat_file[[1]], selectivity=list(model=rep("logistic",2),
       #                                                                     initial_pars=list(c(2,0.3),c(2,0.3))),
@@ -167,7 +186,7 @@ get_WHAM <- function(stock,...){
     # Calculate Mohn's rho values
     MohnsRho<-NA
     MohnsRho <- try(mohns_rho(whamEst))
-    
+ 
     # Store WHAM results in final MSE output (indexed by stock i, rep r, and year y)
     wham_storage$SSB[[r]][[y]] <- whamEst$rep$SSB 
     wham_storage$F[[r]][[y]] <- exp(whamEst$rep$log_F_tot)
