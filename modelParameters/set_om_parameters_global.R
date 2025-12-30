@@ -17,8 +17,8 @@ mprocfile<-"mproc.csv"
 # stockExclude variable. Do not include the extension.R. For example,
 # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
-# Available stocks: haddockGB, codGOM, codGB, pollock, yellowtailflounderGB
-stockExclude <- c('haddockGB', 'codGB', 'pollock', 'yellowtailflounderGB')
+# Available stocks: 'haddockGB', 'codGB', 'pollock', 'yellowtailflounderGB', 'codWGOM'
+stockExclude <- c("haddockGB" , 'codGOM', 'codGB', 'pollock', 'yellowtailflounderGB')
 
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data
@@ -32,16 +32,19 @@ histAssess <- TRUE
 nrep <- 2
 
 # First year to begin actual management
-fmyear <- 2019
+#fmyear <- 2019 # original values
+fmyear <- 2024 # 2025 update
 
 # first year after the initial condition period. The initial condition period
 # simply fills up the arrays as necessary even before the burn-in period
 # begins. This is rather arbitrary but should be larger than the number of
 # years in the assessment model and greater than the first age in the model.
-fyear <- 38
+#fyear <- 38 # original values
+fyear <- 44 # 2025 update
 
 # maximum year predicted into the future
-mxyear <- 2040
+#mxyear <- 2040 # original values
+mxyear <- 2050 # 2025 update
 
 #### Burn-in parameters ####
 
