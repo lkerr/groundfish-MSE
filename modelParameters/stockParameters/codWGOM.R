@@ -3,9 +3,8 @@
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.
 
-###### USING GOM COD VALUES ######
-burnFmsyScalar <- 4
-burnFsd <- 0.3
+burnFmsyScalar <- 4 #GOM cod
+burnFsd <- 0.3 # GOM cod
 
 # first age and plus age
 fage <- 1
@@ -27,7 +26,9 @@ waa_mis<-FALSE
 
 # maturity-length parameters
 # avrg last 5 years 2024 management track assessment 
-mat_par <- c(0.034097519, 0.194696978, 0.607443981, 0.868295767, 0.962022784, 0.990081819, 0.996724229, 0.999177172, 0.999812963) 
+#mat_par <- c(0.034097519, 0.194696978, 0.607443981, 0.868295767, 0.962022784, 0.990081819, 0.996724229, 0.999177172, 0.999812963) 
+mat_par <- c(0.034097519, 0.194696978, 0.607443981, 0.868295767, 0.962022784, 1, 1, 1, 1) 
+
 mat_typ <- 'input'
 
 # natural mortality
@@ -53,7 +54,7 @@ initN_type <- 'input'
 #### Fishery parameters ####
 
 # fishery and survey catchabilities
-qC <- 0.0001 ## THIS IS CARRIED OVER, HASNT BEEN UPDATED
+qC <- 0.0001 ## HASNT BEEN UPDATED
 qI <- 0.0001  # value from bigelow fall + spring (albatross is higher)
 
 DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE.
@@ -65,16 +66,19 @@ selC_typ <- 'input'
 
 #### Recruitment Options ####
 ###For BH SR with relationship with temperature###
-### NEEDS UPDATING STILL?: 
 R_typ <- 'BH'
 Rpar<-c(a=1.24,b=0.00005679,g=0)
 
-#Rpar<-c(a=5.1479515,b=0.0002547,g=-0.8996322)
-R_mis<-FALSE#If BRPs and projections assume a wrong SRR, set to TRUE.
-# R_mis_typ<- 'HS' 
-# Rpar_mis <- c(SSB_star = 6300, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
-# cR = 1,
-# Rnyr= 20)
+# WGOM BH with temp:
+#Rpar<-c(a = 50.7074441, b = 0.00002080295, g = -0.778952)
+
+R_mis<-FALSE # If BRPs and projections assume a wrong SRR, set to TRUE.
+# these are place holders, because R_mis = FALSE
+# will need to update for WGOM COD
+R_mis_typ<- 'HS' 
+Rpar_mis <- c(SSB_star = 6300, #the 'wrong' SRR parameters that will be used in BRP estimation and projections
+cR = 1,
+Rnyr= 20)
 
 #### Survey parameters ####
 
