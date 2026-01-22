@@ -5,6 +5,8 @@
 
 burnFmsyScalar <- 4 #GOM cod
 burnFsd <- 0.3 # GOM cod
+burnFsd <- 0  # Test removing stochasticity on F in the Burn-in
+
 
 # first age and plus age
 fage <- 1
