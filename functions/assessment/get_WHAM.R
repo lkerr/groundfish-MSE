@@ -119,7 +119,8 @@ get_WHAM <- function(stock,...){
       #discard ESS (even if not using)
       wham_dat_file[[1]]$dat$discard_Neff <- matrix(0, nrow = N_rows, 1)
       
-      initN <- get_init(type = initN_type, par = initN_par)
+     # initN <- get_init(type = initN_type, par = initN_par)
+      initN <- c(41644, 4141, 3182, 2048, 849, 286, 116, 32, 36) ### Try different initial numbers-at-age, these are from OM in yidx 131
 
       wham_dat_file[[1]]$dat$N1_ini<-initN
 
@@ -225,8 +226,11 @@ get_WHAM <- function(stock,...){
                                   
       )
       
+
+      
+      
       # input$map$logit_q <- as.factor(matrix(data=NA, nrow =1, ncol = 1)) # Fix catchability at initial values (OM values, which are 0.0001 and set in dat file)
-      # input$map$log_N1_pars <- as.factor(matrix(data=rep(NA,9),nrow=1,ncol=9)) # Fix starting NAA at initial values (OM values)
+      input$map$log_N1 <- as.factor(matrix(data=rep(NA,9),nrow=1,ncol=9)) # Fix starting NAA at initial values (OM values)
       
       # Assert that there is low, but not zero, observation error. This reduces bias in EMs for GB and WGOM
       # input$data$agg_catch_sigma[] <- 0.01
