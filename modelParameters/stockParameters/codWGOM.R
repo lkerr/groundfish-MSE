@@ -62,6 +62,10 @@ DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE.
 # fishery selectivity
 ## aggregate fishery selectivity from most recent selectivity time block
 selC <- c(0.042904915, 0.259597199, 0.540257864, 0.805060898, 1, 1, 1, 0.696886527, 0.468064162) #
+# selC <- c(0.015, 0.147, 0.402, 0.746, 1, 1, 1, 0.738, 0.45) #### TESTING DIFFERENT SELECTIVITY
+# selC <- c(0.009, 0.051, 0.241, 0.651, 0.917, 0.985, 0.997, 1, 1) #### Testing GOM cod values
+
+
 selC_typ <- 'input'
 
 #### Recruitment Options ####
@@ -70,7 +74,7 @@ R_typ <- 'BH'
 Rpar<-c(a=1.24,b=0.00005679,g=0)
 
 # WGOM BH with temp:
-#Rpar<-c(a = 0.7074441, b = 0.00002080295, g = -0.778952)
+Rpar<-c(a = 0.7074441, b = 0.00002080295, g = -0.778952)
 
 R_mis<-FALSE # If BRPs and projections assume a wrong SRR, set to TRUE.
 # these are place holders, because R_mis = FALSE
@@ -86,6 +90,9 @@ Rnyr= 20)
 #selI <- c(1)
 #selI_typ <- 'const'
 selI <- c(0.105426149, 0.356746855, 0.352910758, 0.353555439, 0.441094096, 0.524837583, 0.691394876, 1, 1) #Spring survey from 2024 management track, most recent time block
+# selI <- c(0.227, 0.373, 0.291, 0.254, 0.291, 0.300, 0.384, 1, 1) #### TESTING DIFFERENT SELECTIVITY
+# selI <- c(0.038, 0.134, 0.289, 0.531, 0.778, 1, 1, 1, 1) # testing GOM Cod values
+
 selI_typ <- 'input'
 timeI <- 0.5 # when is the survey (as a proportion of the year)
 
@@ -110,12 +117,12 @@ caaInScalar <- 1 # HAVENT CHANGED
 oe_sumCW <- 0.05
 oe_sumCW_typ <- 'lognorm'
 
-oe_paaCN <- 80
+oe_paaCN <- 100
 oe_paaCN_typ <- 'multinomial'
 
 
 ##########
-oe_sumIN <- 0.5
+oe_sumIN <- 0.25
 oe_sumIN_typ <- 'lognorm'
 
 oe_paaIN <- 100 #15 or 60 across surveys?
@@ -125,7 +132,7 @@ oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 0.5 # cannot be zero #0.5 for Beverton Holt
+pe_R <- 0.25 # cannot be zero #0.5 for Beverton Holt
 pe_RSA<- 0.5 #recruitment process error assumed in the stock assessment
 pe_IA <- 0.18
 
