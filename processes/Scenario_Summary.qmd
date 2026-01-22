@@ -1,0 +1,420 @@
+---
+title: "REPLACE TITLE TO DESCRIBE THE SCENARIO"
+format:
+  html:
+    embed-resources: true
+editor: visual
+---
+
+Description of simulation configuration
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+################## Copy this in the results_DATE/sim directory, open and render
+
+ls <- readRDS("res_for_plots.rds")
+om <- ls$om
+em <- ls$em
+hcr <- ls$hcr
+
+
+cat(paste("Stock:", unique(hcr$stock), "\n"))
+cat(paste("ABC Control Rule:", unique(hcr$hcr), "\n"))
+cat(paste("Number of stochastic iterations:", length(unique(hcr$rep)), "\n\n\n"))
+
+```
+
+```{r}
+#| echo: false
+#| message: false
+
+options(tidyverse.quiet = T)
+options(dplyr.summarise.inform = F)
+
+library(tidyverse)
+library(knitr)
+library(viridis)
+
+startHist <- 130.5
+startMGT <- 174.5
+
+om.hist <- filter(om, year_i > startHist)
+om.mgt<- filter(om, year_i > startMGT)
+
+```
+
+## 1) Operating model results
+
+Trajectories with historical period
+
+::: panel-tabset
+```{r}
+#| results: asis
+#| message: false
+
+covs <- c("N", "SSB", "R", "F_full", "sumCW",
+         # "SSBPROXY", "SSBRATIO", "FPROXY", "FRATIO",   ## EM results even though in OmVals
+          "SSBPROXYT", "SSBRATIOT", "FPROXYT", "FRATIOT")  ## "True BRPs. Very Different... CHECK
+
+om.mean <- om.hist %>% group_by(year_i) %>%
+  summarise(across(all_of(covs), ~mean(.x, na.rm = T)))
+
+
+for(cov in covs){
+  cat("## ", cov, "\n")
+  p1 <- ggplot(data = filter(om.hist),
+               aes(year_i, y = .data[[cov]])) +
+    geom_line(aes(group = rep), alpha = 0.5) +
+    geom_line(data = om.mean, lwd = 1, col = "red") +
+    geom_vline(xintercept = startMGT, lty = 2)
+    ggtitle(paste("True Operating Model", cov))
+  
+  print(p1)
+  
+  cat("\n\n")
+}
+
+
+```
+
+## Stock-Recruit
+
+```{r}
+#| echo: false
+#| message: false
+
+sr <- om.hist %>% group_by(rep) %>% mutate(lagSSB = lead(SSB))
+srmean <- sr %>% group_by(year_i) %>%
+  summarise(lagSSB = mean(lagSSB),
+            R = mean(R))
+
+p1 <- ggplot(mapping = aes(lagSSB, R)) +
+  geom_point(data = sr, alpha = 0.5) +
+  geom_path(data = srmean, aes(alpha = year_i), col = 2)
+
+print(p1)
+
+p2 <- ggplot(data = om.hist, aes(lag(SSB), R)) +
+  geom_point(aes(color = year_i), alpha = 0.5) +
+  geom_path(data = om.mean, col = 2) +
+  scale_color_viridis()
+
+print(p2)  
+
+```
+:::
+
+Trajectories only management period
+
+::: panel-tabset
+```{r}
+#| results: asis
+#| message: false
+
+om.mean <- om.mgt %>% group_by(year_i) %>%
+  summarise(across(all_of(covs), ~mean(.x, na.rm = T)))
+
+
+for(cov in covs){
+  cat("## ", cov, "\n")
+  p1 <- ggplot(data = filter(om.mgt),
+               aes(year_i, y = .data[[cov]])) +
+    geom_line(aes(group = rep), alpha = 0.5) +
+    geom_line(data = om.mean, lwd = 1, col = "red") +
+    geom_vline(xintercept = startMGT, lty = 2)
+    ggtitle(paste("True Operating Model", cov))
+  
+  print(p1)
+  
+  cat("\n\n")
+}
+
+
+```
+
+## Stock-Recruit
+
+```{r}
+#| echo: false
+#| message: false
+
+sr <- om.mgt %>% group_by(rep) %>% mutate(lagSSB = lead(SSB))
+srmean <- sr %>% group_by(year_i) %>%
+  summarise(lagSSB = mean(lagSSB),
+            R = mean(R))
+
+p1 <- ggplot(mapping = aes(lagSSB, R)) +
+  geom_point(data = sr, alpha = 0.5) +
+  geom_path(data = srmean, aes(alpha = year_i), col = 2)
+
+print(p1)
+
+p2 <- ggplot(data = om.mgt, aes(lag(SSB), R)) +
+  geom_point(aes(color = year_i), alpha = 0.5) +
+  geom_path(data = om.mean, col = 2) +
+  scale_color_viridis()
+
+print(p2)  
+
+```
+:::
+
+## 2) Estimation model results
+
+Trajectories
+
+::: panel-tabset
+```{r}
+#| results: asis
+#| message: false
+
+covs <- c("SSB", "SSBMSY", "ssb_ratio",
+          "F", "FMSY", "f_ratio",
+          "R", "Catch")
+
+em.mean <- em %>% group_by(year_i_assessment, year_i_estimate) %>%
+  summarise(across(all_of(covs), ~mean(.x, na.rm = T)))
+
+
+for(cov in covs){
+  cat("## ", cov, "\n")
+  p1 <- ggplot(data = em,
+               aes(year_i_estimate, y = .data[[cov]])) +
+    geom_line(aes(group = interaction(rep, year_i_assessment)), alpha = 0.25) +
+    geom_line(data = em.mean, 
+              aes(col = year_i_assessment,
+                  group = year_i_assessment), lwd = 0.75) +
+    scale_color_viridis()+
+    geom_vline(xintercept = startMGT, lty = 2)
+    ggtitle(paste("Estimated", cov, "Trajectories"))
+  
+  print(p1)
+  
+  cat("\n\n")
+}
+
+
+```
+:::
+
+Terminal estimates
+
+::: panel-tabset
+```{r}
+#| results: asis
+#| message: false
+
+emT <- em %>% group_by(rep, year_i_assessment) %>%
+  filter(year_i_estimate == max(year_i_estimate))
+
+covs <- c("SSB", "SSBMSY", "ssb_ratio",
+          "F", "FMSY", "f_ratio",
+          "R", "Catch",
+          "MohnsRho_SSB", "MohnsRho_F")
+
+emT.mean <- emT %>% group_by(year_i_estimate) %>%
+  summarise(across(all_of(covs), ~mean(.x, na.rm = T)))
+
+
+for(cov in covs){
+  cat("## ", cov, "\n")
+  p1 <- ggplot(data = emT,
+               aes(year_i_estimate, y = .data[[cov]])) +
+    geom_point(aes(col = year_i_assessment), alpha = 0.25) +
+    geom_line(aes(group = interaction(rep)), alpha = 0.25) +
+    scale_color_viridis() +
+    geom_point(data = emT.mean, col = 2) +
+    geom_line(data = emT.mean, col = 2) + 
+    ggtitle(paste("Terminal Year Estimates of", cov))
+  
+  print(p1)
+  
+  cat("\n\n")
+}
+
+
+```
+:::
+
+## 3) Risk Policy results
+
+Primary Risk Policy Quantities
+
+```{r}
+#| echo: false
+#| message: false
+
+paste("This simulation used:", unique(hcr$hcr), "\n")
+n <- nrow(hcr)/14
+
+```
+
+::: panel-tabset
+```{r}
+#| results: asis
+#| message: false
+
+covs <- c("z", "logistic_out", "rec_prob",
+          "prop_dynamic", "prop_tiered")
+
+hcr.mean <- hcr %>% group_by(year_i) %>%
+  summarise(across(all_of(covs), ~mean(.x, na.rm = T)))
+
+
+for(cov in covs){
+  cat("## ", cov, "\n")
+  p1 <- ggplot(data=hcr.mean, aes(year_i, y = .data[[cov]])) + 
+    geom_point() + geom_line(col = 2) +
+    ggtitle(paste("Mean", cov, "Over Time"))
+  print(p1)
+  
+  p2 <- ggplot(data = hcr,
+               aes(year_i, y = .data[[cov]])) +
+    facet_wrap("rep") +
+    geom_line(aes(group = rep), alpha = 0.25) +
+    geom_point() +
+    geom_vline(xintercept = startMGT, lty = 2) +
+    ggtitle(paste(cov, "Over Time in each Iteration"))
+  
+  print(p2)
+  
+  cat("\n\n")
+}
+
+
+```
+
+## Logistic Curve
+
+```{r}
+#| echo: false
+#| message: false
+
+logis <- data.frame(z = seq(0, 5, 0.01)) %>%
+  mutate(rec_prob = 1/(1+exp(-z)))
+
+
+p1 <- ggplot(data = logis, aes(z, rec_prob)) +
+  geom_line() +
+  geom_point(data = hcr.mean, aes(col = year_i)) +
+  scale_color_viridis() +
+  ggtitle("Mean Logistic Position")
+
+print(p1)
+
+p2 <- ggplot(data = hcr, aes(z, rec_prob)) +
+  facet_wrap("rep") +
+  geom_point(data = hcr, aes(col = year_i)) +
+  scale_color_viridis() +
+  geom_line(data = logis, aes(z, rec_prob)) +
+  ggtitle("Logistic Position Over Time in Each Iteration")
+
+print(p2)
+
+```
+:::
+
+Factor scores
+
+::: panel-tabset
+```{r}
+#| results: asis
+#| message: false
+
+
+covs <- c("rp_ssb", "rp_recruit", "rp_assessment",
+          "rp_climate", "rp_condition", "rp_commercial", "rp_recreational")
+
+hcr.mean <- hcr %>% group_by(year_i) %>%
+  summarise(across(all_of(covs), ~mean(.x, na.rm = T)))
+
+
+for(cov in covs){
+  cat("## ", cov, "\n")
+  p1 <- ggplot(data=hcr.mean, aes(year_i, y = .data[[cov]])) + 
+    geom_point() + geom_line(col = 2) + ylim(-4,4) +
+    ggtitle(paste("Mean", cov, "Over Time"))
+  print(p1)
+  
+  p2 <- ggplot(data = hcr,
+               aes(year_i, y = .data[[cov]])) +
+    facet_wrap("rep") +
+    geom_line(aes(group = rep), alpha = 0.25) +
+    geom_point() +
+    geom_vline(xintercept = startMGT, lty = 2) +
+    ylim(-4,4) +
+    ggtitle(paste(cov, "Over Time in each Iteration"))
+  
+  print(p2)
+  
+  cat("\n\n")
+}
+
+
+```
+:::
+
+## 4) ABC Control Rule Results
+
+::: panel-tabset
+```{r}
+#| results: asis
+#| message: false
+
+hcr <- hcr %>% mutate(prop_FMSY = F_Target/F_MSY)
+
+covs <- c("prop_FMSY", "F_MSY", "F_Target")
+
+hcr.mean <- hcr %>% group_by(year_i) %>%
+  summarise(across(all_of(covs), ~mean(.x, na.rm = T)))
+
+
+for(cov in covs){
+  cat("## ", cov, "\n")
+  p1 <- ggplot(data=hcr.mean, aes(year_i, y = .data[[cov]])) + 
+    geom_point() + geom_line(col = 2) +
+    ggtitle(paste("Mean", cov, "Over Time"))
+  print(p1)
+  
+  p2 <- ggplot(data = hcr,
+               aes(year_i, y = .data[[cov]])) +
+    facet_wrap("rep") +
+    geom_line(aes(group = rep), alpha = 0.25) +
+    geom_point() +
+    geom_vline(xintercept = startMGT, lty = 2) +
+    ggtitle(paste(cov, "Over Time in each Iteration"))
+  
+  print(p2)
+  
+  cat("\n\n")
+}
+
+
+```
+
+## ABC
+
+```{r}
+#| echo: false
+#| message: false
+om.mean <- om.mgt %>% group_by(year_i) %>%
+  summarise(ACL = mean(ACL, na.rm=T))
+
+p1 <- ggplot(data = filter(om.mgt),
+               aes(year_i, y = ACL)) +
+  geom_line(aes(group = rep), alpha = 0.5) +
+  geom_point(alpha = 0.25) +
+  geom_line(data = om.mean, lwd = 1, col = "red") +
+  geom_vline(xintercept = startMGT, lty = 2) +
+  ylab("ABC") +
+  ggtitle("ABC Over Time")
+  
+  print(p1)
+
+
+```
+:::
