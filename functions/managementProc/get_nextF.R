@@ -139,8 +139,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     overfishing <- ifelse(tail(parpop$Fhat,1) > FrefRPvalue, 1, 0) #MDM
 
-################################ Insert Risk Policy function here
 
+    
 ################################ Harvest Control Rules
     #Ramp HCR
     if(tolower(parmgt$HCR) == 'slide'){
@@ -160,16 +160,28 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     #Step in fishing mortality HCR
     else if(tolower(parmgt$HCR) == 'step'){
-      if (y==fmyearIdx & overfished== 1){F<-FrefRPvalue*0.7}
+      if (y==fmyearIdx & overfished== 1){F<-FrefRPvalue*0.6}
       else if (y==fmyearIdx & overfished== 0){F<-FThresh}
-      else if (y>fmyearIdx & overfished== 1){F<-FrefRPvalue*0.7}
+      else if (y>fmyearIdx & overfished== 1){F<-FrefRPvalue*0.6}
       else if (y>fmyearIdx & overfished== 0){
-        if(any(stockEnv$OFdStatus==1,na.rm=T)& tail(parpop$SSBhat,1)<BrefRPvalue){F<-FrefRPvalue*0.7}
+        if(any(stockEnv$OFdStatus==1,na.rm=T)& tail(parpop$SSBhat,1)<BrefRPvalue){F<-FrefRPvalue*0.6}
         else{F<-FThresh}}
     }
     
+    ##### Risk Policy
+    rp <- get_RiskPolicy(stockEnv = stockEnv) 
     
+    # Risk Policy integrated dynamic buffer
+    if(tolower(parmgt$HCR) == 'rp_dynamic'){
+      F <- stockEnv$res$FMSY * (rp %>% pull(prop_dynamic))
+    }
     
+    # Risk Policy integrated tiered approach
+    if(tolower(parmgt$HCR) == 'rp_tiered'){
+      F <- stockEnv$res$FMSY * (rp %>% pull(prop_tiered))
+    }
+    
+ F_Target <- F
     
 ######################################### Projections
 
@@ -257,7 +269,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
 
       #If the minimum catch constraint is on, make sure catch advice is not below that constraint
       if(tolower(parmgt$mincatch) == 'true'){
-      if (stockEnv$stockName=='codGOM'){
+      if (stockEnv$stockName %in% c('codGOM', "codWGOM")){
         bycatch<-read.csv(paste('./data/data_raw/AssessmentHistory/codGOM_Discard.csv',sep=''))
         mincatch<-min(tail(bycatch$Discards),10)
       }
@@ -348,7 +360,12 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
 
     out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue,FrefTRPvalue, BrefTRPvalue), 
                 ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
-                OFgStatus = overfishing, catchproj=catchproj) #AEW
+                OFgStatus = overfishing, catchproj=catchproj,
+                RiskPolicy = rp %>% mutate(hcr = tolower(parmgt$HCR),
+                                           .before = everything()) %>%
+                  mutate(F_Target = F_Target, F_MSY = stockEnv$res$FMSY,
+                         ABC_y1 = catchproj[1], ABC_y2 = catchproj[2])
+                ) #AEW
     
 
     
@@ -374,7 +391,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                   waav = parpop$waatrue_y)
     
     out <- list(F = trueF, RPs = c(NA, NA), OFdStatus=NA,
-                OFgStatus = NA) #AEW
+                OFgStatus = NA)
     
   }else{
     

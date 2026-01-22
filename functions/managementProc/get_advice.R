@@ -31,8 +31,8 @@ get_advice <- function(stock){
     if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
       tempStock <- get_WHAM(stock = tempStock)
     }
-    else{
-      get_WHAM(stock = tempStock)}    ##### !!! this if else combination seems to run get_WHAM in all situations but only saves it sometimes...
+    # else{
+      # get_WHAM(stock = tempStock)}    ##### !!! this if else combination seems to run get_WHAM in all situations but only saves it sometimes...
   }
   
 
@@ -155,6 +155,9 @@ get_advice <- function(stock){
 
       tempStock$RPmat[y,] <- gnF$RPs
       tempStock$catchproj <- gnF$catchproj
+      
+      tempStock$hcr[[r]][[y]] <- gnF$RiskPolicy %>% 
+        mutate(rep = r, year_i = y, .before=everything())
 
     }else{
       # Otherwise use old reference points to calculate stock status

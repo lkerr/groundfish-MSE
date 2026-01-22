@@ -182,6 +182,15 @@ big_loop
   omvalGlobal <- sapply(1:nstock, function(x) stock[[x]]['omval'])
   names(omvalGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
   save(omvalGlobal, file=paste0(ResultDirectory,'/sim/omvalGlobal', td2, '.Rdata'))
+  
+  whamGlobal <- sapply(1:nstock, function(x) stock[[x]]['wham_storage'])
+  names(whamGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
+  save(whamGlobal, file=paste0(ResultDirectory,'/sim/whamGlobal', td2, '.Rdata'))
+  
+  summarize_results(omvalGlobal = omvalGlobal, whamGlobal = whamGlobal, hcr =stock[[1]]['hcr'],
+                    stamp = td2,
+                    dir = paste0(ResultDirectory,'/sim/'))
+  
 
   if(runClass != 'HPCC'){
     omparGlobal <- readLines('modelParameters/set_om_parameters_global.R')

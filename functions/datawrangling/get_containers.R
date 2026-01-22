@@ -211,6 +211,8 @@ get_containers <- function(stockPar){
     assess_st_yr=999
   )
   
+  out$hcr <- rep_year_container
+  
   # If one of the assessment models is WHAM this storage container will be created for each stock but only populated for those stocks using WHAM
   # All items in this list can be indexed by wham_storage$listObjects[[irep]][[iyr]]
   if("WHAM" %in% mproc[,'ASSESSCLASS']){
