@@ -171,6 +171,9 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
   # Random error component
   rc<-rnorm(1,mean=0,sd=pe_R)
   R <- Rhat * exp(ac + rc)
+  
+  if(block == "early") {R<- Rhat} # If in burn-in, revert to expected value without any variability
+  
   out <- list(Rhat = unname(Rhat), R = unname(R))
 
   return(out)
