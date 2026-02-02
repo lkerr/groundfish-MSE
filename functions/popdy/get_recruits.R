@@ -41,7 +41,7 @@
 # Rhat_ym1: predicted recruitment from previous year
 
 get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
-                         R_ym1=NULL, Rhat_ym1=NULL, stockEnv=stock, R_est){
+                         R_ym1=NULL, Rhat_ym1=NULL, stockEnv=stock, R_est,y){
   
   if(!type %in% c('BH', 'BHSteep', 'HS')){
     stop(paste('get_recruits: check spelling of R_typ in individual stock 
@@ -49,134 +49,144 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
   }
   
   with(stockEnv, {
-  if('rho' %in% names(par)){
     
-    # Check that values for rho are between -1 and 1 as they should be for
-    # correlations
-    if(par['rho'] < -1 || par['rho'] > 1){
+    if('rho' %in% names(par)){
       
-      stop('Rfun: par[rho] must be between 0 and 1')
+      # Check that values for rho are between -1 and 1 as they should be for
+      # correlations
+      if(par['rho'] < -1 || par['rho'] > 1){
+        
+        stop('Rfun: par[rho] must be between 0 and 1')
+        
+      }
       
-    }
-    
-    # Check that if rho is provided the values for the residuals are not
-    # null (the default)
-    if(is.null(R_ym1) || is.null(Rhat_ym1)){
+      # Check that if rho is provided the values for the residuals are not
+      # null (the default)
+      if(is.null(R_ym1) || is.null(Rhat_ym1)){
+        
+        stop('Rfun: if rho is given R_ym1 and Rhat_ym1 must be provided')
+        
+      }
       
-      stop('Rfun: if rho is given R_ym1 and Rhat_ym1 must be provided')
-      
-    }
-    
-    # Provide warning message if NAs are encountered
-    if(is.na(R_ym1) || is.na(Rhat_ym1)){
-      
-      warning('Rfun: NA encountered in R_ym1 or Rhat_y-1 -- autocorrelation
+      # Provide warning message if NAs are encountered
+      if(is.na(R_ym1) || is.na(Rhat_ym1)){
+        
+        warning('Rfun: NA encountered in R_ym1 or Rhat_y-1 -- autocorrelation
                error not included')
+        R_ym1 <- 1
+        Rhat_ym1 <- 1
+        
+      }
+      
+    }else{
+      
+      # if rho is not provided, then set it to 0.0 and set the residuals to
+      # numbers > 0 (they will be cancelled automatically since rho is zero)
+      par['rho'] <- 0
       R_ym1 <- 1
       Rhat_ym1 <- 1
       
     }
     
-  }else{
-    
-    # if rho is not provided, then set it to 0.0 and set the residuals to
-    # numbers > 0 (they will be cancelled automatically since rho is zero)
-    par['rho'] <- 0
-    R_ym1 <- 1
-    Rhat_ym1 <- 1
-    
-  }
-  
-  if(type == 'BH'){
- 
-    # Expected value
-    Rhat <- (par['a']*SSB)/(1+(par['b']*SSB))*exp(par['g']*TAnom_y)
-    Rhat <- Rhat*1000
-
-  }
-    
-  else if(type == 'BHSteep'){
-  
-    # Note that the steepness version of the stock-recruit model requires SSBR
-    # at F=0 which is a function of selectivity. Percieved selectivity can
-    # change over the course of the time period according to how the assessment
-    # model estimates it; however for the predicted recruitment we are only
-    # interested in the realized recruitment. Thus we can just use the true
-    # selectivity in the model and not worry about the estimated version.
-    
-    if(is.na(par['beta1'])){
-      par['beta1'] <- 0
+    if(type == 'BH'){
+      
+      # Expected value
+      Rhat <- (par['a']*SSB)/(1+(par['b']*SSB))*exp(par['g']*TAnom_y)
+      Rhat <- Rhat*1000
+      
     }
-    if(is.na(par['beta2'])){
-      par['beta2'] <- 0
-    }
-    if(is.na(par['beta3'])){
-      par['beta3'] <- 0
-    }
-
-    Rhat <- with(as.list(par), {
-      # gamma parameterization has to do with fitting model with steepness
-      # between 0 and 1. See A. Weston thesis p. 15 Eqns. 5&6.
-      gamma <- -0.5 * log( (1 - 0.2) / (h - 0.2) - 1) + beta1* TAnom_y
-      hPrime <- 0.2 + (1 - 0.2) / (1 + exp(-2*gamma));
-      R0Prime <- R0 * exp(beta2 * TAnom_y)
-      num <- 4 * hPrime * ( SSB / (SSBRF0) )
-      den <- ( (1 - hPrime) + (5*hPrime - 1) * ( SSB / (R0Prime * SSBRF0) ) )
-      z <-  num / den * exp(beta3 * TAnom_y)
-      return(z)
-    })
-  }
     
-  else if (type == 'HS'){ 
-    if(stock[[i]]$stockName=='codGOM'){
-      Rhat <- with(as.list(par),{
-        SSBhinge<-SSB_star
-        if (type2=="True"){
-          assess_vals <- get_HistAssess(stock = stock[[i]])
-          if (SSB >= SSBhinge) {
-            pred <- cR * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
-          } else if (SSB < SSBhinge){
-            pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
+    else if(type == 'BHSteep'){
+      
+      # Note that the steepness version of the stock-recruit model requires SSBR
+      # at F=0 which is a function of selectivity. Percieved selectivity can
+      # change over the course of the time period according to how the assessment
+      # model estimates it; however for the predicted recruitment we are only
+      # interested in the realized recruitment. Thus we can just use the true
+      # selectivity in the model and not worry about the estimated version.
+      
+      if(is.na(par['beta1'])){
+        par['beta1'] <- 0
+      }
+      if(is.na(par['beta2'])){
+        par['beta2'] <- 0
+      }
+      if(is.na(par['beta3'])){
+        par['beta3'] <- 0
+      }
+      if (exists('Rinc') && Rinc=='TRUE' & exists('y') && y>175){browser()}
+      Rhat <- with(as.list(par), {
+        # gamma parameterization has to do with fitting model with steepness
+        # between 0 and 1. See A. Weston thesis p. 15 Eqns. 5&6.
+        gamma <- -0.5 * log( (1 - 0.2) / (as.numeric(h) - 0.2) - 1) + as.numeric(beta1)* TAnom_y
+        hPrime <- 0.2 + (1 - 0.2) / (1 + exp(-2*gamma));
+        R0Prime <- as.numeric(R0)* exp(as.numeric(beta2) * TAnom_y)
+        num <- 4 * hPrime * ( SSB / (as.numeric(SSBRF0)) )
+        den <- ( (1 - hPrime) + (5*hPrime - 1) * ( SSB / (R0Prime * as.numeric(SSBRF0)) ) )
+        z <-  num / den * exp(as.numeric(beta3) * TAnom_y)
+        return(z)
+      })
+    }
+    
+    else if (type == 'HS'){ 
+      if(stock[[i]]$stockName=='codGOM'){
+        Rhat <- with(as.list(par),{
+          SSBhinge<-SSB_star
+          if (type2=="True"){
+            assess_vals <- get_HistAssess(stock = stock[[i]])
+            if (SSB >= SSBhinge) {
+              pred <- cR * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
+            } else if (SSB < SSBhinge){
+              pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
+            }
           }
-        }
-        else{
-          if (SSB >= SSBhinge) {
-            pred <- cR * remp(1, tail(as.numeric(R_est), Rnyr))
-          } 
-          else if (SSB < SSBhinge){
-            pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(R_est), Rnyr))
+          else{
+            if (SSB >= SSBhinge) {
+              pred <- cR * remp(1, tail(as.numeric(R_est), Rnyr))
+            } 
+            else if (SSB < SSBhinge){
+              pred <-  cR * (SSB/SSBhinge) * remp(1, tail(as.numeric(R_est), Rnyr))
+            }
           }
-        }
-        return(pred)
-      })}
+          return(pred)
+        })}
       if(stock[[i]]$stockName=='haddockGB' | stock[[i]]$stockName=='petraleBC'){
         Rhat <- with(as.list(par),{
-          # if (type=='HS' & type2=='Est'){browser()}
-        if (type2=="True"){
-          assess_vals <- get_HistAssess(stock = stock[[i]])
-          pred<-remp(1, tail(as.numeric(assess_vals$assessdat$R), Rnyr))
-          
-        }
+          if (type2=="True"){
+            assess_vals <- get_HistAssess(stock = stock[[i]])
+            pred<-remp(1, tail(as.numeric(assess_vals$assessdat$R), as.numeric(Rnyr)))
+            if (Rinc=='TRUE' & exists('y') && y>175){
+              assess_vals <- get_HistAssess(stock = stock[[i]])
+              dist<-tail(as.numeric(assess_vals$assessdat$R), as.numeric(Rnyr))
+              dist[dist<20000000][sample(1:length(dist[dist<20000000]),min(y-174,length(dist[dist<20000000])))]<-sample(dist[dist>20000000],min(y-174,length(dist[dist<20000000])),replace=TRUE)
+              pred<-remp(1, dist)
+            }
+          }
           else{
-          pred<-remp(1, tail(R_est, Rnyr))}
-        return(pred)
+            pred<-remp(1, tail(R_est, as.numeric(Rnyr)))
+          }
+          return(pred)
         })}
-  }
-
-  # Autocorrelation component
-  ac <- par['rho'] * log(R_ym1 / Rhat_ym1)
-  
-  # Random error component
-  rc<-rnorm(1,mean=0,sd=pe_R)
-  R <- Rhat * exp(ac + rc)
-  out <- list(Rhat = unname(Rhat), R = unname(R))
-  
-  # if (type2=='Est'){browser()}
-  # return(gr[['Rhat']])
-  return(out)
-  
+    }
+    
+    # Autocorrelation component
+    ac <- as.numeric(par['rho']) * log(R_ym1 / Rhat_ym1)
+    
+    # Random error component
+    rc<-rnorm(1,mean=0,sd=pe_R)
+    R <- Rhat * exp(ac + rc)
+    out <- list(Rhat = unname(Rhat), R = unname(R))
+    
+    # if (type2=='Est'){browser()}
+    # return(gr[['Rhat']])
+    return(out)
+    
   })
 }
+
+
+
+
 
 
 
