@@ -44,7 +44,7 @@ for(r in 1:nrep){
   # oldseed_mproc <- .Random.seed
   
   #### Top MP loop ####
-  for(m in 1:nrow(mproc)){
+  for(m in 1:1){
     
     manage_counter<-0
     
@@ -58,31 +58,34 @@ for(r in 1:nrep){
       source('processes/setupEconType.R')
     }
     # Initialize stocks and determine burn-in F
+    
     for(i in 1:nstock){
       stock[[i]] <- get_popInit(stock[[i]])
     }
     #### get historic assessment info if there is any
-    #    if (histAssess == TRUE) {
+    # if (histAssess == TRUE) {
     for (i in 1:nstock){
       assess_vals <- get_HistAssess(stock = stock[[i]])
     }
-    #   }
+    # }
     #### Top year loop ####
     for(y in fyear:nyear){
       for(i in 1:nstock){
-        stock[[i]] <- get_J1Updates(stock = stock[[i]])
+        stock[[i]] <- get_J1Updates(stock = stock[[i]],y=y,assess_vals=assess_vals)
       }
-
-      source('processes/withinYearAdmin.R')
+      
+      yearitercounter<-yearitercounter+1
+      
+      chunk_flag<-yearitercounter %% savechunksize
+      
       begin_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
       
       # if burn-in period is over...
       if(y >= fmyearIdx){
-        
         manage_counter<-manage_counter+1 #this only gets incremented when y>=fmyearIdx
         
         for(i in 1:nstock){
-          stock[[i]] <- get_advice(stock = stock[[i]])
+          stock[[i]] <- get_advice(stock = stock[[i]],y=y,r=r)
           #stock[[i]] <- get_relError(stock = stock[[i]])
         }
         #Construct the year-replicate index and use those to look up their values from random_sim_draw. This is currently unused.
@@ -111,7 +114,7 @@ for(r in 1:nrep){
           
           for(i in 1:nstock){
             stock[[i]] <- get_implementationF(type = 'adviceWithError',
-                                              stock = stock[[i]])
+                                              stock = stock[[i]],y=y)
           } # End implementation error in standard fisheries
           
         }else{
@@ -120,30 +123,20 @@ for(r in 1:nrep){
         
         for(i in 1:nstock){
           if (y == nyear){
-            stock[[i]] <- get_TermrelError(stock = stock[[i]])
+            stock[[i]] <- get_TermrelError(stock = stock[[i]],y=y)
           }
-          stock[[i]] <- get_fillRepArrays(stock = stock[[i]])
+          stock[[i]] <- get_fillRepArrays(stock = stock[[i]],r=r,y=y)
         }
         
       } #End of burn-in loop
       
       for(i in 1:nstock){
-        stock[[i]] <- get_mortality(stock = stock[[i]])
-        stock[[i]] <- get_indexData(stock = stock[[i]])
+        stock[[i]] <- get_mortality(stock = stock[[i]],y=y)
+        stock[[i]] <- get_indexData(stock = stock[[i]],y=y)
       } #End killing fish loop
       
       
       end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
-      #Save economic results once in a while to a csv file.
-      if(mproc$ImplementationClass[m]=="Economic" &(y >= fmyearIdx) & (chunk_flag==0 | yearitercounter==max_yiter)) {
-        revenue_holder<-rbindlist(revenue_holder)
-        tda <- as.character(Sys.time())
-        tda <- gsub(':', '', tda)
-        tda<-gsub(' ', '_', tda)
-        tda2 <- paste0(tda,"_", round(runif(1, 0, 10000)))
-        write.table(revenue_holder, file.path(econ_results_location, paste0("econ_",tda2, ".csv")), sep=",", row.names=FALSE)
-        revenue_holder<-list()
-      } #End save economic results if statement
       
       if(showProgBar==TRUE){
         setTxtProgressBar(iterpb, yearitercounter)
