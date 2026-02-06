@@ -70,11 +70,11 @@ HPCfunsim<- function(nrep){
       
     }
     
+    #Apply fishing mortality and get survey index 
     for(i in 1:nstock){
       stock[[i]] <- get_mortality(stock = stock[[i]],y=y)
       stock[[i]] <- get_indexData(stock = stock[[i]],y=y)
-    } #End killing fish loop
-    
+    } 
     
     end_rng_holder[[yearitercounter]]<-c(r,m,y,yrs[y],.Random.seed)
     
@@ -83,45 +83,30 @@ HPCfunsim<- function(nrep){
     }
   }
   #End of year loop
-} #End of mproc loop
-
-
-#End rep loop
-
-cat('finished rep')
-
-top_loop_end<-Sys.time()
-
-#econ_timer
-# Output run time / date information and OM inputs. The random number is
-# just ensuring that no simulations will be overwritten because the hpcc
-# might finish some in the same second. td is used for uniquely naming the
-# output file as well as for listing in the output results.
-
-td <- as.character(Sys.time())
-td2 <- gsub(':', '', td)
-td2 <- paste(gsub(' ', '_', td2), round(runif(1, 0, 10000)), sep='_')
-
-
-saveRDS(begin_rng_holder, file.path(econ_results_location,  paste0("begin_rng_",td2, ".Rds")), compress=FALSE)
-saveRDS(end_rng_holder, file.path(econ_results_location,  paste0("end_rng_",td2, ".Rds")), compress=FALSE)
-
-
-for(i in 1:nstock){
-  pth <- paste0('results/fig/', sapply(stock, '[[', 'stockName')[i])
-  dir.create(pth, showWarnings = FALSE)
-}
-
-#### save results ####
-omvalGlobal <- sapply(1:nstock, function(x) stock[[x]]['omval'])
-names(omvalGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
-save(omvalGlobal, file=paste0('results/sim/omvalGlobal', td2, '.Rdata'))
-
-cat('saved sims')
-
-print(unique(warnings()))
-
-cat('\n ---- Successfully Completed ----\n')
+  
+  top_loop_end<-Sys.time()
+  
+  td <- as.character(Sys.time())
+  td2 <- gsub(':', '', td)
+  td2 <- paste(gsub(' ', '_', td2), round(runif(1, 0, 10000)), sep='_')
+  
+  saveRDS(begin_rng_holder, file.path(econ_results_location,  paste0("begin_rng_",td2, ".Rds")), compress=FALSE)
+  saveRDS(end_rng_holder, file.path(econ_results_location,  paste0("end_rng_",td2, ".Rds")), compress=FALSE)
+  
+  #Create figures
+  for(i in 1:nstock){
+    pth <- paste0('results/fig/', sapply(stock, '[[', 'stockName')[i])
+    dir.create(pth, showWarnings = FALSE)
+  }
+  
+  #### save results ####
+  omvalGlobal <- sapply(1:nstock, function(x) stock[[x]]['omval'])
+  names(omvalGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
+  save(omvalGlobal, file=paste0('results/sim/omvalGlobal', td2, '.Rdata'))
+  
+  print(unique(warnings()))
+  
+  cat('\n ---- Successfully Completed ----\n')
 }
 
 library(rslurm)
