@@ -109,14 +109,16 @@ HPCfunsim<- function(nrep){
   cat('\n ---- Successfully Completed ----\n')
 }
 
+#Write sh script with rslurm package
 library(rslurm)
-MSEsim_May9<-slurm_apply(HPCfunsim,pars,
-                         jobname = "HPCfunsim_Nov17",
-                         nodes = 160,
-                         cpus_per_node = 1,
-                         submit = FALSE,
-                         slurm_options = list(time = "120:00:00", nodes = 1, account = "dfo_pfm", partition = "standard", export = "USER,LOGNAME,HOME,MAIL,PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin", qos = "low", `ntasks-per-node` = 1, `mem-per-cpu` = "6400M",`mail-type` = "BEGIN,END,FAIL", `mail-user` = "mackenzie23mazur@gmail.com"),
-                         pkgs = c("dplyr", "sdmTMB"),
-                         rscript_path = "/fs/vnas_Hdfo/comda/mam006/Documents/mam006",
-                         libPaths="/gpfs/fs7/dfo/hpcmc/pfm/mam006/rlib/4.3",
-                         sh_template= "/fs/vnas_Hdfo/comda/mam006/Documents/mam006/template_sh.txt")
+MSEsim<-slurm_apply(HPCfunsim,pars,
+                    jobname = "HPCfunsim_Feb9",
+                    nodes = 160,
+                    cpus_per_node = 1,
+                    submit = FALSE,
+                    slurm_options = list(time = "120:00:00", nodes = 1, 
+                                         account = "dfo_pfm__large", partition = "large", 
+                                         export = "USER,LOGNAME,HOME,MAIL,PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin", 
+                                         qos = "low", `ntasks-per-node` = 1, `mem-per-cpu` = "15GB",`mail-type` = "BEGIN,END,FAIL", 
+                                         `mail-user` = "mackenzie23mazur@gmail.com"),
+                    libPaths="/gpfs/fs7/dfo/hpcmc/pfm/mam006/rlib/4.3")
