@@ -1,4 +1,3 @@
-
 # Run simulation setup. This is a separate file so that the model setup
 # parameters can later be accessed by running the setup but not the
 # entire simulation.
@@ -8,6 +7,7 @@ ffiles <- list.files(path='functions/', pattern="^.*\\.R$",full.names=TRUE, recu
 invisible(sapply(ffiles, source))
 
 # Get the result directory path
+source('processes/runPre.R')
 source('processes/identifyResultDirectory.R')
 
 # Load the overall operating model parameters
@@ -22,8 +22,8 @@ if(!is.null(stockExclude)){
   rem <- match(stockExclude, basename(fileList))
   if(any(is.na(rem))){
     stop(paste('run_setup.R: check names of excluded stocks in', 
-          'set_om_parameters_global file and be sure they match the actual', 
-          'stock file names'))
+               'set_om_parameters_global file and be sure they match the actual', 
+               'stock file names'))
   }
   fileList <- fileList[-rem]
   if(length(fileList) < 1){
@@ -53,17 +53,13 @@ for(i in 1:nstock){
 
 # Get the names of each stock (stocks must follow naming convention)
 stockNames <- unname(sapply(fileList, function(x) 
-                strsplit(x, 'stockParameters/|\\.R')[[1]][2]))
+  strsplit(x, 'stockParameters/|\\.R')[[1]][2]))
 
-
-
-# Get the run info so the functions work appropriately whether they are
-# on Windows or Linux and whether this is an HPCC run or not.
-source('processes/get_runinfo.R')
+# Indicate this is a HPCC run
+runClass<- 'HPCC'
 
 # load the required libraries
 source('processes/loadLibs.R')
-
 
 # load the list of management procedures
 source('processes/generateMP.R')
@@ -71,44 +67,16 @@ source('processes/generateMP.R')
 # Model structure (includes loading in temperature data)
 source('processes/genAnnStructure.R')
 
-# Load specific recruitment functions (these are a list for simulation-based 
+# Load specific recruitment functions
 # approach to deriving Bproxy reference points
 source('processes/Rfun_BmsySim.R')
 
 # Load default ACLs and fractions of the ACL that are allocated to the catch share fishery
 source('processes/genBaselineACLs.R')
 
-#Input data location for economic models
-econdatapath <- 'data/data_processed/econ'
-
-                            # Reults folders for economic models. Create them if necessary
-econ_results_location<-"results/econ/raw"
-dir.create('results/econ/raw', showWarnings = FALSE, recursive=TRUE)
+#Create directories for results 
 dir.create('results/sim', showWarnings = FALSE, recursive=TRUE)
 dir.create('results/fig', showWarnings = FALSE, recursive=TRUE)
-
-# If running on a local machine, more than one repetition should be
-# used otherwise some plotting functions (e.g., boxplots) will fail
-if(runClass == 'Local' && nrep == 1){
-  # stop('For local runs please set nrep > 1 (in set_om_parameters.R)',
-       # call.=FALSE)
-  nrep <- 2
-  warning('local run: nrep (in set_om_parameters.R) set to 2 to avoid errors')
-}
-
-# # Warning regarding Bmsy calculation hindcasts
-# tst <- !is.na(mproc$BREF_TYP) & 
-#        mproc$BREF_TYP == 'SIM' &
-#        mproc$RFUN_NM == 'hindcastMean' &
-#        mproc$BREF_PAR0 > ncaayear
-# if(any(tst)){
-#   msg <- paste0('Number of years in hindcast that you specified (', 
-#                 mproc$BREF_PAR0[tst], ') is larger than the number of years in', 
-#                 ' the moving window of the stock assessment model (', 
-#                 ncaayear, '). Number of years used in the hindcast changed to ', 
-#                 ncaayear, '.\n')
-#   warning(msg)
-# }
 
 # Error regarding bad combinations of mproc
 tst <- mproc$BREF_TYP == 'RSSBR' & mproc$RFUN_NM == 'forecast'
@@ -127,7 +95,6 @@ if(!all(inTest)){
              'of your break years is outside the possible range.'))
 }
 
-
 # get all the necessary containers for the simulation
 stockCont <- list()
 for(i in 1:nstock){
@@ -141,12 +108,6 @@ for(i in 1:nstock){
 }
 names(stock) <- stockNames
 
-
-# Set up a container dataframe for Fleet-level Economic Results
-# These are simulation specific so they are stored in a single dataframe
-source('processes/genEcon_Containers.R')
-
-
 # Ensure that there are enough initial data points to support the
 # index generation at the beginning of the model.
 mxModYrs <- max(sapply(stock, '[[', 'ncaayear'))
@@ -157,20 +118,4 @@ if(fyear < mxModYrs){
              'each stock'))
 }
 
-if (platform == 'Linux'){
-  if(!file.exists('../EXE/ASAP3.EXE')){
-    stop(paste('ASAP3.EXE should be loaded in a directory EXE in the parent',
-               'directory of groundfish-MSE -- i.e., you need an EXE',
-               'directory in the same directory as Rlib and EXE must contain',
-               'ASAP3.EXE', sep='\n'))
-  }
-  rand <- sample(1:10000, 1)
-  tempwd <- getwd()
-  rundir <- paste(tempwd, "/assessment/ASAP/Run", '_', rand, sep = "")
-  dir.create(path = rundir)
-  from.path <- paste('../EXE/ASAP3.EXE', sep = "")
-  to.path   <- paste(rundir, sep= "")
-  file.copy(from = from.path, to = to.path)
-  
-}
 
