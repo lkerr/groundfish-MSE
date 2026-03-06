@@ -6,13 +6,8 @@
 ffiles <- list.files(path='functions/', pattern="^.*\\.R$",full.names=TRUE, recursive=TRUE)
 invisible(sapply(ffiles, source))
 
-# Get the result directory path
-source('processes/runPre.R')
-source('processes/identifyResultDirectory.R')
-
 # Load the overall operating model parameters
 source('modelParameters/set_om_parameters_global.R')
-source('modelParameters/wham_settings.R')
 
 # get the operating model parameters -- first search the space for every
 # version of the set_stock_parameters_xx files and put them in this list.
@@ -62,21 +57,21 @@ runClass<- 'HPCC'
 source('processes/loadLibs.R')
 
 # load the list of management procedures
-source('processes/generateMP.R')
+mproc <- read.csv(file.path("modelParameters",mprocfile), header=TRUE,
+                  stringsAsFactors=FALSE)
+cat('***Reminder: you are reading management procedures from file', mprocfile,'***\n') 
 
-# Model structure (includes loading in temperature data)
-source('processes/genAnnStructure.R')
+# Model structure 
+fmyearIdx <- 175
+nyear <- 195
+yrs <- 1851:2045
 
 # Load specific recruitment functions
 # approach to deriving Bproxy reference points
 source('processes/Rfun_BmsySim.R')
 
-# Load default ACLs and fractions of the ACL that are allocated to the catch share fishery
-source('processes/genBaselineACLs.R')
-
 #Create directories for results 
 dir.create('results/sim', showWarnings = FALSE, recursive=TRUE)
-dir.create('results/fig', showWarnings = FALSE, recursive=TRUE)
 
 # Error regarding bad combinations of mproc
 tst <- mproc$BREF_TYP == 'RSSBR' & mproc$RFUN_NM == 'forecast'
@@ -86,13 +81,6 @@ if(!all(is.na(tst)) && any(tst & !is.na(tst))){
              'odd to use future SSB in the calculation of R for R*SSBR',
              'but then not include SSB projections when thinking about what',
              'the reference point should actually be.'))
-}
-
-# Error regarding number of years.
-inTest <- (plotBrkYrs + fmyearIdx) %in% (fmyearIdx+1):nyear
-if(!all(inTest)){
-  stop(paste('check plotBrkYrs in set_om_parameters_global. One or more',
-             'of your break years is outside the possible range.'))
 }
 
 # get all the necessary containers for the simulation
@@ -117,5 +105,4 @@ if(fyear < mxModYrs){
              'in the global parameters file is less than ncaayear for',
              'each stock'))
 }
-
 
