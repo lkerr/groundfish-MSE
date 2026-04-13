@@ -106,22 +106,29 @@ get_WHAM <- function(stock,...){
       # Recruitment CV
       wham_dat_file[[1]]$dat$recruit_cv <- rep(pe_RSA, N_rows)
 
-      #catch CV
-      wham_dat_file[[1]]$dat$catch_cv <- matrix(0.05, nrow = N_rows, 1)
+      #catch CV and catch effective sample size
+      if(mproc[m,'CatchOEMis'] == 'TRUE'){
+        wham_dat_file[[1]]$dat$catch_cv <- matrix(oe_sumCW_EM, nrow = N_rows, 1)
+        wham_dat_file[[1]]$dat$catch_Neff <- matrix(oe_paaCN_EM, nrow = N_rows, 1)
+        
+      }
+      else if(mproc[m,'CatchOEMis'] == 'FALSE'){
+        wham_dat_file[[1]]$dat$catch_cv <- matrix(oe_sumCW, nrow = N_rows, 1)
+        wham_dat_file[[1]]$dat$catch_Neff <- matrix(oe_paaCN, nrow = N_rows, 1)
+        
+      }
       
       #discard CV - need additional years even if not using
       wham_dat_file[[1]]$dat$discard_cv <- matrix(0, nrow = N_rows, 1)
       
-      #catch effective sample size
-      wham_dat_file[[1]]$dat$catch_Neff <- matrix(oe_paaCN, nrow = N_rows, 1)
-
 
       #discard ESS (even if not using)
       wham_dat_file[[1]]$dat$discard_Neff <- matrix(0, nrow = N_rows, 1)
       
      # initN <- get_init(type = initN_type, par = initN_par)
       initN <- c(41644, 4141, 3182, 2048, 849, 286, 116, 32, 36) ### Try different initial numbers-at-age, these are from OM in yidx 131
-
+      initN <- 1000 * initN
+      
       wham_dat_file[[1]]$dat$N1_ini<-initN
 
       # wham_dat_file[[1]]$dat$SR_scalar_ini<-initN[1]
