@@ -208,7 +208,8 @@ get_containers <- function(stockPar){
       R=c(rep(999,nyear)),
       M=c(rep(999,nyear)),
       MSEyr=c(rep(999,nyear)))),
-    assess_st_yr=999
+    assess_st_yr=999,
+    NAA_deviations = NA
   )
   
   out$hcr <- rep_year_container

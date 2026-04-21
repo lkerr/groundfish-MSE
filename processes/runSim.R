@@ -65,7 +65,7 @@ for(r in 1:nrep){
     #### get historic assessment info if there is any
     if (histAssess == TRUE) {
       for (i in 1:nstock){
-      assess_vals <- get_HistAssess(stock = stock[[i]])
+      assess_vals <- get_HistAssess(stock = stock[[i]]) ### says for i in 1:nstock, but it probably doesn't work for multiple stocks... Looks like it only keeps historical values for the last stock.
       }
     }
 

@@ -54,7 +54,7 @@ get_J1Updates <- function(stock){
 
       # option to overwrite calculated values with historic assessment input values for each year
     if (histAssess == TRUE) {
-      for(i in 1:nstock){
+      for(i in 1:nstock){ ## i doesn't appear to index anything in this code chunk or nested functions. i.e., there is only one set of historical assessment values regardless of nstocks
         if(y %in% assess_vals$assessdat$MSEyr){
         rep_assess <- get_AssessVals()
         F_full[y] <- rep_assess$fish_mort
@@ -64,19 +64,32 @@ get_J1Updates <- function(stock){
     }
   }
 
+    # Add NAA deviations if in historical period and they exist. Otherwise, assume 0.
+    devs <- if (histAssess == F |
+                is.null(assess_vals$NAA_deviations) |
+                !y %in% assess_vals$assessdat$MSEyr){rep(0, nage)} else {
+                  
+                  assess_vals$NAA_deviations %>%
+                    dplyr::filter(MSEyr == y) %>% pull(re)
+                }
+    
     # calculate what the Jan 1 population numbers are for year y, which
     # depend on the numbers and mortality rate in the previous year and
-    # on the recruitment this year
-    J1N[y,] <- get_J1Ny(J1Ny0=J1N[y-1,], Zy0=Z[y-1,], R[y])
+    # on the recruitment and naa deviations in this year
+    J1N[y,] <- get_J1Ny(J1Ny0=J1N[y-1,], Zy0=Z[y-1,], R[y], devs = devs)
 
     # calculate the predicted catch in year y, the catch weight and the
     # proportions of catch numbers-at-age. Add small number in case F=0
     CN[y,] <- get_catch(F_full=F_full[y], M=natM[y],
                         N=J1N[y,], selC=slxC[y,]) + 1e-3
 
+    
+    
     # get Z for the current year
     Z[y,] <- F_full[y]*slxC[y,] + natM[y]
 
+    
+    
     # calculate SSB for the current year AEW
 
     SSB_cur[y] <- sum(J1N[y,] * mat[y,] * waa[y,])
