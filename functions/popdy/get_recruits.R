@@ -91,8 +91,12 @@ get_recruits <- function(type, type2, par, SSB, TAnom_y, pe_R, block,
   if(type == 'BH'){
  
     # Expected value
-    Rhat <- (par['a']*SSB)/(1+(par['b']*SSB))*exp(par['g']*TAnom_y)
-    Rhat <- Rhat*1000
+#    Rhat <- (par['a']*SSB)/(1+(par['b']*SSB))*exp(par['g']*TAnom_y) # old formulation with temperature on the entire denominator
+# New formulation with temperature modifying either the alpha or beta parameter
+     Rhat <- (par['a']*SSB*exp(par['f']*TAnom_y))/(1+(par['b']*SSB*exp(par['g']*TAnom_y)))
+    
+    
+    # Rhat <- Rhat*1000
 
   }
     

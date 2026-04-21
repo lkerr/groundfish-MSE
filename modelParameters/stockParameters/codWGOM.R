@@ -3,7 +3,7 @@
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.
 
-burnFmsyScalar <- 4 #GOM cod
+burnFmsyScalar <- 3.5 #GOM cod
 burnFsd <- 0.3 # GOM cod
 burnFsd <- 0  # Test removing stochasticity on F in the Burn-in
 
@@ -72,11 +72,15 @@ selC_typ <- 'input'
 
 #### Recruitment Options ####
 ###For BH SR with relationship with temperature###
+# f parameter is temperature effect placed on alpha in the numerator
+# g parameter is temperature effect placed on beta parameter in the denominator
 R_typ <- 'BH'
-Rpar<-c(a=1.24,b=0.00005679,g=0)
+Rpar<-c(a=1.24,b=0.00005679, f =0, g=0) # no temperature effect
 
 # WGOM BH with temp:
-Rpar<-c(a = 0.7074441, b = 0.00002080295, g = -0.778952)
+# only f or g should be used, depending on which BH parameter temperature modifies
+Rpar<-c(a = 578, b = 0.00000922, f = 0,  g = 1.10) # MOM6 SST anomaly on the beta parameter in denominator
+
 
 R_mis<-FALSE # If BRPs and projections assume a wrong SRR, set to TRUE.
 # these are place holders, because R_mis = FALSE
@@ -134,7 +138,7 @@ oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 0.25 # cannot be zero #0.5 for Beverton Holt
+pe_R <- 0.25 # cannot be zero #0.77 for is the sigma from lognormal BH w/MOM6
 pe_RSA<- 0.5 #recruitment process error assumed in the stock assessment
 pe_IA <- 0.18
 
