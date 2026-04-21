@@ -4,10 +4,10 @@
 get_RiskPolicy <- function(stockEnv){
   weighting <- "NEFMC"
   
-  nefmc <- c(0.17, 0.16, 0.15, 0.15, 0.1, 0.17, 0.1)
-  uniform <- rep(1/7, 7)
+  nefmc <- c(0.23, 0.21, 0.21, 0.13, 0.23)
+  uniform <- rep(1/5, 5)
 
-  weights <- data.frame(factor = c("ssb", "recruit", "assessment", "climate", "condition", "commercial", "recreational"),
+  weights <- data.frame(factor = c("ssb", "recruit", "climate", "commercial", "recreational"),
                         weight = if(weighting == "uniform"){uniform}else{nefmc})
   
   res <- stockEnv$res
@@ -30,8 +30,8 @@ get_RiskPolicy <- function(stockEnv){
   low <- table(tail(r_group, 6))["Low"]==6
   
   em_cor <- s %in% c("codWGOM", "Haddock")  ## Hard code stocks for Recruitment = 0 due to trends in projections
-#  em_cor <- F     ## Hard code to allow recruitment trends to drive the factor score, regardless of stock/EM specs
-  
+  em_cor <- F     ## Hard code to allow recruitment trends to drive the factor score, regardless of stock/EM specs
+  ## For spring 2026 version of Risk Policy, EM cor should always remain F. Left in the option of using it for future explorations.
   
   ### Collect in a dataframe
   rp <- data.frame(stock = s,
@@ -49,45 +49,34 @@ get_RiskPolicy <- function(stockEnv){
   rp <- rp %>% mutate(
     
     # SSB scoring
-    rp_ssb = case_when(ssb_ratio > 1.5 ~ -4,
-                       between(ssb_ratio, 1, 1.5) ~ -2,
+    rp_ssb = case_when(ssb_ratio > 1.5 ~ 4,
+                       between(ssb_ratio, 1, 1.5) ~ 2,
                        between(ssb_ratio, 0.75, 1) ~ 0,
-                       between(ssb_ratio, 0.5, 0.75) ~ 2,
-                       ssb_ratio < 0.5 ~ 4,
+                       between(ssb_ratio, 0.5, 0.75) ~ -2,
+                       ssb_ratio < 0.5 ~ -4,
                        .default = NA),
     
     # Recruitment scoring
-    rp_recruit = case_when(r_Nhigh>2 ~ -4,
-                           r_Nhigh == 2 ~ -2,
-                           (r_Nlow >3 ) & low_r == F  ~ 2,
-                           low_r == T ~ 4,
+    rp_recruit = case_when(r_Nhigh>2 ~ 4,
+                           r_Nhigh == 2 ~ 2,
+                           (r_Nlow >3 ) & low_r == F  ~ -2,
+                           low_r == T ~ -4,
                            .default = 0),
     
     rp_recruit = case_when(em_cor == T ~ 0,
                            .default = rp_recruit),
     
     ##### Static factors     
-    # Assessment type scoring
-    rp_assessment = case_when(stock == "codWGOM" ~ 0,
-                              stock == "haddockGOM" ~ 0,
-                              stock == "witch" ~ 3,
-                              .default = NA),
 
     # Climate vulnerability scoring, fixed at contemporary score (Hare et al)
-    rp_climate = case_when(stock == "codWGOM" ~ 2,
-                           stock == "haddockGOM" ~ 1,
-                           stock == "witch" ~ 4,
+    rp_climate = case_when(stock == "codWGOM" ~ -2,
+                           stock == "haddockGOM" ~ -1,
+                           stock == "witch" ~ -4,
                            .default = NA),
     
-    # Fish condition scoring, fixed at demonstrated contemporary score (RP scoring tech report)
-    rp_condition = case_when(stock == "codWGOM" ~ 0,
-                             stock == "haddockGOM" ~ 0,
-                             stock == "witch" ~ 1,
-                             .default = NA),
-    
     # Fishery outlook scoring, both fixed at 0
-    rp_commercial = 0, # commercial fishery factor fixed at score of 0
-    rp_recreational = 0 # commercial fishery factor fixed at score of 0
+    rp_commercial = 2, # commercial fishery factor fixed at score of 2 (intermediate)
+    rp_recreational = 2 # recreational fishery factor fixed at score of 2 (intermediate)
     )
   
   
@@ -98,20 +87,22 @@ get_RiskPolicy <- function(stockEnv){
     mutate(weighted_score = score * weight) %>% 
     pull(weighted_score) %>% sum()
   
-  logistic_out <- 1/(1+exp(-z))
+  logistic_out <- 0.5 + (0.5/(1+exp(z)))     # Full sigmoid shape constrained between 0.5 and 1, aligned with revised directionality of factor scoring 
+  
   
   ##### Calculate percent of Fmsy for Risk Policy integrated control rules
-  lower<- 0.5+0.5/3
-  upper <- 1-0.5/3
   
-
+  # Define risk tolerance tiers. Currently equal thirds of the 0.5 to 1 recommended probability space.
+  HighRisk<- 0.5+0.5/3
+  LowRisk <- 1-0.5/3
   
   rp <- rp %>% mutate(z = z, logistic_out = logistic_out,
-                      rec_prob = ifelse(logistic_out<0.5, 0.5, logistic_out),
-                      prop_dynamic = 1-(rec_prob-0.5),
-                      prop_tiered = case_when(rec_prob<lower ~ 1,
-                                              between(rec_prob,lower, upper) ~ 0.75,
-                                              rec_prob>upper ~ 0.5))
+                      rec_prob = ifelse(logistic_out<0.5, 0.5, logistic_out),   # floor of 0.5 for recommended probabilities
+                      prop_dynamic = 1-(rec_prob-0.5),                          # linear translation between recommended probability and proportion of Fmsy
+                      prop_tiered = case_when(rec_prob<HighRisk ~ 0.92,            # Tiered approach, proportions defined as the mean within each tier if using the dynamic approach
+                                              between(rec_prob, HighRisk, LowRisk) ~ 0.75,
+                                              rec_prob>LowRisk ~ 0.58),
+                      pstar_rp_dynamic = 1-rec_prob)
   
   # if(HCR == "dynamic"){prop <- rp %>% pull(prop_dynamic)}
   # if(HCR == "tiered"){prop <- rp %>% pull(prop_tiered)}
