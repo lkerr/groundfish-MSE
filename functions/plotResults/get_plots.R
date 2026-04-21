@@ -25,7 +25,8 @@ get_plots <- function(x, stockEnv, dirIn, dirOut){
     # yrs <- (mxyear - length(temp)+1):mxyear
     
     # Year before the management period to start the plots
-    py0 <- 37 #5
+    # py0 <- 37 #5
+    py0 <- 43 # updated for more recent assessments
     
     # Index for years that will be plotted for trajectories and such
     pyidx <- (fmyearIdx-py0+1):length(yrs)

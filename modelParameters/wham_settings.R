@@ -13,7 +13,26 @@ wham_settings$codGB <- list(model_name = "codGB")
 # GOM cod example using all default WHAM settings
 wham_settings$codGOM <- list(model_name = "codGOM")
 
-wham_settings$codWGOM <- list(model_name = "codWGOM")
+
+### need to update to pull selectivity from stock file !!!!!
+wham_settings$codWGOM <- list(model_name = "codWGOM",
+                              
+                              selectivity = list(model=c("age-specific","age-specific"), # selectivity for catch, index
+                                               initial_pars=list(c(0.042904915, 0.259597199, 0.540257864, 0.805060898, 1, 1, 1, 0.696886527, 0.468064162),
+                                                                 c(0.105426149, 0.356746855, 0.352910758, 0.353555439, 0.441094096, 0.524837583, 0.691394876, 1, 1)),
+                                               fix_pars=list(c(5:7),c(8:9))),
+                              
+                              age_comp = 'dir-mult',
+                          
+                              recruit_model = 2,
+                              
+                              NAA_re = list(sigma = "rec", cor = "ar1_y"),
+                              
+                              basic_info = list(fracyr_SSB = 0, fracyr_indices = 0.5)
+                              
+                              #index_info = list(fracyr_indices = 0.5)
+                              
+                              )
 
 # haddockGB
 # # Setting for the SDM-q linked model

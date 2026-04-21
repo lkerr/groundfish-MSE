@@ -106,22 +106,29 @@ get_WHAM <- function(stock,...){
       # Recruitment CV
       wham_dat_file[[1]]$dat$recruit_cv <- rep(pe_RSA, N_rows)
 
-      #catch CV
-      wham_dat_file[[1]]$dat$catch_cv <- matrix(0.05, nrow = N_rows, 1)
+      #catch CV and catch effective sample size
+      if(mproc[m,'CatchOEMis'] == 'TRUE'){
+        wham_dat_file[[1]]$dat$catch_cv <- matrix(oe_sumCW_EM, nrow = N_rows, 1)
+        wham_dat_file[[1]]$dat$catch_Neff <- matrix(oe_paaCN_EM, nrow = N_rows, 1)
+        
+      }
+      else if(mproc[m,'CatchOEMis'] == 'FALSE'){
+        wham_dat_file[[1]]$dat$catch_cv <- matrix(oe_sumCW, nrow = N_rows, 1)
+        wham_dat_file[[1]]$dat$catch_Neff <- matrix(oe_paaCN, nrow = N_rows, 1)
+        
+      }
       
       #discard CV - need additional years even if not using
       wham_dat_file[[1]]$dat$discard_cv <- matrix(0, nrow = N_rows, 1)
       
-      #catch effective sample size
-      wham_dat_file[[1]]$dat$catch_Neff <- matrix(oe_paaCN, nrow = N_rows, 1)
-
 
       #discard ESS (even if not using)
       wham_dat_file[[1]]$dat$discard_Neff <- matrix(0, nrow = N_rows, 1)
       
      # initN <- get_init(type = initN_type, par = initN_par)
       initN <- c(41644, 4141, 3182, 2048, 849, 286, 116, 32, 36) ### Try different initial numbers-at-age, these are from OM in yidx 131
-
+      initN <- 1000 * initN
+      
       wham_dat_file[[1]]$dat$N1_ini<-initN
 
       # wham_dat_file[[1]]$dat$SR_scalar_ini<-initN[1]
@@ -139,109 +146,35 @@ get_WHAM <- function(stock,...){
       wham_dat_file[[1]]$dat$R_avg_start <- styear
       wham_dat_file[[1]]$dat$R_avg_end <- endyear - 10
 
-   # browser()
-      if (stock$stockName=='codWGOM'){
-        input <- prepare_wham_input(asap3 = wham_dat_file, 
-                                    selectivity=list(model=rep("age-specific",2),
-                                                     initial_pars=list(c(selC),c(selI)),
-                                                     fix_pars=list(c(5:7),c(8:9))),
-                                    age_comp='dir-mult',
-                                    recruit_model=3,
-                                    model_name=stock_wham_settings$model_name)
-      }
-      else if(stock$stockName=='codGOM') {
-        input <- prepare_wham_input(asap3 = wham_dat_file, 
-                                    selectivity=list(model=rep("age-specific",2),
-                                                     initial_pars=list(c(selC),c(selI)),
-                                                     fix_pars=list(c(6:9),c(6:9))),
-                                    age_comp='multinomial',
-                                    recruit_model=2,
-                                    model_name=stock_wham_settings$model_name)
-      }
-      else {
-        input <- prepare_wham_input(asap3 = wham_dat_file, 
-                                    selectivity=list(model=rep("age-specific",2),
-                                                     initial_pars=list(c(selC),c(selI)),
-                                                     fix_pars=list(c(6:9),c(6:9))),
-                                    age_comp='multinomial',
-                                    recruit_model=2,
-                                    model_name=stock_wham_settings$model_name)
-      }
-      # input <- prepare_wham_input(asap3 = wham_dat_file[[1]], selectivity=list(model=rep("logistic",2),
-      #                                                                     initial_pars=list(c(2,0.3),c(2,0.3))),
-      #                                                                     model_name=stock_wham_settings$model_name)
-# need to set up a wham-settings object to pull these from - make it a list so that only list objects that matter get added - only source the wham-settings object once at the start of the file & only if using WHAM
-    }
-
     
-    #### Test very fixed and well-specified inputs for WGOM
-    if(stock$stockName=='codWGOM'){
-      fleet_selmodels <- "age-specific"
-      index_selmodels <- "age-specific"
       
-      
-      ##### Initial values used by research track assessment models
-      # fleet_selinitpars <- list(c(0.5, 0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 0.5, 0.5))
-      # index_selinitpars <- list(c(rep(0.5, 7), rep(1, 2)))
-      
-
-      
-      ##### Setting initial values to estimates from management track assessment models (identical to OM)
-      ### Assume commercial for fleet, and fall for index
-      # fleet_selinitpars <- list(c(0.015, 0.147, 0.402, 0.746, 1, 1, 1, 0.738, 0.45))
-      # index_selinitpars <- list(c(0.227, 0.373, 0.291, 0.254, 0.291, 0.300, 0.384, 1, 1))
-      
-  
-      
-      fleet_selinitpars <- list(selC)
-      index_selinitpars <- list(selI)
-      
-      
-      # Fix all selectivity parameters for fleet and index for testing
-       # fleet_selfixpars <- list(c(1:9))
-       # index_selfixpars <- list(c(1:9))
-      
-        fleet_selfixpars <- list(c(5:7)) 
+    # calls wham paramaterization set in wham_settings.R  
+    input <- do.call(prepare_wham_input, c(list(asap3 = wham_dat_file), stock_wham_settings)) 
+    
+    
        
-        index_selfixpars <- list(6:9)
-       # fleet_selfixpars <- list(c(6:9)) 
+    # for the BRPs in the OM, the length of the R time series is set by BREF_PAR0
+    # if BREF_PAR0 == 200 the whole time series is used, if not an abbreviated timeseries is used
+    # to have equal BRP estimation techniques:
+    
+    if(mproc[m,'BREF_PAR0'] < 200){
       
-      age_comp <- NULL
-      
-      re <- list(sigma = "rec", cor = "ar1_y")
-      # re <- list(NULL)
-      
-      selmodel <- c(fleet_selmodels, index_selmodels)
-      selinitpars <- c(fleet_selinitpars,index_selinitpars)
-      selfixpars <- c(fleet_selfixpars,index_selfixpars)
-      
-      input <- prepare_wham_input(wham_dat_file,
-                                  recruit_model = 2, # 3=BH, default=random about mean
-                                  selectivity = list(model = selmodel,
-                                                     initial_pars = selinitpars,
-                                                     fix_pars = selfixpars),
-                                  age_comp = age_comp,
-                                  NAA_re = re,
-                                  basic_info = list(fracyr_SSB = 0, fracyr_indices = 0.5)
-                                  
-      )
-      
-
-      
-      
-      # input$map$logit_q <- as.factor(matrix(data=NA, nrow =1, ncol = 1)) # Fix catchability at initial values (OM values, which are 0.0001 and set in dat file)
-      input$map$log_N1 <- as.factor(matrix(data=rep(NA,9),nrow=1,ncol=9)) # Fix starting NAA at initial values (OM values)
-      
-      # Assert that there is low, but not zero, observation error. This reduces bias in EMs for GB and WGOM
-      # input$data$agg_catch_sigma[] <- 0.01
-      # input$data$agg_index_sigma[] <- 0.01
-      # input$data$index_Neff[] <- 10000
-      # input$data$catch_Neff[] <- 10000
+      input$basic_info <- c(stock_wham_settings$basic_info, 
+                            list(XSPR_R_avg_yrs = tail(1:wham_dat_file[[1]]$dat$n_years, mproc[m,'BREF_PAR0'])))
       
     }
     
+    #### retaining fixed NAA to start, come back to this!!!!! 
     
+    if (stock$stockName=='codWGOM'){
+      # Fix starting NAA at initial values (OM values)
+      
+      input$map$log_N1 <- as.factor(matrix(data=rep(NA,9),nrow=1,ncol=9))
+      
+    }
+    }
     
+ 
     
     
     # Fit wham model
@@ -249,9 +182,11 @@ get_WHAM <- function(stock,...){
     whamEst <- fit_wham(input, do.osa=F, MakeADFun.silent = TRUE, do.retro = TRUE,
                         n.peels = 3, do.check=TRUE)
 
+    
+    
     # Setting do.osa = TRUE results in "Error in getUserDLL() Multiple TMB models loaded" which is likely an issue with what model TMB is used by make_osa_residuals() - make_osa_resiudals() probably calls TMB::MakeADFun without specifying DLL = "wham"
     #save results from wham
-    # browser()
+    
     saveRDS(whamEst, file = paste(ResultDirectory, "/WHAM_", stockName,'_', r, '_', y, '.rdat', sep = '')) #??? probably don't want to save this, save a subset of results 
 
     
