@@ -17,7 +17,7 @@ summarize_results <- function(omvalGlobal, whamGlobal, hcr, stamp, dir){
   # Remove the "estimated" containers becuase they have a different structure
   len <- sapply(omvalGlobal[[s]], dim) %>% sapply(length)
   om <- omvalGlobal[[s]][len==3]
-  
+
   # Restructure Operating model trajectories for N, SSB, R, F_Full, 
   om.df <- reshape2::melt(om) %>% 
     mutate(across(starts_with("Var"), ~ as.numeric(gsub(".*?([0-9]+).*", "\\1", .x)))) %>%
@@ -36,6 +36,10 @@ summarize_results <- function(omvalGlobal, whamGlobal, hcr, stamp, dir){
   
   ########################################## Load and look at EM results
   
+  # if there is a lag, terminal estimates are 2 years behind when the assessment is run
+  # with no lag they are one year behind when the assessment is run
+  terminal_lag <- if(mproc[1,'Lag']){2}else{1} #### Need to make this more robust (pull estimate year directly from wham model). Currently only works if lag is the same across all mproc rows
+  
   ################### Trajectories
   ##### Function for matrics that estimate a single value in each year (e.g., SSB, F)
   ##### Converts inner lists into a dataframe
@@ -43,7 +47,7 @@ summarize_results <- function(omvalGlobal, whamGlobal, hcr, stamp, dir){
     val <- if(length(dim(x)) == 0){x} else{x[,1]}
     data.frame(val = val) %>% 
       mutate(year_i_assessment = as.numeric(str_replace(y, "year", "")),
-             year_i_estimate = year_i_assessment + row_number() - length(val) - 1,
+             year_i_estimate = year_i_assessment + row_number() - length(val) - terminal_lag,
              .before = everything())}
   
   ##### Apply to SSB, F, R, Catch
