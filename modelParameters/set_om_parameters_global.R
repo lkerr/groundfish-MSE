@@ -17,8 +17,8 @@ mprocfile<-"mproc.csv"
 # stockExclude variable. Do not include the extension.R. For example,
 # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
-# Available stocks: 'haddockGB', 'codGB', 'pollock', 'yellowtailflounderGB', 'codWGOM'
-stockExclude <- c("haddockGB" , 'codGOM', 'codGB', 'pollock', 'yellowtailflounderGB')
+# Available stocks: , 'haddockGB', 'codGB', 'pollock', 'yellowtailflounderGB', 'codWGOM', 'haddockGOM'
+stockExclude <- c("haddockGB" , 'codGOM', 'codGB', 'pollock', 'yellowtailflounderGB', "haddockGOM")
 
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data
@@ -41,10 +41,14 @@ fmyear <- 2024 # 2025 update
 # years in the assessment model and greater than the first age in the model.
 #fyear <- 38 # original values
 fyear <- 44 # 2025 update
+fyear <- 48 # increased for haddock
+
 
 # maximum year predicted into the future
 #mxyear <- 2040 # original values
 mxyear <- 2050 # 2025 update
+mxyear <- fmyear+5 # testing
+mxyear <- fmyear+30 # 30 year projection
 
 #### Burn-in parameters ####
 
@@ -136,6 +140,7 @@ production_vars_post=c("log_crew","log_trip_days","primary","secondary", "log_tr
 # example, c(10, 20) would result in plots from 0-10 years after the mgmnt
 # period begins, 10-20 years and 20 years to the end of the series.
 plotBrkYrs <- c(5, 10, 15)
+plotBrkYrs <- c(1)
 
 # Which sets of plots should be created? Set these objects to T/F
 
