@@ -9,7 +9,7 @@ source('processes/runSetup.R')
 
 
 # Load in the simulation results
-fl <- list.files(file.path(ResultDirectory, 'sim'), full.names=TRUE)
+fl <- list.files(file.path(ResultDirectory, 'sim'), pattern = "omvalGlobal", full.names=TRUE)
 
 # load all the functions
 ffiles <- list.files(path='functions/', full.names=TRUE, recursive=TRUE)
