@@ -13,7 +13,7 @@ source('processes/identifyResultDirectory.R')
 # Load the overall operating model parameters
 source('modelParameters/set_om_parameters_global.R')
 
-source('modelParameters/wham_settings.R')
+
 
 # get the operating model parameters -- first search the space for every
 # version of the set_stock_parameters_xx files and put them in this list.
@@ -55,6 +55,7 @@ for(i in 1:nstock){
 # Get the names of each stock (stocks must follow naming convention)
 stockNames <- unname(sapply(fileList, function(x) 
                 strsplit(x, 'stockParameters/|\\.R')[[1]][2]))
+
 
 
 
@@ -175,3 +176,5 @@ if (platform == 'Linux'){
   
 }
 
+#### Specify WHAM settings for each stock. MOved to end so that we can pull from stock info
+source('modelParameters/wham_settings.R')
