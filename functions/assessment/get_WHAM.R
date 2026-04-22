@@ -129,6 +129,9 @@ get_WHAM <- function(stock,...){
       initN <- c(41644, 4141, 3182, 2048, 849, 286, 116, 32, 36) ### Try different initial numbers-at-age, these are from OM in yidx 131
       initN <- 1000 * initN
       
+      # pull true starting numbers-at-age from OM
+      initN <- stock$J1N[styear,]
+      
       wham_dat_file[[1]]$dat$N1_ini<-initN
 
       # wham_dat_file[[1]]$dat$SR_scalar_ini<-initN[1]
