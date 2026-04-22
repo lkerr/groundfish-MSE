@@ -55,7 +55,6 @@ tAnomOut <- cbind(cmip_base,
                   TANOM_STD = anomStd)
 
 
-write.csv(tAnomOut, 'data/data_processed/tAnomOut.csv', row.names = FALSE)
 
 
 # Determine the actual years based on the available temperature data
@@ -80,21 +79,19 @@ if(any(str_detect(checkfiles, stockNames))){
   MOM6 <- data.frame(year = yrs_temp) %>% 
     left_join(
       read.csv(checkfiles[str_detect(checkfiles, stockNames)]) %>%
-        dplyr::filter(SSP == "SSP245",
-                      Metric == "SST") %>% 
-        select(year = Year, temp = Mean_Temperature, Tanom = Temp_Anomaly)
+        dplyr::filter(SSP == "SSP245") %>% 
+        select(year, temp = temp, Tanom = Temp_Anomaly)
       )
 
+  ### Fill NAs with the mean of first 20  non-NA values
+  MOM6$temp[is.na(MOM6$temp)] <- MOM6 %>% drop_na() %>% head(n= 20) %>% pull(temp) %>% mean()
+  MOM6$Tanom[is.na(MOM6$Tanom)] <- MOM6 %>% drop_na() %>% head(n= 20) %>% pull(Tanom) %>% mean()
+  
+  
   temp <- MOM6$temp
   Tanom <- MOM6$Tanom
   
-  ### Fill NAs with the mean of first 10  non-NA values
-  temp[is.na(temp)] <- MOM6 %>% drop_na() %>% head(n= 20) %>% pull(temp) %>% mean()
-  Tanom[is.na(Tanom)] <- MOM6 %>% drop_na() %>% head(n= 20) %>% pull(Tanom) %>% mean()
+  tAnomOut <- MOM6
 }
 
-
-
-
-
-
+write.csv(tAnomOut, 'data/data_processed/tAnomOut.csv', row.names = FALSE)
