@@ -79,7 +79,7 @@ Rpar<-c(a=1.24,b=0.00005679, f =0, g=0) # no temperature effect
 
 # WGOM BH with temp:
 # only f or g should be used, depending on which BH parameter temperature modifies
-Rpar<-c(a = 578, b = 0.00000922, f = 0,  g = 1.10) # MOM6 SST anomaly on the beta parameter in denominator
+Rpar<-c(a = 1366.812, b = 0.0001553159, f = 0,  g = 1.310604) # du Pontavice BT anomaly on the beta parameter in denominator
 
 
 R_mis<-FALSE # If BRPs and projections assume a wrong SRR, set to TRUE.
@@ -138,7 +138,7 @@ oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 0.25 # cannot be zero #0.77 for is the sigma from lognormal BH w/MOM6
+pe_R <- 0.25 # cannot be zero # 0.68 is the sigma from lognormal BH w/du Pontavice BT anomaly on Beta
 pe_RSA<- 0.5 #recruitment process error assumed in the stock assessment
 pe_IA <- 0.18
 
