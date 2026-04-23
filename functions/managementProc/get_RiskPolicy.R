@@ -3,6 +3,8 @@
 
 get_RiskPolicy <- function(stockEnv){
   weighting <- "NEFMC"
+  fishery <- 2
+  
   
   nefmc <- c(0.23, 0.21, 0.21, 0.13, 0.23)
   uniform <- rep(1/5, 5)
@@ -74,9 +76,9 @@ get_RiskPolicy <- function(stockEnv){
                            stock == "witch" ~ -4,
                            .default = NA),
     
-    # Fishery outlook scoring, both fixed at 0
-    rp_commercial = 2, # commercial fishery factor fixed at score of 2 (intermediate)
-    rp_recreational = 2 # recreational fishery factor fixed at score of 2 (intermediate)
+    # Fishery outlook scoring, both fixed
+    rp_commercial = fishery, # commercial fishery factor fixed at score of 2 (intermediate)
+    rp_recreational = fishery # recreational fishery factor fixed at score of 2 (intermediate)
     )
   
   
