@@ -131,7 +131,7 @@ oe_paaCN_typ <- 'multinomial'
 oe_sumIN <- 0.25
 oe_sumIN_typ <- 'lognorm'
 
-oe_paaIN <- 100 #15 or 60 across surveys?
+oe_paaIN <- 150 #15 or 60 across surveys?
 oe_paaIN_typ <- 'multinomial'
 
 oe_effort <- 0.01
