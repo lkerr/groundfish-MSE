@@ -163,6 +163,7 @@ get_WHAM <- function(stock,...){
     # for the BRPs in the OM, when RFUN_NM == hindcastMean, the length of the R time series is set by BREF_PAR0
     # to have equal BRP estimation techniques:
     # otherwise, e.g., if RFUN_NM == hindcastMeanAllyrs, WHAM default is used, which is all years of R
+    
     if(mproc[m,'RFUN_NM'] == "hindcastMean"){
       
       input$basic_info <- c(stock_wham_settings$basic_info, 
@@ -173,9 +174,10 @@ get_WHAM <- function(stock,...){
     if(mproc[m,'RFUN_NM'] == "hindcastMeanAllyrs"){
       
       input$basic_info <- c(stock_wham_settings$basic_info, 
-                            list(XSPR_R_avg_yrs = 1:wham_dat_file[[1]]$dat$n_years, mproc[m,'BREF_PAR0']))
+                            list(XSPR_R_avg_yrs = 1:wham_dat_file[[1]]$dat$n_years))
       
     }
+    
     #### retaining fixed NAA to start, come back to this!!!!! 
     
     if (stock$stockName=='codWGOM'){
@@ -193,14 +195,24 @@ get_WHAM <- function(stock,...){
 
     
     # Setting do.osa = TRUE results in "Error in getUserDLL() Multiple TMB models loaded" which is likely an issue with what model TMB is used by make_osa_residuals() - make_osa_resiudals() probably calls TMB::MakeADFun without specifying DLL = "wham"
-    #save results from wham
     
-    saveRDS(whamEst, file = paste(ResultDirectory, "/WHAM_", stockName,'_', r, '_', y, '.rdat', sep = '')) #??? probably don't want to save this, save a subset of results 
-
+    
+    # Check if bad parameters were flagges
+    badpar <- "badpar" %in% names(whamEst)
     
     # Convergence check for wham
     check <- check_convergence(whamEst, ret=TRUE) # May want to suppress printing to screen using sink()
     whamConverge <- ifelse((check$na_sdrep == FALSE & check$is_sdrep == TRUE & check$convergence == 0), TRUE, FALSE) # If no NAs in sdrep, hessian invertible and model thinks it is converged (small gradient) then model converged
+    
+    # set flags for file name
+    con_flag <- ifelse(whamConverge, "Converged", "Failed")
+    bad_flag <- ifelse(badpar, "BadPars", "NoBadPars")
+    
+    #save results from wham
+    saveRDS(whamEst, file = paste(ResultDirectory, "/WHAM_", stockName,'_', r, '_', y, "_", con_flag, "_", bad_flag, '.rdat', sep = '')) #??? probably don't want to save this, save a subset of results 
+    
+    if(y == fmyearIdx){plot_wham_output(whamEst, dir.main = paste(getwd(),ResultDirectory, sep = "/"))}
+    
     # Calculate Mohn's rho values
     MohnsRho<-NA
     MohnsRho <- try(mohns_rho(whamEst))

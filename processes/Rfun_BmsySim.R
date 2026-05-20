@@ -34,8 +34,16 @@ Rfun_BmsySim <- list(
     return(gr[['Rhat']])
     },
   
-  hindcastMean = function(parpop,parmgt, ...){
+  hindcastMean = function(parpop,parmgt, ...){ # use when a window of R is needed for reference points, length of years set as BREF_PAR0
+    
     mean(tail(parpop$R,parmgt$BREF_PAR0))
+    
+  },
+  
+  hindcastMeanAllyrs = function(parpop,parmgt, stockEnv,...){ # use when the full time series of R from the management period (note allyears is in reference to the historical assessment and management period and excludes the burn in) is needed for reference points
+    
+    mean(tail(parpop$R,stockEnv$N_rows)) # N_rows is set in get_wham based on styear and endyear, which encompasses the lag, so this code should execute the correct number of years with or without a lag
+    
   },
   
   hindcastSample = function(Rest,...){

@@ -29,6 +29,51 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
 
   }
 
+
+  
+  
+  
+  
+  
+  
+  if(parmgt$RFUN_NM == 'hindcastMeanAllyrs'){
+    if(type == 'FREF'){
+      startHCM <- parmgt$FREF_PAR0
+      endHCM <- parmgt$FREF_PAR1
+    }else if(type == 'BREF'){
+      startHCM <- -(length(parpop$R)) # will make the whole time series be used per line 61 
+      endHCM <- parmgt$BREF_PAR1
+    }
+    else if(type=='current'){#'current' being the current method for New England groundfish which uses projections in the catch advice
+      startFCST <- parenv$y
+      endFCST <- parenv$y + 2
+    }
+    
+    # Tanom is unnecessary for hindcasts. Loop below is based on the length
+    # of Tanom (relevant to "forecast") so adapt this variable to be the
+    # appropriate length.
+    Tanom <- rep(0, ny)
+    
+    # length of recruitment time series
+    nR <- length(parpop$R)
+    
+    # historical R estimates over the time window specified in the file mprocfile (defined in set_om_parameters_global.R)
+    Rest <- get_dwindow(parpop$R,
+                        start = unlist(nR- (-startHCM) + 1),
+                        end = unlist(nR - (-endHCM) + 1))
+    
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   if(parmgt$RFUN_NM == 'forecast'){
     if(type == 'FREF'){
       startFCST <- parenv$y
