@@ -20,7 +20,9 @@ wham_settings$codWGOM <- list(model_name = "codWGOM",
                               selectivity = list(model=c("age-specific","age-specific"), # selectivity for catch, index
                                                initial_pars=list(stock$codWGOM$selC,
                                                                  stock$codWGOM$selI),
-                                               fix_pars=list(c(1:9),c(1:9))),
+                                               fix_pars=list(which(stock$codWGOM$selC==1),
+                                                             which(stock$codWGOM$selI ==1)
+                                                             )),
                               
                           
                               recruit_model = 2,
