@@ -82,7 +82,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     #Use OM values
     parpopT$J1N<-stockEnv$J1N[1:(y-1),]
-    parpopT$selC<-stockEnv$selC
+    parpopT$sel<-stockEnv$selC
     parpopT$R<-stockEnv$R[1:(y-1)]
     stockEnvT<-stockEnv
     stockEnvT$R_mis<-FALSE
@@ -111,6 +111,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     #Determine true biomass reference point
     stockEnvT<-stockEnv
     stockEnvT$R_mis<-FALSE
+
     BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT, #Also calculate the true Bmsy
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
                      FBRP = FrefT[['RPvalue']], stockEnv = stockEnvT)
