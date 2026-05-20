@@ -31,11 +31,17 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     # There cannot be any forward projections associated with RSSBR. They
     # don't make sense because if that is your assumption about recruitment
     # then biomass in the future won't matter.
-
-    parmgt1 <- list(FREF_PAR0 = FBRP, FREF_TYP = 'SSBR')
+    
+    if(parmgt$FREF_TYP == 'SSBR'){
+      parmgt1 <- list(FREF_PAR0 = FBRP, FREF_TYP = 'SSBR')
+      }
+    
+    if(parmgt$FREF_TYP == 'SPR'){
+      parmgt1 <- list(FREF_PAR0 = parmgt$FREF_PAR0, FREF_TYP = 'SPR')
+    } 
 
     ssbrFmax <- get_perRecruit(parmgt=parmgt1, parpop=parpop,
-                               nage=1000, nF=1000, nFrep=100)
+                               nage=100, nF=1000, nFrep=100)
 
     # Load in the recruitment function (recruitment function index is
     # found in the parmgt data frame but the actual functions are from
@@ -45,12 +51,14 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
 
     funR <- Rfun(parpop = parpop,
                  parmgt= parmgt,
-                 ny = parmgt$BREF_PAR0)
+                 ny = parmgt$BREF_PAR0,
+                 stockEnv = stockEnv)
 
     B <- ssbrFmax$SSBvalue * funR
 
     out <- list(RPvalue = B)
 
+    
   }else if(parmgt$BREF_TYP == 'SIM'){
 
     # Load in the recruitment function (recruitment function index is
