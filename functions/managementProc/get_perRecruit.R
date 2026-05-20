@@ -69,9 +69,9 @@ get_perRecruit <- function(parmgt, parpop,
   
   M <- c(c(parpop$M), rep(tail(c(parpop$M), 1), nage-length(parpop$M)))
   mat <- c(c(parpop$mat), rep(tail(c(parpop$mat), 1), nage-length(parpop$mat)))
-  if(!is.null(parpop$mat)){
-    mat <- c(parpop$mat, rep(tail(parpop$mat, 1), nage-length(parpop$mat)))
-  }
+  #if(!is.null(parpop$mat)){
+  #  mat <- c(parpop$mat, rep(tail(parpop$mat, 1), nage-length(parpop$mat)))
+  #}
  
   # Generate Yield- and SSB-at-age
   Y <- numeric(length(F_full))
@@ -156,11 +156,12 @@ get_perRecruit <- function(parmgt, parpop,
   # output the matrix of y/r, ssb/r or spr or and the corresponding values
   # of fully-selected fishing mortality; the reference point level; and the
   # reference point value
+
   out <- list(PRgrid = matrix(c(F_full[oidx], yvalue[oidx]), ncol=2),
               RPlevel = parmgt$FREF_PAR0,
               RPvalue = Fref,
               SSBvalue = SSBatRP)
-
+  
   return(out)
   
 }
