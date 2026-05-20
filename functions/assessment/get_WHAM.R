@@ -102,7 +102,10 @@ get_WHAM <- function(stock,...){
       wham_dat_file[[1]]$dat$index_sel_end_age<-nage
      
       wham_dat_file[[1]]$dat$IAA_mats[[1]] <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, N_rows), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN, N_rows)) #year, value, CV, by-age, sample size
-
+      
+      # testing
+      #wham_dat_file[[1]]$dat$IAA_mats[[1]] <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, N_rows), get_dwindow(obs_paaIN, styear, endyear), rep(80, N_rows)) #year, value, CV, by-age, sample size
+      
       # Recruitment CV
       wham_dat_file[[1]]$dat$recruit_cv <- rep(pe_RSA, N_rows)
 
@@ -113,9 +116,11 @@ get_WHAM <- function(stock,...){
         
       }
       else if(mproc[m,'CatchOEMis'] == 'FALSE'){
-        wham_dat_file[[1]]$dat$catch_cv <- matrix(oe_sumCW, nrow = N_rows, 1)
         wham_dat_file[[1]]$dat$catch_Neff <- matrix(oe_paaCN, nrow = N_rows, 1)
+        wham_dat_file[[1]]$dat$catch_cv <- matrix(oe_sumCW, nrow = N_rows, 1)
         
+        ### testing WGOM cod
+        #wham_dat_file[[1]]$dat$catch_Neff <- matrix(120, nrow = N_rows, 1)
       }
       
       #discard CV - need additional years even if not using
@@ -124,17 +129,16 @@ get_WHAM <- function(stock,...){
 
       #discard ESS (even if not using)
       wham_dat_file[[1]]$dat$discard_Neff <- matrix(0, nrow = N_rows, 1)
-      
-     # initN <- get_init(type = initN_type, par = initN_par)
-      initN <- c(41644, 4141, 3182, 2048, 849, 286, 116, 32, 36) ### Try different initial numbers-at-age, these are from OM in yidx 131
-      initN <- 1000 * initN
+
       
       # pull true starting numbers-at-age from OM
       initN <- stock$J1N[styear,]
-      
-      wham_dat_file[[1]]$dat$N1_ini<-initN
+      wham_dat_file[[1]]$dat$N1_ini <- initN
 
-      # wham_dat_file[[1]]$dat$SR_scalar_ini<-initN[1]
+      wham_dat_file[[1]]$dat$q_ini <- qI      
+        
+      wham_dat_file[[1]]$dat$F1_ini <- exp(stock$F_full[styear]) ### test this 
+      
       # wham_dat_file[[1]]$dat$steepness_ini<-h
 
       if(mproc[m,'Lag'] == 'TRUE'){
@@ -147,7 +151,7 @@ get_WHAM <- function(stock,...){
       wham_dat_file[[1]]$dat$proj_ini <- c((y), -1, 3, -99, 1)
       # 
       wham_dat_file[[1]]$dat$R_avg_start <- styear
-      wham_dat_file[[1]]$dat$R_avg_end <- endyear - 10
+      wham_dat_file[[1]]$dat$R_avg_end <- endyear
 
     
       
@@ -156,17 +160,22 @@ get_WHAM <- function(stock,...){
     
     
        
-    # for the BRPs in the OM, the length of the R time series is set by BREF_PAR0
-    # if BREF_PAR0 == 200 the whole time series is used, if not an abbreviated timeseries is used
+    # for the BRPs in the OM, when RFUN_NM == hindcastMean, the length of the R time series is set by BREF_PAR0
     # to have equal BRP estimation techniques:
-    
-    if(mproc[m,'BREF_PAR0'] < 200){
+    # otherwise, e.g., if RFUN_NM == hindcastMeanAllyrs, WHAM default is used, which is all years of R
+    if(mproc[m,'RFUN_NM'] == "hindcastMean"){
       
       input$basic_info <- c(stock_wham_settings$basic_info, 
                             list(XSPR_R_avg_yrs = tail(1:wham_dat_file[[1]]$dat$n_years, mproc[m,'BREF_PAR0'])))
       
     }
     
+    if(mproc[m,'RFUN_NM'] == "hindcastMeanAllyrs"){
+      
+      input$basic_info <- c(stock_wham_settings$basic_info, 
+                            list(XSPR_R_avg_yrs = 1:wham_dat_file[[1]]$dat$n_years, mproc[m,'BREF_PAR0']))
+      
+    }
     #### retaining fixed NAA to start, come back to this!!!!! 
     
     if (stock$stockName=='codWGOM'){
@@ -177,15 +186,11 @@ get_WHAM <- function(stock,...){
     }
     }
     
- 
-    
-    
+
     # Fit wham model
-    
     whamEst <- fit_wham(input, do.osa=F, MakeADFun.silent = TRUE, do.retro = TRUE,
                         n.peels = 3, do.check=TRUE)
 
-    
     
     # Setting do.osa = TRUE results in "Error in getUserDLL() Multiple TMB models loaded" which is likely an issue with what model TMB is used by make_osa_residuals() - make_osa_resiudals() probably calls TMB::MakeADFun without specifying DLL = "wham"
     #save results from wham

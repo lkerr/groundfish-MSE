@@ -95,10 +95,10 @@ Rnyr= 20)
 ## Survey information
 #selI <- c(1)
 #selI_typ <- 'const'
-selI <- c(0.105426149, 0.356746855, 0.352910758, 0.353555439, 0.441094096, 0.524837583, 0.691394876, 1, 1) #Spring survey from 2024 management track, most recent time block
+#selI <- c(0.105426149, 0.356746855, 0.352910758, 0.353555439, 0.441094096, 0.524837583, 0.691394876, 1, 1) #Spring survey from 2024 management track, most recent time block
 # selI <- c(0.227, 0.373, 0.291, 0.254, 0.291, 0.300, 0.384, 1, 1) #### TESTING DIFFERENT SELECTIVITY
 # selI <- c(0.038, 0.134, 0.289, 0.531, 0.778, 1, 1, 1, 1) # testing GOM Cod values
-
+selI <- c(0.167246964, 0.326401638, 0.398368285, 0.48120414, 0.683119399, 0.706269025, 0.768877092, 1, 1) #TESTING DIFF SELECTIVITY - MEAN OF ALL NEFSC BTS SELECTIVITIES
 selI_typ <- 'input'
 timeI <- 0.5 # when is the survey (as a proportion of the year)
 
@@ -123,23 +123,28 @@ caaInScalar <- 1 # HAVENT CHANGED
 oe_sumCW <- 0.05
 oe_sumCW_typ <- 'lognorm'
 
-oe_paaCN <- 100
+oe_paaCN <- 250
 oe_paaCN_typ <- 'multinomial'
 
 
+### observation levels for the EM, used in get_WHAM if mproc CatchOEMis == TRUE, if FALSE oe_sumCW and oe_paaCW are used
+oe_sumCW_EM <- 0.05
+oe_paaCN_EM <- 80
+
+
 ##########
-oe_sumIN <- 0.25
+oe_sumIN <- 0.2
 oe_sumIN_typ <- 'lognorm'
 
-oe_paaIN <- 100 #15 or 60 across surveys?
+oe_paaIN <- 200 #15 or 60 across surveys?
 oe_paaIN_typ <- 'multinomial'
 
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 0.25 # cannot be zero # 0.68 is the sigma from lognormal BH w/du Pontavice BT anomaly on Beta
-pe_RSA<- 0.5 #recruitment process error assumed in the stock assessment
+pe_R <- 0.20 # cannot be zero # 0.68 is the sigma from lognormal BH w/du Pontavice BT anomaly on Beta
+pe_RSA<- 0.20 #recruitment process error assumed in the stock assessment
 pe_IA <- 0.18
 
 # implementation error of fishing mortality
