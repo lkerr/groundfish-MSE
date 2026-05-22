@@ -123,7 +123,7 @@ caaInScalar <- 1 # HAVENT CHANGED
 oe_sumCW <- 0.05
 oe_sumCW_typ <- 'lognorm'
 
-oe_paaCN <- 250
+oe_paaCN <- 120
 oe_paaCN_typ <- 'multinomial'
 
 
@@ -133,18 +133,19 @@ oe_paaCN_EM <- 80
 
 
 ##########
-oe_sumIN <- 0.2
+oe_sumIN <- 0.25
 oe_sumIN_typ <- 'lognorm'
 
-oe_paaIN <- 200 #15 or 60 across surveys?
+oe_paaIN <- 80 #15 or 60 across surveys?
+ 
 oe_paaIN_typ <- 'multinomial'
 
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 0.20 # cannot be zero # 0.68 is the sigma from lognormal BH w/du Pontavice BT anomaly on Beta
-pe_RSA<- 0.20 #recruitment process error assumed in the stock assessment
+pe_R <- 0.25 # cannot be zero # 0.68 is the sigma from lognormal BH w/du Pontavice BT anomaly on Beta
+pe_RSA<- 0.50 #recruitment process error assumed in the stock assessment
 pe_IA <- 0.18
 
 # implementation error of fishing mortality
