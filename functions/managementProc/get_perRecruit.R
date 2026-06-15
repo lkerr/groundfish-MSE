@@ -48,18 +48,38 @@ get_perRecruit <- function(parmgt, parpop,
   }
   
   # If M is not a vector make it a vector
-  if(length(parpop$M) == 1){
-    parpop$M <- rep(parpop$M, length(parpop$sel))
-  }
+  if(length(parpop$M) == 1 & nfleet == 2){
+    
+    parpop$M <- rep(parpop$M, length(parpop$selC))
+    
+  } else if (length(parpop$M) == 1 & nfleet != 2){
+    
+    parpop$M <- rep(parpop$M, length(parpop$sel)) # there is no sel if nfleet != 2
+    
+    }
+  
+
+  
+    
+  
+  
   
   # potential levels of F for INSIDE the function (i.e., not output)
   F_full <- seq(0, 2, length.out = nF)
+  comF_full <- seq(0, 2, length.out = nF)
+  recF_full <- seq(0, 2, length.out = nF)
+  
   # Initial level for number of recruits
   N_init <- 1
   
   # Adjust input vectors so they match with the number of ages
   # over which the Y/R or SSB/R is being applied.
-  sel <- c(c(parpop$sel), rep(tail(c(parpop$sel), 1), nage-length(parpop$sel)))
+  if(nfleet == 2){
+    selC <-  c(c(parpop$selC), rep(tail(c(parpop$selC), 1), nage-length(parpop$selC)))
+    selR <-  c(c(parpop$selR), rep(tail(c(parpop$selR), 1), nage-length(parpop$selR)))
+  }else{
+    sel <- c(c(parpop$sel), rep(tail(c(parpop$sel), 1), nage-length(parpop$sel)))
+  }
   waa <- c(c(parpop$waa), rep(tail(c(parpop$waa), 1), nage-length(parpop$waa)))
   
   #If weight-at-age is misspecified, make sure it is misspecified in per recruit estimation
@@ -79,7 +99,12 @@ get_perRecruit <- function(parmgt, parpop,
   
   for(i in seq_along(Y)){
     # Calculate mortality, survival and catch
-    F <- sel * F_full[i]
+    if(nfleet == 2){
+      F <- (selC * comF_full[i]) + (selR * recF_full[i])
+    }else{
+      F <- sel * F_full[i]
+    }
+    
     Z <- c(0, F[-length(F)] + M[-length(M)])
     N <- N_init * exp(-cumsum(Z))
     C <- sapply(1:length(N), function(x) 
@@ -95,7 +120,7 @@ get_perRecruit <- function(parmgt, parpop,
     ## find F(x)
     # get all slopes
     slp <- sapply(2:length(Y), function(i){
-                   (Y[i] - Y[i-1]) / (F_full[i] - F_full[i-1])})
+                   (Y[i] - Y[i-1]) / (F_full[i] - F_full[i-1])}) 
     
     # slope at the origin
     slpo <- slp[1]

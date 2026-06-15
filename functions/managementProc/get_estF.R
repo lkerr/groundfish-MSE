@@ -14,26 +14,55 @@ get_estF<-function(catchproj,parmgtproj,parpopproj,parenv,Rfun,stockEnv){
         
       #init= population at the beginning of the year in t-1  
       #exponential survival to the next year/age (t)
-      N[1,a] <- init[a-1] * exp(-parpopproj$sel[a-1]*parpopproj$Fhat - 
-                                  parpopproj$M[a-1])
+      if(nfleet == 2){
+        
+        N[1,a] <- init[a-1] * exp(-(parpopproj$selC[a-1]*parpopproj$comFhat + parpopproj$selR[a-1]*parpopproj$recFhat) - 
+                                    parpopproj$M[a-1])
+        
+      }else{  
+        N[1,a] <- init[a-1] * exp(-parpopproj$sel[a-1]*parpopproj$Fhat - 
+                                    parpopproj$M[a-1])
+      }
+
     }
     
     #Deal with the plus group
-    N[1,nage] <- init[nage-1] * exp(-parpopproj$sel[nage-1] * parpopproj$Fhat - 
-                                      parpopproj$M[nage-1]) + 
-      init[nage] * exp(-parpopproj$sel[nage] * parpopproj$Fhat - 
-                         parpopproj$M[nage])
+    if(nfleet == 2){
+      N[1,nage] <- init[nage-1] * exp(-(parpopproj$selC[nage-1] * parpopproj$comFhat + parpopproj$selR[nage-1] * parpopproj$recFhat) - 
+                                        parpopproj$M[nage-1]) + 
+        init[nage] * exp(-parpopproj$sel[nage] * parpopproj$Fhat - 
+                           parpopproj$M[nage])
+    }else{
+      N[1,nage] <- init[nage-1] * exp(-(parpopproj$selC[nage-1] * parpopproj$comFhat + parpopproj$selR[nage-1] * parpopproj$recFhat ) - 
+                                        parpopproj$M[nage-1]) + 
+        init[nage] * exp(-parpopproj$sel[nage] * parpopproj$Fhat - 
+                           parpopproj$M[nage])
+    }
+
     
     #Recruitment 
     R<-parpopproj$R
     
     N[1,1] <- prod(tail(R,5))^(1/5)
 
+    
+    #### LEFT OFF HERE FOR UPDATING WITH nFLEET == 2:
+    if(nfleet == 2){
+      Fest <- get_2fleetF(x = catchproj,
+                    Nv = N, 
+                    slxCv = parpopproj$selC, 
+                    slxRv = parpopproj$selR,
+                    M = parpopproj$M, 
+                    waav = parpopproj$waa)
+    }else{
     Fest <- get_F(x = catchproj,
                     Nv = N, 
                     slxCv = parpopproj$sel, 
                     M = parpopproj$M, 
                     waav = parpopproj$waa)
+    }
+    
+    
 
   return(Fest)
 }

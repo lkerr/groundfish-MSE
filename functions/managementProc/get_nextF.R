@@ -53,6 +53,11 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     parpopF<-parpop
     
+    if(nfleet == 2){
+    pcom <- stockEnv$pcom
+    prec <- 1 - pcom
+    }
+    
     # for GOM cod, Mramp model uses M = 0.2 for status determination
     if (stockEnv$stockName=='codGOM' & stockEnv$M_typ == 'ramp'){
     parpopF$M<-rep(stockEnv$M, stock[[i]]$nage)
@@ -82,7 +87,12 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     #Use OM values
     parpopT$J1N<-stockEnv$J1N[1:(y-1),]
-    parpopT$sel<-stockEnv$selC
+    
+    if(nfleet == 2){
+      parpopT$selR<-stockEnv$selR
+      parpopT$selC<-stockEnv$selC
+    }else{parpopT$sel<-stockEnv$selC}
+    
     parpopT$R<-stockEnv$R[1:(y-1)]
     stockEnvT<-stockEnv
     stockEnvT$R_mis<-FALSE
@@ -193,6 +203,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
         if(parmgt$ASSESSCLASS == 'WHAM'){
           if(mproc[m,'Lag'] == 'TRUE'){
             # when there is a lag in the wham assessment
+            # for two fleet this will still work because F.report is the combined Rec + com when nfleet == 2
             f_proj <- c(tail(stockEnv$res$F.report,1),F,F) # projected F: 1yr at last F, 2 yrs at target F
             fmsy_proj<- c(tail(stockEnv$res$F.report,1),rep(stockEnv$res$FMSY,2))
             catch_indices <- c(2,3)} else{ # yrs 2 and 3 are catch advice, yr1 is the bridge
@@ -303,6 +314,9 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       
       # Confirm expected catch is not higher than projected OFL
         # for wham models we have a projected OFL already
+        
+        
+        
         if(parmgt$ASSESSCLASS == 'WHAM'){
           ind <- which(catchproj>oflproj) # identify which year's catch are higher than the ofl
           catchproj[ind]<- oflproj[ind] # replace them with that year's ofl
@@ -335,21 +349,58 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
 ######################################## Caclculate OM F values
       
       #Get F for the OM based on catch advice
-      F <- get_F(x = catchproj[1],
+        if(nfleet == 2){
+          
+          # slx is from the assessment, sel is input
+          
+          scom <- stockEnv$selC * pcom
+          srec <- stockEnv$selR * (1-pcom)
+          sel.z <- scom + srec
+          
+          #browser()         
+          F <- get_F(x = catchproj[1],
+                     Nv = stockEnv$J1N[y,], 
+                     slxCv = sel.z, 
+                     M = stockEnv$natM[y], 
+                     waav = stockEnv$waa[y,])
+#browser()  
+        }else{
+          F <- get_F(x = catchproj[1],
                    Nv = stockEnv$J1N[y,], 
-                   slxCv = stockEnv$slxC[y,], 
+                   slxCv = stockEnv$selC, 
                    M = stockEnv$natM[y], 
                    waav = stockEnv$waa[y,])
-      }
+        }
+      }# this closes the if statement starting on line 195 - "if ((y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) == 0)"
       
+      
+      
+   
       #If it is on an 'off' year (assessment does not occur) use catch advice from the previous projections second year
       else{
-      F <- get_F(x = stockEnv$catchproj[2],
-                 Nv = stockEnv$J1N[y,], 
-                 slxCv = stockEnv$slxC[y,], 
-                 M = stockEnv$natM[y], 
-                 waav = stockEnv$waa[y,])
-      catchproj<-stockEnv$catchproj
+        
+        if(nfleet == 2){
+          #browser() 
+          scom <- stockEnv$selC * pcom
+          srec <- stockEnv$selR * (1-pcom)
+          sel.z <- scom + srec
+          
+          F <- get_F(x = stockEnv$catchproj[2],
+                     Nv = stockEnv$J1N[y,], 
+                     slxCv = sel.z, 
+                     M = stockEnv$natM[y], 
+                     waav = stockEnv$waa[y,])
+          catchproj<-stockEnv$catchproj
+          
+        }else{
+          F <- get_F(x = stockEnv$catchproj[2],
+                     Nv = stockEnv$J1N[y,], 
+                     slxCv = stockEnv$selC, 
+                     M = stockEnv$natM[y], 
+                     waav = stockEnv$waa[y,])
+          catchproj<-stockEnv$catchproj
+          
+        }
       }
     }
 
@@ -358,20 +409,36 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     if(tolower(parmgt$projections) == 'false'){catchproj<-NA}
   
     if (F>2){F<-2}#Not letting actual F go over 2
+ 
 
-    out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue,FrefTRPvalue, BrefTRPvalue), 
-                ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
-                OFgStatus = overfishing, catchproj=catchproj,
-                RiskPolicy = rp %>% mutate(hcr = tolower(parmgt$HCR),
-                                           .before = everything()) %>%
-                  mutate(F_Target = F_Target, F_MSY = stockEnv$res$FMSY,
-                         ABC_y1 = catchproj[1], ABC_y2 = catchproj[2])
-                ) #AEW
-    
+ if(nfleet  == 2){
+   
+   comF <- F * pcom
+   recF <- F * (1-pcom)
+   out <- list(F = F, comF = comF, recF = recF,
+               RPs = c(FrefRPvalue, BrefRPvalue,FrefTRPvalue, BrefTRPvalue), 
+               ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
+               OFgStatus = overfishing, catchproj=catchproj,
+               comcatchproj = catchproj * pcom, reccatchproj = catchproj *(1-pcom),
+               RiskPolicy = rp %>% mutate(hcr = tolower(parmgt$HCR),
+                                          .before = everything()) %>%
+                 mutate(F_Target = F_Target, F_MSY = stockEnv$res$FMSY,
+                        ABC_y1 = catchproj[1], ABC_y2 = catchproj[2])
+   ) #AEW
+ }else{
+   out <- list(F = F, RPs = c(FrefRPvalue, BrefRPvalue,FrefTRPvalue, BrefTRPvalue), 
+               ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
+               OFgStatus = overfishing, catchproj=catchproj,
+               RiskPolicy = rp %>% mutate(hcr = tolower(parmgt$HCR),
+                                          .before = everything()) %>%
+                 mutate(F_Target = F_Target, F_MSY = stockEnv$res$FMSY,
+                        ABC_y1 = catchproj[1], ABC_y2 = catchproj[2])
+   ) #AEW
+ }
 
     
   #Plan B Approach
-  }else if(parmgt$ASSESSCLASS == 'PLANB'){
+  }else if(parmgt$ASSESSCLASS == 'PLANB'){ ##has not been updated w/ 2fleets
     
     # Find the recommended level for catch in weight
     CWrec <- tail(parpop$obs_sumCW, 1) * parpop$mult
@@ -385,12 +452,14 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     # Calculate what the corresponding true F is that matches with
     # the actual biomass-at-age in the current year
+    
     trueF <- get_F(x = CWrec,
                   Nv = parpop$Ntrue_y, 
                   slxCv = parpop$slxCtrue_y, 
                   M = parpop$Mtrue_y, 
                   waav = parpop$waatrue_y)
     
+  
     out <- list(F = trueF, RPs = c(NA, NA), OFdStatus=NA,
                 OFgStatus = NA)
     

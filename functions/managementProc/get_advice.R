@@ -2,7 +2,7 @@ get_advice <- function(stock){
   # prepare data for assessment
   tempStock <- get_tmbSetup(stock = stock)
 
-  #### Run assessment model####
+  #### Run assessment model#### 
 
   # Run the CAA assessment
   if(mproc[m,'ASSESSCLASS'] == 'CAA'){
@@ -95,7 +95,7 @@ get_advice <- function(stock){
       })
     }
   
-  if(mproc[m,'ASSESSCLASS'] == 'WHAM'){
+  if(mproc[m,'ASSESSCLASS'] == 'WHAM' & nfleet == 1){
     tempStock <- within(tempStock, {
       parpop <- list(waa = tail(res$waa.fleet, 1),           
                      sel = tail(res$sel.fleet, 1),                      
@@ -107,6 +107,24 @@ get_advice <- function(stock){
                      Rpar = Rpar,
                      Rpar_mis= Rpar_mis,
                      Fhat = tail(res$F.report, 1))
+    })
+  }
+  
+  if(mproc[m,'ASSESSCLASS'] == 'WHAM' & nfleet == 2){
+    tempStock <- within(tempStock, {
+      parpop <- list(waa = tail(res$waa.fleet, 1),           
+                     selC = tail(res$selC.fleet, 1),
+                     selR = tail(res$selR.fleet, 1), 
+                     M = tail(res$M, 1), 
+                     mat = res$maturity,                               
+                     R = res$R,
+                     SSBhat = res$SSB,
+                     J1N = tail(res$J1N,1),                 ### or use J1B reported in biomass 
+                     Rpar = Rpar,
+                     Rpar_mis= Rpar_mis,
+                     Fhat = tail(res$F.report, 1),
+                     comFhat = tail(res$comF.report, 1),
+                     recFhat = tail(res$comF.report, 1))
     })
   }
 #browser()
@@ -182,7 +200,10 @@ get_advice <- function(stock){
                                no = NA)
 
     # Tabulate advice (plus small constant)
+      
       adviceF <- gnF$F + 1e-5
+      advicecomF <- gnF$comF + 1e-5
+      advicerecF <- gnF$recF + 1e-5
 
       # Calculate expected J1N using parameters from last year's assessment
       # model (i.e., this is Dec 31 of the previous year). Recruitment is
@@ -195,11 +216,29 @@ get_advice <- function(stock){
                          Zy0 = parpop$Fhat * parpop$sel + parpop$M,
                          Ry1 = tail(parpop$R, 1)) # last years R
       }
+      
+      if(nfleet == 2){
 
-      quota <- get_catch(F_full = adviceF, M = natM[y], N = J1N[y,], selC = slxC[y,])
+        quota <- get_2fcatch(comF_full = advicecomF, recF_full = advicerecF, 
+                             M = natM[y], N = J1N[y,], 
+                             selC = slxC[y,], selR = slxR[y,], type = "both")
+        
+      }else{
+        quota <- get_catch(F_full = adviceF, M = natM[y], N = J1N[y,], selC = slxC[y,])
+        
+      }
+
       quota <- quota %*% waa[y,]
       F_fullAdvice[y] <- adviceF
-      ACL[y] <- quota
+      comF_fullAdvice[y] <- advicecomF
+      recF_fullAdvice[y] <- advicerecF
+      
+      if(nfleet == 2){
+
+        comACL[y] <- quota * pcom
+        recACL[y] <- quota * (1-pcom)
+        
+      }else{ACL[y] <- quota}
 
     })
 
