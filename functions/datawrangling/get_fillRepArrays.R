@@ -16,7 +16,11 @@ get_fillRepArrays <- function(stock){
     omval$SSB[r,m,] <- SSB
     omval$R[r,m,] <- R
     omval$F_full[r,m,] <- F_full
+    omval$comF_full[r,m,] <- comF_full
+    omval$recF_full[r,m,] <- recF_full
     omval$sumCW[r,m,] <- sumCW
+    omval$sumcomCW[r,m,] <- rowSums(comCW)
+    omval$sumrecCW[r,m,] <- rowSums(recCW)
     omval$OFdStatus[r,m,] <- OFdStatus
     omval$mxGradCAA[r,m,] <- mxGradCAA
     omval$F_fullAdvice[r,m,] <- F_fullAdvice #AEW
@@ -66,7 +70,11 @@ get_fillRepArrays <- function(stock){
     if(mproc[m, 'ASSESSCLASS']=='WHAM'){
       omval$FRATIO[r,m,y] <- stock$res$F.report[length(stock$res$F.report)]/RPmat[,1][y]
       omval$Fest[r,m,y,1:length(stock$res$SSB)]<-stock$res$F.report
-      omval$Catchest[r,m,y,1:length(stock$res$SSB)]<-stock$res$catch
+      omval$comFest[r,m,y,1:length(stock$res$SSB)]<-stock$res$comF.report
+      omval$recFest[r,m,y,1:length(stock$res$SSB)]<-stock$res$recF.report
+      omval$Catchest[r,m,y,1:length(stock$res$SSB)]<-stock$res$comcatch + stock$res$reccatch
+      omval$comCatchest[r,m,y,1:length(stock$res$SSB)]<-stock$res$comcatch
+      omval$recCatchest[r,m,y,1:length(stock$res$SSB)]<-stock$res$reccatch
       omval$Rest[r,m,y,1:length(stock$res$SSB)]<-stock$res$R
       omval$SSBest[r,m,y,1:length(stock$res$SSB)]<-stock$res$SSB
       

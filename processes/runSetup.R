@@ -34,6 +34,8 @@ if(!is.null(stockExclude)){
   }
 }
 
+
+
 # Retrieve the stock names from the file paths
 stockNameListExt <- sapply(fileList, basename)
 stockNameList <- unname(sapply(stockNameListExt, sub, 
@@ -121,6 +123,12 @@ if(!all(is.na(tst)) && any(tst & !is.na(tst))){
              'but then not include SSB projections when thinking about what',
              'the reference point should actually be.'))
 }
+
+# warning for using 2fleets with an assessment that isn't wham
+if(mproc$ASSESSCLASS != 'WHAM' && nfleet == 2){
+  stop(paste('2 fleet structure has not been developed for other assessment types, only WHAM'))
+}
+
 
 # Error regarding number of years.
 inTest <- (plotBrkYrs + fmyearIdx) %in% (fmyearIdx+1):nyear

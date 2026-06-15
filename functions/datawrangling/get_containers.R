@@ -34,26 +34,48 @@ get_containers <- function(stockPar){
     
     # Containers that save the simulation data
     J1N = yxage,
-    CN = yxage,
+    
+    comCN = yxage,
+    recCN = yxage,
+    CN = yxage, # just the CN or CW represent combined rec and com catch ("all") keeping it as is allows flexibility with 1 vs 2 fleet structure
+    
     CN_temp = yxage,
+    
     codCW = yxage,
     codCW2 = yx0,
+    
+    comCW = yxage,
+    recCW = yxage,
     CW = yxage,
+    
     IN = yxage,
     IJ1= yxage,
     laa = yxage,
     waa = yxage,
     Z = yxage,
+    
     slxC = yxage,
+    slxR = yxage,
     slxI = yxage,
+    
     mat = yxage,
+    
     F_full = yx0,
     F_fullAdvice = yx0,
+    comF_full = yx0,
+    comF_fullAdvice = yx0,
+    recF_full = yx0,
+    recF_fullAdvice = yx0,
+    
     ACL = yx0,
+    recACL = yx0,
+    comACL = yx0,
+    
     R = yx0,
     Rhat = yx0,
     N=yx0,
     SSB = yx0,
+    
     RPmat = matrix(NA, nrow=nyear, ncol=4,
                    dimnames = list(paste0(1:nyear), 
                                    c('FRefP', 'BRefP','FRefPT', 'BRefPT'))),
@@ -66,6 +88,12 @@ get_containers <- function(stockPar){
     # assessment model
     
     # catch weight
+    sumcomCW = yx0,
+    obs_sumcomCW = yx0,
+    
+    sumrecCW = yx0,
+    obs_sumrecCW = yx0,
+    
     sumCW = yx0,
     obs_sumCW = yx0,
     
@@ -79,6 +107,14 @@ get_containers <- function(stockPar){
     obs_sumIW = yx0,
     
     # catch proportions-at-age
+    paacomCN = yxage,
+    obs_paacomCN = yxage,
+    
+    # catch proportions-at-age
+    paarecCN = yxage,
+    obs_paarecCN = yxage,
+    
+    # catch proportions-at-age
     paaCN = yxage,
     obs_paaCN = yxage,
     
@@ -87,38 +123,77 @@ get_containers <- function(stockPar){
     obs_paaIN = yxage,
     
     # fishing effort
+    comeffort = yx0,
+    obs_comeffort = yx0,
+    
+    receffort = yx0,
+    obs_receffort = yx0,
+    
     effort = yx0,
     obs_effort = yx0,
+    
     # Stock assessment model results
     relE_qI = yx0,
     relE_qC = yx0,
+    relE_qR = yx0,
+    
     relE_selCs0 = yx0,
     relE_selCs1 = yx0,
+    
+    relE_selRs0 = yx0,
+    relE_selRs1 = yx0,
+    
     relE_ipop_mean = yx0,
     relE_ipop_dev = yx0,
     relE_R_dev = yx0,
     relE_SSB = yx0,
     relE_N= yx0,
     relE_IN = yx0,
+    
     relE_CW = yx0,
+    relE_comCW = yx0,
+    relE_recCW = yx0,
+    
     relE_R = yx0, #AEW
     relE_F = yx0, #AEW
+    relE_comF = yx0, #AEW
+    relE_recF = yx0, #AEW
+    
     SSB_cur = yx0, #AEW
     conv_rate = yx0,#MDM
     Mohns_Rho_SSB = yx0,
     Mohns_Rho_N = yx0,#MDM
+    
     Mohns_Rho_F = yx0,#MDM
+    Mohns_Rho_comF = yx0,
+    Mohns_Rho_recF = yx0,
+    
     Mohns_Rho_R = yx0,#MDM
     mincatchcon = yx0, #MDM
     relTermE_SSB = NA,#MDM
-    relTermE_CW = NA,#MDM
+    
+    relTermE_CW = NA,
+    relTermE_comCW = NA,
+    relTermE_recCW = NA,
+    
     relTermE_IN = NA,#MDM
     relTermE_qI = NA,#MDM
     relTermE_R = NA,#MDM
+    
     relTermE_F = NA,
+    relTermE_comF = NA,
+    relTermE_recF = NA,
+    
     SSBest = save_vector_ann2, 
+    
     Fest = save_vector_ann2, 
+    comFest = save_vector_ann2, 
+    recFest = save_vector_ann2, 
+    
     Catchest = save_vector_ann2, 
+    comCatchest = save_vector_ann2, 
+    recCatchest = save_vector_ann2, 
+    
     Rest = save_vector_ann2,
     
     # Econ model containers
@@ -136,14 +211,28 @@ get_containers <- function(stockPar){
       N = save_vector_ann,
       SSB = save_vector_ann,
       R = save_vector_ann,
+      
       F_full = save_vector_ann,
       F_fullAdvice = save_vector_ann,
+      comF_full = save_vector_ann,
+      comF_fullAdvice = save_vector_ann,
+      recF_full = save_vector_ann,
+      recF_fullAdvice = save_vector_ann,
+      
       ACL = save_vector_ann,
+      comACL = save_vector_ann,
+      recACL = save_vector_ann,
+      
       econCW= save_vector_ann, 
       sumCW = save_vector_ann,
+      sumcomCW = save_vector_ann,
+      sumrecCW = save_vector_ann,
+      
+      
       annPercentChange = save_vector_ann, #cheap ... not really vector.
       meanSizeCN = save_vector_ann,
       meanSizeIN = save_vector_ann,
+      
       FPROXY = save_vector_ann,
       SSBPROXY = save_vector_ann,
       FPROXYT = save_vector_ann,
@@ -153,42 +242,75 @@ get_containers <- function(stockPar){
       SSBRATIO = save_vector_ann,
       SSBRATIOT = save_vector_ann,
       SSBRATIOT2 = save_vector_ann,
+      
       FRATIO = save_vector_ann,
       FRATIOT = save_vector_ann,
       FRATIOT2 = save_vector_ann,
+      
       OFdStatus = save_vector_ann,
       mxGradCAA = save_vector_ann,
       relE_qI = save_vector_ann,
+      
       relE_qC = save_vector_ann,
+      relE_qR = save_vector_ann,
+      
       relE_selCs0 = save_vector_ann,
       relE_selCs1 = save_vector_ann,
+      
+      relE_selRs0 = save_vector_ann,
+      relE_selRs1 = save_vector_ann,
+      
       relE_ipop_mean = save_vector_ann,
       relE_ipop_dev = save_vector_ann,
       relE_R_dev = save_vector_ann,
       relE_SSB = save_vector_ann,
       relE_N = save_vector_ann,
       relE_IN = save_vector_ann,
+      
       relE_CW = save_vector_ann,
+      relE_comCW = save_vector_ann,
+      relE_recCW = save_vector_ann,
+      
       relE_R = save_vector_ann, #AEW
       relE_F = save_vector_ann, #AEW
+      relE_comF = save_vector_ann,
+      relE_recF = save_vector_ann,
+      
       OFgStatus = save_vector_ann, #AEW
       SSB_cur = save_vector_ann, #AEW
       natM = save_vector_ann, #AEW
       conv_rate = save_vector_ann, #MDM
       Mohns_Rho_SSB = save_vector_ann,
       Mohns_Rho_N = save_vector_ann,#MDM
+      
       Mohns_Rho_F = save_vector_ann,#MDM
+      Mohns_Rho_comF = save_vector_ann,
+      Mohns_Rho_recF = save_vector_ann,
+      
       Mohns_Rho_R = save_vector_ann,#MDM
       mincatchcon = save_vector_ann, #MDM
       relTermE_SSB = save_vector_ann,#MDM
-      relTermE_CW = save_vector_ann,#MDM
+      
+      relTermE_CW = save_vector_ann,
+      relTermE_comCW = save_vector_ann,
+      relTermE_recCW = save_vector_ann,
+      
       relTermE_IN = save_vector_ann,#MDM
       relTermE_qI = save_vector_ann,#MDM
       relTermE_R = save_vector_ann,#MDM
       relTermE_F = save_vector_ann,
+      relTermE_comF = save_vector_ann,
+      relTermE_recF = save_vector_ann,
+      
       SSBest = save_vector_ann2,
       Fest = save_vector_ann2,
+      comFest = save_vector_ann2,
+      recFest = save_vector_ann2,
+      
       Catchest = save_vector_ann2,
+      comCatchest = save_vector_ann2,
+      recCatchest = save_vector_ann2,
+      
       Rest = save_vector_ann2
     ),
     
@@ -199,12 +321,15 @@ get_containers <- function(stockPar){
   
   # Define om_settings structure 
   out$om_settings <- list(om_qI = rep_year_container, # indexed by [[irep]][[iyear]]
-                          om_qC = rep_year_container)
+                          om_qC = rep_year_container,
+                          om_qR = rep_year_container)
   
   assess_vals = list(
     assess_dat=as.data.frame(list(
       Year=c(rep(999,nyear)),
       F=c(rep(999,nyear)),
+      comF=c(rep(999,nyear)),
+      recF=c(rep(999,nyear)),
       R=c(rep(999,nyear)),
       M=c(rep(999,nyear)),
       MSEyr=c(rep(999,nyear)))),
@@ -218,12 +343,25 @@ get_containers <- function(stockPar){
   # All items in this list can be indexed by wham_storage$listObjects[[irep]][[iyr]]
   if("WHAM" %in% mproc[,'ASSESSCLASS']){
     store_SSB = vector(mode='list', length = nrep)
+    
     store_F = vector(mode='list', length = nrep)
     store_FAA = vector(mode='list', length = nrep)
+    store_comF = vector(mode='list', length = nrep)
+    store_comFAA = vector(mode='list', length = nrep)
+    store_recF = vector(mode='list', length = nrep)
+    store_recFAA = vector(mode='list', length = nrep)
+    
     store_R = vector(mode='list', length = nrep)
     store_NAA = vector(mode='list', length = nrep)
+    
     store_Catch = vector(mode='list', length = nrep)
+    store_comCatch = vector(mode='list', length = nrep)
+    store_recCatch = vector(mode='list', length = nrep)
+    
     store_CAA = vector(mode='list', length = nrep)
+    store_comCAA = vector(mode='list', length = nrep)
+    store_recCAA = vector(mode='list', length = nrep)
+    
     store_FMSY = vector(mode='list', length = nrep)
     store_SSBMSY = vector(mode='list', length = nrep)
     store_MSY = vector(mode='list', length = nrep)
@@ -231,6 +369,9 @@ get_containers <- function(stockPar){
     store_Convergence = vector(mode='list', length=nrep)
     store_MohnsRho_SSB = vector(mode='list', length=nrep)
     store_MohnsRho_F = vector(mode='list', length=nrep)
+    store_MohnsRho_comF = vector(mode='list', length=nrep)
+    store_MohnsRho_recF = vector(mode='list', length=nrep)
+    
     store_MohnsRho_R = vector(mode='list', length=nrep)
     store_MohnsRho_N = vector(mode='list', length=nrep)
     store_pars_Ecovbeta = vector(mode='list', length=nrep)
@@ -239,19 +380,38 @@ get_containers <- function(stockPar){
     
     for(irep in 1:nrep){
       store_SSB[[irep]] <- vector(mode='list', length = nyear)
+      
       store_F[[irep]] <- vector(mode='list', length = nyear)
       store_FAA[[irep]] <- vector(mode='list', length = nyear)
+      store_comF[[irep]] <- vector(mode='list', length = nyear)
+      store_comFAA[[irep]] <- vector(mode='list', length = nyear)
+      store_recF[[irep]] <- vector(mode='list', length = nyear)
+      store_recFAA[[irep]] <- vector(mode='list', length = nyear)
+      
       store_R[[irep]] <- vector(mode='list', length = nyear)
       store_NAA[[irep]] <- vector(mode='list', length = nyear)
+      
       store_Catch[[irep]] <- vector(mode='list', length = nyear)
+      store_comCatch[[irep]] <- vector(mode='list', length = nyear)
+      store_recCatch[[irep]] <- vector(mode='list', length = nyear)
+      
       store_CAA[[irep]] <- vector(mode='list', length = nyear)
+      store_comCAA[[irep]] <- vector(mode='list', length = nyear)
+      store_recCAA[[irep]] <- vector(mode='list', length = nyear)
+      
+      
       store_FMSY[[irep]] <- rep(NA, nyear) # Single time series since a single value in each year
       store_SSBMSY[[irep]]  <- rep(NA, nyear) # Single time series since a single value in each year
       store_MSY[[irep]]  <- rep(NA, nyear) # Single time series since a single value in each year
       store_SelAA[[irep]] <- vector(mode='list', length = nyear)
       store_Convergence[[irep]] <- rep(NA, nyear) # Single time series, will only populate years where assessment run
       store_MohnsRho_SSB[[irep]] <- rep(NA, nyear) # Single time series since a single value in each year
+      
       store_MohnsRho_F[[irep]] <- rep(NA, nyear) # Single time series since a single value in each year
+      store_MohnsRho_comF[[irep]] <- rep(NA, nyear) # Single time series since a single value in each year
+      store_MohnsRho_recF[[irep]] <- rep(NA, nyear) # Single time series since a single value in each year
+      
+      
       store_MohnsRho_R[[irep]] <- rep(NA, nyear) # Single time series since a single value in each year
       store_MohnsRho_N[[irep]] <- vector(mode='list', length = nyear)
       store_pars_Ecovbeta[[irep]] <- vector(mode='list', length = nyear)
@@ -261,19 +421,37 @@ get_containers <- function(stockPar){
     
     wham_storage_temp <- list(
       SSB = store_SSB,
+      
       F = store_F,
       FAA = store_FAA,
+      comF = store_comF,
+      comFAA = store_comFAA,
+      recF = store_recF,
+      recFAA = store_recFAA,
+      
       R = store_R,
       NAA = store_NAA,
+      
       Catch = store_Catch,
+      comCatch = store_comCatch,
+      recCatch = store_recCatch,
+      
+      
       CAA = store_CAA,
+      comCAA = store_comCAA,
+      recCAA = store_recCAA,
+      
       FMSY = store_FMSY,
       SSBMSY = store_SSBMSY,
       MSY = store_MSY,
       SelAA = store_SelAA,
       checkConvergence = store_Convergence,
       MohnsRho_SSB = store_MohnsRho_SSB,
+      
       MohnsRho_F = store_MohnsRho_F,
+      MohnsRho_comF = store_MohnsRho_comF,
+      MohnsRho_recF = store_MohnsRho_recF,
+      
       MohnsRho_R = store_MohnsRho_R,
       MohnsRho_N = store_MohnsRho_N,
       pars_Ecov_beta = store_pars_Ecovbeta,

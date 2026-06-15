@@ -43,7 +43,8 @@ get_tmbSetup <- function(stock){
                       obs_effort = get_dwindow(obs_effort, sty, lyr),
                       
                       # ESS
-                      oe_paaCN = oe_paaCN,
+
+                      # oe_paaCN = oe_paaCN, list now appended below
                       oe_paaIN = oe_paaIN,
                       
                       # len/wt-at-age
@@ -54,6 +55,19 @@ get_tmbSetup <- function(stock){
                       slxI = get_dwindow(slxI, sty, lyr),
                       timeI = timeI
     )
+  
+    if(nfleet == 2){
+      tmb_dat$oe_paacomCN = oe_paacomCN
+      tmb_dat$oe_paarecCN = oe_paarecCN
+       tmb_dat$obs_sumcomCW = get_dwindow(obs_sumcomCW, sty, lyr)
+       tmb_dat$obs_paacomCN = get_dwindow(obs_paacomCN, sty, lyr)
+       tmb_dat$obs_sumrecCW = get_dwindow(obs_sumrecCW, sty, lyr)
+       tmb_dat$obs_paarecCN = get_dwindow(obs_paarecCN, sty, lyr)
+    }else{
+      tmb_dat$oe_paaCN = oe_paaCN
+    }  
+    
+    
         
     # Parameters on an arithmetic scale
     tmb_par_arith <- list(M = M,
@@ -63,7 +77,7 @@ get_tmbSetup <- function(stock){
                           qC = qC,
                           qI = qI,
                           selC = selC,
-                          oe_sumCW = oe_sumCW,
+                          #oe_sumCW = oe_sumCW,
                           oe_sumIN = oe_sumIN,
                           # oe_effort = oe_effort,
                           # multiply pe_R by 5 because the deviations used by pe_R 
@@ -72,6 +86,16 @@ get_tmbSetup <- function(stock){
                           # extra variance.
                           pe_R = pe_R * 5
     )
+    
+    if(nfleet == 2){
+      tmb_par_arith$oe_sumcomCW = oe_sumcomCW
+      tmb_par_arith$oe_sumrecCW = oe_sumrecCW
+      tmb_par_arith$qR = qR
+      tmb_par_arith$selR = selR
+
+    }else{
+      tmb_par_arith$oe_sumCW = oe_sumCW
+    }  
     
     # Vector indicating whether each of the parameters should be on a log
     # scale or not (1 indicates log scale). Names must match names of
@@ -83,9 +107,15 @@ get_tmbSetup <- function(stock){
                        qC = 1, 
                        qI = 1, 
                        selC = 1, 
-                       oe_sumCW = 1, 
+                       #oe_sumCW = 1, see below
                        oe_sumIN = 1, 
                        pe_R = 1)
+    if(nfleet == 2){
+      tmb_par_scale <- c(tmb_par_scale, oe_sumcomCW = 1, oe_sumrecCW = 1,
+                         qR = 1, selR = 1)
+    }else{
+      mb_par_scale <- c(tmb_par_scale, oe_sumCW = 1)
+    }
     
     # Check for consistency in tmb_par_arith and tmb_par_scale
     if(any(names(tmb_par_arith) != names(tmb_par_scale))){
