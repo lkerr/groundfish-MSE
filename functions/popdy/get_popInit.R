@@ -10,8 +10,16 @@ get_popInit <- function(stock){
     # F_full[1:(ncaayear + fyear + nburn +1)] <- rlnorm(ncaayear + 
     #                                                   fyear + nburn + 1, 
     #                                                   log(0.2), 0.1)
-    F_full[1:fyear] <- rlnorm(fyear, log(0.2), burnFsd)
+    if(nfleet ==2){ # note that rn burnFsd == 0 so no diff for rec vs. com
+      comF_full[1:fyear] <- rlnorm(fyear, log(0.1), burnFsd)
+      recF_full[1:fyear] <- rlnorm(fyear, log(0.05), burnFsd)
+      
+      F_full[1:fyear] <- comF_full[1:fyear] + recF_full[1:fyear]
+    }else{
+      F_full[1:fyear] <- rlnorm(fyear, log(0.2), burnFsd)
+    }
 
+    
     #### Initilizations ####
     # initialize the model with numbers and mortality rates
 
@@ -27,16 +35,62 @@ get_popInit <- function(stock){
     laa[1:(fyear-1),] <- rep(get_lengthAtAge(type='vonB', par=laa_par, 
                                              ages=fage:page, Tanom=0),
                              each=(fyear-1))
-    slxC[1:(fyear-1),] <- get_slx(type = selC_typ, par = selC, 
-                                  laa = laa[1:(fyear-1),])
-    CN[1:(fyear-1),] <- get_catch(F_full = F_full[1:(fyear-1)], M = init_M,
-                                  N = J1N[1:(fyear-1),],
-                                  selC = slxC[1:(fyear-1),])
+    
+    
+    if(nfleet == 2){
+      slxC[1:(fyear-1),] <- get_slx(type = selC_typ, par = selC, 
+                                    laa = laa[1:(fyear-1),])
+      
+      slxR[1:(fyear-1),] <- get_slx(type = selR_typ, par = selR, 
+                                    laa = laa[1:(fyear-1),])
+    }else{
+      slxC[1:(fyear-1),] <- get_slx(type = selC_typ, par = selC, 
+                                    laa = laa[1:(fyear-1),])
+    }
+    
+    if(nfleet == 2){
+      
+      comCN[1:(fyear-1),] <- get_2fcatch(comF_full = comF_full[1:(fyear-1)],
+                                         recF_full = recF_full[1:(fyear-1)],
+                                         M = init_M,
+                                         N = J1N[1:(fyear-1),],
+                                         selC = slxC[1:(fyear-1),],
+                                         selR = slxR[1:(fyear-1),],
+                                         type = "com")
+      
+    recCN[1:(fyear-1),] <- get_2fcatch(comF_full = comF_full[1:(fyear-1)],
+                                       recF_full = recF_full[1:(fyear-1)],
+                                       M = init_M,
+                                       N = J1N[1:(fyear-1),],
+                                       selC = slxC[1:(fyear-1),],
+                                       selR = slxR[1:(fyear-1),],
+                                       type = "rec")
+    
+    CN[1:(fyear-1),] <- comCN[1:(fyear-1),] + recCN[1:(fyear-1),]
+    
+    
+    }else{
+      
+      CN[1:(fyear-1),] <- get_catch(F_full = F_full[1:(fyear-1)], M = init_M,
+                                    N = J1N[1:(fyear-1),],
+                                    sel = slxC[1:(fyear-1),])
+      
+          }
+    
     waa[1:(fyear-1),] <- get_weightAtAge(type=waa_typ, par=waa_par, 
                                          laa=laa[1:(fyear-1),],
                                          inputUnit='kg',y=1,fmyearIdx=fmyearIdx)
     
+    if(nfleet ==2){
+      paaCN[1:(fyear-1),] <- (CN[1:(fyear-1),]) / sum(CN[1:(fyear-1),])
+      paarecCN[1:(fyear-1),] <- (recCN[1:(fyear-1),]) / sum(recCN[1:(fyear-1),])
+      paacomCN[1:(fyear-1),] <- (comCN[1:(fyear-1),]) / sum(comCN[1:(fyear-1),])
+      
+    }else{
     paaCN[1:(fyear-1),] <- (CN[1:(fyear-1),]) / sum(CN[1:(fyear-1),])
+    }
+    
+    
     IN[1:(fyear-1),] <- get_survey(F_full=F_full[1:(fyear-1)], M=init_M, 
                                    N=J1N[1:(fyear-1),], slxC[1:(fyear-1),], 
                                    slxI=selI, timeI=timeI, qI=qI,DecCatch=FALSE,Tanom=0,y=1)
@@ -44,8 +98,15 @@ get_popInit <- function(stock){
     sumIW[1:(fyear-1)] <- apply(IN[1:(fyear-1),] * waa[1:(fyear-1),], 1, sum)
     paaIN[1:(fyear-1),] <- IN[1:(fyear-1),] / sum(IN[1:(fyear-1),])
     
+    if(nfleet == 2){
+      comeffort[1:(fyear-1)] <- comF_full[1:(fyear-1)] / qC
+      receffort[1:(fyear-1)] <- recF_full[1:(fyear-1)] / qR
+      
+      effort[1:(fyear-1)] <- NA
+      
+    }else{
     effort[1:(fyear-1)] <- F_full[1:(fyear-1)] / qC
-    
+    }
     
     Z[1:(fyear-1),] <- rep(F_full[1]+init_M, each=(fyear-1))
     
@@ -68,15 +129,15 @@ get_popInit <- function(stock){
     mat[1:fyear,] <- rep(matTemp, each = fyear)
     
     slxTemp <- get_slx(type=selC_typ, par=selC, laa=laaTemp)
-    slxC[1:fyear,] <- rep(matTemp, each = fyear)
+   # slxC[1:fyear,] <- rep(matTemp, each = fyear) !!! why is this here
     
     # calculate recruits in year y based on the SSB in years previous
     # (depending on the lag) and temperature (forget time lag here)
     SSB[1:fyear] <- sum(J1N[1:fyear,] * 
                             mat[1:fyear,] * waa[1:fyear,])
-
-    CN[1:fyear,] <- get_catch(F_full=F_full[1:fyear], M=init_M, 
-                                N=J1N[1:fyear,], selC=slxC[1:fyear,]) + 1e-3
+  # not sure why this is here if also above:
+   # CN[1:fyear,] <- get_catch(F_full=F_full[1:fyear], M=init_M, 
+                                #N=J1N[1:fyear,], selC=slxC[1:fyear,]) + 1e-3
 
   })
 
@@ -85,11 +146,26 @@ get_popInit <- function(stock){
   out <- within(stock, {  
     stockT<-stock
     stockT$R_mis<-FALSE
-    burnFmsy <- get_burnF(stockT)
+
+    ### !!! testing come back to this
+    burnFmsy <- get_burnF(stockT) # i think MSY stays the same but need 2 F's for the fleets
     burnFmean <- burnFmsyScalar * burnFmsy
-    F_full[(fyear+1):fmyearIdx] <- rlnorm(fmyearIdx - (fyear+1)+1, 
-                                              log(burnFmean), burnFsd)
     
+    burncomFmean <- 2.5 * burnFmsy
+    burnrecFmean <- 1 * burnFmsy
+    
+    
+    if(nfleet == 2){
+    comF_full[(fyear+1):fmyearIdx] <- rlnorm(fmyearIdx - (fyear+1)+1, 
+                                          log(burncomFmean), burnFsd)
+    recF_full[(fyear+1):fmyearIdx] <- rlnorm(fmyearIdx - (fyear+1)+1, 
+                                          log(burnrecFmean), burnFsd)
+    F_full[(fyear+1):fmyearIdx] <-  comF_full[(fyear+1):fmyearIdx] + recF_full[(fyear+1):fmyearIdx]
+    
+    }else{
+      F_full[(fyear+1):fmyearIdx] <- rlnorm(fmyearIdx - (fyear+1)+1, 
+                                            log(burnFmean), burnFsd)
+    }
     
   })
   return(out)

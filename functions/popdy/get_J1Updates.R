@@ -43,6 +43,7 @@ get_J1Updates <- function(stock){
 
     # calculate the selectivity in year y (changes if the laa changes)
     slxC[y,] <- get_slx(type=selC_typ, par=selC, laa=laa[y,])
+    slxR[y,] <- get_slx(type=selR_typ, par=selR, laa=laa[y,])
     slxI[y,] <- get_slx(type=selI_typ, par=selI, laa=NULL)
 
     if (y < fmyearIdx){
@@ -56,8 +57,14 @@ get_J1Updates <- function(stock){
     if (histAssess == TRUE) {
       for(i in 1:nstock){ ## i doesn't appear to index anything in this code chunk or nested functions. i.e., there is only one set of historical assessment values regardless of nstocks
         if(y %in% assess_vals$assessdat$MSEyr){
+        
         rep_assess <- get_AssessVals()
         F_full[y] <- rep_assess$fish_mort
+        
+        if(nfleet == 2){
+        comF_full[y] <- rep_assess$fish_commort
+        recF_full[y] <- rep_assess$fish_recmort
+        }
         R[y] <- rep_assess$rec
         natM[y] <- rep_assess$nat_mort
       }
@@ -72,7 +79,7 @@ get_J1Updates <- function(stock){
                   assess_vals$NAA_deviations %>%
                     dplyr::filter(MSEyr == y) %>% pull(re)
                 }
-    
+
     # calculate what the Jan 1 population numbers are for year y, which
     # depend on the numbers and mortality rate in the previous year and
     # on the recruitment and naa deviations in this year
@@ -80,13 +87,46 @@ get_J1Updates <- function(stock){
 
     # calculate the predicted catch in year y, the catch weight and the
     # proportions of catch numbers-at-age. Add small number in case F=0
-    CN[y,] <- get_catch(F_full=F_full[y], M=natM[y],
-                        N=J1N[y,], selC=slxC[y,]) + 1e-3
+
 
     
+    if(nfleet == 2){
+      
+      
+      comCN[y,] <- get_2fcatch(comF_full = comF_full[y],
+                               recF_full = recF_full[y],
+                               M = natM[y],
+                               N = J1N[y,],
+                               selC = slxC[y,],
+                               selR = slxR[y,],
+                               type = "com")
+      
+      recCN[y,] <- get_2fcatch(comF_full = comF_full[y],
+                               recF_full = recF_full[y],
+                               M = natM[y],
+                               N = J1N[y,],
+                               selC = slxC[y,],
+                               selR = slxR[y,],
+                               type = "rec")
+      
+      CN[y,] <- comCN[y,] + recCN[y,]
+      
+      
+    }else{
+      
+      CN[y,] <- get_catch(F_full=F_full[y], M=natM[y],
+                          N=J1N[y,], selC=slxC[y,]) + 1e-3
+      
+    }
     
     # get Z for the current year
+    if(nfleet == 2){
+      
+      Z[y,] <- ((comF_full[y]*slxC[y,]) + (recF_full[y]*slxR[y,])) + natM[y]
+      
+    }else{
     Z[y,] <- F_full[y]*slxC[y,] + natM[y]
+    }
 
     
     

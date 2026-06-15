@@ -7,20 +7,37 @@ get_implementationF <- function(type, stock){
     if(type == 'advicenoError'){
 
       F_full[y]<- F_fullAdvice[y]
+      F_comfull[y]<- F_comfullAdvice[y]
+      F_recfull[y]<- F_recfullAdvice[y]
 
     }
     if(type == 'adviceWithError'){
 
         # Borrowed error_idx function from survey function bank
-        Fimpl <- F_fullAdvice[y] + F_fullAdvice[y]*ie_bias
+        Fimpl <- F_fullAdvice[y] + F_fullAdvice[y]*ie_bias #0 = no bias
         F_full[y] <- get_error_idx(type = ie_typ,
                                    idx = Fimpl,
                                    par = ie_F)
+        
+        comFimpl <- comF_fullAdvice[y] + comF_fullAdvice[y]*ie_bias
+        comF_full[y] <- get_error_idx(type = ie_typ,
+                                   idx = comFimpl,
+                                   par = ie_F)
+        
+        recFimpl <- recF_fullAdvice[y] + recF_fullAdvice[y]*ie_bias
+        recF_full[y] <- get_error_idx(type = ie_typ,
+                                   idx = recFimpl,
+                                   par = ie_F)
+        
+        
 }
         # add implimentation bias to catch, need to convert from F to catch, back to F
         # get catch in numbers using the Baranov catch equation from advised F
 
     else if(type == 'advicewithcatchbias'){
+      if(nfleet == 2){
+        stop('advicewithcatchbias has not been updated to work with two fleets')
+      }
         CN_temp[y,] <- get_catch(F_full=F_full[y], M=natM[y],
                                  N=J1N[y,], selC=slxC[y,]) + 1e-3
 
@@ -57,7 +74,7 @@ get_implementationF <- function(type, stock){
 
          # Using Pope's approximation;
          # codCW2 needs to be converted to at-age to use
-         #
+         
          # F_full[y] <- get_PopesF(yield = c(codCW2[y,]),
          #                                      naa = J1N[y,],
          #                                      waa = waa[y,],
