@@ -14,26 +14,46 @@ wham_settings$codGB <- list(model_name = "codGB")
 wham_settings$codGOM <- list(model_name = "codGOM")
 
 
-### need to update to pull selectivity from stock file !!!!!
-wham_settings$codWGOM <- list(model_name = "codWGOM",
-                              
-                              selectivity = list(model=c("age-specific","age-specific"), # selectivity for catch, index
-                                               initial_pars=list(stock$codWGOM$selC,
-                                                                 stock$codWGOM$selI),
-                                               fix_pars=list(which(stock$codWGOM$selC==1),
-                                                             which(stock$codWGOM$selI ==1)
-                                                             )),
-                              
-                          
-                              recruit_model = 2,
-                              
-                              NAA_re = list(sigma = "rec+1", cor = "2dar1"),
-                              
-                              basic_info = list(fracyr_SSB = 0, fracyr_indices = 0.5)
-                              
-                              #index_info = list(fracyr_indices = 0.5)
-                              
-                              )
+if(nfleet ==2){
+  
+  wham_settings$codWGOM <- list(model_name = "codWGOM",
+                                
+                                selectivity = list(model=c("age-specific","age-specific", "age-specific"), # selectivity for catch C, catch r, index
+                                                   initial_pars=list(stock$codWGOM$selC,
+                                                                     stock$codWGOM$selR,
+                                                                     stock$codWGOM$selI),
+                                                   fix_pars=list(which(stock$codWGOM$selC == 1),
+                                                                 which(stock$codWGOM$selR == 1),
+                                                                 which(stock$codWGOM$selI == 1)
+                                                   )),
+                                
+                                recruit_model = 2,
+                                
+                                NAA_re = list(sigma = "rec+1", cor = "2dar1"),
+                                
+                                basic_info = list(fracyr_SSB = 0, fracyr_indices = 0.5)
+                                
+  )
+}else{
+  
+  wham_settings$codWGOM <- list(model_name = "codWGOM",
+                                
+                                selectivity = list(model=c("age-specific","age-specific"), # selectivity for catch, index
+                                                   initial_pars=list(stock$codWGOM$selC,
+                                                                     stock$codWGOM$selI),
+                                                   fix_pars=list(which(stock$codWGOM$selC==1),
+                                                                 which(stock$codWGOM$selI ==1)
+                                                   )),
+
+                                recruit_model = 2,
+                                
+                                NAA_re = list(sigma = "rec+1", cor = "2dar1"),
+                                
+                                basic_info = list(fracyr_SSB = 0, fracyr_indices = 0.5)
+                                
+  )
+}
+
 
 # haddockGB
 # # Setting for the SDM-q linked model

@@ -7,10 +7,13 @@ burnFmsyScalar <- 3.5 #GOM cod
 burnFsd <- 0.3 # GOM cod
 burnFsd <- 0  # Test removing stochasticity on F in the Burn-in
 
-
 # first age and plus age
 fage <- 1
 page <- 9
+
+
+### 2 fleets
+pcom <- 0.725 # percent commercial
 
 #### Life history parameters ####
 
@@ -57,18 +60,21 @@ initN_type <- 'input'
 
 # fishery and survey catchabilities
 qC <- 0.0001 ## HASNT BEEN UPDATED
+qR <- 0.0001 ## HASNT BEEN UPDATED
 qI <- 0.0001  # value from bigelow fall + spring (albatross is higher)
 
 DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE.
 
-# fishery selectivity
-## aggregate fishery selectivity from most recent selectivity time block
-selC <- c(0.042904915, 0.259597199, 0.540257864, 0.805060898, 1, 1, 1, 0.696886527, 0.468064162) #
-# selC <- c(0.015, 0.147, 0.402, 0.746, 1, 1, 1, 0.738, 0.45) #### TESTING DIFFERENT SELECTIVITY
-# selC <- c(0.009, 0.051, 0.241, 0.651, 0.917, 0.985, 0.997, 1, 1) #### Testing GOM cod values
-
+# fishery selectivity (Commerical)
+## Commerical fishery selectivity from most recent selectivity time block
+selC <- c(0.015224423, 0.146546166, 0.401664391, 0.746294723, 1, 1, 1, 0.737578292, 0.449978784) #
 
 selC_typ <- 'input'
+
+# fishery selectivity (Recreational)
+## Recreational fishery selectivity from most recent selectivity time block
+selR <- c(0.134726614, 0.634609979, 1, 1, 1, 1, 1, 0.561903842, 0.528056961) #
+selR_typ <- 'input'
 
 #### Recruitment Options ####
 ###For BH SR with relationship with temperature###
@@ -95,9 +101,7 @@ Rnyr= 20)
 ## Survey information
 #selI <- c(1)
 #selI_typ <- 'const'
-#selI <- c(0.105426149, 0.356746855, 0.352910758, 0.353555439, 0.441094096, 0.524837583, 0.691394876, 1, 1) #Spring survey from 2024 management track, most recent time block
-# selI <- c(0.227, 0.373, 0.291, 0.254, 0.291, 0.300, 0.384, 1, 1) #### TESTING DIFFERENT SELECTIVITY
-# selI <- c(0.038, 0.134, 0.289, 0.531, 0.778, 1, 1, 1, 1) # testing GOM Cod values
+
 selI <- c(0.167246964, 0.326401638, 0.398368285, 0.48120414, 0.683119399, 0.706269025, 0.768877092, 1, 1) #TESTING DIFF SELECTIVITY - MEAN OF ALL NEFSC BTS SELECTIVITIES
 selI_typ <- 'input'
 timeI <- 0.5 # when is the survey (as a proportion of the year)
@@ -119,28 +123,57 @@ caaInScalar <- 1 # HAVENT CHANGED
 
 #### Error parameters ####
 
-# observation error levels
-oe_sumCW <- 0.05
-oe_sumCW_typ <- 'lognorm'
 
-oe_paaCN <- 250
-oe_paaCN_typ <- 'multinomial'
+if(nfleet == 1){
+  oe_sumCW <- 0.05
+  oe_sumCW_typ <- 'lognorm'
+  
+  oe_paaCN <- 100
+  oe_paaCN_typ <- 'multinomial'
+  
+  
+}
+
+
+
+# observation error levels - Comm catch
+oe_sumcomCW <- 0.05
+oe_sumcomCW_typ <- 'lognorm'
+
+oe_paacomCN <- 120
+oe_paacomCN_typ <- 'multinomial'
 
 
 ### observation levels for the EM, used in get_WHAM if mproc CatchOEMis == TRUE, if FALSE oe_sumCW and oe_paaCW are used
-oe_sumCW_EM <- 0.05
-oe_paaCN_EM <- 80
+oe_sumcomCW_EM <- 0.05
+oe_paacomCN_EM <- 80
 
+# observation error levels - Rec catch
+oe_sumrecCW <- 0.25
+oe_sumrecCW_typ <- 'lognorm'
+
+oe_paarecCN <- 80
+oe_paarecCN_typ <- 'multinomial'
+
+### observation levels for the EM, used in get_WHAM if mproc CatchOEMis == TRUE, if FALSE oe_sumCW and oe_paaCW are used
+oe_sumrecCW_EM <- 0.25
+oe_paarecCN_EM <- 80
 
 ##########
-oe_sumIN <- 0.2
+oe_sumIN <- 0.25
 oe_sumIN_typ <- 'lognorm'
 
-oe_paaIN <- 200 #15 or 60 across surveys?
+oe_paaIN <- 80  #15 or 60 across surveys?
 oe_paaIN_typ <- 'multinomial'
 
 oe_effort <- 0.01
 oe_effort_typ <- 'lognorm'
+
+oe_comeffort <- 0.01
+oe_comeffort_typ <- 'lognorm'
+
+oe_receffort <- 0.01
+oe_receffort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
 pe_R <- 0.20 # cannot be zero # 0.68 is the sigma from lognormal BH w/du Pontavice BT anomaly on Beta
@@ -148,12 +181,16 @@ pe_RSA<- 0.20 #recruitment process error assumed in the stock assessment
 pe_IA <- 0.18
 
 # implementation error of fishing mortality
+#!!!! right now in get_implementation there are not fleet specific biases, they all use the same biasses 
 ie_F <- 0
 ie_typ <- 'lognorm'
 ie_bias <- 0 # % bias in implementation error (F_Full + F_Full*ie_bias)
 
 # Observation bias (1 is no bias, 0.9 is a -10% bias, etc.) (sumCW*ob_sumCW) (range 0.01-1)
 ob_sumCW <- 1 #0.44 for bias
+ob_sumcomCW <- 1 #0.44 for bias
+ob_sumrecCW <- 1 #0.44 for bias
+
 ob_sumIN <- 1
 
 # catch observation bias (codCW + codCW*C_mult)
