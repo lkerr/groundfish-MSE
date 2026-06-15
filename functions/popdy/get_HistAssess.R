@@ -2,8 +2,12 @@
 
 get_HistAssess <- function(stock) {
   # Stock assessment history file name
+  if(nfleet ==2){
+  fn <- paste('./data/data_raw/AssessmentHistory/',stockNames[i],'_2fleet' ,'.csv', sep = '')
+  }else{
   fn <- paste('./data/data_raw/AssessmentHistory/',stockNames[i], '.csv', sep = '')
-
+  }
+  
   # Check that assessment history information exists for the stock
   if(!file.exists(fn)){
     stop(paste0('get_HistAssess: stock \"', stockNames[i], '\" does not exist ',
@@ -12,16 +16,24 @@ get_HistAssess <- function(stock) {
   }
 
   # read file for the stock with historic assessment information
-  assessdat <- read.csv(paste('./data/data_raw/AssessmentHistory/',stockNames[i], '.csv', sep = ''))
+  assessdat <- read.csv(fn)
+  
  if(stock$M_typ== 'ramp' && stock$stockName=='codGOM'){
    assessdat<- read.csv('./data/data_raw/AssessmentHistory/codGOM_highM.csv')
      if (stock$M == 0.3){
      assessdat<- read.csv('./data/data_raw/AssessmentHistory/codGOM_mediumM.csv')}
  }
- if(ncol(assessdat) != 4){
+  
+ if(nfleet == 1 & ncol(assessdat) != 4 || nfleet ==2 & ncol(assessdat) != 6){
     stop('Check that Assessment History file contains appropriate data.')
-  }
+ }
+  
+  if(nfleet == 2){
+    colnames(assessdat)<-c('Year','comF','recF','F','R','M')
+    
+  }else{
   colnames(assessdat)<-c('Year','F','R','M')
+  }
   assess_st_yr <- fmyearIdx-length(assessdat$Year)
   assessdat$MSEyr <- seq(assess_st_yr, (fmyearIdx-1))
 
