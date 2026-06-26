@@ -53,8 +53,12 @@ summarize_results <- function(omvalGlobal, whamGlobal, hcr, stamp, dir){
   ##### Apply to SSB, F, R, Catch
   traj <- list(SSB = NA,
                F = NA,
+               comF,
+               recF,
                R = NA,
-               Catch = NA)
+               Catch = NA,
+               comCatch = NA,
+               recCatch = NA)
   
   for(t in names(traj)){
     ls <- whamGlobal[[s]][[t]]

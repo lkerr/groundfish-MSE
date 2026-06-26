@@ -19,12 +19,14 @@ get_fillRepArrays <- function(stock){
     omval$comF_full[r,m,] <- comF_full
     omval$recF_full[r,m,] <- recF_full
     omval$sumCW[r,m,] <- sumCW
-    omval$sumcomCW[r,m,] <- rowSums(comCW)
-    omval$sumrecCW[r,m,] <- rowSums(recCW)
+    omval$sumcomCW[r,m,] <- sumcomCW
+    omval$sumrecCW[r,m,] <- sumrecCW
     omval$OFdStatus[r,m,] <- OFdStatus
     omval$mxGradCAA[r,m,] <- mxGradCAA
     omval$F_fullAdvice[r,m,] <- F_fullAdvice #AEW
     omval$ACL[r,m,] <- ACL #AEW
+    omval$comACL[r,m,] <- comACL #AEW
+    omval$recACL[r,m,] <- recACL #AEW
     omval$OFgStatus[r,m,] <- OFgStatus #AEW
     omval$SSB_cur[r,m,] <- SSB_cur #AEW
     omval$natM[r,m,] <- natM #AEW
