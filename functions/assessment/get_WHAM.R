@@ -153,30 +153,28 @@ get_WHAM <- function(stock,...){
       wham_dat_file[[1]]$dat$R_avg_start <- styear
       wham_dat_file[[1]]$dat$R_avg_end <- endyear
 
-    
+      
+      
+      # for the BRPs in the OM, when RFUN_NM == hindcastMean, the length of the R time series is set by BREF_PAR0
+      # to have equal BRP estimation techniques:
+      # otherwise, e.g., if RFUN_NM == hindcastMeanAllyrs, WHAM default is used, which is all years of R
+      
+      if(mproc[m,'RFUN_NM'] == "hindcastMean"){
+        
+        stock_wham_settings$basic_info <- c(stock_wham_settings$basic_info, 
+                              list(XSPR_R_avg_yrs = tail(1:wham_dat_file[[1]]$dat$n_years, mproc[m,'BREF_PAR0'])))
+        
+      }
+      
+      if(mproc[m,'RFUN_NM'] == "hindcastMeanAllyrs"){
+        
+        stock_wham_settings$basic_info <- c(stock_wham_settings$basic_info, 
+                              list(XSPR_R_avg_yrs = 1:wham_dat_file[[1]]$dat$n_years))
+        
+      }
       
     # calls wham paramaterization set in wham_settings.R  
     input <- do.call(prepare_wham_input, c(list(asap3 = wham_dat_file), stock_wham_settings)) 
-    
-    
-       
-    # for the BRPs in the OM, when RFUN_NM == hindcastMean, the length of the R time series is set by BREF_PAR0
-    # to have equal BRP estimation techniques:
-    # otherwise, e.g., if RFUN_NM == hindcastMeanAllyrs, WHAM default is used, which is all years of R
-    
-    if(mproc[m,'RFUN_NM'] == "hindcastMean"){
-      
-      input$basic_info <- c(stock_wham_settings$basic_info, 
-                            list(XSPR_R_avg_yrs = tail(1:wham_dat_file[[1]]$dat$n_years, mproc[m,'BREF_PAR0'])))
-      
-    }
-    
-    if(mproc[m,'RFUN_NM'] == "hindcastMeanAllyrs"){
-      
-      input$basic_info <- c(stock_wham_settings$basic_info, 
-                            list(XSPR_R_avg_yrs = 1:wham_dat_file[[1]]$dat$n_years))
-      
-    }
     
     #### retaining fixed NAA to start, come back to this!!!!! 
     
@@ -211,7 +209,7 @@ get_WHAM <- function(stock,...){
     #save results from wham
     saveRDS(whamEst, file = paste(ResultDirectory, "/WHAM_", stockName,'_', r, '_', y, "_", con_flag, "_", bad_flag, '.rdat', sep = '')) #??? probably don't want to save this, save a subset of results 
     
-    if(y == fmyearIdx){plot_wham_output(whamEst, dir.main = paste(getwd(),ResultDirectory, sep = "/"))}
+    #if(y == fmyearIdx){plot_wham_output(whamEst, dir.main = paste(getwd(),ResultDirectory, sep = "/"))}
     
     # Calculate Mohn's rho values
     MohnsRho<-NA
