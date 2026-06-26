@@ -29,7 +29,7 @@ get_advice <- function(stock){
   # Run WHAM assessment
   if(mproc[m,'ASSESSCLASS'] == 'WHAM'){
     if ((y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0){
-      tempStock <- get_WHAM(stock = tempStock)
+      tempStock <- get_WHAM(stock = tempStock, Tanom = Tanom)
     }
     # else{
       # get_WHAM(stock = tempStock)}    ##### !!! this if else combination seems to run get_WHAM in all situations but only saves it sometimes...
