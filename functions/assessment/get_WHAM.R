@@ -1,4 +1,4 @@
-get_WHAM <- function(stock,...){
+get_WHAM <- function(stock, Tanom,...){
   library.dynam(package = 'wham')
   
 
@@ -44,192 +44,186 @@ get_WHAM <- function(stock,...){
     currentYR <- (fmyear+y-fmyearIdx-1) # Last year of current assessment 
     
     # If ecov specified for the given stock, use only the data through the currentYR of the assessment
-    if("ecov" %in% names(stock_wham_settings)){
-      yr_index <- which(stock_wham_settings$ecov$year >= firstYR & stock_wham_settings$ecov$year <= currentYR)
-      
-      ecov <- NULL
-      ecov$label <- stock_wham_settings$ecov$label
-      ecov$process_model <- stock_wham_settings$ecov$proces_model
-      ecov$mean <- matrix(stock_wham_settings$ecov$mean[yr_index,], ncol = ncol(stock_wham_settings$ecov$mean))
-      ecov$logsigma <- stock_wham_settings$ecov$logsigma[yr_index]
-      ecov$year <- stock_wham_settings$ecov$year[yr_index,]
-      ecov$lag <- stock_wham_settings$ecov$lag
-      ecov$use_obs <- matrix(stock_wham_settings$ecov$use_obs[yr_index,], ncol = ncol(stock_wham_settings$ecov$use_obs))
-      ecov$where <- stock_wham_settings$ecov$where
-      ecov$indices <- list(stock_wham_settings$ecov$indices)
-      ecov$how <- stock_wham_settings$ecov$how
-      
-      temp_wham_settings <- append(stock_wham_settings[-which(names(stock_wham_settings)=="ecov")], list(ecov))
-      names(temp_wham_settings)[which(names(temp_wham_settings) == "")] <- "ecov"
-      
-      # Prepare wham input
-      input <- do.call(prepare_wham_input, c(list(asap3 = wham_dat_file), temp_wham_settings)) # need to set up a wham-settings object to pull these from - make it a list so that only list objects that matter get added - only source the wham-settings object once at the start of the file & only if using WHAM
-      
-    } else{
-      # Prepare wham input (no ecov need to be trimmed to current assessment length)
-      wham_dat_file[[1]]$dat$year1 <- fmyearIdx - ncaayear
-      styear <- fmyearIdx - ncaayear
-      
-      wham_dat_file[[1]]$dat$n_ages<-nage
-      #Change start years below to use moving window
-      #dat_file$dat$year1 <- y - ncaayear
-      #styear <- y - ncaayear
-      
-      #end year
-      if(mproc[m,'Lag'] == 'TRUE'){
-        endyear <- y-2
-      }
-      else if(mproc[m,'Lag'] == 'FALSE'){
-        endyear <- y-1
-      }
-
-      #number of years in assessment
-      N_rows <- length(styear:endyear)
-      wham_dat_file[[1]]$dat$n_years <- N_rows
-      
-      #natural mortality
-      wham_dat_file[[1]]$dat$M <- matrix(get_dwindow(natM, styear, endyear), nrow = N_rows, ncol = page)
-
-      #maturity-at-age
-      wham_dat_file[[1]]$dat$maturity <- matrix(get_dwindow(mat, styear, endyear), nrow = N_rows)
-
-      #WAA matrix
-      wham_dat_file[[1]]$dat$WAA_mats[[1]] <- matrix(get_dwindow(waa, styear, endyear), nrow = N_rows)
-      
-      if(nfleet ==2){
-        wham_dat_file[[1]]$dat$WAA_mats[[2]] <- matrix(get_dwindow(waa, styear, endyear), nrow = N_rows)
-        }
-      
-      #selectivity block (single block setup)
-      wham_dat_file[[1]]$dat$sel_block_assign[[1]] <- rep(1, N_rows)
-      
-      #selectivity block for 2 fleets, the dat ile should already have two blocks if nfleet = 2 (see lines 12-13)
-      if(nfleet == 2){
+    
+    # Prepare wham input (no ecov need to be trimmed to current assessment length)
+    wham_dat_file[[1]]$dat$year1 <- fmyearIdx - ncaayear
+    styear <- fmyearIdx - ncaayear
+    
+    wham_dat_file[[1]]$dat$n_ages<-nage
+    #Change start years below to use moving window
+    #dat_file$dat$year1 <- y - ncaayear
+    #styear <- y - ncaayear
+    
+    #end year
+    if(mproc[m,'Lag'] == 'TRUE'){
+      endyear <- y-2
+    }
+    else if(mproc[m,'Lag'] == 'FALSE'){
+      endyear <- y-1
+    }
+    
+    #number of years in assessment
+    N_rows <- length(styear:endyear)
+    wham_dat_file[[1]]$dat$n_years <- N_rows
+    
+    #natural mortality
+    wham_dat_file[[1]]$dat$M <- matrix(get_dwindow(natM, styear, endyear), nrow = N_rows, ncol = page)
+    
+    #maturity-at-age
+    wham_dat_file[[1]]$dat$maturity <- matrix(get_dwindow(mat, styear, endyear), nrow = N_rows)
+    
+    #WAA matrix
+    wham_dat_file[[1]]$dat$WAA_mats[[1]] <- matrix(get_dwindow(waa, styear, endyear), nrow = N_rows)
+    
+    if(nfleet ==2){
+      wham_dat_file[[1]]$dat$WAA_mats[[2]] <- matrix(get_dwindow(waa, styear, endyear), nrow = N_rows)
+    }
+    
+    #selectivity block (single block setup)
+    wham_dat_file[[1]]$dat$sel_block_assign[[1]] <- rep(1, N_rows)
+    
+    #selectivity block for 2 fleets, the dat ile should already have two blocks if nfleet = 2 (see lines 12-13)
+    if(nfleet == 2){
       wham_dat_file[[1]]$dat$sel_block_assign[[2]] <- rep(2, N_rows)
-      }
-      
-      #selectivity
-      wham_dat_file[[1]]$dat$fleet_sel_end_age<-nage
-      
-      #catch-at-age proportions and sum catch weight
-      if(nfleet == 2){ ### com = blcok 1, rec = block 2
-        wham_dat_file[[1]]$dat$CAA_mats[[1]] <- cbind(get_dwindow(obs_paacomCN, styear, endyear), get_dwindow(obs_sumcomCW, styear, endyear))
-        wham_dat_file[[1]]$dat$CAA_mats[[2]] <- cbind(get_dwindow(obs_paarecCN, styear, endyear), get_dwindow(obs_sumrecCW, styear, endyear))
-      }else{
-        wham_dat_file[[1]]$dat$CAA_mats[[1]] <- cbind(get_dwindow(obs_paaCN, styear, endyear), get_dwindow(obs_sumCW, styear, endyear))
-      }
-      
-      # discards - need additional rows even if not using
-      wham_dat_file[[1]]$dat$DAA_mats[[1]] <- matrix(0, nrow = N_rows, ncol = page + 1)
-
-      if(nfleet == 2){
-        wham_dat_file[[1]]$dat$DAA_mats[[2]] <- matrix(0, nrow = N_rows, ncol = page + 1)
-      }
-      
-      # release - also need additional rows if not using
-      wham_dat_file[[1]]$dat$prop_rel_mats[[1]] <- matrix(0, nrow = N_rows, ncol = page)
-      
-      if(nfleet == 2){
-        wham_dat_file[[1]]$dat$prop_rel_mats[[2]] <- matrix(0, nrow = N_rows, ncol = page)
-      }
-      
-      wham_dat_file[[1]]$dat$index_sel_end_age<-nage
-     
-      wham_dat_file[[1]]$dat$IAA_mats[[1]] <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, N_rows), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN, N_rows)) #year, value, CV, by-age, sample size
-      
-      # testing
-      #wham_dat_file[[1]]$dat$IAA_mats[[1]] <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, N_rows), get_dwindow(obs_paaIN, styear, endyear), rep(80, N_rows)) #year, value, CV, by-age, sample size
-      
-      # Recruitment CV
-      wham_dat_file[[1]]$dat$recruit_cv <- rep(pe_RSA, N_rows)
-
-      #catch CV and catch effective sample size
-      # !!!!! needs to be updated with rec CVS
-      if(mproc[m,'CatchOEMis'] == 'TRUE'){
-        ### !! need to be careful here with rec vs com oe when this is turned on !!
-        if(nfleet ==2){
-          wham_dat_file[[1]]$dat$catch_cv <- matrix(c(rep(oe_sumcomCW_EM, N_rows), rep(oe_sumrecCW_EM, N_rows)), nrow = N_rows, nfleet)
-          wham_dat_file[[1]]$dat$catch_Neff <- matrix(c(rep(oe_paacomCN_EM, N_rows), rep(oe_paarecCN_EM, N_rows)), nrow = N_rows, nfleet)
-          
-        }else{
-          wham_dat_file[[1]]$dat$catch_cv <- matrix(oe_sumCW_EM, nrow = N_rows, 1)
-          wham_dat_file[[1]]$dat$catch_Neff <- matrix(oe_paaCN_EM, nrow = N_rows, 1)
-        }
-        
-        
-      }
-      else if(mproc[m,'CatchOEMis'] == 'FALSE'){
-        if(nfleet ==2){
-          wham_dat_file[[1]]$dat$catch_cv <- matrix(c(rep(oe_sumcomCW, N_rows), rep(oe_sumrecCW, N_rows)), nrow = N_rows, nfleet)
-          wham_dat_file[[1]]$dat$catch_Neff <- matrix(c(rep(oe_paacomCN, N_rows), rep(oe_paarecCN, N_rows)), nrow = N_rows, nfleet)
-        }else{
-          wham_dat_file[[1]]$dat$catch_cv <- matrix(oe_sumCW, nrow = N_rows, 1)
-          wham_dat_file[[1]]$dat$catch_Neff <- matrix(oe_paaCN, nrow = N_rows, 1)
-        }
-      }
-      
-      #discard CV - need additional years even if not using
-      wham_dat_file[[1]]$dat$discard_cv <- matrix(0, nrow = N_rows, nfleet)
-
-
-      #discard ESS (even if not using)
-      wham_dat_file[[1]]$dat$discard_Neff <- matrix(0, nrow = N_rows, nfleet)
-
-      
-      
-      
-      # pull true starting numbers-at-age from OM
-      initN <- stock$J1N[styear,]
-      wham_dat_file[[1]]$dat$N1_ini <- initN
-
-      wham_dat_file[[1]]$dat$q_ini <- qI      
-      
-      if(nfleet == 2){
-        
-        wham_dat_file[[1]]$dat$F1_ini[1] <- exp(stock$comF_full[styear]) 
-        wham_dat_file[[1]]$dat$F1_ini[2] <- exp(stock$recF_full[styear]) 
+    }
+    
+    #selectivity
+    wham_dat_file[[1]]$dat$fleet_sel_end_age<-nage
+    
+    #catch-at-age proportions and sum catch weight
+    if(nfleet == 2){ ### com = blcok 1, rec = block 2
+      wham_dat_file[[1]]$dat$CAA_mats[[1]] <- cbind(get_dwindow(obs_paacomCN, styear, endyear), get_dwindow(obs_sumcomCW, styear, endyear))
+      wham_dat_file[[1]]$dat$CAA_mats[[2]] <- cbind(get_dwindow(obs_paarecCN, styear, endyear), get_dwindow(obs_sumrecCW, styear, endyear))
+    }else{
+      wham_dat_file[[1]]$dat$CAA_mats[[1]] <- cbind(get_dwindow(obs_paaCN, styear, endyear), get_dwindow(obs_sumCW, styear, endyear))
+    }
+    
+    # discards - need additional rows even if not using
+    wham_dat_file[[1]]$dat$DAA_mats[[1]] <- matrix(0, nrow = N_rows, ncol = page + 1)
+    
+    if(nfleet == 2){
+      wham_dat_file[[1]]$dat$DAA_mats[[2]] <- matrix(0, nrow = N_rows, ncol = page + 1)
+    }
+    
+    # release - also need additional rows if not using
+    wham_dat_file[[1]]$dat$prop_rel_mats[[1]] <- matrix(0, nrow = N_rows, ncol = page)
+    
+    if(nfleet == 2){
+      wham_dat_file[[1]]$dat$prop_rel_mats[[2]] <- matrix(0, nrow = N_rows, ncol = page)
+    }
+    
+    wham_dat_file[[1]]$dat$index_sel_end_age<-nage
+    
+    wham_dat_file[[1]]$dat$IAA_mats[[1]] <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, N_rows), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN, N_rows)) #year, value, CV, by-age, sample size
+    
+    # testing
+    #wham_dat_file[[1]]$dat$IAA_mats[[1]] <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, N_rows), get_dwindow(obs_paaIN, styear, endyear), rep(80, N_rows)) #year, value, CV, by-age, sample size
+    
+    # Recruitment CV
+    wham_dat_file[[1]]$dat$recruit_cv <- rep(pe_RSA, N_rows)
+    
+    #catch CV and catch effective sample size
+    # !!!!! needs to be updated with rec CVS
+    if(mproc[m,'CatchOEMis'] == 'TRUE'){
+      ### !! need to be careful here with rec vs com oe when this is turned on !!
+      if(nfleet ==2){
+        wham_dat_file[[1]]$dat$catch_cv <- matrix(c(rep(oe_sumcomCW_EM, N_rows), rep(oe_sumrecCW_EM, N_rows)), nrow = N_rows, nfleet)
+        wham_dat_file[[1]]$dat$catch_Neff <- matrix(c(rep(oe_paacomCN_EM, N_rows), rep(oe_paarecCN_EM, N_rows)), nrow = N_rows, nfleet)
         
       }else{
+        wham_dat_file[[1]]$dat$catch_cv <- matrix(oe_sumCW_EM, nrow = N_rows, 1)
+        wham_dat_file[[1]]$dat$catch_Neff <- matrix(oe_paaCN_EM, nrow = N_rows, 1)
+      }
+      
+      
+    }
+    else if(mproc[m,'CatchOEMis'] == 'FALSE'){
+      if(nfleet ==2){
+        wham_dat_file[[1]]$dat$catch_cv <- matrix(c(rep(oe_sumcomCW, N_rows), rep(oe_sumrecCW, N_rows)), nrow = N_rows, nfleet)
+        wham_dat_file[[1]]$dat$catch_Neff <- matrix(c(rep(oe_paacomCN, N_rows), rep(oe_paarecCN, N_rows)), nrow = N_rows, nfleet)
+      }else{
+        wham_dat_file[[1]]$dat$catch_cv <- matrix(oe_sumCW, nrow = N_rows, 1)
+        wham_dat_file[[1]]$dat$catch_Neff <- matrix(oe_paaCN, nrow = N_rows, 1)
+      }
+    }
+    
+    #discard CV - need additional years even if not using
+    wham_dat_file[[1]]$dat$discard_cv <- matrix(0, nrow = N_rows, nfleet)
+    
+    
+    #discard ESS (even if not using)
+    wham_dat_file[[1]]$dat$discard_Neff <- matrix(0, nrow = N_rows, nfleet)
+    
+    
+    
+    
+    # pull true starting numbers-at-age from OM
+    initN <- stock$J1N[styear,]
+    wham_dat_file[[1]]$dat$N1_ini <- initN
+    
+    wham_dat_file[[1]]$dat$q_ini <- qI      
+    
+    if(nfleet == 2){
+      
+      wham_dat_file[[1]]$dat$F1_ini[1] <- exp(stock$comF_full[styear]) 
+      wham_dat_file[[1]]$dat$F1_ini[2] <- exp(stock$recF_full[styear]) 
+      
+    }else{
       wham_dat_file[[1]]$dat$F1_ini <- exp(stock$F_full[styear]) ### test this 
-      }
-      
-      # wham_dat_file[[1]]$dat$steepness_ini<-h
-
-      if(mproc[m,'Lag'] == 'TRUE'){
-        wham_dat_file[[1]]$dat$nfinalyear <- y-1
-      }
-      else if(mproc[m,'Lag'] == 'FALSE'){
-        wham_dat_file[[1]]$dat$nfinalyear <- y
-      }
-      
-      wham_dat_file[[1]]$dat$proj_ini <- c((y), -1, 3, -99, 1)
-      # 
-      wham_dat_file[[1]]$dat$R_avg_start <- styear
-      wham_dat_file[[1]]$dat$R_avg_end <- endyear
-
+    }
     
+    # wham_dat_file[[1]]$dat$steepness_ini<-h
+    
+    if(mproc[m,'Lag'] == 'TRUE'){
+      wham_dat_file[[1]]$dat$nfinalyear <- y-1
+    }
+    else if(mproc[m,'Lag'] == 'FALSE'){
+      wham_dat_file[[1]]$dat$nfinalyear <- y
+    }
+    
+    wham_dat_file[[1]]$dat$proj_ini <- c((y), -1, 3, -99, 1)
+    # 
+    wham_dat_file[[1]]$dat$R_avg_start <- styear
+    wham_dat_file[[1]]$dat$R_avg_end <- endyear
+    
+    
+    
+    if(mproc[m,'ECOV'] == TRUE){
       
-    # calls wham paramaterization set in wham_settings.R  
-    input <- do.call(prepare_wham_input, c(list(asap3 = wham_dat_file), stock_wham_settings)) 
+      ecov <- get_WHAMecov(stock_wham_settings)
+      
+      ecov$mean <- as.matrix(get_dwindow(Tanom, styear, endyear))
+      ecov$use_obs = matrix(1, ncol=1, nrow=length(ecov$mean)) # use all obs (=1)
+      ecov$year <- styear:endyear
+      #!ecov$lag <- stock_wham_settings$ecov$lag
+      #!ecov$where <- stock_wham_settings$ecov$where
+      stock_wham_settings$ecov <- ecov
+    } 
     
 
-    # for the BRPs in the OM, when RFUN_NM == hindcastMean, the length of the R time series is set by BREF_PAR0
-    # to have equal BRP estimation techniques:
-    # otherwise, e.g., if RFUN_NM == hindcastMeanAllyrs, WHAM default is used, which is all years of R
-    
     if(mproc[m,'RFUN_NM'] == "hindcastMean"){
       
-      input$basic_info <- c(stock_wham_settings$basic_info, 
+      stock_wham_settings$basic_info <- c(stock_wham_settings$basic_info, 
                             list(XSPR_R_avg_yrs = tail(1:wham_dat_file[[1]]$dat$n_years, mproc[m,'BREF_PAR0'])))
       
     }
     
     if(mproc[m,'RFUN_NM'] == "hindcastMeanAllyrs"){
       
-      input$basic_info <- c(stock_wham_settings$basic_info, 
+      stock_wham_settings$basic_info <- c(stock_wham_settings$basic_info, 
                             list(XSPR_R_avg_yrs = 1:wham_dat_file[[1]]$dat$n_years))
       
     }
+    
+    # calls wham paramaterization set in wham_settings.R  
+    input <- do.call(prepare_wham_input, c(list(asap3 = wham_dat_file), stock_wham_settings)) 
+    
+    
+    # for the BRPs in the OM, when RFUN_NM == hindcastMean, the length of the R time series is set by BREF_PAR0
+    # to have equal BRP estimation techniques:
+    # otherwise, e.g., if RFUN_NM == hindcastMeanAllyrs, WHAM default is used, which is all years of R
+    
+
     
     #### retaining fixed NAA to start, come back to this!!!!! 
     
@@ -239,9 +233,12 @@ get_WHAM <- function(stock,...){
       input$map$log_N1 <- as.factor(matrix(data=rep(NA,9),nrow=1,ncol=9))
       
     }
-    }
     
-
+    
+    
+    
+    
+    
     # Fit wham model
     whamEst <- fit_wham(input, do.osa=F, MakeADFun.silent = TRUE, do.retro = TRUE,
                         n.peels = 3, do.check=TRUE)

@@ -26,15 +26,14 @@ if(nfleet ==2){
                                                                  which(stock$codWGOM$selR == 1),
                                                                  which(stock$codWGOM$selI == 1)
                                                    )),
-                                
-                                recruit_model = 2,
+                                  recruit_model = 3,
+            
                                 
                                 NAA_re = list(sigma = "rec+1", cor = "2dar1"),
                                 
                                 basic_info = list(fracyr_SSB = 0, fracyr_indices = 0.5)
                                 
-  )
-}else{
+  )}else{
   
   wham_settings$codWGOM <- list(model_name = "codWGOM",
                                 
