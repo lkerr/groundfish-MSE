@@ -76,7 +76,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     
     return(list(RPvalue = F, equiJ1N_MSY = equiJ1N_MSY))
     
-  }else if(parmgt$FREF_TYP == 'FmsySim'){
+  }else if(parmgt$FREF_TYP == 'FmsySim'){ # used for Burn in F no matter your FREF_TYP in mproc
    
     candF <- seq(from=0, to=1.25, by=0.01)
 
@@ -102,7 +102,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
                               stockEnv = stockEnv)})
     
     sumCW <- do.call(cbind, sapply(simAtF, '[', 'sumCW'))
-    
+
     meanSumCW <- apply(sumCW, 2, mean)
 
     Fmsy <- candF[which.max(meanSumCW)]

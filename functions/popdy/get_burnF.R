@@ -11,18 +11,36 @@ get_burnF <- function(stock){
                  yrs_temp = yrs_temp, # temperature years
                  y = 1)
   
-  parpop <- with(stock, {
-                   list(
-                     waa = waa[1,, drop=FALSE], 
-                     sel = slxC[1,, drop=FALSE], 
-                     M = init_M, 
-                     mat = mat[1,, drop=FALSE],
-                     R = NA,
-                     SSBhat = SSB[1, drop=FALSE],
-                     J1N = J1N[1,, drop=FALSE],
-                     Rpar = Rpar,
-                     Fhat = NA,
-                     switch= TRUE)})
+  if(nfleet==2){
+    parpop <- with(stock, {
+      list(
+        waa = waa[1,, drop=FALSE], 
+        selC = slxC[1,, drop=FALSE], 
+        selR = slxR[1,, drop=FALSE], 
+        M = init_M, 
+        mat = mat[1,, drop=FALSE],
+        R = NA,
+        SSBhat = SSB[1, drop=FALSE],
+        J1N = J1N[1,, drop=FALSE],
+        Rpar = Rpar,
+        Fhat = NA,
+        comFhat = NA,
+       recFhat = NA,
+        switch= TRUE)})
+  }else{
+    parpop <- with(stock, {
+      list(
+        waa = waa[1,, drop=FALSE], 
+        sel = slxC[1,, drop=FALSE], 
+        M = init_M, 
+        mat = mat[1,, drop=FALSE],
+        R = NA,
+        SSBhat = SSB[1, drop=FALSE],
+        J1N = J1N[1,, drop=FALSE],
+        Rpar = Rpar,
+        Fhat = NA,
+        switch= TRUE)})
+  }
 
   Fref <- get_FBRP(parmgt = parmgt, parpop = parpop, parenv = parenv, 
                    Rfun_lst = Rfun_lst, stockEnv=stock)

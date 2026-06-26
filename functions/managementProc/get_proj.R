@@ -115,20 +115,37 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     init<-suminit*initpaa
   }
 
-  # Ensure that all vectors are the same length
+  # Ensure that all vectors are the right length:
+  
+  if(nfleet == 2){
+    if(!all(length(parpop$selC) == length(init),
+            length(parpop$selC) == length(parpop$waa),
+            length(parpop$selR) == length(init),
+            length(parpop$selR) == length(parpop$waa))){
+      stop('get_proj: check vector lengths')
+    } 
+  }else{
   if(!all(length(parpop$sel) == length(init),
           length(parpop$sel) == length(parpop$waa))){
     stop('get_proj: check vector lengths')
   }
+  }
 
   # If M is a vector, ensure it is the same length as the rest
-  if(length(parpop$M) > 1){
+  if(length(parpop$M) > 1 & nfleet != 2){
     if(length(parpop$sel) != length(parpop$M)){
       stop('get_proj: check vector lengths (M)')
     }
   }
-
-  nage <- length(parpop$sel)
+  if(length(parpop$M) > 1 & nfleet == 2){
+    if(!all(length(parpop$selC) != length(parpop$M),
+            length(parpop$selR) != length(parpop$M))){
+      stop('get_proj: check vector lengths (M)')
+    }
+  }
+  
+  if(nfleet==2){nage <- length(parpop$selC)
+  }else{nage <- length(parpop$sel)}
 
   # if M is not given as a vector, make it one
   if(length(parpop$M) == 1){
@@ -148,6 +165,11 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   N[1,] <- init
   #Get beginning of year population in year t+1
   if (type=='current'){
+    
+    if(nfleet==2){
+      stop("type = `current` not configured for 2 fleets")
+    }
+    
     Fhat<-parpop$Fhat
     for(a in 2:(nage-1)){
       #init= population at the beginning of the year in t-1
@@ -169,9 +191,17 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       N[1,]<-N[1,]/(1+stockEnv$Mohns_Rho_SSB[y])
     }
   }
+  
   for(y in 2:length(Tanom)){
+    
   Fvalue<-F_val
+  
   if (type=='current'){
+    
+    if(nfleet==2){
+      stop("type = `current` not configured for 2 fleets")
+    }
+    
     if (y==2 & !exists('catchproj',stockEnv)){
       Fvalue<-parpop$Fhat
     }
@@ -183,11 +213,32 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
                     waav = parpop$waa)
     }
   }
+  ## WORK HERE FOR @ FLEET!!!
+  
+  
+  # if nfleet == 2, need to allocate sel for cand F by relative Catch
+  
+  if(nfleet == 2){
+    
+    comCN_sum <- rowSums(stockEnv$comCN)
+    CN_sum <- rowSums(stockEnv$CN)
+    
+    last_index <- max(which(!is.na(comCN_sum))) # use last year of CN
+  
+
+    
+    pxcom <- comCN_sum[last_index]/CN_sum[last_index]
+    
+    parpop$sel <- (stockEnv$selC * pxcom) + (stockEnv$selR * (1-pxcom))
+  }
+  
     for(a in 2:(nage-1)){
       #N[y-1] is the population at the beginning of the previous year
       #exponential survival to the next year/age
+      
       N[y,a] <- N[y-1, a-1] * exp(-parpop$sel[a-1]*Fvalue -
                                     parpop$M[a-1])
+      
     }
     # Deal with the plus group
       N[y,nage] <- N[y-1,nage-1] * exp(-parpop$sel[nage-1] * Fvalue -
@@ -215,7 +266,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   SSBaa <- sweep(Waa, MARGIN=2, STATS=parpop$mat, FUN='*')
 
   # Calculate the catch in weight
-  sumCW <- sapply(2:nrow(N), function(i){
+  sumCW <- sapply(2:nrow(N), function(i){ #if nfleet == 2 the new shell should be used for this
     CN <- (parpop$sel * F_val) / (parpop$sel * F_val + parpop$M) *
       N[i,] * (1 - exp(-F_val * parpop$sel - parpop$M))
     tempSumCW <- CN %*% c(parpop$waa)
