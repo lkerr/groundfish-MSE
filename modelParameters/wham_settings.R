@@ -37,6 +37,33 @@ wham_settings$codWGOM <- list(model_name = "codWGOM",
                               
                               )
 
+
+
+# GOM haddock
+wham_settings$haddockGOM <- list(model_name = "haddockGOM",
+                              
+                              selectivity = list(model=c("age-specific","age-specific"), # selectivity for catch, index
+                                                 initial_pars=list(stock$haddockGOM$selC,
+                                                                   stock$haddockGOM$selI),
+                                                 #fix_pars=list(which(stock$haddockGOM$selC==1),
+                                                 #which(stock$haddockGOM$selI ==1))
+                                                 
+                                                 fix_pars=list(c(1:9),c(1:9))
+                                                 
+                              ),
+                              
+                              
+                              recruit_model = 2,
+                              
+                             # NAA_re = list(sigma = "rec+1", cor = "2dar1"),
+                              NAA_re = list(sigma = "rec", cor = "ar1_y"), # run w/o full NAA REs, only recruitment
+                              basic_info = list(fracyr_SSB = 0, fracyr_indices = 0.5)
+                              
+                              #index_info = list(fracyr_indices = 0.5)
+                              
+)
+
+
 # haddockGB
 # # Setting for the SDM-q linked model
 # wham_settings$haddockGB <- list(model_name = "haddockGB_model",

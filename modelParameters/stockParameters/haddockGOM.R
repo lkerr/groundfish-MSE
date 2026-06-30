@@ -4,7 +4,7 @@
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.
 
-burnFmsyScalar <- 4 #GOM cod carryover
+burnFmsyScalar <- 0 # Haddock should enter historical period ~ SSB = 15k
 burnFsd <- 0.3 # GOM cod carryover
 burnFsd <- 0  # Remove stochasticity on F in the Burn-in
 
@@ -40,8 +40,8 @@ M_typ <- 'const'
 init_M <- 0.2
 
 # initial numbers at-age parameters. Can be input or based on exponential decline.
-# from 2024 management track assessment. GOM haddock dat file N1_ini
-initN_par <- c(6599, 1377, 1888, 2204, 588, 463, 1, 5, 20)
+# from 2024 management track assessment results . GOM haddock.
+initN_par <- c(13701.7444, 25231.9673, 1055.3418, 2326.5296, 1262.8613, 817.8998, 278.6307, 248.3106, 216.7139) *1000
 initN_type <- 'input'
 # initN_par <- c(nage = page, N0 = 2e7, F_full = 0.05, M = 0.2)
 # initN_type <- 'expDecline'
@@ -51,12 +51,12 @@ initN_type <- 'input'
 
 # fishery and survey catchabilities
 qC <- 0.0001 ## HASNT BEEN UPDATED
-qI <- 0.0001  # value from bigelow fall + spring (albatross is higher)
+qI <- 0.0001  # HASNT BEEN UPDATED. SPRING BTS = 0.0001739906, FALL BTS = 0.000426685
 
 DecCatch<-FALSE #If survey catchability decreases with temperature, set to TRUE.
 
 # fishery selectivity. From 2024 management track assessment, which has a single aggregate fleet. Using most recent selectivity time block.
-selC <- c(0.02, 0.12, 0.33, 0.54, 0.73, 1, 1, 1, 1) # scraped from figures
+selC <- c(0.02250824, 0.11092088, 0.32271663, 0.53992700, 0.72855051, 1.00000000, 1.00000000, 1.00000000, 1.00000000) # 3rd selectivity block in WHAM model (m$rep$selAA[[3]][1,])
 selC_typ <- 'input'
 
 #### Recruitment Options ####
@@ -64,11 +64,19 @@ selC_typ <- 'input'
 ###For BH SR with relationship with temperature###
 R_typ <- 'BH'
 
-# Haddock GOM BH with temp (r increases w/ temp):
-Rpar<-c(a = 1.5193511, b = 0.0004695, g = -1.3659508) #### THESE ARE W/ TEMP IS IN DENOMINATOR. CHECK TO MAKE SUREIN IT IS IN OM
+# f parameter is temperature effect placed on alpha in the numerator
+# g parameter is temperature effect placed on beta parameter in the denominator
+
+# Haddock GOM BH w/o temp. Sigma from model is 1.25
+Rpar<-c(a = 341.3797, b = 0.00002522813, f = 0, g = 0)
+
+# Haddock GOM BH with temp (r increases w/ temp). Sigma from model is 1.14
+Rpar<-c(a = 562.6789, b = 0.00009613923, f = 0.668772, g = 0) #### THESE ARE W/ TEMP IN Numerator
+
+
 
 # No temperature (appeared to underestimate R at high SSB)
-Rpar<-c(a=0.6956046,b=0.0001242,g=0)
+# Rpar<-c(a=0.6956046,b=0.0001242, f=0, g=0)
 
 R_mis<-FALSE # If BRPs and projections assume a wrong SRR, set to TRUE.
 # these are place holders, because R_mis = FALSE
@@ -83,7 +91,11 @@ Rnyr= 20)
 ## Survey information
 #selI <- c(1)
 #selI_typ <- 'const'
-selI <- c(0.6, 0.62, 0.91, 1, 1, 1, 1, 1, 1) #Spring survey from 2024 management track, most recent time block
+
+# selI <- c(0.6011289, 0.6176342, 0.9038376, 1.0000000, 1.0000000, 1.0000000, 1.0000000, 1.0000000, 1.0000000) # Spring trawl survey from 2024 management track
+# selI <- c(0.4630576, 0.6604424, 0.7968710, 0.8720059, 1.0000000, 1.0000000, 1.0000000, 1.0000000, 1.0000000) # Fall trawl survey from 2024 management track
+selI <- c(0.5320932, 0.6390383, 0.8503543, 0.9360030, 1.0000000, 1.0000000, 1.0000000, 1.0000000, 1.0000000) # at-age means of spring and fall trawl surveys from 2024 management track
+
 selI_typ <- 'input'
 timeI <- 0.5 # when is the survey (as a proportion of the year)
 
@@ -117,14 +129,14 @@ oe_sumIN <- 0.43 # from GOM haddock 2024 management track dat file. Mean of all 
 oe_sumIN <- 0.33 # from GOM haddock 2024 management track dat file. Mean of 10 most recent CVs for Spring BTS. Fall is 0.36
 oe_sumIN_typ <- 'lognorm'
 
-oe_paaIN <- 25 # from GOM haddock 2024 management track dat file. Most recent 20 or so years use this. Fall uses 12.
+oe_paaIN <- 80 # from GOM haddock 2024 management track dat file. Most recent 20 or so years use 25 for spring, and 12 for fall
 oe_paaIN_typ <- 'multinomial'
 
 oe_effort <- 0.01  #### DID NOT CHANGE
 oe_effort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 0.25 # cannot be zero # 0.5 for Beverton Holt # DID NOT CHANGE THIS, SHOULD BE INFORMED BY SR MODEL ESTIMATION
+pe_R <- 1 # cannot be zero # 0.5 for Beverton Holt # DID NOT CHANGE THIS, SHOULD BE INFORMED BY SR MODEL ESTIMATION
 pe_RSA<- 1 # recruitment process error assumed in the stock assessment. Recruitment CV from 2024 GOM haddock management track dat file.
 pe_IA <- 0.18 #### DID NOT CHANGE. DON'T KNOW WHERE THIS VALUE IS FROM
 
