@@ -24,6 +24,9 @@ get_fillRepArrays <- function(stock){
     omval$OFdStatus[r,m,] <- OFdStatus
     omval$mxGradCAA[r,m,] <- mxGradCAA
     omval$F_fullAdvice[r,m,] <- F_fullAdvice #AEW
+    omval$comF_fullAdvice[r,m,] <- comF_fullAdvice #AEW
+    omval$recF_fullAdvice[r,m,] <- recF_fullAdvice #AEW
+    
     omval$ACL[r,m,] <- ACL #AEW
     omval$comACL[r,m,] <- comACL #AEW
     omval$recACL[r,m,] <- recACL #AEW

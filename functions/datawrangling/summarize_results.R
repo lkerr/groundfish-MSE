@@ -51,14 +51,23 @@ summarize_results <- function(omvalGlobal, whamGlobal, hcr, stamp, dir){
              .before = everything())}
   
   ##### Apply to SSB, F, R, Catch
-  traj <- list(SSB = NA,
-               F = NA,
-               comF,
-               recF,
-               R = NA,
-               Catch = NA,
-               comCatch = NA,
-               recCatch = NA)
+  if(nfleet == 2){
+    traj <- list(SSB = NA,
+                 F = NA,
+                 comF = NA,
+                 recF = NA,
+                 R = NA,
+                 Catch = NA,
+                 comCatch = NA,
+                 recCatch = NA)
+    
+  }else{
+    traj <- list(SSB = NA,
+                 F = NA,
+                 R = NA,
+                 Catch = NA)
+  }
+  
   
   for(t in names(traj)){
     ls <- whamGlobal[[s]][[t]]
@@ -110,6 +119,50 @@ summarize_results <- function(omvalGlobal, whamGlobal, hcr, stamp, dir){
   em <- left_join(traj_wide, single_wide, by = c("rep", "year_i_assessment")) %>%
     rowwise() %>% mutate(ssb_ratio = SSB/SSBMSY, f_ratio = F/FMSY, .before = "SSB")
   
+  
+  ##### add selectivies when 2 fleets are used, these are by age so need to do some adjusting
+if(nfleet ==2){  sels <- c("comSelAA", "recSelAA", "IndSelAA")
+  
+  sellist_full <- list()
+  
+  for(t in sels){
+    ls <- whamGlobal[[s]][[t]]
+    reps <- 1:length(ls)
+    
+    rep_list <- list()
+    for(r in reps){
+      yi <- length(ls[[r]])
+      names(ls[[r]]) <- paste0("year", 1:yi)
+      
+      sellist1 <- list()
+      
+      for(f in 1:yi){
+        
+        if(!is.null(ls[[r]][[f]]) && length(ls[[r]][[f]]) > 0){
+          
+          df <- data.frame(ls[[r]][f])
+          df$yri <- str_split_i(colnames(df), "\\.", 1)[1]
+          names(df) <- c( paste0("Age",rep(1:(dim(df)[2]-1))), "year_i_assessement")
+          sellist1[[f]] <- df
+        }
+        
+        }
+      stacked_df <- do.call(rbind, sellist1)
+      stacked_df$rep <- paste0("rep",r)
+      
+      rep_list[[r]] <- stacked_df 
+    }
+    final_stacked_df <- do.call(rbind, rep_list)
+    final_stacked_df$sel_typ <- t
+    
+    sellist_full[[t]] <- final_stacked_df 
+    
+  }
+  
+  full_sel <- do.call(rbind, sellist_full)
+}
+  
+  
   ################################# Risk Policy
   
   hcr1 <- hcr$hcr
@@ -123,10 +176,18 @@ summarize_results <- function(omvalGlobal, whamGlobal, hcr, stamp, dir){
   ## Need to add this. Currently just saving the hcr list as it is stored
   
   ################################ Save restructured results
+  if(nfleet ==2){  
+    saveRDS(list(om = mutate(om.df, date_stamp = stamp, .before = everything()),
+                                em = mutate(em, date_stamp = stamp, .before = everything()), 
+                                hcr = mutate(hcr.df, date_stamp = stamp, .before = everything()),
+                 sel = mutate(full_sel, date_stamp = stamp, .before = everything())), 
+                           file = paste0(dir, "res_for_plots.rds"))}
+  else{
   saveRDS(list(om = mutate(om.df, date_stamp = stamp, .before = everything()),
                em = mutate(em, date_stamp = stamp, .before = everything()), 
                hcr = mutate(hcr.df, date_stamp = stamp, .before = everything())), 
           file = paste0(dir, "res_for_plots.rds"))
+  }
 
 }
 

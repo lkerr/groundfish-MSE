@@ -124,7 +124,7 @@ get_advice <- function(stock){
                      Rpar_mis= Rpar_mis,
                      Fhat = tail(res$F.report, 1),
                      comFhat = tail(res$comF.report, 1),
-                     recFhat = tail(res$comF.report, 1))
+                     recFhat = tail(res$recF.report, 1))
     })
   }
 #browser()
@@ -237,6 +237,7 @@ get_advice <- function(stock){
 
         comACL[y] <- quota * pcom
         recACL[y] <- quota * (1-pcom)
+        ACL[y] <- quota
         
       }else{ACL[y] <- quota}
 

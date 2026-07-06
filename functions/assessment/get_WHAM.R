@@ -190,7 +190,9 @@ get_WHAM <- function(stock, Tanom,...){
     
     if(mproc[m,'ECOV'] == TRUE){
       
-      ecov <- get_WHAMecov(stock_wham_settings)
+      updates <- get_WHAMecov(stock_wham_settings)
+      
+      ecov <- updates$ecov
       
       ecov$mean <- as.matrix(get_dwindow(Tanom, styear, endyear))
       ecov$use_obs = matrix(1, ncol=1, nrow=length(ecov$mean)) # use all obs (=1)
@@ -198,6 +200,10 @@ get_WHAM <- function(stock, Tanom,...){
       #!ecov$lag <- stock_wham_settings$ecov$lag
       #!ecov$where <- stock_wham_settings$ecov$where
       stock_wham_settings$ecov <- ecov
+      
+      stock_wham_settings$recruit_model <- updates$recruit_model
+      stock_wham_settings$NAA_re <- updates$NAA_re
+      
     } 
     
 
@@ -283,6 +289,18 @@ get_WHAM <- function(stock, Tanom,...){
     wham_storage$MohnsRho_N[[r]][[y]] <- MohnsRho$naa[1,,]
     wham_storage$pars_q[[r]][[y]] <- tail(whamEst$rep$q, n=1) # Save only final q estimate, may revise in future but only a single value can be retained or get_fillRepArrays throws an error!!!
 
+    if(nfleet == 2){
+      
+      wham_storage$comF[[r]][[y]] <- apply(whamEst$rep$FAA[1,,], 1, max)
+      wham_storage$recF[[r]][[y]] <- apply(whamEst$rep$FAA[2,,], 1, max)
+      wham_storage$comCatch[[r]][[y]] = whamEst$rep$pred_catch[,1]
+      wham_storage$recCatch[[r]][[y]] = whamEst$rep$pred_catch[,2]
+      wham_storage$comSelAA[[r]][[y]] <- whamEst$rep$selAA[[1]]
+      wham_storage$recSelAA[[r]][[y]] <- whamEst$rep$selAA[[2]]
+      wham_storage$IndSelAA[[r]][[y]] <- whamEst$rep$selAA[[3]]
+      
+    }
+    
     ### some things use different data structures in multi- or single-wham
     if(whamversion == "multi"){
       wham_storage$R[[r]][[y]] <- whamEst$rep$NAA[,,,1]
