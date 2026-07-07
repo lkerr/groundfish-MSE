@@ -26,7 +26,7 @@ if(nfleet ==2){
                                                                  which(stock$codWGOM$selR == 1),
                                                                  which(stock$codWGOM$selI == 1)
                                                    )),
-                                  recruit_model = 3,
+                                  recruit_model = 2,
             
                                 
                                 NAA_re = list(sigma = "rec+1", cor = "2dar1"),
