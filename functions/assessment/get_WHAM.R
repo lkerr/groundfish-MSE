@@ -196,18 +196,18 @@ get_WHAM <- function(stock,...){
     
     
     # Check if bad parameters were flagges
-    badpar <- "badpar" %in% names(whamEst)
+    #badpar <- "badpar" %in% names(whamEst)
     
     # Convergence check for wham
     check <- check_convergence(whamEst, ret=TRUE) # May want to suppress printing to screen using sink()
     whamConverge <- ifelse((check$na_sdrep == FALSE & check$is_sdrep == TRUE & check$convergence == 0), TRUE, FALSE) # If no NAs in sdrep, hessian invertible and model thinks it is converged (small gradient) then model converged
     
     # set flags for file name
-    con_flag <- ifelse(whamConverge, "Converged", "Failed")
-    bad_flag <- ifelse(badpar, "BadPars", "NoBadPars")
+    #con_flag <- ifelse(whamConverge, "Converged", "Failed")
+    #bad_flag <- ifelse(badpar, "BadPars", "NoBadPars")
     
     #save results from wham
-    saveRDS(whamEst, file = paste(ResultDirectory, "/WHAM_", stockName,'_', r, '_', y, "_", con_flag, "_", bad_flag, '.rdat', sep = '')) #??? probably don't want to save this, save a subset of results 
+    #saveRDS(whamEst, file = paste(ResultDirectory, "/WHAM_", stockName,'_', r, '_', y, "_", con_flag, "_", bad_flag, '.rdat', sep = '')) #??? probably don't want to save this, save a subset of results 
     
     #if(y == fmyearIdx){plot_wham_output(whamEst, dir.main = paste(getwd(),ResultDirectory, sep = "/"))}
     
