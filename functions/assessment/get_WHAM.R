@@ -295,6 +295,8 @@ get_WHAM <- function(stock, Tanom,...){
       wham_storage$recF[[r]][[y]] <- apply(whamEst$rep$FAA[2,,], 1, max)
       wham_storage$comCatch[[r]][[y]] = whamEst$rep$pred_catch[,1]
       wham_storage$recCatch[[r]][[y]] = whamEst$rep$pred_catch[,2]
+      wham_storage$Catch[[r]][[y]] <- whamEst$rep$pred_catch[,1] + whamEst$rep$pred_catch[,2]
+      
       wham_storage$comSelAA[[r]][[y]] <- whamEst$rep$selAA[[1]]
       wham_storage$recSelAA[[r]][[y]] <- whamEst$rep$selAA[[2]]
       wham_storage$IndSelAA[[r]][[y]] <- whamEst$rep$selAA[[3]]
@@ -341,7 +343,8 @@ get_WHAM <- function(stock, Tanom,...){
           comF.report= apply(whamEst$rep$FAA[1,,], 1, max),
           recF.report= apply(whamEst$rep$FAA[2,,], 1, max),
           comcatch = whamEst$rep$pred_catch[,1],
-          reccatch = whamEst$rep$pred_catch[,2]
+          reccatch = whamEst$rep$pred_catch[,2],
+          catch = whamEst$rep$pred_catch[,1] + whamEst$rep$pred_catch[,2]
         )
       }}
 
