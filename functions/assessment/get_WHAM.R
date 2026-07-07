@@ -178,7 +178,7 @@ get_WHAM <- function(stock,...){
     
     #### retaining fixed NAA to start, come back to this!!!!! 
     
-    if (stock$stockName=='codWGOM'){
+    if (stock$stockName %in% c('codWGOM', "haddockGOM")){
       # Fix starting NAA at initial values (OM values)
       
       input$map$log_N1 <- as.factor(matrix(data=rep(NA,9),nrow=1,ncol=9))

@@ -2,15 +2,19 @@
 
 
 get_RiskPolicy <- function(stockEnv){
-  weighting <- "NEFMC"
+  weighting <- "approved" # Defaults to the approved weights, regardless of what is here. Other options are "uniform" and "mock"
   fishery <- 2
   
   
-  nefmc <- c(0.23, 0.21, 0.21, 0.13, 0.23)
+  nefmc_mock <-     c(0.23, 0.21, 0.21, 0.13, 0.23)
+  # nefmc_approved <- c(0.23, 0.22, 0.16, 0.15, 0.21)
+  nefmc_approved <- c(3.44, 2.89, 2.11, 2.06, 2.83)
+  nefmc_approved <- nefmc_approved/sum(nefmc_approved)
   uniform <- rep(1/5, 5)
 
-  weights <- data.frame(factor = c("ssb", "recruit", "climate", "commercial", "recreational"),
-                        weight = if(weighting == "uniform"){uniform}else{nefmc})
+  weights <- data.frame(factor = c("ssb", "recruit", "climate", "recreational", "commercial"),
+                        weight = if(weighting == "uniform"){uniform}else{
+                          if(weighting == "mock"){nefmc_mock}else{nefmc_approved}})
   
   res <- stockEnv$res
   s <- stockEnv$stockName
@@ -95,8 +99,12 @@ get_RiskPolicy <- function(stockEnv){
   ##### Calculate percent of Fmsy for Risk Policy integrated control rules
   
   # Define risk tolerance tiers. Currently equal thirds of the 0.5 to 1 recommended probability space.
-  HighRisk<- 0.5+0.5/3
-  LowRisk <- 1-0.5/3
+  # HighRisk<- 0.5+0.5/3
+  # LowRisk <- 1-0.5/3
+  
+  # Approved risk tiers, based on the second derivative of the logistic function
+  HighRisk <- 0.61
+  LowRisk <- 0.89
   
   rp <- rp %>% mutate(z = z, logistic_out = logistic_out,
                       rec_prob = ifelse(logistic_out<0.5, 0.5, logistic_out),   # floor of 0.5 for recommended probabilities
