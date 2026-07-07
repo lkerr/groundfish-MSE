@@ -66,8 +66,8 @@ get_perRecruit <- function(parmgt, parpop,
   
   # potential levels of F for INSIDE the function (i.e., not output)
   F_full <- seq(0, 2, length.out = nF)
-  comF_full <- seq(0, 2, length.out = nF)
-  recF_full <- seq(0, 2, length.out = nF)
+  #comF_full <- seq(0, 2, length.out = nF)
+  #recF_full <- seq(0, 2, length.out = nF)
   
   # Initial level for number of recruits
   N_init <- 1
@@ -100,7 +100,16 @@ get_perRecruit <- function(parmgt, parpop,
   for(i in seq_along(Y)){
     # Calculate mortality, survival and catch
     if(nfleet == 2){
-      F <- (selC * comF_full[i]) + (selR * recF_full[i])
+     
+      # estimate current ratio
+      #pcom.t <- parpop$comFhat / parpop$Fhat
+     pcom <- 0.725 ### test this needs updating
+      scom <- selC * pcom
+      srec <- selR * (1-pcom)
+      sel.z <- scom + srec
+      
+    F <- sel.z * F_full[i]
+    
     }else{
       F <- sel * F_full[i]
     }
@@ -114,8 +123,9 @@ get_perRecruit <- function(parmgt, parpop,
     # fishing mortality
     Y[i] <- C %*% c(waa) # (use c() for proper formatting)
     SSB[i] <- sum(N * waa * mat)
+    
   }
-
+  
   if(parmgt$FREF_TYP == 'YPR'){
     ## find F(x)
     # get all slopes
