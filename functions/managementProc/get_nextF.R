@@ -91,6 +91,12 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     if(nfleet == 2){
       parpopT$selR<-stockEnv$selR
       parpopT$selC<-stockEnv$selC
+      
+      # if two fleets get the current proportion of com fishing
+        styear <- fmyearIdx - stockEnv$ncaayear
+        pcom.temp <- (sum(stockEnv$comF_full[styear:(y-1)])/sum(stockEnv$F_full[styear:(y-1)]))
+        parpopT$pcom.temp <- pcom.temp
+      
     }else{parpopT$sel<-stockEnv$selC}
     
     parpopT$R<-stockEnv$R[1:(y-1)]

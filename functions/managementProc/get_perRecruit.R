@@ -103,8 +103,11 @@ get_perRecruit <- function(parmgt, parpop,
      
       # estimate current ratio
       #pcom.t <- parpop$comFhat / parpop$Fhat
-     pcom <- 0.725 ### test this needs updating
-      scom <- selC * pcom
+      
+     pcom <- parpop$pcom.temp
+     #pcom <- .82
+     
+     scom <- selC * pcom
       srec <- selR * (1-pcom)
       sel.z <- scom + srec
       
