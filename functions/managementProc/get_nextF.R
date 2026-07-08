@@ -182,6 +182,10 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       F <- stockEnv$res$FMSY * (rp %>% pull(prop_tiered))
     }
     
+    
+    #Use Fmsy for F in projections for P* HCR
+    if(tolower(parmgt$HCR) == 'pstar'){F<-FrefRPvalue}
+    
  F_Target <- F
     
 ######################################### Projections
@@ -218,8 +222,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       parpopproj$J1N<-tail(stockEnv$res$N.age,1)
       parpopproj$catch<-stockEnv$res$catch.obs
       
-      #Use Fmsy for F in projections for P* HCR
-      if(tolower(parmgt$HCR) == 'pstar'){F<-FrefRPvalue}
+
       
       #If weight-at-age is misspecified, make it misspecified in projections
       if(stockEnv$waa_mis=='TRUE'){
@@ -255,17 +258,24 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       #Get catch advice 
       catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
       
-      #Determine catch advice for P* HCR
-      if(tolower(parmgt$HCR) == 'pstar'){
-        P<-calc_pstar(0.4,tail(parpop$SSBhat,1)/BThresh)
-        CV<-1
-        catchproj[1]<-calc_ABC(catchproj[1],P,CV)
-        catchproj[2]<-calc_ABC(catchproj[2],P,CV)
-      }
+      if(tolower(parmgt$HCR) == 'pstar'){oflproj <- catchproj} # set projected OFL
+
       
       
       } # end of if wham else statement. all approaches should now have 2 yrs of projected catch
 
+        
+
+#Determine catch advice for P* HCR
+      if(tolower(parmgt$HCR) == 'pstar'){
+        P<-calc_pstar(relB = tail(parpop$SSBhat,1)/BThresh, parmgt = parmgt, rp = rp)
+        CV<-parmgt$PSTAR_CV
+        catchproj[1]<-calc_ABC(oflproj[1],P,CV)
+        catchproj[2]<-calc_ABC(oflproj[2],P,CV)
+      }
+        
+
+        
 ################################# Constraints on projected catch        
 
       #If the minimum catch constraint is on, make sure catch advice is not below that constraint
