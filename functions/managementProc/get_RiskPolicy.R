@@ -3,6 +3,7 @@
 
 get_RiskPolicy <- function(stockEnv){
   weighting <- "approved" # Defaults to the approved weights, regardless of what is here. Other options are "uniform" and "mock"
+  #weighting <- "mock"
   fishery <- 2
   
   

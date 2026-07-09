@@ -1,6 +1,15 @@
-calc_pstar = function(maxp, relB)#function to calculate P* based on SSB/SSBmsy
+#function to calculate P* 
+# Can use biomass-based algorithm to emulate MAMFC approach, risk policy-informed, or user-specified
+
+
+calc_pstar = function(relB, parmgt, rp)
+
 {
-  if(relB>=1) #at asymptote
+
+###### MAFMC biomass-based approach to setting P*. HOLD OVER: NEED TO UPDATE/REVISE.
+  if(tolower(parmgt$PSTAR) == "mafmc"){
+    maxp <- 0.4
+    if(relB>=1) #at asymptote
   {
     P = maxp
   }
@@ -14,5 +23,17 @@ calc_pstar = function(maxp, relB)#function to calculate P* based on SSB/SSBmsy
     inter <- maxp-slope
     P = inter+slope*relB
   }
+  }
+  
+##### Risk Policy informed P*
+  if(tolower(parmgt$PSTAR) == "riskpolicy") {
+    P = rp$pstar_rp_dynamic
+  }
+  
+##### Fixed, user-specified P* set in mproc
+  if(is.numeric(parmgt$PSTAR)) {
+    P = parmgt$PSTAR
+  }
+  
   return(P)
 }
