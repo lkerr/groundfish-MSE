@@ -40,9 +40,18 @@ get_containers <- function(stockPar){
     CN = yxage, # just the CN or CW represent combined rec and com catch ("all") keeping it as is allows flexibility with 1 vs 2 fleet structure
     
     CN_temp = yxage,
+    comCN_temp = yxage,
+    recCN_temp = yxage,
+    
     
     codCW = yxage,
     codCW2 = yx0,
+    
+    codcomCW = yxage,
+    codcomCW2 = yx0,
+    
+    codrecCW = yxage,
+    codrecCW2 = yx0,
     
     comCW = yxage,
     recCW = yxage,

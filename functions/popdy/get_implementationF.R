@@ -82,7 +82,70 @@ get_implementationF <- function(type, stock){
          #                                      M = natM[y],
          #                                      ra = c(8))
 
-    else{
+    else if(type == '2fleeterror'){
+      
+      if(nfleet != 2){
+        stop('2fleeterror only works with two fleets')
+      }
+      
+
+      comCN_temp[y,] <- get_2fcatch(comF_full = comF_fullAdvice[y], recF_full = recF_fullAdvice[y], 
+                                    M=natM[y],  N=J1N[y,], selC=slxC[y,], selR = slxR[y,], type = "com") + 1e-3
+      
+      recCN_temp[y,] <- get_2fcatch(comF_full = comF_fullAdvice[y], recF_full = recF_fullAdvice[y], 
+                                    M=natM[y],  N=J1N[y,], selC=slxC[y,], selR = slxR[y,], type = "rec") + 1e-3
+      
+      
+      # Figure out the advised commercial catch weight-at-age 
+      codcomCW[y,] <- comCN_temp[y,] *  waa[y,]
+      
+      # add bias to sum commercial catch weight
+      codcomCW2[y] <- sum(codcomCW[y,]) #+ (sum(codCW[y,]) * C_mult)
+      
+      codcomCW2[y] <- sum(codcomCW[y,]) * get_error_idx(type = ie_typ,
+                                                        idx = 0.99,
+                                                        par = 0.01)
+      
+      # Figure out the advised recreational catch weight-at-age
+      codrecCW[y,] <- recCN_temp[y,] *  waa[y,]
+      
+      # add bias to sum rec catch weight
+      codrecCW2[y] <- sum(codrecCW[y,]) * get_error_idx(type = ie_typ,
+                                                        idx = 0.90,
+                                                        par = 0.15)
+      
+      
+      # add to get total 
+      codCW[y,]  <- codcomCW[y,] + codrecCW[y,]
+      codCW2[y] <- codcomCW2[y] + codrecCW2[y]
+
+      # Determine what the fishing mortality would have to be to get
+      # that biased catch level (convert biased catch back to F).
+      # Update codGOM fully selected fishing mortality to that value.
+      
+      # ST method using solver;
+      
+      # use proportional catch for sel, as in get_nextF
+      
+      pcom.temp <- codcomCW2[y] / codCW2[y]
+      
+      
+      scom <- selC * pcom.temp
+      srec <- selR * (1-pcom.temp)
+      sel.z <- scom + srec
+      
+      F_full[y] <- get_F(x = c(codCW2[y]),
+                         Nv = J1N[y,],
+                         slxCv = sel.z,
+                         M = natM[y],
+                         waav = waa[y,])
+
+      comF_full[y] <-  F_full[y]  * pcom.temp
+      recF_full[y] <-  F_full[y]  * (1-pcom.temp)
+      
+
+      
+    }else{
 
       stop('get_implementationF: type not recognized')
 
