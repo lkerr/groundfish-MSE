@@ -220,9 +220,20 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
           
           # project from the wham model and extract the appropriate years of predicted catch
           pwham <-  project_wham(stockEnv$whamEst, proj.opts = list(proj.F = f_proj))
-          catchproj <- tail(pwham$rep$pred_catch,3)[catch_indices]
           poflwham <- project_wham(stockEnv$whamEst, proj.opts = list(proj.F = fmsy_proj))
+          
+          if(nfleet == 2){# !!! WHAM projections will need to be updated for 2 stocks
+            pwham_fullcatch <- pwham$rep$pred_catch[,1]+pwham$rep$pred_catch[,2]
+            catchproj <- tail(pwham_fullcatch,3)[catch_indices]
+            
+            pofl_fullcatch <- poflwham$rep$pred_catch[,1]+poflwham$rep$pred_catch[,2]
+            oflproj <- tail(pofl_fullcatch,3)[catch_indices]
+            
+          }else{
+          catchproj <- tail(pwham$rep$pred_catch,3)[catch_indices]
           oflproj <- tail(poflwham$rep$pred_catch,3)[catch_indices]
+          }
+          
         }else{ 
           
       # if not using a wham model
@@ -274,6 +285,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       
       #Determine catch advice for P* HCR
       if(tolower(parmgt$HCR) == 'pstar'){
+        (if(nfleet ==2){stop("pstart not developved for 2 fleets yet")})
         P<-calc_pstar(0.4,tail(parpop$SSBhat,1)/BThresh)
         CV<-1
         catchproj[1]<-calc_ABC(catchproj[1],P,CV)
@@ -352,6 +364,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       }
         }
       
+        
+        
 ######################################## Caclculate OM F values
       
       #Get F for the OM based on catch advice
@@ -421,7 +435,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
    
    comF <- F * pcom
    recF <- F * (1-pcom)
-   out <- list(F = F, comF = comF, recF = recF,
+   out <- list(F = F, comF = comF, recF = recF,F_Target = F_Target,
                RPs = c(FrefRPvalue, BrefRPvalue,FrefTRPvalue, BrefTRPvalue), 
                ThresholdRPs = c(FThresh, BThresh), OFdStatus = overfished,
                OFgStatus = overfishing, catchproj=catchproj,
