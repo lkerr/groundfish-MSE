@@ -163,7 +163,42 @@ if(nfleet ==2){  sels <- c("comSelAA", "recSelAA", "IndSelAA")
 }
   
   
-  ################################# Risk Policy
+  
+  ### add paa 
+  
+  
+  
+  paa <- omvalGlobal[[s]]%>%keep_at(\(name) str_detect(name, "paa"))
+  paa_names <- names(paa)
+  
+  paalist_full <- list()
+  
+  for(p in paa_names){
+    ls <- omvalGlobal[[s]][[p]]
+    reps <- 1:dim(ls)[1]
+    
+    rep_list <- list()
+    
+    for(r in reps){
+      pf <- as.data.frame(ls[r,,,]) %>%
+        rownames_to_column( var = "Year") %>%
+        mutate(Year = str_remove_all(Year, "\\D"),
+               rep = r)
+
+      rep_list[[r]] <- pf
+        
+      }
+
+    stacked_df <- do.call(rbind, rep_list)
+    stacked_df$paa_type <- p
+    paalist_full[[p]] <- stacked_df
+    }
+    
+  paalist_full <- do.call(rbind, paalist_full)
+  
+
+  
+  #################paaCN################################# Risk Policy
   
   hcr1 <- hcr$hcr
   reps <- 1:length(hcr)
@@ -178,11 +213,13 @@ if(nfleet ==2){  sels <- c("comSelAA", "recSelAA", "IndSelAA")
   ################################ Save restructured results
   if(nfleet ==2){  
     saveRDS(list(om = mutate(om.df, date_stamp = stamp, .before = everything()),
-                                em = mutate(em, date_stamp = stamp, .before = everything()), 
-                                hcr = mutate(hcr.df, date_stamp = stamp, .before = everything()),
-                 sel = mutate(full_sel, date_stamp = stamp, .before = everything())), 
-                           file = paste0(dir, "res_for_plots.rds"))}
-  else{
+                 em = mutate(em, date_stamp = stamp, .before = everything()), 
+                 hcr = mutate(hcr.df, date_stamp = stamp, .before = everything()),
+                 sel = mutate(full_sel, date_stamp = stamp, .before = everything()),
+                 paa = mutate(paalist_full, date_stamp = stamp, .before = everything())), 
+            
+                           file = paste0(dir, "res_for_plots.rds"))
+    }else{
   saveRDS(list(om = mutate(om.df, date_stamp = stamp, .before = everything()),
                em = mutate(em, date_stamp = stamp, .before = everything()), 
                hcr = mutate(hcr.df, date_stamp = stamp, .before = everything())), 

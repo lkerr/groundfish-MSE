@@ -6,7 +6,8 @@ get_containers <- function(stockPar){
   yxage = matrix(NA, nrow=nyear, ncol=stockPar$nage)
   yx0 = rep(NA, nyear)
   est = matrix(NA,nyear,106)
-  
+  age = stockPar$nage
+    
   nomyear = nyear - (stockPar$ncaayear + fyear + nburn)
   nmproc = nrow(mproc)
 
@@ -22,6 +23,13 @@ get_containers <- function(stockPar){
                                           paste0('mproc', 1:nmproc),
                                           paste0('nyear', 1:nyear),
                                           paste0('nyear', 1:nyear)))
+  
+  save_vector_ann3 = array(data = NA,
+                          dim = c(nrep, nmproc, nyear, age),
+                          dimnames = list(paste0('rep', 1:nrep), 
+                                          paste0('mproc', 1:nmproc),
+                                          paste0('nyear', 1:nyear),
+                                          paste0('nage',1:age)))
   
   
   # Revised container style (index by rep and year, repeated by mproc when stock object generated for each mproc)
@@ -237,6 +245,21 @@ get_containers <- function(stockPar){
       sumcomCW = save_vector_ann,
       sumrecCW = save_vector_ann,
       
+      obs_sumCW = save_vector_ann,
+      obs_sumcomCW = save_vector_ann,
+      obs_sumrecCW = save_vector_ann,
+      Index = save_vector_ann,
+      obs_Index = save_vector_ann,
+      
+      paaCN = save_vector_ann3,
+      paacomCN = save_vector_ann3,
+      paarecCN = save_vector_ann3,
+      paaIN = save_vector_ann3,
+      
+      obs_paaCN = save_vector_ann3,
+      obs_paacomCN = save_vector_ann3,
+      obs_paarecCN = save_vector_ann3,
+      obs_paaIN = save_vector_ann3,
       
       annPercentChange = save_vector_ann, #cheap ... not really vector.
       meanSizeCN = save_vector_ann,

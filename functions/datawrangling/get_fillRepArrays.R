@@ -34,6 +34,26 @@ get_fillRepArrays <- function(stock){
     omval$SSB_cur[r,m,] <- SSB_cur #AEW
     omval$natM[r,m,] <- natM #AEW
     
+    
+    ## adding observation model resuls aks
+    
+    omval$obs_sumCW[r,m,] <- obs_sumCW
+    omval$obs_sumcomCW[r,m,] <- obs_sumcomCW
+    omval$obs_sumrecCW[r,m,] <- obs_sumrecCW
+    omval$Index[r,m,] <- sumIN
+    omval$obs_Index[r,m,] <- obs_sumIN
+    
+    omval$paaCN[r,m,,] = paaCN
+    omval$paacomCN[r,m,,] = paacomCN
+    omval$paarecCN[r,m,,] = paarecCN
+    omval$paaIN[r,m,,] = paaIN
+    
+    omval$obs_paaCN[r,m,,] = obs_paaCN
+    omval$obs_paacomCN[r,m,,] = obs_paacomCN
+    omval$obs_paarecCN[r,m,,] = obs_paarecCN
+    omval$obs_paaIN[r,m,,] = obs_paaIN
+    
+    
     # annPercentChange not true vector -- just repeated values. This needs
     # to be calculated after the run so that the appropriate time windows
     # can be used.
