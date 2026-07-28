@@ -65,12 +65,17 @@ get_J1Updates <- function(stock){
   }
 
     # Add NAA deviations if in historical period and they exist. Otherwise, assume 0.
-    devs <- if (histAssess == F |
-                is.null(assess_vals$NAA_deviations) |
-                !y %in% assess_vals$assessdat$MSEyr){rep(0, nage)} else {
-                  
-                  assess_vals$NAA_deviations %>%
-                    dplyr::filter(MSEyr == y) %>% pull(re)
+    devs <- if (histAssess == F | 
+                is.null(assess_vals$NAA_deviations)) {rep(0, nage)} else {
+                  if(y %in% assess_vals$assessdat$MSEyr){
+                    assess_vals$NAA_deviations %>%  dplyr::filter(MSEyr == y) %>% pull(re) }else{
+                      # add in mean + sd to carry forward
+                      assess_vals$NAA_m_sd %>%
+                        group_by(age) %>%
+                        mutate(re = rnorm(1, mean = mean, sd = 0)) %>% pull(re)
+                      
+                      
+                    }
                 }
     
     # calculate what the Jan 1 population numbers are for year y, which
