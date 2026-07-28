@@ -83,7 +83,7 @@ get_J1Updates <- function(stock){
                     # add in mean + sd to carry forward
                       assess_vals$NAA_m_sd %>%
                         group_by(age) %>%
-                        mutate(re = rnorm(1, mean = mean, sd = sd)) %>% pull(re)
+                        mutate(re = rnorm(1, mean = mean, sd = 0)) %>% pull(re) # sd = sd for the true sd
                       
                     
                   }
