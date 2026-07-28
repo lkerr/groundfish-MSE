@@ -111,7 +111,7 @@ for(r in 1:nrep){
 
         }else if(mproc$ImplementationClass[m] == "StandardFisheries"){
           for(i in 1:nstock){
-            stock[[i]] <- get_implementationF(type = 'adviceWithError',
+            stock[[i]] <- get_implementationF(type = '2fleeterror',
                                               stock = stock[[i]])
           } # End implementation error in standard fisheries
         }else{
@@ -179,6 +179,7 @@ big_loop
 
 
   #### save results ####
+    # does this need to be in a loop for two stocks?
   omvalGlobal <- sapply(1:nstock, function(x) stock[[x]]['omval'])
   names(omvalGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
   save(omvalGlobal, file=paste0(ResultDirectory,'/sim/omvalGlobal', td2, '.Rdata'))
@@ -187,6 +188,7 @@ big_loop
   names(whamGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
   save(whamGlobal, file=paste0(ResultDirectory,'/sim/whamGlobal', td2, '.Rdata'))
   
+###!!! make sure the paa is saving
   summarize_results(omvalGlobal = omvalGlobal, whamGlobal = whamGlobal, hcr =stock[[1]]['hcr'],
                     stamp = td2,
                     dir = paste0(ResultDirectory,'/sim/'))
