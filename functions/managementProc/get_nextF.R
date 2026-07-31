@@ -219,9 +219,9 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
               catch_indices <- c(1,2)} # yrs 1 and 2 are catch advice, yr3 is not used
           
           # project from the wham model and extract the appropriate years of predicted catch
-          pwham <-  project_wham(stockEnv$whamEst, proj.opts = list(proj.F = f_proj, proj_NAA_opt = 2))
-          poflwham <- project_wham(stockEnv$whamEst, proj.opts = list(proj.F = fmsy_proj, proj_NAA_opt = 2))
-          
+          pwham <-  project_wham(stockEnv$whamEst, proj.opts = list(proj.F = f_proj, proj_NAA_opt = 2, proj_R_opt = 3))
+          poflwham <- project_wham(stockEnv$whamEst, proj.opts = list(proj.F = fmsy_proj, proj_NAA_opt = 2, proj_R_opt = 3))
+
           if(nfleet == 2){# !!! WHAM projections will need to be updated for 2 stocks
             pwham_fullcatch <- pwham$rep$pred_catch[,1]+pwham$rep$pred_catch[,2]
             catchproj <- tail(pwham_fullcatch,3)[catch_indices]
