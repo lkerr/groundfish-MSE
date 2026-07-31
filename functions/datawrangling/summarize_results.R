@@ -121,7 +121,8 @@ summarize_results <- function(omvalGlobal, whamGlobal, hcr, stamp, dir){
   
   
   ##### add selectivies when 2 fleets are used, these are by age so need to do some adjusting
-if(nfleet ==2){  sels <- c("comSelAA", "recSelAA", "IndSelAA")
+if(nfleet ==2){
+  sels <- c("comSelAA", "recSelAA", "IndSelAA")
   
   sellist_full <- list()
   
@@ -197,8 +198,43 @@ if(nfleet ==2){  sels <- c("comSelAA", "recSelAA", "IndSelAA")
   paalist_full <- do.call(rbind, paalist_full)
   
 
+ ############ add NAAs
   
-  #################paaCN################################# Risk Policy
+  ls <- whamGlobal[[s]]$NAAdevs
+  reps <- 1:length(ls)
+  
+  rep_list <- list()
+
+
+      for(r in reps){
+        yi <- length(ls[[r]])
+        names(ls[[r]]) <- paste0("year", 1:yi)
+        
+        naalist1 <- list()
+        
+        for(f in 1:yi){
+          
+          if(!is.null(ls[[r]][[f]]) && length(ls[[r]][[f]]) > 0){
+            
+            naa_temp <- expand.grid(year = 1:dim(ls[[r]][[f]])[3],
+                                    age = 1:dim(ls[[r]][[f]])[4])
+            naa_temp$re <- as.vector(ls[[r]][[f]][1,1,,])
+            naa_temp$yri = f
+            
+            
+            naalist1[[f]] <- naa_temp
+          }
+          
+        }
+        stacked_df <- do.call(rbind, naalist1)
+        stacked_df$rep <- paste0("rep",r)
+        
+        rep_list[[r]] <- stacked_df 
+      }
+  full_naa <- do.call(rbind, rep_list)
+
+  
+  ################################# Risk Policy
   
   hcr1 <- hcr$hcr
   reps <- 1:length(hcr)
@@ -216,7 +252,8 @@ if(nfleet ==2){  sels <- c("comSelAA", "recSelAA", "IndSelAA")
                  em = mutate(em, date_stamp = stamp, .before = everything()), 
                  hcr = mutate(hcr.df, date_stamp = stamp, .before = everything()),
                  sel = mutate(full_sel, date_stamp = stamp, .before = everything()),
-                 paa = mutate(paalist_full, date_stamp = stamp, .before = everything())), 
+                 paa = mutate(paalist_full, date_stamp = stamp, .before = everything()), 
+            naa = mutate(full_naa, date_stamp = stamp, .before = everything())),
             
                            file = paste0(dir, "res_for_plots.rds"))
     }else{

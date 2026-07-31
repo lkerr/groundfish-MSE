@@ -402,6 +402,7 @@ get_containers <- function(stockPar){
     store_comSelAA = vector(mode='list', length = nrep)
     store_recSelAA = vector(mode='list', length = nrep)
     store_IndSelAA = vector(mode='list', length = nrep)
+    store_NAAdevs= vector(mode='list', length = nrep)
     
     store_Convergence = vector(mode='list', length=nrep)
     store_MohnsRho_SSB = vector(mode='list', length=nrep)
@@ -445,6 +446,7 @@ get_containers <- function(stockPar){
       store_comSelAA[[irep]] <- vector(mode='list', length = nyear)
       store_recSelAA[[irep]] <- vector(mode='list', length = nyear)
       store_IndSelAA[[irep]] <- vector(mode='list', length = nyear)
+      store_NAAdevs[[irep]] <- vector(mode='list', length = nyear)
       
       store_Convergence[[irep]] <- rep(NA, nyear) # Single time series, will only populate years where assessment run
       store_MohnsRho_SSB[[irep]] <- rep(NA, nyear) # Single time series since a single value in each year
@@ -490,6 +492,8 @@ get_containers <- function(stockPar){
       comSelAA = store_comSelAA,
       recSelAA = store_recSelAA,
       IndSelAA = store_IndSelAA,
+      NAAdevs = store_NAAdevs,
+      
       checkConvergence = store_Convergence,
       MohnsRho_SSB = store_MohnsRho_SSB,
       

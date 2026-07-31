@@ -264,9 +264,9 @@ get_WHAM <- function(stock, Tanom,...){
     bad_flag <- ifelse(badpar, "BadPars", "NoBadPars")
     
     #save results from wham
-    saveRDS(whamEst, file = paste(ResultDirectory, "/WHAM_", stockName,'_', r, '_', y, "_", con_flag, "_", bad_flag, '.rdat', sep = '')) #??? probably don't want to save this, save a subset of results 
+    #saveRDS(whamEst, file = paste(ResultDirectory, "/WHAM_", stockName,'_', r, '_', y, "_", con_flag, "_", bad_flag, '.rdat', sep = '')) #??? probably don't want to save this, save a subset of results 
     
-    if(y == fmyearIdx){plot_wham_output(whamEst, dir.main = paste(getwd(),ResultDirectory, sep = "/"))}
+    #if(y == fmyearIdx){plot_wham_output(whamEst, dir.main = paste(getwd(),ResultDirectory, sep = "/"))}
     
     # Calculate Mohn's rho values
     MohnsRho<-NA
@@ -300,6 +300,7 @@ get_WHAM <- function(stock, Tanom,...){
       wham_storage$comSelAA[[r]][[y]] <- whamEst$rep$selAA[[1]]
       wham_storage$recSelAA[[r]][[y]] <- whamEst$rep$selAA[[2]]
       wham_storage$IndSelAA[[r]][[y]] <- whamEst$rep$selAA[[3]]
+      wham_storage$NAAdevs[[r]][[y]] <- whamEst$rep$NAA_devs
       
     }
     
@@ -334,6 +335,7 @@ get_WHAM <- function(stock, Tanom,...){
           selC.fleet= whamEst$rep$selAA[[1]],
           selR.fleet= whamEst$rep$selAA[[2]],
           sel.Index = whamEst$rep$selAA[[3]],
+          NAA.devs = whamEst$rep$NAA_devs,
           M=tail(whamEst$rep$MAA[1,,,1],1),  # assumes M is constant across ages and saves the most recent value
           maturity=tail(whamEst$input$data$mature[1,,],1), # Last row of maturity input, !!! only works if maturity constant over time
           R=whamEst$rep$NAA[1,,,1],
