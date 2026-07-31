@@ -79,14 +79,14 @@ get_J1Updates <- function(stock){
                     assess_vals$NAA_deviations %>%
                     dplyr::filter(MSEyr == y) %>% pull(re)
                   
-                    }else{
+                    }else if(y > max(assess_vals$assessdat$MSEyr)){
                     # add in mean + sd to carry forward
                       assess_vals$NAA_m_sd %>%
                         group_by(age) %>%
-                        mutate(re = rnorm(1, mean = mean, sd = 0)) %>% pull(re) # sd = sd for the true sd
-                      
+                        mutate(re = rnorm(1, mean = mean, sd = 0)) %>% pull(re)  # sd = sd for the true sd
+                        
                     
-                  }
+                  }else{re = 0}
     
                 }
 
