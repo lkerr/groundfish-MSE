@@ -24,7 +24,8 @@ if(nfleet ==2){
                                                                      stock$codWGOM$selI),
                                                    fix_pars=list(which(stock$codWGOM$selC == 1),
                                                                  which(stock$codWGOM$selR == 1),
-                                                                 which(stock$codWGOM$selI == 1)
+                                                                 #which(stock$codWGOM$selI == 1)
+                                                                 c(1:9)
                                                    )),
                                   recruit_model = 2,
             
