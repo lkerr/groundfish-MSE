@@ -19,7 +19,7 @@ mprocfile<-"mproc.csv"
 # stockExclude <- NULL indludes all stocks.
 
 # Available stocks: , 'haddockGB', 'codGB', 'pollock', 'yellowtailflounderGB', 'codWGOM', 'haddockGOM'
-stockExclude <- c("haddockGB" , 'codGOM', 'codGB', 'pollock', 'yellowtailflounderGB', "haddockGOM")
+stockExclude <- c("haddockGB" , 'codGOM', 'codGB', 'pollock', 'yellowtailflounderGB', "haddockGOM", "blackseabassN")
 
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data
@@ -33,7 +33,7 @@ nfleet <- 2
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 2
+nrep <- 10
 
 # First year to begin actual management
 #fmyear <- 2019 # original values

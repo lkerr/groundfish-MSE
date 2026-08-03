@@ -140,24 +140,24 @@ if(nfleet == 1){
 oe_sumcomCW <- 0.05
 oe_sumcomCW_typ <- 'lognorm'
 
-oe_paacomCN <- 120
+oe_paacomCN <- 100
 oe_paacomCN_typ <- 'multinomial'
 
 
 ### observation levels for the EM, used in get_WHAM if mproc CatchOEMis == TRUE, if FALSE oe_sumCW and oe_paaCW are used
 oe_sumcomCW_EM <- 0.05
-oe_paacomCN_EM <- 80
+oe_paacomCN_EM <- 100
 
 # observation error levels - Rec catch
-oe_sumrecCW <- 0.25
+oe_sumrecCW <- 0.05
 oe_sumrecCW_typ <- 'lognorm'
 
-oe_paarecCN <- 80
+oe_paarecCN <- 100
 oe_paarecCN_typ <- 'multinomial'
 
 ### observation levels for the EM, used in get_WHAM if mproc CatchOEMis == TRUE, if FALSE oe_sumCW and oe_paaCW are used
 oe_sumrecCW_EM <- 0.25
-oe_paarecCN_EM <- 80
+oe_paarecCN_EM <- 100
 
 ##########
 oe_sumIN <- 0.25
