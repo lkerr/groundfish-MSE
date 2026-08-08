@@ -265,6 +265,7 @@ get_WHAM <- function(stock, Tanom,...){
     
     #save results from wham
     #saveRDS(whamEst, file = paste(ResultDirectory, "/WHAM_", stockName,'_', r, '_', y, "_", con_flag, "_", bad_flag, '.rdat', sep = '')) #??? probably don't want to save this, save a subset of results 
+    print(c(r, y))
     
     #if(y == fmyearIdx){plot_wham_output(whamEst, dir.main = paste(getwd(),ResultDirectory, sep = "/"))}
     
