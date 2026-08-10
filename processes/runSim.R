@@ -167,9 +167,9 @@ big_loop
   td2 <- gsub(':', '', td)
   td2 <- paste(gsub(' ', '_', td2), round(runif(1, 0, 10000)), sep='_')
 
-
-    saveRDS(begin_rng_holder, file.path(econ_results_location,  paste0("begin_rng_",td2, ".Rds")), compress=FALSE)
-    saveRDS(end_rng_holder, file.path(econ_results_location,  paste0("end_rng_",td2, ".Rds")), compress=FALSE)
+# turn off econ to save computer space
+    #saveRDS(begin_rng_holder, file.path(econ_results_location,  paste0("begin_rng_",td2, ".Rds")), compress=FALSE)
+    #saveRDS(end_rng_holder, file.path(econ_results_location,  paste0("end_rng_",td2, ".Rds")), compress=FALSE)
 
 
   for(i in 1:nstock){
@@ -179,6 +179,7 @@ big_loop
 
 
   #### save results ####
+    # does this need to be in a loop for two stocks?
   omvalGlobal <- sapply(1:nstock, function(x) stock[[x]]['omval'])
   names(omvalGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
   save(omvalGlobal, file=paste0(ResultDirectory,'/sim/omvalGlobal', td2, '.Rdata'))
@@ -187,6 +188,7 @@ big_loop
   names(whamGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
   save(whamGlobal, file=paste0(ResultDirectory,'/sim/whamGlobal', td2, '.Rdata'))
   
+###!!! make sure the paa is saving
   summarize_results(omvalGlobal = omvalGlobal, whamGlobal = whamGlobal, hcr =stock[[1]]['hcr'],
                     stamp = td2,
                     dir = paste0(ResultDirectory,'/sim/'))
