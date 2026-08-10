@@ -32,7 +32,11 @@ if(nfleet ==2){
                                 
                                 NAA_re = list(sigma = "rec+1", cor = "2dar1"),
                                 
-                                basic_info = list(fracyr_SSB = 0, fracyr_indices = 0.5)
+                                basic_info = list(bias_correct_BRPs = FALSE,
+                                  bias_correct_process = FALSE,
+                                                  bias_correct_observation = FALSE,
+                                                  fracyr_SSB = 0, 
+                                                  fracyr_indices = 0.5)
                                 
   )}else{
   
