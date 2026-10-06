@@ -19,7 +19,7 @@ mprocfile<-"mproc.csv"
 # stockExclude <- NULL indludes all stocks.
 
 # Available stocks: , 'haddockGB', 'codGB', 'pollock', 'yellowtailflounderGB', 'codWGOM', 'haddockGOM'
-stockExclude <- c("haddockGB" , 'codGOM', 'codGB', 'pollock', 'yellowtailflounderGB', "haddockGOM", "blackseabassN")
+stockExclude <- c("haddockGB" , 'codGOM', 'codGB', 'pollock', 'yellowtailflounderGB', "haddockGOM", "codWGOM", "blackseabassS")
 
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data
@@ -33,20 +33,20 @@ nfleet <- 2
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 10
+nrep <- 4
 
 # First year to begin actual management
 #fmyear <- 2019 # original values
-fmyear <- 2024 # 2025 update
+fmyear <- 2025 # 2025 update
 
 # first year after the initial condition period. The initial condition period
 # simply fills up the arrays as necessary even before the burn-in period
 # begins. This is rather arbitrary but should be larger than the number of
 # years in the assessment model and greater than the first age in the model.
 #fyear <- 38 # original values
-fyear <- 44 # 2025 update
-fyear <- 48 # increased for haddock
-
+#fyear <- 44 # 2025 update - cod
+#fyear <- 48 # increased for haddock
+fyear <- 36 # bsb
 
 # maximum year predicted into the future
 #mxyear <- 2040 # original values
