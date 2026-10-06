@@ -11,7 +11,13 @@ get_popInit <- function(stock){
     #                                                   fyear + nburn + 1, 
     #                                                   log(0.2), 0.1)
     if(nfleet ==2){ # note that rn burnFsd == 0 so no diff for rec vs. com
-      comF_full[1:fyear] <- rlnorm(fyear, log(0.1), burnFsd)
+      
+      if(stock$stockName %in% c('blackseabassN', 'blackseabassS')){
+        comF_full[1:fyear] <- rlnorm(fyear, log(0.05), burnFsd) 
+      }else{
+        comF_full[1:fyear] <- rlnorm(fyear, log(0.1), burnFsd)
+      }
+      
       recF_full[1:fyear] <- rlnorm(fyear, log(0.05), burnFsd)
       
       F_full[1:fyear] <- comF_full[1:fyear] + recF_full[1:fyear]
