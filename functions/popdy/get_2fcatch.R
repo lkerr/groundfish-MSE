@@ -18,7 +18,7 @@ get_2fcatch <- function(comF_full, recF_full, M, N, selC, selR, type){
   }
   
   # calculate Z
-  Z <- ((selC * recF_full) + (selC * comF_full)) + M
+  Z <- ((selR * recF_full) + (selC * comF_full)) + M
   
   # Baranov catch eqn
   
