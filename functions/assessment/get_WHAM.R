@@ -239,7 +239,7 @@ get_WHAM <- function(stock, Tanom,...){
       input$map$log_N1 <- as.factor(matrix(data=rep(NA,9),nrow=1,ncol=9))
       
     }
-    if (stock$stockName=='blackseabassN'){
+    if (stock$stockName %in% c('blackseabassN', 'blackseabassS')){
       # Fix starting NAA at initial values (OM values)
       
       input$map$log_N1 <- as.factor(matrix(data=rep(NA,8),nrow=1,ncol=8))
