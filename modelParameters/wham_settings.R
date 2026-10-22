@@ -27,36 +27,84 @@ if(nfleet ==2){
                                                                  #which(stock$codWGOM$selI == 1)
                                                                  c(1:9)
                                                    )),
-                                  recruit_model = 2,
-            
+                                recruit_model = 2,
                                 
-                                NAA_re = list(sigma = "rec+1", cor = "2dar1"),
+                                age_comp = "multinomial",
+                                NAA_re = list(sigma = "rec+1", cor = "ar1_y", decouple_recruitment = FALSE),
                                 
-                                basic_info = list(bias_correct_BRPs = FALSE,
-                                  bias_correct_process = FALSE,
+                                basic_info = list(bias_correct_BRPs = TRUE,
+                                                  bias_correct_process = FALSE,
                                                   bias_correct_observation = FALSE,
                                                   fracyr_SSB = 0, 
                                                   fracyr_indices = 0.5)
-                                
-  )}else{
-  
-  wham_settings$codWGOM <- list(model_name = "codWGOM",
-                                
-                                selectivity = list(model=c("age-specific","age-specific"), # selectivity for catch, index
-                                                   initial_pars=list(stock$codWGOM$selC,
-                                                                     stock$codWGOM$selI),
-                                                   fix_pars=list(which(stock$codWGOM$selC==1),
-                                                                 which(stock$codWGOM$selI ==1)
-                                                   )),
-
-                                recruit_model = 2,
-                                
-                                NAA_re = list(sigma = "rec+1", cor = "2dar1"),
-                                
-                                basic_info = list(fracyr_SSB = 0, fracyr_indices = 0.5)
-                                
   )
-}
+                                
+                                
+                                
+                                wham_settings$blackseabassN <- list(model_name = "blackseabassN",
+                                                              
+                                                              selectivity = list(model=c("age-specific","age-specific", "age-specific"), # selectivity for catch C, catch r, index
+                                                                                 initial_pars=list(stock$blackseabassN$selC,
+                                                                                                   stock$blackseabassN$selR,
+                                                                                                   stock$blackseabassN$selI),
+                                                                                 fix_pars=list(which(stock$blackseabassN$selC == 1),
+                                                                                               which(stock$blackseabassN$selR == 1),
+                                                                                               c(1:8)
+                                                                                 )),
+                                                              recruit_model = 2,
+                                                              
+                                                              age_comp = "multinomial",
+                                                              NAA_re = list(sigma = "rec+1", cor = "2dar1", decouple_recruitment = FALSE),
+                                                              
+                                                              basic_info = list(bias_correct_BRPs = TRUE,
+                                                                                bias_correct_process = FALSE,
+                                                                                bias_correct_observation = FALSE,
+                                                                                fracyr_SSB = 0, 
+                                                                                fracyr_indices = 0.5)
+                                )
+                                
+                                
+                                
+                                wham_settings$blackseabassS <- list(model_name = "blackseabassS",
+                                                                    
+                                                                    selectivity = list(model=c("age-specific","age-specific", "age-specific"), # selectivity for catch C, catch r, index
+                                                                                       initial_pars=list(stock$blackseabassS$selC,
+                                                                                                         stock$blackseabassS$selR,
+                                                                                                         stock$blackseabassS$selI),
+                                                                                       fix_pars=list(which(stock$blackseabassS$selC == 1),
+                                                                                                     which(stock$blackseabassS$selR == 1),
+                                                                                                     c(1:8)
+                                                                                       )),
+                                                                    recruit_model = 2,
+                                                                    
+                                                                    age_comp = "multinomial",
+                                                                    NAA_re = list(sigma = "rec+1", cor = "2dar1", decouple_recruitment = FALSE),
+                                                                    
+                                                                    basic_info = list(bias_correct_BRPs = TRUE,
+                                                                                      bias_correct_process = FALSE,
+                                                                                      bias_correct_observation = FALSE,
+                                                                                      fracyr_SSB = 0, 
+                                                                                      fracyr_indices = 0.5)
+                                )
+                                }else{
+                                  
+                                  wham_settings$codWGOM <- list(model_name = "codWGOM",
+                                                                
+                                                                selectivity = list(model=c("age-specific","age-specific"), # selectivity for catch, index
+                                                                                   initial_pars=list(stock$codWGOM$selC,
+                                                                                                     stock$codWGOM$selI),
+                                                                                   fix_pars=list(which(stock$codWGOM$selC==1),
+                                                                                                 which(stock$codWGOM$selI ==1)
+                                                                                   )),
+                                                                
+                                                                recruit_model = 2,
+                                                                
+                                                                NAA_re = list(sigma = "rec+1", cor = "2dar1"),
+                                                                
+                                                                basic_info = list(fracyr_SSB = 0, fracyr_indices = 0.5)
+                                                                
+                                  )
+                                }
 
 
 # haddockGB

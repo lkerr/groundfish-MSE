@@ -186,7 +186,11 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     }
     
     ##### Risk Policy
+    if(stockEnv$stockName %in% c("codWGOM", "haddockGOM")){
     rp <- get_RiskPolicy(stockEnv = stockEnv) 
+    }else{
+      rp <- as_tibble(NULL)
+    }
     
     # Risk Policy integrated dynamic buffer
     if(tolower(parmgt$HCR) == 'rp_dynamic'){

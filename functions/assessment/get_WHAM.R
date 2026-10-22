@@ -165,8 +165,8 @@ get_WHAM <- function(stock, Tanom,...){
     
     if(nfleet == 2){
       
-      wham_dat_file[[1]]$dat$F1_ini[1] <- exp(stock$comF_full[styear]) 
-      wham_dat_file[[1]]$dat$F1_ini[2] <- exp(stock$recF_full[styear]) 
+      #wham_dat_file[[1]]$dat$F1_ini[1] <- exp(stock$comF_full[styear]) 
+      #wham_dat_file[[1]]$dat$F1_ini[2] <- exp(stock$recF_full[styear]) 
       
     }else{
       wham_dat_file[[1]]$dat$F1_ini <- exp(stock$F_full[styear]) ### test this 
@@ -239,9 +239,12 @@ get_WHAM <- function(stock, Tanom,...){
       input$map$log_N1 <- as.factor(matrix(data=rep(NA,9),nrow=1,ncol=9))
       
     }
-    
-    
-    
+    if (stock$stockName=='blackseabassN'){
+      # Fix starting NAA at initial values (OM values)
+      
+      input$map$log_N1 <- as.factor(matrix(data=rep(NA,8),nrow=1,ncol=8))
+      
+    }
     
     
     
@@ -267,7 +270,7 @@ get_WHAM <- function(stock, Tanom,...){
     #saveRDS(whamEst, file = paste(ResultDirectory, "/WHAM_", stockName,'_', r, '_', y, "_", con_flag, "_", bad_flag, '.rdat', sep = '')) #??? probably don't want to save this, save a subset of results 
     print(c(r, y))
     
-    #if(y == fmyearIdx){plot_wham_output(whamEst, dir.main = paste(getwd(),ResultDirectory, sep = "/"))}
+    if(y == fmyearIdx){plot_wham_output(whamEst, dir.main = paste(getwd(),ResultDirectory, sep = "/"))}
     
     # Calculate Mohn's rho values
     MohnsRho<-NA
