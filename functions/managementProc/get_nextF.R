@@ -202,6 +202,9 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       F <- stockEnv$res$FMSY * (rp %>% pull(prop_tiered))
     }
     
+    #Use Fmsy for F in projections for P* HCR
+    if(tolower(parmgt$HCR) == 'pstar'){F<-FrefRPvalue}
+    
  F_Target <- F
     
 ######################################### Projections
@@ -290,8 +293,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       #Determine catch advice for P* HCR
       if(tolower(parmgt$HCR) == 'pstar'){
         (if(nfleet ==2){stop("pstart not developved for 2 fleets yet")})
-        P<-calc_pstar(0.4,tail(parpop$SSBhat,1)/BThresh)
-        CV<-1
+        P<-calc_pstar(tail(parpop$SSBhat,1)/BThresh)
+        CV<-1.0
         catchproj[1]<-calc_ABC(catchproj[1],P,CV)
         catchproj[2]<-calc_ABC(catchproj[2],P,CV)
       }
