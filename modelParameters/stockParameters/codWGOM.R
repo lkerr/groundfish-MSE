@@ -4,6 +4,7 @@
 # but distribution is lognormal. SD is lognormal SD.
 
 burnFmsyScalar <- 3.5 #GOM cod
+burnFmsycomprop <-2.5/3.5
 burnFsd <- 0.3 # GOM cod
 burnFsd <- 0  # Test removing stochasticity on F in the Burn-in
 
@@ -137,33 +138,33 @@ if(nfleet == 1){
 
 
 # observation error levels - Comm catch
-oe_sumcomCW <- 0.025 #0.05
+oe_sumcomCW <- 0.05 #0.5 #0.025 # 0.05
 oe_sumcomCW_typ <- 'lognorm'
 
-oe_paacomCN <- 200 #25 #100
+oe_paacomCN <- 100 #50 #200 #25 #100
 oe_paacomCN_typ <- 'multinomial'
 
 ### observation levels for the EM, used in get_WHAM if mproc CatchOEMis == TRUE, if FALSE oe_sumCW and oe_paaCW are used
-oe_sumcomCW_EM <- 0.025 #0.05
-oe_paacomCN_EM <- 200 #25 #100
+oe_sumcomCW_EM <- 0.05 #0.5 #0.025
+oe_paacomCN_EM <- 100 #50 #25 #200
 
 # observation error levels - Rec catch
-oe_sumrecCW <- 0.025 #0.05
+oe_sumrecCW <- 0.05 #0.5 #0.025 #0.05
 oe_sumrecCW_typ <- 'lognorm'
 
-oe_paarecCN <- 200 #100
+oe_paarecCN <- 100 #50 #200 #100
 oe_paarecCN_typ <- 'multinomial'
 
 ### observation levels for the EM, used in get_WHAM if mproc CatchOEMis == TRUE, if FALSE oe_sumCW and oe_paaCW are used
-oe_sumrecCW_EM <- 0.025 #0.05
-oe_paarecCN_EM <- 200 #100
+oe_sumrecCW_EM <- 0.05 #0.5 #0.025 #0.05
+oe_paarecCN_EM <- 100 #50 #200 #100
 
 
 ##########
-oe_sumIN <- 0.025 #0.25
+oe_sumIN <- 0.25 #0.5 #0.025 #0.25
 oe_sumIN_typ <- 'lognorm'
 
-oe_paaIN <- 200 #100  #15 or 60 across surveys?
+oe_paaIN <- 100 #50 #200 #100  #15 or 60 across surveys?
 oe_paaIN_typ <- 'multinomial'
 
 oe_effort <- 0.01
@@ -176,8 +177,8 @@ oe_receffort <- 0.01
 oe_receffort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 0.02 #0.20 # cannot be zero # 0.68 is the sigma from lognormal BH w/du Pontavice BT anomaly on Beta
-pe_RSA<- 0.02 #0.20 #recruitment process error assumed in the stock assessment
+pe_R <- 0.25 # cannot be zero # 0.68 is the sigma from lognormal BH w/du Pontavice BT anomaly on Beta
+pe_RSA<- 0.25 #recruitment process error assumed in the stock assessment
 pe_IA <- 0.18
 
 # implementation error of fishing mortality
@@ -195,6 +196,10 @@ ob_sumIN <- 1
 
 # catch observation bias (codCW + codCW*C_mult)
 C_mult <-  0 #1.25 for bias, 0 for no bias
+
+# com CAA observation bias, needs to be a vector that is the same length as age groups
+# Observation bias (1 is no bias, 0.9 is a -10% bias, etc.)
+ob_comCAA <- c(1, 1, 1, 1, 0, 0, 0, 0, 0)
 
 #bias change points
 Change_point2<-FALSE #If TRUE, catch bias changes in the MP period
