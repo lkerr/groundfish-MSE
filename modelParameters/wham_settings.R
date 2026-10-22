@@ -32,7 +32,7 @@ if(nfleet ==2){
                                 age_comp = "multinomial",
                                 NAA_re = list(sigma = "rec+1", cor = "ar1_y", decouple_recruitment = FALSE),
                                 
-                                basic_info = list(bias_correct_BRPs = TRUE,
+                                basic_info = list(bias_correct_BRPs = FALSE,
                                                   bias_correct_process = FALSE,
                                                   bias_correct_observation = FALSE,
                                                   fracyr_SSB = 0, 
