@@ -155,10 +155,10 @@ get_popInit <- function(stock){
 
     ### !!! testing come back to this
     burnFmsy <- get_burnF(stockT) # i think MSY stays the same but need 2 F's for the fleets
-    burnFmean <- burnFmsyScalar * burnFmsy
+    burnFmean <- burnFmsyScalar * burnFmsy # note this isn't used for 2 fleets
     
-    burncomFmean <- 2.5 * burnFmsy
-    burnrecFmean <- 1 * burnFmsy
+    burncomFmean <- burnFmsycomprop * burnFmsyScalar * burnFmsy
+    burnrecFmean <- (1-burnFmsycomprop) * burnFmsyScalar * burnFmsy
     
     
     if(nfleet == 2){

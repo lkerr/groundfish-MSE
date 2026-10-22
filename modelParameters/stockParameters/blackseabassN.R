@@ -5,6 +5,8 @@
 # but distribution is lognormal. SD is lognormal SD.
 
 burnFmsyScalar <- 0 
+burnFmsycomprop <- 0.5 
+
 burnFsd <- 0.3
 burnFsd <- 0  # Test removing stochasticity on F in the Burn-in
 
@@ -78,8 +80,9 @@ selR_typ <- 'input'
 # g parameter is temperature effect placed on beta parameter in the denominator
 R_typ <- 'BH'
 # only f or g should be used, depending on which BH parameter temperature modifies
+Rpar<-c(a = 36447.31, b = 0.002612013, f = 0,  g = -0.08623424) 
+#^^^this is the temp one but anomoly data hasnt been updated yet:
 Rpar<-c(a = 70760.39, b = 0.003769120, f = 0,  g = 0) 
-
 
 R_mis<-FALSE # If BRPs and projections assume a wrong SRR, set to TRUE.
 # these are place holders, because R_mis = FALSE
@@ -130,7 +133,7 @@ if(nfleet == 1){
 oe_sumcomCW <- 0.05
 oe_sumcomCW_typ <- 'lognorm'
 
-oe_paacomCN <- 50
+oe_paacomCN <- 100 #50
 oe_paacomCN_typ <- 'multinomial'
 
 
@@ -142,7 +145,7 @@ oe_paacomCN_EM <- 50
 oe_sumrecCW <- 0.1
 oe_sumrecCW_typ <- 'lognorm'
 
-oe_paarecCN <- 50
+oe_paarecCN <- 100 #50
 oe_paarecCN_typ <- 'multinomial'
 
 ### observation levels for the EM, used in get_WHAM if mproc CatchOEMis == TRUE, if FALSE oe_sumCW and oe_paaCW are used
@@ -153,7 +156,7 @@ oe_paarecCN_EM <- 50
 oe_sumIN <- 0.25
 oe_sumIN_typ <- 'lognorm'
 
-oe_paaIN <- 50  #15 or 60 across surveys?
+oe_paaIN <- 100 #50
 oe_paaIN_typ <- 'multinomial'
 
 oe_effort <- 0.01
