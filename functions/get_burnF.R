@@ -1,14 +1,10 @@
 get_burnF <- function(stock){
-
   Rfun_lst <- Rfun_BmsySim
   parmgt <- list(RFUN_NM = 'forecast',
                  FREF_TYP = 'FmsySim',
                  FREF_PAR0 = length(yrs)-1)
  
-  parenv <- list(tempY = temp,
-                 Tanom = rep(0,length(yrs)),
-                 yrs = yrs, # management years
-                 yrs_temp = yrs_temp, # temperature years
+  parenv <- list(yrs = yrs, # management years
                  y = 1)
   
   parpop <- with(stock, {
@@ -24,8 +20,10 @@ get_burnF <- function(stock){
                      Fhat = NA,
                      switch= TRUE)})
 
-  Fref <- get_FBRP(parmgt = parmgt, parpop = parpop, parenv = parenv, 
-                   Rfun_lst = Rfun_lst, stockEnv=stock)
+ parpopburnF<-parpop
+ parpopburnF$Rpar[4]<-'FALSE'
+  Fref <- get_FBRP(parmgt = parmgt, parpop = parpopburnF, parenv = parenv, 
+                   Rfun_lst = Rfun_lst, stockEnv=stock,y=NULL,block=1)
   
   return(Fref$RPvalue)
 }

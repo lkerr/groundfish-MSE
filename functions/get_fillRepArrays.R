@@ -9,106 +9,69 @@
 ## management time-period so you can see the response. It is set pretty
 ## arbitrarily though.
 
-get_fillRepArrays <- function(stock){
+get_fillRepArrays <- function(stock,r,y){
+m<-1
   out <- within(stock, {
-    omval$N[r,m,] <- rowSums(J1N)
-    omval$SSB[r,m,] <- SSB
-    omval$R[r,m,] <- R
-    omval$F_full[r,m,] <- F_full
-    omval$sumCW[r,m,] <- sumCW
-    omval$OFdStatus[r,m,] <- OFdStatus
-    omval$mxGradCAA[r,m,] <- mxGradCAA
-    omval$F_fullAdvice[r,m,] <- F_fullAdvice #AEW
-    omval$ACL[r,m,] <- ACL #AEW
-    omval$OFgStatus[r,m,] <- OFgStatus #AEW
-    omval$SSB_cur[r,m,] <- SSB_cur #AEW
-    omval$natM[r,m,] <- natM #AEW
+    omval$N <- rowSums(J1N)
+    omval$SSB <- SSB
+    omval$R <- R
+    omval$F_full <- F_full
+    omval$sumCW <- sumCW
+    omval$F_fullAdvice <- F_fullAdvice #AEW
+    omval$ACL <- ACL #AEW
+    omval$natM <- natM #AEW
     
     # annPercentChange not true vector -- just repeated values. This needs
     # to be calculated after the run so that the appropriate time windows
     # can be used.
     
-    omval$annPercentChange[r,m,] <- NA # placeholder -- calculated later
+    omval$annPercentChange <- NA # placeholder -- calculated later
     meanSizeCN <- sapply(1:nrow(CN), 
                          function(x) laa[x,] %*% paaCN[x,])
-    omval$meanSizeCN[r,m,] <- meanSizeCN
+    omval$meanSizeCN <- meanSizeCN
     meanSizeIN <- sapply(1:nrow(CN), 
                          function(x) laa[x,] %*% paaIN[x,])
-    omval$meanSizeIN[r,m,] <- meanSizeIN
-
-    omval$FPROXY[r,m,] <- RPmat[y,1]
-    omval$SSBPROXY[r,m,] <- RPmat[y,2]
-    omval$FPROXYT[r,m,] <- RPmat[y,3]
-    omval$SSBPROXYT[r,m,] <- RPmat[y,4]
+    omval$meanSizeIN <- meanSizeIN
+    omval$FPROXY[y] <- RPmat[y,1]
+    omval$SSBPROXY[y] <- RPmat[y,2]
+    omval$FPROXYT[y] <- RPmat[y,3]
+    omval$SSBPROXYT[y] <- RPmat[y,4]
     
-    omval$SSBRATIO[r,m,y] <- stock$res$SSB[length(stock$res$SSB)]/RPmat[,2][y]
+    omval$SSBRATIO[y] <- stock$res$SSB[length(stock$res$SSB)]/RPmat[,2][y]
     if(mproc[m,'rhoadjust'] == 'TRUE' & y>fmyearIdx & Mohns_Rho_SSB[y]>0.15){
       omval$FRATIO[r,m,y] <- (stock$res$F.report[length(stock$res$F.report)]/(Mohns_Rho_F[y]+1))/RPmat[,1][y]
       omval$SSBRATIO[r,m,y] <-(stock$res$SSB[length(stock$res$SSB)]/(Mohns_Rho_SSB[y]+1))/RPmat[,2][y]
     }
-    omval$FRATIOT[r,m,y] <- stock$F_full[y]/RPmat[,3][y]
-    omval$SSBRATIOT[r,m,y] <- stock$SSB[y]/RPmat[,4][y]
+    omval$FRATIOT[y] <- stock$F_full[y]/RPmat[,3][y]
+    omval$SSBRATIOT[y] <- stock$SSB[y]/RPmat[,4][y]
     if(y == nyear){
-      # Determine whether additional years should be added on to the
-      # beginning of the series
-      if(nyear > length(cmip_dwn$YEAR)){
-        nprologueY <- nyear - length(cmip_dwn$YEAR)
-        prologueY <- (cmip_dwn$YEAR[1]-nprologueY):(cmip_dwn$YEAR[1]-1)
-        yrs <- c(prologueY, cmip_dwn$YEAR)
-        # If no additional years needed then just take them from the years
-        # time series.
-      }else{
-        yrs <- rev(rev(cmip_dwn$YEAR)[1:nyear])
-      }
       omval$YEAR <- yrs
     }
     
     if(mproc[m, 'ASSESSCLASS']=='WHAM'){
-      omval$FRATIO[r,m,y] <- stock$res$F.report[length(stock$res$F.report)]/RPmat[,1][y]
-      omval$Fest[r,m,y,1:length(stock$res$SSB)]<-stock$res$F.report
-      omval$Catchest[r,m,y,1:length(stock$res$SSB)]<-stock$res$catch
-      omval$Rest[r,m,y,1:length(stock$res$SSB)]<-stock$res$R
-      omval$SSBest[r,m,y,1:length(stock$res$SSB)]<-stock$res$SSB
-      
+      omval$FRATIO[y] <- stock$res$F.report[length(stock$res$F.report)]/RPmat[,1][y]
+      omval$Fest[y,1:length(stock$res$SSB)]<-stock$res$F.report
+      omval$Catchest[y,1:length(stock$res$SSB)]<-stock$res$catch
+      omval$Rest[y,1:length(stock$res$SSB)]<-stock$res$R
+      omval$SSBest[y,1:length(stock$res$SSB)]<-stock$res$SSB
     }
     
     # Assessment model diagnostics ... -1 gives 1 NA. Will change when I get
-    omval$relE_qC[r,m,] <- relE_qC
-    omval$relE_selCs0[r,m,] <- relE_selCs0
-    omval$relE_selCs1[r,m,] <- relE_selCs1
-    omval$relE_ipop_mean[r,m,] <- relE_ipop_mean
-    omval$relE_ipop_dev[r,m,] <- relE_ipop_dev
-    omval$relE_R_dev[r,m,] <- relE_R_dev
-    omval$relE_SSB[r,m,] <- relE_SSB
-    omval$relE_N[r,m,] <- relE_N
-    omval$relE_IN[r,m,] <- relE_IN
-    omval$relE_CW[r,m,] <- relE_CW
-    omval$relE_R[r,m,] <- relE_R #AEW
-    omval$relE_F[r,m,] <- relE_F #AEW
-    omval$conv_rate[r,m,]<-conv_rate #MDM
+   
+    omval$conv_rate<-conv_rate #MDM
     
-    omval$mincatchcon[r,m,]<-mincatchcon
-    
-    if(mproc[m,'ASSESSCLASS'] == 'WHAM' & !is.na(stock$wham_storage$MohnsRho_SSB[[r]][[y]])){
-      omval$Mohns_Rho_SSB[r,m,y] <- stock$wham_storage$MohnsRho_SSB[[r]][[y]]$SSB
+    if(mproc[m,'ASSESSCLASS'] == 'WHAM' & !is.na(stock$wham_storage$MohnsRho_SSB[[y]])){
+      omval$Mohns_Rho_SSB[y] <- stock$wham_storage$MohnsRho_SSB[[y]]
       # omval$Mohns_Rho_N[r,m,y] <- stock$wham_storage$MohnsRho_N[[r]][[y]] # I have a vector of at-age rho values, looks like asap saves single summary value
-      omval$Mohns_Rho_F[r,m,y] <- stock$wham_storage$MohnsRho_F[[r]][[y]]$Fbar
-      omval$Mohns_Rho_R[r,m,y] <- stock$wham_storage$MohnsRho_R[[r]][[y]]
+      omval$Mohns_Rho_F[y] <- stock$wham_storage$MohnsRho_F[[y]]
+      omval$Mohns_Rho_R[y] <- stock$wham_storage$MohnsRho_R[[y]]
+      omval$Mest[y,1:length(stock$res$SSB)] <- stock$wham_storage$M[[1]][[y]]
+      omval$alphaest[y] <- tail(stock$wham_storage$alpha[[1]][[y]],1)
+      omval$betaest[y] <- tail(stock$wham_storage$beta[[1]][[y]],1)
     } else {
-      omval$Mohns_Rho_SSB[r,m,y]<-Mohns_Rho_SSB[y] 
-      omval$Mohns_Rho_N[r,m,y]<-Mohns_Rho_N[y] #MDM
-      omval$Mohns_Rho_F[r,m,y]<-Mohns_Rho_F[y] #MDM
-      omval$Mohns_Rho_R[r,m,y]<-Mohns_Rho_R[y] #MDM
-      omval$relE_qI[r,m,y] <- relE_qI[y] 
-    }
-    if (y == nyear){
-      omval$relTermE_SSB[r,m,] <- relTermE_SSB #MDM
-      omval$relTermE_CW[r,m,] <- relTermE_CW #MDM
-      omval$relTermE_CW[r,m,] <- relTermE_CW #MDM
-      omval$relTermE_IN[r,m,] <- relTermE_IN #MDM
-      omval$relTermE_qI[r,m,] <- relTermE_qI #MDM
-      omval$relTermE_R[r,m,] <- relTermE_R #MDM
-      omval$relTermE_F[r,m,] <- relTermE_F #MDM
+      omval$Mohns_Rho_SSB[y]<-Mohns_Rho_SSB[y] 
+      omval$Mohns_Rho_F[y]<-Mohns_Rho_F[y]#MDM
+      omval$Mohns_Rho_R[y]<-Mohns_Rho_R[y]#MDM
     }
   })
   

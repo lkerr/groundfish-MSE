@@ -4,10 +4,10 @@ get_tmbSetup <- function(stock,y=y){
   
   
   out <- within(stock, {
-    
+
     # Ensure that TMB will use the Rtools compiler (only windows ... and 
     # not necessary on all machines)
-    
+
     sty <- y - ncaayear
     lyr <- y - 1
     
@@ -17,43 +17,40 @@ get_tmbSetup <- function(stock,y=y){
     # get the initial population mean and deviations (and add in small
     # constant in case abundance in an age class is zero (important to deal
     # with log(0) issue)
-    
+
     ipopInfo <- get_LMdevs(J1N[sty,]/ caaInScalar)
     log_ipop_mean <- ipopInfo$lmean
     ipop_dev <- ipopInfo$lLMdevs
     
     tmb_dat <- list(
-      
-      # index bounds
-      ncaayear = ncaayear,
-      nage = nage,
-      
-      # Catch
-      
-      obs_sumCW = get_dwindow(obs_sumCW, sty, lyr),
-      obs_paaCN = get_dwindow(obs_paaCN, sty, lyr),
-      
-      # Index
-      obs_sumIN = get_dwindow(obs_sumIN, sty, lyr) / caaInScalar,
-      obs_paaIN = get_dwindow(obs_paaIN, sty, lyr),
-      
-      # Fishing effort
-      obs_effort = get_dwindow(obs_effort, sty, lyr),
-      
-      # ESS
-      oe_paaCN = oe_paaCN,
-      oe_paaIN = oe_paaIN,
-      
-      # len/wt-at-age
-      laa = get_dwindow(laa, sty, lyr),
-      waa = get_dwindow(waa, sty, lyr) * caaInScalar,
-      
-      # Survey info
-      slxI = get_dwindow(slxI, sty, lyr),
-      
-      timeI = timeI
-    )
     
+                      # index bounds
+                      ncaayear = ncaayear,
+                      nage = nage,
+                      
+                      # Catch
+
+                      obs_sumCW = get_dwindow(obs_sumCW, sty, lyr),
+                      obs_paaCN = get_dwindow(obs_paaCN, sty, lyr),
+                    
+                      # Index
+                      obs_sumIN = get_dwindow(obs_sumIN, sty, lyr) / caaInScalar,
+                      obs_paaIN = get_dwindow(obs_paaIN, sty, lyr),
+                      
+                      # ESS
+                      oe_paaCN = oe_paaCN,
+                      oe_paaIN = oe_paaIN,
+                      
+                      # len/wt-at-age
+                      laa = get_dwindow(laa, sty, lyr),
+                      waa = get_dwindow(waa, sty, lyr) * caaInScalar,
+                      
+                      # Survey info
+                      slxI = get_dwindow(slxI, sty, lyr),
+
+                      timeI = timeI
+    )
+        
     # file.remove('results/caasink.txt')
     # sapply(1:length(tmb_dat), function(x){
     #   # cat(names(tmb_dat[[x]]), '\n', file='results/caasink.txt', append=TRUE)
@@ -101,12 +98,12 @@ get_tmbSetup <- function(stock,y=y){
     
     # Apply log function to those parameters that should be logged
     tmb_par <- mapply(FUN = function(x,y)
-      if(y == 1){
-        return(log(x))
-      }else{
-        return(x)
-      }, 
-      tmb_par_arith, tmb_par_scale)
+                              if(y == 1){
+                                return(log(x))
+                              }else{
+                                return(x)
+                            }, 
+                      tmb_par_arith, tmb_par_scale)
     
     names(tmb_par) <- sapply(1:length(tmb_par), 
                              function(x) ifelse(tmb_par_scale[x],
@@ -117,7 +114,7 @@ get_tmbSetup <- function(stock,y=y){
     # the model; base is for an easy comparison to the true values
     # (i.e., tmb_par_base is not used later in the code)
     tmb_par_base <- tmb_par
-    
+   
     # get the lower and upper bounds. Be a little careful with value for p --
     # if it is 1.0 (or less) then if you have a positive value it will be bounded
     # to be positive and negative bounded to be negative always which may be
@@ -125,33 +122,33 @@ get_tmbSetup <- function(stock,y=y){
     # has to do with parameters that are close to 1.0 like, for instance, survey
     # catchability may be).
     tmb_lb <- mapply(FUN = function(x,y){
-      get_bounds(x = x, 
-                 type = 'lower', 
-                 p = boundRgLev, 
-                 logScale = y)
-    }, 
-    tmb_par_arith, tmb_par_scale)
-    
+                             get_bounds(x = x, 
+                                        type = 'lower', 
+                                        p = boundRgLev, 
+                                        logScale = y)
+                           }, 
+                     tmb_par_arith, tmb_par_scale)
+      
     
     
     tmb_ub <- mapply(FUN = function(x,y){
-      get_bounds(x = x, 
-                 type = 'upper', 
-                 p = boundRgLev, 
-                 logScale = y)
-    }, 
-    tmb_par_arith, tmb_par_scale)
+                             get_bounds(x = x, 
+                                        type = 'upper', 
+                                        p = boundRgLev, 
+                                        logScale = y)
+                           }, 
+                     tmb_par_arith, tmb_par_scale)
     
     
     names(tmb_lb) <- sapply(1:length(tmb_lb), 
-                            function(x) ifelse(tmb_par_scale[x],
-                                               paste0('log_', names(tmb_lb)[x]),
-                                               names(tmb_lb)[x]))
+                             function(x) ifelse(tmb_par_scale[x],
+                                                paste0('log_', names(tmb_lb)[x]),
+                                                names(tmb_lb)[x]))
     
     names(tmb_ub) <- sapply(1:length(tmb_ub), 
-                            function(x) ifelse(tmb_par_scale[x],
-                                               paste0('log_', names(tmb_ub)[x]),
-                                               names(tmb_ub)[x]))
+                             function(x) ifelse(tmb_par_scale[x],
+                                                paste0('log_', names(tmb_ub)[x]),
+                                                names(tmb_ub)[x]))
     
     
     # make any deviations have identical scales across all
@@ -162,11 +159,11 @@ get_tmbSetup <- function(stock,y=y){
       tmb_ub[[devIdx[i]]] <- rep(max(tmb_ub[[devIdx[i]]]), 
                                  length(tmb_ub[[devIdx[i]]]))
     }
-    
+
   })
-  
+
   return(out)
-  
+
 }
 
 

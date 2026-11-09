@@ -1,9 +1,9 @@
 get_WHAM <- function(stock,y,r,wham_storage,...){
   library.dynam(package = 'wham')
   m<-1
-  if (stock$stockName=='petraleBC'){
+    if (stock$stockName=='petraleBC'){
     wham_dat_file <- read_asap3_dat('assessment/ASAP/ASAP3.dat')}
-  if (stock$stockName=='codGOM'){
+    if (stock$stockName=='codGOM'){
     wham_dat_file<-read_asap3_dat(paste('assessment/ASAP/', stock$stockName, ".dat", sep = ''))}
   
   ###### Urgent questions to finish this piece ??? !!!
@@ -18,33 +18,10 @@ get_WHAM <- function(stock,y,r,wham_storage,...){
   out <- within(stock, {
     #### WHAM settings ####
     # Pull wham settings for this stock (loaded in runSetup from wham_settings.R)
-    stock_wham_settings <- flatten(wham_settings[stockName])
-    firstYR <- fmyear - ncaayear-1 # First year of assessment
+
+    firstYR <- fmyear - ncaayear # First year of assessment
     currentYR <- (fmyear+y-fmyearIdx-1) # Last year of current assessment 
-    
-    # If ecov specified for the given stock, use only the data through the currentYR of the assessment
-    if("ecov" %in% names(stock_wham_settings)){
-      yr_index <- which(stock_wham_settings$ecov$year >= firstYR & stock_wham_settings$ecov$year <= currentYR)
-      
-      ecov <- NULL
-      ecov$label <- stock_wham_settings$ecov$label
-      ecov$process_model <- stock_wham_settings$ecov$proces_model
-      ecov$mean <- matrix(stock_wham_settings$ecov$mean[yr_index,], ncol = ncol(stock_wham_settings$ecov$mean))
-      ecov$logsigma <- stock_wham_settings$ecov$logsigma[yr_index]
-      ecov$year <- stock_wham_settings$ecov$year[yr_index,]
-      ecov$lag <- stock_wham_settings$ecov$lag
-      ecov$use_obs <- matrix(stock_wham_settings$ecov$use_obs[yr_index,], ncol = ncol(stock_wham_settings$ecov$use_obs))
-      ecov$where <- stock_wham_settings$ecov$where
-      ecov$indices <- list(stock_wham_settings$ecov$indices)
-      ecov$how <- stock_wham_settings$ecov$how
-      
-      temp_wham_settings <- append(stock_wham_settings[-which(names(stock_wham_settings)=="ecov")], list(ecov))
-      names(temp_wham_settings)[which(names(temp_wham_settings) == "")] <- "ecov"
-      
-      # Prepare wham input
-      input <- do.call(prepare_wham_input, c(list(asap3 = wham_dat_file), temp_wham_settings)) # need to set up a wham-settings object to pull these from - make it a list so that only list objects that matter get added - only source the wham-settings object once at the start of the file & only if using WHAM
-      
-    } else{
+
       # Prepare wham input (no ecov need to be trimmed to current assessment length)
       wham_dat_file[[1]]$dat$year1 <- fmyearIdx - ncaayear
       styear <- fmyearIdx - ncaayear
@@ -61,20 +38,20 @@ get_WHAM <- function(stock,y,r,wham_storage,...){
       else if(mproc[m,'Lag'] == 'FALSE'){
         endyear <- y-1
       }
-      
+
       #number of years in assessment
       N_rows <- length(styear:endyear)
       wham_dat_file[[1]]$dat$n_years <- N_rows
       
       #natural mortality
-      wham_dat_file[[1]]$dat$M <- matrix(get_dwindow(natM, styear, endyear), nrow = N_rows, ncol = page)
+      wham_dat_file[[1]]$dat$M <- matrix(mean(get_dwindow(natM, styear, endyear)), nrow = N_rows, ncol = page)
       if (M_mis==TRUE){#If there is a natural mortality missepcification, the stock assessment will assume that M is the value in M_mis_val
         wham_dat_file[[1]]$dat$M <- matrix(M_mis_val, nrow = N_rows, ncol = page)
       }
       
       #maturity-at-age
       wham_dat_file[[1]]$dat$maturity <- matrix(get_dwindow(mat, styear, endyear), nrow = N_rows)
-      
+
       #WAA matrix
       wham_dat_file[[1]]$dat$WAA_mats[[1]] <-matrix(get_dwindow(waa, styear, endyear), nrow = N_rows)
       
@@ -90,14 +67,14 @@ get_WHAM <- function(stock,y,r,wham_storage,...){
       
       #selectivity block (single block setup)
       wham_dat_file[[1]]$dat$sel_block_assign[[1]] <- rep(1, N_rows)
-      
+
       #selectivity
       wham_dat_file[[1]]$dat$fleet_sel_end_age<-nage
       if(stock$stockName=='petraleBC'){
-        wham_dat_file[[1]]$dat$sel_ini[[1]]<- matrix(c(c(selC,3,0.5,rep(0,4)),c(rep(-1,2),rep(1,8),rep(-2,12),1,3,rep(0,4)),c(rep(0,22),rep(1,2),rep(0,4)),c(rep(1,24),rep(0,4))),nrow=28,ncol=4)
-        wham_dat_file[[1]]$dat$Frep_ages<-c(7,22)
+      wham_dat_file[[1]]$dat$sel_ini[[1]]<- matrix(c(c(selC,3,0.5,rep(0,4)),c(rep(-1,2),rep(1,8),rep(-2,12),1,3,rep(0,4)),c(rep(0,22),rep(1,2),rep(0,4)),c(rep(1,24),rep(0,4))),nrow=28,ncol=4)
+      wham_dat_file[[1]]$dat$Frep_ages<-c(7,22)
       }
-      
+
       #catch-at-age proportions and sum catch weight
       wham_dat_file[[1]]$dat$CAA_mats[[1]] <- cbind(get_dwindow(obs_paaCN, styear, endyear), get_dwindow(obs_sumCW, styear, endyear))
       if(gapinage==TRUE){
@@ -112,17 +89,17 @@ get_WHAM <- function(stock,y,r,wham_storage,...){
       }
       # discards - need additional rows even if not using
       wham_dat_file[[1]]$dat$DAA_mats[[1]] <- matrix(0, nrow = N_rows, ncol = page + 1)
-      
+
       # release - also need additional rows if not using
       wham_dat_file[[1]]$dat$prop_rel_mats[[1]] <- matrix(0, nrow = N_rows, ncol = page)
       wham_dat_file[[1]]$dat$index_sel_end_age<-nage
       if (stock$stockName=='petraleBC'){
-        wham_dat_file[[1]]$dat$index_sel_ini[[1]]<- matrix(c(c(selI,1.5,1,rep(0,4)),c(rep(-1,2),rep(1,3),rep(2,2),rep(-2,15),1,2,rep(0,4)),c(rep(1,22),rep(0,6)),c(rep(1,24),rep(0,4))),nrow=28,ncol=4)
+      wham_dat_file[[1]]$dat$index_sel_ini[[1]]<- matrix(c(c(selI,1.5,1,rep(0,4)),c(rep(-1,2),rep(1,3),rep(2,2),rep(-2,15),1,2,rep(0,4)),c(rep(1,22),rep(0,6)),c(rep(1,24),rep(0,4))),nrow=28,ncol=4)
       }
       # #index data; sum index value, observation error, proportions-at-age, sample size
-      
+
       wham_dat_file[[1]]$dat$IAA_mats[[1]] <- cbind(seq(styear,endyear), get_dwindow(obs_sumIN, styear, endyear), rep(oe_sumIN, N_rows), get_dwindow(obs_paaIN, styear, endyear), rep(oe_paaIN, N_rows)) #year, value, CV, by-age, sample size
-      
+
       if(gapinage==TRUE){
         df1<-get_dwindow(obs_paaIN, styear, endyear)
         df2<-matrix(0,nrow=N_rows,ncol=nage)
@@ -141,7 +118,7 @@ get_WHAM <- function(stock,y,r,wham_storage,...){
       }
       # Recruitment CV
       wham_dat_file[[1]]$dat$recruit_cv <- rep(pe_RSA, N_rows)
-      
+
       #catch CV
       wham_dat_file[[1]]$dat$catch_cv <- matrix(0.05, nrow = N_rows, 1)
       
@@ -163,15 +140,13 @@ get_WHAM <- function(stock,y,r,wham_storage,...){
       }
       #discard ESS (even if not using)
       wham_dat_file[[1]]$dat$discard_Neff <- matrix(0, nrow = N_rows, 1)
-      
-      initN <- get_init(type = initN_type, par = initN_par)/100
-      
+
+      initN <- get_init(type = initN_type, par = initN_par)
+
       wham_dat_file[[1]]$dat$N1_ini<-initN
-      
-      wham_dat_file[[1]]$dat$F1_ini<-0.01
-      
-      wham_dat_file[[1]]$dat$steepness_ini<-h
-      
+
+      wham_dat_file[[1]]$dat$F1_ini<-0.001
+
       if(mproc[m,'Lag'] == 'TRUE'){
         wham_dat_file[[1]]$dat$nfinalyear <- y-1
       }
@@ -182,37 +157,68 @@ get_WHAM <- function(stock,y,r,wham_storage,...){
       wham_dat_file[[1]]$dat$proj_ini <- c((y), -1, 3, -99, 1)
       # 
       wham_dat_file[[1]]$dat$R_avg_start <- styear
-      wham_dat_file[[1]]$dat$R_avg_end <- endyear - 10
-      
+      wham_dat_file[[1]]$dat$R_avg_end <- endyear
+
       wham_dat_file[[1]]$dat$q_ini<-qI
-      
+
       if (stock$stockName=='petraleBC'){
-        input <- prepare_wham_input(asap3 = wham_dat_file, selectivity=list(model=rep("age-specific",2),
-                                                                            fix_pars=list(c(1:2,6:22),c(1:2,6:22))),
+        input <- prepare_wham_input(asap3 = wham_dat_file,selectivity=list(model=rep("age-specific",2),
+                                                   fix_pars=list(c(1:3,7:22),c(1:3,7:22))),
                                     # age_comp='multinomial',
+                                    recruit_model=3,
                                     age_comp='logistic-normal-pool0',
-                                    M=list(mean_model='estimate-M',model='constant',est_ages=1),
-                                    recruit_model=2,
+                                    M = list(mean_model = "estimate-M"),
                                     NAA_re=list(sigma='rec',cor='iid'),
-                                    model_name=stock_wham_settings$model_name)
-        if(RER=='TRUE'){
-          enviroR<-(na.omit(stock$R)/mean(stock$R,na.rm=T))[4:(length(na.omit(stock$R))-1)]
-          enviroR<-rnorm(length(enviroR),mean=enviroR,sd=rep(0.75,length(enviroR)))
-          enviroR<-as.data.frame(enviroR)
-          enviroR$sigma<-0.75
-          enviroR$Year<-wham_dat_file[[1]]$dat$year1:(wham_dat_file[[1]]$dat$year1+wham_dat_file[[1]]$dat$n_years-1)
-          ecov<-list(label='EnvR',mean=as.matrix(enviroR$enviroR),logsigma=as.matrix(log(enviroR$sigma)),year=enviroR$Year,
-                     use_obs=matrix(1,ncol=1,nrow=dim(enviroR)[1]), process_model='rw', recruitment_how=matrix('controlling-lag-0-linear',1,1))
-          input <- prepare_wham_input(asap3 = wham_dat_file, selectivity=list(model=rep("age-specific",2),
-                                                                              fix_pars=list(c(1:2,6:22),c(1:2,6:22))),
-                                      # age_comp='multinomial',
-                                      age_comp='logistic-normal-pool0',
-                                      M=list(mean_model='estimate-M',model='constant',est_ages=1),
-                                      recruit_model=2,
-                                      ecov=ecov,
-                                      NAA_re=list(sigma='rec',cor='iid'),
-                                      model_name=stock_wham_settings$model_name)}
-        if(MRE=='TRUE'){
+                                    model_name='petraleBC')
+        if (FixMRE==TRUE){
+          input <- prepare_wham_input(asap3 = wham_dat_file,selectivity=list(model=rep("age-specific",2),
+                                                   fix_pars=list(c(1:3,7:22),c(1:3,7:22))),
+                                    # age_comp='multinomial',
+                                    recruit_model=3,
+                                    age_comp='logistic-normal-pool0',
+                                    M=list(mean_model='fixed-M',model='constant',re_model=matrix('ar1_y',1,1),est_ages=1),
+                                    NAA_re=list(sigma='rec',cor='iid'),
+                                    model_name='petraleBC')
+        }
+        # input$map$Mpars<-factor(rep(NA,length(input$par$Mpars)))
+        # input$map$mean_rec_pars<-as.factor(c(1,NA))
+        # input$map$Mpars<-as.factor(rep(NA,length(input$map$Mpars)))
+        # recruit_pars=c(1170,0.000138)
+        #selectivity=list(model=rep("age-specific",2),
+         #                fix_pars=list(c(1:2,6:22),c(1:2,6:22))),
+        # input <- prepare_wham_input(asap3 = wham_dat_file, selectivity=list(model=rep("logistic",2),initial_pars=list(c(4,0.2),c(4,0.2))),
+        #                             age_comp='multinomial',
+        #                             # age_comp='logistic-normal-pool0',
+        #                             M=list(mean_model='estimate-M',model='constant',est_ages=1),
+        #                             recruit_model=3,
+        #                             NAA_re=list(sigma='rec',cor='iid'),
+        #                             model_name=stock_wham_settings$model_name)
+      if(RER=='TRUE'){
+        enviro<-rep(0.1,length(88:174))
+        if(y>175){
+          enviro<-c(enviro,seq(0.1,by=0.1,length.out=(y-175)))
+        }
+        sdenv<-enviro*0.2
+        enviro<-rnorm(length(enviro),mean=enviro,sd=sdenv)
+        enviro<-as.data.frame(enviro)
+        enviro$sigma<-0.2
+        enviro$Year<-wham_dat_file[[1]]$dat$year1:(wham_dat_file[[1]]$dat$year1+wham_dat_file[[1]]$dat$n_years-1)
+        ecov<-list(label='EnvR',mean=as.matrix(enviro$enviro),logsigma=as.matrix(log(enviro$sigma)),year=enviro$Year,
+                   use_obs=matrix(1,ncol=1,nrow=dim(enviro)[1]), process_model='rw', recruitment_how=matrix('controlling-lag-0-linear',1,1))
+        input <- prepare_wham_input(asap3 = wham_dat_file,selectivity=list(model=rep("age-specific",2),
+                                                                           fix_pars=list(c(1:3,7:22),c(1:3,7:22))),
+                                    # age_comp='multinomial',
+                                    recruit_model=3,
+                                    age_comp='logistic-normal-pool0',
+                                    M = list(mean_model = "estimate-M"),
+                                    ecov=ecov,
+                                    NAA_re=list(sigma='rec',cor='iid'),
+                                    model_name='petraleBC')}
+        input$par$log_NAA_sigma[1]<-log(pe_RSA)
+        input$map$log_NAA_sigma<-factor(rep(NA,length(input$par$log_NAA_sigma)))
+        input$data$waa_pointer_indices<-1
+        input$data$waa_pointer_ssb<-1
+      if(MRE=='TRUE'){
           enviroM<-(na.omit(stock$natM)/mean(stock$natM,na.rm=T))[89:(length(na.omit(stock$natM))-1)]
           enviroM<-rnorm(length(enviroM),mean=enviroM,sd=rep(0.75,length(enviroM)))
           enviroM<-as.data.frame(enviroM)
@@ -228,78 +234,81 @@ get_WHAM <- function(stock,y,r,wham_storage,...){
                                       recruit_model=2,
                                       ecov=ecov,
                                       NAA_re=list(sigma='rec',cor='iid'),
-                                      model_name=stock_wham_settings$model_name)}
+                                      model_name='petraleBC')}
       }
-      
+
       if (stock$stockName=='codGOM'){
         input <- prepare_wham_input(asap3 = wham_dat_file, selectivity=list(model=rep("age-specific",2),
                                                                             initial_pars=list(c(selC),c(selI)),
                                                                             fix_pars=list(c(6:9),c(6:9))),
-                                    # age_comp='multinomial',
-                                    # recruit_model=2,
-                                    model_name=stock_wham_settings$model_name)
+                                                                            # age_comp='multinomial',
+                                                                            # recruit_model=2,
+                                                                            model_name='codGOM')
       }
       # input <- prepare_wham_input(asap3 = wham_dat_file[[1]], selectivity=list(model=rep("logistic",2),
       #                                                                     initial_pars=list(c(2,0.3),c(2,0.3))),
       #                                                                     model_name=stock_wham_settings$model_name)
-      # need to set up a wham-settings object to pull these from - make it a list so that only list objects that matter get added - only source the wham-settings object once at the start of the file & only if using WHAM
-    }
-    
+# need to set up a wham-settings object to pull these from - make it a list so that only list objects that matter get added - only source the wham-settings object once at the start of the file & only if using WHAM
+
     # Fit wham model
     whamEst <- try(fit_wham(input, do.osa=F, MakeADFun.silent = TRUE, do.retro = TRUE,do.check=TRUE))
     # Setting do.osa = TRUE results in "Error in getUserDLL() Multiple TMB models loaded" which is likely an issue with what model TMB is used by make_osa_residuals() - make_osa_resiudals() probably calls TMB::MakeADFun without specifying DLL = "wham"
-    #save results from wham
+#save results from wham
     # saveRDS(whamEst, file = paste("Assessment/WHAM/", stockName,'_', r, '_', y, '.rdat', sep = '')) #??? probably don't want to save this, save a subset of results 
-    
+
     # Convergence check for wham
     check<-NULL
     check <- try(check_convergence(whamEst, ret=TRUE))
     # May want to suppress printing to screen using sink()
     if(is.null(check)){
-      whamConverge <- ifelse((check$na_sdrep == FALSE & check$is_sdrep == TRUE & check$convergence == 0), TRUE, FALSE) # If no NAs in sdrep, hessian invertible and model thinks it is converged (small gradient) then model converged
+    whamConverge <- ifelse((check$na_sdrep == FALSE & check$is_sdrep == TRUE & check$convergence == 0), TRUE, FALSE) # If no NAs in sdrep, hessian invertible and model thinks it is converged (small gradient) then model converged
     }else{whamConverge<-FALSE}
     # Calculate Mohn's rho values
     MohnsRho<-NA
     MohnsRho<-try(mohns_rho(whamEst))
     if(class(whamEst)!='try-error'){
-      # Store WHAM results in final MSE output (indexed by stock i, rep r, and year y)
-      wham_storage$SSB[[r]][[y]] <- whamEst$rep$SSB 
-      wham_storage$F[[r]][[y]] <- exp(whamEst$rep$log_F_tot)
-      wham_storage$FAA[[r]][[y]] <- exp(whamEst$rep$log_FAA_tot)
-      wham_storage$R[[r]][[y]] <- whamEst$rep$NAA[,,,1]
-      wham_storage$NAA[[r]][[y]] <- whamEst$rep$NAA[,,,1:nage]
-      wham_storage$Catch[[r]][[y]] <- whamEst$rep$pred_catch # Not successfully saved in wham_storage for each assessment year
-      wham_storage$CAA[[r]][[y]] <- whamEst$rep$pred_CAA[,1,] 
-      wham_storage$FMSY[[r]][[y]] <- exp(whamEst$rep$log_FXSPR_static)
-      wham_storage$SSBMSY[[r]][[y]] <- exp(whamEst$rep$log_SSB_FXSPR_static)[1]
-      wham_storage$MSY[[r]][[y]] <- exp(whamEst$rep$log_Y_FXSPR_static)[1]
-      wham_storage$SelAA[[r]][[y]] <- whamEst$rep$selAA
-      wham_storage$checkConvergence[[r]][[y]] <- whamConverge
-      wham_storage$MohnsRho_SSB[[r]][[y]] <- MohnsRho["SSB"]
-      wham_storage$MohnsRho_F[[r]][[y]] <- MohnsRho["Fbar"]
-      if (is.na(MohnsRho["SSB"])){
-        wham_storage$MohnsRho_R[[r]][[y]] <- NA
-      }
-      if (!is.na(MohnsRho["SSB"])){
-        wham_storage$MohnsRho_R[[r]][[y]] <- MohnsRho$naa[,,1]
-      }
-      wham_storage$MohnsRho_N[[r]][[y]] <- MohnsRho[grep("N", names(MohnsRho))]
-      wham_storage$pars_Ecov_beta[[r]][[y]] <- whamEst$rep$Ecov_beta[3,,1,] # Should pull last row associated with index, may need to be revised in the future!!!
-      wham_storage$pars_Ecov_process[[r]][[y]] <- whamEst$rep$Ecov_process_pars
-      wham_storage$pars_q[[r]][[y]] <- tail(whamEst$rep$q, n=1) # Save only final q estimate, may revise in future but only a single value can be retained or get_fillRepArrays throws an error!!!
-      
-      # Read in results
-      res <- list(
-        waa.fleet= matrix(whamEst$input$data$waa[1,1,], nrow = 1), # First row of fleet WAA, !!! only works with a single fleet
-        sel.fleet=whamEst$rep$selAA[[1]],
-        M=tail(whamEst$rep$MAA[,,,1],1),
-        maturity=whamEst$input$data$mature[,nrow(whamEst$input$data$mature),], # Last row of maturity input, !!! only works if maturity constant over time
-        R=whamEst$rep$NAA[,,,1],
-        SSB=whamEst$rep$SSB,
-        J1N=tail(whamEst$rep$NAA[,,,1:nage],1),
-        F.report= exp(whamEst$rep$log_F_tot),
-        catch = whamEst$rep$pred_catch
-      )
+    # Store WHAM results in final MSE output (indexed by stock i, rep r, and year y)
+    wham_storage$SSB[[r]][[y]] <- whamEst$rep$SSB 
+    wham_storage$F[[r]][[y]] <- exp(whamEst$rep$log_F_tot)
+    wham_storage$FAA[[r]][[y]] <- exp(whamEst$rep$log_FAA_tot)
+    wham_storage$R[[r]][[y]] <- whamEst$rep$NAA[,,,1]
+    wham_storage$NAA[[r]][[y]] <- whamEst$rep$NAA[,,,1:nage]
+    wham_storage$Catch[[r]][[y]] <- whamEst$rep$pred_catch # Not successfully saved in wham_storage for each assessment year
+    wham_storage$CAA[[r]][[y]] <- whamEst$rep$pred_CAA[,1,] 
+    wham_storage$FMSY[y] <- tail(exp(whamEst$rep$log_FMSY),1)
+    wham_storage$SSBMSY[y] <- tail(exp(whamEst$rep$log_SSB_MSY),1)[,1]
+    wham_storage$MSY[y] <- exp(whamEst$rep$log_MSY)[1]
+    wham_storage$SelF[[r]][[y]]<-whamEst$rep$selpars[[1]][1,]
+    wham_storage$SelAA[[r]][[y]] <- whamEst$rep$selAA
+    wham_storage$checkConvergence[y] <- whamConverge
+    wham_storage$MohnsRho_SSB[y] <- MohnsRho["SSB"]
+    wham_storage$MohnsRho_F[y] <- MohnsRho["Fbar"]
+    wham_storage$M[[r]][[y]]<-exp(whamEst$rep$log_M)[,,,1]
+    wham_storage$alpha[[r]][[y]]<-exp(whamEst$rep$log_SR_a)
+    wham_storage$beta[[r]][[y]]<-exp(whamEst$rep$log_SR_b)
+    if (is.na(MohnsRho["SSB"])){
+      wham_storage$MohnsRho_R[y] <- NA
+    }
+    if (!is.na(MohnsRho["SSB"])){
+      wham_storage$MohnsRho_R[y] <- MohnsRho$naa[,,1]
+    }
+    wham_storage$MohnsRho_N[y] <- MohnsRho[grep("N", names(MohnsRho))]
+    wham_storage$pars_Ecov_beta[[r]][[y]] <- whamEst$rep$Ecov_beta[3,,1,] # Should pull last row associated with index, may need to be revised in the future!!!
+    wham_storage$pars_Ecov_process[[r]][[y]] <- whamEst$rep$Ecov_process_pars
+    wham_storage$pars_q[[r]][[y]] <- tail(whamEst$rep$q, n=1) # Save only final q estimate, may revise in future but only a single value can be retained or get_fillRepArrays throws an error!!!
+
+    # Read in results
+    res <- list(
+      waa.fleet= matrix(whamEst$input$data$waa[1,1,], nrow = 1), # First row of fleet WAA, !!! only works with a single fleet
+      sel.fleet=whamEst$rep$selAA[[1]],
+      M=tail(whamEst$rep$MAA[,,,1],1),
+      maturity=whamEst$input$data$mature[,nrow(whamEst$input$data$mature),], # Last row of maturity input, !!! only works if maturity constant over time
+      R=whamEst$rep$NAA[,,,1],
+      SSB=whamEst$rep$SSB,
+      J1N=tail(whamEst$rep$NAA[,,,1:nage],1),
+      F.report= exp(whamEst$rep$log_F_tot),
+      catch = whamEst$rep$pred_catch
+    )
     }
     # !!! Maybe look at this code to pull together performance metrics/diagnostics to save
     # !!! Look at postprocessing/Plots, and functions/plotResults (auto generated) - get_plots function runs everything, prioritize this

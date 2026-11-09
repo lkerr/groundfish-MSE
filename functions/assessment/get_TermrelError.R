@@ -1,5 +1,5 @@
-get_TermrelError <- function(stock){
-  
+get_TermrelError <- function(stock,y){
+  m<-1
   out <- within(stock, {
     #### Calculate terminal rel errors ####
     CN[y,] %*% waa[y,]

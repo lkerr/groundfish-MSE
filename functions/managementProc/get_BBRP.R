@@ -20,7 +20,7 @@
 #         to see what needs to be included in the list.
 
 get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
-                     distillBmsy=mean, stockEnv){
+                     distillBmsy=mean, stockEnv,block){
 
   if(parmgt$BREF_TYP == 'RSSBR'){
     
@@ -41,7 +41,7 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
     # the list Rfun_BmsySim which is created in the processes folder.
 
     Rfun <- Rfun_lst[[parmgt$RFUN_NM]]
-    
+
     funR <- Rfun(parpop = parpop, 
                  parmgt= parmgt,
                  ny = parmgt$BREF_PAR0)
@@ -77,7 +77,8 @@ get_BBRP <- function(parmgt, parpop, parenv, Rfun_lst, FBRP,
                     Rfun = Rfun, F_val = FBRP,
                     ny = 200, # only will be relevant for hindcast version
                     stReportYear = 2,
-                    stockEnv = stockEnv)$SSB
+                    stockEnv = stockEnv,
+                    block=block)$SSB
     
     SSBvalue <- distillBmsy(SSB)
 
