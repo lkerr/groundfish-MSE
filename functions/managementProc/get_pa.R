@@ -12,24 +12,25 @@
 # Bmsy: Bmsy reference point or proxy
 # 
 
-
 get_pa <- function(parpop, Fmsy, Bmsy, Blim){
 
-  if(tail(parpop$SSBhat, 1) <= Bmsy){
-    
-    F <- Fmsy * (tail(parpop$SSBhat, 1) / Bmsy)
-    
-  }else if(tail(parpop$SSBhat, 1) <= Blim){
-    F<-0
-
-  }else{
+  if(tail(parpop$SSBhat, 1) >= Bmsy){
     
     F <- Fmsy
+    
+  }else if(tail(parpop$SSBhat, 1) < Bmsy & tail(parpop$SSBhat, 1)>=Blim){
+    
+    F<-Fmsy*((tail(parpop$SSBhat, 1)-Blim)/((Bmsy)-Blim))
+    
+  }else if (tail(parpop$SSBhat,1)<Blim){
+    
+    F <- 0
     
   }
   
   return(c(Fadvice = unname(F)))
   
 }
+
 
 

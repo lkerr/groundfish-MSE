@@ -1,6 +1,6 @@
 #Function to get what estimated F would be based on the catch advice.
 #Used to make sure estimated F is not over the estimated OFL. 
-get_estF<-function(catchproj,parmgtproj,parpopproj,parenv,Rfun,stockEnv){
+get_estF<-function(catchproj,parmgtproj,parpopproj,parenv,Rfun,stockEnv,y){
     nage <- length(parpopproj$sel)
     N <- matrix(0, nrow=1, ncol=nage)
     init <- tail(parpopproj$J1N, 1)

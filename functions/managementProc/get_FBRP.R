@@ -31,12 +31,13 @@
 
 
 
-get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
+get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv,y,block){
   # Load in the recruitment function (recruitment function index is
   # found in the parmgt data frame but the actual functions are from
   # the list Rfun_BmsySim which is created in the processes folder.
   # Necessary for any forecast simulation-based approaches.
 
+  m<-1
   Rfun <- Rfun_lst[[parmgt$RFUN_NM]]
   
   if(parmgt$FREF_TYP == 'YPR' | parmgt$FREF_TYP == 'SPR'){
@@ -62,7 +63,7 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
                  ny = 200,
                  stReportYr = 2,
                  stockEnv = stockEnv)
-  
+
       # Extract the equilibrium population for use in forecasts for
       # Fmsy forecast calculations and for output for Bmsy forecast
       # calculations
@@ -77,7 +78,106 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     return(list(RPvalue = F, equiJ1N_MSY = equiJ1N_MSY))
     
   }else if(parmgt$FREF_TYP == 'FmsySim'){
-   
+  
+    
+    ## ---- WHAM MSY inputs you provided (hard-coded here) ----
+    # maturity <- parpop$mat
+    # 
+    # weight <- parpop$waa
+    # 
+    # selectivity <- parpop$sel
+    # # stockEnv$wham_storage$SelF[[r]][[y]]  # ages 6..22 fully selected
+    # 
+    # M     <- rep(parpop$M,22)
+    #   # tail(stockEnv$wham_storage$M[[r]][[y]],22)
+    # alpha <- as.numeric(stockEnv$Rpar[['a']])*1000
+    #   # tail(stockEnv$wham_storage$alpha[[r]][[y]],1)
+    # beta  <- as.numeric(stockEnv$Rpar[['b']])
+    # # tail(stockEnv$wham_storage$beta[[r]][[y]],1) 
+    # 
+    # ## ---- Deterministic equilibrium MSY with WHAM conventions ----
+    # eq_msy <- function(maturity, weight, selectivity, M, alpha, beta,
+    #                    spawn_frac = 0, F_upper = 1.25, grid_dF = 0.01) {
+    #   
+    #   stopifnot(length(maturity)==length(weight),
+    #             length(weight)==length(selectivity))
+    #   A <- length(maturity)
+    #   
+    #   spr_ypr <- function(F_full) {
+    #     Fa <- F_full * selectivity
+    #     Za <- Fa + M
+    #     
+    #     la <- numeric(A)
+    #     la[1] <- 1
+    #     if (A >= 2) {
+    #       for (a in 2:(A-1)) la[a] <- la[a-1] * exp(-Za[a-1])
+    #       la[A] <- la[A-1] * exp(-Za[A-1])
+    #       la[A] <- la[A] / (1 - exp(-Za[A]))   # geometric plus-group
+    #     }
+    #     
+    #     SPR <- sum(la * weight * maturity)
+    #     
+    #     Ca  <- (Fa / Za) * (1 - exp(-Za)) * la
+    #     YPR <- sum(Ca * weight)
+    #     list(SPR = SPR, YPR = YPR)
+    #   }
+    #   
+    #   eq_yield <- function(F_full) {
+    #     pry <- spr_ypr(F_full)
+    #     SPR <- pry$SPR; YPR <- pry$YPR
+    #     if (alpha * SPR <= 1) return(c(Y=0, SSB=0, R=0, SPR=SPR))
+    #     R   <- (alpha*SPR - 1) / (beta*SPR)
+    #     SSB <- R * SPR
+    #     Y   <- R * YPR
+    #     c(Y=Y, SSB=SSB, R=R, SPR=SPR)
+    #   }
+    #   
+    #   F_grid <- seq(0, F_upper, by = grid_dF)
+    #   out <- vapply(F_grid, eq_yield, numeric(4))
+    #   Y   <- out[1,]; SSB <- out[2,]; R <- out[3,]; SPR <- out[4,]
+    #   
+    #   i <- which.max(Y)
+    #   list(F_msy=F_grid[i], MSY=Y[i], SSB_msy=SSB[i], SPR_msy=SPR[i],
+    #        curve = data.frame(F=F_grid, Yield=Y, SSB=SSB, SPR=SPR))
+    # }
+    # 
+    # ## ---- Run (spawn at beginning of year: spawn_frac = 0) ----
+    # res <- eq_msy(maturity, weight, selectivity, M, alpha, beta, spawn_frac = 0)
+    # 
+    # cat("\n**Expected (≈ WHAM): F_msy ~ 0.07, MSY ~ 1022.73, SSB_msy ~ 12813, SPR_msy ~ 0.001706**\n")
+    # print(with(res, c(F_msy=F_msy, MSY=MSY, SSB_msy=SSB_msy, SPR_msy=SPR_msy)), digits=8)
+    # 
+    # ## ---- Sanity points at F = 0.07 and F = 0.16 ----
+    # checkF <- function(Fval) {
+    #   A <- length(maturity)
+    #   Fa <- Fval * selectivity
+    #   Za <- Fa + M
+    #   
+    #   la <- numeric(A); la[1] <- 1
+    #   for (a in 2:(A-1)) la[a] <- la[a-1] * exp(-Za[a-1])
+    #   la[A] <- la[A-1] * exp(-Za[A-1]); la[A] <- la[A] / (1 - exp(-Za[A]))
+    #   SPR <- sum(la * exp(-Za * 0) * weight * maturity)
+    #   Ca  <- (Fa / Za) * (1 - exp(-Za)) * la
+    #   YPR <- sum(Ca * weight)
+    #   if (alpha * SPR <= 1) return(c(Y=0, SSB=0, R=0, SPR=SPR))
+    #   R   <- (alpha*SPR - 1) / (beta*SPR)
+    #   SSB <- R * SPR
+    #   Y   <- R * YPR
+    #   c(Y=Y, SSB=SSB, R=R, SPR=SPR)
+    # }
+    # 
+    # cat("\nEquilibrium at F=0.07 (should be near Y≈1022.7, SPR≈0.001706):\n")
+    # print(checkF(0.07), digits=8)
+    # 
+    # cat("\nEquilibrium at F=0.16 (should be near Y≈229):\n")
+    # print(checkF(0.16), digits=8)
+    # 
+    # ## ---- Top of the curve (show a few neighbors around F_msy) ----
+    # ix <- which.max(res$curve$Yield)
+    # rng <- max(1, ix-3):min(nrow(res$curve), ix+3)
+    # cat("\nNeighborhood of the maximum:\n")
+    # print(res$curve[rng, ], digits=8)
+    # 
     candF <- seq(from=0, to=1.25, by=0.01)
 
     # Edit the environmental parameters for the initial run so that
@@ -86,43 +186,44 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
     # for hindcast projections. Temperature is length 1 -- the length
     # of the temperature anomaly is tested in get_proj.
     parenvTemp <- parenv
-    parenvTemp$Tanom <- rep(parenv$Tanom[parenv$y],
-                            times = length(parenv$Tanom))
 
     simAtF <- lapply(1:length(candF), function(x){
                      get_proj(type = 'FREF',
-                              parmgt = parmgt, 
-                              parpop = parpop, 
-                              parenv = parenvTemp, 
+                              parmgt = parmgt,
+                              parpop = parpop,
+                              parenv = parenvTemp,
                               Rfun = Rfun,
                               F_val = candF[x],
                               ny = 200,
                               stReportYr = 2,
-                              stockEnv = stockEnv)})
-    
+                              stockEnv = stockEnv,
+                              block=block)})
+
+    cat('finished getproj for FBRP')
     sumCW <- do.call(cbind, sapply(simAtF, '[', 'sumCW'))
-    
+
     meanSumCW <- apply(sumCW, 2, mean)
     Fmsy <- candF[which.max(meanSumCW)]
-    
-    # Extract the equilibrium population (at each level of F) for use in 
-    # forecasts for Fmsy forecast calculations and for output for Bmsy 
+
+    # Extract the equilibrium population (at each level of F) for use in
+    # forecasts for Fmsy forecast calculations and for output for Bmsy
     # forecast calculations
     equiJ1N_MSY <- sapply(simAtF, '[', 'J1N')
-    
-    
-    # If using forward projection, use the equilibrium values for population
-    # size at the current temperature (simAtF) and the optimal F (Fmsy) and 
-    # project forward from there. It is important to start from here because 
-    # otherwise there might not be enough time in the projection to reach 
-    # an equilibrium state.
-  
+
+
+  # If using forward projection, use the equilibrium values for population
+  # size at the current temperature (simAtF) and the optimal F (Fmsy) and
+  # project forward from there. It is important to start from here because
+  # otherwise there might not be enough time in the projection to reach
+  # an equilibrium state.
+  # 
     if(parmgt$RFUN_NM == 'forecast'){
       
       # Get the initial population using the optimal F assuming current
       # temperature anomaly (FMSY)
       
       parpopTemp <- parpop
+      if(exists('y')){
       simAtF <- lapply(1:length(candF), function(x){
         parpopTemp$J1N <- equiJ1N_MSY[[x]]
         get_proj(type = 'FREF',
@@ -132,7 +233,20 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
                  Rfun = Rfun,
                  F_val = candF[x],
                  stReportYr = 2,
-                 stockEnv = stockEnv)})
+                 stockEnv = stockEnv,
+                 block=block)})}
+
+        simAtF <- lapply(1:length(candF), function(x){
+          parpopTemp$J1N <- equiJ1N_MSY[[x]]
+          get_proj(type = 'FREF',
+                   parmgt = parmgt, 
+                   parpop = parpopTemp,
+                   parenv = parenv, 
+                   Rfun = Rfun,
+                   F_val = candF[x],
+                   stReportYr = 2,
+                   stockEnv = stockEnv,
+                   block=block)})
       
       # Update the optimal states assuming variable temperature
       sumCW <- do.call(cbind, sapply(simAtF, '[', 'sumCW'))
@@ -142,7 +256,6 @@ get_FBRP <- function(parmgt, parpop, parenv, Rfun_lst, stockEnv){
       
     }
     
-
     # Warn if maximum yield did not occur within the range
     if(Fmsy %in% range(candF)){
       warning(paste0('get_FBRP: maximum yield occurs at endpoint of ',

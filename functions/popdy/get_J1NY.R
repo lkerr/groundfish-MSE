@@ -1,5 +1,3 @@
-
-
 # Function to determine numbers-at-age at the start of each year
 # after recruitment has occurred.
 # 
@@ -8,8 +6,6 @@
 # Zy0: vector of total mortality-at-age in year y-1
 # 
 # Ry1 recruitment in year y
-
-
 
 get_J1Ny <- function(J1Ny0, Zy0, Ry1){
   

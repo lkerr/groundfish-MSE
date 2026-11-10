@@ -46,22 +46,19 @@
 #         could be simplified a little to combine RPlast and evalRP but
 #         it is pretty clear this way at least.
 
-get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
+get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv,y){
   # A general application of national standard 1 reference points. There
   # are different ways to grab the F reference point and the B reference
   # point and those will be implemented in get_FBRP
+  m<-1
   if(parmgt$ASSESSCLASS == 'CAA' || parmgt$ASSESSCLASS == 'WHAM'){
     # for GOM cod, Mramp model uses M = 0.2 for status determination
-    parpopF<-parpop
-    parpopF$M<-rep(stockEnv$M,stock[[i]]$nage)
-    parpopF$switch<-FALSE
     
-    Fref <- get_FBRP(parmgt = parmgt, parpop = parpopF, 
-                     parenv = parenv, Rfun_lst = Rfun_BmsySim, 
-                     stockEnv = stockEnv)
+    Fref <- stockEnv$wham_storage$FMSY[y]
+
     parmgtT<-parmgt
     parpopT<-parpop
-    parpopT$M<-rep(stockEnv$M,stock[[i]]$nage)
+    parpopT$M<-rep(tail(na.omit(stockEnv$natM),1),stock[[i]]$nage)
     parpopT$switch<-TRUE
     parpopT$J1N<-stockEnv$J1N[1:(y-1),]
     parpopT$selC<-stockEnv$selC
@@ -70,33 +67,28 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     stockEnvT$R_mis<-FALSE
     FrefT <- get_FBRP(parmgt = parmgtT, parpop = parpopT, #Also calculate the true Fmsy
                      parenv = parenv, Rfun_lst = Rfun_BmsySim, 
-                     stockEnv = stockEnvT)
-    
+                     stockEnv = stockEnvT,y=y,block=y)
+
     # if using forecast start the BMSY initial population at the equilibrium
     # FMSY level (before any temperature projections). This is consistent
     # with how the Fmsy is calculated.
-    parpopUpdate <- parpopF
-    parpopUpdateT <- parpopT
     if(parmgt$RFUN_NM == 'forecast'){
       
-      parpopUpdate$J1N <- Fref$equiJ1N_MSY
+      parpopT$J1N <- FrefT$equiJ1N_MSY
       
     }
-
-    Bref <- get_BBRP(parmgt = parmgt, parpop = parpopUpdate, 
-                     parenv = parenv, Rfun_lst = Rfun_BmsySim,
-                     FBRP = Fref[['RPvalue']], stockEnv = stockEnv)
+    Bref<-stockEnv$wham_storage$SSBMSY[y]
     
     stockEnvT<-stockEnv
     stockEnvT$R_mis<-FALSE
 
-    BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopUpdateT, #Also calculate the true Bmsy
+    BrefT <- get_BBRP(parmgt = parmgtT, parpop = parpopT, #Also calculate the true Bmsy
                      parenv = parenv, Rfun_lst = Rfun_BmsySim,
-                     FBRP = FrefT[['RPvalue']], stockEnv = stockEnvT)
+                     FBRP = FrefT[['RPvalue']], stockEnv = stockEnvT,block=y)
 
     if(evalRP){
-      FrefRPvalue <- Fref[['RPvalue']]
-      BrefRPvalue <- Bref[['RPvalue']]*USRScalar
+      FrefRPvalue <- Fref
+      BrefRPvalue <- Bref*USRScalar
       FrefTRPvalue <- FrefT[['RPvalue']]
       BrefTRPvalue <- BrefT[['RPvalue']]*USRScalar
     }else{
@@ -110,8 +102,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     # overfishing is occurring
     
     # otherwise just use same reference points values   
-    BThresh <- BrefScalar * BrefRPvalue
-    FThresh <- FrefScalar * FrefRPvalue
+    BThresh <- BrefScalar * Bref
+    FThresh <- FrefScalar * Fref
 
     overfished <- ifelse(tail(parpop$SSBhat,1) < BThresh, 1, 0)
     
@@ -123,7 +115,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     }
     
     else if(tolower(parmgt$HCR) == 'pa'){
-      F <- get_pa(parpop, Fmsy=FThresh, Bmsy=BrefRPvalue, Blim=BThresh)['Fadvice']
+      F <- get_pa(parpop, Fmsy=Fref, Bmsy= BrefRPvalue, Blim=BThresh)['Fadvice']
       
     }
     
@@ -154,13 +146,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     
     if(tolower(parmgt$projections) == 'true'){
       if ((y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) == 0){
-      parmgtproj<-parmgt
-      parmgtproj$RFUN_NM<-"forecast"
-      catchproj<-matrix(ncol=2,nrow=100)
-      parpopproj<-parpop
-      parpopproj$SSBhat<-stockEnv$res$SSB
-      parpopproj$J1N<-tail(stockEnv$res$J1N,1)
-      parpopproj$catch<-stockEnv$res$catch.obs
+      proj<-project_wham(stockEnv$whamEst,proj.opts=list(n.yrs=1,use.last.F=FALSE,proj.F=F))
+      catchproj<-proj$rep$pred_stock_catch[,,(length(proj$rep$pred_stock_catch))]
       if(tolower(parmgt$HCR) == 'pstar'){F<-FrefRPvalue}
       if(stockEnv$waa_mis=='TRUE'){
         parpopproj$waa<-colMeans(stock[[1]]$waa[160:165,])
@@ -171,32 +158,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
           parpopproj$waa<-colMeans(stock[[1]]$waa[150:155,])
         }
       }
-      for (i in 1:100){
-          if(mproc[m,'Lag'] == 'TRUE'){
-          catchproj[i,]<-get_proj(type = 'current',
-                                  parmgt = parmgtproj, 
-                                  parpop = parpopproj, 
-                                  parenv = parenv, 
-                                  Rfun = Rfun_BmsySim$forecast,
-                                  F_val = F,
-                                  ny = 200,
-                                  stReportYr = 2,
-                                  stockEnv = stockEnv)$sumCW
-          }
-          else if(mproc[m,'Lag'] == 'FALSE'){
-          parpopproj$switch<-'TRUE'
-          catchproj[i,]<-get_projnolag(type = 'current',
-                                  parmgt = parmgtproj, 
-                                  parpop = parpopproj, 
-                                  parenv = parenv, 
-                                  Rfun = Rfun_BmsySim$forecast,
-                                  F_val = F,
-                                  ny = 200,
-                                  stReportYr = 2,
-                                  stockEnv = stockEnv)$sumCW
-          }
-      }
-      catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
       if(tolower(parmgt$HCR) == 'pstar'){
         calc_pstar = function(maxp, relB)#function to calculate P* based on SSB/SSBmsy
         {
@@ -257,25 +218,6 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
           catchproj[2]<- catchproj[1]-(catchproj[1]*.2)}
         if(((catchproj[2]-catchproj[1])/catchproj[2])*100>20){
           catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
-      }
-      Fest<-get_estF(catchproj=catchproj[1],parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv)
-      if (Fest>FrefRPvalue){
-        catchproj<-matrix(ncol=2,nrow=100)
-        for (i in 1:100){
-            catchproj[i,]<-get_projnolag(type = 'current',
-                                    parmgt = parmgtproj, 
-                                    parpop = parpopproj, 
-                                    parenv = parenv, 
-                                    Rfun = Rfun_BmsySim$forecast,
-                                    F_val = FrefRPvalue,
-                                    ny = 200,
-                                    stReportYr = 2,
-                                    stockEnv = stockEnv)$sumCW}
-        catchproj<-c(median(catchproj[,1]),median(catchproj[,1]))
-        if(tolower(mproc$varlimit) == 'true'){
-          if(((catchproj[2]-catchproj[1])/catchproj[2])*100>20){
-            catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
-        }
       }
       F <- get_F(x = catchproj[1],
                    Nv = stockEnv$J1N[y,], 

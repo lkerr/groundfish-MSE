@@ -69,6 +69,7 @@ get_perRecruit <- function(parmgt, parpop,
   
   # Adjust input vectors so they match with the number of ages
   # over which the Y/R or SSB/R is being applied.
+
   sel <- c(c(parpop$sel), rep(tail(c(parpop$sel), 1), nage-length(parpop$sel)))
   waa <- c(c(parpop$waa), rep(tail(c(parpop$waa), 1), nage-length(parpop$waa)))
   if (stock[[1]]$waa_mis==TRUE){

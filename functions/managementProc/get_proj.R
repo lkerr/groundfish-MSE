@@ -1,5 +1,6 @@
-get_proj <- function(type, parmgt, parpop, parenv, Rfun,
-                     F_val, stReportYr, ny=NULL, stockEnv, ...){
+get_proj <- function(type, parmgt, parpop, Rfun,parenv,
+                     F_val, stReportYr, ny=NULL, stockEnv,block, ...){
+
   if(parmgt$RFUN_NM == 'hindcastMean'){
     if(type == 'FREF'){
       startHCM <- -parmgt$FREF_PAR0
@@ -16,7 +17,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     # Tanom is unnecessary for hindcasts. Loop below is based on the length
     # of Tanom (relevant to "forecast") so adapt this variable to be the
     # appropriate length.
-    Tanom <- rep(0, ny)
+    Tanom <- rep(0, length(startFCST:endFCST))
     
     # length of recruitment time series
     nR <- length(parpop$R)
@@ -29,6 +30,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   }
    
   if(parmgt$RFUN_NM == 'forecast'){
+
     if(type == 'FREF'){
       startFCST <- parenv$y
       endFCST <- parenv$y + parmgt$FREF_PAR0
@@ -40,24 +42,14 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       startFCST <- parenv$y
       endFCST <- parenv$y + 2
     }
-    
-    if(is.na(parenv$Tanom[endFCST])){
-      stop(paste('get_proj: end projection year out of temperature anomaly',
-                 'range. Check FREF_PAR0 or BREF_PAR0 in mproc.'))
-    }
-    
-    Tanom <- parenv$Tanom[startFCST:endFCST]
-       
-    ny <- length(Tanom)
   }
   
- 
   # Get the initial population for the simulation -- assumes exponential 
   # survival based on the given F, mean recruitment and M
   # ages <- 1:length(parpop$sel)
   # meanR <- mean(parpop$R)
   # init <- meanR * exp(-ages * F_val*parpop$sel - as.numeric(parpop$M))
-   
+
   # The initial population is the estimates in the last year
   init <- tail(parpop$J1N,1)
 
@@ -75,6 +67,7 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   }
 
   # If M is a vector, ensure it is the same length as the rest
+
   if(length(parpop$M) > 1){
     if(length(parpop$sel) != length(parpop$M)){
       stop('get_proj: check vector lengths (M)')
@@ -82,20 +75,21 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
   }
   
   nage <- length(parpop$sel)
-  
+
   # if M is not given as a vector, make it one
+
   if(length(parpop$M) == 1){
-    if(exists('y') & parpop$switch==TRUE){
-    parpop$M <- rep(stockEnv$natM[y], nage)}
-    else if(exists('y') & parpop$switch==FALSE){
+    if(parpop$switch==TRUE){
+    parpop$M <- rep(tail(na.omit(stockEnv$natM),1), nage)}
+    else if(parpop$switch==FALSE){
       parpop$M <- rep(0.2, nage)
     }
     else{parpop$M<-rep(parpop$M,nage)}
     
   }
-  
+
   # set up containers
-  N <- matrix(0, nrow=ny, ncol=nage)
+  N <- matrix(0, nrow=length(startFCST:endFCST), ncol=nage)
 
   # set up initial conditions
   N[1,] <- init 
@@ -118,11 +112,13 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
     Recruits<-parpop$R
     
     N[1,1] <- prod(tail(Recruits,5))^(1/5)
+
     if (mproc$rhoadjust==TRUE & y>fmyearIdx & stockEnv$Mohns_Rho_SSB[y]>0.15){
       N[1,]<-N[1,]/(1+stockEnv$Mohns_Rho_SSB[y])
     }
   }
-  for(y in 2:length(Tanom)){
+
+  for(y in 2:length(startFCST:endFCST)){
   Fvalue<-F_val
   if (type=='current'){
     if (y==2 & !exists('catchproj',stockEnv)){
@@ -142,32 +138,38 @@ get_proj <- function(type, parmgt, parpop, parenv, Rfun,
       N[y,a] <- N[y-1, a-1] * exp(-parpop$sel[a-1]*Fvalue - 
                                     parpop$M[a-1])
     }
+
     # Deal with the plus group
       N[y,nage] <- N[y-1,nage-1] * exp(-parpop$sel[nage-1] * Fvalue - 
                                        parpop$M[nage-1]) + 
                  N[y-1,nage] * exp(-parpop$sel[nage] * Fvalue - 
                                      parpop$M[nage])
+    
     ## Recruitment
     # sd of historical R estimates
       parpop$Rpar_mis<-stockEnv$Rpar_mis#will use incorrect recruitment assumption if set in model parameters script
-      if(type=='current'){parpop$switch<-'FALSE'}
+      if(type=='current'){parpop$switch<-'TRUE'}
+      SSB<-c(N[y-1,]) %*% c(parpop$waa* parpop$mat)
+
         N[y,1] <- Rfun(type = stockEnv$R_typ,
                      parpop = parpop, 
                      parenv = parenv, 
                      parmgt = parmgt,
-                     SSB = c(N[y-1,]) %*% c(parpop$waa* parpop$mat),
-                     sdR = stockEnv$pe_R,
-                     TAnom = Tanom[y],
-                     Rest = Rest)
+                     SSB = SSB,
+                     sdR = 0,
+                     TAnom = 0,
+                     y=y,
+                     block=block)
+}
       #if(type=='BREF'){N[y,1]<-7165447}
-  }
-  # Get weight-at-age
+
   Waa <- sweep(N, MARGIN=2, STATS=parpop$waa, FUN='*')
   
   # Get mature biomass-at-age
   SSBaa <- sweep(Waa, MARGIN=2, STATS=parpop$mat, FUN='*')
 
   # Calculate the catch in weight
+
   sumCW <- sapply(2:nrow(N), function(i){
     CN <- (parpop$sel * F_val) / (parpop$sel * F_val + parpop$M) * 
       N[i,] * (1 - exp(-F_val * parpop$sel - parpop$M))

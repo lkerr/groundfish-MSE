@@ -1,5 +1,5 @@
 get_projnolag <- function(type, parmgt, parpop, parenv, Rfun,
-                     F_val, stReportYr, ny=NULL, stockEnv, ...){
+                     F_val, stReportYr, ny=NULL, stockEnv,y, ...){
 
   if(parmgt$RFUN_NM == 'hindcastMean'){
     if(type == 'FREF'){
@@ -9,7 +9,7 @@ get_projnolag <- function(type, parmgt, parpop, parenv, Rfun,
       startHCM <- -parmgt$BREF_PAR0
       endHCM <- parmgt$BREF_PAR1
     }
-    else if(type=='current'){#'current' being the current method for New England groundfish which uses projections in the catch advice 
+    else if(type=='current'){#'current' being the current method for New England groundfish which uses projections in the catch advice
       startFCST <- parenv$y
       endFCST <- parenv$y + 2
       startHCM <- -parmgt$BREF_PAR0
@@ -44,12 +44,7 @@ get_projnolag <- function(type, parmgt, parpop, parenv, Rfun,
       endFCST <- parenv$y + 2
     }
     
-    if(is.na(parenv$Tanom[endFCST])){
-      stop(paste('get_proj: end projection year out of temperature anomaly',
-                 'range. Check FREF_PAR0 or BREF_PAR0 in mproc.'))
-    }
-    
-    Tanom <- c(parenv$Tanom[startFCST:endFCST])
+    Tanom <- rep(0, length(startFCST:endFCST))
     
     ny <- length(Tanom)
     
@@ -110,6 +105,7 @@ get_projnolag <- function(type, parmgt, parpop, parenv, Rfun,
       Fhat<-parpop$Fhat
     }
     if (exists('catchproj',stockEnv)){
+      parpop$M <- rep(tail(na.omit(stockEnv$natM),1), nage)
       Fhat<-get_F(x = stockEnv$catchproj[2],
                   Nv = init, 
                   slxCv = parpop$sel, 
@@ -135,10 +131,10 @@ get_projnolag <- function(type, parmgt, parpop, parenv, Rfun,
                    SSB = c(init) %*% c(parpop$waa* parpop$mat),
                    sdR = stockEnv$pe_R,
                    TAnom = Tanom[1],
-                   Rest = Rest)
-    if (mproc$rhoadjust==TRUE & y>fmyearIdx & stockEnv$Mohns_Rho_SSB[y]>0.15){
-      N[1,]<-N[1,]/(1+stockEnv$Mohns_Rho_SSB[y])
-    }
+                   y=y)
+    # if (mproc$rhoadjust==TRUE & y>fmyearIdx & stockEnv$Mohns_Rho_SSB[y]>0.15){
+    #   N[1,]<-N[1,]/(1+stockEnv$Mohns_Rho_SSB[y])
+    # }
   }
   for(y in 2:length(Tanom)){
     Fvalue<-F_val
@@ -158,6 +154,7 @@ get_projnolag <- function(type, parmgt, parpop, parenv, Rfun,
     # sd of historical R estimates
     parpop$Rpar_mis<-stockEnv$Rpar_mis#will use incorrect recruitment assumption if set in model parameters script
     if(type=='current'){parpop$switch<-'FALSE'}
+
     N[y,1] <- Rfun(type = stockEnv$R_typ,
                    parpop = parpop, 
                    parenv = parenv, 
@@ -165,8 +162,9 @@ get_projnolag <- function(type, parmgt, parpop, parenv, Rfun,
                    SSB = c(N[y-1,]) %*% c(parpop$waa* parpop$mat),
                    sdR = stockEnv$pe_R,
                    TAnom = Tanom[y],
-                   Rest = Rest)
+                   y=y)
   }
+
   # Get weight-at-age
   Waa <- sweep(N, MARGIN=2, STATS=parpop$waa, FUN='*')
   
@@ -174,7 +172,7 @@ get_projnolag <- function(type, parmgt, parpop, parenv, Rfun,
   SSBaa <- sweep(Waa, MARGIN=2, STATS=parpop$mat, FUN='*')
   
   # Calculate the catch in weight
-  
+  parpop$M <- rep(tail(na.omit(stockEnv$natM),1), nage)
   sumCW <- sapply(2:nrow(N), function(i){
     CN <- (parpop$sel * F_val) / (parpop$sel * F_val + parpop$M) * 
       N[i,] * (1 - exp(-F_val * parpop$sel - parpop$M))
@@ -189,6 +187,7 @@ get_projnolag <- function(type, parmgt, parpop, parenv, Rfun,
       return(tempSumCW)
     })
   }
+  
   J1Npj <- N
   SSBaa <- SSBaa
   SSBpj <- apply(SSBaa, 1, sum)
