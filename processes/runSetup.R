@@ -17,8 +17,8 @@ if(!is.null(stockExclude)){
   rem <- match(stockExclude, basename(fileList))
   if(any(is.na(rem))){
     stop(paste('run_setup.R: check names of excluded stocks in', 
-               'set_om_parameters_global file and be sure they match the actual', 
-               'stock file names'))
+          'set_om_parameters_global file and be sure they match the actual', 
+          'stock file names'))
   }
   fileList <- fileList[-rem]
   if(length(fileList) < 1){
@@ -48,7 +48,7 @@ for(i in 1:nstock){
 
 # Get the names of each stock (stocks must follow naming convention)
 stockNames <- unname(sapply(fileList, function(x) 
-  strsplit(x, 'stockParameters/|\\.R')[[1]][2]))
+                strsplit(x, 'stockParameters/|\\.R')[[1]][2]))
 
 # Indicate this is a HPCC run
 runClass<- 'HPCC'
@@ -105,4 +105,5 @@ if(fyear < mxModYrs){
              'in the global parameters file is less than ncaayear for',
              'each stock'))
 }
+
 
