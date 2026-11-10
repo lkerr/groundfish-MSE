@@ -16,6 +16,7 @@
 get_error_paa <- function(paa, par){
 
   paaE <- c(rmultinom(n=1, size=par, prob=paa)) / par
+  
   return(paaE)
   
 }

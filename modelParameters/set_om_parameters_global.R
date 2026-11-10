@@ -19,6 +19,7 @@ stockExclude <- c('haddockGB','codGOM', 'codGB_Error', 'pollock', 'yellowtailflo
 histAssess <- TRUE
 
 #### Structural parameters ####
+nrep <- 100
 # First year to begin actual management
 fmyear <- 2025
 

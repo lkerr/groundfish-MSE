@@ -22,7 +22,7 @@
 #
 # y: year in simulation 
 
-get_survey <- function(F_full, M, N, slxF, slxI, timeI, qI, DecCatch, IncCatch, Tanom, y){
+get_survey <- function(F_full, M, N, slxF, slxI, timeI, qI, DecCatch, IncCatch, y){
   
   if(length(N) != length(slxF)){
     stop('length N must be == length selF')

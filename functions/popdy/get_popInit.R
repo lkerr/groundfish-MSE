@@ -1,24 +1,16 @@
-
-
 # Function to initialize the stocks
 
 get_popInit <- function(stock){
 
   stock <- within(stock, {
-
     # First few years of fishery information
-    # F_full[1:(ncaayear + fyear + nburn +1)] <- rlnorm(ncaayear + 
-    #                                                   fyear + nburn + 1, 
-    #                                                   log(0.2), 0.1)
     F_full[1:fyear] <- rlnorm(fyear, log(burnFmsyScalar), burnFsd)
 
     #### Initilizations ####
     # initialize the model with numbers and mortality rates
-
     # in the first n (fyear-1) years.
-
+   
     initN <- get_init(type = initN_type, par = initN_par)
-
     
     J1N[1:fyear,] <- rep(initN, each=fyear)
     
@@ -27,11 +19,14 @@ get_popInit <- function(stock){
     laa[1:(fyear-1),] <- rep(get_lengthAtAge(type='vonB', par=laa_par, 
                                              ages=fage:page, Tanom=0),
                              each=(fyear-1))
-    slxC[1:(fyear-1),] <- get_slx(type = selC_typ, par = selC, 
-                                  laa = laa[1:(fyear-1),])
+    
+    slxC[1:(fyear-1),] <- rep(get_slx(type = selC_typ, par = selC, 
+                                  laa = laa[1:(fyear-1),]),each=(fyear-1))
+    
     CN[1:(fyear-1),] <- get_catch(F_full = F_full[1:(fyear-1)], M = init_M,
                                   N = J1N[1:(fyear-1),],
                                   selC = slxC[1:(fyear-1),])
+    
     waa[1:(fyear-1),] <- get_weightAtAge(type=waa_typ, par=waa_par, 
                                          laa=laa[1:(fyear-1),],
                                          inputUnit='kg',y=1,fmyearIdx=fmyearIdx)
@@ -40,24 +35,18 @@ get_popInit <- function(stock){
 
     IN[1:(fyear-1),] <- get_survey(F_full=F_full[1:(fyear-1)], M=init_M, 
                                    N=J1N[1:(fyear-1),], slxC[1:(fyear-1),], 
-                                   slxI=selI, timeI=timeI, qI=qI,DecCatch=FALSE,IncCatch=FALSE,Tanom=0,y=1)
+                                   slxI=rep(selI,each=(fyear-1)), timeI=timeI, qI=qI,DecCatch=FALSE,IncCatch=FALSE,y=1)
     
     sumIN[1:(fyear-1)] <- sum(IN[1:(fyear-1),])
     sumIW[1:(fyear-1)] <- apply(IN[1:(fyear-1),] * waa[1:(fyear-1),], 1, sum)
     paaIN[1:(fyear-1),] <- IN[1:(fyear-1),] / sum(IN[1:(fyear-1),])
     
-    effort[1:(fyear-1)] <- F_full[1:(fyear-1)] / qC
-    
-    
     Z[1:(fyear-1),] <- rep(F_full[1]+init_M, each=(fyear-1))
-    
     
     # calculate length-at-age
     laaTemp <- get_lengthAtAge(type=laa_typ, par=laa_par, 
                                ages=fage:page, Tanom=0)
     laa[1:fyear,] <- rep(laaTemp, each = fyear)
-    # other option here is get_size which tries to take temperature
-    # into account. Needs some work there though.
     
     # calculate weight-at-age in year y
     waaTemp <- get_weightAtAge(type=waa_typ, par=waa_par, 
@@ -84,6 +73,7 @@ get_popInit <- function(stock){
 
     # Determine the F for the rest of the burn-in period based on the
     # calculation of Fmsy and the proportion given in the parameter file.
+
   out <- within(stock, {  
     stockT<-stock
     stockT$R_mis<-FALSE
@@ -94,6 +84,7 @@ get_popInit <- function(stock){
     
     
   })
+
   return(out)
   
 }

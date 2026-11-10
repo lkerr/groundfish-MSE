@@ -1,6 +1,6 @@
 
 
-get_implementationF <- function(type, stock){
+get_implementationF <- function(type, stock,y){
 
   within(stock, {
 
