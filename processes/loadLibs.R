@@ -41,21 +41,41 @@ if(runClass == 'HPCC'){
   # https://gist.github.com/smithdanielle/9913897
   check.packages <- function(pkg){
     new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
-    if (length(new.pkg))
-      install.packages(new.pkg, dependencies = TRUE)
+    
+    if (length(new.pkg)){
+      print(paste("********** New packages needed:", new.pkg))
+      for(p in new.pkg){
+        print("********* installing", p)
+        if(p == "wham"){p <- "timjmiller/wham"}
+        if(p == "ASAPplots"){p <- "cmlegault/ASAPplots"}
+        if(p == "pak"){install.packages(p)} else{pak::pkg_install(p)}
+      }
+    } else{print("No new packages needed")}
     sapply(pkg, require, character.only = TRUE)
   }
 
-  pkg<-c("msm", "tmvtnorm", "TMB", "abind", "glue", "tidyverse", "dplyr", "data.table", "ASAPplots","fishmethods","timeSeries","fBasics","fGarch", "wham")
+  pkg <- c("pak", "gmm", "mvtnorm", "tmvtnorm", "expm", "msm", "Matrix", "TMB", "abind", "glue",
+           "tidyr", "dplyr", "readr", "purrr", "tibble", "stringr", "forcats", "lubridate", "ggplot2", # core 9 tidyverse packages (tidyverse metapackage also requires ragg, which cannot be installed on HPC) 
+           "data.table", "fishmethods", "timeSeries", "fBasics", "fGarch",
+           "wham", "ASAPplots")
+  
   check.packages(pkg)
+  
 
   require(msm)
   require(tmvtnorm)
   require(TMB)
   require(abind)
   require(glue)
-  require(tidyverse)
+  require(tidyr)
   require(dplyr)
+  require(readr)
+  require(purrr)
+  require(tibble)
+  require(stringr)
+  require(forcats)
+  require(lubridate)
+  require(ggplot2)
   require(data.table)
   require(ASAPplots)
   require(fishmethods)
