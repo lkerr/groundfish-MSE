@@ -38,8 +38,8 @@ for(i in 1:length(flLst[[1]])){
   
   dirOut <- paste0(ResultDirectory, '/fig/', stknm, '/')
 
-  get_plots(x=omval, stockEnv = stockPar[[i]], 
-            dirIn=paste0(ResultDirectory, '/sim/'), dirOut=dirOut)
+#  get_plots(x=omval, stockEnv = stockPar[[i]], 
+#            dirIn=paste0(ResultDirectory, '/sim/'), dirOut=dirOut)
 }
 
 # Output the management procedures text file in the figure directory
