@@ -36,6 +36,9 @@ get_HistAssess <- function(stock) {
              re = case_when(age == 1 ~ 0, .default = re)) %>%  # set age 1 deviation to 0. We use the estimated age 1 trajectory, which already incorporates for the deviation
       left_join(select(assessdat, year = Year, MSEyr), by = "year")
       
+    fn3 <- paste('./data/data_raw/AssessmentHistory/',stockNames[i], '_NAA_m_sd.csv', sep = '')
+    devs_m_sd <- read.csv(fn3)
+    
       }
   
   if(!exists("devs")){ cat(paste0("get_HistAssess: stock ", stockNames[i],
@@ -45,5 +48,6 @@ get_HistAssess <- function(stock) {
   return(list(
     assessdat = assessdat,
     assess_st_yr = assess_st_yr,
-        NAA_deviations = get0("devs", ifnotfound = NULL)))
+    NAA_deviations = get0("devs", ifnotfound = NULL),
+    NAA_m_sd = get0("devs_m_sd", ifnotfound = NULL)))
   }
