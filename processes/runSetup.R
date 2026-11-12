@@ -159,7 +159,7 @@ if(fyear < mxModYrs){
              'each stock'))
 }
 
-if (platform == 'Linux'){
+if (mproc[m,'ASSESSCLASS'] == 'ASAP' & platform == 'Linux'){
   if(!file.exists('../EXE/ASAP3.EXE')){
     warning(paste('ASAP3.EXE should be loaded in a directory EXE in the parent',
                'directory of groundfish-MSE -- i.e., you need an EXE',
