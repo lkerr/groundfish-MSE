@@ -7,6 +7,7 @@ simpleTemperature <- FALSE
 
 # Which management procedures csv do you want to read:
 mprocfile<-"mproc.csv"
+#mprocfile<-"mproc_testPstar.csv"
 #mprocfile<-"mprocTest.csv"
 #mprocfile<-"mprocEcon.csv"
 
@@ -18,7 +19,9 @@ mprocfile<-"mproc.csv"
 # stockExclude <- 'haddockGB' (string) will leave haddockGB.R out of the analysis.
 # stockExclude <- NULL indludes all stocks.
 # Available stocks: , 'haddockGB', 'codGB', 'pollock', 'yellowtailflounderGB', 'codWGOM', 'haddockGOM'
-stockExclude <- c("haddockGB" , 'codGOM', 'codGB', 'pollock', 'yellowtailflounderGB', "haddockGOM")
+# stockExclude <- c("haddockGB" , 'codGOM', 'codGB', 'pollock', 'yellowtailflounderGB', "haddockGOM")
+ stockExclude <- c("haddockGB" , 'codGOM', 'codGB', 'pollock', 'yellowtailflounderGB', "codWGOM")
+
 
 #### historic assessment values #### AEW
 # if you want to use an input of historic assessment data
@@ -29,7 +32,7 @@ histAssess <- TRUE
 #### Structural parameters ####
 
 # number of times to repeat this analysis
-nrep <- 100
+nrep <- 2
 
 # First year to begin actual management
 #fmyear <- 2019 # original values
@@ -46,9 +49,9 @@ fyear <- 48 # increased for haddock
 
 # maximum year predicted into the future
 #mxyear <- 2040 # original values
-mxyear <- 2050 # 2025 update
+mxyear <- 200 # 2025 update
 mxyear <- fmyear+5 # testing
-mxyear <- fmyear+30 # 30 year projection
+# mxyear <- fmyear+30 # 30 year projection
 
 #### Burn-in parameters ####
 
