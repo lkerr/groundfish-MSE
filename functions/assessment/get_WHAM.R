@@ -9,7 +9,7 @@ get_WHAM <- function(stock,...){
   if (Sys.info()['sysname'] == "Windows") {
     wham_dat_file<-read_asap3_dat(paste('assessment/ASAP/', stock$stockName, ".dat", sep = ''))
   } else if (Sys.info()['sysname'] == "Linux") {
-    wham_dat_file <- read_asap3_dat(paste(rundir, '/ASAP3.dat', sep = ''))
+    wham_dat_file <- read_asap3_dat(paste('assessment/ASAP/', stock$stockName, ".dat", sep = ''))
   } else { # Other operating systems (e.g. mac)
     wham_dat_file <- read_asap3_dat('assessment/ASAP/ASAP3.dat')
   }
