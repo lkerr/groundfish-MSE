@@ -32,7 +32,7 @@ if(platform != 'Linux'){
 # get and format the system time
 # use the dt environmental variable created on the HPC, if it exists.
 
-timetring <- ifelse(Sys.getenv("dt") == "", 
+timeString <- ifelse(Sys.getenv("dt") == "", 
              format(Sys.time(), "%Y-%m-%d-%H-%M-%S"),
              Sys.getenv("dt"))
 

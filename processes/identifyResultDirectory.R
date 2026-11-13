@@ -10,4 +10,4 @@ resNames <- grep(pattern = 'results', # look for files containing this
                  value = TRUE)        # pring out the actual folder names
 
 ResultDirectory <- tail(sort(resNames), 1) # ID the most recent folder
-
+timeString <- gsub("results_", "", ResultDirectory) # get only the datetime stamp from the results directory
