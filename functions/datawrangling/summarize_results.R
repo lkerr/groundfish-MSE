@@ -122,7 +122,7 @@ summarize_results <- function(omvalGlobal, whamGlobal, hcr, stamp, dir){
   saveRDS(list(om = mutate(om.df, date_stamp = stamp, .before = everything()),
                em = mutate(em, date_stamp = stamp, .before = everything()), 
                hcr = mutate(hcr.df, date_stamp = stamp, .before = everything())), 
-          file = paste0(dir, "res_for_plots.rds"))
+          file = paste0(dir, "res_for_plots_", stamp, ".rds"))
 
 }
 

@@ -184,6 +184,8 @@ big_loop
     arraytask <- Sys.getenv("SLURM_ARRAY_TASK_ID") # task number within the array
     arraymax <- Sys.getenv("SLURM_ARRAY_TASK_MAX") # maximum task number within the array
     
+    print("Array Job variable:")
+    print(arrayjob)
     print("Array Task variable:")
     print(arraytask)
     print("Array Max variable:")
@@ -193,9 +195,13 @@ big_loop
                     "local",
                     paste(arrayjob, arraytask, sep = "_"))
     
+    print("jobid variable:")
+    print(jobid)
     
     stamp <- paste(timeString, jobid, sep = "_")
     
+    print("stamp:")
+    print(stamp)
     
   omvalGlobal <- sapply(1:nstock, function(x) stock[[x]]['omval'])
   names(omvalGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
@@ -207,7 +213,7 @@ big_loop
   
   summarize_results(omvalGlobal = omvalGlobal, whamGlobal = whamGlobal, hcr =stock[[1]]['hcr'],
                     stamp = stamp,
-                    dir = paste0(ResultDirectory))
+                    dir = paste0(ResultDirectory, "/"))
   
 
   if(runClass != 'HPCC'){
