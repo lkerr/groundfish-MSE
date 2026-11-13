@@ -291,17 +291,18 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
       
       #Determine catch advice for P* HCR
-      if(tolower(parmgt$HCR) == 'pstar'){
-        (if(nfleet ==2){stop("pstart not developved for 2 fleets yet")})
-        P<-calc_pstar(tail(parpop$SSBhat,1)/BThresh)
-        CV<-1.0
-        catchproj[1]<-calc_ABC(catchproj[1],P,CV)
-        catchproj[2]<-calc_ABC(catchproj[2],P,CV)
-      }
+     
       
       
       } # end of if wham else statement. all approaches should now have 2 yrs of projected catch
 
+        if(tolower(parmgt$HCR) == 'pstar'){
+          P<-calc_pstar(tail(parpop$SSBhat,1)/BThresh)
+          CV<-1.0
+          catchproj[1]<-calc_ABC(catchproj[1],P,CV)
+          catchproj[2]<-calc_ABC(catchproj[2],P,CV)
+        }
+        
 ################################# Constraints on projected catch        
 
       #If the minimum catch constraint is on, make sure catch advice is not below that constraint
