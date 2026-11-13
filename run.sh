@@ -1,19 +1,11 @@
+echo "Update code to current version on GitHub"
 
+cd groundfish-MSE   # navigate to the repository directory
+git fetch --depth=1 origin NEFMC_Risk_Policy   # fetch the current version of branch in repository with out merging remote and local files
+git reset --hard origin/NEFMC_Risk_Policy   # force local tracked files to match the remote, discarding local modifications and commits
+git clean -fdx   # this line would delete all untracked files (if including x, will also delete ignored files; wihtout x, ignored files remain)
 
-#!/bin/bash
+echo "Done"   # directory should now look like a clean, freshly cloned version of the branch
 
-#BSUB -W 00:15                            # How much time does your job need (HH:MM)
-#BSUB -q short                            # Which queue {short, long, parallel, GPU, interactive}
-#BSUB -J "run"                    # Job Name
-#BSUB -R rusage[mem=10000] 
-#BSUB -n 1
-
-#BSUB -o "./%J.o"
-#BSUB -e "./%J.e"
-
-
-bsub < runPre.sh
-bsub < runSim.sh
-bsub < runPost.sh
-
-echo "run complete"
+# echo "Run Control file"
+bash control.sh   # run the script
