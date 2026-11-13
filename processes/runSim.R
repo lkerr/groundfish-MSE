@@ -179,16 +179,34 @@ big_loop
 
 
   #### save results ####
+    ##### Get the SLURM job and array task numbers for saving results files from HPC runs
+    arrayjob <- Sys.getenv("SLURM_ARRAY_JOB_ID")
+    arraytask <- Sys.getenv("SLURM_ARRAY_TASK_ID") # task number within the array
+    arraymax <- Sys.getenv("SLURM_ARRAY_TASK_MAX") # maximum task number within the array
+    
+    print("Array Task variable:")
+    print(arraytask)
+    print("Array Max variable:")
+    print(arraymax)
+    
+    jobid <- ifelse(arrayjob == "" & arraytask == "",
+                    "local",
+                    paste(arrayjob, arraytask, sep = "_"))
+    
+    
+    stamp <- paste(timeString, jobid, sep = "_")
+    
+    
   omvalGlobal <- sapply(1:nstock, function(x) stock[[x]]['omval'])
   names(omvalGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
-  save(omvalGlobal, file=paste0(ResultDirectory,'/sim/omvalGlobal', td2, '.Rdata'))
+  save(omvalGlobal, file=paste0(ResultDirectory,'/sim/omvalGlobal_', stamp, '.Rdata'))
   
   whamGlobal <- sapply(1:nstock, function(x) stock[[x]]['wham_storage'])
   names(whamGlobal) <- sapply(1:nstock, function(x) stock[[x]][['stockName']])
-  save(whamGlobal, file=paste0(ResultDirectory,'/sim/whamGlobal', td2, '.Rdata'))
+  save(whamGlobal, file=paste0(ResultDirectory,'/sim/whamGlobal_', stamp, '.Rdata'))
   
   summarize_results(omvalGlobal = omvalGlobal, whamGlobal = whamGlobal, hcr =stock[[1]]['hcr'],
-                    stamp = td2,
+                    stamp = stamp,
                     dir = paste0(ResultDirectory,'/sim/'))
   
 

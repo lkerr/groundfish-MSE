@@ -30,9 +30,12 @@ if(platform != 'Linux'){
 
 # Create new results directory tagged with date/time
 # get and format the system time
-time <- Sys.time()
-timeString <- format(x = time, 
-                     format = "%Y-%m-%d-%H-%M-%S")
+# use the dt environmental variable created on the HPC, if it exists.
+
+timetring <- ifelse(Sys.getenv("dt") == "", 
+             format(Sys.time(), "%Y-%m-%d-%H-%M-%S"),
+             Sys.getenv("dt"))
+
 # define a directory name
 ResultDirectory <- paste('results', timeString, sep='_')
 dir.create(ResultDirectory, showWarnings = FALSE, recursive=TRUE)
