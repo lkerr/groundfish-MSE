@@ -120,6 +120,10 @@ get_indexData <- function(stock){
                                         par=oe_paacomCN)
       obs_paarecCN[y,] <- get_error_paa(type=oe_reccomCN_typ, paa=paarecCN[y,], 
                                         par=oe_paarecCN)
+      if(mproc[m,'OBiasCAA'] == 'TRUE'){
+        obs_paacomCN[y,] <- obs_paacomCN[y,] * ob_comCAA  
+      }
+      
     }else{
       obs_paaCN[y,] <- get_error_paa(type=oe_paaCN_typ, paa=paaCN[y,], 
                                      par=oe_paaCN)
@@ -131,30 +135,14 @@ get_indexData <- function(stock){
     ## only for the observed index values, not "true"
     
     
-    if(mproc[m,'MissingIdx'] == 'TRUE' & y >= (fmyearIdx + 10) & y < (fmyearIdx + 20)){ # 2nd 10 years of management period w/ probabalistic missing data
+    #if(mproc[m,'MissingIdx'] == 'TRUE' & y >= (fmyearIdx + 10) & y < (fmyearIdx + 20)){ # 2nd 10 years of management period w/ probabalistic missing data
+    # running a test for if the missing survey occurs in the last set of years
+    if(mproc[m,'MissingIdx'] == 'TRUE' & y %in% c(174, 175, 178, 181)){ 
       
-      prob <- rbinom(1, 1, 0.4) # 1 = 40% chance of occuring
+      obs_sumIN[y] <- -999
+      obs_sumIW[y] <- NA
+      obs_paaIN[y,] <- NA
       
-      if(prob == 1){
-        obs_sumIN[y] <- -999
-        obs_sumIW[y] <- NA
-        obs_paaIN[y,] <- NA
-      }
-      
-      if(prob == 0){
-        
-        obs_sumIN[y] <- get_error_idx(type=oe_sumIN_typ, 
-                                      idx=sumIN[y] * ob_sumIN, 
-                                      par=oe_sumIN)
-        
-        # Observed index by weight is a function of the observed index and the
-        # true proportions at age. This preserves the fact that the multinomial proportions at age
-        # and the lognormal numbers-at-age are separate processes (which is consistent with
-        # most assessment models)
-        obs_sumIW[y] <- (obs_sumIN[y] * paaIN[y,]) %*% waa[y,]
-        obs_paaIN[y,] <- get_error_paa(type=oe_paaIN_typ, paa=paaIN[y,], 
-                                       par=oe_paaIN)
-      }
     }else{
       
 
