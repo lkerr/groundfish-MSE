@@ -33,3 +33,11 @@ git clean -fd # this line would delete all untracked files (so results?)
 
 # Then can open an interactive RStudio session, open ~/processes/runSim.R and try running the simulation
 
+########## Code to make a time stamp and new results directory
+echo "********** Setup **********"
+cd groundfish-MSE
+
+# generate and print datetime stamp. This is used in the R scripts.
+dt=$(date +'%Y-%m-%d-%H-%M-%S')
+echo $dt
+mkdir "results_$dt" 

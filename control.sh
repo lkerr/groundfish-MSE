@@ -11,15 +11,15 @@ dt=$(date +'%Y-%m-%d-%H-%M-%S')   # datetime stamp, used to make results directo
 echo $dt   # print the datetime stamp
 mkdir "results_$dt"    # make a new results directory with the datetime stamp
 
-# Run the batch script
+# Run the batch script with a SLURM array
 echo "********** Run Batch *********"
-ID=$(sbatch --parsable ./SubmitJob_MSEarray.sh)   # Submit array job and capture the job id to use in dependency below
+ID=$(sbatch --parsable --output="results_$dt/%x_%A_%a.log" ./SubmitJob_MSEarray.sh)   # capture the job id for later dependency, save log in results directory
 
 echo MSE array is job number $ID
 echo "********** Submitted Batch *********"
 
-# Collate the results
-#echo "********** Submit collation job **********"
-sbatch --dependency=afterany:$ID ./SubmitJob_CollateArray.sh
+# Collate the results !!!!!! NEED TO MODIFY COLLATION CODE FOR groundfish-MSE once array is running and saving appropriately
+# echo "********** Submit collation job **********"
+# sbatch --dependency=afterany:$ID ./SubmitJob_CollateArray.sh
 
 # echo "********** Collation job submitted with dependency **********"
