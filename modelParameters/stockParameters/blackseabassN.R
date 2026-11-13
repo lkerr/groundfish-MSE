@@ -4,7 +4,7 @@
 # Average and sd F before the management period begins. Mean on real scale
 # but distribution is lognormal. SD is lognormal SD.
 
-burnFmsyScalar <- 0 
+burnFmsyScalar <- 0.65
 burnFmsycomprop <- 0.5 
 
 burnFsd <- 0.3
@@ -80,7 +80,7 @@ selR_typ <- 'input'
 # g parameter is temperature effect placed on beta parameter in the denominator
 R_typ <- 'BH'
 # only f or g should be used, depending on which BH parameter temperature modifies
-Rpar<-c(a = 36447.31, b = 0.002612013, f = 0,  g = -0.08623424) 
+#Rpar<-c(a = 36447.31, b = 0.002612013, f = 0,  g = -0.08623424) 
 #^^^this is the temp one but anomoly data hasnt been updated yet:
 Rpar<-c(a = 70760.39, b = 0.003769120, f = 0,  g = 0) 
 
@@ -122,7 +122,7 @@ if(nfleet == 1){
   oe_sumCW <- 0.05
   oe_sumCW_typ <- 'lognorm'
   
-  oe_paaCN <- 100
+  oe_paaCN <- 200
   oe_paaCN_typ <- 'multinomial'
   
 }
@@ -133,30 +133,30 @@ if(nfleet == 1){
 oe_sumcomCW <- 0.05
 oe_sumcomCW_typ <- 'lognorm'
 
-oe_paacomCN <- 100 #50
+oe_paacomCN <- 200 #50
 oe_paacomCN_typ <- 'multinomial'
 
 
 ### observation levels for the EM, used in get_WHAM if mproc CatchOEMis == TRUE, if FALSE oe_sumCW and oe_paaCW are used
 oe_sumcomCW_EM <- 0.05
-oe_paacomCN_EM <- 50
+oe_paacomCN_EM <- 200
 
 # observation error levels - Rec catch
-oe_sumrecCW <- 0.1
+oe_sumrecCW <- 0.05
 oe_sumrecCW_typ <- 'lognorm'
 
-oe_paarecCN <- 100 #50
+oe_paarecCN <- 200 #50
 oe_paarecCN_typ <- 'multinomial'
 
 ### observation levels for the EM, used in get_WHAM if mproc CatchOEMis == TRUE, if FALSE oe_sumCW and oe_paaCW are used
 oe_sumrecCW_EM <- 0.1
-oe_paarecCN_EM <- 50
+oe_paarecCN_EM <- 200
 
 ##########
 oe_sumIN <- 0.25
 oe_sumIN_typ <- 'lognorm'
 
-oe_paaIN <- 100 #50
+oe_paaIN <- 200 #50
 oe_paaIN_typ <- 'multinomial'
 
 oe_effort <- 0.01
@@ -169,8 +169,8 @@ oe_receffort <- 0.01
 oe_receffort_typ <- 'lognorm'
 
 # process error levels  ###################################  !!!!!!!!!!!!!!
-pe_R <- 1 # cannot be zero # 0.68 is the sigma from lognormal BH w/du Pontavice BT anomaly on Beta
-pe_RSA<- 1 #recruitment process error assumed in the stock assessment
+pe_R <- 0.5 
+pe_RSA<- 0.5 #recruitment process error assumed in the stock assessment
 pe_IA <- 0.18
 
 # implementation error of fishing mortality

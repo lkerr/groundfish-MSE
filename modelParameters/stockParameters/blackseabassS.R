@@ -69,7 +69,7 @@ selC_typ <- 'input'
 
 # fishery selectivity (Recreational)
 ## Recreational fishery selectivity from most recent selectivity time block, not CPA rec
-selR <- c(0.12, 0.28, 0.55, 0.8, 0.91, 0.96, 0.99, 1) #
+selR <- c(0.12, 0.28, 0.55, 0.8, 0.91, 0.96, 1, 1) #
 selR_typ <- 'input'
 
 #### Recruitment Options #### 
