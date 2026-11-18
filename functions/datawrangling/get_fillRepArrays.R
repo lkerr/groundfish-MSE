@@ -26,6 +26,9 @@ get_fillRepArrays <- function(stock){
     omval$F_fullAdvice[r,m,] <- F_fullAdvice #AEW
     omval$comF_fullAdvice[r,m,] <- comF_fullAdvice #AEW
     omval$recF_fullAdvice[r,m,] <- recF_fullAdvice #AEW
+    omval$CatchProjEM[r,m,] <- CatchProjEM
+    omval$CatchProjOM[r,m,] <- CatchProjOM
+    omval$FTrueTarget[r,m,] <- FTrueTarget
     
     omval$ACL[r,m,] <- ACL #AEW
     omval$comACL[r,m,] <- comACL #AEW

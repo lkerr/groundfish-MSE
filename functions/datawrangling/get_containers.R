@@ -64,6 +64,8 @@ get_containers <- function(stockPar){
     comCW = yxage,
     recCW = yxage,
     CW = yxage,
+    CatchProjOM = yx0,
+    CatchProjEM = yx0,
     
     IN = yxage,
     IJ1= yxage,
@@ -83,6 +85,7 @@ get_containers <- function(stockPar){
     comF_fullAdvice = yx0,
     recF_full = yx0,
     recF_fullAdvice = yx0,
+    FTrueTarget = yx0,
     
     ACL = yx0,
     recACL = yx0,
@@ -235,6 +238,7 @@ get_containers <- function(stockPar){
       comF_fullAdvice = save_vector_ann,
       recF_full = save_vector_ann,
       recF_fullAdvice = save_vector_ann,
+      FTrueTarget = save_vector_ann,
       
       ACL = save_vector_ann,
       comACL = save_vector_ann,
@@ -244,6 +248,8 @@ get_containers <- function(stockPar){
       sumCW = save_vector_ann,
       sumcomCW = save_vector_ann,
       sumrecCW = save_vector_ann,
+      CatchProjOM = save_vector_ann,
+      CatchProjEM = save_vector_ann,
       
       obs_sumCW = save_vector_ann,
       obs_sumcomCW = save_vector_ann,

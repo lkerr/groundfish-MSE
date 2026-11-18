@@ -164,7 +164,7 @@ get_advice <- function(stock){
     if( y == fmyearIdx ||
         mproc[m,'ASSESSCLASS'] == 'PLANB' ||
         (y > fmyearIdx &
-          (y-fmyearIdx) %% mproc[m,'RPInt'] == 0 ) ){
+          (y-fmyearIdx) %% mproc[m,'AssessFreq'] == 0 ) ){
 
       gnF <- get_nextF(parmgt = mproc[m,], parpop = tempStock$parpop,
                        parenv = parenv,
@@ -173,6 +173,9 @@ get_advice <- function(stock){
 
       tempStock$RPmat[y,] <- gnF$RPs
       tempStock$catchproj <- gnF$catchproj
+      tempStock$CatchProjEM[y] <- gnF$CatchProjEM
+      tempStock$FTrueTarget[y] <- gnF$FTrue
+      #tempStock$wham_storage$catchproj[[r]][[y]] <- gnF$catchproj
       
       tempStock$hcr[[r]][[y]] <- gnF$RiskPolicy %>% 
         mutate(rep = r, year_i = y, .before=everything())
@@ -185,6 +188,8 @@ get_advice <- function(stock){
                          RPlast = tempStock$RPmat[y-1,], evalRP = FALSE,
                          stock = tempStock)
         tempStock$RPmat[y,] <- tempStock$RPmat[y-1,]
+        tempStock$CatchProjEM[y] <- gnF$CatchProjEM
+        tempStock$FTrueTarget[y] <- gnF$FTrue
     }
     
     # Report overfished status (based on previous year's data)
@@ -205,6 +210,10 @@ get_advice <- function(stock){
       advicecomF <- gnF$comF + 1e-5
       advicerecF <- gnF$recF + 1e-5
 
+      adviceF_TRUE <- gnF$FTrue + 1e-5
+      advicecomF_TRUE <- (gnF$FTrue * pcom) + 1e-5
+      advicerecF_TRUE <- (gnF$FTrue * (1-pcom)) + 1e-5
+      
       # Calculate expected J1N using parameters from last year's assessment
       # model (i.e., this is Dec 31 of the previous year). Recruitment is
       # just recruitment from the previous year. This could be important
@@ -218,10 +227,15 @@ get_advice <- function(stock){
       }
       
       if(nfleet == 2){
-
         quota <- get_2fcatch(comF_full = advicecomF, recF_full = advicerecF, 
                              M = natM[y], N = J1N[y,], 
                              selC = slxC[y,], selR = slxR[y,], type = "both")
+        
+        # use true target F to calculate what the projected catch would be if the assessment was correct
+        CatchProjOM_temp <- get_2fcatch(comF_full = advicecomF_TRUE, recF_full = advicerecF_TRUE, 
+                             M = natM[y], N = J1N[y,], 
+                             selC = slxC[y,], selR = slxR[y,], type = "both")
+        CatchProjOM[y] <- sum(CatchProjOM_temp %*% waa[y,])
         
       }else{
         quota <- get_catch(F_full = adviceF, M = natM[y], N = J1N[y,], selC = slxC[y,])
