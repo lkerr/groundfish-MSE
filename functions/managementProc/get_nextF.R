@@ -214,7 +214,10 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
     }
     
     #Use Fmsy for F in projections for P* HCR
-    if(tolower(parmgt$HCR) == 'pstar'){F<-FrefRPvalue}
+    if(tolower(parmgt$HCR) == 'pstar'){
+      F<-FrefRPvalue
+      FTrue <- FrefTRPvalue
+      }
     
  F_Target <- F
     
@@ -305,19 +308,18 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       #Get catch advice 
       catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
       
-      #Determine catch advice for P* HCR
-      if(tolower(parmgt$HCR) == 'pstar'){
-        (if(nfleet ==2){stop("pstar not developved for 2 fleets yet")})
-        (if(parmgt$AssessFreq !=2){stop("pstar only developed for AssessFreq == 2")})
-        P<-calc_pstar(tail(parpop$SSBhat,1)/BThresh)
-        CV<-1.0
-        catchproj[1]<-calc_ABC(catchproj[1],P,CV)
-        catchproj[2]<-calc_ABC(catchproj[2],P,CV)
-      }
-      
-      
-      } # end of if wham else statement. all approaches should now have projected catch
 
+
+      } # end of if wham else statement. all approaches should now have projected catch
+        
+      #Determine catch advice for P* HCR
+        if(tolower(parmgt$HCR) == 'pstar'){
+          P<-calc_pstar(tail(parpop$SSBhat,1)/BrefRPvalue)
+          CV<-1.0
+          catchproj<-calc_ABC(catchproj,P,CV)
+
+        }
+        
 ################################# Constraints on projected catch        
 
       #If the minimum catch constraint is on, make sure catch advice is not below that constraint
