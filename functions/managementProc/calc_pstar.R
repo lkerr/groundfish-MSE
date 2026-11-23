@@ -7,10 +7,13 @@ calc_pstar = function(relB)#function to calculate P* based on SSB/SSBmsy
   else if(relB < 1.5 & relB >= 1.0)
   {
     P = 0.37+0.08*relB # linear regression from 0.45 to 0.49
-  }
-  else
-  {
+  } else{
     P = -0.05+0.5*relB # linear regression from 0 to 0.45
+    
+    if(P < 0){
+      P = 0
+    }
+    
   }
   return(P)
 }
