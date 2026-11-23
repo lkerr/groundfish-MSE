@@ -232,10 +232,28 @@ get_advice <- function(stock){
                              selC = slxC[y,], selR = slxR[y,], type = "both")
         
         # use true target F to calculate what the projected catch would be if the assessment was correct
-        CatchProjOM_temp <- get_2fcatch(comF_full = advicecomF_TRUE, recF_full = advicerecF_TRUE, 
-                             M = natM[y], N = J1N[y,], 
-                             selC = slxC[y,], selR = slxR[y,], type = "both")
-        CatchProjOM[y] <- sum(CatchProjOM_temp %*% waa[y,])
+        # because pstar projects at Fmsy, need a different method for pstar HCR
+        if(tolower(mproc[m,]$HCR) == 'pstar'){
+          # first get catch at FMSY 
+          CatchProjOM_temp <- get_2fcatch(comF_full = advicecomF_TRUE, recF_full = advicerecF_TRUE, 
+                      M = natM[y], N = J1N[y,], 
+                      selC = slxC[y,], selR = slxR[y,], type = "both")
+          CatchProjOM_temp <- sum(CatchProjOM_temp %*% waa[y,]) 
+          # apply pstar 
+          
+          P <- calc_pstar(SSB[y]/RPmat[y,4])
+          CV <- mproc[m,]$PSTAR_CV
+          CatchProjOM[y] <- calc_ABC(CatchProjOM_temp,P,CV)
+          
+          
+          
+        }else{
+          CatchProjOM_temp <- get_2fcatch(comF_full = advicecomF_TRUE, recF_full = advicerecF_TRUE, 
+                                          M = natM[y], N = J1N[y,], 
+                                          selC = slxC[y,], selR = slxR[y,], type = "both")
+          CatchProjOM[y] <- sum(CatchProjOM_temp %*% waa[y,])
+          
+        }
         
       }else{
         quota <- get_catch(F_full = adviceF, M = natM[y], N = J1N[y,], selC = slxC[y,])
