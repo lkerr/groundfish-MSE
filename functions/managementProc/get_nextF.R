@@ -158,6 +158,14 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
 
 
     
+    
+    
+    
+    
+    
+    
+    
+    
 ################################ Harvest Control Rules
     #Ramp HCR
     if(tolower(parmgt$HCR) == 'slide'){
@@ -220,246 +228,327 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
       }
     
  F_Target <- F
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
     
 ######################################### Projections
 
-    if(tolower(parmgt$projections) == 'true'){
-      if ((y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) == 0){ # if it is an assessment year
-        
-        # if using a wham model run projections from that
-        if(parmgt$ASSESSCLASS == 'WHAM'){
-          
-          padding <- parmgt$AssessFreq
-          
-          if(mproc[m,'Lag'] == 'TRUE'){
-            # when there is a lag in the wham assessment
-            # for two fleet this will still work because F.report is the combined Rec + com when nfleet == 2
-            f_proj <- c(tail(stockEnv$res$F.report,1),rep(F, padding)) # projected F: 1yr at last F, 2 yrs at target F
-            fmsy_proj<- c(tail(stockEnv$res$F.report,1),rep(stockEnv$res$FMSY,padding))
-            catch_indices <- c(2:(padding+1))} else{ # yrs 2 and 3 are catch advice, yr1 is the bridge
-              # when there is not a lag in the wham assessment
-              f_proj <- rep(F,padding+1) # projected F: 3 yrs at target F, there is no bridge
-              fmsy_proj <- rep(stockEnv$res$FMSY, padding+1)
-              catch_indices <- c(1:padding)} # yrs 1 and 2 are catch advice, yr3 is not used
-          #browser()
-          # project from the wham model and extract the appropriate years of predicted catch
-          pwham <-  project_wham(stockEnv$whamEst, proj.opts = list(n.yrs = padding+1, proj.F = f_proj, proj_NAA_opt = 2, proj_R_opt = 3))
-          #poflwham <- project_wham(stockEnv$whamEst, proj.opts = list(proj.F = fmsy_proj, proj_NAA_opt = 2, proj_R_opt = 3))
-
-          if(nfleet == 2){# !!! WHAM projections will need to be updated for 2 stocks
-            pwham_fullcatch <- pwham$rep$pred_catch[,1]+pwham$rep$pred_catch[,2]
-          #browser()
-            catchproj <- tail(pwham_fullcatch,padding+1)[catch_indices]
-            
-            #pofl_fullcatch <- poflwham$rep$pred_catch[,1]+poflwham$rep$pred_catch[,2]
-            #oflproj <- tail(pofl_fullcatch,3)[catch_indices]
-            
-          }else{
-          catchproj <- tail(pwham$rep$pred_catch,padding+1)[catch_indices]
-          #oflproj <- tail(poflwham$rep$pred_catch,3)[catch_indices]
-          }
-          
-        }else{ 
+ if(tolower(parmgt$projections) == 'true'){
+   if ((y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) == 0){ # if it is an assessment year
+     
+     # if using a wham model run projections from that
+     if(parmgt$ASSESSCLASS == 'WHAM'){
+       
+       padding <- parmgt$AssessFreq
+       
+       if(mproc[m,'Lag'] == 'TRUE'){
+         # when there is a lag in the wham assessment
+         # for two fleet this will still work because F.report is the combined Rec + com when nfleet == 2
+         f_proj <- c(tail(stockEnv$res$F.report,1),rep(F, padding)) # projected F: 1yr at last F, 2 yrs at target F
+         fmsy_proj<- c(tail(stockEnv$res$F.report,1),rep(stockEnv$res$FMSY,padding))
+         catch_indices <- c(2:(padding+1))} 
+       else{ # yrs 2 and 3 are catch advice, yr1 is the bridge
+         # when there is not a lag in the wham assessment
+         f_proj <- rep(F,padding+1) # projected F: 3 yrs at target F, there is no bridge
+         fmsy_proj <- rep(stockEnv$res$FMSY, padding+1)
+         catch_indices <- c(1:padding)} # yrs 1 and 2 are catch advice, yr3 is not used
+       
+       # project from the wham model and extract the appropriate years of predicted catch
+       pwham <-  project_wham(stockEnv$whamEst, proj.opts = list(n.yrs = padding+1, proj.F = f_proj, proj_NAA_opt = 2, proj_R_opt = 3))
+       #poflwham <- project_wham(stockEnv$whamEst, proj.opts = list(proj.F = fmsy_proj, proj_NAA_opt = 2, proj_R_opt = 3))
+       
+       if(nfleet == 2){# !!! WHAM projections will need to be updated for 2 stocks
+         pwham_fullcatch <- pwham$rep$pred_catch[,1]+pwham$rep$pred_catch[,2]
+         catchproj <- tail(pwham_fullcatch,padding+1)[catch_indices]
+         
+         #pofl_fullcatch <- poflwham$rep$pred_catch[,1]+poflwham$rep$pred_catch[,2]
+         #oflproj <- tail(pofl_fullcatch,3)[catch_indices]
+         
+       }else{
+         catchproj <- tail(pwham$rep$pred_catch,padding+1)[catch_indices]
+         #oflproj <- tail(poflwham$rep$pred_catch,3)[catch_indices]
+       }
+       
+     }else{ # projections if it is not a WHAM model:
        if(parmgt$AssessFreq != 2){stop('Developed for Assessment frequnecy 2 only')}   
-      # if not using a wham model
-      parmgtproj<-parmgt
-      parmgtproj$RFUN_NM<-"forecast"
-      catchproj<-matrix(ncol=2,nrow=100)
-      parpopproj<-parpop
-      parpopproj$SSBhat<-stockEnv$res$SSB
-      parpopproj$R<-stockEnv$res$N.age[,1]
-      parpopproj$J1N<-tail(stockEnv$res$N.age,1)
-      parpopproj$catch<-stockEnv$res$catch.obs
-      
-      #Use Fmsy for F in projections for P* HCR
-      if(tolower(parmgt$HCR) == 'pstar'){F<-FrefRPvalue}
-      
-      #If weight-at-age is misspecified, make it misspecified in projections
-      if(stockEnv$waa_mis=='TRUE'){
-        parpopproj$waa<-stock[[1]]$waa[1,]
-      }
-      
-      #Projections differ if there is a lag or no lag in information to the assessment
-      for (i in 1:100){
-          if(mproc[m,'Lag'] == 'TRUE'){
-          catchproj[i,]<-get_proj(type = 'current',
-                                  parmgt = parmgtproj, 
-                                  parpop = parpopproj, 
-                                  parenv = parenv, 
-                                  Rfun = Rfun_BmsySim$forecast,
-                                  F_val = F,
-                                  ny = 200,
-                                  stReportYr = 2,
-                                  stockEnv = stockEnv)$sumCW
-          }
-          else if(mproc[m,'Lag'] == 'FALSE'){
-          catchproj[i,]<-get_projnolag(type = 'current',
-                                  parmgt = parmgtproj, 
-                                  parpop = parpopproj, 
-                                  parenv = parenv, 
-                                  Rfun = Rfun_BmsySim$forecast,
-                                  F_val = F,
-                                  ny = 200,
-                                  stReportYr = 2,
-                                  stockEnv = stockEnv)$sumCW
-          }
-      }
-  
-      #Get catch advice 
-      catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
-      
-
-
-      } # end of if wham else statement. all approaches should now have projected catch
-        
-      #Determine catch advice for P* HCR
-        if(tolower(parmgt$HCR) == 'pstar'){
-          P<-calc_pstar(tail(parpop$SSBhat,1)/BrefRPvalue)
-          CV<-1.0
-          catchproj<-calc_ABC(catchproj,P,CV)
-
-        }
-        
-################################# Constraints on projected catch        
-
-      #If the minimum catch constraint is on, make sure catch advice is not below that constraint
-      if(tolower(parmgt$mincatch) == 'true'){
-        
-        if(parmgt$AssessFreq != 2){stop('Min catch developed for Assessment frequnecy 2 only')}  
-        
-      if (stockEnv$stockName %in% c('codGOM', "codWGOM")){
-        bycatch<-read.csv(paste('./data/data_raw/AssessmentHistory/codGOM_Discard.csv',sep=''))
-        mincatch<-min(tail(bycatch$Discards),10)
-      }
-      if (stockEnv$stockName=='haddockGB'){
-        bycatch<-read.csv(paste(getwd(),'/data/data_raw/AssessmentHistory/haddockGB_Discard.csv',sep=""))
-        mincatch<-min(tail(bycatch$Discard),10)
-      }
-      if (catchproj[1]>mincatch & catchproj[2]>mincatch){mincatchcon<-0}
-      if (catchproj[1]<mincatch){
-        catchproj[1]<-mincatch
-        mincatchcon<-1
-      }
-      if (catchproj[2]<mincatch){
-        catchproj[2]<-mincatch
-        mincatchcon<-1
-      }
-      }
-      
-      #If catch variation constraint is on, make sure catch advice does not vary more than 20% from year to year
-      if(tolower(mproc$varlimit) == 'true'){
-        if(((catchproj[1]-(stockEnv$sumCW[y-1]*stockEnv$ob_sumCW))/catchproj[1])*100<(-20)){
-          catchproj[1]<-(stockEnv$sumCW[y-1]*stockEnv$ob_sumCW)-((stockEnv$sumCW[y-1]*stockEnv$ob_sumCW)*.2)}
-        if(((catchproj[1]-(stockEnv$sumCW[y-1]*stockEnv$ob_sumCW))/catchproj[1])*100>20){
-          catchproj[1]<- (stockEnv$sumCW[y-1]*stockEnv$ob_sumCW)+((stockEnv$sumCW[y-1]*stockEnv$ob_sumCW)*.2)}
-        if(((catchproj[2]-catchproj[1])/catchproj[2])*100<(-20)){
-          catchproj[2]<- catchproj[1]-(catchproj[1]*.2)}
-        if(((catchproj[2]-catchproj[1])/catchproj[2])*100>20){
-          catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
-      }
-      
-      # Confirm expected catch is not higher than projected OFL
-        # for wham models we have a projected OFL already
-        
-        
-        
-        if(parmgt$ASSESSCLASS == 'WHAM'){
-          #ind <- which(catchproj>oflproj) # identify which year's catch are higher than the ofl
-          #catchproj[ind]<- oflproj[ind] # replace them with that year's ofl
-        }else{
-      # for non-wham assessments would need to run an ofl projection
-      #Estimate F to make sure catch advice is not over the perceived OFL
-      Fest<-get_estF(catchproj=catchproj[1],parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv)
-      
-      #If catch advice is over the perceived OFL, catch advice becomes the catch at the perceived OFL
-      if (Fest>FrefRPvalue){
-        catchproj<-matrix(ncol=2,nrow=100)
-        for (i in 1:100){
-            catchproj[i,]<-get_proj(type = 'current',
-                                    parmgt = parmgtproj, 
-                                    parpop = parpopproj, 
-                                    parenv = parenv, 
-                                    Rfun = Rfun_BmsySim$forecast,
-                                    F_val = FrefRPvalue,
-                                    ny = 200,
-                                    stReportYr = 2,
-                                    stockEnv = stockEnv)$sumCW}
-        catchproj<-c(median(catchproj[,1]),median(catchproj[,1]))
-        if(tolower(mproc$varlimit) == 'true'){
-          if(((catchproj[2]-catchproj[1])/catchproj[2])*100>20){
-            catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
-        }
-      }
-        }
-      
-        
-        
-        
-        
-        
-######################################## Caclculate OM F values
-      
-      #Get F for the OM based on catch advice
-        if(nfleet == 2){
-          
-          # slx is from the assessment, sel is input
-          
-          scom <- stockEnv$selC * pcom
-          srec <- stockEnv$selR * (1-pcom)
-          sel.z <- scom + srec
-          
-          #browser()         
-          F <- get_F(x = catchproj[1],
-                     Nv = stockEnv$J1N[y,], 
-                     slxCv = sel.z, 
-                     M = stockEnv$natM[y], 
-                     waav = stockEnv$waa[y,])
-          CatchProjEM <- catchproj[1]
-#browser()  
-        }else{
-          F <- get_F(x = catchproj[1],
-                   Nv = stockEnv$J1N[y,], 
-                   slxCv = stockEnv$selC, 
-                   M = stockEnv$natM[y], 
-                   waav = stockEnv$waa[y,])
-          CatchProjEM <- catchproj[1]
-        }
-      }# this closes the if statement starting on line 195 - "if ((y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) == 0)"
-      
-      
-      
+       # if not using a wham model
+       parmgtproj<-parmgt
+       parmgtproj$RFUN_NM<-"forecast"
+       catchproj<-matrix(ncol=2,nrow=100)
+       parpopproj<-parpop
+       parpopproj$SSBhat<-stockEnv$res$SSB
+       parpopproj$R<-stockEnv$res$N.age[,1]
+       parpopproj$J1N<-tail(stockEnv$res$N.age,1)
+       parpopproj$catch<-stockEnv$res$catch.obs
+       
+       #Use Fmsy for F in projections for P* HCR
+       if(tolower(parmgt$HCR) == 'pstar'){F<-FrefRPvalue}
+       
+       #If weight-at-age is misspecified, make it misspecified in projections
+       if(stockEnv$waa_mis=='TRUE'){
+         parpopproj$waa<-stock[[1]]$waa[1,]
+       }
+       
+       #Projections differ if there is a lag or no lag in information to the assessment
+       for (i in 1:100){
+         if(mproc[m,'Lag'] == 'TRUE'){
+           catchproj[i,]<-get_proj(type = 'current',
+                                   parmgt = parmgtproj, 
+                                   parpop = parpopproj, 
+                                   parenv = parenv, 
+                                   Rfun = Rfun_BmsySim$forecast,
+                                   F_val = F,
+                                   ny = 200,
+                                   stReportYr = 2,
+                                   stockEnv = stockEnv)$sumCW
+         }
+         else if(mproc[m,'Lag'] == 'FALSE'){
+           catchproj[i,]<-get_projnolag(type = 'current',
+                                        parmgt = parmgtproj, 
+                                        parpop = parpopproj, 
+                                        parenv = parenv, 
+                                        Rfun = Rfun_BmsySim$forecast,
+                                        F_val = F,
+                                        ny = 200,
+                                        stReportYr = 2,
+                                        stockEnv = stockEnv)$sumCW
+         }
+       }
+       
+       #Get catch advice 
+       catchproj<-c(median(catchproj[,1]),median(catchproj[,2]))
+       
+       
+       
+     } # end of if wham else statement. all approaches should now have projected catch
+     
+     
+     
+     
+     #Determine catch advice for P* HCR
+     if(tolower(parmgt$HCR) == 'pstar'){
+       P<-calc_pstar(tail(parpop$SSBhat,1)/BrefRPvalue)
+       CV<- parmgt$PSTAR_CV
+       catchproj<-calc_ABC(catchproj,P,CV)
+       
+     }
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     ################################# Constraints on projected catch        
+     
+     #If the minimum catch constraint is on, make sure catch advice is not below that constraint
+     if(tolower(parmgt$mincatch) == 'true'){
+       
+       if(parmgt$AssessFreq != 2){stop('Min catch developed for Assessment frequnecy 2 only')}  
+       
+       if (stockEnv$stockName %in% c('codGOM', "codWGOM")){
+         bycatch<-read.csv(paste('./data/data_raw/AssessmentHistory/codGOM_Discard.csv',sep=''))
+         mincatch<-min(tail(bycatch$Discards),10)
+       }
+       if (stockEnv$stockName=='haddockGB'){
+         bycatch<-read.csv(paste(getwd(),'/data/data_raw/AssessmentHistory/haddockGB_Discard.csv',sep=""))
+         mincatch<-min(tail(bycatch$Discard),10)
+       }
+       if (catchproj[1]>mincatch & catchproj[2]>mincatch){mincatchcon<-0}
+       if (catchproj[1]<mincatch){
+         catchproj[1]<-mincatch
+         mincatchcon<-1
+       }
+       if (catchproj[2]<mincatch){
+         catchproj[2]<-mincatch
+         mincatchcon<-1
+       }
+     }
+     
+     #If catch variation constraint is on, make sure catch advice does not vary more than 20% from year to year
+     if(tolower(mproc$varlimit) == 'true'){
+       if(((catchproj[1]-(stockEnv$sumCW[y-1]*stockEnv$ob_sumCW))/catchproj[1])*100<(-20)){
+         catchproj[1]<-(stockEnv$sumCW[y-1]*stockEnv$ob_sumCW)-((stockEnv$sumCW[y-1]*stockEnv$ob_sumCW)*.2)}
+       if(((catchproj[1]-(stockEnv$sumCW[y-1]*stockEnv$ob_sumCW))/catchproj[1])*100>20){
+         catchproj[1]<- (stockEnv$sumCW[y-1]*stockEnv$ob_sumCW)+((stockEnv$sumCW[y-1]*stockEnv$ob_sumCW)*.2)}
+       if(((catchproj[2]-catchproj[1])/catchproj[2])*100<(-20)){
+         catchproj[2]<- catchproj[1]-(catchproj[1]*.2)}
+       if(((catchproj[2]-catchproj[1])/catchproj[2])*100>20){
+         catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
+     }
+     
+     # Confirm expected catch is not higher than projected OFL
+     # for wham models we have a projected OFL already
+     
+     
+     
+     if(parmgt$ASSESSCLASS == 'WHAM'){
+       #ind <- which(catchproj>oflproj) # identify which year's catch are higher than the ofl
+       #catchproj[ind]<- oflproj[ind] # replace them with that year's ofl
+     }else{
+       # for non-wham assessments would need to run an ofl projection
+       #Estimate F to make sure catch advice is not over the perceived OFL
+       Fest<-get_estF(catchproj=catchproj[1],parmgtproj=parmgtproj,parpopproj=parpopproj,parenv=parenv,Rfun=Rfun,stockEnv=stockEnv)
+       
+       #If catch advice is over the perceived OFL, catch advice becomes the catch at the perceived OFL
+       if (Fest>FrefRPvalue){
+         catchproj<-matrix(ncol=2,nrow=100)
+         for (i in 1:100){
+           catchproj[i,]<-get_proj(type = 'current',
+                                   parmgt = parmgtproj, 
+                                   parpop = parpopproj, 
+                                   parenv = parenv, 
+                                   Rfun = Rfun_BmsySim$forecast,
+                                   F_val = FrefRPvalue,
+                                   ny = 200,
+                                   stReportYr = 2,
+                                   stockEnv = stockEnv)$sumCW}
+         catchproj<-c(median(catchproj[,1]),median(catchproj[,1]))
+         if(tolower(mproc$varlimit) == 'true'){
+           if(((catchproj[2]-catchproj[1])/catchproj[2])*100>20){
+             catchproj[2]<- catchproj[1]+(catchproj[1]*.2)}
+         }
+       }
+     }
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     ######################################## Caclculate OM F values
+     
+     #Get F for the OM based on catch advice
+     if(nfleet == 2){
+       
+       # slx is from the assessment, sel is input
+       
+       scom <- stockEnv$selC * pcom
+       srec <- stockEnv$selR * (1-pcom)
+       sel.z <- scom + srec
+       
+       #browser()         
+       F <- get_F(x = catchproj[1],
+                  Nv = stockEnv$J1N[y,], 
+                  slxCv = sel.z, 
+                  M = stockEnv$natM[y], 
+                  waav = stockEnv$waa[y,])
+       CatchProjEM <- catchproj[1]
+       #browser()  
+     }else{
+       F <- get_F(x = catchproj[1],
+                  Nv = stockEnv$J1N[y,], 
+                  slxCv = stockEnv$selC, 
+                  M = stockEnv$natM[y], 
+                  waav = stockEnv$waa[y,])
+       CatchProjEM <- catchproj[1]
+     }
+   }# this closes the if statement starting  - "if ((y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) == 0)"
    
-      #If it is on an 'off' year (assessment does not occur) use catch advice from the previous projections second year
-      else{
-        
-        if(nfleet == 2){
-          #browser() 
-          scom <- stockEnv$selC * pcom
-          srec <- stockEnv$selR * (1-pcom)
-          sel.z <- scom + srec
-          
-          catchprog_pad <- (y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) 
-          
-          F <- get_F(x = stockEnv$catchproj[catchprog_pad + 1],
-                     Nv = stockEnv$J1N[y,], 
-                     slxCv = sel.z, 
-                     M = stockEnv$natM[y], 
-                     waav = stockEnv$waa[y,])
-          CatchProjEM <- stockEnv$catchproj[catchprog_pad + 1]
-          catchproj <- stockEnv$catchproj # need to resave catch proj for the out function to work (overwrites same values)
-          
-        }else{
-          catchprog_pad <- y-fmyearIdx %% as.numeric(tolower(parmgt$AssessFreq)) 
-          F <- get_F(x = stockEnv$catchproj[catchprog_pad+1],
-                     Nv = stockEnv$J1N[y,], 
-                     slxCv = stockEnv$selC, 
-                     M = stockEnv$natM[y], 
-                     waav = stockEnv$waa[y,])
-          CatchProjEM <- stockEnv$catchproj[catchprog_pad + 1]
-          
-        }
-      }
-    }
+   
+   
+   
+   #If it is on an 'off' year (assessment does not occur) use catch advice from the previous projections
+   else{
+     
+     if(nfleet == 2){
+       
+       scom <- stockEnv$selC * pcom
+       srec <- stockEnv$selR * (1-pcom)
+       sel.z <- scom + srec
+       
+       catchprog_pad <- (y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) 
+       
+       if(parmgt$HCR == "pstar"){
+         # browser()
+         # for pstar you need to re-run projections so that the out years 
+         # use the catch or F applied in the loop ,rather than assumed fishing at FMSY
+         # update f_proj
+         padding <- parmgt$AssessFreq
+         
+         # Original f_proj (not run in years w/o an assessment)
+         
+         if(mproc[m,'Lag'] == 'TRUE'){
+           
+           
+           
+           f_proj <- c(tail(stockEnv$res$F.report,1),rep(F, padding))
+           catch_indices <- c(2:(padding+1))
+           
+           # add catch proj into the f_proj
+           f_proj[2:(catchprog_pad+1)] <- stockEnv[["catchproj"]][1:catchprog_pad]
+           
+           proj_f_opt <- c(4, rep(5, catchprog_pad), rep(4, padding - catchprog_pad))
+
+           
+         }else{ # add for if no lag
+
+           
+         }
+         
+         
+         pwham <-  project_wham(stockEnv$whamEst, 
+                                proj.opts = list(n.yrs = padding+1, 
+                                                 proj_Fcatch = f_proj, 
+                                                 proj_NAA_opt = 2, 
+                                                 proj_R_opt = 3,
+                                                 proj_f_opt = proj_f_opt))
+         pwham_fullcatch <- pwham$rep$pred_catch[,1]+pwham$rep$pred_catch[,2]
+         
+         catchproj <- tail(pwham_fullcatch,padding+1)[catch_indices]
+         
+         
+         F <- get_F(x = catchproj[catchprog_pad + 1],
+                    Nv = stockEnv$J1N[y,], 
+                    slxCv = sel.z, 
+                    M = stockEnv$natM[y], 
+                    waav = stockEnv$waa[y,])
+         CatchProjEM <- catchproj[catchprog_pad + 1]
+         
+       }else{ # if its not pstar use catch associated with HCR
+         # note may want to update so all HCR's use new projetions (this will be slower)
+         # right now we have no implementation error so it doesnt matter, but would want to re-evaluate with implementation error
+         F <- get_F(x = catchproj[catchprog_pad + 1],
+                    Nv = stockEnv$J1N[y,], 
+                    slxCv = sel.z, 
+                    M = stockEnv$natM[y], 
+                    waav = stockEnv$waa[y,])
+         CatchProjEM <- catchproj[catchprog_pad + 1]
+         catchproj <- catchproj # need to resave catch proj for the out function to work (overwrites same values)
+       }
+       }else{ # if not two fleets
+         catchprog_pad <- y-fmyearIdx %% as.numeric(tolower(parmgt$AssessFreq)) 
+         F <- get_F(x = catchproj[catchprog_pad+1],
+                    Nv = stockEnv$J1N[y,], 
+                    slxCv = stockEnv$selC, 
+                    M = stockEnv$natM[y], 
+                    waav = stockEnv$waa[y,])
+         CatchProjEM <- stockEnv$catchproj[catchprog_pad + 1]
+         
+       }
+     }
+   }
 
 ########################################### No projections advice
     #No projections (no projected catch advice)
