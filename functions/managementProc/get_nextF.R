@@ -530,28 +530,26 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
        sel.z <- scom + srec
        
        catchprog_pad <- (y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) 
+       catchproj <- stockEnv$catchproj # need to resave catch proj for the out function to work (overwrites same values)
        
        
+       F <- get_F(x = catchproj[catchprog_pad + 1],
+                  Nv = stockEnv$J1N[y,], 
+                  slxCv = sel.z, 
+                  M = stockEnv$natM[y], 
+                  waav = stockEnv$waa[y,])
+       CatchProjEM <- catchproj[catchprog_pad + 1]
          
-         
-         F <- get_F(x = catchproj[catchprog_pad + 1],
-                    Nv = stockEnv$J1N[y,], 
-                    slxCv = sel.z, 
-                    M = stockEnv$natM[y], 
-                    waav = stockEnv$waa[y,])
-         CatchProjEM <- catchproj[catchprog_pad + 1]
-         catchproj <- stockEnv$catchproj # need to resave catch proj for the out function to work (overwrites same values)
-         
-       }else{ # if not two fleets
-         catchprog_pad <- y-fmyearIdx %% as.numeric(tolower(parmgt$AssessFreq)) 
-         F <- get_F(x = catchproj[catchprog_pad+1],
-                    Nv = stockEnv$J1N[y,], 
-                    slxCv = stockEnv$selC, 
-                    M = stockEnv$natM[y], 
-                    waav = stockEnv$waa[y,])
-         CatchProjEM <- stockEnv$catchproj[catchprog_pad + 1]
-         
-       }
+     }else{ # if not two fleets
+       catchprog_pad <- y-fmyearIdx %% as.numeric(tolower(parmgt$AssessFreq)) 
+       catchproj <- stockEnv$catchproj # need to resave catch proj for the out function to work (overwrites same values)
+       F <- get_F(x = catchproj[catchprog_pad+1],
+                  Nv = stockEnv$J1N[y,], 
+                  slxCv = stockEnv$selC, 
+                  M = stockEnv$natM[y], 
+                  waav = stockEnv$waa[y,])
+       CatchProjEM <- stockEnv$catchproj[catchprog_pad + 1]
+     }
      }
    }
 
