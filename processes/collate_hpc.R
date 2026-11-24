@@ -27,7 +27,7 @@ outdir <- if_else(str_ends(path, "/"), path, str_c(path, "/")) %>%
   str_c("results_", tag)
 
 print(paste("base directory path is:", path))
-print(paste("Ouput directory is: "), outdir))
+print(paste("Ouput directory is:", outdir))
 
 if(!dir.exists(outdir)){dir.create(outdir, recursive = T)}
 
