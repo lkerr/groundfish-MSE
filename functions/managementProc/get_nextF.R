@@ -338,6 +338,57 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
        P<-calc_pstar(tail(parpop$SSBhat,1)/BrefRPvalue)
        CV<- parmgt$PSTAR_CV
        catchproj<-calc_ABC(catchproj,P,CV)
+      
+
+       # for pstar you need to re-run projections so that the out years 
+       # use the catch or F applied in the loop ,rather than assumed fishing at FMSY
+       # update f_proj
+
+       if(mproc[m,'Lag'] == 'TRUE'){
+        
+         proj_F_opt <- c( rep(4, length(f_proj)))
+         catchproj_temp <- rep(NA, padding)
+         catch_indices <- c(2:(padding+1))
+         proj <- f_proj
+         
+         for(p in 2:length(proj-1)){
+           
+           #proj <- c(tail(stockEnv$res$F.report,1), catchproj)
+           
+           proj[p] <- catchproj[p-1]
+           proj_F_opt[p] <- 5
+          
+           mod.proj <- project_wham(stockEnv$whamEst, 
+                                    proj.opts = list(n.yrs = padding+1, proj_F_opt =  proj_F_opt,
+                                                     proj_Fcatch =  proj, 
+                                                     proj_NAA_opt = 2, 
+                                                     proj_R_opt = 3
+                                                     ))
+           
+           
+           pwham_fullcatch <- mod.proj$rep$pred_catch[,1]+mod.proj$rep$pred_catch[,2]
+           nextOFL <- tail(pwham_fullcatch,padding)[p]
+           nextABC <- calc_ABC(nextOFL,P,CV)
+          catchproj[p] <- nextABC
+
+           }
+         
+         
+         
+         # add catch proj into the f_proj
+         
+         
+         
+         
+         
+       }else{ # add for if no lag
+         
+         
+       }
+       
+       
+       
+       
        
      }
      
@@ -480,43 +531,7 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
        
        catchprog_pad <- (y-fmyearIdx) %% as.numeric(tolower(parmgt$AssessFreq)) 
        
-       if(parmgt$HCR == "pstar"){
-         # browser()
-         # for pstar you need to re-run projections so that the out years 
-         # use the catch or F applied in the loop ,rather than assumed fishing at FMSY
-         # update f_proj
-         padding <- parmgt$AssessFreq
-         
-         # Original f_proj (not run in years w/o an assessment)
-         
-         if(mproc[m,'Lag'] == 'TRUE'){
-           
-           
-           
-           f_proj <- c(tail(stockEnv$res$F.report,1),rep(F, padding))
-           catch_indices <- c(2:(padding+1))
-           
-           # add catch proj into the f_proj
-           f_proj[2:(catchprog_pad+1)] <- stockEnv[["catchproj"]][1:catchprog_pad]
-           
-           proj_f_opt <- c(4, rep(5, catchprog_pad), rep(4, padding - catchprog_pad))
-
-           
-         }else{ # add for if no lag
-
-           
-         }
-         
-         
-         pwham <-  project_wham(stockEnv$whamEst, 
-                                proj.opts = list(n.yrs = padding+1, 
-                                                 proj_Fcatch = f_proj, 
-                                                 proj_NAA_opt = 2, 
-                                                 proj_R_opt = 3,
-                                                 proj_f_opt = proj_f_opt))
-         pwham_fullcatch <- pwham$rep$pred_catch[,1]+pwham$rep$pred_catch[,2]
-         
-         catchproj <- tail(pwham_fullcatch,padding+1)[catch_indices]
+       
          
          
          F <- get_F(x = catchproj[catchprog_pad + 1],
@@ -525,18 +540,8 @@ get_nextF <- function(parmgt, parpop, parenv, RPlast, evalRP, stockEnv){
                     M = stockEnv$natM[y], 
                     waav = stockEnv$waa[y,])
          CatchProjEM <- catchproj[catchprog_pad + 1]
+         catchproj <- stockEnv$catchproj # need to resave catch proj for the out function to work (overwrites same values)
          
-       }else{ # if its not pstar use catch associated with HCR
-         # note may want to update so all HCR's use new projetions (this will be slower)
-         # right now we have no implementation error so it doesnt matter, but would want to re-evaluate with implementation error
-         F <- get_F(x = catchproj[catchprog_pad + 1],
-                    Nv = stockEnv$J1N[y,], 
-                    slxCv = sel.z, 
-                    M = stockEnv$natM[y], 
-                    waav = stockEnv$waa[y,])
-         CatchProjEM <- catchproj[catchprog_pad + 1]
-         catchproj <- catchproj # need to resave catch proj for the out function to work (overwrites same values)
-       }
        }else{ # if not two fleets
          catchprog_pad <- y-fmyearIdx %% as.numeric(tolower(parmgt$AssessFreq)) 
          F <- get_F(x = catchproj[catchprog_pad+1],
