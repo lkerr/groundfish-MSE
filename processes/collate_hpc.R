@@ -22,7 +22,7 @@ tag <- str_remove_all(file_names[1], paste(patterns, collapse = "|"))
 
 ##### This directory managmenent is not working!!!!!!! 
 # collated results get saved, but inside multiple nested directories in the original results directory
-path <- ResultDirectory %>% str_remove("groundfish-MSE.*") 
+path <- getwd() %>% str_remove("groundfish-MSE.*") 
 outdir <- if_else(str_ends(path, "/"), path, str_c(path, "/")) %>%
   str_c("results_", tag)
 
@@ -37,7 +37,8 @@ iteration_results <- lapply(file_names, readRDS) %>% set_names(file_names)
 collated_results <- list_transpose(iteration_results) %>% map(bind_rows)
 
 filepath <- paste0(outdir, "/collated_results_", tag, ".rds")
-print(paste("File path name is: "), filepath))
+print(paste("File path name is: ", filepath))
+
 # save results to the output directory
 saveRDS(collated_results, file = filepath)
 
