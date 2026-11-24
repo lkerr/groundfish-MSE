@@ -13,6 +13,6 @@
 
 module load gnu8/8.3.0
 module load R/4.2.2
-Rscript ./Processes/CollateHPCarray.R
+Rscript ./processes/collate_hpc.R
 
 echo " collation job complete"

@@ -19,7 +19,7 @@ echo MSE array is job number $ID
 echo "********** Submitted Batch *********"
 
 # Collate the results !!!!!! NEED TO MODIFY COLLATION CODE FOR groundfish-MSE once array is running and saving appropriately
-# echo "********** Submit collation job **********"
-# sbatch --dependency=afterany:$ID ./SubmitJob_CollateArray.sh
+echo "********** Submit collation job **********"
+sbatch --dependency=afterany:$ID ./SubmitJob_CollateArray.sh
 
-# echo "********** Collation job submitted with dependency **********"
+echo "********** Collation job submitted with dependency **********"
