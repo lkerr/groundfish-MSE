@@ -11,8 +11,8 @@
 #SBATCH --output=collate_%j.log          # Standard output and error log
 #SBATCH --export=ALL
 
-module load gnu8/8.3.0
-module load R/4.2.2
+module load gnu12/12.2.0
+module load R/4.4.1
 Rscript ./processes/collate_hpc.R
 
 echo " collation job complete"
